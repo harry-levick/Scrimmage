@@ -48,7 +48,7 @@ public class Main extends Application{
     }
 
     public void init() {
-        // TODO: Add setting up audio, graphics, input, handlers and connections
+        // TODO: Add setting up audio, graphics, input, audioHandler and connections
     }
 
     private void update() {
