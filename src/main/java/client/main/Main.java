@@ -1,5 +1,7 @@
 package client.main;
 
+import client.util.inputHandler.KeyboardInput;
+import client.util.inputHandler.MouseInput;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
@@ -13,6 +15,8 @@ import org.apache.logging.log4j.Logger;
 public class Main extends Application{
 
     private static final Logger LOGGER = LogManager.getLogger(Main.class.getName());
+    public static KeyboardInput keyInput;
+    public static MouseInput mouseInput;
 
     public static void main(String args[]) {
         launch(args);
@@ -34,6 +38,13 @@ public class Main extends Application{
         primaryStage.setHeight(primaryScreenBounds.getHeight());
         primaryStage.show();
 
+        //Setup Input
+        scene.setOnKeyPressed(keyInput);
+        scene.setOnKeyReleased(keyInput);
+        scene.setOnMousePressed(mouseInput);
+        scene.setOnMouseMoved(mouseInput);
+        scene.setOnMouseReleased(mouseInput);
+
         //TODO Create all rendering setup screens
 
         new AnimationTimer() {
@@ -48,6 +59,8 @@ public class Main extends Application{
     }
 
     public void init() {
+        keyInput = new KeyboardInput();
+        mouseInput = new MouseInput();
         // TODO: Add setting up audio, graphics, input, audioHandler and connections
     }
 

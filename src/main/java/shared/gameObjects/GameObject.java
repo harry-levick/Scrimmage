@@ -1,9 +1,11 @@
 package shared.gameObjects;
 
+import shared.ObjectID;
+
 public abstract class GameObject {
 
     protected int x, y;
-    protected String id;
+    protected ObjectID id;
     protected Version version;
 
 
@@ -17,7 +19,7 @@ public abstract class GameObject {
      * @param id Unique Identifier of every game object
      * @param version Is this object being created on server or client
      */
-    public GameObject(int x, int y , String id, Version version) {
+    public GameObject(int x, int y , ObjectID id, Version version) {
         this.x = x;
         this.y = y;
         this.id = id;
@@ -48,12 +50,8 @@ public abstract class GameObject {
         this.y = y;
     }
 
-    public String getId() {
+    public ObjectID getId() {
         return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public Version getVersion() {
