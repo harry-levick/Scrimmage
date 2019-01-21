@@ -1,5 +1,6 @@
 package shared.gameObjects.entities;
 
+import shared.ObjectID;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Version;
 
@@ -15,6 +16,6 @@ public abstract class Entity extends GameObject {
      * @param version Is this object being created on server or client
      */
     public Entity(int x, int y, String id, Version version) {
-        super(x, y, id, version);
+        super(x, y, ObjectID.valueOf(id), version);
     }
 }

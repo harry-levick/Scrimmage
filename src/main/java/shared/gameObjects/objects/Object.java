@@ -1,5 +1,6 @@
 package shared.gameObjects.objects;
 
+import shared.ObjectID;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Version;
 
@@ -14,7 +15,7 @@ public abstract class Object extends GameObject {
      * @param id      Unique Identifier of every game object
      * @param version Is this object being created on server or client
      */
-    public Object(int x, int y, String id, Version version) {
+    public Object(int x, int y, ObjectID id, Version version) {
         super(x, y, id, version);
     }
 }
