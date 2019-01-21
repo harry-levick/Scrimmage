@@ -45,6 +45,7 @@ public class Main extends Application{
         scene.setOnMouseMoved(mouseInput);
         scene.setOnMouseReleased(mouseInput);
 
+
         //TODO Create all rendering setup screens
 
         new AnimationTimer() {
