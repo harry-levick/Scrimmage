@@ -1,9 +1,10 @@
 package shared.gameObjects;
 
-import shared.ObjectID;
-import shared.gameObjects.objects.Components.Component;
-import shared.gameObjects.objects.Components.ComponentType;
-import shared.gameObjects.objects.Transform;
+import shared.gameObjects.Components.Component;
+import shared.gameObjects.Components.ComponentType;
+import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.Transform;
+import shared.gameObjects.Utils.Version;
 
 import java.io.Serializable;
 import java.util.ArrayList;

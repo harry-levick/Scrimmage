@@ -1,6 +1,6 @@
 package shared.packets;
 
-public enum InputPacket {
+public enum ClientPacket {
     UP,
     DOWN,
     LEFT,

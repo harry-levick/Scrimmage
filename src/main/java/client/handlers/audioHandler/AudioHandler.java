@@ -1,4 +1,4 @@
-package client.util.audioHandler;
+package client.handlers.audioHandler;
 
 import client.main.Settings;
 import javafx.scene.media.AudioClip;

@@ -1,4 +1,4 @@
-package shared.gameObjects.objects;
+package shared.gameObjects.Utils;
 
 import shared.gameObjects.GameObject;
 import shared.util.maths.Rotation;

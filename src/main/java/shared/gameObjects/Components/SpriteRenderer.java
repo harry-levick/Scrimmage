@@ -1,7 +1,5 @@
-package shared.gameObjects.objects.Components;
+package shared.gameObjects.Components;
 
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import shared.gameObjects.GameObject;
 
 import java.io.Serializable;

@@ -1,7 +1,7 @@
 package client.main;
 
-import client.util.inputHandler.KeyboardInput;
-import client.util.inputHandler.MouseInput;
+import client.handlers.inputHandler.KeyboardInput;
+import client.handlers.inputHandler.MouseInput;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;

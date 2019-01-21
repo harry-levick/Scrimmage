@@ -1,4 +1,4 @@
-package shared.gameObjects.objects.Components;
+package shared.gameObjects.Components;
 
 import shared.gameObjects.GameObject;
 

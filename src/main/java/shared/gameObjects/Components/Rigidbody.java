@@ -1,7 +1,7 @@
-package shared.gameObjects.objects.Components;
+package shared.gameObjects.Components;
 
 import shared.gameObjects.GameObject;
-import shared.gameObjects.objects.Transform;
+import shared.gameObjects.Utils.Transform;
 import shared.physics.RigibodyType;
 import shared.physics.RigidbodyUpdateType;
 import shared.util.maths.Vector2;

@@ -1,4 +1,4 @@
-package client.util.audioHandler;
+package client.handlers.audioHandler;
 
 public class MusicAssets {
 

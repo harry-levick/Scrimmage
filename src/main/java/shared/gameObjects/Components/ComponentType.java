@@ -1,4 +1,4 @@
-package shared.gameObjects.objects.Components;
+package shared.gameObjects.Components;
 
 public enum ComponentType {
     SPRITE_RENDERER,

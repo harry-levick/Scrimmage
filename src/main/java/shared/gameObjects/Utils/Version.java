@@ -1,4 +1,4 @@
-package shared.gameObjects;
+package shared.gameObjects.Utils;
 
 public enum Version {
     SERVER,

@@ -1,4 +1,4 @@
-package shared;
+package shared.gameObjects.Utils;
 
 public enum ObjectID {
     Player,
