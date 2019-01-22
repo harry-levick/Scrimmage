@@ -2,7 +2,7 @@ package shared.gameObjects;
 
 import shared.gameObjects.Utils.ObjectID;
 
-public class TestObject extends GameObject {
+public class ExampleObject extends GameObject {
     /**
      * Base class used to create an object in game.
      * This is used on both the client and server side to ensure actions are calculated the same
@@ -11,7 +11,7 @@ public class TestObject extends GameObject {
      * @param y       Y coordinate of object in game world
      * @param id      Unique Identifier of every game object
      */
-    public TestObject(int x, int y, ObjectID id) {
+    public ExampleObject(double x, double y, ObjectID id) {
         super(x, y, id);
     }
 
@@ -22,6 +22,7 @@ public class TestObject extends GameObject {
 
     @Override
     public void render() {
-
+        imageView.relocate(x,y);
     }
+
 }

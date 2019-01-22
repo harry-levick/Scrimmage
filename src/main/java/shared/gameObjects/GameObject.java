@@ -1,5 +1,8 @@
 package shared.gameObjects;
 
+import javafx.scene.Group;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import shared.gameObjects.Components.Component;
 import shared.gameObjects.Components.ComponentType;
 import shared.gameObjects.Utils.ObjectID;
@@ -15,9 +18,13 @@ import java.util.Set;
 
 public abstract class GameObject implements Serializable {
 
-    protected int x, y;
+    protected double x, y;
     protected ObjectID id;
-    protected Version version;
+
+    protected transient Version version;
+    protected transient ImageView imageView;
+    protected transient Group root;
+    protected transient Image baseImage;
 
     protected GameObject parent;
     protected Set<GameObject> children;
@@ -27,7 +34,6 @@ public abstract class GameObject implements Serializable {
     protected boolean active;
     protected boolean destroyed;
 
-
     /**
      * Base class used to create an object in game.
      * This is used on both the client and server side to ensure actions are calculated the same
@@ -35,13 +41,12 @@ public abstract class GameObject implements Serializable {
      * @param x X coordinate of object in game world
      * @param y Y coordinate of object in game world
      * @param id Unique Identifier of every game object
-     * @param version Is this object being created on server or client
      */
-    public GameObject(int x, int y , ObjectID id, Version version) {
+    public GameObject(double x, double y , ObjectID id) {
         this.x = x;
         this.y = y;
         this.id = id;
-        this.version = version;
+
 
         this.transform = new Transform(this);
         components = new ArrayList<>();
@@ -55,14 +60,26 @@ public abstract class GameObject implements Serializable {
     //Client Side only
     public abstract void render();
 
-
+    //Ignore for now, added due to unSerializable objects
+    public void setupRender(Group root, Image baseImage, Version version) {
+        this.root = root;
+        imageView = new ImageView();
+        this.baseImage = baseImage;
+        this.imageView.setImage(baseImage);
+        root.getChildren().add(this.imageView);
+        this.version = version;
+    }
 
     public void AddChild(GameObject child) {
         children.add(child);
     }
+
+
+
     public void RemoveChild(GameObject child) {
         children.remove(child);
     }
+
     public boolean isChild(GameObject child) {
         return children.contains(child);
     }
@@ -128,7 +145,7 @@ public abstract class GameObject implements Serializable {
     }
 
     //Getters and Setters
-    public int getX() {
+    public double getX() {
         return x;
     }
 
@@ -136,7 +153,7 @@ public abstract class GameObject implements Serializable {
         this.x = x;
     }
 
-    public int getY() {
+    public double getY() {
         return y;
     }
 
@@ -179,6 +196,10 @@ public abstract class GameObject implements Serializable {
         this.transform = transform;
     }
 
+    public ImageView getImageView() {
+        return imageView;
+    }
+
     public void setActive(boolean state) {
         if(!destroyed) {
             active = state;
@@ -193,3 +214,5 @@ public abstract class GameObject implements Serializable {
         return destroyed;
     }
 }
+
+

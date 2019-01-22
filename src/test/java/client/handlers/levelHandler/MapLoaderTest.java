@@ -5,23 +5,22 @@ import org.junit.Test;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.TestObject;
 import shared.gameObjects.Utils.ObjectID;
-import shared.gameObjects.Utils.Version;
 
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 
 public class MapLoaderTest {
-    private TestObject g1 = new TestObject(6,7, ObjectID.Bot, Version.CLIENT);
-    private TestObject g2 = new TestObject(934,12312, ObjectID.Bot, Version.SERVER);
-    private TestObject g3 = new TestObject(567560,12, ObjectID.Player, Version.CLIENT);
+    private TestObject g1 = new TestObject(6,7, ObjectID.Bot);
+    private TestObject g2 = new TestObject(934,12312, ObjectID.Bot);
+    private TestObject g3 = new TestObject(567560,12, ObjectID.Player);
     ArrayList<GameObject> gameObjects = new ArrayList<>();
 
     private MapLoader map = new MapLoader();
     private String path = "B:/map.ser";
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         gameObjects.add(g1);
         gameObjects.add(g2);
         gameObjects.add(g3);

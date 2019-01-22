@@ -4,6 +4,8 @@ import shared.gameObjects.GameObject;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Objects;
 
 public class MapLoader {
 
@@ -23,8 +25,7 @@ public class MapLoader {
         try {
             FileInputStream fis = new FileInputStream(path);
             ObjectInputStream ois = new ObjectInputStream(fis);
-            ArrayList<GameObject> gameObjects = (ArrayList<GameObject>)ois.readObject();
-            return gameObjects;
+            return (ArrayList<GameObject>)ois.readObject();
         } catch (FileNotFoundException e) {
             return new ArrayList<>();
         } catch (IOException e) {
@@ -45,9 +46,25 @@ public class MapLoader {
             }
         });
         ArrayList<Map> maps = new ArrayList<>();
-        for (File file : files) {
+        for (File file : Objects.requireNonNull(files)) {
             Map tempMap = new Map(file.getName(), file.getPath(), GameState.IN_GAME);
             maps.add(tempMap);
+        }
+        return maps;
+    }
+
+    public static HashMap<String,Map> getMenuMaps(String path) {
+        File dir = new File(path);
+        File files[] = dir.listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.endsWith(".ser");
+            }
+        });
+        HashMap<String,Map> maps = new HashMap<>();
+        for (File file : Objects.requireNonNull(files)) {
+            Map tempMap = new Map(file.getName(), file.getPath(), GameState.MAIN_MENU);
+            maps.put(file.getName(), tempMap);
         }
         return maps;
     }
