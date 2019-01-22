@@ -143,10 +143,13 @@ fabric.properties
 ### Intellij Patch ###
 # Comment Reason: https://github.com/joeblau/gitignore.io/issues/186#issuecomment-215987721
 
-# *.iml
-# modules.xml
-# .idea/misc.xml
-# *.ipr
+*.iml
+modules.xml
+.idea/misc.xml
+*.ipr
+.idea/checkstyle-idea.xml
+.idea/encodings.xml
+.idea/vcs.xml
 
 # Sonarlint plugin
 .idea/sonarlint
@@ -173,6 +176,9 @@ fabric.properties
 *.tar.gz
 *.rar
 
+# Mac OS #
+*.DS_STORE
+
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
@@ -187,5 +193,6 @@ dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
+
 
 # End of https://www.gitignore.io/api/java,maven,eclipse,intellij
