@@ -20,12 +20,12 @@ import shared.gameObjects.Utils.Version;
 
 import java.util.ArrayList;
 
-public class Main extends Application {
+public class LevelEditor extends Application {
 
     private ArrayList<GameObject> gameObjects;
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage){
         primaryStage.setTitle("Level Editor");
         Group root = new Group();
         gameObjects = new ArrayList<>();
