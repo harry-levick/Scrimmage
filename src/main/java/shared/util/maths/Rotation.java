@@ -1,6 +1,8 @@
 package shared.util.maths;
 
-public class Rotation {
+import java.io.Serializable;
+
+public class Rotation implements Serializable {
     private float rot;
 
     public Rotation(float rot) {

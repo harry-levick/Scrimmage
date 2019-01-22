@@ -6,14 +6,33 @@ package client.main;
 public class Settings {
     private int musicVolume;
     private int soundEffectVolume;
+    private String mapsPath = "/resources/maps";
+    private String menuPath = "/resources/menus";
+
+    public String getMapsPath() {
+        return mapsPath;
+    }
+
+    public void setMapsPath(String mapsPath) {
+        this.mapsPath = mapsPath;
+    }
 
     /**
      * Default Constructor
      * Music volume set to 100 and sound effects to 75
      */
+
     public Settings() {
         musicVolume = 100;
         soundEffectVolume = 75;
+    }
+
+    public String getMenuPath() {
+        return menuPath;
+    }
+
+    public void setMenuPath(String menuPath) {
+        this.menuPath = menuPath;
     }
 
     /**
