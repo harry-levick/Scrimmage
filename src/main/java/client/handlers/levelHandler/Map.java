@@ -3,38 +3,39 @@ package client.handlers.levelHandler;
 import javafx.scene.image.Image;
 
 public class Map {
-    private String name;
-    private Image mapIcon;
-    private String playlist;
-    private String path;
-    private GameState gameState;
 
-    public Map(String name, String path, GameState gameState) {
-        this.name = name;
-        this.mapIcon = new Image("");
-        this.playlist = "N/A";
-        this.path = path;
-        this.gameState = gameState;
-    }
+  private String name;
+  private Image mapIcon;
+  private String playlist;
+  private String path;
+  private GameState gameState;
 
-    public String getName() {
-        return name;
-    }
+  public Map(String name, String path, GameState gameState) {
+    this.name = name;
+    this.mapIcon = new Image("");
+    this.playlist = "N/A";
+    this.path = path;
+    this.gameState = gameState;
+  }
 
-    public String getPath() {
-        return path;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public GameState getGameState() {
-        return gameState;
-    }
+  public String getPath() {
+    return path;
+  }
 
-    public Image getMapIcon() {
+  public GameState getGameState() {
+    return gameState;
+  }
 
-        return mapIcon;
-    }
+  public Image getMapIcon() {
 
-    public String getPlaylist() {
-        return playlist;
-    }
+    return mapIcon;
+  }
+
+  public String getPlaylist() {
+    return playlist;
+  }
 }
