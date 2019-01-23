@@ -1,12 +1,15 @@
 package shared.weapons;
 
+import shared.gameObjects.GameObject;
+import shared.gameObjects.Utils.ObjectID;
+
 /**
  * @author hlf764 The abstract class for all weapons in the game.
  */
-abstract class Weapon {
+abstract class Weapon extends GameObject{
 
-  float damage = 1.0f; // per bullet
-  float weight = 20.0f; // grams
+  double damage = 1.0;  // per bullet
+  double weight = 20.0; // grams
   String name = "None"; // name of the weapon
 
   /**
@@ -14,29 +17,34 @@ abstract class Weapon {
    *
    * @param _damage Damage of the weapon
    * @param _weight Weight of the weapon
-   * @param _name Name of the weapon
+   * @param _name   Name of the weapon
    */
-  public Weapon(float _damage, float _weight, String _name) {
+  public Weapon(double x, double y, ObjectID id, double _damage, double _weight, String _name) {
+    super(x, y, id);
     setDamage(_damage);
     setWeight(_weight);
     setName(_name);
   }
+  
+  // -------------------
+  // Setters and Getters
+  // -------------------
 
-  public float getDamage() {
+  public double getDamage() {
     return this.damage;
   }
 
-  public void setDamage(float newDamage) {
+  public void setDamage(double newDamage) {
     if (newDamage > 0 && newDamage < 100.0f) {
       this.damage = newDamage;
     }
   }
 
-  public float getWeight() {
+  public double getWeight() {
     return this.weight;
   }
 
-  public void setWeight(float newWeight) {
+  public void setWeight(double newWeight) {
     if (newWeight > 0 && newWeight < 1000.0f) {
       this.weight = newWeight;
     }

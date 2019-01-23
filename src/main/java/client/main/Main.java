@@ -30,6 +30,7 @@ public class Main extends Application {
     primaryStage.setScene(scene);
     primaryStage.setFullScreen(true);
     Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+
     // TODO Create a screen height and width variable and scale render off that
     // Set Stage boundaries to visible bounds of the main screen
     primaryStage.setX(primaryScreenBounds.getMinX());
