@@ -8,6 +8,12 @@ public class KeyboardInput implements EventHandler<KeyEvent> {
   // TODO Add more keyboard controls
   public static boolean leftKey, rightKey, jumpKey;
 
+  public KeyboardInput() {
+    leftKey = false;
+    rightKey = false;
+    jumpKey = false;
+  }
+
   @Override
   public void handle(KeyEvent event) {
     if (event.getEventType() == KeyEvent.KEY_PRESSED) {

@@ -19,10 +19,10 @@ public class LevelHandler {
   public LevelHandler(Settings settings, Group root, Version version) {
     this.version = version;
     maps = MapLoader.getMaps(settings.getMapsPath());
-    //menus = MapLoader.getMaps(settings.getMenuPath());
-    //menus = MapLoader.getMenuMaps(settings.getMenuPath());
+    // menus = MapLoader.getMaps(settings.getMenuPath());
+    // menus = MapLoader.getMenuMaps(settings.getMenuPath());
     // Set inital game level as the Main Menu
-    map = maps.get(0); //FOR TESTING
+    map = maps.get(0); // FOR TESTING
     generateLevel(root);
   }
 
@@ -45,7 +45,6 @@ public class LevelHandler {
   /**
    * NOTE: This to change the level use change Map Removes current game objects and creates new ones
    * from Map file
-   *
    */
   public void generateLevel(Group root) {
     // Remove current game objects
@@ -54,7 +53,7 @@ public class LevelHandler {
 
     // Create new game objects for map
     gameObjects = MapLoader.loadMap(map.getPath());
-    gameObjects.forEach(gameObject -> gameObject.initialise(root, version));
+    gameObjects.forEach(gameObject -> gameObject.initialise(root, version, true));
     gameState = map.getGameState();
   }
 

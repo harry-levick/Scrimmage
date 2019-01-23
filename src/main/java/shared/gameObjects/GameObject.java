@@ -2,8 +2,10 @@ package shared.gameObjects;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
@@ -18,12 +20,13 @@ public abstract class GameObject implements Serializable {
 
   protected double x, y;
   protected ObjectID id;
-  protected String baseImageURL;
+  protected HashMap<String, String> spriteLibaryURL;
+  protected boolean animate;
 
   protected transient Version version;
   protected transient ImageView imageView;
   protected transient Group root;
-  protected transient Image baseImage;
+  protected transient HashMap<String, Image> spriteLibary;
 
   protected GameObject parent;
   protected Set<GameObject> children;
@@ -42,10 +45,12 @@ public abstract class GameObject implements Serializable {
    * @param id Unique Identifier of every game object
    */
   public GameObject(double x, double y, ObjectID id, String baseImageURL) {
+    spriteLibaryURL = new HashMap<>();
     this.x = x;
     this.y = y;
     this.id = id;
-    this.baseImageURL = baseImageURL;
+    spriteLibaryURL.put("baseImage", baseImageURL);
+    animate = false;
 
     this.transform = new Transform(this);
     components = new ArrayList<>();
@@ -60,10 +65,17 @@ public abstract class GameObject implements Serializable {
   public abstract void render();
 
   // Ignore for now, added due to unSerializable objects
-  public void initialise(Group root, Version version) {
+  public void initialise(Group root, Version version, boolean animate) {
     this.root = root;
     imageView = new ImageView();
-    this.imageView.setImage(new Image(baseImageURL));
+    spriteLibary = new HashMap<>();
+    // Convert Image URL to Image
+    for (Map.Entry<String, String> imageURL : spriteLibaryURL.entrySet()) {
+      spriteLibary.put(imageURL.getKey(), new Image(imageURL.getValue()));
+    }
+    this.animate = animate;
+
+    this.imageView.setImage(spriteLibary.get("baseImage"));
     root.getChildren().add(this.imageView);
     this.version = version;
   }

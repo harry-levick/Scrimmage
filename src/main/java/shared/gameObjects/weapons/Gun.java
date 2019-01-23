@@ -2,30 +2,28 @@ package shared.gameObjects.weapons;
 
 import shared.gameObjects.Utils.ObjectID;
 
-/**
- * @author hlf764 The abstract class for all guns type weapon.
- */
+/** @author hlf764 The abstract class for all guns type weapon. */
 abstract class Gun extends Weapon {
 
-  double bulletSpeed = 5.0;     // metre per second
-  double fireRate = 80.0;       // bullets per minute
-  double bulletWidth = 30.0;    // width of bullet ==(pixel?)==
-  double range = 1000.0;        // suitable for swords, explosion, laser beams
+  double bulletSpeed = 5.0; // metre per second
+  double fireRate = 80.0; // bullets per minute
+  double bulletWidth = 30.0; // width of bullet ==(pixel?)==
+  double range = 1000.0; // suitable for swords, explosion, laser beams
   boolean fullAutoFire = false; // able to shoot with full-auto or single-shot
   boolean singleHanded = false; // holding the weapon with one hand or two
 
   /**
    * Constructor of the Gun class
    *
-   * @param _damage         Damage of the gun
-   * @param _weight         Weight of the gun
-   * @param _name           Name of the gun
-   * @param _bulletSpeed    Speed of the bullets
-   * @param _fireRate       Fire rate of the gun (bullets per minute)
-   * @param _bulletWidth    Width of the bullet
-   * @param _range          Range of the bullets they travel
-   * @param _fullAutoFire   Is it full-automatic fire or single-shot
-   * @param _singleHanded   Is it be hold with one hand or two hands
+   * @param _damage Damage of the gun
+   * @param _weight Weight of the gun
+   * @param _name Name of the gun
+   * @param _bulletSpeed Speed of the bullets
+   * @param _fireRate Fire rate of the gun (bullets per minute)
+   * @param _bulletWidth Width of the bullet
+   * @param _range Range of the bullets they travel
+   * @param _fullAutoFire Is it full-automatic fire or single-shot
+   * @param _singleHanded Is it be hold with one hand or two hands
    */
   public Gun(
       double x,
@@ -101,9 +99,7 @@ abstract class Gun extends Weapon {
     return this.singleHanded;
   }
 
-  /**
-   * For testing
-   */
+  /** For testing */
   @Override
   public String toString() {
     String s = "";

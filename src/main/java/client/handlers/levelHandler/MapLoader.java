@@ -45,15 +45,9 @@ public class MapLoader {
   // TODO Add map image and playlist
   public static ArrayList<Map> getMaps(String path) {
     /**
-     File dir = new File(path);
-     File files[] =
-     dir.listFiles(
-     new FilenameFilter() {
-    @Override public boolean accept(File dir, String name) {
-    return name.endsWith(".map");
-    }
-    });s
-     **/
+     * File dir = new File(path); File files[] = dir.listFiles( new FilenameFilter() { @Override
+     * public boolean accept(File dir, String name) { return name.endsWith(".map"); } });s
+     */
     File folder = new File(path);
     File[] list = folder.listFiles();
     ArrayList<Map> maps = new ArrayList<>();

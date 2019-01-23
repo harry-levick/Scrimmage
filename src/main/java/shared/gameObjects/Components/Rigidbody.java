@@ -57,17 +57,11 @@ public class Rigidbody extends Component implements Serializable {
   }
   // Force Methods
 
-  /**
-   * Applies a force of a defined from a defined source direction (Instantaneous Force)
-   */
-  void addForce(float force, Transform source) {
-  }
+  /** Applies a force of a defined from a defined source direction (Instantaneous Force) */
+  void addForce(float force, Transform source) {}
 
-  /**
-   * Moves the Rigibody to the defined space over time, instant if 0
-   */
-  void move(Vector2 position, float time) {
-  }
+  /** Moves the Rigibody to the defined space over time, instant if 0 */
+  void move(Vector2 position, float time) {}
 
   // Getters and Setters
   public Vector2 getVelocity() {

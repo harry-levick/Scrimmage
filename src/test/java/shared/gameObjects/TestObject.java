@@ -17,10 +17,8 @@ public class TestObject extends GameObject {
   }
 
   @Override
-  public void update() {
-  }
+  public void update() {}
 
   @Override
-  public void render() {
-  }
+  public void render() {}
 }

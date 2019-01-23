@@ -17,6 +17,7 @@ import shared.gameObjects.ExampleObject;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.Utils.Version;
+import shared.gameObjects.players.Player;
 
 public class LevelEditor extends Application {
 
@@ -33,14 +34,11 @@ public class LevelEditor extends Application {
     gameObjects = new ArrayList<>();
 
     // Example of loading map
-    //gameObjects = MapLoader.loadMap("menus.map");
-    gameObjects.forEach(
-        gameObject ->
-            gameObject.initialise(
-                root, Version.CLIENT));
+    // gameObjects = MapLoader.loadMap("menus.map");
+    gameObjects.forEach(gameObject -> gameObject.initialise(root, Version.CLIENT, false));
 
     ChoiceBox cb = new ChoiceBox();
-    cb.setItems(FXCollections.observableArrayList("ExampleObject", "Test2"));
+    cb.setItems(FXCollections.observableArrayList("ExampleObject", "Player"));
     Button btn = new Button();
     btn.setText("Save Map");
     btn.setOnAction(
@@ -63,8 +61,11 @@ public class LevelEditor extends Application {
           public void handle(MouseEvent event) {
             if (cb.getValue() == "ExampleObject") {
               GameObject temp = new ExampleObject(event.getX(), event.getY(), ObjectID.Bot);
-              temp.initialise(
-                  root, Version.CLIENT);
+              temp.initialise(root, Version.CLIENT, false);
+              gameObjects.add(temp);
+            } else if (cb.getValue() == "Player") {
+              Player temp = new Player(event.getX(), event.getY(), ObjectID.Player);
+              temp.initialise(root, Version.CLIENT, false);
               gameObjects.add(temp);
             }
           }

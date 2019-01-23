@@ -37,19 +37,19 @@ public class Main extends Application {
     levelHandler = new LevelHandler(settings, root, Version.CLIENT);
     currentMap = levelHandler.getMap();
 
-    //Main Game Loop
+    // Main Game Loop
     new AnimationTimer() {
       @Override
       public void handle(long now) {
-        //Changes Map/Level
+        // Changes Map/Level
         if (currentMap != levelHandler.getMap()) {
           levelHandler.generateLevel(root);
           currentMap = levelHandler.getMap();
         }
-        //Updates and Renders every object
+        // Updates and Renders every object
         levelHandler.getGameObjects().forEach(gameObject -> gameObject.update());
         levelHandler.getGameObjects().forEach(gameObject -> gameObject.render());
-        //TODO Add networking here
+        // TODO Add networking here
       }
     }.start();
   }
@@ -83,7 +83,5 @@ public class Main extends Application {
     scene.setOnMousePressed(mouseInput);
     scene.setOnMouseMoved(mouseInput);
     scene.setOnMouseReleased(mouseInput);
-
-
   }
 }
