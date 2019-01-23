@@ -12,63 +12,61 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class Main extends Application{
+public class Main extends Application {
 
-    private static final Logger LOGGER = LogManager.getLogger(Main.class.getName());
-    public static KeyboardInput keyInput;
-    public static MouseInput mouseInput;
+  private static final Logger LOGGER = LogManager.getLogger(Main.class.getName());
+  public static KeyboardInput keyInput;
+  public static MouseInput mouseInput;
 
-    public static void main(String args[]) {
-        launch(args);
-    }
+  public static void main(String args[]) {
+    launch(args);
+  }
 
-    @Override
-    public void start(Stage primaryStage) {
-        Group root = new Group();
-        primaryStage.setTitle("Alone In The Dark");
-        Scene scene = new Scene(root, 500, 500);
-        primaryStage.setScene(scene);
-        primaryStage.setFullScreen(true);
-        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-        //TODO Create a screen height and width variable and scale render off that
-        //Set Stage boundaries to visible bounds of the main screen
-        primaryStage.setX(primaryScreenBounds.getMinX());
-        primaryStage.setY(primaryScreenBounds.getMinY());
-        primaryStage.setWidth(primaryScreenBounds.getWidth());
-        primaryStage.setHeight(primaryScreenBounds.getHeight());
-        primaryStage.show();
+  @Override
+  public void start(Stage primaryStage) {
+    Group root = new Group();
+    primaryStage.setTitle("Alone In The Dark");
+    Scene scene = new Scene(root, 500, 500);
+    primaryStage.setScene(scene);
+    primaryStage.setFullScreen(true);
+    Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+    // TODO Create a screen height and width variable and scale render off that
+    // Set Stage boundaries to visible bounds of the main screen
+    primaryStage.setX(primaryScreenBounds.getMinX());
+    primaryStage.setY(primaryScreenBounds.getMinY());
+    primaryStage.setWidth(primaryScreenBounds.getWidth());
+    primaryStage.setHeight(primaryScreenBounds.getHeight());
+    primaryStage.show();
 
-        //Setup Input
-        scene.setOnKeyPressed(keyInput);
-        scene.setOnKeyReleased(keyInput);
-        scene.setOnMousePressed(mouseInput);
-        scene.setOnMouseMoved(mouseInput);
-        scene.setOnMouseReleased(mouseInput);
+    // Setup Input
+    scene.setOnKeyPressed(keyInput);
+    scene.setOnKeyReleased(keyInput);
+    scene.setOnMousePressed(mouseInput);
+    scene.setOnMouseMoved(mouseInput);
+    scene.setOnMouseReleased(mouseInput);
 
-        //TODO Create all rendering setup screens
+    // TODO Create all rendering setup screens
 
-        new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                update();
-                render();
-                //printFPS if debuging
-                LOGGER.debug("FPS:");
-            }
-        }.start();
-    }
+    new AnimationTimer() {
+      @Override
+      public void handle(long now) {
+        update();
+        render();
+        // printFPS if debuging
+        LOGGER.debug("FPS:");
+      }
+    }.start();
+  }
 
-    public void init() {
-        keyInput = new KeyboardInput();
-        mouseInput = new MouseInput();
-        // TODO: Add setting up audio, graphics, input, audioHandler and connections
-    }
+  public void init() {
+    keyInput = new KeyboardInput();
+    mouseInput = new MouseInput();
+    // TODO: Add setting up audio, graphics, input, audioHandler and connections
+  }
 
-    private void update() {
+  private void update() {
+  }
 
-    }
-
-    private void render() {
-
-    }
+  private void render() {
+  }
 }
