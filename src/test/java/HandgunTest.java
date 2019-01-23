@@ -3,7 +3,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
-import shared.weapons.Handgun;
+import shared.gameObjects.weapons.Handgun;
 
 public class HandgunTest {
 
@@ -11,7 +11,7 @@ public class HandgunTest {
 
   @BeforeClass
   public static void initHandgun() {
-    handgun = new Handgun(8f, 3.4f, "Revolver", 7f, 1000f, 120f, 2f);
+    // handgun = new Handgun(8f, 3.4f, "Revolver", 7f, 1000f, 120f, 2f);
   }
 
   @Test

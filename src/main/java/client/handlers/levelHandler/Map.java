@@ -12,7 +12,6 @@ public class Map {
 
   public Map(String name, String path, GameState gameState) {
     this.name = name;
-    this.mapIcon = new Image("");
     this.playlist = "N/A";
     this.path = path;
     this.gameState = gameState;

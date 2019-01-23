@@ -7,8 +7,10 @@ public class Settings {
 
   private int musicVolume;
   private int soundEffectVolume;
-  private String mapsPath = "/resources/maps";
-  private String menuPath = "/resources/menus";
+  private String mapsPath =
+      "C:\\Users\\brett\\projects\\aloneinthedark\\src\\main\\resources\\menus";
+  private String menuPath =
+      "C:\\Users\\brett\\projects\\aloneinthedark\\src\\main\\resources\\menus";
 
   /**
    * Default Constructor Music volume set to 100 and sound effects to 75

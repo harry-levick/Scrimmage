@@ -16,7 +16,7 @@ public class ExampleObject extends GameObject {
    * @param id Unique Identifier of every game object
    */
   public ExampleObject(double x, double y, ObjectID id) {
-    super(x, y, id);
+    super(x, y, id, "images/platforms/stone/elementStone013.png");
     health = 100;
   }
 

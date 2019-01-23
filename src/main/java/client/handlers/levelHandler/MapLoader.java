@@ -44,17 +44,20 @@ public class MapLoader {
   // TODO Replace with lambda
   // TODO Add map image and playlist
   public static ArrayList<Map> getMaps(String path) {
-    File dir = new File(path);
-    File files[] =
-        dir.listFiles(
-            new FilenameFilter() {
-              @Override
-              public boolean accept(File dir, String name) {
-                return name.endsWith(".ser");
-              }
-            });
+    /**
+     File dir = new File(path);
+     File files[] =
+     dir.listFiles(
+     new FilenameFilter() {
+    @Override public boolean accept(File dir, String name) {
+    return name.endsWith(".map");
+    }
+    });s
+     **/
+    File folder = new File(path);
+    File[] list = folder.listFiles();
     ArrayList<Map> maps = new ArrayList<>();
-    for (File file : Objects.requireNonNull(files)) {
+    for (File file : Objects.requireNonNull(list)) {
       Map tempMap = new Map(file.getName(), file.getPath(), GameState.IN_GAME);
       maps.add(tempMap);
     }
@@ -68,7 +71,7 @@ public class MapLoader {
             new FilenameFilter() {
               @Override
               public boolean accept(File dir, String name) {
-                return name.endsWith(".ser");
+                return name.endsWith(".map");
               }
             });
     HashMap<String, Map> maps = new HashMap<>();

@@ -13,7 +13,7 @@ public class TestObject extends GameObject {
    * @param id Unique Identifier of every game object
    */
   public TestObject(int x, int y, ObjectID id) {
-    super(x, y, id);
+    super(x, y, id, "testobjectimagepath");
   }
 
   @Override

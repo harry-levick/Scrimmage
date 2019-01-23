@@ -11,7 +11,6 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import shared.gameObjects.ExampleObject;
@@ -34,11 +33,11 @@ public class LevelEditor extends Application {
     gameObjects = new ArrayList<>();
 
     // Example of loading map
-    gameObjects = MapLoader.loadMap("menus.map");
+    //gameObjects = MapLoader.loadMap("menus.map");
     gameObjects.forEach(
         gameObject ->
-            gameObject.setupRender(
-                root, new Image("images/platforms/stone/elementStone013.png"), Version.CLIENT));
+            gameObject.initialise(
+                root, Version.CLIENT));
 
     ChoiceBox cb = new ChoiceBox();
     cb.setItems(FXCollections.observableArrayList("ExampleObject", "Test2"));
@@ -64,8 +63,8 @@ public class LevelEditor extends Application {
           public void handle(MouseEvent event) {
             if (cb.getValue() == "ExampleObject") {
               GameObject temp = new ExampleObject(event.getX(), event.getY(), ObjectID.Bot);
-              temp.setupRender(
-                  root, new Image("images/platforms/stone/elementStone013.png"), Version.CLIENT);
+              temp.initialise(
+                  root, Version.CLIENT);
               gameObjects.add(temp);
             }
           }

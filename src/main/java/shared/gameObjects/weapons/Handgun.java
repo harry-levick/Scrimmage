@@ -1,4 +1,4 @@
-package shared.weapons;
+package shared.gameObjects.weapons;
 
 import shared.gameObjects.Utils.ObjectID;
 

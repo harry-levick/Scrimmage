@@ -18,6 +18,7 @@ public abstract class GameObject implements Serializable {
 
   protected double x, y;
   protected ObjectID id;
+  protected String baseImageURL;
 
   protected transient Version version;
   protected transient ImageView imageView;
@@ -40,10 +41,11 @@ public abstract class GameObject implements Serializable {
    * @param y Y coordinate of object in game world
    * @param id Unique Identifier of every game object
    */
-  public GameObject(double x, double y, ObjectID id) {
+  public GameObject(double x, double y, ObjectID id, String baseImageURL) {
     this.x = x;
     this.y = y;
     this.id = id;
+    this.baseImageURL = baseImageURL;
 
     this.transform = new Transform(this);
     components = new ArrayList<>();
@@ -58,11 +60,10 @@ public abstract class GameObject implements Serializable {
   public abstract void render();
 
   // Ignore for now, added due to unSerializable objects
-  public void setupRender(Group root, Image baseImage, Version version) {
+  public void initialise(Group root, Version version) {
     this.root = root;
     imageView = new ImageView();
-    this.baseImage = baseImage;
-    this.imageView.setImage(baseImage);
+    this.imageView.setImage(new Image(baseImageURL));
     root.getChildren().add(this.imageView);
     this.version = version;
   }

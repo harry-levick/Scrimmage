@@ -3,7 +3,9 @@ package client.handlers.levelHandler;
 import client.main.Settings;
 import java.util.ArrayList;
 import java.util.HashMap;
+import javafx.scene.Group;
 import shared.gameObjects.GameObject;
+import shared.gameObjects.Utils.Version;
 
 public class LevelHandler {
 
@@ -12,28 +14,48 @@ public class LevelHandler {
   private HashMap<String, Map> menus;
   private GameState gameState;
   private Map map;
+  private Version version;
 
-  public LevelHandler(Settings settings) {
+  public LevelHandler(Settings settings, Group root, Version version) {
+    this.version = version;
     maps = MapLoader.getMaps(settings.getMapsPath());
-    menus = MapLoader.getMenuMaps(settings.getMenuPath());
+    //menus = MapLoader.getMaps(settings.getMenuPath());
+    //menus = MapLoader.getMenuMaps(settings.getMenuPath());
     // Set inital game level as the Main Menu
-    changeLevel(menus.get("MAIN_MENU"));
+    map = maps.get(0); //FOR TESTING
+    generateLevel(root);
+  }
+
+  public boolean changeMap(Map map) {
+    if (maps.contains(map)) {
+      this.map = map;
+      return true;
+    }
+    return false;
+  }
+
+  public boolean changeMenu(Map menu) {
+    if (menus.containsValue(menu)) {
+      this.map = menu;
+      return true;
+    }
+    return false;
   }
 
   /**
-   * Removes current game objects and creates new ones from Map file
+   * NOTE: This to change the level use change Map Removes current game objects and creates new ones
+   * from Map file
    *
-   * @param map Map object to change to, can be a Map that is a menu
    */
-  public void changeLevel(Map map) {
+  public void generateLevel(Group root) {
     // Remove current game objects
     gameObjects.forEach(gameObject -> gameObject.setActive(false));
     gameObjects.clear();
-    // Create new game objects for map
 
+    // Create new game objects for map
     gameObjects = MapLoader.loadMap(map.getPath());
+    gameObjects.forEach(gameObject -> gameObject.initialise(root, version));
     gameState = map.getGameState();
-    this.map = map;
   }
 
   /**
