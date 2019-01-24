@@ -1,4 +1,4 @@
-package client.handlers.levelHandler;
+package shared.handlers.levelHandler;
 
 import static org.junit.Assert.assertEquals;
 

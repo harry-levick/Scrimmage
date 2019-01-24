@@ -2,8 +2,6 @@ package client.main;
 
 import client.handlers.inputHandler.KeyboardInput;
 import client.handlers.inputHandler.MouseInput;
-import client.handlers.levelHandler.LevelHandler;
-import client.handlers.levelHandler.Map;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
@@ -14,6 +12,8 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import shared.gameObjects.Utils.Version;
+import shared.handlers.levelHandler.LevelHandler;
+import shared.handlers.levelHandler.Map;
 
 public class Main extends Application {
 

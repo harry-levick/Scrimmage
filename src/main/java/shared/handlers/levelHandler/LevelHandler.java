@@ -1,4 +1,4 @@
-package client.handlers.levelHandler;
+package shared.handlers.levelHandler;
 
 import client.main.Settings;
 import java.util.ArrayList;
@@ -54,6 +54,7 @@ public class LevelHandler {
     // Create new game objects for map
     gameObjects = MapLoader.loadMap(map.getPath());
     gameObjects.forEach(gameObject -> gameObject.initialise(root, version, true));
+    gameObjects.removeIf(gameObject -> !(gameObject instanceof GameObject));
     gameState = map.getGameState();
   }
 

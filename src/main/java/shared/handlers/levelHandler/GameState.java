@@ -1,4 +1,4 @@
-package client.handlers.levelHandler;
+package shared.handlers.levelHandler;
 
 /** @author Brett Saunders */
 public enum GameState {

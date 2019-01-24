@@ -1,6 +1,5 @@
 package levelEditor;
 
-import client.handlers.levelHandler.MapLoader;
 import java.util.ArrayList;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -18,6 +17,7 @@ import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.Utils.Version;
 import shared.gameObjects.players.Player;
+import shared.handlers.levelHandler.MapLoader;
 
 public class LevelEditor extends Application {
 

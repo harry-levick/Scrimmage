@@ -1,4 +1,4 @@
-package client.handlers.levelHandler;
+package shared.handlers.levelHandler;
 
 import java.io.File;
 import java.io.FileInputStream;
