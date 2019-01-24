@@ -17,7 +17,7 @@ public class Player extends GameObject {
   @Override
   public void update() {
     if (KeyboardInput.rightKey) {
-       setX(getX() + 10);
+      setX(getX() + 10);
     }
     if (KeyboardInput.leftKey) {
       setX(getX() - 10);

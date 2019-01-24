@@ -2,7 +2,9 @@ package shared.gameObjects.weapons;
 
 import shared.gameObjects.Utils.ObjectID;
 
-/** @author hlf764 The abstract class for all guns type weapon. */
+/**
+ * @author hlf764 The abstract class for all guns type weapon.
+ */
 abstract class Gun extends Weapon {
 
   double bulletSpeed;   // pixel per second
@@ -35,7 +37,7 @@ abstract class Gun extends Weapon {
       double _bulletWidth,
       boolean _fullAutoFire,
       boolean _singleHanded) {
-    
+
     super(x, y, id, _damage, _weight, _name);
     setBulletSpeed(_bulletSpeed);
     setFireRate(_fireRate);
@@ -86,7 +88,9 @@ abstract class Gun extends Weapon {
     return this.singleHanded;
   }
 
-  /** For testing */
+  /**
+   * For testing
+   */
   @Override
   public String toString() {
     String s = "";

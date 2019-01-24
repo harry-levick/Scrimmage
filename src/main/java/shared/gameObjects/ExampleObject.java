@@ -21,7 +21,8 @@ public class ExampleObject extends GameObject {
   }
 
   @Override
-  public void update() {}
+  public void update() {
+  }
 
   public int getHealth() {
     return health;

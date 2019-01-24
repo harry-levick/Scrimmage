@@ -11,12 +11,6 @@ import shared.physics.types.ColliderType;
 public abstract class Collider extends Component implements Serializable {
 
   boolean collisionEnter, collisionExit, collisionStay, triggerEnter, triggerExit, triggerStay, trigger;
-
-
-  public ColliderType getColliderType() {
-    return colliderType;
-  }
-
   ColliderType colliderType;
 
   Collider(GameObject parent, ColliderType colliderType, boolean trigger) {
@@ -25,16 +19,19 @@ public abstract class Collider extends Component implements Serializable {
     this.trigger = trigger;
   }
 
+  public ColliderType getColliderType() {
+    return colliderType;
+  }
+
   public void collision() {
-    if(trigger) {
-      if(!triggerStay) {
+    if (trigger) {
+      if (!triggerStay) {
         triggerEnter = triggerStay = true;
         return;
       }
       triggerEnter = false;
-    }
-    else {
-      if(!collisionStay) {
+    } else {
+      if (!collisionStay) {
         collisionEnter = collisionStay = true;
         return;
       }
@@ -44,15 +41,14 @@ public abstract class Collider extends Component implements Serializable {
 
   public void noCollision() {
     if (trigger) {
-      if(triggerStay) {
+      if (triggerStay) {
         triggerExit = true;
         triggerStay = false;
         return;
       }
       collisionExit = true;
-    }
-    else {
-      if(collisionStay) {
+    } else {
+      if (collisionStay) {
         collisionExit = true;
         collisionStay = false;
         return;

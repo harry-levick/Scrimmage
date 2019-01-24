@@ -2,7 +2,9 @@ package shared.gameObjects.weapons;
 
 import shared.gameObjects.Utils.ObjectID;
 
-/** @author hlf764 The Handgun class. */
+/**
+ * @author hlf764 The Handgun class.
+ */
 public class Handgun extends Gun {
 
   /**
@@ -42,7 +44,9 @@ public class Handgun extends Gun {
         false);
   }
 
-  public void update() {}
+  public void update() {
+  }
 
-  public void render() {}
+  public void render() {
+  }
 }
