@@ -1,4 +1,3 @@
-
 # Alone In The Dark
 
 Team Project to create a video game.
@@ -11,9 +10,10 @@ Team Project to create a video game.
 * Audio
 
 ## Coding Style
-TBD
+[Google Code Style for Java](https://google.github.io/styleguide/javaguide.html)
 
-
+## Documentation
+System Requirements and Reports - [link](https://git-teaching.cs.bham.ac.uk/mod-team-proj-2018/aloneinthedark/blob/master/DOCUMENTATION.md)
 
 ## Built With
 

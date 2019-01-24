@@ -1,10 +1,10 @@
 package shared.packets;
 
 public enum ClientPacket {
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT,
-    CLICK,
-    INVALID
+  UP,
+  DOWN,
+  LEFT,
+  RIGHT,
+  CLICK,
+  INVALID
 }

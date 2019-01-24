@@ -11,65 +11,77 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import shared.gameObjects.Utils.Version;
+import shared.handlers.levelHandler.LevelHandler;
+import shared.handlers.levelHandler.Map;
 
-public class Main extends Application{
+public class Main extends Application {
 
-    private static final Logger LOGGER = LogManager.getLogger(Main.class.getName());
-    public static KeyboardInput keyInput;
-    public static MouseInput mouseInput;
+  private static final Logger LOGGER = LogManager.getLogger(Main.class.getName());
+  public static KeyboardInput keyInput;
+  public static MouseInput mouseInput;
+  public static LevelHandler levelHandler;
+  public static Settings settings;
 
-    public static void main(String args[]) {
-        launch(args);
-    }
+  private Group root;
+  private Scene scene;
+  private Map currentMap;
 
-    @Override
-    public void start(Stage primaryStage) {
-        Group root = new Group();
-        primaryStage.setTitle("Alone In The Dark");
-        Scene scene = new Scene(root, 500, 500);
-        primaryStage.setScene(scene);
-        primaryStage.setFullScreen(true);
-        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-        //TODO Create a screen height and width variable and scale render off that
-        //Set Stage boundaries to visible bounds of the main screen
-        primaryStage.setX(primaryScreenBounds.getMinX());
-        primaryStage.setY(primaryScreenBounds.getMinY());
-        primaryStage.setWidth(primaryScreenBounds.getWidth());
-        primaryStage.setHeight(primaryScreenBounds.getHeight());
-        primaryStage.show();
+  public static void main(String args[]) {
+    launch(args);
+  }
 
-        //Setup Input
-        scene.setOnKeyPressed(keyInput);
-        scene.setOnKeyReleased(keyInput);
-        scene.setOnMousePressed(mouseInput);
-        scene.setOnMouseMoved(mouseInput);
-        scene.setOnMouseReleased(mouseInput);
+  @Override
+  public void start(Stage primaryStage) {
+    setupRender(primaryStage);
+    levelHandler = new LevelHandler(settings, root, Version.CLIENT);
+    currentMap = levelHandler.getMap();
 
+    // Main Game Loop
+    new AnimationTimer() {
+      @Override
+      public void handle(long now) {
+        // Changes Map/Level
+        if (currentMap != levelHandler.getMap()) {
+          levelHandler.generateLevel(root);
+          currentMap = levelHandler.getMap();
+        }
+        // Updates and Renders every object
+        levelHandler.getGameObjects().forEach(gameObject -> gameObject.update());
+        levelHandler.getGameObjects().forEach(gameObject -> gameObject.render());
+        // TODO Add networking here
+      }
+    }.start();
+  }
 
-        //TODO Create all rendering setup screens
+  public void init() {
+    settings = new Settings();
+    keyInput = new KeyboardInput();
+    mouseInput = new MouseInput();
+    // TODO: Add setting up audio, graphics, input, audioHandler and connections
+  }
 
-        new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                update();
-                render();
-                //printFPS if debuging
-                LOGGER.debug("FPS:");
-            }
-        }.start();
-    }
+  private void setupRender(Stage primaryStage) {
+    root = new Group();
+    primaryStage.setTitle("Alone In The Dark");
+    scene = new Scene(root, 1000, 1000);
+    primaryStage.setScene(scene);
+    primaryStage.setFullScreen(false);
+    Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 
-    public void init() {
-        keyInput = new KeyboardInput();
-        mouseInput = new MouseInput();
-        // TODO: Add setting up audio, graphics, input, audioHandler and connections
-    }
+    // TODO Create a screen height and width variable and scale render off that
+    // Set Stage boundaries to visible bounds of the main screen
+    primaryStage.setX(primaryScreenBounds.getMinX());
+    primaryStage.setY(primaryScreenBounds.getMinY());
+    primaryStage.setWidth(primaryScreenBounds.getWidth());
+    primaryStage.setHeight(primaryScreenBounds.getHeight());
+    primaryStage.show();
 
-    private void update() {
-
-    }
-
-    private void render() {
-
-    }
+    // Setup Input
+    scene.setOnKeyPressed(keyInput);
+    scene.setOnKeyReleased(keyInput);
+    scene.setOnMousePressed(mouseInput);
+    scene.setOnMouseMoved(mouseInput);
+    scene.setOnMouseReleased(mouseInput);
+  }
 }
