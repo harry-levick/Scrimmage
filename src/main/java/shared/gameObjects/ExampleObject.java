@@ -39,7 +39,7 @@ public class ExampleObject extends GameObject {
 
   @Override
   public void render() {
-    imageView.relocate(x, y);
+    imageView.relocate(getX(), getY());
     // Example not best way as every frame rechecking and recreating image
     if (health > 60) {
 

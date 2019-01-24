@@ -8,7 +8,12 @@ public abstract class Component implements Serializable {
 
   protected boolean isActive;
   protected GameObject parent;
-  protected ComponentType type;
+  protected ComponentType componentType;
+
+  Component(GameObject parent, ComponentType componentType) {
+    this.parent = parent;
+    this.componentType = componentType;
+  }
 
   public void setIsActive(boolean state) {
     isActive = state;
@@ -26,8 +31,8 @@ public abstract class Component implements Serializable {
     this.parent = parent;
   }
 
-  public ComponentType getType() {
-    return type;
+  public ComponentType getComponentType() {
+    return componentType;
   }
 
   public void update() {}

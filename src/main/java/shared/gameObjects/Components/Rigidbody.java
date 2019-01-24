@@ -3,8 +3,8 @@ package shared.gameObjects.Components;
 import java.io.Serializable;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.Transform;
-import shared.physics.RigibodyType;
-import shared.physics.RigidbodyUpdateType;
+import shared.physics.types.RigibodyType;
+import shared.physics.types.RigidbodyUpdateType;
 import shared.util.maths.Vector2;
 
 /**
@@ -38,6 +38,7 @@ public class Rigidbody extends Component implements Serializable {
       float angularVelocity,
       float angularRadius,
       GameObject parent) {
+    super(parent, ComponentType.RIGIBODY);
     this.angularCoefficient = angularCoefficient;
     this.angularRadius = angularRadius;
     this.angularVelocity = angularVelocity;
@@ -48,7 +49,6 @@ public class Rigidbody extends Component implements Serializable {
     this.bodyType = bodyType;
     this.updateMethod = updateMethod;
     this.velocity = Vector2.Zero();
-    this.parent = parent;
   }
 
   // Update Methods

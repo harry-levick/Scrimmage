@@ -17,6 +17,12 @@ public class Transform implements Serializable {
     gameObject = parent;
   }
 
+  public Transform(GameObject parent, Vector2 pos) {
+    this.pos = pos;
+    this.rot = new Rotation(0);
+    gameObject = parent;
+  }
+
   public void translate(Vector2 vector) {
     pos.add(vector);
   }

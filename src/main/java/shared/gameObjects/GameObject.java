@@ -15,10 +15,10 @@ import shared.gameObjects.Components.ComponentType;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.Utils.Transform;
 import shared.gameObjects.Utils.Version;
+import shared.util.maths.Vector2;
 
 public abstract class GameObject implements Serializable {
 
-  protected double x, y;
   protected ObjectID id;
   protected HashMap<String, String> spriteLibaryURL;
   protected boolean animate;
@@ -46,13 +46,11 @@ public abstract class GameObject implements Serializable {
    */
   public GameObject(double x, double y, ObjectID id, String baseImageURL) {
     spriteLibaryURL = new HashMap<>();
-    this.x = x;
-    this.y = y;
     this.id = id;
     spriteLibaryURL.put("baseImage", baseImageURL);
     animate = false;
 
-    this.transform = new Transform(this);
+    this.transform = new Transform(this, new Vector2((float) x, (float) y));
     components = new ArrayList<>();
     children = new HashSet<>();
     parent = null;
@@ -106,7 +104,7 @@ public abstract class GameObject implements Serializable {
    */
   public Component GetComponent(ComponentType type) {
     for (Component c : components) {
-      if (c.getType() == type) {
+      if (c.getComponentType() == type) {
         return c;
       }
     }
@@ -120,7 +118,7 @@ public abstract class GameObject implements Serializable {
   public ArrayList<Component> GetComponents(ComponentType type) {
     ArrayList<Component> ret = new ArrayList<>();
     for (Component c : components) {
-      if (c.getType() == type) {
+      if (c.getComponentType() == type) {
         ret.add(c);
       }
     }
@@ -134,7 +132,7 @@ public abstract class GameObject implements Serializable {
   public ArrayList<Component> GetComponentsInChildren(ComponentType type) {
     ArrayList<Component> ret = new ArrayList<>();
     for (Component c : components) {
-      if (c.getType() == type) {
+      if (c.getComponentType() == type) {
         ret.add(c);
       }
     }
@@ -150,19 +148,19 @@ public abstract class GameObject implements Serializable {
 
   // Getters and Setters
   public double getX() {
-    return x;
+    return this.transform.getPos().getX();
   }
 
   public void setX(int x) {
-    this.x = x;
+    this.transform.getPos().setX(x);
   }
 
   public double getY() {
-    return y;
+    return this.transform.getPos().getY();
   }
 
   public void setY(int y) {
-    this.y = y;
+    this.transform.getPos().setY(y);
   }
 
   public ObjectID getId() {

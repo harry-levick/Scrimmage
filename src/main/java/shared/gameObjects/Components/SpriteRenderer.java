@@ -9,8 +9,7 @@ public class SpriteRenderer extends Component implements Serializable {
   // LAYERS? POSITIONS? MIGHT BE POSSIBLE, PLACED HERE
 
   public SpriteRenderer(GameObject parent) {
-    this.parent = parent;
-    type = ComponentType.SPRITE_RENDERER;
+    super(parent, ComponentType.SPRITE_RENDERER);
   }
 
   @Override
