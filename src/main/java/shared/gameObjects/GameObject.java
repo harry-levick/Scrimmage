@@ -151,16 +151,16 @@ public abstract class GameObject implements Serializable {
     return this.transform.getPos().getX();
   }
 
-  public void setX(int x) {
-    this.transform.getPos().setX(x);
+  public void setX(double x) {
+    this.transform.getPos().setX((float) x);
   }
 
   public double getY() {
     return this.transform.getPos().getY();
   }
 
-  public void setY(int y) {
-    this.transform.getPos().setY(y);
+  public void setY(double y) {
+    this.transform.getPos().setY((float) y);
   }
 
   public ObjectID getId() {

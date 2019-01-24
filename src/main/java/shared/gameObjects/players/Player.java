@@ -17,16 +17,16 @@ public class Player extends GameObject {
   @Override
   public void update() {
     if (KeyboardInput.rightKey) {
-      x += 10;
+       setX(getX() + 10);
     }
     if (KeyboardInput.leftKey) {
-      x -= 10;
+      setX(getX() - 10);
     }
   }
 
   @Override
   public void render() {
-    imageView.relocate(x, y);
+    imageView.relocate(getX(), getY());
     if (animate) {
       imageView.setImage(animator());
     }
