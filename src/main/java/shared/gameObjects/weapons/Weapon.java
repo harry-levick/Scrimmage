@@ -6,9 +6,9 @@ import shared.gameObjects.Utils.ObjectID;
 /** @author hlf764 The abstract class for all weapons in the game. */
 abstract class Weapon extends GameObject {
 
-  double damage = 1.0; // per bullet
-  double weight = 20.0; // grams
-  String name = "None"; // name of the weapon
+  double damage;
+  double weight; // grams
+  String name;   // name of the weapon
 
   /**
    * Constructor of the weapon class

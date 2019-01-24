@@ -5,12 +5,11 @@ import shared.gameObjects.Utils.ObjectID;
 /** @author hlf764 The abstract class for all guns type weapon. */
 abstract class Gun extends Weapon {
 
-  double bulletSpeed = 5.0; // metre per second
-  double fireRate = 80.0; // bullets per minute
-  double bulletWidth = 30.0; // width of bullet ==(pixel?)==
-  double range = 1000.0; // suitable for swords, explosion, laser beams
-  boolean fullAutoFire = false; // able to shoot with full-auto or single-shot
-  boolean singleHanded = false; // holding the weapon with one hand or two
+  double bulletSpeed;   // pixel per second
+  double fireRate;      // bullets per minute
+  double bulletWidth;   // width of bullet ==(pixel?)==
+  boolean fullAutoFire; // able to shoot with full-auto or single-shot
+  boolean singleHanded; // holding the weapon with one hand or two
 
   /**
    * Constructor of the Gun class
@@ -21,7 +20,6 @@ abstract class Gun extends Weapon {
    * @param _bulletSpeed Speed of the bullets
    * @param _fireRate Fire rate of the gun (bullets per minute)
    * @param _bulletWidth Width of the bullet
-   * @param _range Range of the bullets they travel
    * @param _fullAutoFire Is it full-automatic fire or single-shot
    * @param _singleHanded Is it be hold with one hand or two hands
    */
@@ -35,14 +33,13 @@ abstract class Gun extends Weapon {
       double _bulletSpeed,
       double _fireRate,
       double _bulletWidth,
-      double _range,
       boolean _fullAutoFire,
       boolean _singleHanded) {
+    
     super(x, y, id, _damage, _weight, _name);
     setBulletSpeed(_bulletSpeed);
     setFireRate(_fireRate);
     setBulletWidth(_bulletWidth);
-    setRange(_range);
     this.fullAutoFire = _fullAutoFire;
     this.singleHanded = _singleHanded;
   }
@@ -56,7 +53,7 @@ abstract class Gun extends Weapon {
   }
 
   public void setBulletSpeed(double newSpeed) {
-    if (newSpeed > 0 && newSpeed < 50.0f) {
+    if (newSpeed > 0 && newSpeed < 50.0) {
       this.bulletSpeed = newSpeed;
     }
   }
@@ -66,7 +63,7 @@ abstract class Gun extends Weapon {
   }
 
   public void setFireRate(double newFireRate) {
-    if (newFireRate > 0f) {
+    if (newFireRate > 0) {
       this.fireRate = newFireRate;
     }
   }
@@ -76,18 +73,8 @@ abstract class Gun extends Weapon {
   }
 
   public void setBulletWidth(double newWidth) {
-    if (newWidth > 0f) {
+    if (newWidth > 0) {
       this.bulletWidth = newWidth;
-    }
-  }
-
-  public double getRange() {
-    return this.range;
-  }
-
-  public void setRange(double newRange) {
-    if (newRange > 0) {
-      this.range = newRange;
     }
   }
 
@@ -108,7 +95,6 @@ abstract class Gun extends Weapon {
     s += "Weight        = " + getWeight() + "\n";
     s += "Name          = " + getName() + "\n";
     s += "BulletSpeed   = " + getBulletSpeed() + "\n";
-    s += "Range         = " + getRange() + "\n";
     s += "FireRate      = " + getFireRate() + "\n";
     s += "BulletWidth   = " + getBulletWidth() + "\n";
     s += "FullAutoFire  = " + isFullAutoFire() + "\n";
