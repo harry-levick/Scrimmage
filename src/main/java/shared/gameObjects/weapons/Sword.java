@@ -3,14 +3,14 @@ package shared.gameObjects.weapons;
 import shared.gameObjects.Utils.ObjectID;
 
 public class Sword extends Melee {
-  
+
   double range;
   double beginAngle;
   double endAngle;
-  
+
   /**
    * Constructor of the Sword class
-   * 
+   *
    * @param x The x position of the sword
    * @param y The y position of the sword
    * @param id The ObjectID of the sword
@@ -24,23 +24,18 @@ public class Sword extends Melee {
   public Sword(
       double x,
       double y,
-      ObjectID id, 
-      double _damage, 
-      double _weight, 
+      ObjectID id,
+      double _damage,
+      double _weight,
       String _name,
       double _range,
       double _beginAngle,
       double _endAngle) {
-    
+
     super(x, y, id, _damage, _weight, _name, _range, _beginAngle, _endAngle);
   }
-  
-  public void update() {
-    
-  }
-  
-  public void render() {
-    
-  }
-  
+
+  public void update() {}
+
+  public void render() {}
 }

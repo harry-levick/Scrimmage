@@ -8,7 +8,7 @@ abstract class Weapon extends GameObject {
 
   double damage;
   double weight; // grams
-  String name;   // name of the weapon
+  String name; // name of the weapon
 
   /**
    * Constructor of the weapon class

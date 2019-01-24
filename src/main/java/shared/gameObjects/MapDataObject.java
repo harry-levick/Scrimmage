@@ -13,5 +13,4 @@ public class MapDataObject implements Serializable {
     this.mapUUID = mapUUID;
     this.gameState = gameState;
   }
-
 }

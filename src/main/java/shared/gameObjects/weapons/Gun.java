@@ -5,9 +5,9 @@ import shared.gameObjects.Utils.ObjectID;
 /** @author hlf764 The abstract class for all guns type weapon. */
 abstract class Gun extends Weapon {
 
-  double bulletSpeed;   // pixel per second
-  double fireRate;      // bullets per minute
-  double bulletWidth;   // width of bullet ==(pixel?)==
+  double bulletSpeed; // pixel per second
+  double fireRate; // bullets per minute
+  double bulletWidth; // width of bullet ==(pixel?)==
   boolean fullAutoFire; // able to shoot with full-auto or single-shot
   boolean singleHanded; // holding the weapon with one hand or two
 
@@ -35,7 +35,7 @@ abstract class Gun extends Weapon {
       double _bulletWidth,
       boolean _fullAutoFire,
       boolean _singleHanded) {
-    
+
     super(x, y, id, _damage, _weight, _name);
     setBulletSpeed(_bulletSpeed);
     setFireRate(_fireRate);

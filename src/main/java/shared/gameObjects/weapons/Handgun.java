@@ -28,18 +28,7 @@ public class Handgun extends Gun {
       double _bulletSpeed,
       double _fireRate,
       double _bulletWidth) {
-    super(
-        x,
-        y,
-        id,
-        _damage,
-        _weight,
-        _name,
-        _bulletSpeed,
-        _fireRate,
-        _bulletWidth,
-        false,
-        false);
+    super(x, y, id, _damage, _weight, _name, _bulletSpeed, _fireRate, _bulletWidth, false, false);
   }
 
   public void update() {}
