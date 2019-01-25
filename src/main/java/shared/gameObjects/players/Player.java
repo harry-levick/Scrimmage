@@ -7,9 +7,12 @@ import shared.gameObjects.Utils.ObjectID;
 
 public class Player extends GameObject {
 
+  private int health;
+
   public Player(double x, double y, ObjectID id) {
     super(x, y, id, "images/player/player_idle.png");
     createSprites();
+    this.health = 100;
   }
 
   // These are just temporary before physics gets implemented
@@ -53,4 +56,6 @@ public class Player extends GameObject {
     }
     return spriteLibary.get("baseImage");
   }
+
+  public int getHealth() { return health; }
 }
