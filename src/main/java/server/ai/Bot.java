@@ -3,9 +3,10 @@ package server.ai;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
 
-public class Npc extends Player {
+/** @author Harry Levick (hxl799) */
+public class Bot extends Player {
 
-  public Npc(double x, double y, ObjectID id) {
+  public Bot(double x, double y, ObjectID id) {
     super(x, y, id);
 
   }
