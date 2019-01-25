@@ -20,9 +20,12 @@ public class AiAgent {
    */
   public void startAgent() {
     active = true;
+    PlayerState playerState;
 
     while (active) {
       state = state.next();
+      playerState = new PlayerState(player.getHealth(), player.getWeapon().getAmmo(), null);
+
       /**
        * The ai can be in one of 6 states at any one time.
        * The state it is in determines the actions that it takes.
