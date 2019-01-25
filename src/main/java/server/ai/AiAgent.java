@@ -21,10 +21,10 @@ public class AiAgent {
   public void startAgent() {
     active = true;
     PlayerState playerState;
-
+    //TODO work out how to get the weapon and ammo from the player.
     while (active) {
-      state = state.next();
       playerState = new PlayerState(player.getHealth(), player.getWeapon().getAmmo(), null);
+      state = state.next(playerState);
 
       /**
        * The ai can be in one of 6 states at any one time.
