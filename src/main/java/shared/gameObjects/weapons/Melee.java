@@ -52,4 +52,9 @@ public abstract class Melee extends Weapon {
   public void setEndAngle(double newEndAngle) {
     if (newEndAngle > 0 && newEndAngle < 90.0) this.endAngle = newEndAngle;
   }
+
+  /**
+   * @return true for melee.
+   */
+  public boolean isMelee() { return true; }
 }

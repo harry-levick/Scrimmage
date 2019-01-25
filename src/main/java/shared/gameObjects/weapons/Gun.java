@@ -10,6 +10,7 @@ abstract class Gun extends Weapon {
   double bulletWidth; // width of bullet ==(pixel?)==
   boolean fullAutoFire; // able to shoot with full-auto or single-shot
   boolean singleHanded; // holding the weapon with one hand or two
+  int ammo; // The amount of ammo left
 
   /**
    * Constructor of the Gun class
@@ -102,4 +103,14 @@ abstract class Gun extends Weapon {
 
     return s;
   }
+
+  /**
+   * @return false for gun.
+   */
+  public boolean isMelee() { return false; }
+
+  /**
+   * @return the number of bullets remaining in the gun.
+   */
+  public int getAmmo() { return ammo; }
 }
