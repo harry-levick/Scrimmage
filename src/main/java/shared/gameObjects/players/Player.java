@@ -64,4 +64,12 @@ public class Player extends GameObject {
   }
 
   public int getHealth() { return health; }
+
+  public Weapon getHolding() {
+    return holding;
+  }
+
+  public void setHolding(Weapon holding) {
+    this.holding = holding;
+  }
 }
