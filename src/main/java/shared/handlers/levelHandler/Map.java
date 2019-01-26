@@ -31,7 +31,6 @@ public class Map {
     return gameState;
   }
 
-
   public Image getMapIcon() {
 
     return mapIcon;

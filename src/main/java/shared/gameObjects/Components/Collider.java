@@ -10,7 +10,13 @@ import shared.physics.types.ColliderType;
  */
 public abstract class Collider extends Component implements Serializable {
 
-  boolean collisionEnter, collisionExit, collisionStay, triggerEnter, triggerExit, triggerStay, trigger;
+  boolean collisionEnter,
+      collisionExit,
+      collisionStay,
+      triggerEnter,
+      triggerExit,
+      triggerStay,
+      trigger;
   ColliderType colliderType;
 
   Collider(GameObject parent, ColliderType colliderType, boolean trigger) {
@@ -57,7 +63,7 @@ public abstract class Collider extends Component implements Serializable {
     }
   }
 
-  //Getters
+  // Getters
 
   public boolean isCollisionEnter() {
     return collisionEnter;
