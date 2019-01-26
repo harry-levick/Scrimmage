@@ -39,8 +39,7 @@ abstract class Gun extends Weapon {
       boolean fullAutoFire,
       boolean singleHanded) {
 
-    super(x, y, id, damage, weight, name, true, false);
-    this.ammo = ammo;
+    super(x, y, id, damage, weight, name, true, false, ammo);
     this.bulletSpeed = bulletSpeed;
     this.bulletWidth = bulletWidth;
     this.fireRate = fireRate;
@@ -51,18 +50,6 @@ abstract class Gun extends Weapon {
   // -------------------
   // Setters and Getters
   // -------------------
-  
-  /**
-   * @return the number of bullets remaining in the gun.
-   */
-  public int getAmmo() {
-    return this.ammo;
-  }
-  
-  public void setAmmo(int newAmmo) {
-    if (newAmmo > 0)
-      this.ammo = newAmmo;
-  }
   
   public double getBulletSpeed() {
     return this.bulletSpeed;

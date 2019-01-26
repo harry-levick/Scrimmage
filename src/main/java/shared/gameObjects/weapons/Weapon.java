@@ -11,6 +11,7 @@ public abstract class Weapon extends GameObject {
   protected String name; // name of the weapon
   protected boolean isGun;
   protected boolean isMelee;
+  protected int ammo; // -1 = unlimited
 
   /**
    * Constructor of the weapon class
@@ -20,13 +21,14 @@ public abstract class Weapon extends GameObject {
    * @param name Name of the weapon
    */
   public Weapon(double x, double y, ObjectID id, double damage, double weight, String name,
-      boolean isGun, boolean isMelee) {
+      boolean isGun, boolean isMelee, int ammo) {
     super(x, y, id, "gunimagepath");
     this.isGun = isGun;
     this.isMelee = isMelee;
     this.damage = damage;
     this.weight = weight;
     this.name = name;
+    this.ammo = ammo;
   }
 
   // -------------------
@@ -75,5 +77,9 @@ public abstract class Weapon extends GameObject {
 
   public void setName(String newName) {
     this.name = newName;
+  }
+
+  public int getAmmo() {
+    return this.ammo;
   }
 }

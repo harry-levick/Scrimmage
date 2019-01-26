@@ -20,7 +20,7 @@ public abstract class Melee extends Weapon {
       double endAngle
   ) {
 
-    super(x, y, id, damage, weight, name, false, true);
+    super(x, y, id, damage, weight, name, false, true, -1);
     this.range = range;
     this.beginAngle = beginAngle;
     this.endAngle = endAngle;
