@@ -6,11 +6,24 @@ public enum FiniteStateAutomata {
 
   ATTACKING() {
     public FiniteStateAutomata next(PlayerState playerState) {
-      if ( (playerState.getDistanceToEnemy() > playerState.getWeaponRange()) &&
-          (playerState.getHealth() >= this.highHealth) || (playerState.getHealth() >= playerState.getEnemyHealth() * 1.4) ) {
+      int enemyDistance = playerState.getDistanceToEnemy();
+      int weaponRange = playerState.getWeaponRange();
+      int botHealth = playerState.getHealth();
+      int enemyHealth = playerState.getEnemyHealth();
+
+      if ( (enemyDistance > weaponRange) && (botHealth >= this.highHealth) ||
+          (enemyDistance > weaponRange) && (botHealth >= enemyHealth * 1.5) ) {
         return CHASING;
-      } else if ( (playerState.getDistanceToEnemy() <= playerState.getWeaponRange()) &&
+
+      } else if ( (enemyDistance <= weaponRange) &&
           () ) {
+        return CHASING_ATTACKING;
+
+      } else if () {
+        return FLEEING;
+
+      } else if () {
+        return FLEEING_ATTACKING;
 
       }
     }
