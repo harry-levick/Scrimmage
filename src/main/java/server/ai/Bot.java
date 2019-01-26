@@ -18,7 +18,7 @@ public class Bot extends Player {
    * Receives an action and then executes this action.
    */
   private void executeAction() {
-    // Deciding on the implementation of action execution.
+    // TODO decide on the implementation of action execution.
   }
 
 }

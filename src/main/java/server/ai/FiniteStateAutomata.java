@@ -5,11 +5,11 @@ public enum FiniteStateAutomata {
 
 
   ATTACKING() {
-    public FiniteStateAutomata next(PlayerState playerState) {
-      int enemyDistance = playerState.getDistanceToEnemy();
-      int weaponRange = playerState.getWeaponRange();
-      int botHealth = playerState.getHealth();
-      int enemyHealth = playerState.getEnemyHealth();
+    public FiniteStateAutomata next() {
+      int enemyDistance;
+      int weaponRange;
+      int botHealth;
+      int enemyHealth;
 
       if ( (enemyDistance > weaponRange) && (botHealth >= this.highHealth) ||
           (enemyDistance > weaponRange) && (botHealth >= enemyHealth * 1.5) ) {
@@ -30,38 +30,38 @@ public enum FiniteStateAutomata {
 
   },
   CHASING() {
-    public FiniteStateAutomata next(PlayerState playerState) {
+    public FiniteStateAutomata next() {
       return null;
     }
   },
   CHASING_ATTACKING() {
-    public FiniteStateAutomata next(PlayerState playerState) {
+    public FiniteStateAutomata next() {
       return null;
     }
   },
   FLEEING() {
-    public FiniteStateAutomata next(PlayerState playerState) {
+    public FiniteStateAutomata next() {
       return null;
     }
   },
   FLEEING_ATTACKING() {
-    public FiniteStateAutomata next(PlayerState playerState) {
+    public FiniteStateAutomata next() {
       return null;
     }
   },
   STILL() {
-    public FiniteStateAutomata next(PlayerState playerState) {
+    public FiniteStateAutomata next() {
       return null;
     }
   },
   INITIAL_STATE() {
     // The initial state just acts as an entry point, and so directs straight to the still state.
-    public FiniteStateAutomata next(PlayerState playerState) {
+    public FiniteStateAutomata next() {
       return FiniteStateAutomata.STILL;
     }
   };
 
-  public abstract FiniteStateAutomata next(PlayerState playerState);
+  public abstract FiniteStateAutomata next();
   final int highHealth = 66;
   final int mediumHealth = 33;
 
