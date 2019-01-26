@@ -4,24 +4,31 @@ import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 
 /** @author hlf764 The abstract class for all weapons in the game. */
-abstract class Weapon extends GameObject {
+public abstract class Weapon extends GameObject {
 
-  double damage;
-  double weight; // grams
-  String name; // name of the weapon
+  protected double damage;
+  protected double weight; // grams
+  protected String name; // name of the weapon
+  protected boolean isGun;
+  protected boolean isMelee;
+  protected int ammo; // -1 = unlimited
 
   /**
    * Constructor of the weapon class
    *
-   * @param _damage Damage of the weapon
-   * @param _weight Weight of the weapon
-   * @param _name Name of the weapon
+   * @param damage Damage of the weapon
+   * @param weight Weight of the weapon
+   * @param name Name of the weapon
    */
-  public Weapon(double x, double y, ObjectID id, double _damage, double _weight, String _name) {
+  public Weapon(double x, double y, ObjectID id, double damage, double weight, String name,
+      boolean isGun, boolean isMelee, int ammo) {
     super(x, y, id, "gunimagepath");
-    setDamage(_damage);
-    setWeight(_weight);
-    setName(_name);
+    this.isGun = isGun;
+    this.isMelee = isMelee;
+    this.damage = damage;
+    this.weight = weight;
+    this.name = name;
+    this.ammo = ammo;
   }
 
   // -------------------
@@ -42,6 +49,22 @@ abstract class Weapon extends GameObject {
     return this.weight;
   }
 
+  public boolean isGun() {
+    return isGun;
+  }
+
+  public void setGun(boolean gun) {
+    isGun = gun;
+  }
+
+  public boolean isMelee() {
+    return isMelee;
+  }
+
+  public void setMelee(boolean melee) {
+    isMelee = melee;
+  }
+
   public void setWeight(double newWeight) {
     if (newWeight > 0 && newWeight < 1000.0f) {
       this.weight = newWeight;
@@ -54,5 +77,9 @@ abstract class Weapon extends GameObject {
 
   public void setName(String newName) {
     this.name = newName;
+  }
+
+  public int getAmmo() {
+    return this.ammo;
   }
 }

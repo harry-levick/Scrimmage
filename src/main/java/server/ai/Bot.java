@@ -6,6 +6,9 @@ import shared.gameObjects.players.Player;
 /** @author Harry Levick (hxl799) */
 public class Bot extends Player {
 
+  boolean jumpKey, leftKey, rightKey, click;
+  double mouseX, mouseY;
+
   public Bot(double x, double y, ObjectID id) {
     super(x, y, id);
 

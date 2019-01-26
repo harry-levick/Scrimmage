@@ -4,16 +4,21 @@ import client.handlers.inputHandler.KeyboardInput;
 import javafx.scene.image.Image;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.Version;
+import shared.gameObjects.weapons.Weapon;
 
 public class Player extends GameObject {
 
-  int health;
-
+  protected int health;
+  protected Weapon holding;
 
   public Player(double x, double y, ObjectID id) {
     super(x, y, id, "images/player/player_idle.png");
-    createSprites();
     this.health = 100;
+    holding = null;
+    if (version == Version.CLIENT) {
+      createSprites();
+    }
   }
 
   // These are just temporary before physics gets implemented
@@ -59,4 +64,12 @@ public class Player extends GameObject {
   }
 
   public int getHealth() { return health; }
+
+  public Weapon getHolding() {
+    return holding;
+  }
+
+  public void setHolding(Weapon holding) {
+    this.holding = holding;
+  }
 }

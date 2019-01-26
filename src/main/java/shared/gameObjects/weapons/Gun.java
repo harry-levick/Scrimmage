@@ -5,64 +5,51 @@ import shared.gameObjects.Utils.ObjectID;
 /** @author hlf764 The abstract class for all guns type weapon. */
 abstract class Gun extends Weapon {
 
-  double bulletSpeed; // pixel per second
-  double fireRate; // bullets per minute
-  double bulletWidth; // width of bullet ==(pixel?)==
-  boolean fullAutoFire; // able to shoot with full-auto or single-shot
-  boolean singleHanded; // holding the weapon with one hand or two
-  int ammo; // The amount of ammo left
+  protected double bulletSpeed; // pixel per second
+  protected double fireRate; // bullets per minute
+  protected double bulletWidth; // width of bullet ==(pixel?)==
+  protected boolean fullAutoFire; // able to shoot with full-auto or single-shot
+  protected boolean singleHanded; // holding the weapon with one hand or two
+  protected int ammo; // The amount of ammo left
 
   /**
    * Constructor of the Gun class
    *
-   * @param _damage Damage of the gun
-   * @param _weight Weight of the gun
-   * @param _name Name of the gun
-   * @param _ammo Total amount of ammo
-   * @param _bulletSpeed Speed of the bullets
-   * @param _fireRate Fire rate of the gun (bullets per minute)
-   * @param _bulletWidth Width of the bullet
-   * @param _fullAutoFire Is it full-automatic fire or single-shot
-   * @param _singleHanded Is it be hold with one hand or two hands
+   * @param damage Damage of the gun
+   * @param weight Weight of the gun
+   * @param name Name of the gun
+   * @param ammo Total amount of ammo
+   * @param bulletSpeed Speed of the bullets
+   * @param fireRate Fire rate of the gun (bullets per minute)
+   * @param bulletWidth Width of the bullet
+   * @param fullAutoFire Is it full-automatic fire or single-shot
+   * @param singleHanded Is it be hold with one hand or two hands
    */
   public Gun(
       double x,
       double y,
       ObjectID id,
-      double _damage,
-      double _weight,
-      String _name,
-      int _ammo,
-      double _bulletSpeed,
-      double _fireRate,
-      double _bulletWidth,
-      boolean _fullAutoFire,
-      boolean _singleHanded) {
+      double damage,
+      double weight,
+      String name,
+      int ammo,
+      double bulletSpeed,
+      double fireRate,
+      double bulletWidth,
+      boolean fullAutoFire,
+      boolean singleHanded) {
 
-    super(x, y, id, _damage, _weight, _name);
-    setAmmo(_ammo);
-    setBulletSpeed(_bulletSpeed);
-    setFireRate(_fireRate);
-    setBulletWidth(_bulletWidth);
-    this.fullAutoFire = _fullAutoFire;
-    this.singleHanded = _singleHanded;
+    super(x, y, id, damage, weight, name, true, false, ammo);
+    this.bulletSpeed = bulletSpeed;
+    this.bulletWidth = bulletWidth;
+    this.fireRate = fireRate;
+    this.fullAutoFire = fullAutoFire;
+    this.singleHanded = singleHanded;
   }
 
   // -------------------
   // Setters and Getters
   // -------------------
-  
-  /**
-   * @return the number of bullets remaining in the gun.
-   */
-  public int getAmmo() {
-    return this.ammo;
-  }
-  
-  public void setAmmo(int newAmmo) {
-    if (newAmmo > 0)
-      this.ammo = newAmmo;
-  }
   
   public double getBulletSpeed() {
     return this.bulletSpeed;
@@ -119,11 +106,4 @@ abstract class Gun extends Weapon {
     return s;
   }
 
-  /**
-   * @return false for gun.
-   */
-  public boolean isMelee() { return false; }
-  
-  public boolean isGun() { return true; }
-  
 }
