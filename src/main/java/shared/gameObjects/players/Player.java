@@ -4,11 +4,12 @@ import client.handlers.inputHandler.KeyboardInput;
 import javafx.scene.image.Image;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.weapons.Weapon;
 
 public class Player extends GameObject {
 
-  int health;
-
+  protected int health;
+  protected Weapon holding;
 
   public Player(double x, double y, ObjectID id) {
     super(x, y, id, "images/player/player_idle.png");
