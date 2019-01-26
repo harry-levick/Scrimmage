@@ -57,4 +57,7 @@ public abstract class Melee extends Weapon {
    * @return true for melee.
    */
   public boolean isMelee() { return true; }
+  
+  public boolean isGun() { return false; }
+  
 }
