@@ -14,6 +14,7 @@ public class Handgun extends Gun {
    * @param _damage Damage of the gun
    * @param _weight Weight of the gun
    * @param _name Name of the gun
+   * @param _ammo Total amount of ammo
    * @param _bulletSpeed Speed of the bullets
    * @param _fireRate Fire rate of the gun (bullets per minute)
    * @param _bulletWidth Width of the bullet
@@ -25,10 +26,11 @@ public class Handgun extends Gun {
       double _damage,
       double _weight,
       String _name,
+      int _ammo,
       double _bulletSpeed,
       double _fireRate,
       double _bulletWidth) {
-    super(x, y, id, _damage, _weight, _name, _bulletSpeed, _fireRate, _bulletWidth, false, false);
+    super(x, y, id, _damage, _weight, _name, _ammo, _bulletSpeed, _fireRate, _bulletWidth, false, false);
   }
 
   public void update() {}

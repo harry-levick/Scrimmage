@@ -10,6 +10,7 @@ abstract class Gun extends Weapon {
   double bulletWidth; // width of bullet ==(pixel?)==
   boolean fullAutoFire; // able to shoot with full-auto or single-shot
   boolean singleHanded; // holding the weapon with one hand or two
+  int ammo; // The amount of ammo left
 
   /**
    * Constructor of the Gun class
@@ -17,6 +18,7 @@ abstract class Gun extends Weapon {
    * @param _damage Damage of the gun
    * @param _weight Weight of the gun
    * @param _name Name of the gun
+   * @param _ammo Total amount of ammo
    * @param _bulletSpeed Speed of the bullets
    * @param _fireRate Fire rate of the gun (bullets per minute)
    * @param _bulletWidth Width of the bullet
@@ -30,6 +32,7 @@ abstract class Gun extends Weapon {
       double _damage,
       double _weight,
       String _name,
+      int _ammo,
       double _bulletSpeed,
       double _fireRate,
       double _bulletWidth,
@@ -37,6 +40,7 @@ abstract class Gun extends Weapon {
       boolean _singleHanded) {
 
     super(x, y, id, _damage, _weight, _name);
+    setAmmo(_ammo);
     setBulletSpeed(_bulletSpeed);
     setFireRate(_fireRate);
     setBulletWidth(_bulletWidth);
@@ -47,7 +51,19 @@ abstract class Gun extends Weapon {
   // -------------------
   // Setters and Getters
   // -------------------
-
+  
+  /**
+   * @return the number of bullets remaining in the gun.
+   */
+  public int getAmmo() {
+    return this.ammo;
+  }
+  
+  public void setAmmo(int newAmmo) {
+    if (newAmmo > 0)
+      this.ammo = newAmmo;
+  }
+  
   public double getBulletSpeed() {
     return this.bulletSpeed;
   }
@@ -102,4 +118,12 @@ abstract class Gun extends Weapon {
 
     return s;
   }
+
+  /**
+   * @return false for gun.
+   */
+  public boolean isMelee() { return false; }
+  
+  public boolean isGun() { return true; }
+  
 }

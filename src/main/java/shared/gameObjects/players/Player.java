@@ -7,7 +7,8 @@ import shared.gameObjects.Utils.ObjectID;
 
 public class Player extends GameObject {
 
-  private int health;
+  int health;
+
 
   public Player(double x, double y, ObjectID id) {
     super(x, y, id, "images/player/player_idle.png");
