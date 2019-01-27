@@ -1,5 +1,6 @@
 package shared.gameObjects.weapons;
 
+import java.util.UUID;
 import shared.gameObjects.Utils.ObjectID;
 
 /**
@@ -31,6 +32,7 @@ abstract class Gun extends Weapon {
       double x,
       double y,
       ObjectID id,
+
       double damage,
       double weight,
       String name,
@@ -39,14 +41,16 @@ abstract class Gun extends Weapon {
       double fireRate,
       double bulletWidth,
       boolean fullAutoFire,
-      boolean singleHanded) {
+      boolean singleHanded,
+      UUID uuid) {
 
-    super(x, y, id, damage, weight, name, true, false, ammo);
+    super(x, y, id, damage, weight, name, true, false, ammo, uuid);
     this.bulletSpeed = bulletSpeed;
     this.bulletWidth = bulletWidth;
     this.fireRate = fireRate;
     this.fullAutoFire = fullAutoFire;
     this.singleHanded = singleHanded;
+
   }
 
   // -------------------
