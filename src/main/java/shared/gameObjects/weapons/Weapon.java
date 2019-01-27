@@ -2,6 +2,7 @@ package shared.gameObjects.weapons;
 
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
+import java.util.UUID;
 
 /** @author hlf764 The abstract class for all weapons in the game. */
 abstract class Weapon extends GameObject {
@@ -17,8 +18,8 @@ abstract class Weapon extends GameObject {
    * @param _weight Weight of the weapon
    * @param _name Name of the weapon
    */
-  public Weapon(double x, double y, ObjectID id, double _damage, double _weight, String _name) {
-    super(x, y, id, "gunimagepath");
+  public Weapon(double x, double y, ObjectID id, double _damage, double _weight, String _name, UUID weaponUUID) {
+    super(x, y, id, "gunimagepath", weaponUUID);
     setDamage(_damage);
     setWeight(_weight);
     setName(_name);
