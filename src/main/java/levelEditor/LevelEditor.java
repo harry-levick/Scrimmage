@@ -62,11 +62,11 @@ public class LevelEditor extends Application {
           public void handle(MouseEvent event) {
             UUID uuid = UUID.randomUUID();
             if (cb.getValue() == "ExampleObject") {
-              GameObject temp = new ExampleObject(event.getX(), event.getY(), ObjectID.Bot);
+              GameObject temp = new ExampleObject(event.getX(), event.getY(), ObjectID.Bot, uuid);
               temp.initialise(root, Version.CLIENT, false);
               gameObjects.add(temp);
             } else if (cb.getValue() == "Player") {
-              Player temp = new Player(event.getX(), event.getY(), ObjectID.Player);
+              Player temp = new Player(event.getX(), event.getY(), ObjectID.Player, uuid);
               temp.initialise(root, Version.CLIENT, false);
               gameObjects.add(temp);
             }

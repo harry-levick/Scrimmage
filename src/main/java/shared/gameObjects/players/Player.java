@@ -1,14 +1,15 @@
 package shared.gameObjects.players;
 
 import client.handlers.inputHandler.KeyboardInput;
+import java.util.UUID;
 import javafx.scene.image.Image;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 
 public class Player extends GameObject {
 
-  public Player(double x, double y, ObjectID id) {
-    super(x, y, id, "images/player/player_idle.png");
+  public Player(double x, double y, ObjectID id, UUID playerUUID) {
+    super(x, y, id, "images/player/player_idle.png", playerUUID);
     createSprites();
   }
 
