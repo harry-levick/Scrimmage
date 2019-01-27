@@ -23,9 +23,19 @@ public class Main extends Application {
   public static LevelHandler levelHandler;
   public static Settings settings;
 
+  private static final float timeStep = 0.0166f;
+
+  private String gameTitle = "Alone in the Dark";
+
   private Group root;
   private Scene scene;
   private Map currentMap;
+  private float maximumStep;
+  private long previousTime;
+  private float accumulatedTime;
+
+  private float elapsedSinceFPS = 0f;
+  private int framesElapsedSinceFPS = 0;
 
   public static void main(String args[]) {
     launch(args);
@@ -46,15 +56,55 @@ public class Main extends Application {
           levelHandler.generateLevel(root);
           currentMap = levelHandler.getMap();
         }
-        // Updates and Renders every object
-        levelHandler.getGameObjects().forEach(gameObject -> gameObject.update());
+
+        if (previousTime == 0) {
+          previousTime = now;
+          return;
+        }
+
+        float secondElapsed = (now - previousTime) / 1e9f; // time elapsed in seconds
+        float secondsElapsedCapped = Math.min(secondElapsed, maximumStep);
+        accumulatedTime += secondsElapsedCapped;
+        previousTime = now;
+
+        if (accumulatedTime < timeStep) {
+          float timeSinceInterpolation = timeStep - (accumulatedTime - secondElapsed);
+          float alphaRemaining = secondElapsed / timeSinceInterpolation;
+          levelHandler.getGameObjects()
+              .forEach(gameObject -> gameObject.interpolatePosition(alphaRemaining));
+          return;
+        }
+
+        while (accumulatedTime >= 2 * timeStep) {
+          levelHandler.getGameObjects().forEach(gameObject -> gameObject.update());
+          accumulatedTime -= timeStep;
+        }
         levelHandler.getGameObjects().forEach(gameObject -> gameObject.render());
-        // TODO Add networking here
+        levelHandler.getGameObjects().forEach(gameObject -> gameObject.update());
+        accumulatedTime -= timeStep;
+        float alpha = accumulatedTime / timeStep;
+        levelHandler.getGameObjects().forEach(gameObject -> gameObject.interpolatePosition(alpha));
+
+        calculateFPS(secondElapsed, primaryStage);
       }
     }.start();
   }
 
+  public void calculateFPS(float secondElapsed, Stage primaryStage) {
+    elapsedSinceFPS += secondElapsed;
+    framesElapsedSinceFPS++;
+    if (elapsedSinceFPS >= 0.5f) {
+      int fps = Math.round(framesElapsedSinceFPS / elapsedSinceFPS);
+      primaryStage.setTitle(gameTitle + " FPS: " + fps);
+      elapsedSinceFPS = 0;
+      framesElapsedSinceFPS = 0;
+    }
+  }
+
   public void init() {
+    maximumStep = Float.MAX_VALUE;
+    previousTime = 0;
+    accumulatedTime = 0;
     settings = new Settings();
     keyInput = new KeyboardInput();
     mouseInput = new MouseInput();
@@ -63,7 +113,7 @@ public class Main extends Application {
 
   private void setupRender(Stage primaryStage) {
     root = new Group();
-    primaryStage.setTitle("Alone In The Dark");
+    primaryStage.setTitle(gameTitle);
     scene = new Scene(root, 1000, 1000);
     primaryStage.setScene(scene);
     primaryStage.setFullScreen(false);

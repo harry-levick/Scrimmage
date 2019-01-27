@@ -35,9 +35,16 @@ public class Handgun extends Gun {
     super(x, y, id, damage, weight, name, ammo, bulletSpeed, fireRate, bulletWidth, false, false);
   }
 
+  @Override
   public void update() {
   }
 
+  @Override
   public void render() {
+  }
+
+  @Override
+  public void interpolatePosition(float alpha) {
+
   }
 }

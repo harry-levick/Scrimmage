@@ -50,4 +50,9 @@ public class ExampleObject extends GameObject {
       imageView.setImage(new Image("images/platforms/stone/elementStone048.png"));
     }
   }
+
+  @Override
+  public void interpolatePosition(float alpha) {
+
+  }
 }

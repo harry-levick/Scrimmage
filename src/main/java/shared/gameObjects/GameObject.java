@@ -35,6 +35,7 @@ public abstract class GameObject implements Serializable {
 
   protected boolean active;
   protected boolean destroyed;
+  protected boolean updated;
 
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
@@ -46,6 +47,7 @@ public abstract class GameObject implements Serializable {
    */
   public GameObject(double x, double y, ObjectID id, String baseImageURL) {
     spriteLibaryURL = new HashMap<>();
+    this.updated = false;
     this.id = id;
     spriteLibaryURL.put("baseImage", baseImageURL);
     animate = false;
@@ -61,6 +63,8 @@ public abstract class GameObject implements Serializable {
 
   // Client Side only
   public abstract void render();
+
+  public abstract void interpolatePosition(float alpha);
 
   // Ignore for now, added due to unSerializable objects
   public void initialise(Group root, Version version, boolean animate) {
@@ -146,7 +150,11 @@ public abstract class GameObject implements Serializable {
     destroyed = active = false;
   }
 
-  // Getters and Setters
+
+  /**
+   * Basic Getters and Setters
+   */
+
   public double getX() {
     return this.transform.getPos().getX();
   }
@@ -205,6 +213,14 @@ public abstract class GameObject implements Serializable {
 
   public boolean isActive() {
     return active;
+  }
+
+  public boolean isUpdated() {
+    return updated;
+  }
+
+  public void setUpdated(boolean updated) {
+    this.updated = updated;
   }
 
   public void setActive(boolean state) {

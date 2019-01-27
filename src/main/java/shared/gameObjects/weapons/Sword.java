@@ -35,7 +35,16 @@ public class Sword extends Melee {
     super(x, y, id, damage, weight, name, range, beginAngle, endAngle);
   }
 
-  public void update() {}
+  @Override
+  public void update() {
+  }
 
-  public void render() {}
+  @Override
+  public void render() {
+  }
+
+  @Override
+  public void interpolatePosition(float alpha) {
+
+  }
 }
