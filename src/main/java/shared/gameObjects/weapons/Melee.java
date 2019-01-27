@@ -35,7 +35,9 @@ public abstract class Melee extends Weapon {
   }
 
   public void setRange(double newRange) {
-    if (newRange > 0 && newRange < 100.0) this.range = newRange;
+    if (newRange > 0 && newRange < 100.0) {
+      this.range = newRange;
+    }
   }
 
   public double getBeginAngle() {
@@ -43,7 +45,9 @@ public abstract class Melee extends Weapon {
   }
 
   public void setBeginAngle(double newBeginAngle) {
-    if (newBeginAngle > 0 && newBeginAngle < 90.0) this.beginAngle = newBeginAngle;
+    if (newBeginAngle > 0 && newBeginAngle < 90.0) {
+      this.beginAngle = newBeginAngle;
+    }
   }
 
   public double getEndAngle() {
@@ -51,8 +55,10 @@ public abstract class Melee extends Weapon {
   }
 
   public void setEndAngle(double newEndAngle) {
-    if (newEndAngle > 0 && newEndAngle < 90.0) this.endAngle = newEndAngle;
+    if (newEndAngle > 0 && newEndAngle < 90.0) {
+      this.endAngle = newEndAngle;
+    }
   }
 
-  
+
 }

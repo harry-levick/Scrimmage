@@ -2,7 +2,9 @@ package shared.gameObjects.weapons;
 
 import shared.gameObjects.Utils.ObjectID;
 
-/** @author hlf764 The Handgun class. */
+/**
+ * @author hlf764 The Handgun class.
+ */
 public class Handgun extends Gun {
 
   /**
@@ -33,7 +35,16 @@ public class Handgun extends Gun {
     super(x, y, id, damage, weight, name, ammo, bulletSpeed, fireRate, bulletWidth, false, false);
   }
 
-  public void update() {}
+  @Override
+  public void update() {
+  }
 
-  public void render() {}
+  @Override
+  public void render() {
+  }
+
+  @Override
+  public void interpolatePosition(float alpha) {
+
+  }
 }

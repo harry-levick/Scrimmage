@@ -3,7 +3,9 @@ package shared.gameObjects.weapons;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 
-/** @author hlf764 The abstract class for all weapons in the game. */
+/**
+ * @author hlf764 The abstract class for all weapons in the game.
+ */
 public abstract class Weapon extends GameObject {
 
   protected double damage;
