@@ -28,7 +28,7 @@ public class AiAgent {
    */
   public void startAgent() {
     active = true;
-    double prevX, prevY;
+    double prevDist, newDist;
     /**
      * Would I need to fetch all players on each loop, or would a single fetch outside of the loop
      * give a reference to all players that updates with the player updates?
@@ -38,6 +38,9 @@ public class AiAgent {
         .filter(p -> p instanceof Player)
         .map(Player.class::cast)
         .collect(Collectors.toList());
+
+    // Update the targeted player
+    targetPlayer = findTarget(allPlayers);
 
     while (active) {
 
@@ -58,14 +61,19 @@ public class AiAgent {
           // TODO calculate and execute the best path to the target whilst attacking.
         case FLEEING_ATTACKING:
           // TODO calculate and execute the best path away from the target whilst attacking.
+        /**
+         * The ai will always be in the initial state on the first loop, so will default
+         * allowing us to find the target player for the first time in the default case.
+         */
         default:
-          // Get the coords of the target player from the last loop, this can then be used to see
-          // if the player is running away etc.
-          prevX = targetPlayer.getX();
-          prevY = targetPlayer.getY();
-          // Update the targeted player
+          // Calculate the distance to the target from the previous loop
+          prevDist = calcDistance(bot, targetPlayer);
+          // Update the target player
           targetPlayer = findTarget(allPlayers);
-          state = state.next(targetPlayer, bot, prevX, prevY);
+          // Calculate the distance to the updated target
+          newDist = calcDistance(bot, targetPlayer);
+
+          state = state.next(targetPlayer, bot, prevDist, newDist);
       }
     }
 
