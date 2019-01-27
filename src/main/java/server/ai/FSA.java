@@ -24,7 +24,7 @@ public enum FSA {
       } else if ((newDist <= weaponRange) &&
           (newDist > prevDist) &&
           ((botHealth >= this.HIGH_HEALTH) || (botHealth >= enemyHealth * 1.5)) &&
-          (ammoLeft > 0)) {
+          ((ammoLeft > 0) && targetPlayer.getHolding().isGun())) {
         return CHASING_ATTACKING;
 
       } else if ((botHealth <= this.MEDIUM_HEALTH) ||
@@ -35,7 +35,7 @@ public enum FSA {
           (botHealth >= this.MEDIUM_HEALTH) &&
           (newDist <= prevDist) &&
           (newDist <= weaponRange) &&
-          (ammoLeft > 0)){
+          ((ammoLeft > 0) && targetPlayer.getHolding().isGun())){
         return FLEEING_ATTACKING;
 
       } else return ATTACKING;
@@ -52,7 +52,7 @@ public enum FSA {
       int enemyHealth = StateInfo.enemyHealth;
 
       if ((newDist <= weaponRange) &&
-          (ammoLeft >= 0) &&
+          ((ammoLeft > 0) && targetPlayer.getHolding().isGun()) &&
           (botHealth >= this.MEDIUM_HEALTH) &&
           // Target staying relatively still
           (prevDist * 1.05 <= newDist && newDist <= prevDist * 1.05 )) {
@@ -61,18 +61,18 @@ public enum FSA {
       } else if ((newDist <= weaponRange) &&
           (newDist > prevDist) &&
           ((botHealth >= this.HIGH_HEALTH) || (botHealth >= enemyHealth * 1.5)) &&
-          (ammoLeft > 0)) {
+          ((ammoLeft > 0) && targetPlayer.getHolding().isGun())) {
         return CHASING_ATTACKING;
 
       } else if ((botHealth <= this.MEDIUM_HEALTH) ||
-          ((bot.getHolding().isGun()) && (ammoLeft == 0) || newDist > weaponRange)) {
+          (((bot.getHolding().isGun()) && (ammoLeft == 0)) || newDist > weaponRange)) {
         return FLEEING;
 
       } else if ((botHealth <= this.HIGH_HEALTH) &&
           (botHealth >= this.MEDIUM_HEALTH) &&
           (newDist <= prevDist) &&
           (newDist <= weaponRange) &&
-          (ammoLeft > 0)) {
+          ((ammoLeft > 0) && targetPlayer.getHolding().isGun())) {
         return FLEEING_ATTACKING;
 
       } else return CHASING;
@@ -91,8 +91,8 @@ public enum FSA {
       if ((newDist <= weaponRange) &&
           // Target staying relatively still
           (prevDist * 1.05 <= newDist && newDist <= prevDist * 1.05 ) &&
-          (ammoLeft >= 0) &&
-          ((botHealth >= this.HIGH_HEALTH) || (botHealth >= enemyHealth * 1.5)) {
+          ((ammoLeft > 0) && targetPlayer.getHolding().isGun()) &&
+          ((botHealth >= this.HIGH_HEALTH) || (botHealth >= enemyHealth * 1.5))) {
         return ATTACKING;
 
       } else if (((botHealth >= this.HIGH_HEALTH) || (botHealth >= enemyHealth * 1.5)) &&
@@ -107,7 +107,7 @@ public enum FSA {
       } else if ((botHealth < this.HIGH_HEALTH) &&
           (newDist < prevDist) &&
           (newDist <= weaponRange) &&
-          (ammoLeft > 0)) {
+          (ammoLeft > 0) && targetPlayer.getHolding().isGun())) {
         return FLEEING_ATTACKING;
 
       } else return CHASING_ATTACKING;
@@ -130,7 +130,7 @@ public enum FSA {
       if ((newDist <= weaponRange) &&
           (newDist < prevDist) &&
           (botHealth >= this.HIGH_HEALTH) &&
-          (ammoLeft > 0)) {
+          (ammoLeft > 0) && targetPlayer.getHolding().isGun())) {
         return ATTACKING;
 
       } else if ((botHealth >= this.HIGH_HEALTH) &&
@@ -141,13 +141,13 @@ public enum FSA {
       } else if ((botHealth >= this.HIGH_HEALTH) &&
           (newDist > prevDist) &&
           (newDist < weaponRange) &&
-          (ammoLeft > 0)) {
+          (ammoLeft > 0) && targetPlayer.getHolding().isGun())) {
         return CHASING_ATTACKING;
 
       } else if ((newDist <= weaponRange) &&
           (newDist < prevDist) &&
           (botHealth <= this.HIGH_HEALTH) &&
-          (ammoLeft > 0)) {
+          ((ammoLeft > 0) && targetPlayer.getHolding().isGun())) {
         return FLEEING_ATTACKING;
       // If we have run out of the range of the enemy
       } else if (newDist > enemyWeaponRange) {
@@ -195,7 +195,23 @@ public enum FSA {
       int botHealth = StateInfo.botHealth;
       int enemyHealth = StateInfo.enemyHealth;
 
-      return null;
+      if ((newDist <= weaponRange) &&
+          ()) {
+        return ATTACKING;
+
+      } else if () {
+        return CHASING;
+
+      } else if () {
+        return CHASING_ATTACKING;
+
+      } else if () {
+        return FLEEING;
+
+      } else if () {
+        return FLEEING_ATTACKING;
+
+      } else return STILL;
     }
   },
   INITIAL_STATE() {
