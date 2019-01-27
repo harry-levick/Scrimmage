@@ -22,7 +22,8 @@ public class ExampleObject extends GameObject {
   }
 
   @Override
-  public void update() {}
+  public void update() {
+  }
 
   public int getHealth() {
     return health;
@@ -49,5 +50,10 @@ public class ExampleObject extends GameObject {
     } else if (health < 40) {
       imageView.setImage(new Image("images/platforms/stone/elementStone048.png"));
     }
+  }
+
+  @Override
+  public void interpolatePosition(float alpha) {
+
   }
 }

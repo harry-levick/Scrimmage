@@ -5,26 +5,28 @@ import shared.gameObjects.Utils.ObjectID;
 
 public abstract class Melee extends Weapon {
 
-  double range; // radius in pixels
-  double beginAngle; // swing from beginAngle (relative to arm)
-  double endAngle; // swing till endAngle (relative to arm)
+  protected double range; // radius in pixels
+  protected double beginAngle; // swing from beginAngle (relative to arm)
+  protected double endAngle; // swing till endAngle (relative to arm)
 
   public Melee(
       double x,
       double y,
       ObjectID id,
-      double _damage,
-      double _weight,
-      String _name,
-      double _range,
-      double _beginAngle,
-      double _endAngle,
+
+      double damage,
+      double weight,
+      String name,
+      double range,
+      double beginAngle,
+      double endAngle,
       UUID uuid) {
 
-    super(x, y, id, _damage, _weight, _name, uuid);
-    setRange(_range);
-    setBeginAngle(_beginAngle);
-    setEndAngle(_endAngle);
+    super(x, y, id, damage, weight, name, false, true, -1, uuid);
+    this.range = range;
+    this.beginAngle = beginAngle;
+    this.endAngle = endAngle;
+
   }
 
   // -------------------
@@ -36,7 +38,9 @@ public abstract class Melee extends Weapon {
   }
 
   public void setRange(double newRange) {
-    if (newRange > 0 && newRange < 100.0) this.range = newRange;
+    if (newRange > 0 && newRange < 100.0) {
+      this.range = newRange;
+    }
   }
 
   public double getBeginAngle() {
@@ -44,7 +48,9 @@ public abstract class Melee extends Weapon {
   }
 
   public void setBeginAngle(double newBeginAngle) {
-    if (newBeginAngle > 0 && newBeginAngle < 90.0) this.beginAngle = newBeginAngle;
+    if (newBeginAngle > 0 && newBeginAngle < 90.0) {
+      this.beginAngle = newBeginAngle;
+    }
   }
 
   public double getEndAngle() {
@@ -52,6 +58,10 @@ public abstract class Melee extends Weapon {
   }
 
   public void setEndAngle(double newEndAngle) {
-    if (newEndAngle > 0 && newEndAngle < 90.0) this.endAngle = newEndAngle;
+    if (newEndAngle > 0 && newEndAngle < 90.0) {
+      this.endAngle = newEndAngle;
+    }
   }
+
+
 }

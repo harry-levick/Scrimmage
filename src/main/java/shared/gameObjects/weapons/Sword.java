@@ -5,9 +5,9 @@ import shared.gameObjects.Utils.ObjectID;
 
 public class Sword extends Melee {
 
-  double range;
-  double beginAngle;
-  double endAngle;
+  protected double range;
+  protected double beginAngle;
+  protected double endAngle;
 
   /**
    * Constructor of the Sword class
@@ -15,29 +15,40 @@ public class Sword extends Melee {
    * @param x The x position of the sword
    * @param y The y position of the sword
    * @param id The ObjectID of the sword
-   * @param _damage Damage of the sword
-   * @param _weight Weight of the sword
-   * @param _name Name of the sword
-   * @param _range Range of the sword
-   * @param _beginAngle The starting angle when the sword swing
-   * @param _endAngle The ending angle when the sword swing
+   * @param damage Damage of the sword
+   * @param weight Weight of the sword
+   * @param name Name of the sword
+   * @param range Range of the sword
+   * @param beginAngle The starting angle when the sword swing
+   * @param endAngle The ending angle when the sword swing
    */
   public Sword(
       double x,
       double y,
       ObjectID id,
-      double _damage,
-      double _weight,
-      String _name,
-      double _range,
-      double _beginAngle,
-      double _endAngle,
+
+      double damage,
+      double weight,
+      String name,
+      double range,
+      double beginAngle,
+      double endAngle,
       UUID uuid) {
 
-    super(x, y, id, _damage, _weight, _name, _range, _beginAngle, _endAngle, uuid);
+    super(x, y, id, damage, weight, name, range, beginAngle, endAngle, uuid);
   }
 
-  public void update() {}
+  @Override
+  public void update() {
 
-  public void render() {}
+  }
+
+  @Override
+  public void render() {
+  }
+
+  @Override
+  public void interpolatePosition(float alpha) {
+
+  }
 }

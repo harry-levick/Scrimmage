@@ -1,6 +1,8 @@
 package client.main;
 
-/** @author Brett Saunders */
+/**
+ * @author Brett Saunders
+ */
 public class Settings {
 
   private int musicVolume;
@@ -10,7 +12,9 @@ public class Settings {
   private String menuPath =
       "C:\\Users\\brett\\projects\\aloneinthedark\\src\\main\\resources\\menus";
 
-  /** Default Constructor Music volume set to 100 and sound effects to 75 */
+  /**
+   * Default Constructor Music volume set to 100 and sound effects to 75
+   */
   public Settings() {
     musicVolume = 100;
     soundEffectVolume = 75;
@@ -32,7 +36,9 @@ public class Settings {
     this.menuPath = menuPath;
   }
 
-  /** @return Current game music volume */
+  /**
+   * @return Current game music volume
+   */
   public int getMusicVolume() {
     return musicVolume;
   }
@@ -47,7 +53,9 @@ public class Settings {
     this.musicVolume = musicVolume < 0 ? 0 : musicVolume;
   }
 
-  /** @return Current game sound effect volume */
+  /**
+   * @return Current game sound effect volume
+   */
   public int getSoundEffectVolume() {
     return soundEffectVolume;
   }
