@@ -23,7 +23,8 @@ public enum FSA {
 
       } else if ((newDist <= weaponRange) &&
           (newDist > prevDist) &&
-          ((botHealth >= this.HIGH_HEALTH) || (botHealth >= enemyHealth * 1.5))) {
+          ((botHealth >= this.HIGH_HEALTH) || (botHealth >= enemyHealth * 1.5)) &&
+          (ammoLeft > 0)) {
         return CHASING_ATTACKING;
 
       } else if ((botHealth <= this.MEDIUM_HEALTH) ||
@@ -33,7 +34,8 @@ public enum FSA {
       } else if ((botHealth <= this.HIGH_HEALTH) &&
           (botHealth >= this.MEDIUM_HEALTH) &&
           (newDist <= prevDist) &&
-          (newDist <= weaponRange)){
+          (newDist <= weaponRange) &&
+          (ammoLeft > 0)){
         return FLEEING_ATTACKING;
 
       } else return ATTACKING;
@@ -58,7 +60,8 @@ public enum FSA {
 
       } else if ((newDist <= weaponRange) &&
           (newDist > prevDist) &&
-          (botHealth >= this.HIGH_HEALTH) || (botHealth >= enemyHealth * 1.5)) {
+          (botHealth >= this.HIGH_HEALTH) || (botHealth >= enemyHealth * 1.5) &&
+          (ammoLeft > 0)) {
         return CHASING_ATTACKING;
 
       } else if ((botHealth <= this.MEDIUM_HEALTH) ||
@@ -68,7 +71,8 @@ public enum FSA {
       } else if ((botHealth <= this.HIGH_HEALTH) &&
           (botHealth >= this.MEDIUM_HEALTH) &&
           (newDist <= prevDist) &&
-          (newDist <= weaponRange)) {
+          (newDist <= weaponRange) &&
+          (ammoLeft > 0)) {
         return FLEEING_ATTACKING;
 
       } else return CHASING;
@@ -101,8 +105,9 @@ public enum FSA {
         return FLEEING;
 
       } else if ((botHealth < this.HIGH_HEALTH) &&
-          (newDist < prevDist) && 
-          (newDist <= weaponRange)) {
+          (newDist < prevDist) &&
+          (newDist <= weaponRange) &&
+          (ammoLeft > 0)) {
         return FLEEING_ATTACKING;
 
       } else return CHASING_ATTACKING;
@@ -110,16 +115,68 @@ public enum FSA {
   },
   FLEEING() {
     public FSA next(Player targetPlayer, Player bot, double prevDist, double newDist) {
-      return null;
+      StateInfo.setInfo(targetPlayer, bot);
+
+      double weaponRange = StateInfo.weaponRange;
+      int ammoLeft = StateInfo.ammoLeft;
+      int botHealth = StateInfo.botHealth;
+      int enemyHealth = StateInfo.enemyHealth;
+
+      Melee temp;
+
+      double enemyWeaponRange = (targetPlayer.getHolding().isGun()) ? Double.POSITIVE_INFINITY :
+          (temp = (Melee) targetPlayer.getHolding()).getRange();
+
+      if ((newDist <= weaponRange) &&
+          (newDist < prevDist) &&
+          (botHealth >= this.HIGH_HEALTH) &&
+          (ammoLeft > 0)) {
+        return ATTACKING;
+
+      } else if ((botHealth >= this.HIGH_HEALTH) &&
+          (newDist > prevDist) &&
+          (newDist > weaponRange)) {
+        return CHASING;
+
+      } else if ((botHealth >= this.HIGH_HEALTH) &&
+          (newDist > prevDist) &&
+          (newDist < weaponRange) &&
+          (ammoLeft > 0)) {
+        return CHASING_ATTACKING;
+
+      } else if ((newDist <= weaponRange) &&
+          (newDist < prevDist) &&
+          (botHealth <= this.HIGH_HEALTH) &&
+          (ammoLeft > 0)) {
+        return FLEEING_ATTACKING;
+      // If we have run out of the range of the enemy
+      } else if (newDist > enemyWeaponRange) {
+        return STILL;
+
+      } else return FLEEING;
     }
   },
   FLEEING_ATTACKING() {
     public FSA next(Player targetPlayer, Player bot, double prevDist, double newDist) {
+      StateInfo.setInfo(targetPlayer, bot);
+
+      double weaponRange = StateInfo.weaponRange;
+      int ammoLeft = StateInfo.ammoLeft;
+      int botHealth = StateInfo.botHealth;
+      int enemyHealth = StateInfo.enemyHealth;
+
       return null;
     }
   },
   STILL() {
     public FSA next(Player targetPlayer, Player bot, double prevDist, double newDist) {
+      StateInfo.setInfo(targetPlayer, bot);
+
+      double weaponRange = StateInfo.weaponRange;
+      int ammoLeft = StateInfo.ammoLeft;
+      int botHealth = StateInfo.botHealth;
+      int enemyHealth = StateInfo.enemyHealth;
+
       return null;
     }
   },
