@@ -11,14 +11,14 @@ import shared.gameObjects.players.Player;
 public class AiAgent {
 
   Bot bot;
-  FiniteStateAutomata state;
+  FSA state;
   boolean active;
   ArrayList<GameObject> gameObjects;
   Player targetPlayer;
 
   public AiAgent(double xPos, double yPos, ObjectID id, ArrayList<GameObject> gameObjects) {
     this.bot = new Bot(xPos, yPos, id);
-    this.state = FiniteStateAutomata.INITIAL_STATE;
+    this.state = FSA.INITIAL_STATE;
     this.active = false;
     this.gameObjects = gameObjects;
   }
@@ -28,6 +28,7 @@ public class AiAgent {
    */
   public void startAgent() {
     active = true;
+    double prevX, prevY;
     /**
      * Would I need to fetch all players on each loop, or would a single fetch outside of the loop
      * give a reference to all players that updates with the player updates?
@@ -38,10 +39,7 @@ public class AiAgent {
         .map(Player.class::cast)
         .collect(Collectors.toList());
 
-    targetPlayer = findTarget(allPlayers);
-
     while (active) {
-      state = state.next(targetPlayer, bot);
 
       /**
        * The ai can be in one of 6 states at any one time.
@@ -61,8 +59,13 @@ public class AiAgent {
         case FLEEING_ATTACKING:
           // TODO calculate and execute the best path away from the target whilst attacking.
         default:
+          // Get the coords of the target player from the last loop, this can then be used to see
+          // if the player is running away etc.
+          prevX = targetPlayer.getX();
+          prevY = targetPlayer.getY();
           // Update the targeted player
           targetPlayer = findTarget(allPlayers);
+          state = state.next(targetPlayer, bot, prevX, prevY);
       }
     }
 
