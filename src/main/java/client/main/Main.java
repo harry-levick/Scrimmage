@@ -2,6 +2,12 @@ package client.main;
 
 import client.handlers.inputHandler.KeyboardInput;
 import client.handlers.inputHandler.MouseInput;
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
@@ -26,6 +32,7 @@ public class Main extends Application {
   private static final float timeStep = 0.0166f;
 
   private String gameTitle = "Alone in the Dark";
+  private static final int port = 4445;
 
   private Group root;
   private Scene scene;
@@ -36,6 +43,10 @@ public class Main extends Application {
 
   private float elapsedSinceFPS = 0f;
   private int framesElapsedSinceFPS = 0;
+  private boolean multilayer = false;
+  private DatagramSocket socket;
+  private InetAddress address;
+  private byte[] buffer;
 
   public static void main(String args[]) {
     launch(args);
@@ -85,6 +96,15 @@ public class Main extends Application {
         float alpha = accumulatedTime / timeStep;
         levelHandler.getGameObjects().forEach(gameObject -> gameObject.interpolatePosition(alpha));
 
+        if (multilayer) {
+          buffer = KeyboardInput.getInput().getBytes();
+          try {
+            socket.send(new DatagramPacket(buffer, buffer.length, address, port));
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
+        }
+
         calculateFPS(secondElapsed, primaryStage);
       }
     }.start();
@@ -109,6 +129,18 @@ public class Main extends Application {
     keyInput = new KeyboardInput();
     mouseInput = new MouseInput();
     // TODO: Add setting up audio, graphics, input, audioHandler and connections
+    if (multilayer) {
+      try {
+        socket = new DatagramSocket();
+      } catch (SocketException e) {
+        e.printStackTrace();
+      }
+      try {
+        address = InetAddress.getByName("localhost");
+      } catch (UnknownHostException e) {
+        e.printStackTrace();
+      }
+    }
   }
 
   private void setupRender(Stage primaryStage) {
@@ -134,4 +166,5 @@ public class Main extends Application {
     scene.setOnMouseMoved(mouseInput);
     scene.setOnMouseReleased(mouseInput);
   }
+
 }
