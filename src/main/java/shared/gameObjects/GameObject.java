@@ -10,8 +10,8 @@ import java.util.Set;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import shared.gameObjects.Components.Component;
-import shared.gameObjects.Components.ComponentType;
+import shared.gameObjects.components.Component;
+import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.Utils.Transform;
 import shared.gameObjects.Utils.Version;
@@ -99,8 +99,8 @@ public abstract class GameObject implements Serializable {
   }
 
   /**
-   * @param type The type of desired component to return
-   * @return The first attached component found
+   * @param type The type of desired components to return
+   * @return The first attached components found
    */
   public Component GetComponent(ComponentType type) {
     for (Component c : components) {
@@ -126,7 +126,7 @@ public abstract class GameObject implements Serializable {
   }
 
   /**
-   * @param type The type of desired component to return
+   * @param type The type of desired components to return
    * @return ArrayList of all found attached components to this object and all of its children
    */
   public ArrayList<Component> GetComponentsInChildren(ComponentType type) {

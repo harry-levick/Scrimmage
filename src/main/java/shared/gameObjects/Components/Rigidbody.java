@@ -1,4 +1,4 @@
-package shared.gameObjects.Components;
+package shared.gameObjects.components;
 
 import java.io.Serializable;
 import shared.gameObjects.GameObject;
@@ -8,7 +8,7 @@ import shared.physics.types.RigidbodyUpdateType;
 import shared.util.maths.Vector2;
 
 /**
- * @author fxa579 The primary component responsible for all Physics updates; includes data and
+ * @author fxa579 The primary components responsible for all Physics updates; includes data and
  *     methods to process forces and gravity
  */
 public class Rigidbody extends Component implements Serializable {

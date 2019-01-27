@@ -1,4 +1,4 @@
-package shared.gameObjects.Components;
+package shared.gameObjects.components;
 
 import java.io.Serializable;
 import java.util.ArrayList;

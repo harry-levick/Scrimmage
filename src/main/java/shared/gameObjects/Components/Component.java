@@ -1,14 +1,14 @@
-package shared.gameObjects.Components;
+package shared.gameObjects.components;
 
 import java.io.Serializable;
 import shared.gameObjects.GameObject;
 
-/** @author fxa579 Base class for Components, all GameObject components extend this class */
+/** @author fxa579 Base class for components, all GameObject components extend this class */
 public abstract class Component implements Serializable {
 
-  protected boolean isActive;
-  protected GameObject parent;
-  protected ComponentType componentType;
+  private boolean isActive;
+  private GameObject parent;
+  private ComponentType componentType;
 
   Component(GameObject parent, ComponentType componentType) {
     this.parent = parent;
