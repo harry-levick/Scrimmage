@@ -209,21 +209,29 @@ public enum FSA {
       int botHealth = StateInfo.botHealth;
       int enemyHealth = StateInfo.enemyHealth;
 
-      if ((newDist <= weaponRange) &&
-          ((ammoLeft > 0) && targetPlayer.getHolding().isGun() || (newDist <= weaponRange)) &&
-          ()) {
+      if (((botHealth >= this.HIGH_HEALTH) || (botHealth >= enemyHealth * 1.5)) &&
+          (newDist <= weaponRange) &&
+          ((ammoLeft > 0) && targetPlayer.getHolding().isGun() || targetPlayer.getHolding()
+              .isMelee())) {
         return ATTACKING;
 
-      } else if () {
+      } else if (((botHealth >= this.HIGH_HEALTH) || (botHealth >= enemyHealth * 1.5)) &&
+          (newDist > weaponRange)) {
         return CHASING;
 
-      } else if () {
+      } else if (((botHealth >= this.HIGH_HEALTH) || (botHealth >= enemyHealth * 1.5)) &&
+          (newDist <= weaponRange) &&
+          ((ammoLeft > 0) && targetPlayer.getHolding().isGun() || targetPlayer.getHolding()
+          .isMelee()) &&
+          (newDist > prevDist)) {
         return CHASING_ATTACKING;
 
-      } else if () {
+      } else if ((botHealth < this.MEDIUM_HEALTH)) {
         return FLEEING;
 
-      } else if () {
+      } else if ((botHealth < this.HIGH_HEALTH) &&
+          (newDist <= weaponRange) &&
+          (newDist < prevDist)) {
         return FLEEING_ATTACKING;
 
       } else return STILL;
