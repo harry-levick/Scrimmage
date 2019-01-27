@@ -116,21 +116,19 @@ public class LevelEditor extends Application {
     // sets 10x10 grid based on scene size
     int sceneX = 1000;  //size of scene TODO fetch automatically
     int sceneY = 1000;
-    int gridX = 10;
-    int gridY = 10;
+    int gridX = 20;
+    int gridY = 20;
 
     ArrayList<Line> gridlines = new ArrayList<Line>();
     if (snapToGrid){
       for (int i = 0; i < gridX; i++) {
         int xPos = (sceneX / gridX) * i;
         Line line = new Line(xPos,0,xPos,1000);
-        System.out.println("X " + i +" : " + xPos);
         gridlines.add(line);
       }
       for (int i = 0; i < gridY; i++) {
         int yPos = (sceneY / gridY) * i;
         Line line = new Line(0,yPos,1000,yPos);
-        System.out.println("Y " + i +" : " + yPos);
         gridlines.add(line);
       }
     }
