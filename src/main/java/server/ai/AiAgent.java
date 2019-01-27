@@ -30,11 +30,12 @@ public class AiAgent {
     active = true;
     /**
      * Would I need to fetch all players on each loop, or would a single fetch outside of the loop
-     * give a reference to both players that updates with the player updates?
+     * give a reference to all players that updates with the player updates?
      */
     // Collect all players from the world
     List<Player> allPlayers = gameObjects.stream()
         .filter(p -> p instanceof Player)
+        .map(Player.class::cast)
         .collect(Collectors.toList());
 
     targetPlayer = findTarget(allPlayers);
@@ -48,17 +49,17 @@ public class AiAgent {
        */
       switch (state) {
         case STILL:
-
+          // TODO what to do in the still state?
         case CHASING:
-
+          // TODO calculate and execute the best path to the target.
         case FLEEING:
-
+          // TODO calculate and execute the best path away from the target.
         case ATTACKING:
-
+          // TODO think about how an attacking script would work.
         case CHASING_ATTACKING:
-
+          // TODO calculate and execute the best path to the target whilst attacking.
         case FLEEING_ATTACKING:
-
+          // TODO calculate and execute the best path away from the target whilst attacking.
         default:
           // Update the targeted player
           targetPlayer = findTarget(allPlayers);
@@ -74,27 +75,37 @@ public class AiAgent {
    */
   private Player findTarget(List<Player> allPlayers) {
     Player target = null;
-    double targetX, targetY, changeX, changeY;
-    double botX = bot.getX();
-    double botY = bot.getY();
     double targetDistance = Double.POSITIVE_INFINITY;
 
     for (Player p : allPlayers) {
-      targetX = p.getX();
-      targetY = p.getY();
-
-      changeX = targetX - botX;
-      changeY = targetY - botY;
-
-      double distance = Math.sqrt(Math.pow(changeX, 2) + Math.pow(changeY, 2));
+      double distance = calcDistance(bot, p);
       // Update the target if another player is closer
       if (distance < targetDistance) {
         targetDistance = distance;
         target = p;
       }
-
     }
-    
+
     return target;
+  }
+
+  /**
+   * Calculate the distance between two players
+   * @param p1 player 1
+   * @param p2 player 2
+   * @return the euclidean distance between p1 and p2
+   */
+  private double calcDistance(Player p1, Player p2) {
+    double p1X, p1Y, p2X, p2Y;
+    double changeX, changeY;
+    p1X = p1.getX();
+    p1Y = p1.getY();
+    p2X = p2.getX();
+    p2Y = p2.getY();
+
+    changeX = p1X - p2X;
+    changeY = p1Y - p2Y;
+
+    return Math.sqrt(Math.pow(changeX, 2) + Math.pow(changeY, 2));
   }
 }
