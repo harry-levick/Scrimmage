@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -19,6 +20,7 @@ import shared.util.maths.Vector2;
 
 public abstract class GameObject implements Serializable {
 
+  protected UUID objectUUID;
   protected ObjectID id;
   protected HashMap<String, String> spriteLibaryURL;
   protected boolean animate;
@@ -44,9 +46,10 @@ public abstract class GameObject implements Serializable {
    * @param y Y coordinate of object in game world
    * @param id Unique Identifier of every game object
    */
-  public GameObject(double x, double y, ObjectID id, String baseImageURL) {
+  public GameObject(double x, double y, ObjectID id, String baseImageURL, UUID objectUUID) {
     spriteLibaryURL = new HashMap<>();
     this.id = id;
+    this.objectUUID = objectUUID;
     spriteLibaryURL.put("baseImage", baseImageURL);
     animate = false;
 

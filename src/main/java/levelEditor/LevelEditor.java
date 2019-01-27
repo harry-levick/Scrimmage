@@ -1,6 +1,7 @@
 package levelEditor;
 
 import java.util.ArrayList;
+import java.util.UUID;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -45,7 +46,7 @@ public class LevelEditor extends Application {
         new EventHandler<ActionEvent>() {
           @Override
           public void handle(ActionEvent event) {
-            MapLoader.saveMap(gameObjects, "menus.map");
+            MapLoader.saveMap(gameObjects, "menustest.map");
           }
         });
     btn.setLayoutX(10);
@@ -59,6 +60,7 @@ public class LevelEditor extends Application {
         new EventHandler<MouseEvent>() {
           @Override
           public void handle(MouseEvent event) {
+            UUID uuid = UUID.randomUUID();
             if (cb.getValue() == "ExampleObject") {
               GameObject temp = new ExampleObject(event.getX(), event.getY(), ObjectID.Bot);
               temp.initialise(root, Version.CLIENT, false);
