@@ -1,5 +1,6 @@
 package shared.gameObjects;
 
+import java.util.UUID;
 import javafx.scene.image.Image;
 import shared.gameObjects.Utils.ObjectID;
 
@@ -15,8 +16,8 @@ public class ExampleObject extends GameObject {
    * @param y Y coordinate of object in game world
    * @param id Unique Identifier of every game object
    */
-  public ExampleObject(double x, double y, ObjectID id) {
-    super(x, y, id, "images/platforms/stone/elementStone013.png");
+  public ExampleObject(double x, double y, ObjectID id, UUID exampleUUID) {
+    super(x, y, id, "images/platforms/stone/elementStone013.png", exampleUUID);
     health = 100;
   }
 

@@ -1,5 +1,6 @@
 package shared.gameObjects.weapons;
 
+import java.util.UUID;
 import shared.gameObjects.Utils.ObjectID;
 
 /**
@@ -25,14 +26,17 @@ public class Handgun extends Gun {
       double x,
       double y,
       ObjectID id,
+
       double damage,
       double weight,
       String name,
       int ammo,
       double bulletSpeed,
       double fireRate,
-      double bulletWidth) {
-    super(x, y, id, damage, weight, name, ammo, bulletSpeed, fireRate, bulletWidth, false, false);
+      double bulletWidth,
+      UUID uuid) {
+    super(x, y, id, damage, weight, name, ammo, bulletSpeed, fireRate, bulletWidth, false, false, uuid);
+
   }
 
   @Override

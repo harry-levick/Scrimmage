@@ -1,5 +1,6 @@
 package shared.gameObjects.weapons;
 
+import java.util.UUID;
 import shared.gameObjects.Utils.ObjectID;
 
 public abstract class Melee extends Weapon {
@@ -12,18 +13,20 @@ public abstract class Melee extends Weapon {
       double x,
       double y,
       ObjectID id,
+
       double damage,
       double weight,
       String name,
       double range,
       double beginAngle,
-      double endAngle
-  ) {
+      double endAngle,
+      UUID uuid) {
 
-    super(x, y, id, damage, weight, name, false, true, -1);
+    super(x, y, id, damage, weight, name, false, true, -1, uuid);
     this.range = range;
     this.beginAngle = beginAngle;
     this.endAngle = endAngle;
+
   }
 
   // -------------------
