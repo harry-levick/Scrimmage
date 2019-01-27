@@ -24,4 +24,9 @@ public class TestObject extends GameObject {
   @Override
   public void render() {
   }
+
+  @Override
+  public void interpolatePosition(float alpha){
+
+  }
 }
