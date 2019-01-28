@@ -46,8 +46,14 @@ abstract class Gun extends Weapon {
     this.fullAutoFire = fullAutoFire;
     this.singleHanded = singleHanded;
   }
+  
+  public void fire(double mouseX, double mouseY) {
+    ObjectID id = ObjectID.Player;
+    Bullet bullet = new Bullet(getX(), getY(), id, mouseX, mouseY, this.bulletWidth, this.bulletSpeed);
+    bullet.fire();
+  }
 
-  // -------------------
+  // -------START-------
   // Setters and Getters
   // -------------------
   
@@ -88,6 +94,10 @@ abstract class Gun extends Weapon {
   public boolean isSingleHanded() {
     return this.singleHanded;
   }
+  
+  // -------------------
+  // Setters and Getters
+  // --------END--------
 
   /** For testing */
   @Override

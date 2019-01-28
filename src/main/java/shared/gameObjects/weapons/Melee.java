@@ -26,6 +26,10 @@ public abstract class Melee extends Weapon {
     this.beginAngle = beginAngle;
     this.endAngle = endAngle;
   }
+  
+  public void fire(double mouseX, double mouseY) {
+    
+  }
 
   // -------------------
   // Setters and Getters

@@ -30,8 +30,10 @@ public abstract class Weapon extends GameObject {
     this.name = name;
     this.ammo = ammo;
   }
+  
+  public abstract void fire(double mouseX, double mouseY);
 
-  // -------------------
+  // -------START-------
   // Setters and Getters
   // -------------------
 
@@ -88,5 +90,9 @@ public abstract class Weapon extends GameObject {
       this.ammo = newAmmo;
     }
   }
+  
+  // -------------------
+  // Setters and Getters
+  // --------END--------
   
 }
