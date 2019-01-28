@@ -4,10 +4,6 @@ import shared.gameObjects.Utils.ObjectID;
 
 public class Sword extends Melee {
 
-  protected double range;
-  protected double beginAngle;
-  protected double endAngle;
-
   /**
    * Constructor of the Sword class
    *
