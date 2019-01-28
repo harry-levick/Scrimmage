@@ -3,6 +3,9 @@ package shared.gameObjects.components;
 import java.io.Serializable;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.Transform;
+import shared.physics.data.AngularData;
+import shared.physics.data.Force;
+import shared.physics.data.MaterialProperty;
 import shared.physics.types.RigibodyType;
 import shared.physics.types.RigidbodyUpdateType;
 import shared.util.maths.Vector2;
@@ -14,41 +17,34 @@ import shared.util.maths.Vector2;
 public class Rigidbody extends Component implements Serializable {
 
   private Vector2 velocity;
-  // private Force force
+  private Force currentForce;
 
   private RigibodyType bodyType;
   private RigidbodyUpdateType updateMethod;
+  private MaterialProperty material;
+  private AngularData angularData;
 
-  private float frictionCoefficient;
   private float mass;
   private float gravityScale;
-  private float momentOfInertia;
-  private float angularCoefficient;
-  private float angularVelocity;
-  private float angularRadius;
 
   public Rigidbody(
       RigibodyType bodyType,
       RigidbodyUpdateType updateMethod,
-      float frictionCoefficient,
       float mass,
       float gravityScale,
-      float momentOfInertia,
-      float angularCoefficient,
-      float angularVelocity,
-      float angularRadius,
+      MaterialProperty material,
+      AngularData angularData,
       GameObject parent) {
     super(parent, ComponentType.RIGIBODY);
-    this.angularCoefficient = angularCoefficient;
-    this.angularRadius = angularRadius;
-    this.angularVelocity = angularVelocity;
-    this.frictionCoefficient = frictionCoefficient;
     this.gravityScale = gravityScale;
-    this.momentOfInertia = momentOfInertia;
     this.mass = mass;
+    this.material = material;
+    this.angularData = angularData;
     this.bodyType = bodyType;
     this.updateMethod = updateMethod;
-    this.velocity = Vector2.Zero();
+
+    velocity = Vector2.Zero();
+    currentForce = new Force();
   }
 
   // Update Methods
@@ -88,14 +84,6 @@ public class Rigidbody extends Component implements Serializable {
     this.updateMethod = updateMethod;
   }
 
-  public float getFrictionCoefficient() {
-    return frictionCoefficient;
-  }
-
-  public void setFrictionCoefficient(float frictionCoefficient) {
-    this.frictionCoefficient = frictionCoefficient;
-  }
-
   public float getMass() {
     return mass;
   }
@@ -112,35 +100,19 @@ public class Rigidbody extends Component implements Serializable {
     this.gravityScale = gravityScale;
   }
 
-  public float getMomentOfInertia() {
-    return momentOfInertia;
+  public MaterialProperty getMaterial() {
+    return material;
   }
 
-  public void setMomentOfInertia(float momentOfInertia) {
-    this.momentOfInertia = momentOfInertia;
+  public void setMaterial(MaterialProperty material) {
+    this.material = material;
   }
 
-  public float getAngularCoefficient() {
-    return angularCoefficient;
+  public AngularData getAngularData() {
+    return angularData;
   }
 
-  public void setAngularCoefficient(float angularCoefficient) {
-    this.angularCoefficient = angularCoefficient;
-  }
-
-  public float getAngularVelocity() {
-    return angularVelocity;
-  }
-
-  public void setAngularVelocity(float angularVelocity) {
-    this.angularVelocity = angularVelocity;
-  }
-
-  public float getAngularRadius() {
-    return angularRadius;
-  }
-
-  public void setAngularRadius(float angularRadius) {
-    this.angularRadius = angularRadius;
+  public void setAngularData(AngularData angularData) {
+    this.angularData = angularData;
   }
 }
