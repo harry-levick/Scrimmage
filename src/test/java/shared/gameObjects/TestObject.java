@@ -1,5 +1,6 @@
 package shared.gameObjects;
 
+import java.util.UUID;
 import shared.gameObjects.Utils.ObjectID;
 
 public class TestObject extends GameObject {
@@ -12,13 +13,20 @@ public class TestObject extends GameObject {
    * @param y Y coordinate of object in game world
    * @param id Unique Identifier of every game object
    */
-  public TestObject(int x, int y, ObjectID id) {
-    super(x, y, id, "testobjectimagepath");
+  public TestObject(int x, int y, ObjectID id, UUID testUUID) {
+    super(x, y, id, "testobjectimagepath", testUUID);
   }
 
   @Override
-  public void update() {}
+  public void update() {
+  }
 
   @Override
-  public void render() {}
+  public void render() {
+  }
+
+  @Override
+  public void interpolatePosition(float alpha){
+
+  }
 }

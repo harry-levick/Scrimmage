@@ -2,6 +2,12 @@ package client.main;
 
 import client.handlers.inputHandler.KeyboardInput;
 import client.handlers.inputHandler.MouseInput;
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
@@ -23,9 +29,24 @@ public class Main extends Application {
   public static LevelHandler levelHandler;
   public static Settings settings;
 
+  private static final float timeStep = 0.0166f;
+
+  private String gameTitle = "Alone in the Dark";
+  private static final int port = 4445;
+
   private Group root;
   private Scene scene;
   private Map currentMap;
+  private float maximumStep;
+  private long previousTime;
+  private float accumulatedTime;
+
+  private float elapsedSinceFPS = 0f;
+  private int framesElapsedSinceFPS = 0;
+  private boolean multilayer = false;
+  private DatagramSocket socket;
+  private InetAddress address;
+  private byte[] buffer;
 
   public static void main(String args[]) {
     launch(args);
@@ -46,24 +67,85 @@ public class Main extends Application {
           levelHandler.generateLevel(root);
           currentMap = levelHandler.getMap();
         }
-        // Updates and Renders every object
-        levelHandler.getGameObjects().forEach(gameObject -> gameObject.update());
+
+        if (previousTime == 0) {
+          previousTime = now;
+          return;
+        }
+
+        float secondElapsed = (now - previousTime) / 1e9f; // time elapsed in seconds
+        float secondsElapsedCapped = Math.min(secondElapsed, maximumStep);
+        accumulatedTime += secondsElapsedCapped;
+        previousTime = now;
+
+        if (accumulatedTime < timeStep) {
+          float timeSinceInterpolation = timeStep - (accumulatedTime - secondElapsed);
+          float alphaRemaining = secondElapsed / timeSinceInterpolation;
+          levelHandler.getGameObjects()
+              .forEach(gameObject -> gameObject.interpolatePosition(alphaRemaining));
+          return;
+        }
+
+        while (accumulatedTime >= 2 * timeStep) {
+          levelHandler.getGameObjects().forEach(gameObject -> gameObject.update());
+          accumulatedTime -= timeStep;
+        }
         levelHandler.getGameObjects().forEach(gameObject -> gameObject.render());
-        // TODO Add networking here
+        levelHandler.getGameObjects().forEach(gameObject -> gameObject.update());
+        accumulatedTime -= timeStep;
+        float alpha = accumulatedTime / timeStep;
+        levelHandler.getGameObjects().forEach(gameObject -> gameObject.interpolatePosition(alpha));
+
+        if (multilayer) {
+          buffer = KeyboardInput.getInput().getBytes();
+          try {
+            socket.send(new DatagramPacket(buffer, buffer.length, address, port));
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
+        }
+
+        calculateFPS(secondElapsed, primaryStage);
       }
     }.start();
   }
 
+  public void calculateFPS(float secondElapsed, Stage primaryStage) {
+    elapsedSinceFPS += secondElapsed;
+    framesElapsedSinceFPS++;
+    if (elapsedSinceFPS >= 0.5f) {
+      int fps = Math.round(framesElapsedSinceFPS / elapsedSinceFPS);
+      primaryStage.setTitle(gameTitle + " FPS: " + fps);
+      elapsedSinceFPS = 0;
+      framesElapsedSinceFPS = 0;
+    }
+  }
+
   public void init() {
+    maximumStep = Float.MAX_VALUE;
+    previousTime = 0;
+    accumulatedTime = 0;
     settings = new Settings();
     keyInput = new KeyboardInput();
     mouseInput = new MouseInput();
     // TODO: Add setting up audio, graphics, input, audioHandler and connections
+    if (multilayer) {
+      try {
+        socket = new DatagramSocket();
+      } catch (SocketException e) {
+        e.printStackTrace();
+      }
+      try {
+        address = InetAddress.getByName("localhost");
+      } catch (UnknownHostException e) {
+        e.printStackTrace();
+      }
+    }
   }
 
   private void setupRender(Stage primaryStage) {
     root = new Group();
-    primaryStage.setTitle("Alone In The Dark");
+    primaryStage.setTitle(gameTitle);
     scene = new Scene(root, 1000, 1000);
     primaryStage.setScene(scene);
     primaryStage.setFullScreen(false);
@@ -84,4 +166,5 @@ public class Main extends Application {
     scene.setOnMouseMoved(mouseInput);
     scene.setOnMouseReleased(mouseInput);
   }
+
 }

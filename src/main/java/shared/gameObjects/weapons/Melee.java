@@ -1,5 +1,6 @@
 package shared.gameObjects.weapons;
 
+import java.util.UUID;
 import shared.gameObjects.Utils.ObjectID;
 
 public abstract class Melee extends Weapon {
@@ -12,18 +13,20 @@ public abstract class Melee extends Weapon {
       double x,
       double y,
       ObjectID id,
+
       double damage,
       double weight,
       String name,
       double range,
       double beginAngle,
-      double endAngle
-  ) {
+      double endAngle,
+      UUID uuid) {
 
-    super(x, y, id, damage, weight, name, false, true, -1);
+    super(x, y, id, damage, weight, name, false, true, -1, uuid);
     this.range = range;
     this.beginAngle = beginAngle;
     this.endAngle = endAngle;
+
   }
 
   // -------------------
@@ -35,7 +38,9 @@ public abstract class Melee extends Weapon {
   }
 
   public void setRange(double newRange) {
-    if (newRange > 0 && newRange < 100.0) this.range = newRange;
+    if (newRange > 0 && newRange < 100.0) {
+      this.range = newRange;
+    }
   }
 
   public double getBeginAngle() {
@@ -43,7 +48,9 @@ public abstract class Melee extends Weapon {
   }
 
   public void setBeginAngle(double newBeginAngle) {
-    if (newBeginAngle > 0 && newBeginAngle < 90.0) this.beginAngle = newBeginAngle;
+    if (newBeginAngle > 0 && newBeginAngle < 90.0) {
+      this.beginAngle = newBeginAngle;
+    }
   }
 
   public double getEndAngle() {
@@ -51,8 +58,10 @@ public abstract class Melee extends Weapon {
   }
 
   public void setEndAngle(double newEndAngle) {
-    if (newEndAngle > 0 && newEndAngle < 90.0) this.endAngle = newEndAngle;
+    if (newEndAngle > 0 && newEndAngle < 90.0) {
+      this.endAngle = newEndAngle;
+    }
   }
 
-  
+
 }
