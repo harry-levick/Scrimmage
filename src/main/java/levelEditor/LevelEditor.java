@@ -83,7 +83,7 @@ public class LevelEditor extends Application {
     root.getChildren().add(btnSave);
     root.getChildren().add(btnToggleGrid);
 
-    Scene scene = new Scene(root, 1000, 1000);
+    Scene scene = new Scene(root, 1920, 1080);
     scene.setOnMouseClicked(
         new EventHandler<MouseEvent>() {
           @Override
@@ -102,6 +102,7 @@ public class LevelEditor extends Application {
         });
     primaryStage.setScene(scene);
     primaryStage.show();
+    primaryStage.setFullScreen(true);
     System.out.println("testasd");
 
     new AnimationTimer() {
@@ -114,8 +115,8 @@ public class LevelEditor extends Application {
 
   private ArrayList<Line> redrawGrid() {
     // sets 10x10 grid based on scene size
-    int sceneX = 1000;  //size of scene TODO fetch automatically
-    int sceneY = 1000;
+    int sceneX = 1920;  //size of scene TODO fetch automatically
+    int sceneY = 1080;
     int gridX = 20;
     int gridY = 20;
 
@@ -123,12 +124,12 @@ public class LevelEditor extends Application {
     if (snapToGrid){
       for (int i = 0; i < gridX; i++) {
         int xPos = (sceneX / gridX) * i;
-        Line line = new Line(xPos,0,xPos,1000);
+        Line line = new Line(xPos,0,xPos,1080);
         gridlines.add(line);
       }
       for (int i = 0; i < gridY; i++) {
         int yPos = (sceneY / gridY) * i;
-        Line line = new Line(0,yPos,1000,yPos);
+        Line line = new Line(0,yPos,1920,yPos);
         gridlines.add(line);
       }
     }
