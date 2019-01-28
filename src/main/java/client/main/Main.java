@@ -11,12 +11,15 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Slider;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
@@ -210,6 +213,18 @@ public class Main extends Application {
     btnVolH.setLayoutX(300);
     btnVolH.setLayoutY(10);
     root.getChildren().add(btnVolH);
+    Slider sldVol = new Slider();
+    sldVol.setValue(settings.getMusicVolume()* 100);
+    sldVol.valueProperty().addListener(new InvalidationListener() {
+      @Override
+      public void invalidated(Observable observable) {
+        settings.setMusicVolume(sldVol.getValue()/100f);
+        audio.updateVolume();
+      }
+    });
+    sldVol.setLayoutX(400);
+    sldVol.setLayoutY(10);
+    root.getChildren().add(sldVol);
 
 
 
