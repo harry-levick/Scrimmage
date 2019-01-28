@@ -2,12 +2,14 @@
 
 ## License
 *Title* Kevin MacLeod (incompetech.com)
+
 Licensed under Creative Commons: By Attribution 3.0
+
 http://creativecommons.org/licenses/by/3.0/
 
 ### Tracks
 * Obliteration
-* Satiate - onlu percussion
+* Satiate - only percussion
 * Man Down
 * Local Forecast
 * Getting it Done
@@ -17,7 +19,7 @@ http://creativecommons.org/licenses/by/3.0/
 ## Suggested Use of Tracks
 * Obliteration
   * Fight Scene
-* Satiate - onlu percussion
+* Satiate - only percussion
   * Fight Scene
   * Warmup
 * Man Down
