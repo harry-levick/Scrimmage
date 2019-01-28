@@ -49,11 +49,17 @@ public abstract class Weapon extends GameObject {
     return this.weight;
   }
 
+  public void setWeight(double newWeight) {
+    if (newWeight > 0 && newWeight < 1000.0f) {
+      this.weight = newWeight;
+    }
+  }
+
   public boolean isGun() {
     return isGun;
   }
 
-  public void setGun(boolean gun) {
+  public void setIsGun(boolean gun) {
     isGun = gun;
   }
 
@@ -61,14 +67,8 @@ public abstract class Weapon extends GameObject {
     return isMelee;
   }
 
-  public void setMelee(boolean melee) {
+  public void setIsMelee(boolean melee) {
     isMelee = melee;
-  }
-
-  public void setWeight(double newWeight) {
-    if (newWeight > 0 && newWeight < 1000.0f) {
-      this.weight = newWeight;
-    }
   }
 
   public String getName() {
@@ -82,4 +82,11 @@ public abstract class Weapon extends GameObject {
   public int getAmmo() {
     return this.ammo;
   }
+  
+  public void setAmmo(int newAmmo) {
+    if (newAmmo == -1 || newAmmo > 0) {
+      this.ammo = newAmmo;
+    }
+  }
+  
 }
