@@ -43,7 +43,7 @@ public class Main extends Application {
 
   private float elapsedSinceFPS = 0f;
   private int framesElapsedSinceFPS = 0;
-  private boolean multilayer = false;
+  private boolean multiplayer = false;
   private DatagramSocket socket;
   private InetAddress address;
   private byte[] buffer;
@@ -96,7 +96,7 @@ public class Main extends Application {
         float alpha = accumulatedTime / timeStep;
         levelHandler.getGameObjects().forEach(gameObject -> gameObject.interpolatePosition(alpha));
 
-        if (multilayer) {
+        if (multiplayer) {
           buffer = KeyboardInput.getInput().getBytes();
           try {
             socket.send(new DatagramPacket(buffer, buffer.length, address, port));
@@ -129,7 +129,7 @@ public class Main extends Application {
     keyInput = new KeyboardInput();
     mouseInput = new MouseInput();
     // TODO: Add setting up audio, graphics, input, audioHandler and connections
-    if (multilayer) {
+    if (multiplayer) {
       try {
         socket = new DatagramSocket();
       } catch (SocketException e) {

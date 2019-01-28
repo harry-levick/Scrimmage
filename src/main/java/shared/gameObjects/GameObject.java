@@ -54,7 +54,7 @@ public abstract class GameObject implements Serializable {
     this.objectUUID = objectUUID;
     spriteLibaryURL.put("baseImage", baseImageURL);
     animate = false;
-
+    active = true;
     this.transform = new Transform(this, new Vector2((float) x, (float) y));
     components = new ArrayList<>();
     children = new HashSet<>();
