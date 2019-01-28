@@ -24,11 +24,12 @@ public class Sword extends Melee {
       double damage,
       double weight,
       String name,
+      int ammo,
       double range,
       double beginAngle,
       double endAngle) {
 
-    super(x, y, id, damage, weight, name, range, beginAngle, endAngle);
+    super(x, y, id, damage, weight, name, ammo, range, beginAngle, endAngle);
   }
 
   public void update() {}

@@ -15,12 +15,13 @@ public abstract class Melee extends Weapon {
       double damage,
       double weight,
       String name,
+      int ammo,
       double range,
       double beginAngle,
       double endAngle
   ) {
 
-    super(x, y, id, damage, weight, name, false, true, -1);
+    super(x, y, id, damage, weight, name, false, true, ammo);
     this.range = range;
     this.beginAngle = beginAngle;
     this.endAngle = endAngle;
@@ -53,6 +54,5 @@ public abstract class Melee extends Weapon {
   public void setEndAngle(double newEndAngle) {
     if (newEndAngle > 0 && newEndAngle < 90.0) this.endAngle = newEndAngle;
   }
-
   
 }

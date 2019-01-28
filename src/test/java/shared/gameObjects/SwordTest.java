@@ -18,7 +18,7 @@ public class SwordTest {
   
   @BeforeClass
   public static void initSword() {
-    sword = new Sword(10, 10, ObjectID.Player, 10, 10, "Sword", 5, 70, 20);
+    sword = new Sword(10, 10, ObjectID.Player, 10, 10, "Sword", 30, 5, 70, 20);
   }
   
   @Test
