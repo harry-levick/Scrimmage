@@ -1,5 +1,7 @@
 package client.main;
 
+import java.io.File;
+
 /**
  * @author Brett Saunders
  */
@@ -8,9 +10,9 @@ public class Settings {
   private int musicVolume;
   private int soundEffectVolume;
   private String mapsPath =
-      "src\\main\\resources\\menus";
+      "src" + File.separator + "main" + File.separator + "resources" + File.separator + "menus";
   private String menuPath =
-      "src\\main\\resources\\menus";
+      "src" + File.separator + "main" + File.separator + "resources" + File.separator + "menus";
 
   /**
    * Default Constructor Music volume set to 100 and sound effects to 75
