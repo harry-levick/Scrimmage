@@ -17,6 +17,7 @@ import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.Utils.Version;
 import shared.gameObjects.players.Player;
+import shared.gameObjects.weapons.Handgun;
 import shared.handlers.levelHandler.MapLoader;
 
 public class LevelEditor extends Application {
@@ -38,7 +39,7 @@ public class LevelEditor extends Application {
     gameObjects.forEach(gameObject -> gameObject.initialise(root, Version.CLIENT, false));
 
     ChoiceBox cb = new ChoiceBox();
-    cb.setItems(FXCollections.observableArrayList("ExampleObject", "Player"));
+    cb.setItems(FXCollections.observableArrayList("ExampleObject", "Player", "Handgun"));
     Button btn = new Button();
     btn.setText("Save Map");
     btn.setOnAction(
@@ -67,6 +68,9 @@ public class LevelEditor extends Application {
               Player temp = new Player(event.getX(), event.getY(), ObjectID.Player);
               temp.initialise(root, Version.CLIENT, false);
               gameObjects.add(temp);
+            } else if (cb.getValue() == "Handgun") {
+              Handgun temp = new Handgun(event.getX(), event.getY(), ObjectID.Weapon, 10, 10, "Handgun", 100, 100, 100, 10);
+              temp.initialise(root, Version.CLIENT, false);
             }
           }
         });
