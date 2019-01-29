@@ -4,6 +4,8 @@ import shared.gameObjects.Utils.ObjectID;
 
 /** @author hlf764 The Handgun class. */
 public class Handgun extends Gun {
+  
+  private static String imagePath = "images/weapons/handgun.jpg";
 
   /**
    * Constructor of the Handgun class
@@ -30,10 +32,12 @@ public class Handgun extends Gun {
       double bulletSpeed,
       double fireRate,
       double bulletWidth) {
-    super(x, y, id, damage, weight, name, ammo, bulletSpeed, fireRate, bulletWidth, false, false);
+    
+    super(x, y, id, imagePath, damage, weight, name, ammo, bulletSpeed, fireRate, bulletWidth, false, false);
   }
 
   public void update() {}
 
   public void render() {}
+  
 }

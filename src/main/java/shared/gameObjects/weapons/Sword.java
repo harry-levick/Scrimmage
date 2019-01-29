@@ -3,6 +3,8 @@ package shared.gameObjects.weapons;
 import shared.gameObjects.Utils.ObjectID;
 
 public class Sword extends Melee {
+  
+  private static String imagePath = "";
 
   /**
    * Constructor of the Sword class
@@ -29,7 +31,7 @@ public class Sword extends Melee {
       double beginAngle,
       double endAngle) {
 
-    super(x, y, id, damage, weight, name, ammo, range, beginAngle, endAngle);
+    super(x, y, id, imagePath, damage, weight, name, ammo, range, beginAngle, endAngle);
   }
 
   public void update() {}
