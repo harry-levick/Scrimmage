@@ -21,6 +21,8 @@ public class Bullet extends GameObject {
   private Image bulletImage;// image of the bullet
   public boolean isHit;     // true if there is an object at that position
   
+  private static String imagePath = "images/weapons/bullet.png";
+  
   public Bullet(
       double gunX,          // gun initial x position
       double gunY,          // gun initial y position
@@ -30,7 +32,7 @@ public class Bullet extends GameObject {
       double width,         // the width of the bullet
       double speed) {       // the speed of the bullet
     
-    super(gunX, gunY, id, "path/to/bulletImage");
+    super(gunX, gunY, id, imagePath);
     setWidth(width);
     setSpeed(speed);
     
@@ -67,13 +69,14 @@ public class Bullet extends GameObject {
   public void render() {
     imageView.relocate(newX, newY);
     if (animate) {
-      imageView.setImage(bulletImage);
+      imageView.setImage(getImage());
     }
   }
   
   public Image getImage() {
     // generate a bullet image based on bulletWidth
-    return null;
+    Image image = new Image(imagePath);
+    return image;
   }
   
   // -------START-------
