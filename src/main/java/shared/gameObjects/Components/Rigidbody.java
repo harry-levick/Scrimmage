@@ -38,7 +38,6 @@ public class Rigidbody extends Component implements Serializable {
 
   public Rigidbody(
       RigidbodyType bodyType,
-      RigidbodyUpdateType updateMethod,
       float mass,
       float gravityScale,
       float airDrag,
@@ -52,7 +51,7 @@ public class Rigidbody extends Component implements Serializable {
     this.material = material;
     this.angularData = angularData;
     this.bodyType = bodyType;
-    this.updateMethod = updateMethod;
+    this.updateMethod = RigidbodyUpdateType.DISCRETE;
 
     collisions = new ArrayList<>();
     forces = new ArrayList<>();
@@ -62,11 +61,9 @@ public class Rigidbody extends Component implements Serializable {
 
   // Update Methods
   public void update() {
-    // TODO Add Physics Updates Here
+    // TODO
     applyCollisions();
     applyForces();
-    // Update Velocity
-    // Move Body
     lastAcceleration = acceleration;
     deltaPos =
         deltaPos.add(
@@ -76,6 +73,7 @@ public class Rigidbody extends Component implements Serializable {
     acceleration = currentForce.div(mass);
     acceleration = lastAcceleration.add(acceleration).div(2);
     velocity = velocity.add(acceleration.mult(Physics.TIMESTEP));
+    move(deltaPos, 0);
   }
   // Force Methods
 
@@ -122,6 +120,7 @@ public class Rigidbody extends Component implements Serializable {
     if (!grounded) {
       currentForce = currentForce.add(Vector2.Up().mult(Physics.GRAVITY * mass * gravityScale));
     }
+    // TODO add Friction and Drag
   }
   // Getters and Setters
   public Vector2 getVelocity() {

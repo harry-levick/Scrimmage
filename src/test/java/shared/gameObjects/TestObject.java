@@ -1,6 +1,7 @@
 package shared.gameObjects;
 
 import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.components.ComponentType;
 
 public class TestObject extends GameObject {
 
@@ -17,7 +18,9 @@ public class TestObject extends GameObject {
   }
 
   @Override
-  public void update() {}
+  public void update() {
+    GetComponent(ComponentType.RIGIBODY).update();
+  }
 
   @Override
   public void render() {}
