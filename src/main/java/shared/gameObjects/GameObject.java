@@ -15,7 +15,6 @@ import shared.gameObjects.Components.Component;
 import shared.gameObjects.Components.ComponentType;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.Utils.Transform;
-import shared.gameObjects.Utils.Version;
 import shared.util.maths.Vector2;
 
 public abstract class GameObject implements Serializable {
@@ -25,7 +24,6 @@ public abstract class GameObject implements Serializable {
   protected HashMap<String, String> spriteLibaryURL;
   protected boolean animate;
 
-  protected transient Version version;
   protected transient ImageView imageView;
   protected transient Group root;
   protected transient HashMap<String, Image> spriteLibary;
@@ -67,10 +65,19 @@ public abstract class GameObject implements Serializable {
   // Client Side only
   public abstract void render();
 
+  //Interpolate Position Client only
   public abstract void interpolatePosition(float alpha);
 
+  /**
+   * Contains the state of the object for sending over server Only contains items that need sending
+   * separate by commas
+   *
+   * @return State of object
+   */
+  public abstract String getState();
+
   // Ignore for now, added due to unSerializable objects
-  public void initialise(Group root, Version version, boolean animate) {
+  public void initialise(Group root, boolean animate) {
     this.root = root;
     imageView = new ImageView();
     spriteLibary = new HashMap<>();
@@ -82,7 +89,6 @@ public abstract class GameObject implements Serializable {
 
     this.imageView.setImage(spriteLibary.get("baseImage"));
     root.getChildren().add(this.imageView);
-    this.version = version;
   }
 
   public void AddChild(GameObject child) {
@@ -176,14 +182,6 @@ public abstract class GameObject implements Serializable {
 
   public ObjectID getId() {
     return id;
-  }
-
-  public Version getVersion() {
-    return version;
-  }
-
-  public void setVersion(Version version) {
-    this.version = version;
   }
 
   public GameObject getParent() {

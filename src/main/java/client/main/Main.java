@@ -8,6 +8,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.UUID;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -15,7 +16,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import shared.gameObjects.Utils.Version;
+import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.LevelHandler;
 import shared.handlers.levelHandler.Map;
 
@@ -26,6 +27,7 @@ public class Main extends Application {
   public static MouseInput mouseInput;
   public static LevelHandler levelHandler;
   public static Settings settings;
+  public static Player clientPlayer;
 
   private static final float timeStep = 0.0166f;
 
@@ -53,7 +55,7 @@ public class Main extends Application {
   @Override
   public void start(Stage primaryStage) {
     setupRender(primaryStage);
-    levelHandler = new LevelHandler(settings, root, Version.CLIENT);
+    levelHandler = new LevelHandler(settings, root, true);
     currentMap = levelHandler.getMap();
 
     // Main Game Loop
@@ -62,7 +64,7 @@ public class Main extends Application {
       public void handle(long now) {
         // Changes Map/Level
         if (currentMap != levelHandler.getMap()) {
-          levelHandler.generateLevel(root);
+          levelHandler.generateLevel(root, true);
           currentMap = levelHandler.getMap();
         }
 
@@ -120,13 +122,15 @@ public class Main extends Application {
   }
 
   public void init() {
-    maximumStep = Float.MAX_VALUE;
+    maximumStep = 0.0166f;
     previousTime = 0;
     accumulatedTime = 0;
     settings = new Settings();
     keyInput = new KeyboardInput();
     mouseInput = new MouseInput();
-    // TODO: Add setting up audio, graphics, input, audioHandler and connections
+    //Start off screen
+    clientPlayer = new Player(-500, -500, UUID.randomUUID());
+
     if (multiplayer) {
       try {
         socket = new DatagramSocket();
@@ -164,5 +168,6 @@ public class Main extends Application {
     scene.setOnMouseMoved(mouseInput);
     scene.setOnMouseReleased(mouseInput);
   }
+
 
 }

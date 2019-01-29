@@ -56,4 +56,9 @@ public class ExampleObject extends GameObject {
   public void interpolatePosition(float alpha) {
 
   }
+
+  @Override
+  public String getState() {
+    return null;
+  }
 }

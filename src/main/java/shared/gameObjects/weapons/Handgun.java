@@ -51,4 +51,9 @@ public class Handgun extends Gun {
   public void interpolatePosition(float alpha) {
 
   }
+
+  @Override
+  public String getState() {
+    return null;
+  }
 }
