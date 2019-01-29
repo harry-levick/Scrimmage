@@ -29,6 +29,7 @@ abstract class Gun extends Weapon {
       double x,
       double y,
       ObjectID id,
+      String imagePath,
       double damage,
       double weight,
       String name,
@@ -39,7 +40,7 @@ abstract class Gun extends Weapon {
       boolean fullAutoFire,
       boolean singleHanded) {
 
-    super(x, y, id, damage, weight, name, true, false, ammo);
+    super(x, y, id, imagePath, damage, weight, name, true, false, ammo);
     this.bulletSpeed = bulletSpeed;
     this.bulletWidth = bulletWidth;
     this.fireRate = fireRate;
