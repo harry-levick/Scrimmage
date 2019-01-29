@@ -10,11 +10,11 @@ import java.util.Set;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import shared.gameObjects.components.Component;
-import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.Utils.Transform;
 import shared.gameObjects.Utils.Version;
+import shared.gameObjects.components.Component;
+import shared.gameObjects.components.ComponentType;
 import shared.util.maths.Vector2;
 
 public abstract class GameObject implements Serializable {

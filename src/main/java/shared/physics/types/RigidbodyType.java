@@ -1,6 +1,6 @@
 package shared.physics.types;
 
-public enum RigibodyType {
+public enum RigidbodyType {
   DYNAMIC,
   KINEMATIC,
   STATIC,

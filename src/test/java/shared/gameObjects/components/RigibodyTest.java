@@ -1,5 +1,3 @@
 package shared.gameObjects.components;
 
-public class RigibodyTest {
-
-}
+public class RigibodyTest {}

@@ -20,8 +20,16 @@ public abstract class Weapon extends GameObject {
    * @param weight Weight of the weapon
    * @param name Name of the weapon
    */
-  public Weapon(double x, double y, ObjectID id, double damage, double weight, String name,
-      boolean isGun, boolean isMelee, int ammo) {
+  public Weapon(
+      double x,
+      double y,
+      ObjectID id,
+      double damage,
+      double weight,
+      String name,
+      boolean isGun,
+      boolean isMelee,
+      int ammo) {
     super(x, y, id, "gunimagepath");
     this.isGun = isGun;
     this.isMelee = isMelee;

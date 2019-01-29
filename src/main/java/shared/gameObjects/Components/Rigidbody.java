@@ -3,13 +3,11 @@ package shared.gameObjects.components;
 import java.io.Serializable;
 import java.util.ArrayList;
 import shared.gameObjects.GameObject;
-import shared.gameObjects.Utils.Transform;
 import shared.physics.Physics;
 import shared.physics.data.AngularData;
 import shared.physics.data.Collision;
-import shared.physics.data.Force;
 import shared.physics.data.MaterialProperty;
-import shared.physics.types.RigibodyType;
+import shared.physics.types.RigidbodyType;
 import shared.physics.types.RigidbodyUpdateType;
 import shared.util.maths.Vector2;
 
@@ -25,11 +23,12 @@ public class Rigidbody extends Component implements Serializable {
   private Vector2 lastAcceleration;
   private Vector2 acceleration;
 
-  private RigibodyType bodyType;
+  private RigidbodyType bodyType;
   private RigidbodyUpdateType updateMethod;
   private MaterialProperty material;
   private AngularData angularData;
   private ArrayList<Collision> collisions;
+  private ArrayList<Vector2> forces;
 
   private float mass;
   private float gravityScale;
@@ -38,7 +37,7 @@ public class Rigidbody extends Component implements Serializable {
   private boolean grounded;
 
   public Rigidbody(
-      RigibodyType bodyType,
+      RigidbodyType bodyType,
       RigidbodyUpdateType updateMethod,
       float mass,
       float gravityScale,
@@ -56,6 +55,7 @@ public class Rigidbody extends Component implements Serializable {
     this.updateMethod = updateMethod;
 
     collisions = new ArrayList<>();
+    forces = new ArrayList<>();
     velocity = acceleration = lastAcceleration = deltaPos = Vector2.Zero();
     currentForce = acceleration.mult(mass);
   }
@@ -63,12 +63,16 @@ public class Rigidbody extends Component implements Serializable {
   // Update Methods
   public void update() {
     // TODO Add Physics Updates Here
-    //Apply Collision Forces
-    //Update Forces
-    //Update Velocity
-    //Move Body
+    applyCollisions();
+    applyForces();
+    // Update Velocity
+    // Move Body
     lastAcceleration = acceleration;
-    deltaPos = deltaPos.add(velocity.mult(Physics.TIMESTEP).add(acceleration.mult(0.5f).mult(Physics.TIMESTEP*Physics.TIMESTEP )));
+    deltaPos =
+        deltaPos.add(
+            velocity
+                .mult(Physics.TIMESTEP)
+                .add(acceleration.mult(0.5f).mult(Physics.TIMESTEP * Physics.TIMESTEP)));
     acceleration = currentForce.div(mass);
     acceleration = lastAcceleration.add(acceleration).div(2);
     velocity = velocity.add(acceleration.mult(Physics.TIMESTEP));
@@ -76,12 +80,49 @@ public class Rigidbody extends Component implements Serializable {
   // Force Methods
 
   /** Applies a force of a defined from a defined source direction (Instantaneous Force) */
-  void addForce(Vector2 force, Transform source) {}
+  void addForce(Vector2 force) {
+    forces.add(force);
+  }
 
   /** Moves the Rigibody to the defined space over time, instant if 0 */
-  void move(Vector2 position, float time) {}
+  void move(Vector2 distance, float time) {
+    if (time <= 0) {
+      getParent().getTransform().translate(distance);
+    } else {
 
-  //Update Methods
+    }
+  }
+
+  // Update Methods
+  private void applyCollisions() {
+    for (Collision c : collisions) {
+      if (c.getCollidedObject().getBodyType() == RigidbodyType.STATIC) {
+        switch (c.getDirection()) {
+          case DOWN:
+          case UP:
+            setVelocity(getVelocity().mult(Vector2.Right()));
+            break;
+          case LEFT:
+          case RIGHT:
+            setVelocity(getVelocity().mult(Vector2.Up()));
+            break;
+        }
+      } else if (c.getCollidedObject().getBodyType() == RigidbodyType.DYNAMIC) {
+        Vector2 collisionForce;
+        // TODO Momentum and Impulse Calculation
+      }
+    }
+  }
+
+  private void applyForces() {
+    currentForce = Vector2.Zero();
+    for (Vector2 force : forces) {
+      currentForce = currentForce.add(force);
+    }
+    if (!grounded) {
+      currentForce = currentForce.add(Vector2.Up().mult(Physics.GRAVITY * mass * gravityScale));
+    }
+  }
   // Getters and Setters
   public Vector2 getVelocity() {
     return velocity;
@@ -91,11 +132,11 @@ public class Rigidbody extends Component implements Serializable {
     this.velocity = velocity;
   }
 
-  public RigibodyType getBodyType() {
+  public RigidbodyType getBodyType() {
     return bodyType;
   }
 
-  public void setType(RigibodyType bodyType) {
+  public void setType(RigidbodyType bodyType) {
     this.bodyType = bodyType;
   }
 

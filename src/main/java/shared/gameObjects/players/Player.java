@@ -63,7 +63,9 @@ public class Player extends GameObject {
     return spriteLibary.get("baseImage");
   }
 
-  public int getHealth() { return health; }
+  public int getHealth() {
+    return health;
+  }
 
   public Weapon getHolding() {
     return holding;

@@ -50,7 +50,7 @@ abstract class Gun extends Weapon {
   // -------------------
   // Setters and Getters
   // -------------------
-  
+
   public double getBulletSpeed() {
     return this.bulletSpeed;
   }
@@ -105,5 +105,4 @@ abstract class Gun extends Weapon {
 
     return s;
   }
-
 }
