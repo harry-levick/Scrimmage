@@ -11,7 +11,6 @@ public class Sword extends Melee {
    *
    * @param x The x position of the sword
    * @param y The y position of the sword
-   * @param id The ObjectID of the sword
    * @param damage Damage of the sword
    * @param weight Weight of the sword
    * @param name Name of the sword
@@ -22,7 +21,6 @@ public class Sword extends Melee {
   public Sword(
       double x,
       double y,
-      ObjectID id,
       double damage,
       double weight,
       String name,
@@ -31,7 +29,7 @@ public class Sword extends Melee {
       double beginAngle,
       double endAngle) {
 
-    super(x, y, id, imagePath, damage, weight, name, ammo, range, beginAngle, endAngle);
+    super(x, y, imagePath, damage, weight, name, ammo, range, beginAngle, endAngle);
   }
 
   public void update() {}

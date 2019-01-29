@@ -69,7 +69,7 @@ public class LevelEditor extends Application {
               temp.initialise(root, Version.CLIENT, false);
               gameObjects.add(temp);
             } else if (cb.getValue() == "Handgun") {
-              Handgun temp = new Handgun(event.getX(), event.getY(), ObjectID.Weapon, 10, 10, "Handgun", 100, 100, 100, 10);
+              Handgun temp = new Handgun(event.getX(), event.getY(), 10, 10, "Handgun", 100, 100, 100, 10);
               temp.initialise(root, Version.CLIENT, false);
             }
           }

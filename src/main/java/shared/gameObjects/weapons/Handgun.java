@@ -24,7 +24,6 @@ public class Handgun extends Gun {
   public Handgun(
       double x,
       double y,
-      ObjectID id,
       double damage,
       double weight,
       String name,
@@ -33,7 +32,7 @@ public class Handgun extends Gun {
       double fireRate,
       double bulletWidth) {
     
-    super(x, y, id, imagePath, damage, weight, name, ammo, bulletSpeed, fireRate, bulletWidth, false, false);
+    super(x, y, imagePath, damage, weight, name, ammo, bulletSpeed, fireRate, bulletWidth, false, false);
   }
 
   public void update() {}

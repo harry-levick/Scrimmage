@@ -19,7 +19,6 @@ public class HandgunTest {
     handgun = new Handgun(
         10, 
         10,
-        ObjectID.Player,
         10,
         10,
         "HandGun",

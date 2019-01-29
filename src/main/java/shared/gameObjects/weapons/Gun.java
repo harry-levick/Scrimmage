@@ -15,6 +15,9 @@ abstract class Gun extends Weapon {
   /**
    * Constructor of the Gun class
    *
+   * @param x The x position of the gun
+   * @param y The y position of the gun
+   * @param imagePath The image path to the gun image
    * @param damage Damage of the gun
    * @param weight Weight of the gun
    * @param name Name of the gun
@@ -28,7 +31,6 @@ abstract class Gun extends Weapon {
   public Gun(
       double x,
       double y,
-      ObjectID id,
       String imagePath,
       double damage,
       double weight,
@@ -40,7 +42,7 @@ abstract class Gun extends Weapon {
       boolean fullAutoFire,
       boolean singleHanded) {
 
-    super(x, y, id, imagePath, damage, weight, name, true, false, ammo);
+    super(x, y, imagePath, damage, weight, name, true, false, ammo);
     this.bulletSpeed = bulletSpeed;
     this.bulletWidth = bulletWidth;
     this.fireRate = fireRate;
