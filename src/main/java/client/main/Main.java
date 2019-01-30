@@ -191,7 +191,7 @@ public class Main extends Application {
           public void handle(ActionEvent event) {
             //audio.setMusicVolume(0.2f);
             settings.setMusicVolume(0.2);
-            audio.updateVolume();
+            audio.updateMusicVolume();
           }
         }
     );
@@ -206,7 +206,7 @@ public class Main extends Application {
           public void handle(ActionEvent event) {
             //audio.setMusicVolume(1.0f);
             settings.setMusicVolume(1.0);
-            audio.updateVolume();
+            audio.updateMusicVolume();
           }
         }
     );
@@ -219,12 +219,26 @@ public class Main extends Application {
       @Override
       public void invalidated(Observable observable) {
         settings.setMusicVolume(sldVol.getValue()/100f);
-        audio.updateVolume();
+        audio.updateMusicVolume();
       }
     });
     sldVol.setLayoutX(400);
     sldVol.setLayoutY(10);
     root.getChildren().add(sldVol);
+    Button btnSfx = new Button();
+    btnSfx.setText("SFX");
+    btnSfx.setOnAction(
+        new EventHandler<ActionEvent>() {
+          @Override
+          public void handle(ActionEvent event) {
+            //audio.setMusicVolume(1.0f);
+            audio.playSFX("CHOOSE_YOUR_CHARACTER");
+          }
+        }
+    );
+    btnSfx.setLayoutX(550);
+    btnSfx.setLayoutY(10);
+    root.getChildren().add(btnSfx);
 
 
 
