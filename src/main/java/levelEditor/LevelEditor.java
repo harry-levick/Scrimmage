@@ -1,6 +1,5 @@
 package levelEditor;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.UUID;
 import javafx.animation.AnimationTimer;
@@ -103,7 +102,6 @@ public class LevelEditor extends Application {
     primaryStage.setScene(scene);
     primaryStage.show();
     primaryStage.setFullScreen(true);
-    System.out.println("testasd");
 
     new AnimationTimer() {
       @Override

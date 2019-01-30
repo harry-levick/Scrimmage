@@ -241,18 +241,18 @@ public class Main extends Application {
     root.getChildren().add(btnSfx);
 
 
+    scene = new Scene(root, 1920, 1080);
 
-    scene = new Scene(root, 1000, 1000);
     primaryStage.setScene(scene);
-    primaryStage.setFullScreen(false);
-    Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+    primaryStage.setFullScreen(true);
+    //Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 
     // TODO Create a screen height and width variable and scale render off that
     // Set Stage boundaries to visible bounds of the main screen
-    primaryStage.setX(primaryScreenBounds.getMinX());
-    primaryStage.setY(primaryScreenBounds.getMinY());
-    primaryStage.setWidth(primaryScreenBounds.getWidth());
-    primaryStage.setHeight(primaryScreenBounds.getHeight());
+    //primaryStage.setX(primaryScreenBounds.getMinX());
+    //primaryStage.setY(primaryScreenBounds.getMinY());
+    //primaryStage.setWidth(primaryScreenBounds.getWidth());
+    //primaryStage.setHeight(primaryScreenBounds.getHeight());
     primaryStage.show();
 
     // Setup Input
