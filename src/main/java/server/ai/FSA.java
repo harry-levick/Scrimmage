@@ -161,7 +161,7 @@ public enum FSA {
         return FLEEING_ATTACKING;
       // If we have run out of the range of the enemy
       } else if (newDist > enemyWeaponRange) {
-        return STILL;
+        return IDLE;
 
       } else return FLEEING;
     }
@@ -200,7 +200,7 @@ public enum FSA {
       } else return FLEEING_ATTACKING;
     }
   },
-  STILL() {
+  IDLE() {
     public FSA next(Player targetPlayer, Player bot, double prevDist, double newDist) {
       StateInfo.setInfo(targetPlayer, bot);
 
@@ -234,13 +234,13 @@ public enum FSA {
           (newDist < prevDist)) {
         return FLEEING_ATTACKING;
 
-      } else return STILL;
+      } else return IDLE;
     }
   },
   INITIAL_STATE() {
     // The initial state just acts as an entry point, and so directs straight to the still state.
     public FSA next(Player targetPlayer, Player bot, double prevDist, double newDist) {
-      return FSA.STILL;
+      return FSA.IDLE;
     }
   };
 
