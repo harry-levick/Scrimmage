@@ -66,7 +66,13 @@ public abstract class GameObject implements Serializable {
   public abstract void render();
 
   //Interpolate Position Client only
-  public abstract void interpolatePosition(float alpha);
+  public void interpolatePosition(float alpha) {
+    if (!isActive()) {
+      return;
+    }
+    imageView.setTranslateX(alpha * getX() + (1 - alpha) * imageView.getTranslateX());
+    imageView.setTranslateY(alpha * getY() + (1 - alpha) * imageView.getTranslateY());
+  }
 
   /**
    * Contains the state of the object for sending over server Only contains items that need sending

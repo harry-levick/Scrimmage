@@ -36,15 +36,6 @@ public class Player extends GameObject {
   }
 
   @Override
-  public void interpolatePosition(float alpha) {
-    if (!isActive()) {
-      return;
-    }
-    imageView.setTranslateX(alpha * getX() + (1 - alpha) * imageView.getTranslateX());
-    imageView.setTranslateY(alpha * getY() + (1 - alpha) * imageView.getTranslateY());
-  }
-
-  @Override
   public String getState() {
     return null;
   }

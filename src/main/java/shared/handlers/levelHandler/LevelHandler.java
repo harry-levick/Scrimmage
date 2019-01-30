@@ -1,6 +1,6 @@
 package shared.handlers.levelHandler;
 
-import client.main.Main;
+import client.main.Client;
 import client.main.Settings;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,8 +55,8 @@ public class LevelHandler {
     gameObjects.forEach(
         gameObject -> {
           if (gameObject.getId() == ObjectID.MapDataObject && isClient) {
-            Main.clientPlayer.setX(gameObject.getX());
-            Main.clientPlayer.setY(gameObject.getY());
+            Client.clientPlayer.setX(gameObject.getX());
+            Client.clientPlayer.setY(gameObject.getY());
             gameObjects.remove(gameObject);
           } else {
             gameObject.initialise(root, true);

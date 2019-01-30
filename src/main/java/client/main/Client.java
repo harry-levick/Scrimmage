@@ -20,9 +20,9 @@ import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.LevelHandler;
 import shared.handlers.levelHandler.Map;
 
-public class Main extends Application {
+public class Client extends Application {
 
-  private static final Logger LOGGER = LogManager.getLogger(Main.class.getName());
+  private static final Logger LOGGER = LogManager.getLogger(Client.class.getName());
   public static KeyboardInput keyInput;
   public static MouseInput mouseInput;
   public static LevelHandler levelHandler;
@@ -47,6 +47,7 @@ public class Main extends Application {
   private DatagramSocket socket;
   private InetAddress address;
   private byte[] buffer;
+
 
   public static void main(String args[]) {
     launch(args);
@@ -151,14 +152,6 @@ public class Main extends Application {
     scene = new Scene(root, 1920, 1080);
     primaryStage.setScene(scene);
     primaryStage.setFullScreen(true);
-    //Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-
-    // TODO Create a screen height and width variable and scale render off that
-    // Set Stage boundaries to visible bounds of the main screen
-    //primaryStage.setX(primaryScreenBounds.getMinX());
-    //primaryStage.setY(primaryScreenBounds.getMinY());
-    //primaryStage.setWidth(primaryScreenBounds.getWidth());
-    //primaryStage.setHeight(primaryScreenBounds.getHeight());
     primaryStage.show();
 
     // Setup Input
