@@ -7,8 +7,8 @@ import java.io.File;
  */
 public class Settings {
 
-  private int musicVolume;
-  private int soundEffectVolume;
+  private double musicVolume;
+  private double soundEffectVolume;
   private String mapsPath =
       "src" + File.separator + "main" + File.separator + "resources" + File.separator + "menus";
   private String menuPath =
@@ -18,8 +18,8 @@ public class Settings {
    * Default Constructor Music volume set to 100 and sound effects to 75
    */
   public Settings() {
-    musicVolume = 100;
-    soundEffectVolume = 75;
+    musicVolume = 0.5f;
+    soundEffectVolume = 0.75f;
   }
 
   public String getMapsPath() {
@@ -41,7 +41,7 @@ public class Settings {
   /**
    * @return Current game music volume
    */
-  public int getMusicVolume() {
+  public double getMusicVolume() {
     return musicVolume;
   }
 
@@ -50,15 +50,15 @@ public class Settings {
    *
    * @param musicVolume Volume to set music too
    */
-  public void setMusicVolume(int musicVolume) {
-    this.musicVolume = musicVolume > 100 ? 100 : musicVolume;
+  public void setMusicVolume(double musicVolume) {
+    this.musicVolume = musicVolume > 1.0 ? 1.0 : musicVolume;
     this.musicVolume = musicVolume < 0 ? 0 : musicVolume;
   }
 
   /**
    * @return Current game sound effect volume
    */
-  public int getSoundEffectVolume() {
+  public double getSoundEffectVolume() {
     return soundEffectVolume;
   }
 
@@ -67,8 +67,8 @@ public class Settings {
    *
    * @param soundEffectVolume Volume to set game sound effects too
    */
-  public void setSoundEffectVolume(int soundEffectVolume) {
-    this.soundEffectVolume = soundEffectVolume > 100 ? 100 : soundEffectVolume;
+  public void setSoundEffectVolume(double soundEffectVolume) {
+    this.soundEffectVolume = soundEffectVolume > 1.0 ? 1.0 : soundEffectVolume;
     this.soundEffectVolume = soundEffectVolume < 0 ? 0 : soundEffectVolume;
   }
 }

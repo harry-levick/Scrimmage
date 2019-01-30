@@ -1,5 +1,6 @@
 package client.main;
 
+import client.handlers.audioHandler.AudioHandler;
 import client.handlers.inputHandler.KeyboardInput;
 import client.handlers.inputHandler.MouseInput;
 import java.io.IOException;
@@ -10,8 +11,16 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Slider;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -144,7 +153,96 @@ public class Main extends Application {
   private void setupRender(Stage primaryStage) {
     root = new Group();
     primaryStage.setTitle(gameTitle);
+
+    AudioHandler audio = new AudioHandler(settings);
+
+    //todo TESTING: change controls here
+    Button btnPlay = new Button();
+    btnPlay.setText("Play");
+    btnPlay.setOnAction(
+        new EventHandler<ActionEvent>() {
+          @Override
+          public void handle(ActionEvent event) {
+            audio.playMusic("FUNK_GAME_LOOP");
+          }
+        }
+    );
+    btnPlay.setLayoutX(10);
+    btnPlay.setLayoutY(10);
+    root.getChildren().add(btnPlay);
+    Button btnStop = new Button();
+    btnStop.setText("Stop");
+    btnStop.setOnAction(
+        new EventHandler<ActionEvent>() {
+          @Override
+          public void handle(ActionEvent event) {
+            audio.stopMusic();
+          }
+        }
+    );
+    btnStop.setLayoutX(100);
+    btnStop.setLayoutY(10);
+    root.getChildren().add(btnStop);
+    Button btnVolL = new Button();
+    btnVolL.setText("Vol 20");
+    btnVolL.setOnAction(
+        new EventHandler<ActionEvent>() {
+          @Override
+          public void handle(ActionEvent event) {
+            //audio.setMusicVolume(0.2f);
+            settings.setMusicVolume(0.2);
+            audio.updateMusicVolume();
+          }
+        }
+    );
+    btnVolL.setLayoutX(200);
+    btnVolL.setLayoutY(10);
+    root.getChildren().add(btnVolL);
+    Button btnVolH = new Button();
+    btnVolH.setText("Vol 100");
+    btnVolH.setOnAction(
+        new EventHandler<ActionEvent>() {
+          @Override
+          public void handle(ActionEvent event) {
+            //audio.setMusicVolume(1.0f);
+            settings.setMusicVolume(1.0);
+            audio.updateMusicVolume();
+          }
+        }
+    );
+    btnVolH.setLayoutX(300);
+    btnVolH.setLayoutY(10);
+    root.getChildren().add(btnVolH);
+    Slider sldVol = new Slider();
+    sldVol.setValue(settings.getMusicVolume()* 100);
+    sldVol.valueProperty().addListener(new InvalidationListener() {
+      @Override
+      public void invalidated(Observable observable) {
+        settings.setMusicVolume(sldVol.getValue()/100f);
+        audio.updateMusicVolume();
+      }
+    });
+    sldVol.setLayoutX(400);
+    sldVol.setLayoutY(10);
+    root.getChildren().add(sldVol);
+    Button btnSfx = new Button();
+    btnSfx.setText("SFX");
+    btnSfx.setOnAction(
+        new EventHandler<ActionEvent>() {
+          @Override
+          public void handle(ActionEvent event) {
+            //audio.setMusicVolume(1.0f);
+            audio.playSFX("CHOOSE_YOUR_CHARACTER");
+          }
+        }
+    );
+    btnSfx.setLayoutX(550);
+    btnSfx.setLayoutY(10);
+    root.getChildren().add(btnSfx);
+
+
     scene = new Scene(root, 1920, 1080);
+
     primaryStage.setScene(scene);
     primaryStage.setFullScreen(true);
     //Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
@@ -163,6 +261,10 @@ public class Main extends Application {
     scene.setOnMousePressed(mouseInput);
     scene.setOnMouseMoved(mouseInput);
     scene.setOnMouseReleased(mouseInput);
+
+    //Start Music
+
+
   }
 
 }
