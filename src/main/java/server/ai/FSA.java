@@ -18,18 +18,20 @@ public enum FSA {
       int enemyHealth = StateInfo.enemyHealth;
 
       if ((newDist > weaponRange) &&
-          ((botHealth >= this.HIGH_HEALTH) || (botHealth >= enemyHealth * 1.5)) ) {
+          (botHealth >= this.HIGH_HEALTH) &&
+          ((ammoLeft > 0) && targetPlayer.getHolding().isGun() || targetPlayer.getHolding()
+              .isMelee())) {
         return CHASING;
 
       } else if ((newDist <= weaponRange) &&
           (newDist > prevDist) &&
-          ((botHealth >= this.HIGH_HEALTH) || (botHealth >= enemyHealth * 1.5)) &&
+          (botHealth >= this.HIGH_HEALTH) &&
           ((ammoLeft > 0) && targetPlayer.getHolding().isGun() || targetPlayer.getHolding()
               .isMelee())) {
         return CHASING_ATTACKING;
 
       } else if ((botHealth <= this.MEDIUM_HEALTH) ||
-          (bot.getHolding().isGun()) && (ammoLeft == 0)) {
+          ((ammoLeft == 0) && targetPlayer.getHolding().isGun())) {
         return FLEEING;
 
       } else if ((botHealth <= this.HIGH_HEALTH) &&
@@ -56,25 +58,25 @@ public enum FSA {
       if ((newDist <= weaponRange) &&
           ((ammoLeft > 0) && targetPlayer.getHolding().isGun() || targetPlayer.getHolding()
               .isMelee()) &&
-          (botHealth >= this.MEDIUM_HEALTH) &&
+          (botHealth >= this.HIGH_HEALTH) &&
           // Target staying relatively still
           (prevDist * 1.05 <= newDist && newDist <= prevDist * 1.05 )) {
         return ATTACKING;
 
       } else if ((newDist <= weaponRange) &&
           (newDist > prevDist) &&
-          ((botHealth >= this.HIGH_HEALTH) || (botHealth >= enemyHealth * 1.5)) &&
+          (botHealth >= this.HIGH_HEALTH) &&
           ((ammoLeft > 0) && targetPlayer.getHolding().isGun() || targetPlayer.getHolding()
               .isMelee())) {
         return CHASING_ATTACKING;
 
       } else if ((botHealth <= this.MEDIUM_HEALTH) ||
-          (((bot.getHolding().isGun()) && (ammoLeft == 0)) || newDist > weaponRange)) {
+          ((bot.getHolding().isGun()) && (ammoLeft == 0))) {
         return FLEEING;
 
       } else if ((botHealth <= this.HIGH_HEALTH) &&
           (botHealth >= this.MEDIUM_HEALTH) &&
-          (newDist <= prevDist) &&
+          (newDist < prevDist) &&
           (newDist <= weaponRange) &&
           ((ammoLeft > 0) && targetPlayer.getHolding().isGun() || targetPlayer.getHolding()
               .isMelee())) {
@@ -98,19 +100,20 @@ public enum FSA {
           (prevDist * 1.05 <= newDist && newDist <= prevDist * 1.05 ) &&
           ((ammoLeft > 0) && targetPlayer.getHolding().isGun() || targetPlayer.getHolding()
               .isMelee()) &&
-          ((botHealth >= this.HIGH_HEALTH) || (botHealth >= enemyHealth * 1.5))) {
+          (botHealth >= this.HIGH_HEALTH)) {
         return ATTACKING;
 
-      } else if (((botHealth >= this.HIGH_HEALTH) || (botHealth >= enemyHealth * 1.5)) &&
+      } else if ((botHealth >= this.HIGH_HEALTH) &&
           (newDist > weaponRange) &&
           (newDist > prevDist)) {
         return CHASING;
 
       } else if ((botHealth <= this.MEDIUM_HEALTH) ||
-          ((bot.getHolding().isGun()) && (ammoLeft == 0) || newDist > weaponRange)) {
+          ((bot.getHolding().isGun()) && (ammoLeft == 0))) {
         return FLEEING;
 
-      } else if ((botHealth < this.HIGH_HEALTH) &&
+      } else if ((botHealth <= this.HIGH_HEALTH) &&
+          (botHealth >= MEDIUM_HEALTH) &&
           (newDist < prevDist) &&
           (newDist <= weaponRange) &&
           ((ammoLeft > 0) && targetPlayer.getHolding().isGun() || targetPlayer.getHolding()
@@ -135,7 +138,6 @@ public enum FSA {
           (temp = (Melee) targetPlayer.getHolding()).getRange();
 
       if ((newDist <= weaponRange) &&
-          (newDist < prevDist) &&
           (botHealth >= this.HIGH_HEALTH) &&
           ((ammoLeft > 0) && targetPlayer.getHolding().isGun() || targetPlayer.getHolding()
               .isMelee())) {
@@ -156,11 +158,13 @@ public enum FSA {
       } else if ((newDist <= weaponRange) &&
           (newDist < prevDist) &&
           (botHealth <= this.HIGH_HEALTH) &&
+          (botHealth >= this.MEDIUM_HEALTH) &&
           (((ammoLeft > 0) && targetPlayer.getHolding().isGun()) || targetPlayer.getHolding()
               .isMelee())) {
         return FLEEING_ATTACKING;
       // If we have run out of the range of the enemy
-      } else if (newDist > enemyWeaponRange) {
+      } else if ((newDist > enemyWeaponRange) &&
+          (botHealth >= this.HIGH_HEALTH)) {
         return IDLE;
 
       } else return FLEEING;
@@ -175,25 +179,25 @@ public enum FSA {
       int botHealth = StateInfo.botHealth;
       int enemyHealth = StateInfo.enemyHealth;
 
-      if (((botHealth > this.HIGH_HEALTH) || (botHealth >= enemyHealth * 1.5)) &&
+      if (((botHealth >= this.HIGH_HEALTH)) &&
           (newDist < prevDist) &&
           (newDist <= weaponRange) &&
           ((bot.getHolding().isGun() && ammoLeft > 0) || targetPlayer.getHolding()
               .isMelee())) {
         return ATTACKING;
 
-      } else if (((botHealth > this.HIGH_HEALTH) || (botHealth >= enemyHealth * 1.5)) &&
+      } else if (((botHealth >= this.HIGH_HEALTH)) &&
           (newDist > weaponRange)) {
         return CHASING;
 
-      } else if (((botHealth > this.HIGH_HEALTH) || (botHealth >= enemyHealth * 1.5)) &&
+      } else if (((botHealth >= this.HIGH_HEALTH)) &&
           (newDist <= weaponRange) &&
           (newDist > prevDist) &&
           ((ammoLeft > 0) && targetPlayer.getHolding().isGun() || targetPlayer.getHolding()
               .isMelee())) {
         return CHASING_ATTACKING;
 
-      } else if ((botHealth < this.MEDIUM_HEALTH) &&
+      } else if ((botHealth <= this.MEDIUM_HEALTH) &&
           (prevDist > newDist)) {
         return FLEEING;
 
@@ -209,17 +213,17 @@ public enum FSA {
       int botHealth = StateInfo.botHealth;
       int enemyHealth = StateInfo.enemyHealth;
 
-      if (((botHealth >= this.HIGH_HEALTH) || (botHealth >= enemyHealth * 1.5)) &&
+      if (((botHealth >= this.HIGH_HEALTH)) &&
           (newDist <= weaponRange) &&
           ((ammoLeft > 0) && targetPlayer.getHolding().isGun() || targetPlayer.getHolding()
               .isMelee())) {
         return ATTACKING;
 
-      } else if (((botHealth >= this.HIGH_HEALTH) || (botHealth >= enemyHealth * 1.5)) &&
+      } else if (((botHealth >= this.HIGH_HEALTH)) &&
           (newDist > weaponRange)) {
         return CHASING;
 
-      } else if (((botHealth >= this.HIGH_HEALTH) || (botHealth >= enemyHealth * 1.5)) &&
+      } else if (((botHealth >= this.HIGH_HEALTH)) &&
           (newDist <= weaponRange) &&
           ((ammoLeft > 0) && targetPlayer.getHolding().isGun() || targetPlayer.getHolding()
           .isMelee()) &&
@@ -229,7 +233,8 @@ public enum FSA {
       } else if ((botHealth < this.MEDIUM_HEALTH)) {
         return FLEEING;
 
-      } else if ((botHealth < this.HIGH_HEALTH) &&
+      } else if ((botHealth <= this.HIGH_HEALTH) &&
+          (botHealth >= this.MEDIUM_HEALTH) &&
           (newDist <= weaponRange) &&
           (newDist < prevDist)) {
         return FLEEING_ATTACKING;
@@ -245,12 +250,6 @@ public enum FSA {
   };
 
   public abstract FSA next(Player targetPlayer, Player bot, double prevDist, double newDist);
-
-  private Object[] retrieveInfo(Player target, Player bot) {
-    Object[] info = new Object[5];
-
-    return info;
-  }
 
   final int HIGH_HEALTH = 66;
   final int MEDIUM_HEALTH = 33;
