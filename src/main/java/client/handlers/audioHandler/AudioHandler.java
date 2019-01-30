@@ -26,7 +26,7 @@ public class AudioHandler {
    * @param trackName Music resource to play
    */
   public void playMusic(String trackName) {
-    String path = musicAssets.getTrackPath("FUNK_GAME_LOOP");
+    String path = musicAssets.getTrackPath(trackName);
     if (!(path == null)) {
       musicMedia = new Media(new File(path).toURI().toString());
       musicPlayer = new MediaPlayer(musicMedia);
@@ -50,7 +50,7 @@ public class AudioHandler {
    * @param trackName sound effect resource
    */
   public void playSFX(String trackName) {
-    String path = effectsAssets.getTrackPath("CHOOSE_YOUR_CHARACTER");
+    String path = effectsAssets.getTrackPath(trackName);
     if (!(path == null)) {
       effectMedia = new Media(new File(path).toURI().toString());
       effectPlayer = new MediaPlayer(effectMedia);
