@@ -2,12 +2,21 @@ package server.ai;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
 
 /** @author Harry Levick (hxl799) */
+
+/**
+ * AiAgent is the main body of an ai, creating an AiAgent will create a bot in the world at (x,y).
+ * The AiAgent class then has the main loop of the bot, which is inside the startAgent() method,
+ * calling this method begins the main loop.
+ * Before the startAgent() method is called, you must call the getBot() method so that the bot can
+ * be added to the list of gameObjects.
+ */
 public class AiAgent {
 
   Bot bot;
@@ -16,8 +25,8 @@ public class AiAgent {
   ArrayList<GameObject> gameObjects;
   Player targetPlayer;
 
-  public AiAgent(double xPos, double yPos, ObjectID id, ArrayList<GameObject> gameObjects) {
-    this.bot = new Bot(xPos, yPos, id);
+  public AiAgent(double xPos, double yPos, ObjectID id, UUID uuid, ArrayList<GameObject> gameObjects) {
+    this.bot = new Bot(xPos, yPos, id, uuid);
     this.state = FSA.INITIAL_STATE;
     this.active = false;
     this.gameObjects = gameObjects;
@@ -43,14 +52,13 @@ public class AiAgent {
     targetPlayer = findTarget(allPlayers);
 
     while (active) {
-
       /**
        * The ai can be in one of 6 states at any one time.
        * The state it is in determines the actions that it takes.
        */
       switch (state) {
-        case STILL:
-          // TODO what to do in the still state?
+        case IDLE:
+          // TODO what to do in the idle state?
         case CHASING:
           // TODO calculate and execute the best path to the target.
         case FLEEING:
@@ -77,6 +85,17 @@ public class AiAgent {
       }
     }
 
+  }
+
+  /**
+   * Receives an action and then executes this action.
+   * This method will only execute one action at a time (the first action in the list). Since the
+   * method will be called inside of the agent loop
+   * @param actions: a list of actions to take.
+   */
+  private void executeAction(ArrayList<boolean[]> actions) {
+    // TODO decide on the implementation of action execution.
+    bot.jumpKey = true;
   }
 
   /**
