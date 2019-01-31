@@ -8,7 +8,6 @@ import shared.physics.data.AngularData;
 import shared.physics.data.Collision;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.RigidbodyType;
-import shared.physics.types.RigidbodyUpdateType;
 import shared.util.maths.Vector2;
 
 /**
@@ -18,13 +17,16 @@ import shared.util.maths.Vector2;
 public class Rigidbody extends Component implements Serializable {
 
   private Vector2 deltaPos;
+  private Vector2 deltaPosUpdate;
+
   private Vector2 velocity;
+
   private Vector2 currentForce;
   private Vector2 lastAcceleration;
   private Vector2 acceleration;
 
   private RigidbodyType bodyType;
-  private RigidbodyUpdateType updateMethod;
+
   private MaterialProperty material;
   private AngularData angularData;
   private ArrayList<Collision> collisions;
@@ -51,11 +53,10 @@ public class Rigidbody extends Component implements Serializable {
     this.material = material;
     this.angularData = angularData;
     this.bodyType = bodyType;
-    this.updateMethod = RigidbodyUpdateType.DISCRETE;
 
     collisions = new ArrayList<>();
     forces = new ArrayList<>();
-    velocity = acceleration = lastAcceleration = deltaPos = Vector2.Zero();
+    velocity = acceleration = lastAcceleration = deltaPos = deltaPosUpdate = Vector2.Zero();
     currentForce = acceleration.mult(mass);
   }
 
@@ -65,30 +66,43 @@ public class Rigidbody extends Component implements Serializable {
     applyCollisions();
     applyForces();
     lastAcceleration = acceleration;
+
     deltaPos =
         deltaPos.add(
             velocity
                 .mult(Physics.TIMESTEP)
                 .add(acceleration.mult(0.5f).mult(Physics.TIMESTEP * Physics.TIMESTEP)));
+    deltaPos = deltaPosUpdate.add(deltaPos);
+    deltaPosUpdate = Vector2.Zero();
+    move(deltaPos, 0);
+
     acceleration = currentForce.div(mass);
     acceleration = lastAcceleration.add(acceleration).div(2);
     velocity = velocity.add(acceleration.mult(Physics.TIMESTEP));
-    move(deltaPos, 0);
+
+    grounded = false;
   }
   // Force Methods
 
-  /** Applies a force of a defined from a defined source direction (Instantaneous Force) */
-  void addForce(Vector2 force) {
+  /** Applies a force to be added on the next physics update */
+  public void addForce(Vector2 force) {
     forces.add(force);
   }
 
-  /** Moves the Rigibody to the defined space over time, instant if 0 */
-  void move(Vector2 distance, float time) {
+  /** Moves the Object to the defined space over time, instant if 0 */
+  public void move(Vector2 distance, float time) {
     if (time <= 0) {
       getParent().getTransform().translate(distance);
     } else {
 
     }
+  }
+  /**
+   * Moves the Object a given distance on the next update. The object may end up on another space
+   * due to external forces.
+   */
+  public void move(Vector2 distance) {
+    move(distance, 0);
   }
 
   // Update Methods
@@ -97,6 +111,7 @@ public class Rigidbody extends Component implements Serializable {
       if (c.getCollidedObject().getBodyType() == RigidbodyType.STATIC) {
         switch (c.getDirection()) {
           case DOWN:
+            grounded = true;
           case UP:
             setVelocity(getVelocity().mult(Vector2.Right()));
             break;
@@ -117,11 +132,14 @@ public class Rigidbody extends Component implements Serializable {
     for (Vector2 force : forces) {
       currentForce = currentForce.add(force);
     }
+    forces.clear();
     if (!grounded) {
       currentForce = currentForce.add(Vector2.Up().mult(Physics.GRAVITY * mass * gravityScale));
     }
     // TODO add Friction and Drag
   }
+
+
   // Getters and Setters
   public Vector2 getVelocity() {
     return velocity;
@@ -137,14 +155,6 @@ public class Rigidbody extends Component implements Serializable {
 
   public void setType(RigidbodyType bodyType) {
     this.bodyType = bodyType;
-  }
-
-  public RigidbodyUpdateType getUpdateMethod() {
-    return updateMethod;
-  }
-
-  public void setUpdateMethod(RigidbodyUpdateType updateMethod) {
-    this.updateMethod = updateMethod;
   }
 
   public float getMass() {

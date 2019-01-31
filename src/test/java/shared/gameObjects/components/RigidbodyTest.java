@@ -17,7 +17,6 @@ public class RigidbodyTest {
   private static MaterialProperty material;
   private static AngularData angularData;
 
-
   @BeforeClass
   public static void InitColliders() {
     a = new TestObject(2, 2, ObjectID.Player);
@@ -45,65 +44,47 @@ public class RigidbodyTest {
   }
 
   @Test
-  public void gravityInAir() {
-
-  }
+  public void gravityInAir() {}
 
   @Test
-  public void gravityGrounded() {
-
-  }
+  public void gravityGrounded() {}
 
   @Test
-  public void dragForceGravity() {
-
-  }
+  public void dragForceGravity() {}
 
   @Test
-  public void addForceNoTime() {
-
-  }
+  public void addForceNoTime() {}
 
   @Test
-  public void addForceTime() {
-
-  }
+  public void addForceTime() {}
 
   @Test
-  public void collisionDynamicDynamic() {
-
-  }
-  @Test
-  public void collisionDynamicStatic() {
-
-  }
+  public void addDistanceNoTime() {}
 
   @Test
-  public void collisionStaticStatic() {
-
-  }
+  public void addDistanceTime() {}
 
   @Test
-  public void staticFriction() {
-
-  }
+  public void collisionDynamicDynamic() {}
 
   @Test
-  public void kineticFriction() {
-
-  }
-  @Test
-  public void multipleDynamicCollisions() {
-
-  }
+  public void collisionDynamicStatic() {}
 
   @Test
-  public void multipleStaticCollisions() {
-
-  }
+  public void collisionStaticStatic() {}
 
   @Test
-  public void terminalVelocities() {
+  public void staticFriction() {}
 
-  }
+  @Test
+  public void kineticFriction() {}
+
+  @Test
+  public void multipleDynamicCollisions() {}
+
+  @Test
+  public void multipleStaticCollisions() {}
+
+  @Test
+  public void terminalVelocities() {}
 }
