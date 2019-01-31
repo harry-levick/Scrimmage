@@ -6,8 +6,11 @@ import shared.gameObjects.GameObject;
 import shared.physics.types.ColliderType;
 import shared.util.maths.Vector2;
 
-/** An edge collider, primarily for use with static obbjects (eg. floor) */
+/**
+ * An edge collider, primarily for use with static obbjects (eg. floor)
+ */
 public class EdgeCollider extends Collider implements Serializable {
+
   ArrayList<Vector2> nodes;
 
   public EdgeCollider(GameObject parent, boolean isTrigger) {

@@ -3,6 +3,7 @@ package shared.handlers.levelHandler;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
+import java.util.UUID;
 import org.junit.Before;
 import org.junit.Test;
 import shared.gameObjects.GameObject;
@@ -12,9 +13,9 @@ import shared.gameObjects.Utils.ObjectID;
 public class MapLoaderTest {
 
   ArrayList<GameObject> gameObjects = new ArrayList<>();
-  private TestObject g1 = new TestObject(6, 7, ObjectID.Bot);
-  private TestObject g2 = new TestObject(934, 12312, ObjectID.Bot);
-  private TestObject g3 = new TestObject(567560, 12, ObjectID.Player);
+  private TestObject g1 = new TestObject(6, 7, ObjectID.Bot, UUID.randomUUID());
+  private TestObject g2 = new TestObject(934, 12312, ObjectID.Bot, UUID.randomUUID());
+  private TestObject g3 = new TestObject(567560, 12, ObjectID.Player, UUID.randomUUID());
   private MapLoader map = new MapLoader();
   private String path = "B:/map.ser";
 

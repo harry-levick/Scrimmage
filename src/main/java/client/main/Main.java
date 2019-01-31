@@ -1,12 +1,25 @@
 package client.main;
 
+import client.handlers.audioHandler.AudioHandler;
 import client.handlers.inputHandler.KeyboardInput;
 import client.handlers.inputHandler.MouseInput;
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Slider;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
@@ -23,9 +36,24 @@ public class Main extends Application {
   public static LevelHandler levelHandler;
   public static Settings settings;
 
+  private static final float timeStep = 0.0166f;
+
+  private String gameTitle = "Alone in the Dark";
+  private static final int port = 4445;
+
   private Group root;
   private Scene scene;
   private Map currentMap;
+  private float maximumStep;
+  private long previousTime;
+  private float accumulatedTime;
+
+  private float elapsedSinceFPS = 0f;
+  private int framesElapsedSinceFPS = 0;
+  private boolean multiplayer = false;
+  private DatagramSocket socket;
+  private InetAddress address;
+  private byte[] buffer;
 
   public static void main(String args[]) {
     launch(args);
@@ -46,35 +74,185 @@ public class Main extends Application {
           levelHandler.generateLevel(root);
           currentMap = levelHandler.getMap();
         }
-        // Updates and Renders every object
-        levelHandler.getGameObjects().forEach(gameObject -> gameObject.update());
+
+        if (previousTime == 0) {
+          previousTime = now;
+          return;
+        }
+
+        float secondElapsed = (now - previousTime) / 1e9f; // time elapsed in seconds
+        float secondsElapsedCapped = Math.min(secondElapsed, maximumStep);
+        accumulatedTime += secondsElapsedCapped;
+        previousTime = now;
+
+        if (accumulatedTime < timeStep) {
+          float timeSinceInterpolation = timeStep - (accumulatedTime - secondElapsed);
+          float alphaRemaining = secondElapsed / timeSinceInterpolation;
+          levelHandler.getGameObjects()
+              .forEach(gameObject -> gameObject.interpolatePosition(alphaRemaining));
+          return;
+        }
+
+        while (accumulatedTime >= 2 * timeStep) {
+          levelHandler.getGameObjects().forEach(gameObject -> gameObject.update());
+          accumulatedTime -= timeStep;
+        }
         levelHandler.getGameObjects().forEach(gameObject -> gameObject.render());
-        // TODO Add networking here
+        levelHandler.getGameObjects().forEach(gameObject -> gameObject.update());
+        accumulatedTime -= timeStep;
+        float alpha = accumulatedTime / timeStep;
+        levelHandler.getGameObjects().forEach(gameObject -> gameObject.interpolatePosition(alpha));
+
+        if (multiplayer) {
+          buffer = KeyboardInput.getInput().getBytes();
+          try {
+            socket.send(new DatagramPacket(buffer, buffer.length, address, port));
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
+        }
+
+        calculateFPS(secondElapsed, primaryStage);
       }
     }.start();
   }
 
+  public void calculateFPS(float secondElapsed, Stage primaryStage) {
+    elapsedSinceFPS += secondElapsed;
+    framesElapsedSinceFPS++;
+    if (elapsedSinceFPS >= 0.5f) {
+      int fps = Math.round(framesElapsedSinceFPS / elapsedSinceFPS);
+      primaryStage.setTitle(gameTitle + " FPS: " + fps);
+      elapsedSinceFPS = 0;
+      framesElapsedSinceFPS = 0;
+    }
+  }
+
   public void init() {
+    maximumStep = Float.MAX_VALUE;
+    previousTime = 0;
+    accumulatedTime = 0;
     settings = new Settings();
     keyInput = new KeyboardInput();
     mouseInput = new MouseInput();
     // TODO: Add setting up audio, graphics, input, audioHandler and connections
+    if (multiplayer) {
+      try {
+        socket = new DatagramSocket();
+      } catch (SocketException e) {
+        e.printStackTrace();
+      }
+      try {
+        address = InetAddress.getByName("localhost");
+      } catch (UnknownHostException e) {
+        e.printStackTrace();
+      }
+    }
   }
 
   private void setupRender(Stage primaryStage) {
     root = new Group();
-    primaryStage.setTitle("Alone In The Dark");
-    scene = new Scene(root, 1000, 1000);
+    primaryStage.setTitle(gameTitle);
+
+    AudioHandler audio = new AudioHandler(settings);
+
+    //todo TESTING: change controls here
+    Button btnPlay = new Button();
+    btnPlay.setText("Play");
+    btnPlay.setOnAction(
+        new EventHandler<ActionEvent>() {
+          @Override
+          public void handle(ActionEvent event) {
+            audio.playMusic("FUNK_GAME_LOOP");
+          }
+        }
+    );
+    btnPlay.setLayoutX(10);
+    btnPlay.setLayoutY(10);
+    root.getChildren().add(btnPlay);
+    Button btnStop = new Button();
+    btnStop.setText("Stop");
+    btnStop.setOnAction(
+        new EventHandler<ActionEvent>() {
+          @Override
+          public void handle(ActionEvent event) {
+            audio.stopMusic();
+          }
+        }
+    );
+    btnStop.setLayoutX(100);
+    btnStop.setLayoutY(10);
+    root.getChildren().add(btnStop);
+    Button btnVolL = new Button();
+    btnVolL.setText("Vol 20");
+    btnVolL.setOnAction(
+        new EventHandler<ActionEvent>() {
+          @Override
+          public void handle(ActionEvent event) {
+            //audio.setMusicVolume(0.2f);
+            settings.setMusicVolume(0.2);
+            audio.updateMusicVolume();
+          }
+        }
+    );
+    btnVolL.setLayoutX(200);
+    btnVolL.setLayoutY(10);
+    root.getChildren().add(btnVolL);
+    Button btnVolH = new Button();
+    btnVolH.setText("Vol 100");
+    btnVolH.setOnAction(
+        new EventHandler<ActionEvent>() {
+          @Override
+          public void handle(ActionEvent event) {
+            //audio.setMusicVolume(1.0f);
+            settings.setMusicVolume(1.0);
+            audio.updateMusicVolume();
+          }
+        }
+    );
+    btnVolH.setLayoutX(300);
+    btnVolH.setLayoutY(10);
+    root.getChildren().add(btnVolH);
+    Slider sldVol = new Slider();
+    sldVol.setValue(settings.getMusicVolume()* 100);
+    sldVol.valueProperty().addListener(new InvalidationListener() {
+      @Override
+      public void invalidated(Observable observable) {
+        settings.setMusicVolume(sldVol.getValue()/100f);
+        audio.updateMusicVolume();
+      }
+    });
+    sldVol.setLayoutX(400);
+    sldVol.setLayoutY(10);
+    root.getChildren().add(sldVol);
+    Button btnSfx = new Button();
+    btnSfx.setText("SFX");
+    btnSfx.setOnAction(
+        new EventHandler<ActionEvent>() {
+          @Override
+          public void handle(ActionEvent event) {
+            //audio.setMusicVolume(1.0f);
+            audio.playSFX("CHOOSE_YOUR_CHARACTER");
+          }
+        }
+    );
+    btnSfx.setLayoutX(550);
+    btnSfx.setLayoutY(10);
+    root.getChildren().add(btnSfx);
+
+
+    scene = new Scene(root, 1920, 1080);
+
     primaryStage.setScene(scene);
-    primaryStage.setFullScreen(false);
-    Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+    primaryStage.setFullScreen(true);
+    //Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 
     // TODO Create a screen height and width variable and scale render off that
     // Set Stage boundaries to visible bounds of the main screen
-    primaryStage.setX(primaryScreenBounds.getMinX());
-    primaryStage.setY(primaryScreenBounds.getMinY());
-    primaryStage.setWidth(primaryScreenBounds.getWidth());
-    primaryStage.setHeight(primaryScreenBounds.getHeight());
+    //primaryStage.setX(primaryScreenBounds.getMinX());
+    //primaryStage.setY(primaryScreenBounds.getMinY());
+    //primaryStage.setWidth(primaryScreenBounds.getWidth());
+    //primaryStage.setHeight(primaryScreenBounds.getHeight());
     primaryStage.show();
 
     // Setup Input
@@ -83,5 +261,10 @@ public class Main extends Application {
     scene.setOnMousePressed(mouseInput);
     scene.setOnMouseMoved(mouseInput);
     scene.setOnMouseReleased(mouseInput);
+
+    //Start Music
+
+
   }
+
 }

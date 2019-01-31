@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -19,6 +20,7 @@ import shared.util.maths.Vector2;
 
 public abstract class GameObject implements Serializable {
 
+  protected UUID objectUUID;
   protected ObjectID id;
   protected HashMap<String, String> spriteLibaryURL;
   protected boolean animate;
@@ -35,6 +37,7 @@ public abstract class GameObject implements Serializable {
 
   protected boolean active;
   protected boolean destroyed;
+  protected boolean updated;
 
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
@@ -44,12 +47,14 @@ public abstract class GameObject implements Serializable {
    * @param y Y coordinate of object in game world
    * @param id Unique Identifier of every game object
    */
-  public GameObject(double x, double y, ObjectID id, String baseImageURL) {
+  public GameObject(double x, double y, ObjectID id, String baseImageURL, UUID objectUUID) {
     spriteLibaryURL = new HashMap<>();
+    this.updated = false;
     this.id = id;
+    this.objectUUID = objectUUID;
     spriteLibaryURL.put("baseImage", baseImageURL);
     animate = false;
-
+    active = true;
     this.transform = new Transform(this, new Vector2((float) x, (float) y));
     components = new ArrayList<>();
     children = new HashSet<>();
@@ -61,6 +66,8 @@ public abstract class GameObject implements Serializable {
 
   // Client Side only
   public abstract void render();
+
+  public abstract void interpolatePosition(float alpha);
 
   // Ignore for now, added due to unSerializable objects
   public void initialise(Group root, Version version, boolean animate) {
@@ -146,7 +153,11 @@ public abstract class GameObject implements Serializable {
     destroyed = active = false;
   }
 
-  // Getters and Setters
+
+  /**
+   * Basic Getters and Setters
+   */
+
   public double getX() {
     return this.transform.getPos().getX();
   }
@@ -205,6 +216,14 @@ public abstract class GameObject implements Serializable {
 
   public boolean isActive() {
     return active;
+  }
+
+  public boolean isUpdated() {
+    return updated;
+  }
+
+  public void setUpdated(boolean updated) {
+    this.updated = updated;
   }
 
   public void setActive(boolean state) {
