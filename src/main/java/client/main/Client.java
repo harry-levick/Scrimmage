@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.UUID;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -131,19 +129,6 @@ public class Client extends Application {
     mouseInput = new MouseInput();
     //Start off screen
     clientPlayer = new Player(-500, -500, UUID.randomUUID());
-
-    if (multiplayer) {
-      try {
-        socket = new DatagramSocket();
-      } catch (SocketException e) {
-        e.printStackTrace();
-      }
-      try {
-        address = InetAddress.getByName("localhost");
-      } catch (UnknownHostException e) {
-        e.printStackTrace();
-      }
-    }
   }
 
   private void setupRender(Stage primaryStage) {
