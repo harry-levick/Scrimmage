@@ -2,8 +2,11 @@ package shared.gameObjects.weapons;
 
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
+import java.util.UUID;
 
-/** @author hlf764 The abstract class for all weapons in the game. */
+/**
+ * @author hlf764 The abstract class for all weapons in the game.
+ */
 public abstract class Weapon extends GameObject {
 
   protected double damage;
@@ -20,6 +23,7 @@ public abstract class Weapon extends GameObject {
    * @param weight Weight of the weapon
    * @param name Name of the weapon
    */
+<<<<<<< HEAD
   public Weapon(
       double x, 
       double y,
@@ -31,12 +35,19 @@ public abstract class Weapon extends GameObject {
       boolean isMelee, 
       int ammo) {
     super(x, y, ObjectID.Weapon, imagePath);
+=======
+
+  public Weapon(double x, double y, ObjectID id, double damage, double weight, String name,
+      boolean isGun, boolean isMelee, int ammo, UUID uuid) {
+    super(x, y, id, "gunimagepath", uuid);
+>>>>>>> origin
     this.isGun = isGun;
     this.isMelee = isMelee;
     this.damage = damage;
     this.weight = weight;
     this.name = name;
     this.ammo = ammo;
+
   }
   
   public abstract void fire(double mouseX, double mouseY);

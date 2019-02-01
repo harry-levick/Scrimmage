@@ -2,6 +2,7 @@ package shared.gameObjects.players;
 
 import client.handlers.inputHandler.MouseInput;
 import client.handlers.inputHandler.KeyboardInput;
+import java.util.UUID;
 import javafx.scene.image.Image;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
@@ -13,8 +14,8 @@ public class Player extends GameObject {
   protected int health;
   protected Weapon holding;
 
-  public Player(double x, double y, ObjectID id) {
-    super(x, y, id, "images/player/player_idle.png");
+  public Player(double x, double y, ObjectID id, UUID playerUUID) {
+    super(x, y, id, "images/player/player_idle.png", playerUUID);
     this.health = 100;
     holding = null;
     if (version == Version.CLIENT) {
@@ -42,10 +43,26 @@ public class Player extends GameObject {
 
   @Override
   public void render() {
-    imageView.relocate(getX(), getY());
+    if (!isActive()) {
+      return;
+    }
+
+    imageView.setTranslateX(getX());
+    imageView.setTranslateY(getY());
     if (animate) {
       imageView.setImage(animator());
     }
+  }
+
+  @Override
+  public void interpolatePosition(float alpha) {
+    if (!isActive()) {
+      return;
+    }
+
+    imageView.setTranslateX(alpha * getX() + (1 - alpha) * imageView.getTranslateX());
+    imageView.setTranslateY(alpha * getY() + (1 - alpha) * imageView.getTranslateY());
+
   }
 
   public void createSprites() {
@@ -70,7 +87,9 @@ public class Player extends GameObject {
     return spriteLibary.get("baseImage");
   }
 
-  public int getHealth() { return health; }
+  public int getHealth() {
+    return health;
+  }
 
   public Weapon getHolding() {
     return holding;
