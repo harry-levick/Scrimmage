@@ -1,12 +1,9 @@
 package client.main;
 
+import client.handlers.connectionHandler.ConnectionHandler;
+import client.handlers.inputHandler.InputHandler;
 import client.handlers.inputHandler.KeyboardInput;
 import client.handlers.inputHandler.MouseInput;
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.util.UUID;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -14,37 +11,32 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.LevelHandler;
 import shared.handlers.levelHandler.Map;
 
 public class Client extends Application {
 
   private static final Logger LOGGER = LogManager.getLogger(Client.class.getName());
-  public static KeyboardInput keyInput;
-  public static MouseInput mouseInput;
+  public static InputHandler inputHandler;
   public static LevelHandler levelHandler;
   public static Settings settings;
-  public static Player clientPlayer;
+  public static boolean multiplayer;
 
-  private static final float timeStep = 0.0166f;
+  private final float timeStep = 0.0166f;
+  private final String gameTitle = "Alone in the Dark";
+  private final int port = 4445;
 
-  private String gameTitle = "Alone in the Dark";
-  private static final int port = 4445;
-
+  private ConnectionHandler connectionHandler;
+  private KeyboardInput keyInput;
+  private MouseInput mouseInput;
   private Group root;
   private Scene scene;
   private Map currentMap;
   private float maximumStep;
   private long previousTime;
   private float accumulatedTime;
-
   private float elapsedSinceFPS = 0f;
   private int framesElapsedSinceFPS = 0;
-  private boolean multiplayer = false;
-  private DatagramSocket socket;
-  private InetAddress address;
-  private byte[] buffer;
 
 
   public static void main(String args[]) {
@@ -61,6 +53,11 @@ public class Client extends Application {
     new AnimationTimer() {
       @Override
       public void handle(long now) {
+
+        if (multiplayer) {
+          processServerPackets();
+        }
+
         // Changes Map/Level
         if (currentMap != levelHandler.getMap()) {
           levelHandler.generateLevel(root, true);
@@ -89,20 +86,15 @@ public class Client extends Application {
           levelHandler.getGameObjects().forEach(gameObject -> gameObject.update());
           accumulatedTime -= timeStep;
         }
+        /** Apply Input */
+        levelHandler.getClientPlayer().applyInput(multiplayer, connectionHandler);
+        /** Render Game Objects */
         levelHandler.getGameObjects().forEach(gameObject -> gameObject.render());
+        /** Update Game Objects */
         levelHandler.getGameObjects().forEach(gameObject -> gameObject.update());
         accumulatedTime -= timeStep;
         float alpha = accumulatedTime / timeStep;
         levelHandler.getGameObjects().forEach(gameObject -> gameObject.interpolatePosition(alpha));
-
-        if (multiplayer) {
-          buffer = KeyboardInput.getInput().getBytes();
-          try {
-            socket.send(new DatagramPacket(buffer, buffer.length, address, port));
-          } catch (IOException e) {
-            e.printStackTrace();
-          }
-        }
 
         calculateFPS(secondElapsed, primaryStage);
       }
@@ -125,10 +117,11 @@ public class Client extends Application {
     previousTime = 0;
     accumulatedTime = 0;
     settings = new Settings();
-    keyInput = new KeyboardInput();
-    mouseInput = new MouseInput();
+    inputHandler = new InputHandler();
+    keyInput = new KeyboardInput(inputHandler);
+    mouseInput = new MouseInput(inputHandler);
+    multiplayer = false;
     //Start off screen
-    clientPlayer = new Player(-500, -500, UUID.randomUUID());
   }
 
   private void setupRender(Stage primaryStage) {
@@ -136,7 +129,7 @@ public class Client extends Application {
     primaryStage.setTitle(gameTitle);
     scene = new Scene(root, 1920, 1080);
     primaryStage.setScene(scene);
-    primaryStage.setFullScreen(true);
+    primaryStage.setFullScreen(false);
     primaryStage.show();
 
     // Setup Input
@@ -145,6 +138,16 @@ public class Client extends Application {
     scene.setOnMousePressed(mouseInput);
     scene.setOnMouseMoved(mouseInput);
     scene.setOnMouseReleased(mouseInput);
+  }
+
+  private void processServerPackets() {
+    if (connectionHandler.received.size() != 0) {
+      try {
+        String message = (String) connectionHandler.received.take();
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    }
   }
 
 

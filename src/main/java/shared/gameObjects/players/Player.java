@@ -1,10 +1,12 @@
 package shared.gameObjects.players;
 
-import client.handlers.inputHandler.KeyboardInput;
+import client.handlers.connectionHandler.ConnectionHandler;
+import client.handlers.inputHandler.InputHandler;
 import java.util.UUID;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.weapons.Weapon;
+import shared.packets.PacketInput;
 
 public class Player extends GameObject {
 
@@ -40,17 +42,24 @@ public class Player extends GameObject {
     return null;
   }
 
-  public void applyInput() {
-    if (KeyboardInput.rightKey) {
+  public void applyInput(boolean multiplayer, ConnectionHandler connectionHandler) {
+    if (InputHandler.rightKey) {
       vx = speed;
     }
-    if (KeyboardInput.leftKey) {
+    if (InputHandler.leftKey) {
       vx = -speed;
     }
-    if (!KeyboardInput.rightKey && !KeyboardInput.leftKey) {
+    if (!InputHandler.rightKey && !InputHandler.leftKey) {
       vx = 0;
     }
     setX(getX() + (vx * 0.0166));
+
+    /** If multiplayer then send input to server */
+    if (multiplayer) {
+      PacketInput input = new PacketInput(InputHandler.x, InputHandler.y, InputHandler.leftKey,
+          InputHandler.rightKey, InputHandler.jumpKey, InputHandler.click);
+      connectionHandler.send(input.getData());
+    }
   }
 
 

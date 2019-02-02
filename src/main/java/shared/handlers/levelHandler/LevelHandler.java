@@ -1,22 +1,30 @@
 package shared.handlers.levelHandler;
 
-import client.main.Client;
 import client.main.Settings;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 import javafx.scene.Group;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.players.Player;
 
 public class LevelHandler {
 
   private ArrayList<GameObject> gameObjects = new ArrayList<>();
+  private ArrayList<Player> players = new ArrayList<>();
+  private Player clientPlayer;
   private ArrayList<Map> maps;
   private HashMap<String, Map> menus;
   private GameState gameState;
   private Map map;
 
   public LevelHandler(Settings settings, Group root, boolean isClient) {
+    if (isClient) {
+      clientPlayer = new Player(500, 500, UUID.randomUUID());
+      clientPlayer.initialise(root, true);
+      players.add(clientPlayer);
+    }
     maps = MapLoader.getMaps(settings.getMapsPath());
     // menus = MapLoader.getMaps(settings.getMenuPath());
     // menus = MapLoader.getMenuMaps(settings.getMenuPath());
@@ -50,23 +58,21 @@ public class LevelHandler {
     gameObjects.forEach(gameObject -> gameObject.setActive(false));
     gameObjects.clear();
 
+
     // Create new game objects for map
     gameObjects = MapLoader.loadMap(map.getPath());
     gameObjects.forEach(
         gameObject -> {
           if (gameObject.getId() == ObjectID.MapDataObject && isClient) {
-            Client.clientPlayer.setX(gameObject.getX());
-            Client.clientPlayer.setY(gameObject.getY());
+            //clientPlayer.setX(gameObject.getX());
+            //clientPlayer.setY(gameObject.getY());
             gameObjects.remove(gameObject);
           } else {
             gameObject.initialise(root, true);
           }
         });
+    gameObjects.add(clientPlayer);
     gameState = map.getGameState();
-
-    if (isClient) {
-
-    }
   }
 
   /**
@@ -112,5 +118,17 @@ public class LevelHandler {
    */
   public Map getMap() {
     return map;
+  }
+
+  public ArrayList<Player> getPlayers() {
+    return players;
+  }
+
+  public void addPlayer(Player newPlayer) {
+    players.add(newPlayer);
+  }
+
+  public Player getClientPlayer() {
+    return clientPlayer;
   }
 }

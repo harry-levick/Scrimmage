@@ -10,7 +10,7 @@ public class PacketJoin extends Packet {
   //private int skin;
 
   public PacketJoin(UUID clientID, String username) {
-    packetID = 0;
+    packetID = PacketID.JOIN.getID();
     this.clientID = clientID;
     this.username = username;
     data = ByteUtil

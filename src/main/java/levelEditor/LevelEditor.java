@@ -17,7 +17,6 @@ import javafx.stage.Stage;
 import shared.gameObjects.ExampleObject;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
-import shared.gameObjects.Utils.Version;
 import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.MapLoader;
 
@@ -38,7 +37,7 @@ public class LevelEditor extends Application {
 
     // Example of loading map
     // gameObjects = MapLoader.loadMap("menus.map");
-    gameObjects.forEach(gameObject -> gameObject.initialise(root, Version.CLIENT, false));
+    gameObjects.forEach(gameObject -> gameObject.initialise(root, false));
 
     ChoiceBox cb = new ChoiceBox();
     cb.setItems(FXCollections.observableArrayList("ExampleObject", "Player"));
@@ -90,11 +89,11 @@ public class LevelEditor extends Application {
             UUID uuid = UUID.randomUUID();
             if (cb.getValue() == "ExampleObject") {
               GameObject temp = new ExampleObject(event.getX(), event.getY(), ObjectID.Bot, uuid);
-              temp.initialise(root, Version.CLIENT, false);
+              temp.initialise(root, false);
               gameObjects.add(temp);
             } else if (cb.getValue() == "Player") {
-              Player temp = new Player(event.getX(), event.getY(), ObjectID.Player, uuid);
-              temp.initialise(root, Version.CLIENT, false);
+              Player temp = new Player(event.getX(), event.getY(), uuid);
+              temp.initialise(root, false);
               gameObjects.add(temp);
             }
           }

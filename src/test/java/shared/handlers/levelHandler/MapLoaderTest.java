@@ -46,7 +46,6 @@ public class MapLoaderTest {
       assertEquals(gameObjectsTest.get(i).getX(), gameObjects.get(i).getX());
       assertEquals(gameObjectsTest.get(i).getY(), gameObjects.get(i).getY());
       assertEquals(gameObjectsTest.get(i).getId(), gameObjects.get(i).getId());
-      assertEquals(gameObjectsTest.get(i).getVersion(), gameObjects.get(i).getVersion());
       i++;
     }
   }

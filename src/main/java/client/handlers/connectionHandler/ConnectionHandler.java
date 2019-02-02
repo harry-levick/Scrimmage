@@ -11,7 +11,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class ConnectionHandler extends Thread {
 
-  public static BlockingQueue received;
+  public BlockingQueue received;
 
   private InetAddress address;
   private MulticastSocket socket;
@@ -45,6 +45,7 @@ public class ConnectionHandler extends Thread {
       DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
       try {
         socket.receive(packet);
+        received.add(packet.getData().toString());
       } catch (IOException e) {
         e.printStackTrace();
       } finally {
