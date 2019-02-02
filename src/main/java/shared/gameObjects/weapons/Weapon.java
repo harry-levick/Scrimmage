@@ -23,7 +23,6 @@ public abstract class Weapon extends GameObject {
    * @param weight Weight of the weapon
    * @param name Name of the weapon
    */
-<<<<<<< HEAD
   public Weapon(
       double x, 
       double y,
@@ -33,14 +32,9 @@ public abstract class Weapon extends GameObject {
       String name,
       boolean isGun, 
       boolean isMelee, 
-      int ammo) {
-    super(x, y, ObjectID.Weapon, imagePath);
-=======
-
-  public Weapon(double x, double y, ObjectID id, double damage, double weight, String name,
-      boolean isGun, boolean isMelee, int ammo, UUID uuid) {
-    super(x, y, id, "gunimagepath", uuid);
->>>>>>> origin
+      int ammo,
+      UUID uuid) {
+    super(x, y, ObjectID.Weapon, imagePath, uuid);
     this.isGun = isGun;
     this.isMelee = isMelee;
     this.damage = damage;
