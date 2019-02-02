@@ -1,6 +1,5 @@
 package shared.packets;
 
-import shared.util.byteFunctions.ByteUtil;
 
 public class PacketInput extends Packet {
 
@@ -17,15 +16,15 @@ public class PacketInput extends Packet {
     this.x = x;
     this.y = y;
 
-    data = ByteUtil
-        .combinedBytes(Integer.toString(packetID).getBytes(), Double.toString(x).getBytes(),
-            Double.toString(y).getBytes(), String.valueOf(leftKey).getBytes(),
-            String.valueOf(rightKey).getBytes(), String.valueOf(jumpKey).getBytes(),
-            String.valueOf(click).getBytes());
+    data = (Integer.toString(packetID) + "," + Double.toString(x) + "," +
+        Double.toString(y) + "," + Boolean.toString(leftKey) + "," +
+        Boolean.toString(rightKey) + "," + Boolean.toString(jumpKey) + "," +
+        Boolean.toString(click)).getBytes();
   }
 
   public PacketInput(byte[] data) {
-    String[] unpackedData = data.toString().trim().split(",");
+    String temp = new String(data).trim();
+    String[] unpackedData = temp.split(",");
     this.packetID = Integer.parseInt(unpackedData[0]);
     this.x = Double.parseDouble(unpackedData[1]);
     this.y = Double.parseDouble(unpackedData[2]);

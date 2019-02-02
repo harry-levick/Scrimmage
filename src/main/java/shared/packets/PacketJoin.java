@@ -1,7 +1,6 @@
 package shared.packets;
 
 import java.util.UUID;
-import shared.util.byteFunctions.ByteUtil;
 
 public class PacketJoin extends Packet {
 
@@ -13,15 +12,14 @@ public class PacketJoin extends Packet {
     packetID = PacketID.JOIN.getID();
     this.clientID = clientID;
     this.username = username;
-    data = ByteUtil
-        .combinedBytes(Integer.toString(packetID).getBytes(), ByteUtil.getBytesUUID(clientID),
-            username.getBytes());
+    data = (Integer.toString(packetID) + "," + clientID.toString() + "," + username).getBytes();
   }
 
   public PacketJoin(byte[] data) {
-    String[] unpackedData = data.toString().trim().split(",");
+    String temp = new String(data).trim();
+    String[] unpackedData = temp.split(",");
     this.packetID = Integer.parseInt(unpackedData[0]);
-    this.clientID = ByteUtil.getUUID(unpackedData[1].getBytes());
+    this.clientID = UUID.fromString(unpackedData[1]);
     this.username = unpackedData[2];
   }
 
