@@ -5,6 +5,7 @@ public class AngularData {
   private float angularRadius;
   private float angularCoefficient;
   private float angularVelocity;
+  private float momentOfInertia;
 
   public AngularData(float angularRadius, float angularCoefficient, float angularVelocity) {
     this.angularRadius = angularRadius;
