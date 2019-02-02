@@ -9,6 +9,8 @@ import shared.physics.data.MaterialProperty;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
 
+import java.util.UUID;
+
 public class RigidbodyTest {
   private static BoxCollider boxA, boxB, boxC;
   private static CircleCollider circleD, circleE, circleF;
@@ -19,12 +21,12 @@ public class RigidbodyTest {
 
   @BeforeClass
   public static void InitColliders() {
-    a = new TestObject(2, 2, ObjectID.Player);
-    b = new TestObject(3, 1, ObjectID.Player);
-    c = new TestObject(10, 10, ObjectID.Player);
-    d = new TestObject(11, 11, ObjectID.Player);
-    e = new TestObject(20, 20, ObjectID.Player);
-    f = new TestObject(21, 21, ObjectID.Player);
+    a = new TestObject(2, 2, ObjectID.Player, UUID.randomUUID());
+    b = new TestObject(3, 1, ObjectID.Player, UUID.randomUUID());
+    c = new TestObject(10, 10, ObjectID.Player, UUID.randomUUID());
+    d = new TestObject(11, 11, ObjectID.Player, UUID.randomUUID());
+    e = new TestObject(20, 20, ObjectID.Player, UUID.randomUUID());
+    f = new TestObject(21, 21, ObjectID.Player, UUID.randomUUID());
 
     boxA = new BoxCollider(a, new Vector2(2, 2), false);
     boxB = new BoxCollider(b, new Vector2(2, 2), false);
