@@ -52,6 +52,9 @@ public class Player extends GameObject {
     if (!InputHandler.rightKey && !InputHandler.leftKey) {
       vx = 0;
     }
+    if (InputHandler.click && holding != null) {
+      holding.fire(InputHandler.x, InputHandler.y);
+    } //else punch
     setX(getX() + (vx * 0.0166));
 
     /** If multiplayer then send input to server */

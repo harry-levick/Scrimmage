@@ -18,6 +18,9 @@ abstract class Gun extends Weapon {
   /**
    * Constructor of the Gun class
    *
+   * @param x The x position of the gun
+   * @param y The y position of the gun
+   * @param imagePath The image path to the gun image
    * @param damage Damage of the gun
    * @param weight Weight of the gun
    * @param name Name of the gun
@@ -32,7 +35,7 @@ abstract class Gun extends Weapon {
       double x,
       double y,
       ObjectID id,
-
+      String imagePath,
       double damage,
       double weight,
       String name,
@@ -44,7 +47,8 @@ abstract class Gun extends Weapon {
       boolean singleHanded,
       UUID uuid) {
 
-    super(x, y, id, damage, weight, name, true, false, ammo, uuid);
+    super(x, y, id, imagePath, damage, weight, name, true, false, ammo, uuid);
+
     this.bulletSpeed = bulletSpeed;
     this.bulletWidth = bulletWidth;
     this.fireRate = fireRate;
@@ -53,7 +57,14 @@ abstract class Gun extends Weapon {
 
   }
 
-  // -------------------
+  public void fire(double mouseX, double mouseY) {
+    UUID uuid = UUID.randomUUID();
+    Bullet bullet = new Bullet(getX(), getY(), mouseX, mouseY, this.bulletWidth, this.bulletSpeed,
+        uuid);
+    bullet.fire();
+  }
+
+  // -------START-------
   // Setters and Getters
   // -------------------
 
@@ -94,6 +105,10 @@ abstract class Gun extends Weapon {
   public boolean isSingleHanded() {
     return this.singleHanded;
   }
+
+  // -------------------
+  // Setters and Getters
+  // --------END--------
 
   /**
    * For testing

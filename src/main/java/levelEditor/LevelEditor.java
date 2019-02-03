@@ -22,6 +22,7 @@ import shared.gameObjects.menu.main.ButtonMultiplayer;
 import shared.gameObjects.menu.main.ButtonSettings;
 import shared.gameObjects.menu.main.ButtonSingleplayer;
 import shared.gameObjects.players.Player;
+import shared.gameObjects.weapons.Handgun;
 import shared.handlers.levelHandler.MapLoader;
 
 public class LevelEditor extends Application {
@@ -46,7 +47,7 @@ public class LevelEditor extends Application {
     ChoiceBox cb = new ChoiceBox();
     cb.setItems(FXCollections
         .observableArrayList("ExampleObject", "Player", "Singleplayer Button", "Multiplayer Button",
-            "Settings Button", "Level Editor Button"));
+            "Settings Button", "Level Editor Button", "Handgun"));
     cb.setLayoutX(10);
     cb.setLayoutY(10);
 
@@ -70,7 +71,7 @@ public class LevelEditor extends Application {
           public void handle(ActionEvent event) {
             snapToGrid = !snapToGrid;
             ArrayList<Line> gridlines = redrawGrid();
-            for (Line line: gridlines) {
+            for (Line line : gridlines) {
               root.getChildren().add(line);
             }
           }
@@ -79,9 +80,9 @@ public class LevelEditor extends Application {
     btnToggleGrid.setLayoutY(10);
 
     ArrayList<Line> gridlines = redrawGrid();
-    for (Line line: gridlines) {
+    for (Line line : gridlines) {
       root.getChildren().add(line);
-    } //todo remove
+    } // todo remove
 
     root.getChildren().add(cb);
     root.getChildren().add(btnSave);
@@ -121,6 +122,10 @@ public class LevelEditor extends Application {
                   ObjectID.Bot, uuid);
               temp.initialise(root, false);
               gameObjects.add(temp);
+            } else if (cb.getValue() == "Handgun") {
+              Handgun temp = new Handgun(event.getX(), event.getY(), ObjectID.Weapon, 10, 10,
+                  "Handgun", 100, 100, 100, 10, uuid);
+              temp.initialise(root, false);
             }
           }
         });
@@ -138,21 +143,21 @@ public class LevelEditor extends Application {
 
   private ArrayList<Line> redrawGrid() {
     // sets 10x10 grid based on scene size
-    int sceneX = 1920;  //size of scene TODO fetch automatically
+    int sceneX = 1920; // size of scene TODO fetch automatically
     int sceneY = 1080;
     int gridX = 20;
     int gridY = 20;
 
     ArrayList<Line> gridlines = new ArrayList<Line>();
-    if (snapToGrid){
+    if (snapToGrid) {
       for (int i = 0; i < gridX; i++) {
         int xPos = (sceneX / gridX) * i;
-        Line line = new Line(xPos,0,xPos,1080);
+        Line line = new Line(xPos, 0, xPos, 1080);
         gridlines.add(line);
       }
       for (int i = 0; i < gridY; i++) {
         int yPos = (sceneY / gridY) * i;
-        Line line = new Line(0,yPos,1920,yPos);
+        Line line = new Line(0, yPos, 1920, yPos);
         gridlines.add(line);
       }
     }

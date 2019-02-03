@@ -6,6 +6,7 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -45,7 +46,7 @@ public class ConnectionHandler extends Thread {
       DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
       try {
         socket.receive(packet);
-        received.add(packet.getData().toString());
+        received.add(Arrays.toString(packet.getData()));
       } catch (IOException e) {
         e.printStackTrace();
       } finally {

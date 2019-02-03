@@ -8,6 +8,8 @@ import shared.gameObjects.Utils.ObjectID;
  */
 public class Handgun extends Gun {
 
+  private static String imagePath = "images/weapons/handgun.jpg";
+
   /**
    * Constructor of the Handgun class
    *
@@ -26,7 +28,6 @@ public class Handgun extends Gun {
       double x,
       double y,
       ObjectID id,
-
       double damage,
       double weight,
       String name,
@@ -35,8 +36,8 @@ public class Handgun extends Gun {
       double fireRate,
       double bulletWidth,
       UUID uuid) {
-    super(x, y, id, damage, weight, name, ammo, bulletSpeed, fireRate, bulletWidth, false, false, uuid);
-
+    super(x, y, id, imagePath, damage, weight, name, ammo, bulletSpeed, fireRate, bulletWidth,
+        false, true, uuid);
   }
 
   @Override

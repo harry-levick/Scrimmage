@@ -1,8 +1,8 @@
 package shared.gameObjects.weapons;
 
+import java.util.UUID;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
-import java.util.UUID;
 
 /**
  * @author hlf764 The abstract class for all weapons in the game.
@@ -23,10 +23,19 @@ public abstract class Weapon extends GameObject {
    * @param weight Weight of the weapon
    * @param name Name of the weapon
    */
-
-  public Weapon(double x, double y, ObjectID id, double damage, double weight, String name,
-      boolean isGun, boolean isMelee, int ammo, UUID uuid) {
-    super(x, y, id, "gunimagepath", uuid);
+  public Weapon(
+      double x,
+      double y,
+      ObjectID id,
+      String imagePath,
+      double damage,
+      double weight,
+      String name,
+      boolean isGun,
+      boolean isMelee,
+      int ammo,
+      UUID uuid) {
+    super(x, y, id, imagePath, uuid);
     this.isGun = isGun;
     this.isMelee = isMelee;
     this.damage = damage;
@@ -36,7 +45,9 @@ public abstract class Weapon extends GameObject {
 
   }
 
-  // -------------------
+  public abstract void fire(double mouseX, double mouseY);
+
+  // -------START-------
   // Setters and Getters
   // -------------------
 
@@ -54,11 +65,17 @@ public abstract class Weapon extends GameObject {
     return this.weight;
   }
 
+  public void setWeight(double newWeight) {
+    if (newWeight > 0 && newWeight < 1000.0f) {
+      this.weight = newWeight;
+    }
+  }
+
   public boolean isGun() {
     return isGun;
   }
 
-  public void setGun(boolean gun) {
+  public void setIsGun(boolean gun) {
     isGun = gun;
   }
 
@@ -66,14 +83,8 @@ public abstract class Weapon extends GameObject {
     return isMelee;
   }
 
-  public void setMelee(boolean melee) {
+  public void setIsMelee(boolean melee) {
     isMelee = melee;
-  }
-
-  public void setWeight(double newWeight) {
-    if (newWeight > 0 && newWeight < 1000.0f) {
-      this.weight = newWeight;
-    }
   }
 
   public String getName() {
@@ -87,4 +98,15 @@ public abstract class Weapon extends GameObject {
   public int getAmmo() {
     return this.ammo;
   }
+
+  public void setAmmo(int newAmmo) {
+    if (newAmmo == -1 || newAmmo > 0) {
+      this.ammo = newAmmo;
+    }
+  }
+
+  // -------------------
+  // Setters and Getters
+  // --------END--------
+  
 }

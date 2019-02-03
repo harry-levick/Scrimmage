@@ -3,5 +3,7 @@ package shared.gameObjects.Utils;
 public enum ObjectID {
   Player,
   Bot,
-  MapDataObject
+  MapDataObject,
+  Weapon,
+  Bullet
 }

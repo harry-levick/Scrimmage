@@ -31,44 +31,60 @@ public class Vector2 implements Serializable {
     return new Vector2(0, 1);
   }
 
-  public void mult(float scalar) {
-    setX(getX() * scalar);
-    setY(getY() * scalar);
+  public Vector2 mult(float scalar) {
+    float x, y;
+    x = (getX() * scalar);
+    y = (getY() * scalar);
+    return new Vector2(x, y);
   }
 
-  public void mult(Vector2 vector) {
-    setX(getX() * vector.getX());
-    setY(getY() * vector.getY());
+  public Vector2 mult(Vector2 vector) {
+    float x, y;
+    x = (getX() * vector.getX());
+    y = (getY() * vector.getY());
+    return new Vector2(x, y);
   }
 
-  public void add(float scalar) {
-    setX(getX() + scalar);
-    setY(getY() + scalar);
+  public Vector2 add(float scalar) {
+    float x, y;
+    x = (getX() + scalar);
+    y = (getY() + scalar);
+    return new Vector2(x, y);
   }
 
-  public void add(Vector2 vector) {
-    setX(getX() + vector.getX());
-    setY(getY() + vector.getY());
+  public Vector2 add(Vector2 vector) {
+    float x, y;
+    x = (getX() + vector.getX());
+    y = (getY() + vector.getY());
+    return new Vector2(x, y);
   }
 
-  public void sub(float scalar) {
-    setX(getX() - scalar);
-    setY(getY() - scalar);
+  public Vector2 sub(float scalar) {
+    float x, y;
+    x = (getX() - scalar);
+    y = (getY() - scalar);
+    return new Vector2(x, y);
   }
 
-  public void sub(Vector2 vector) {
-    setX(getX() - vector.getX());
-    setY(getY() - vector.getY());
+  public Vector2 sub(Vector2 vector) {
+    float x, y;
+    x = (getX() - vector.getX());
+    y = (getY() - vector.getY());
+    return new Vector2(x, y);
   }
 
-  public void div(float scalar) {
-    setX(getX() / scalar);
-    setY(getY() / scalar);
+  public Vector2 div(float scalar) {
+    float x, y;
+    x = (getX() / scalar);
+    y = (getY() / scalar);
+    return new Vector2(x, y);
   }
 
-  public void div(Vector2 vector) {
-    setX(getX() / vector.getX());
-    setY(getY() / vector.getY());
+  public Vector2 div(Vector2 vector) {
+    float x, y;
+    x = getX() / vector.getX();
+    y = getY() / vector.getY();
+    return new Vector2(x, y);
   }
 
   /**
@@ -103,9 +119,7 @@ public class Vector2 implements Serializable {
         Math.sqrt(Math.pow(vector.getX() - getX(), 2) + Math.pow(vector.getY() - getY(), 2));
   }
 
-  /**
-   * Angle between two vectors, approximated
-   */
+  /** Angle between two vectors, approximated */
   public float angleBetween(Vector2 vector) {
     if (vector.magnitude(Zero()) == 0) {
       return (float) Math.tan(getY() / getX());
@@ -113,11 +127,24 @@ public class Vector2 implements Serializable {
     return (float) Math.acos(dot(vector) / (magnitude(Zero()) * vector.magnitude(Zero())));
   }
 
-  /**
-   * Angle of the vector with respect to world space
-   */
+  /** Angle of the vector with respect to world space */
   public float angle() {
     return angleBetween(Zero());
+  }
+
+  /**
+   * Clamps the vector between the two values
+   */
+  public Vector2 clamp(Vector2 min, Vector2 max) {
+    float x, y;
+    x = Math.max(min.getX(), Math.min(max.getX(), getX()));
+    y = Math.max(min.getY(), Math.min(max.getY(), getY()));
+    return new Vector2(x, y);
+  }
+
+  @Override
+  public String toString() {
+    return "X: " + getX() + " Y: " + getY();
   }
 
   public float getX() {

@@ -11,10 +11,10 @@ import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import shared.gameObjects.Components.Component;
-import shared.gameObjects.Components.ComponentType;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.Utils.Transform;
+import shared.gameObjects.components.Component;
+import shared.gameObjects.components.ComponentType;
 import shared.util.maths.Vector2;
 
 public abstract class GameObject implements Serializable {
@@ -97,11 +97,11 @@ public abstract class GameObject implements Serializable {
     root.getChildren().add(this.imageView);
   }
 
-  public void AddChild(GameObject child) {
+  public void addChild(GameObject child) {
     children.add(child);
   }
 
-  public void RemoveChild(GameObject child) {
+  public void removeChild(GameObject child) {
     children.remove(child);
   }
 
@@ -109,19 +109,19 @@ public abstract class GameObject implements Serializable {
     return children.contains(child);
   }
 
-  public void AddComponent(Component component) {
+  public void addComponent(Component component) {
     components.add(component);
   }
 
-  public void RemoveComponent(Component component) {
+  public void removeComponent(Component component) {
     components.remove(component);
   }
 
   /**
-   * @param type The type of desired component to return
-   * @return The first attached component found
+   * @param type The type of desired components to return
+   * @return The first attached components found
    */
-  public Component GetComponent(ComponentType type) {
+  public Component getComponent(ComponentType type) {
     for (Component c : components) {
       if (c.getComponentType() == type) {
         return c;
@@ -134,7 +134,7 @@ public abstract class GameObject implements Serializable {
    * @param type The type of desired componenet to return
    * @return ArrayList of all found attached components
    */
-  public ArrayList<Component> GetComponents(ComponentType type) {
+  public ArrayList<Component> getComponents(ComponentType type) {
     ArrayList<Component> ret = new ArrayList<>();
     for (Component c : components) {
       if (c.getComponentType() == type) {
@@ -145,10 +145,10 @@ public abstract class GameObject implements Serializable {
   }
 
   /**
-   * @param type The type of desired component to return
+   * @param type The type of desired components to return
    * @return ArrayList of all found attached components to this object and all of its children
    */
-  public ArrayList<Component> GetComponentsInChildren(ComponentType type) {
+  public ArrayList<Component> getComponentsInChildren(ComponentType type) {
     ArrayList<Component> ret = new ArrayList<>();
     for (Component c : components) {
       if (c.getComponentType() == type) {
@@ -156,12 +156,12 @@ public abstract class GameObject implements Serializable {
       }
     }
     for (GameObject go : children) {
-      ret.addAll(go.GetComponentsInChildren(type));
+      ret.addAll(go.getComponentsInChildren(type));
     }
     return ret;
   }
 
-  public void Destroy() {
+  public void destroy() {
     destroyed = active = false;
   }
 

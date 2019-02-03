@@ -13,19 +13,24 @@ public abstract class Melee extends Weapon {
       double x,
       double y,
       ObjectID id,
-
+      String imagePath,
       double damage,
       double weight,
       String name,
+      int ammo,
       double range,
       double beginAngle,
       double endAngle,
       UUID uuid) {
 
-    super(x, y, id, damage, weight, name, false, true, -1, uuid);
+    super(x, y, id, imagePath, damage, weight, name, false, true, -1, uuid);
     this.range = range;
     this.beginAngle = beginAngle;
     this.endAngle = endAngle;
+
+  }
+
+  public void fire(double mouseX, double mouseY) {
 
   }
 
@@ -62,6 +67,4 @@ public abstract class Melee extends Weapon {
       this.endAngle = newEndAngle;
     }
   }
-
-
 }

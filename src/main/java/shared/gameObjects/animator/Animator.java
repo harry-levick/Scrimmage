@@ -5,7 +5,7 @@ import javafx.scene.image.Image;
 
 public class Animator {
 
-  // Helpful varaibles
+  // Helpful variables
   ArrayList<Image> images;
   int numberOfImages;
   int currentImage = 0;
@@ -26,7 +26,6 @@ public class Animator {
     return null;
   }
 
-
   public void update() {
     // This called every frame.
     this.animationTimer += 1;
@@ -37,12 +36,9 @@ public class Animator {
         this.currentImage = 0;
       }
     }
-
   }
 
   public void render(double X, double Y) {
     // draw(images.get(currentImage),x,y)
   }
-
-
 }
