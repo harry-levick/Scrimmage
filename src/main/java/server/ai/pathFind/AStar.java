@@ -42,7 +42,7 @@ public class AStar {
    */
   public class SearchNode {
     // The number of ticks elapsed since the start of the search.
-    private int timeElapsed = 0;
+    private double distanceElapsed;
     // The optimal (estimated) time to reach the goal node from this node.
     public double estimatedDistance = 0;
     // The optimal time to reach the goal node AFTER simulating with the selected action.
@@ -52,13 +52,14 @@ public class AStar {
     // The list of game objects in this scene
     public List<GameObject> sceneSnapshot;
     // The bot that the path-finding is concerned with.
-    public Bot bot;
+    public double botX;
+    public double botY;
 
     // Not sure on the use yet.
     public boolean hasBeenHurt = false;
 
     public boolean visited = false;
-    // The action used to get to this node.
+    // The action used to get to the next node (child of this node).
     boolean[] action;
 
     // Not sure on the use yet.
@@ -67,14 +68,32 @@ public class AStar {
     public SearchNode(boolean[] action, int repetitions, SearchNode parent) {
       this.parentNode = parent;
       if (parentNode != null) {
-        this.remainingDistance = parent.estimateRemainingTimeChild(action, repetitions);
-        timeElapsed = parent.timeElapsed + repetitions;
+        this.botY = parent.botY + calcYChange(action);
+        this.botX = parent.botY + calcXChange(action);
+        this.remainingDistance = parent.estimateRemainingDistanceChild(action, repetitions);
+        distanceElapsed = parent.distanceElapsed + (parent.remainingDistance - remainingDistance);
       } else {
         this.remainingDistance = calcRemainingDist();
-        timeElapsed = 0;
+        distanceElapsed = 0;
+        this.botX = bot.getX();
+        this.botY = bot.getY();
       }
       this.action = action;
       this.repetitions = repetitions;
+    }
+
+    private double calcXChange(boolean[] action) {
+      if (action[Bot.KEY_LEFT]) {
+        return -X_CHANGE;
+      } else if (action[Bot.KEY_RIGHT]) {
+        return X_CHANGE;
+      } else return 0;
+    }
+
+    private double calcYChange(boolean[] action) {
+      if (action[Bot.KEY_JUMP]) {
+        return -Y_CHANGE;
+      } else return 0;
     }
 
     /**
@@ -107,7 +126,7 @@ public class AStar {
      * @param repetitions
      * @return Time remaining.
      */
-    public double estimateRemainingTimeChild(boolean[] action, int repetitions) {
+    public double estimateRemainingDistanceChild(boolean[] action, int repetitions) {
       return null;
     }
 
@@ -121,7 +140,7 @@ public class AStar {
      * Simulate the world state after we have applied the action of this node, using the parent
      * state.
      */
-    public float simulatePos() {
+    public double simulatePos() {
       // Set the state to the parents scene
       worldScene = parentNode.sceneSnapshot;
       parentNode.sceneSnapshot = backupState();
@@ -130,17 +149,26 @@ public class AStar {
         // Run the simulator
         advanceStep(action);
       }
-
+      // Set the remaining distance after we've simulated the effects of our action.
       remainingDistance = calcRemainingDist();
       if (visited) { remainingDistance += visitedListPenalty; }
       sceneSnapshot = backupState();
 
-      return remainingTime;
+      return remainingDistance;
+    }
+
+    public void advanceStep(boolean[] action) {
+      // Advance the world scene to a new scene that would be the case if we applied the action.
+      // TODO
     }
 
   }
 
-
+  /**
+   * Constructor
+   * @param worldScene The list of gameObject's in the world.
+   * @param bot the bot that this path-finding is concerned with.
+   */
   public AStar(List<GameObject> worldScene, Bot bot) {
     this.worldScene = worldScene;
     this.bot = bot;
@@ -202,17 +230,16 @@ public class AStar {
     while ((openList.size() != 0) && (bot.getX() != enemy.getX()) && (bot.getY() != enemy.getY())) {
       ticks++;
 
-          // Pick the best node from the open-list
+      // Pick the best node from the open-list
       current = pickBestPos(openList);
       currentGood = false;
 
       // Simulate the consequences of the action associated with the chosen node
-      float realRemainingTime = current.simulatePos();
+      double realRemainingDistance = current.simulatePos();
 
       // Now act on what we get as a remaining time.
     }
   }
-
 
   /**
    * The distance covered at maximum acceleration with
@@ -330,6 +357,24 @@ public class AStar {
     if (currentPos.parentNode != null && checkParent && canJumpHigher(currentPos.parentNode, false)) { return true; }
 
     return currentPos.bot.mayJump() || currentPos.bot.jumpTime > 0;
+  }
+
+
+  private SearchNode pickBestPos(ArrayList<SearchNode> openList) {
+    SearchNode bestPos = null;
+    double bestPosCost = Double.POSITIVE_INFINITY;
+
+    for (SearchNode current : openList) {
+      double currentCost = current.getRemainingDistance() + current.distanceElapsed;
+      if (currentCost < bestPosCost) {
+        bestPos = current;
+        bestPosCost = currentCost;
+      }
+
+    }
+    openList.remove(bestPos);
+
+    return bestPos;
   }
 
 }
