@@ -3,7 +3,7 @@ package shared.gameObjects.components;
 public enum ComponentType {
   SPRITE_RENDERER,
   ANIMATOR,
-  RIGIBODY,
+  RIGIDBODY,
   COLLIDER,
   CANVAS,
   TEXT,

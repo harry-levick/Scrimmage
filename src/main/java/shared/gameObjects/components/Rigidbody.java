@@ -41,14 +41,14 @@ public class Rigidbody extends Component implements Serializable {
   private boolean grounded;
 
   /**
-   *
-   * @param bodyType
-   * @param mass
-   * @param gravityScale
-   * @param airDrag
-   * @param material
-   * @param angularData
-   * @param parent
+   * The main component responsible for Physics calculations. Attach this to a GameObject to have it affected by the Physics Engine.
+   * @param bodyType The Rigidbody Type. Dynamic moves, static does not.
+   * @param mass The mass of the objects, affects things like gravity and friction.
+   * @param gravityScale The scaling factor of how much gravity affects the object.
+   * @param airDrag The friction coefficient of movement while in-midair
+   * @param material The physics material the object is made of.
+   * @param angularData The angular information of the object.
+   * @param parent The GameObject the object is attached to.
    */
   public Rigidbody(
       RigidbodyType bodyType,
@@ -58,7 +58,7 @@ public class Rigidbody extends Component implements Serializable {
       MaterialProperty material,
       AngularData angularData,
       GameObject parent) {
-    super(parent, ComponentType.RIGIBODY);
+    super(parent, ComponentType.RIGIDBODY);
     this.gravityScale = gravityScale;
     this.mass = mass;
     this.airDrag = airDrag;
@@ -85,46 +85,38 @@ public class Rigidbody extends Component implements Serializable {
    * Called every physics frame, manages the velocity, forces, position, etc.
    */
   public void update() {
-    // TODO
     applyCollisions();
     applyForces();
-    lastAcceleration = acceleration;
-
-    if (impactVelocity.getX() != 0 && impactVelocity.getY() != 0) {
-      velocity = Vector2.Unit().mult(impactVelocity);
-      impactVelocity = Vector2.Zero();
-    }
-
-    deltaPos =
-        deltaPos.add(
-            velocity
-                .mult(Physics.TIMESTEP)
-                .add(acceleration.mult(0.5f).mult(Physics.TIMESTEP * Physics.TIMESTEP)));
-    deltaPos = deltaPosUpdate.add(deltaPos);
-    move(deltaPos);
-    deltaPosUpdate = Vector2.Zero();
-    deltaPos = Vector2.Zero();
-
-    acceleration = currentForce.div(mass);
-    acceleration = lastAcceleration.add(acceleration).div(2);
-    velocity = velocity.add(acceleration.mult(Physics.TIMESTEP));
+    updateVelocity();
 
     grounded = false;
   }
   // Force Methods
 
-  /** Applies a force to be added on the next physics update */
+  /**
+   *
+   * @param force
+   */
   public void addForce(Vector2 force) {
     forces.add(force);
   }
 
+  /**
+   * Applies a force to be added over time; the force is automatically divided and added on each update frame equally.
+   * @param force The total force to be applied
+   * @param time The time to spread the force over
+   */
   public void addForce(Vector2 force, float time) {
     float iterations = time / Physics.TIMESTEP;
     Vector2 forceToApply = force.div(iterations);
     forceTimes.add(new ForceTime(forceToApply, (int) iterations));
   }
 
-  /** Moves the Object to the defined space over time, instant if 0 */
+  /**
+   * Sets the velocity to match the desired distance / time needed. Could potentially be overtaken by the physics engine.
+   * @param distance The distance required to be covered.
+   * @param time The time to cover the distance.
+   */
   public void move(Vector2 distance, float time) {
     if (time <= 0) {
       getParent().getTransform().translate(distance);
@@ -135,12 +127,17 @@ public class Rigidbody extends Component implements Serializable {
   /**
    * Moves the Object a given distance on the next update. The object may end up on another space
    * due to external forces.
+   * @param distance The distance to the cover.
    */
   public void move(Vector2 distance) {
     move(distance, 0);
   }
 
   // Update Methods
+
+  /**
+   * An update method; all collision updates happen here
+   */
   private void applyCollisions() {
     for (Collision c : collisions) {
       if (c.getCollidedObject().getBodyType() == RigidbodyType.STATIC) {
@@ -161,6 +158,9 @@ public class Rigidbody extends Component implements Serializable {
     }
   }
 
+  /**
+   * An update method; all force updates happen here.
+   */
   private void applyForces() {
 
     currentForce = Vector2.Zero();
@@ -193,6 +193,31 @@ public class Rigidbody extends Component implements Serializable {
     }
   }
 
+  /**
+   * An update method; all velocity and acceleration updates happen here
+   */
+  private void updateVelocity() {
+    lastAcceleration = acceleration;
+
+    if (impactVelocity.getX() != 0 && impactVelocity.getY() != 0) {
+      velocity = Vector2.Unit().mult(impactVelocity);
+      impactVelocity = Vector2.Zero();
+    }
+
+    deltaPos =
+        deltaPos.add(
+            velocity
+                .mult(Physics.TIMESTEP)
+                .add(acceleration.mult(0.5f).mult(Physics.TIMESTEP * Physics.TIMESTEP)));
+    deltaPos = deltaPosUpdate.add(deltaPos);
+    move(deltaPos);
+    deltaPosUpdate = Vector2.Zero();
+    deltaPos = Vector2.Zero();
+
+    acceleration = currentForce.div(mass);
+    acceleration = lastAcceleration.add(acceleration).div(2);
+    velocity = velocity.add(acceleration.mult(Physics.TIMESTEP));
+  }
   // Getters and Setters
   public Vector2 getVelocity() {
     return velocity;
@@ -258,6 +283,9 @@ public class Rigidbody extends Component implements Serializable {
   }
 }
 
+/**
+ * Helper class to apply force over time without needed to thread/coroutine
+ */
 class ForceTime {
   private Vector2 force;
   private int iterations;
