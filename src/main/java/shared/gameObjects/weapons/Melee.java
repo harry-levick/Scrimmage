@@ -13,7 +13,6 @@ public abstract class Melee extends Weapon {
       double x,
       double y,
       ObjectID id,
-
       double damage,
       double weight,
       String name,
@@ -26,7 +25,6 @@ public abstract class Melee extends Weapon {
     this.range = range;
     this.beginAngle = beginAngle;
     this.endAngle = endAngle;
-
   }
 
   // -------------------
@@ -62,6 +60,4 @@ public abstract class Melee extends Weapon {
       this.endAngle = newEndAngle;
     }
   }
-
-
 }

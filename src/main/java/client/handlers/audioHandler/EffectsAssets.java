@@ -5,9 +5,18 @@ import java.util.HashMap;
 
 public class EffectsAssets {
 
-  private String filePath = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "audio" + File.separator + "sound-effects";
+  private String filePath =
+      "src"
+          + File.separator
+          + "main"
+          + File.separator
+          + "resources"
+          + File.separator
+          + "audio"
+          + File.separator
+          + "sound-effects";
 
-  private final HashMap<String,String> tracks = new HashMap<String, String>();
+  private final HashMap<String, String> tracks = new HashMap<String, String>();
 
   public EffectsAssets() {
     // put tracks into hashmap

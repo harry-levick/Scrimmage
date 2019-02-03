@@ -16,6 +16,7 @@ public class TestObject extends GameObject {
   public TestObject(int x, int y, ObjectID id, UUID testUUID) {
     super(x, y, id, "testobjectimagepath", testUUID);
   }
+
   @Override
   public void update() {}
 
@@ -23,7 +24,5 @@ public class TestObject extends GameObject {
   public void render() {}
 
   @Override
-  public void interpolatePosition(float alpha){
-
-  }
+  public void interpolatePosition(float alpha) {}
 }

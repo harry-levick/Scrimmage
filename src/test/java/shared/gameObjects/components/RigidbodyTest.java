@@ -1,5 +1,6 @@
 package shared.gameObjects.components;
 
+import java.util.UUID;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import shared.gameObjects.TestObject;
@@ -8,8 +9,6 @@ import shared.physics.data.AngularData;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
-
-import java.util.UUID;
 
 public class RigidbodyTest {
   private static BoxCollider boxA, boxB, boxC;
@@ -36,7 +35,7 @@ public class RigidbodyTest {
     circleF = new CircleCollider(f, 2, false);
 
     material = new MaterialProperty(1, 0, 0);
-    angularData = new AngularData(0, 0, 0);
+    angularData = new AngularData(0, 0, 0, 0);
     rbA = new Rigidbody(RigidbodyType.DYNAMIC, 1, 1, 0, material, angularData, a);
     rbC = new Rigidbody(RigidbodyType.DYNAMIC, 1, 1, 0, material, angularData, c);
     a.AddComponent(boxA);

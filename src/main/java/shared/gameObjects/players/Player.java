@@ -55,7 +55,6 @@ public class Player extends GameObject {
 
     imageView.setTranslateX(alpha * getX() + (1 - alpha) * imageView.getTranslateX());
     imageView.setTranslateY(alpha * getY() + (1 - alpha) * imageView.getTranslateY());
-
   }
 
   public void createSprites() {

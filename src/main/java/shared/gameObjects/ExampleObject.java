@@ -22,8 +22,7 @@ public class ExampleObject extends GameObject {
   }
 
   @Override
-  public void update() {
-  }
+  public void update() {}
 
   public int getHealth() {
     return health;
@@ -53,7 +52,5 @@ public class ExampleObject extends GameObject {
   }
 
   @Override
-  public void interpolatePosition(float alpha) {
-
-  }
+  public void interpolatePosition(float alpha) {}
 }

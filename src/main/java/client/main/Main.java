@@ -15,12 +15,10 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -88,7 +86,8 @@ public class Main extends Application {
         if (accumulatedTime < timeStep) {
           float timeSinceInterpolation = timeStep - (accumulatedTime - secondElapsed);
           float alphaRemaining = secondElapsed / timeSinceInterpolation;
-          levelHandler.getGameObjects()
+          levelHandler
+              .getGameObjects()
               .forEach(gameObject -> gameObject.interpolatePosition(alphaRemaining));
           return;
         }
@@ -156,7 +155,7 @@ public class Main extends Application {
 
     AudioHandler audio = new AudioHandler(settings);
 
-    //todo TESTING: change controls here
+    // todo TESTING: change controls here
     Button btnPlay = new Button();
     btnPlay.setText("Play");
     btnPlay.setOnAction(
@@ -165,8 +164,7 @@ public class Main extends Application {
           public void handle(ActionEvent event) {
             audio.playMusic("FUNK_GAME_LOOP");
           }
-        }
-    );
+        });
     btnPlay.setLayoutX(10);
     btnPlay.setLayoutY(10);
     root.getChildren().add(btnPlay);
@@ -178,8 +176,7 @@ public class Main extends Application {
           public void handle(ActionEvent event) {
             audio.stopMusic();
           }
-        }
-    );
+        });
     btnStop.setLayoutX(100);
     btnStop.setLayoutY(10);
     root.getChildren().add(btnStop);
@@ -189,12 +186,11 @@ public class Main extends Application {
         new EventHandler<ActionEvent>() {
           @Override
           public void handle(ActionEvent event) {
-            //audio.setMusicVolume(0.2f);
+            // audio.setMusicVolume(0.2f);
             settings.setMusicVolume(0.2);
             audio.updateMusicVolume();
           }
-        }
-    );
+        });
     btnVolL.setLayoutX(200);
     btnVolL.setLayoutY(10);
     root.getChildren().add(btnVolL);
@@ -204,24 +200,26 @@ public class Main extends Application {
         new EventHandler<ActionEvent>() {
           @Override
           public void handle(ActionEvent event) {
-            //audio.setMusicVolume(1.0f);
+            // audio.setMusicVolume(1.0f);
             settings.setMusicVolume(1.0);
             audio.updateMusicVolume();
           }
-        }
-    );
+        });
     btnVolH.setLayoutX(300);
     btnVolH.setLayoutY(10);
     root.getChildren().add(btnVolH);
     Slider sldVol = new Slider();
-    sldVol.setValue(settings.getMusicVolume()* 100);
-    sldVol.valueProperty().addListener(new InvalidationListener() {
-      @Override
-      public void invalidated(Observable observable) {
-        settings.setMusicVolume(sldVol.getValue()/100f);
-        audio.updateMusicVolume();
-      }
-    });
+    sldVol.setValue(settings.getMusicVolume() * 100);
+    sldVol
+        .valueProperty()
+        .addListener(
+            new InvalidationListener() {
+              @Override
+              public void invalidated(Observable observable) {
+                settings.setMusicVolume(sldVol.getValue() / 100f);
+                audio.updateMusicVolume();
+              }
+            });
     sldVol.setLayoutX(400);
     sldVol.setLayoutY(10);
     root.getChildren().add(sldVol);
@@ -231,28 +229,26 @@ public class Main extends Application {
         new EventHandler<ActionEvent>() {
           @Override
           public void handle(ActionEvent event) {
-            //audio.setMusicVolume(1.0f);
+            // audio.setMusicVolume(1.0f);
             audio.playSFX("CHOOSE_YOUR_CHARACTER");
           }
-        }
-    );
+        });
     btnSfx.setLayoutX(550);
     btnSfx.setLayoutY(10);
     root.getChildren().add(btnSfx);
-
 
     scene = new Scene(root, 1920, 1080);
 
     primaryStage.setScene(scene);
     primaryStage.setFullScreen(true);
-    //Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+    // Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 
     // TODO Create a screen height and width variable and scale render off that
     // Set Stage boundaries to visible bounds of the main screen
-    //primaryStage.setX(primaryScreenBounds.getMinX());
-    //primaryStage.setY(primaryScreenBounds.getMinY());
-    //primaryStage.setWidth(primaryScreenBounds.getWidth());
-    //primaryStage.setHeight(primaryScreenBounds.getHeight());
+    // primaryStage.setX(primaryScreenBounds.getMinX());
+    // primaryStage.setY(primaryScreenBounds.getMinY());
+    // primaryStage.setWidth(primaryScreenBounds.getWidth());
+    // primaryStage.setHeight(primaryScreenBounds.getHeight());
     primaryStage.show();
 
     // Setup Input
@@ -262,9 +258,7 @@ public class Main extends Application {
     scene.setOnMouseMoved(mouseInput);
     scene.setOnMouseReleased(mouseInput);
 
-    //Start Music
-
+    // Start Music
 
   }
-
 }

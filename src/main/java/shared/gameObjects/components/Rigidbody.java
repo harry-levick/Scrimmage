@@ -139,7 +139,6 @@ public class Rigidbody extends Component implements Serializable {
     // TODO add Friction and Drag
   }
 
-
   // Getters and Setters
   public Vector2 getVelocity() {
     return velocity;

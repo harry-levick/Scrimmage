@@ -3,9 +3,7 @@ package shared.gameObjects.weapons;
 import java.util.UUID;
 import shared.gameObjects.Utils.ObjectID;
 
-/**
- * @author hlf764 The Handgun class.
- */
+/** @author hlf764 The Handgun class. */
 public class Handgun extends Gun {
 
   /**
@@ -26,7 +24,6 @@ public class Handgun extends Gun {
       double x,
       double y,
       ObjectID id,
-
       double damage,
       double weight,
       String name,
@@ -35,20 +32,28 @@ public class Handgun extends Gun {
       double fireRate,
       double bulletWidth,
       UUID uuid) {
-    super(x, y, id, damage, weight, name, ammo, bulletSpeed, fireRate, bulletWidth, false, false, uuid);
-
+    super(
+        x,
+        y,
+        id,
+        damage,
+        weight,
+        name,
+        ammo,
+        bulletSpeed,
+        fireRate,
+        bulletWidth,
+        false,
+        false,
+        uuid);
   }
 
   @Override
-  public void update() {
-  }
+  public void update() {}
 
   @Override
-  public void render() {
-  }
+  public void render() {}
 
   @Override
-  public void interpolatePosition(float alpha) {
-
-  }
+  public void interpolatePosition(float alpha) {}
 }

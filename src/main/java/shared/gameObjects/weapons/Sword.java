@@ -26,7 +26,6 @@ public class Sword extends Melee {
       double x,
       double y,
       ObjectID id,
-
       double damage,
       double weight,
       String name,
@@ -39,16 +38,11 @@ public class Sword extends Melee {
   }
 
   @Override
-  public void update() {
-
-  }
+  public void update() {}
 
   @Override
-  public void render() {
-  }
+  public void render() {}
 
   @Override
-  public void interpolatePosition(float alpha) {
-
-  }
+  public void interpolatePosition(float alpha) {}
 }
