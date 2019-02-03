@@ -6,7 +6,7 @@ import shared.gameObjects.players.Player;
 
 /** @author Harry Levick (hxl799) */
 
-public class Bot extends Player implements Cloneable {
+public class Bot extends Player {
 
   boolean jumpKey, leftKey, rightKey, click;
   double mouseX, mouseY;
@@ -21,12 +21,6 @@ public class Bot extends Player implements Cloneable {
   public Bot(double x, double y, ObjectID id, UUID playerUUID) {
     super(x, y, id, playerUUID);
 
-  }
-
-  @Override
-  public Object clone() throws CloneNotSupportedException {
-    Bot clone = (Bot) super.clone();
-    return clone;
   }
 
   public boolean mayJump() { return mayJump; }
