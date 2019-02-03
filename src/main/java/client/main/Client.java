@@ -106,7 +106,7 @@ public class Client extends Application {
     framesElapsedSinceFPS++;
     if (elapsedSinceFPS >= 0.5f) {
       int fps = Math.round(framesElapsedSinceFPS / elapsedSinceFPS);
-      primaryStage.setTitle(gameTitle + " FPS: " + fps);
+      primaryStage.setTitle(gameTitle + "   --    FPS: " + fps);
       elapsedSinceFPS = 0;
       framesElapsedSinceFPS = 0;
     }
