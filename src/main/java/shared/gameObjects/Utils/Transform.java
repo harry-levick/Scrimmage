@@ -7,30 +7,66 @@ import shared.util.maths.Vector2;
 
 public class Transform implements Serializable {
 
-  private Vector2 pos;
+  private Vector2 topPos;
+  private Vector2 botPos;
+  private Vector2 size;
   private Rotation rot;
   private GameObject gameObject;
 
   public Transform(GameObject parent) {
-    this.pos = Vector2.Zero();
+    this.topPos = this.size = Vector2.Zero();
+    this.botPos = this.topPos.add(this.size);
     this.rot = new Rotation(0);
     gameObject = parent;
   }
 
-  public Transform(GameObject parent, Vector2 pos) {
-    this.pos = pos;
+  public Transform(GameObject parent, Vector2 topPos) {
+    this.topPos = topPos;
+    this.size = Vector2.Unit();
+    this.botPos = this.topPos.add(this.size);
     this.rot = new Rotation(0);
     gameObject = parent;
   }
 
-  public void translate(Vector2 vector) {
-    pos.add(vector);
+  public Transform(GameObject parent, Vector2 topPos, Vector2 size) {
+    this.topPos = topPos;
+    this.size = size;
+    this.botPos = this.topPos.add(this.size);
+    this.rot = new Rotation(0);
+    gameObject = parent;
   }
 
-  public void rotate(float rotationAmoint) {
+  /**
+   * Moves the attached gameObject to the desired position.
+   * @param translateFactor
+   */
+  public void translate(Vector2 translateFactor) {
+    topPos = topPos.add(translateFactor);
+    botPos = botPos.add(translateFactor);
+  }
+
+  /**
+   * [Does not do anything currently]
+   * @param rotation
+   */
+  public void rotate(Vector2 rotation) {
     // TODO Add Rotation Methods
   }
 
+  /**
+   * Scales an object's size with a given scale factor. It's JavaFX position remains the same.
+   * @param scaleFactor The amount to scale by per axis.
+   */
+  public void scale(Vector2 scaleFactor) {
+    this.size = size.mult(scaleFactor);
+    botPos = topPos.add(size);
+  }
+
+  /**
+   * Computes the (approximated) distance between two objects
+   * @param transform The object comparing to
+   * @return The distance between the two objects
+   */
   public float distance(Transform transform) {
     return getPos().magnitude(transform.getPos());
   }
@@ -44,10 +80,18 @@ public class Transform implements Serializable {
   }
 
   public Vector2 getPos() {
-    return pos;
+    return topPos;
   }
 
   public void setPos(Vector2 pos) {
-    this.pos = pos;
+    this.topPos = pos;
+  }
+
+  public Vector2 getBotPos() {
+    return botPos;
+  }
+
+  public Vector2 getSize() {
+    return size;
   }
 }
