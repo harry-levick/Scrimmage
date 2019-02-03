@@ -1,5 +1,6 @@
 package shared.gameObjects.players;
 
+import client.handlers.inputHandler.MouseInput;
 import client.handlers.inputHandler.KeyboardInput;
 import java.util.UUID;
 import javafx.scene.image.Image;
@@ -31,6 +32,12 @@ public class Player extends GameObject {
     }
     if (KeyboardInput.leftKey) {
       setX(getX() - 10);
+    }
+    if (MouseInput.click) {
+      if (holding != null) {
+        holding.fire(MouseInput.x, MouseInput.y);
+      }
+      // else punch?
     }
   }
 

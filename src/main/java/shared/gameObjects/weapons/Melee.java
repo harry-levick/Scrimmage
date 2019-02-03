@@ -16,6 +16,7 @@ public abstract class Melee extends Weapon {
       double damage,
       double weight,
       String name,
+      int ammo,
       double range,
       double beginAngle,
       double endAngle,
@@ -25,6 +26,10 @@ public abstract class Melee extends Weapon {
     this.range = range;
     this.beginAngle = beginAngle;
     this.endAngle = endAngle;
+  }
+  
+  public void fire(double mouseX, double mouseY) {
+    
   }
 
   // -------------------

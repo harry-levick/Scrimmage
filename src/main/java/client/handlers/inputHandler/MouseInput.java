@@ -5,8 +5,8 @@ import javafx.scene.input.MouseEvent;
 
 public class MouseInput implements EventHandler<MouseEvent> {
 
-  public boolean click;
-  public double x, y;
+  public static boolean click;
+  public static double x, y;
 
   @Override
   public void handle(MouseEvent event) {
