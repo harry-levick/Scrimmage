@@ -1,5 +1,6 @@
 package shared.gameObjects.weapons;
 
+import java.util.UUID;
 import javafx.scene.image.Image;
 
 import shared.gameObjects.GameObject;
@@ -30,9 +31,10 @@ public class Bullet extends GameObject {
       double mouseX,        // mouse initial x position
       double mouseY,        // mouse initial y position
       double width,         // the width of the bullet
-      double speed) {       // the speed of the bullet
+      double speed,         // the speed of the bullet
+      UUID uuid) {          // uuid of this bullet
     
-    super(gunX, gunY, id, imagePath);
+    super(gunX, gunY, id, imagePath, uuid);
     setWidth(width);
     setSpeed(speed);
     
@@ -71,6 +73,12 @@ public class Bullet extends GameObject {
     if (animate) {
       imageView.setImage(getImage());
     }
+  }
+  
+  @Override
+  public void interpolatePosition(float alpha) {
+    // TODO Auto-generated method stub
+    
   }
   
   public Image getImage() {
