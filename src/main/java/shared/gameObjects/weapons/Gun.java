@@ -34,6 +34,7 @@ abstract class Gun extends Weapon {
   public Gun(
       double x,
       double y,
+      ObjectID id,
       String imagePath,
       double damage,
       double weight,
@@ -46,7 +47,7 @@ abstract class Gun extends Weapon {
       boolean singleHanded,
       UUID uuid) {
 
-    super(x, y, imagePath, damage, weight, name, true, false, ammo, uuid);
+    super(x, y, id, imagePath, damage, weight, name, true, false, ammo, uuid);
 
     this.bulletSpeed = bulletSpeed;
     this.bulletWidth = bulletWidth;
@@ -57,8 +58,8 @@ abstract class Gun extends Weapon {
   }
   
   public void fire(double mouseX, double mouseY) {
-    ObjectID id = ObjectID.Player;
-    Bullet bullet = new Bullet(getX(), getY(), id, mouseX, mouseY, this.bulletWidth, this.bulletSpeed);
+    UUID uuid = UUID.randomUUID();
+    Bullet bullet = new Bullet(getX(), getY(), mouseX, mouseY, this.bulletWidth, this.bulletSpeed, uuid);
     bullet.fire();
   }
 

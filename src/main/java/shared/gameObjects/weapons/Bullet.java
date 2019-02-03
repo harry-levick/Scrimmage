@@ -27,14 +27,13 @@ public class Bullet extends GameObject {
   public Bullet(
       double gunX,          // gun initial x position
       double gunY,          // gun initial y position
-      ObjectID id,          // ObjectID
       double mouseX,        // mouse initial x position
       double mouseY,        // mouse initial y position
       double width,         // the width of the bullet
       double speed,         // the speed of the bullet
       UUID uuid) {          // uuid of this bullet
     
-    super(gunX, gunY, id, imagePath, uuid);
+    super(gunX, gunY, ObjectID.Bullet, imagePath, uuid);
     setWidth(width);
     setSpeed(speed);
     

@@ -36,7 +36,7 @@ public class Handgun extends Gun {
       double fireRate,
       double bulletWidth,
       UUID uuid) {
-    super(x, y, id, damage, weight, name, ammo, bulletSpeed, fireRate, bulletWidth, false, false, uuid);
+    super(x, y, id, imagePath, damage, weight, name, ammo, bulletSpeed, fireRate, bulletWidth, false, true, uuid);
   }
 
   @Override
