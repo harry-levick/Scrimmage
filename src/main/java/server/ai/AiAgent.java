@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import server.ai.pathFind.AStar;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
@@ -24,12 +25,15 @@ public class AiAgent {
   boolean active;
   ArrayList<GameObject> gameObjects;
   Player targetPlayer;
+  AStar pathFinder;
 
-  public AiAgent(double xPos, double yPos, ObjectID id, UUID uuid, ArrayList<GameObject> gameObjects) {
+  public AiAgent(double xPos, double yPos, ObjectID id, UUID uuid,
+      ArrayList<GameObject> gameObjects) {
     this.bot = new Bot(xPos, yPos, id, uuid);
     this.state = FSA.INITIAL_STATE;
     this.active = false;
     this.gameObjects = gameObjects;
+    this.pathFinder = new AStar(gameObjects, this.bot);
   }
 
   /**
