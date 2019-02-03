@@ -27,13 +27,13 @@ public class Bullet extends GameObject {
   public Bullet(
       double gunX,          // gun initial x position
       double gunY,          // gun initial y position
-      ObjectID id,          // ObjectID
       double mouseX,        // mouse initial x position
       double mouseY,        // mouse initial y position
       double width,         // the width of the bullet
-      double speed) {       // the speed of the bullet
+      double speed,         // the speed of the bullet
+      UUID uuid) {          // uuid of this bullet
     
-    super(gunX, gunY, id, imagePath, UUID.randomUUID());
+    super(gunX, gunY, ObjectID.Bullet, imagePath, uuid);
     setWidth(width);
     setSpeed(speed);
     
@@ -51,12 +51,7 @@ public class Bullet extends GameObject {
     render();
   }
 
-  @Override
-  public void interpolatePosition(float alpha) {
-
-  }
-
-  public void fire() {
+  public void fire() { 
     this.newX += deltaX;
     this.newY += deltaY;
   }
@@ -77,6 +72,12 @@ public class Bullet extends GameObject {
     if (animate) {
       imageView.setImage(getImage());
     }
+  }
+  
+  @Override
+  public void interpolatePosition(float alpha) {
+    // TODO Auto-generated method stub
+    
   }
   
   public Image getImage() {
