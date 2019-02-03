@@ -40,6 +40,16 @@ public class Rigidbody extends Component implements Serializable {
 
   private boolean grounded;
 
+  /**
+   *
+   * @param bodyType
+   * @param mass
+   * @param gravityScale
+   * @param airDrag
+   * @param material
+   * @param angularData
+   * @param parent
+   */
   public Rigidbody(
       RigidbodyType bodyType,
       float mass,
@@ -70,6 +80,10 @@ public class Rigidbody extends Component implements Serializable {
   }
 
   // Update Methods
+
+  /**
+   * Called every physics frame, manages the velocity, forces, position, etc.
+   */
   public void update() {
     // TODO
     applyCollisions();
@@ -172,7 +186,7 @@ public class Rigidbody extends Component implements Serializable {
             currentForce.add(
                 Vector2.Right()
                     .mult(Physics.GRAVITY * mass * gravityScale)
-                    .mult(material.getKineticFriction()));
+                    .mult(currentForce.getX() > 0 ? -1 : 1 *material.getKineticFriction()));
       } else {
         currentForce.setX(0);
       }
@@ -234,6 +248,13 @@ public class Rigidbody extends Component implements Serializable {
 
   public void setAirDrag(float airDrag) {
     this.airDrag = airDrag;
+  }
+
+  /**
+   * For Testing Purposes Only
+   */
+  public void setGrounded(boolean grounded) {
+    this.grounded = grounded;
   }
 }
 

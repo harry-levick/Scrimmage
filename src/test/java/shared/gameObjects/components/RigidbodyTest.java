@@ -5,7 +5,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.UUID;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import shared.gameObjects.TestObject;
 import shared.gameObjects.Utils.ObjectID;
@@ -50,21 +49,26 @@ public class RigidbodyTest {
 
   @Test
   public void gravityInAir() {
-      assertEquals(a.getTransform().getPos().getY(), 2, 0);
-      for (int i = 0; i < 60; i++)
-        rbA.update();
-      assertEquals(6.9, a.getY(), 0.5);
+    assertEquals(a.getTransform().getPos().getY(), 2, 0);
+    for (int i = 0; i < 60; i++) rbA.update();
+    assertEquals(6.9, a.getY(), 0.5);
   }
 
   @Test
-  public void gravityGrounded() {}
+  public void gravityGrounded() {
+    assertEquals(a.getTransform().getPos().getY(), 2, 0);
+    for (int i = 0; i < 120; i++) {
+      rbA.setGrounded(true);
+      rbA.update();
+    }
+    assertEquals(2, a.getY(), 0);
+  }
 
   @Test
   public void dragForceGravity() {
     assertEquals(a.getTransform().getPos().getY(), 2, 0);
     rbA.setAirDrag(1);
-    for (int i = 0; i < 60; i++)
-      rbA.update();
+    for (int i = 0; i < 60; i++) rbA.update();
     assertTrue(a.getY() < 6.6 && a.getY() > 5.9);
   }
 
@@ -108,26 +112,49 @@ public class RigidbodyTest {
   @Test
   public void collisionDynamicDynamic() {
     assertEquals(a.getTransform().getPos().getY(), 2, 0);
+    assertTrue(false);
   }
 
   @Test
   public void collisionDynamicStatic() {
     assertEquals(a.getTransform().getPos().getY(), 2, 0);
+    assertTrue(false);
   }
 
   @Test
   public void collisionStaticStatic() {
     assertEquals(a.getTransform().getPos().getY(), 2, 0);
+    assertTrue(false);
   }
 
   @Test
   public void staticFriction() {
     assertEquals(a.getTransform().getPos().getY(), 2, 0);
+    rbA.setMaterial(new MaterialProperty(1f, 2f, 1f));
+    rbA.addForce(new Vector2(5, 0));
+    for (int i = 0; i < 3; i++) {
+      rbA.setGrounded(true);
+      rbA.update();
+    }
+    assertEquals(2, a.getTransform().getPos().getX(), 0);
+    rbA.addForce(new Vector2(50, 0));
+    for (int i = 0; i < 3; i++) {
+      rbA.setGrounded(true);
+      rbA.update();
+    }
+    assertTrue(a.getTransform().getPos().getX() > 2);
   }
 
   @Test
   public void kineticFriction() {
     assertEquals(a.getTransform().getPos().getY(), 2, 0);
+    rbA.setMaterial(new MaterialProperty(1f, 2f, 1f));
+    rbA.addForce(new Vector2(6000, 0), 1);
+    for (int i = 0; i < 60; i++) {
+      rbA.setGrounded(true);
+      rbA.update();
+    }
+    assertEquals(45, a.getTransform().getPos().getX(), 1);
   }
 
   @Test
@@ -138,10 +165,6 @@ public class RigidbodyTest {
   @Test
   public void multipleStaticCollisions() {
     assertEquals(a.getTransform().getPos().getY(), 2, 0);
-  }
-
-  @Test
-  public void terminalVelocities() {
-    assertEquals(a.getTransform().getPos().getY(), 2, 0);
+    assertTrue(false);
   }
 }
