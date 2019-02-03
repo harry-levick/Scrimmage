@@ -14,6 +14,7 @@ import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
 
 public class RigidbodyTest {
+
   private static BoxCollider boxA, boxB, boxC;
   private static CircleCollider circleD, circleE, circleF;
   private static Rigidbody rbA, rbB, rbC, rbD, rbE, rbF;
@@ -50,7 +51,9 @@ public class RigidbodyTest {
   @Test
   public void gravityInAir() {
     assertEquals(a.getTransform().getPos().getY(), 2, 0);
-    for (int i = 0; i < 60; i++) rbA.update();
+    for (int i = 0; i < 60; i++) {
+      rbA.update();
+    }
     assertEquals(6.9, a.getY(), 0.5);
   }
 
@@ -68,7 +71,9 @@ public class RigidbodyTest {
   public void dragForceGravity() {
     assertEquals(a.getTransform().getPos().getY(), 2, 0);
     rbA.setAirDrag(1);
-    for (int i = 0; i < 60; i++) rbA.update();
+    for (int i = 0; i < 60; i++) {
+      rbA.update();
+    }
     assertTrue(a.getY() < 6.6 && a.getY() > 5.9);
   }
 

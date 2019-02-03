@@ -4,7 +4,7 @@ import java.util.UUID;
 import shared.gameObjects.Utils.ObjectID;
 
 public class Sword extends Melee {
-  
+
   private static String imagePath = "";
 
   /**
@@ -36,11 +36,15 @@ public class Sword extends Melee {
   }
 
   @Override
-  public void update() {}
+  public void update() {
+  }
 
   @Override
-  public void render() {}
+  public void render() {
+  }
 
   @Override
-  public void interpolatePosition(float alpha) {}
+  public String getState() {
+    return null;
+  }
 }

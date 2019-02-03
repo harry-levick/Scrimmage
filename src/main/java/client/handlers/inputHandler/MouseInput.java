@@ -5,19 +5,22 @@ import javafx.scene.input.MouseEvent;
 
 public class MouseInput implements EventHandler<MouseEvent> {
 
-  public static boolean click;
-  public static double x, y;
+  private InputHandler inputHandler;
+
+  public MouseInput(InputHandler inputHandler) {
+    this.inputHandler = inputHandler;
+  }
 
   @Override
   public void handle(MouseEvent event) {
     if (event.getEventType() == MouseEvent.MOUSE_MOVED) {
-      x = event.getX();
-      y = event.getY();
+      inputHandler.x = event.getX();
+      inputHandler.y = event.getY();
     }
     if (event.getEventType() == MouseEvent.MOUSE_PRESSED) {
-      click = true;
+      inputHandler.click = true;
     } else if (event.getEventType() == MouseEvent.MOUSE_RELEASED) {
-      click = false;
+      inputHandler.click = false;
     }
   }
 }

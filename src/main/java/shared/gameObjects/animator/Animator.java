@@ -5,7 +5,7 @@ import javafx.scene.image.Image;
 
 public class Animator {
 
-  // Helpful varaibles
+  // Helpful variables
   ArrayList<Image> images;
   int numberOfImages;
   int currentImage = 0;

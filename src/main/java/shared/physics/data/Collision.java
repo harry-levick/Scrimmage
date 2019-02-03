@@ -5,6 +5,7 @@ import shared.physics.types.CollisionDirection;
 import shared.util.maths.Vector2;
 
 public class Collision {
+
   private Rigidbody collidedObject;
   private Vector2 pointOfCollision;
   private CollisionDirection direction;

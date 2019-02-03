@@ -29,9 +29,9 @@ public abstract class Melee extends Weapon {
     this.endAngle = endAngle;
 
   }
-  
+
   public void fire(double mouseX, double mouseY) {
-    
+
   }
 
   // -------------------

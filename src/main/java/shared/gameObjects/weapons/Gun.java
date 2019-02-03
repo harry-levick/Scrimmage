@@ -56,10 +56,11 @@ abstract class Gun extends Weapon {
     this.singleHanded = singleHanded;
 
   }
-  
+
   public void fire(double mouseX, double mouseY) {
     UUID uuid = UUID.randomUUID();
-    Bullet bullet = new Bullet(getX(), getY(), mouseX, mouseY, this.bulletWidth, this.bulletSpeed, uuid);
+    Bullet bullet = new Bullet(getX(), getY(), mouseX, mouseY, this.bulletWidth, this.bulletSpeed,
+        uuid);
     bullet.fire();
   }
 
@@ -104,7 +105,7 @@ abstract class Gun extends Weapon {
   public boolean isSingleHanded() {
     return this.singleHanded;
   }
-  
+
   // -------------------
   // Setters and Getters
   // --------END--------

@@ -41,7 +41,9 @@ public class Rigidbody extends Component implements Serializable {
   private boolean grounded;
 
   /**
-   * The main component responsible for Physics calculations. Attach this to a GameObject to have it affected by the Physics Engine.
+   * The main component responsible for Physics calculations. Attach this to a GameObject to have it
+   * affected by the Physics Engine.
+   *
    * @param bodyType The Rigidbody Type. Dynamic moves, static does not.
    * @param mass The mass of the objects, affects things like gravity and friction.
    * @param gravityScale The scaling factor of how much gravity affects the object.
@@ -95,14 +97,15 @@ public class Rigidbody extends Component implements Serializable {
 
   /**
    *
-   * @param force
    */
   public void addForce(Vector2 force) {
     forces.add(force);
   }
 
   /**
-   * Applies a force to be added over time; the force is automatically divided and added on each update frame equally.
+   * Applies a force to be added over time; the force is automatically divided and added on each
+   * update frame equally.
+   *
    * @param force The total force to be applied
    * @param time The time to spread the force over
    */
@@ -113,7 +116,9 @@ public class Rigidbody extends Component implements Serializable {
   }
 
   /**
-   * Sets the velocity to match the desired distance / time needed. Could potentially be overtaken by the physics engine.
+   * Sets the velocity to match the desired distance / time needed. Could potentially be overtaken
+   * by the physics engine.
+   *
    * @param distance The distance required to be covered.
    * @param time The time to cover the distance.
    */
@@ -124,9 +129,11 @@ public class Rigidbody extends Component implements Serializable {
       setVelocity(distance.div(time));
     }
   }
+
   /**
    * Moves the Object a given distance on the next update. The object may end up on another space
    * due to external forces.
+   *
    * @param distance The distance to the cover.
    */
   public void move(Vector2 distance) {
@@ -186,7 +193,7 @@ public class Rigidbody extends Component implements Serializable {
             currentForce.add(
                 Vector2.Right()
                     .mult(Physics.GRAVITY * mass * gravityScale)
-                    .mult(currentForce.getX() > 0 ? -1 : 1 *material.getKineticFriction()));
+                    .mult(currentForce.getX() > 0 ? -1 : 1 * material.getKineticFriction()));
       } else {
         currentForce.setX(0);
       }
@@ -287,6 +294,7 @@ public class Rigidbody extends Component implements Serializable {
  * Helper class to apply force over time without needed to thread/coroutine
  */
 class ForceTime {
+
   private Vector2 force;
   private int iterations;
 

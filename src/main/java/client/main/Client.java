@@ -1,14 +1,10 @@
 package client.main;
 
 import client.handlers.audioHandler.AudioHandler;
+import client.handlers.connectionHandler.ConnectionHandler;
+import client.handlers.inputHandler.InputHandler;
 import client.handlers.inputHandler.KeyboardInput;
 import client.handlers.inputHandler.MouseInput;
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.beans.InvalidationListener;
@@ -22,36 +18,33 @@ import javafx.scene.control.Slider;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import shared.gameObjects.Utils.Version;
 import shared.handlers.levelHandler.LevelHandler;
 import shared.handlers.levelHandler.Map;
 
-public class Main extends Application {
+public class Client extends Application {
 
-  private static final Logger LOGGER = LogManager.getLogger(Main.class.getName());
-  public static KeyboardInput keyInput;
-  public static MouseInput mouseInput;
+  private static final Logger LOGGER = LogManager.getLogger(Client.class.getName());
+  public static InputHandler inputHandler;
   public static LevelHandler levelHandler;
   public static Settings settings;
+  public static boolean multiplayer;
 
-  private static final float timeStep = 0.0166f;
+  private final float timeStep = 0.0166f;
+  private final String gameTitle = "Alone in the Dark";
+  private final int port = 4445;
 
-  private String gameTitle = "Alone in the Dark";
-  private static final int port = 4445;
-
+  private ConnectionHandler connectionHandler;
+  private KeyboardInput keyInput;
+  private MouseInput mouseInput;
   private Group root;
   private Scene scene;
   private Map currentMap;
   private float maximumStep;
   private long previousTime;
   private float accumulatedTime;
-
   private float elapsedSinceFPS = 0f;
   private int framesElapsedSinceFPS = 0;
-  private boolean multiplayer = false;
-  private DatagramSocket socket;
-  private InetAddress address;
-  private byte[] buffer;
+
 
   public static void main(String args[]) {
     launch(args);
@@ -60,16 +53,21 @@ public class Main extends Application {
   @Override
   public void start(Stage primaryStage) {
     setupRender(primaryStage);
-    levelHandler = new LevelHandler(settings, root, Version.CLIENT);
+    levelHandler = new LevelHandler(settings, root, true);
     currentMap = levelHandler.getMap();
 
     // Main Game Loop
     new AnimationTimer() {
       @Override
       public void handle(long now) {
+
+        if (multiplayer) {
+          processServerPackets();
+        }
+
         // Changes Map/Level
         if (currentMap != levelHandler.getMap()) {
-          levelHandler.generateLevel(root);
+          levelHandler.generateLevel(root, true);
           currentMap = levelHandler.getMap();
         }
 
@@ -86,8 +84,7 @@ public class Main extends Application {
         if (accumulatedTime < timeStep) {
           float timeSinceInterpolation = timeStep - (accumulatedTime - secondElapsed);
           float alphaRemaining = secondElapsed / timeSinceInterpolation;
-          levelHandler
-              .getGameObjects()
+          levelHandler.getGameObjects()
               .forEach(gameObject -> gameObject.interpolatePosition(alphaRemaining));
           return;
         }
@@ -96,20 +93,15 @@ public class Main extends Application {
           levelHandler.getGameObjects().forEach(gameObject -> gameObject.update());
           accumulatedTime -= timeStep;
         }
+        /** Apply Input */
+        levelHandler.getClientPlayer().applyInput(multiplayer, connectionHandler);
+        /** Render Game Objects */
         levelHandler.getGameObjects().forEach(gameObject -> gameObject.render());
+        /** Update Game Objects */
         levelHandler.getGameObjects().forEach(gameObject -> gameObject.update());
         accumulatedTime -= timeStep;
         float alpha = accumulatedTime / timeStep;
         levelHandler.getGameObjects().forEach(gameObject -> gameObject.interpolatePosition(alpha));
-
-        if (multiplayer) {
-          buffer = KeyboardInput.getInput().getBytes();
-          try {
-            socket.send(new DatagramPacket(buffer, buffer.length, address, port));
-          } catch (IOException e) {
-            e.printStackTrace();
-          }
-        }
 
         calculateFPS(secondElapsed, primaryStage);
       }
@@ -121,32 +113,22 @@ public class Main extends Application {
     framesElapsedSinceFPS++;
     if (elapsedSinceFPS >= 0.5f) {
       int fps = Math.round(framesElapsedSinceFPS / elapsedSinceFPS);
-      primaryStage.setTitle(gameTitle + " FPS: " + fps);
+      primaryStage.setTitle(gameTitle + "   --    FPS: " + fps);
       elapsedSinceFPS = 0;
       framesElapsedSinceFPS = 0;
     }
   }
 
   public void init() {
-    maximumStep = Float.MAX_VALUE;
+    maximumStep = 0.0166f;
     previousTime = 0;
     accumulatedTime = 0;
     settings = new Settings();
-    keyInput = new KeyboardInput();
-    mouseInput = new MouseInput();
-    // TODO: Add setting up audio, graphics, input, audioHandler and connections
-    if (multiplayer) {
-      try {
-        socket = new DatagramSocket();
-      } catch (SocketException e) {
-        e.printStackTrace();
-      }
-      try {
-        address = InetAddress.getByName("localhost");
-      } catch (UnknownHostException e) {
-        e.printStackTrace();
-      }
-    }
+    inputHandler = new InputHandler();
+    keyInput = new KeyboardInput(inputHandler);
+    mouseInput = new MouseInput(inputHandler);
+    multiplayer = false;
+    //Start off screen
   }
 
   private void setupRender(Stage primaryStage) {
@@ -240,15 +222,7 @@ public class Main extends Application {
     scene = new Scene(root, 1920, 1080);
 
     primaryStage.setScene(scene);
-    primaryStage.setFullScreen(true);
-    // Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-
-    // TODO Create a screen height and width variable and scale render off that
-    // Set Stage boundaries to visible bounds of the main screen
-    // primaryStage.setX(primaryScreenBounds.getMinX());
-    // primaryStage.setY(primaryScreenBounds.getMinY());
-    // primaryStage.setWidth(primaryScreenBounds.getWidth());
-    // primaryStage.setHeight(primaryScreenBounds.getHeight());
+    primaryStage.setFullScreen(false);
     primaryStage.show();
 
     // Setup Input
@@ -261,4 +235,16 @@ public class Main extends Application {
     // Start Music
 
   }
+
+  private void processServerPackets() {
+    if (connectionHandler.received.size() != 0) {
+      try {
+        String message = (String) connectionHandler.received.take();
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+
 }

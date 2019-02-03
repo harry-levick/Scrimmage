@@ -3,19 +3,12 @@ package client.handlers.inputHandler;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
 
-public class KeyboardInput implements EventHandler<KeyEvent> {
+public class KeyboardInput extends InputHandler implements EventHandler<KeyEvent> {
 
-  public static boolean keyPressed;
-  public static boolean leftKey, rightKey, jumpKey;
+  private InputHandler inputHandler;
 
-  public KeyboardInput() {
-    leftKey = false;
-    rightKey = false;
-    jumpKey = false;
-  }
-
-  public static String getInput() {
-    return "INPUT:" + leftKey + "," + rightKey + "," + jumpKey;
+  public KeyboardInput(InputHandler inputHandler) {
+    this.inputHandler = inputHandler;
   }
 
   @Override
@@ -23,32 +16,32 @@ public class KeyboardInput implements EventHandler<KeyEvent> {
     if (event.getEventType() == KeyEvent.KEY_PRESSED) {
       switch (event.getCode()) {
         case A:
-          leftKey = true;
-          keyPressed = true;
+          inputHandler.leftKey = true;
+          inputHandler.keyPressed = true;
           break;
         case D:
-          rightKey = true;
-          keyPressed = true;
+          inputHandler.rightKey = true;
+          inputHandler.keyPressed = true;
           break;
         case SPACE:
-          jumpKey = true;
-          keyPressed = true;
+          inputHandler.jumpKey = true;
+          inputHandler.keyPressed = true;
           break;
         default:
       }
     } else if (event.getEventType() == KeyEvent.KEY_RELEASED) {
       switch (event.getCode()) {
         case A:
-          leftKey = false;
-          keyPressed = false;
+          inputHandler.leftKey = false;
+          inputHandler.keyPressed = false;
           break;
         case D:
-          rightKey = false;
-          keyPressed = false;
+          inputHandler.rightKey = false;
+          inputHandler.keyPressed = false;
           break;
         case SPACE:
-          jumpKey = false;
-          keyPressed = false;
+          inputHandler.jumpKey = false;
+          inputHandler.keyPressed = false;
           break;
         default:
       }

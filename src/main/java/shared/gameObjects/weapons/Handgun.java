@@ -7,7 +7,7 @@ import shared.gameObjects.Utils.ObjectID;
  * @author hlf764 The Handgun class.
  */
 public class Handgun extends Gun {
-  
+
   private static String imagePath = "images/weapons/handgun.jpg";
 
   /**
@@ -36,13 +36,14 @@ public class Handgun extends Gun {
       double fireRate,
       double bulletWidth,
       UUID uuid) {
-    super(x, y, id, imagePath, damage, weight, name, ammo, bulletSpeed, fireRate, bulletWidth, false, true, uuid);
+    super(x, y, id, imagePath, damage, weight, name, ammo, bulletSpeed, fireRate, bulletWidth,
+        false, true, uuid);
   }
 
   @Override
   public void update() {
   }
-  
+
   @Override
   public void render() {
   }
@@ -50,5 +51,10 @@ public class Handgun extends Gun {
   @Override
   public void interpolatePosition(float alpha) {
 
+  }
+
+  @Override
+  public String getState() {
+    return null;
   }
 }

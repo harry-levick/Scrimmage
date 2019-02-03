@@ -2,7 +2,9 @@ package client.main;
 
 import java.io.File;
 
-/** @author Brett Saunders */
+/**
+ * @author Brett Saunders
+ */
 public class Settings {
 
   private double musicVolume;
@@ -34,7 +36,9 @@ public class Settings {
     this.menuPath = menuPath;
   }
 
-  /** @return Current game music volume */
+  /**
+   * @return Current game music volume
+   */
   public double getMusicVolume() {
     return musicVolume;
   }
@@ -49,7 +53,9 @@ public class Settings {
     this.musicVolume = musicVolume < 0 ? 0 : musicVolume;
   }
 
-  /** @return Current game sound effect volume */
+  /**
+   * @return Current game sound effect volume
+   */
   public double getSoundEffectVolume() {
     return soundEffectVolume;
   }

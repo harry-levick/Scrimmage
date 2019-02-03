@@ -1,14 +1,11 @@
 package shared.gameObjects;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import shared.gameObjects.Utils.ObjectID;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import shared.gameObjects.weapons.Weapon;
-import shared.gameObjects.weapons.Handgun;
 
 public class HandgunTest {
 

@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 public class MusicAssets {
 
+  private final HashMap<String, String> tracks = new HashMap<String, String>();
   private String filePath =
       "src"
           + File.separator
@@ -15,8 +16,6 @@ public class MusicAssets {
           + "audio"
           + File.separator
           + "music";
-
-  private final HashMap<String, String> tracks = new HashMap<String, String>();
 
   public MusicAssets() {
     tracks.put("FUNK_GAME_LOOP", "funk-game-loop-by-kevin-macleod.mp3");

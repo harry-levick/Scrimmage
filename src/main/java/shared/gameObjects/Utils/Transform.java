@@ -38,7 +38,6 @@ public class Transform implements Serializable {
 
   /**
    * Moves the attached gameObject to the desired position.
-   * @param translateFactor
    */
   public void translate(Vector2 translateFactor) {
     topPos = topPos.add(translateFactor);
@@ -64,6 +63,7 @@ public class Transform implements Serializable {
 
   /**
    * Computes the (approximated) distance between two objects
+   *
    * @param transform The object comparing to
    * @return The distance between the two objects
    */

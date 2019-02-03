@@ -13,7 +13,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.Utils.Transform;
-import shared.gameObjects.Utils.Version;
 import shared.gameObjects.components.Component;
 import shared.gameObjects.components.ComponentType;
 import shared.util.maths.Vector2;
@@ -25,7 +24,6 @@ public abstract class GameObject implements Serializable {
   protected HashMap<String, String> spriteLibaryURL;
   protected boolean animate;
 
-  protected transient Version version;
   protected transient ImageView imageView;
   protected transient Group root;
   protected transient HashMap<String, Image> spriteLibary;
@@ -67,10 +65,25 @@ public abstract class GameObject implements Serializable {
   // Client Side only
   public abstract void render();
 
-  public abstract void interpolatePosition(float alpha);
+  //Interpolate Position Client only
+  public void interpolatePosition(float alpha) {
+    if (!isActive()) {
+      return;
+    }
+    imageView.setTranslateX(alpha * getX() + (1 - alpha) * imageView.getTranslateX());
+    imageView.setTranslateY(alpha * getY() + (1 - alpha) * imageView.getTranslateY());
+  }
+
+  /**
+   * Contains the state of the object for sending over server Only contains items that need sending
+   * separate by commas
+   *
+   * @return State of object
+   */
+  public abstract String getState();
 
   // Ignore for now, added due to unSerializable objects
-  public void initialise(Group root, Version version, boolean animate) {
+  public void initialise(Group root, boolean animate) {
     this.root = root;
     imageView = new ImageView();
     spriteLibary = new HashMap<>();
@@ -82,7 +95,6 @@ public abstract class GameObject implements Serializable {
 
     this.imageView.setImage(spriteLibary.get("baseImage"));
     root.getChildren().add(this.imageView);
-    this.version = version;
   }
 
   public void addChild(GameObject child) {
@@ -153,7 +165,11 @@ public abstract class GameObject implements Serializable {
     destroyed = active = false;
   }
 
-  /** Basic Getters and Setters */
+
+  /**
+   * Basic Getters and Setters
+   */
+
   public double getX() {
     return this.transform.getPos().getX();
   }
@@ -172,14 +188,6 @@ public abstract class GameObject implements Serializable {
 
   public ObjectID getId() {
     return id;
-  }
-
-  public Version getVersion() {
-    return version;
-  }
-
-  public void setVersion(Version version) {
-    this.version = version;
   }
 
   public GameObject getParent() {

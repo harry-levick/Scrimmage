@@ -43,10 +43,9 @@ public class MapLoaderTest {
     ArrayList<GameObject> gameObjectsTest = map.loadMap(path);
     int i = 0;
     while (gameObjectsTest.size() > i) {
-      assertEquals(gameObjectsTest.get(i).getX(), gameObjects.get(i).getX());
-      assertEquals(gameObjectsTest.get(i).getY(), gameObjects.get(i).getY());
+      assertEquals(gameObjectsTest.get(i).getX(), gameObjects.get(i).getX(), 0.0001);
+      assertEquals(gameObjectsTest.get(i).getY(), gameObjects.get(i).getY(), 0.0001);
       assertEquals(gameObjectsTest.get(i).getId(), gameObjects.get(i).getId());
-      assertEquals(gameObjectsTest.get(i).getVersion(), gameObjects.get(i).getVersion());
       i++;
     }
   }

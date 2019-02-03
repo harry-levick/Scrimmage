@@ -40,7 +40,9 @@ public abstract class Collider extends Component implements Serializable {
 
   public static boolean circleCircleCollision(CircleCollider circleA, CircleCollider circleB) {
     if (circleA.getCentre().magnitude(circleB.getCentre())
-        < circleA.getRadius() + circleB.getRadius()) return true;
+        < circleA.getRadius() + circleB.getRadius()) {
+      return true;
+    }
     return false;
   }
 

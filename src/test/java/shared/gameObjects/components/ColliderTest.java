@@ -10,6 +10,7 @@ import shared.gameObjects.Utils.ObjectID;
 import shared.util.maths.Vector2;
 
 public class ColliderTest {
+
   private static BoxCollider boxA, boxB, boxC;
   private static CircleCollider circleD, circleE, circleF;
   private static TestObject a, b, c, d, e, f;
