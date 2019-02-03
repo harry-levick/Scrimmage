@@ -26,44 +26,6 @@ public abstract class Collider extends Component implements Serializable {
     this.trigger = trigger;
   }
 
-  public ColliderType getColliderType() {
-    return colliderType;
-  }
-
-  public void collision() {
-    if (trigger) {
-      if (!triggerStay) {
-        triggerEnter = triggerStay = true;
-        return;
-      }
-      triggerEnter = false;
-    } else {
-      if (!collisionStay) {
-        collisionEnter = collisionStay = true;
-        return;
-      }
-      collisionEnter = false;
-    }
-  }
-
-  public void noCollision() {
-    if (trigger) {
-      if (triggerStay) {
-        triggerExit = true;
-        triggerStay = false;
-        return;
-      }
-      collisionExit = true;
-    } else {
-      if (collisionStay) {
-        collisionExit = true;
-        collisionStay = false;
-        return;
-      }
-      collisionExit = true;
-    }
-  }
-
   // Static Collision Methods
   public static boolean boxCircleCollision(BoxCollider box, CircleCollider circle) {
     float clampDist =
@@ -109,6 +71,44 @@ public abstract class Collider extends Component implements Serializable {
   public static boolean circleEdgeCollision(CircleCollider circle, EdgeCollider edge) {
 
     return false;
+  }
+
+  public ColliderType getColliderType() {
+    return colliderType;
+  }
+
+  public void collision() {
+    if (trigger) {
+      if (!triggerStay) {
+        triggerEnter = triggerStay = true;
+        return;
+      }
+      triggerEnter = false;
+    } else {
+      if (!collisionStay) {
+        collisionEnter = collisionStay = true;
+        return;
+      }
+      collisionEnter = false;
+    }
+  }
+
+  public void noCollision() {
+    if (trigger) {
+      if (triggerStay) {
+        triggerExit = true;
+        triggerStay = false;
+        return;
+      }
+      collisionExit = true;
+    } else {
+      if (collisionStay) {
+        collisionExit = true;
+        collisionStay = false;
+        return;
+      }
+      collisionExit = true;
+    }
   }
 
   // Getters

@@ -69,38 +69,79 @@ public class RigidbodyTest {
   }
 
   @Test
-  public void addForceNoTime() {}
+  public void addForceNoTime() {
+    assertEquals(a.getTransform().getPos().getY(), 2, 0);
+    for (int i = 0; i < 60; i++) {
+      rbA.addForce(new Vector2(100, 0));
+      rbA.update();
+    }
+    assertEquals(52, a.getX(), 4);
+  }
 
   @Test
-  public void addForceTime() {}
+  public void addForceTime() {
+    assertEquals(a.getTransform().getPos().getY(), 2, 0);
+    rbA.addForce(new Vector2(6000, 0), 1);
+    for (int i = 0; i < 60; i++) {
+      rbA.update();
+    }
+    assertEquals(52, a.getX(), 4);
+  }
 
   @Test
-  public void addDistanceNoTime() {}
+  public void addDistanceNoTime() {
+    assertEquals(a.getTransform().getPos().getY(), 2, 0);
+    rbA.move(new Vector2(10, 10));
+    assertEquals(12, a.getX(), 0.5);
+  }
 
   @Test
-  public void addDistanceTime() {}
+  public void addDistanceTime() {
+    assertEquals(a.getTransform().getPos().getY(), 2, 0);
+    rbA.move(new Vector2(0, 5), 1);
+    for (int i = 0; i < 60; i++) {
+      rbA.update();
+    }
+    assertEquals(11.7, a.getY(), 1);
+  }
 
   @Test
-  public void collisionDynamicDynamic() {}
+  public void collisionDynamicDynamic() {
+    assertEquals(a.getTransform().getPos().getY(), 2, 0);
+  }
 
   @Test
-  public void collisionDynamicStatic() {}
+  public void collisionDynamicStatic() {
+    assertEquals(a.getTransform().getPos().getY(), 2, 0);
+  }
 
   @Test
-  public void collisionStaticStatic() {}
+  public void collisionStaticStatic() {
+    assertEquals(a.getTransform().getPos().getY(), 2, 0);
+  }
 
   @Test
-  public void staticFriction() {}
+  public void staticFriction() {
+    assertEquals(a.getTransform().getPos().getY(), 2, 0);
+  }
 
   @Test
-  public void kineticFriction() {}
+  public void kineticFriction() {
+    assertEquals(a.getTransform().getPos().getY(), 2, 0);
+  }
 
   @Test
-  public void multipleDynamicCollisions() {}
+  public void multipleDynamicCollisions() {
+    assertEquals(a.getTransform().getPos().getY(), 2, 0);
+  }
 
   @Test
-  public void multipleStaticCollisions() {}
+  public void multipleStaticCollisions() {
+    assertEquals(a.getTransform().getPos().getY(), 2, 0);
+  }
 
   @Test
-  public void terminalVelocities() {}
+  public void terminalVelocities() {
+    assertEquals(a.getTransform().getPos().getY(), 2, 0);
+  }
 }

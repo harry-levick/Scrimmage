@@ -32,6 +32,7 @@ public class Rigidbody extends Component implements Serializable {
   private AngularData angularData;
   private ArrayList<Collision> collisions;
   private ArrayList<Vector2> forces;
+  private ArrayList<ForceTime> forceTimes;
 
   private float mass;
   private float gravityScale;
@@ -57,6 +58,8 @@ public class Rigidbody extends Component implements Serializable {
 
     collisions = new ArrayList<>();
     forces = new ArrayList<>();
+    forceTimes = new ArrayList<>();
+
     impactVelocity = Vector2.Zero();
     velocity = Vector2.Zero();
     acceleration = Vector2.Zero();
@@ -101,12 +104,18 @@ public class Rigidbody extends Component implements Serializable {
     forces.add(force);
   }
 
+  public void addForce(Vector2 force, float time) {
+    float iterations = time / Physics.TIMESTEP;
+    Vector2 forceToApply = force.div(iterations);
+    forceTimes.add(new ForceTime(forceToApply, (int) iterations));
+  }
+
   /** Moves the Object to the defined space over time, instant if 0 */
   public void move(Vector2 distance, float time) {
     if (time <= 0) {
       getParent().getTransform().translate(distance);
     } else {
-
+      setVelocity(distance.div(time));
     }
   }
   /**
@@ -139,8 +148,15 @@ public class Rigidbody extends Component implements Serializable {
   }
 
   private void applyForces() {
-    //
+
     currentForce = Vector2.Zero();
+    for (ForceTime force : forceTimes) {
+      if (force.iterate()) {
+        currentForce = currentForce.add(force.getForce());
+      } else {
+
+      }
+    }
     for (Vector2 force : forces) {
       currentForce = currentForce.add(force);
     }
@@ -218,5 +234,27 @@ public class Rigidbody extends Component implements Serializable {
 
   public void setAirDrag(float airDrag) {
     this.airDrag = airDrag;
+  }
+}
+
+class ForceTime {
+  private Vector2 force;
+  private int iterations;
+
+  public ForceTime(Vector2 force, int iterations) {
+    this.force = force;
+    this.iterations = iterations;
+  }
+
+  public Vector2 getForce() {
+    return force;
+  }
+
+  public boolean iterate() {
+    if (iterations <= 0) {
+      return false;
+    }
+    iterations--;
+    return true;
   }
 }
