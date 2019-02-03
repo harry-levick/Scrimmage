@@ -17,9 +17,9 @@ public class SwordTest {
   private static double delta = 0.001;
   
   @BeforeClass
-  public static void initSword() {
-    sword = new Sword(10, 10, 10, 10, "Sword", 30, 5, 70, 20);
-  }
+ // public static void initSword() {
+  //  sword = new Sword(10, 10, 10, 10, "Sword", 30, 5, 70, 20);
+//  }
   
   @Test
   public void testGetX() {

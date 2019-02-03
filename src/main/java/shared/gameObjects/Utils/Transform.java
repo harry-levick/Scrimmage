@@ -41,8 +41,8 @@ public class Transform implements Serializable {
    * @param translateFactor
    */
   public void translate(Vector2 translateFactor) {
-    topPos.add(translateFactor);
-    botPos.add(translateFactor);
+    topPos = topPos.add(translateFactor);
+    botPos = botPos.add(translateFactor);
   }
 
   /**

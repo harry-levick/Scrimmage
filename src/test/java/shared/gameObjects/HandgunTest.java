@@ -16,17 +16,18 @@ public class HandgunTest {
 
   @BeforeClass
   public static void initHandgun() {
-    handgun = new Handgun(
-        10, 
-        10,
-        10,
-        10,
-        "HandGun",
-        30,
-        40,
-        80,
-        3
-    );
+    /*    handgun = new Handgun(
+          10,
+          10,
+          10,
+          10,
+          "HandGun",
+          30,
+          40,
+          80,
+          3
+      );
+    */
   }
 
   @Test

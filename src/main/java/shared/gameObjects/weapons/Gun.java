@@ -44,7 +44,7 @@ abstract class Gun extends Weapon {
       boolean singleHanded,
       UUID uuid) {
 
-    super(x, y, id, damage, weight, name, true, false, ammo, uuid);
+    super(x, y, "", damage, weight, name, true, false, ammo, uuid);
 
     this.bulletSpeed = bulletSpeed;
     this.bulletWidth = bulletWidth;

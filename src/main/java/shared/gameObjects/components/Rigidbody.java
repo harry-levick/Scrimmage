@@ -20,6 +20,7 @@ public class Rigidbody extends Component implements Serializable {
   private Vector2 deltaPosUpdate;
 
   private Vector2 velocity;
+  private Vector2 impactVelocity;
 
   private Vector2 currentForce;
   private Vector2 lastAcceleration;
@@ -56,7 +57,12 @@ public class Rigidbody extends Component implements Serializable {
 
     collisions = new ArrayList<>();
     forces = new ArrayList<>();
-    velocity = acceleration = lastAcceleration = deltaPos = deltaPosUpdate = Vector2.Zero();
+    impactVelocity = Vector2.Zero();
+    velocity = Vector2.Zero();
+    acceleration = Vector2.Zero();
+    lastAcceleration = Vector2.Zero();
+    deltaPos = Vector2.Zero();
+    deltaPosUpdate = Vector2.Zero();
     currentForce = acceleration.mult(mass);
   }
 
@@ -67,14 +73,20 @@ public class Rigidbody extends Component implements Serializable {
     applyForces();
     lastAcceleration = acceleration;
 
+    if (impactVelocity.getX() != 0 && impactVelocity.getY() != 0) {
+      velocity = Vector2.Unit().mult(impactVelocity);
+      impactVelocity = Vector2.Zero();
+    }
+
     deltaPos =
         deltaPos.add(
             velocity
                 .mult(Physics.TIMESTEP)
                 .add(acceleration.mult(0.5f).mult(Physics.TIMESTEP * Physics.TIMESTEP)));
     deltaPos = deltaPosUpdate.add(deltaPos);
+    move(deltaPos);
     deltaPosUpdate = Vector2.Zero();
-    move(deltaPos, 0);
+    deltaPos = Vector2.Zero();
 
     acceleration = currentForce.div(mass);
     acceleration = lastAcceleration.add(acceleration).div(2);
@@ -121,22 +133,34 @@ public class Rigidbody extends Component implements Serializable {
             break;
         }
       } else if (c.getCollidedObject().getBodyType() == RigidbodyType.DYNAMIC) {
-        Vector2 collisionForce;
         // TODO Momentum and Impulse Calculation
       }
     }
   }
 
   private void applyForces() {
+    //
     currentForce = Vector2.Zero();
     for (Vector2 force : forces) {
       currentForce = currentForce.add(force);
     }
     forces.clear();
+    // Gravity and Friction
+    float gravityForce = Physics.GRAVITY * mass * gravityScale;
     if (!grounded) {
-      currentForce = currentForce.add(Vector2.Up().mult(Physics.GRAVITY * mass * gravityScale));
+      currentForce = currentForce.add(Vector2.Up().mult(gravityForce));
+      currentForce = currentForce.add(Vector2.Up().mult(airDrag).mult(velocity).mult(-0.5f * mass));
+    } else {
+      if (currentForce.getX() > gravityForce * material.getStaticFriction()) {
+        currentForce =
+            currentForce.add(
+                Vector2.Right()
+                    .mult(Physics.GRAVITY * mass * gravityScale)
+                    .mult(material.getKineticFriction()));
+      } else {
+        currentForce.setX(0);
+      }
     }
-    // TODO add Friction and Drag
   }
 
   // Getters and Setters
@@ -186,5 +210,13 @@ public class Rigidbody extends Component implements Serializable {
 
   public void setAngularData(AngularData angularData) {
     this.angularData = angularData;
+  }
+
+  public float getAirDrag() {
+    return airDrag;
+  }
+
+  public void setAirDrag(float airDrag) {
+    this.airDrag = airDrag;
   }
 }

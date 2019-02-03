@@ -12,11 +12,15 @@ public class EdgeCollider extends Collider implements Serializable {
   ArrayList<Vector2> nodes;
 
   public EdgeCollider(GameObject parent, boolean isTrigger) {
-    super(parent, ColliderType.CIRCLE, isTrigger);
-    nodes = new ArrayList<Vector2>();
+    super(parent, ColliderType.EDGE, isTrigger);
+    nodes = new ArrayList<>();
   }
 
-  public void AddNode(Vector2 position) {
+  public void addNode(Vector2 position) {
     nodes.add(position);
+  }
+
+  public ArrayList<Vector2> getNodes() {
+    return nodes;
   }
 }

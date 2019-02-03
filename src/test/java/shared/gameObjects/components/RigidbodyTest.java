@@ -1,6 +1,10 @@
 package shared.gameObjects.components;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.UUID;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import shared.gameObjects.TestObject;
@@ -18,8 +22,8 @@ public class RigidbodyTest {
   private static MaterialProperty material;
   private static AngularData angularData;
 
-  @BeforeClass
-  public static void InitColliders() {
+  @Before
+  public void InitColliders() {
     a = new TestObject(2, 2, ObjectID.Player, UUID.randomUUID());
     b = new TestObject(3, 1, ObjectID.Player, UUID.randomUUID());
     c = new TestObject(10, 10, ObjectID.Player, UUID.randomUUID());
@@ -38,20 +42,31 @@ public class RigidbodyTest {
     angularData = new AngularData(0, 0, 0, 0);
     rbA = new Rigidbody(RigidbodyType.DYNAMIC, 1, 1, 0, material, angularData, a);
     rbC = new Rigidbody(RigidbodyType.DYNAMIC, 1, 1, 0, material, angularData, c);
-    a.AddComponent(boxA);
-    a.AddComponent(rbA);
-    c.AddComponent(boxC);
-    c.AddComponent(rbC);
+    a.addComponent(boxA);
+    a.addComponent(rbA);
+    c.addComponent(boxC);
+    c.addComponent(rbC);
   }
 
   @Test
-  public void gravityInAir() {}
+  public void gravityInAir() {
+      assertEquals(a.getTransform().getPos().getY(), 2, 0);
+      for (int i = 0; i < 60; i++)
+        rbA.update();
+      assertEquals(6.9, a.getY(), 0.5);
+  }
 
   @Test
   public void gravityGrounded() {}
 
   @Test
-  public void dragForceGravity() {}
+  public void dragForceGravity() {
+    assertEquals(a.getTransform().getPos().getY(), 2, 0);
+    rbA.setAirDrag(1);
+    for (int i = 0; i < 60; i++)
+      rbA.update();
+    assertTrue(a.getY() < 6.6 && a.getY() > 5.9);
+  }
 
   @Test
   public void addForceNoTime() {}

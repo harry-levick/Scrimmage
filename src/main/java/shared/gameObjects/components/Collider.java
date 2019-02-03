@@ -93,33 +93,51 @@ public abstract class Collider extends Component implements Serializable {
     return false;
   }
 
+  public static boolean boxEdgeCollision(BoxCollider box, EdgeCollider edge) {
+    Vector2[] corners = box.getCorners();
+    for (Vector2 node : edge.getNodes()) {
+      if (corners[0].getY() < node.getY()
+          && corners[1].getY() > node.getY()
+          && corners[0].getX() < node.getX()
+          && corners[2].getX() > node.getX()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public static boolean circleEdgeCollision(CircleCollider circle, EdgeCollider edge) {
+
+    return false;
+  }
+
   // Getters
 
-  public boolean isCollisionEnter() {
+  public boolean onCollisionEnter() {
     return collisionEnter;
   }
 
-  public boolean isCollisionExit() {
+  public boolean onCollisionExit() {
     return collisionExit;
   }
 
-  public boolean isCollisionStay() {
+  public boolean onCollisionStay() {
     return collisionStay;
   }
 
-  public boolean isTriggerEnter() {
+  public boolean onTriggerEnter() {
     return triggerEnter;
   }
 
-  public boolean isTriggerExit() {
+  public boolean onTriggerExit() {
     return triggerExit;
   }
 
-  public boolean isTriggerStay() {
+  public boolean onTriggerStay() {
     return triggerStay;
   }
 
-  public boolean isTrigger() {
+  public boolean onTrigger() {
     return trigger;
   }
 }
