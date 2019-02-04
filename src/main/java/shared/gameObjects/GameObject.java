@@ -14,6 +14,7 @@ import javafx.scene.image.ImageView;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.Utils.Transform;
 import shared.gameObjects.animator.Animator;
+import shared.gameObjects.components.Collider;
 import shared.gameObjects.components.Component;
 import shared.gameObjects.components.ComponentType;
 import shared.util.maths.Vector2;
@@ -69,6 +70,12 @@ public abstract class GameObject implements Serializable {
   // Client Side only
   public void render() {
     imageView.setImage(animation.getImage());
+  }
+  //Collision engine
+  public void updateCollision(ArrayList<GameObject> gameObjects) {
+    if(getComponent(ComponentType.COLLIDER) != null) {
+      //TODO Collision Checking
+    }
   }
 
   //Interpolate Position Client only

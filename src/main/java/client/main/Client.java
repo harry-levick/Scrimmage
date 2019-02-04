@@ -97,6 +97,8 @@ public class Client extends Application {
         levelHandler.getClientPlayer().applyInput(multiplayer, connectionHandler);
         /** Render Game Objects */
         levelHandler.getGameObjects().forEach(gameObject -> gameObject.render());
+        /** Check Collisions */
+        levelHandler.getGameObjects().forEach(gameObject -> gameObject.updateCollision(levelHandler.getGameObjects()));
         /** Update Game Objects */
         levelHandler.getGameObjects().forEach(gameObject -> gameObject.update());
         accumulatedTime -= timeStep;
