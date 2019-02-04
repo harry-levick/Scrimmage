@@ -1,29 +1,22 @@
 package shared.gameObjects;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
 import javafx.scene.Group;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.Utils.Transform;
 import shared.gameObjects.animator.Animator;
-import shared.gameObjects.components.Collider;
 import shared.gameObjects.components.Component;
 import shared.gameObjects.components.ComponentType;
 import shared.util.maths.Vector2;
+
+import java.io.Serializable;
+import java.util.*;
 
 public abstract class GameObject implements Serializable {
 
   protected UUID objectUUID;
   protected ObjectID id;
-  
+
   protected transient ImageView imageView;
   protected transient Group root;
 
@@ -46,19 +39,21 @@ public abstract class GameObject implements Serializable {
    * @param y Y coordinate of object in game world
    * @param id Unique Identifier of every game object
    */
-  public GameObject(double x, double y, ObjectID id, UUID objectUUID) {
+  public GameObject(double x, double y, double sizeX, double sizeY, ObjectID id, UUID objectUUID) {
     this.updated = false;
     this.id = id;
     this.objectUUID = objectUUID;
     active = true;
-    this.transform = new Transform(this, new Vector2((float) x, (float) y));
+    this.transform =
+        new Transform(
+            this, new Vector2((float) x, (float) y), new Vector2((float) sizeX, (float) sizeY));
     components = new ArrayList<>();
     children = new HashSet<>();
     parent = null;
     animation = new Animator();
     initialiseAnimation();
   }
-  
+
   // Initialise the animation
   public abstract void initialiseAnimation();
 
@@ -71,14 +66,14 @@ public abstract class GameObject implements Serializable {
   public void render() {
     imageView.setImage(animation.getImage());
   }
-  //Collision engine
+  // Collision engine
   public void updateCollision(ArrayList<GameObject> gameObjects) {
-    if(getComponent(ComponentType.COLLIDER) != null) {
-      //TODO Collision Checking
+    if (getComponent(ComponentType.COLLIDER) != null) {
+      // TODO Collision Checking
     }
   }
 
-  //Interpolate Position Client only
+  // Interpolate Position Client only
   public void interpolatePosition(float alpha) {
     if (!isActive()) {
       return;
@@ -172,11 +167,7 @@ public abstract class GameObject implements Serializable {
     destroyed = active = false;
   }
 
-
-  /**
-   * Basic Getters and Setters
-   */
-
+  /** Basic Getters and Setters */
   public double getX() {
     return this.transform.getPos().getX();
   }

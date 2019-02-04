@@ -1,13 +1,14 @@
 package shared.gameObjects.components;
 
-import static org.junit.Assert.assertTrue;
-
-import java.util.UUID;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import shared.gameObjects.TestObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.util.maths.Vector2;
+
+import java.util.UUID;
+
+import static org.junit.Assert.assertTrue;
 
 public class ColliderTest {
 

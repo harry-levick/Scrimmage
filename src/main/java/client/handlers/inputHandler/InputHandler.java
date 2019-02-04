@@ -13,5 +13,4 @@ public class InputHandler {
     this.jumpKey = false;
     this.click = false;
   }
-
 }

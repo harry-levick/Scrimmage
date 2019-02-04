@@ -1,42 +1,43 @@
 package shared.gameObjects.weapons;
 
-import java.util.UUID;
 import javafx.scene.image.Image;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 
-/**
- * @author hlf764
- */
+import java.util.UUID;
+
+/** @author hlf764 */
 public class Bullet extends GameObject {
 
   private static String imagePath = "images/weapons/bullet.png";
-  public boolean isHit;     // true if there is an object at that position
-  private double width;     // width of bullet
-  private double speed;     // speed of bullet
-  private double newX;      // new x position when update() is called
-  private double newY;      // new y position when update() is called
-  private double slope;     // the slope of the bullet path
-  private double deltaX;    // change in x in every update
-  private double deltaY;    // change in y in every update
-  private Image bulletImage;// image of the bullet
+  public boolean isHit; // true if there is an object at that position
+  private double width; // width of bullet
+  private double speed; // speed of bullet
+  private double newX; // new x position when update() is called
+  private double newY; // new y position when update() is called
+  private double slope; // the slope of the bullet path
+  private double deltaX; // change in x in every update
+  private double deltaY; // change in y in every update
+  private Image bulletImage; // image of the bullet
 
   public Bullet(
-      double gunX,          // gun initial x position
-      double gunY,          // gun initial y position
-      double mouseX,        // mouse initial x position
-      double mouseY,        // mouse initial y position
-      double width,         // the width of the bullet
-      double speed,         // the speed of the bullet
-      UUID uuid) {          // uuid of this bullet
+      double gunX, // gun initial x position
+      double gunY, // gun initial y position
+      double sizeX,
+      double sizeY,
+      double mouseX, // mouse initial x position
+      double mouseY, // mouse initial y position
+      double width, // the width of the bullet
+      double speed, // the speed of the bullet
+      UUID uuid) { // uuid of this bullet
 
-    super(gunX, gunY, ObjectID.Bullet, uuid);
+    super(gunX, gunY, sizeX, sizeY, ObjectID.Bullet, uuid);
     setWidth(width);
     setSpeed(speed);
 
     this.newX = gunX;
     this.newY = gunY;
-    this.slope = (gunY - mouseY) / (gunX - mouseX);     // slope of the bullet path
+    this.slope = (gunY - mouseY) / (gunX - mouseX); // slope of the bullet path
     // deltaX and deltaY show the change in x and y values in every updates
     // The last bit of the expression shows whether x and y should progress in
     // positive or negative direction
@@ -114,7 +115,6 @@ public class Bullet extends GameObject {
 
   @Override
   public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", new Image[]{this.bulletImage}); 
+    this.animation.supplyAnimation("default", new Image[] {this.bulletImage});
   }
-
 }

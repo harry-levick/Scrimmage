@@ -1,8 +1,9 @@
 package shared.gameObjects.menu.main;
 
-import java.util.UUID;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.menu.ButtonObject;
+
+import java.util.UUID;
 
 public class ButtonMultiplayer extends ButtonObject {
 
@@ -14,12 +15,14 @@ public class ButtonMultiplayer extends ButtonObject {
    * @param y Y coordinate of object in game world
    * @param id Unique Identifier of every game object
    */
-  public ButtonMultiplayer(double x, double y, ObjectID id, UUID objectUUID) {
-    super(x, y, id, objectUUID);
+  public ButtonMultiplayer(
+      double x, double y, double sizeX, double sizeY, ObjectID id, UUID objectUUID) {
+    super(x, y, sizeX, sizeY, id, objectUUID);
   }
 
   @Override
   public void initialiseAnimation() {
-    super.initialiseAnimation("images/buttons/multiplayer_unpressed.png","images/buttons/multiplayer_pressed.png");
+    super.initialiseAnimation(
+        "images/buttons/multiplayer_unpressed.png", "images/buttons/multiplayer_pressed.png");
   }
 }

@@ -1,8 +1,6 @@
 package shared.handlers.levelHandler;
 
-/**
- * @author Brett Saunders
- */
+/** @author Brett Saunders */
 public enum GameState {
   MAIN_MENU,
   IN_GAME,

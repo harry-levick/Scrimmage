@@ -1,7 +1,5 @@
 package shared.gameObjects.components;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import shared.gameObjects.GameObject;
 import shared.physics.Physics;
 import shared.physics.data.AngularData;
@@ -9,6 +7,9 @@ import shared.physics.data.Collision;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
+
+import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * @author fxa579 The primary components responsible for all Physics updates; includes data and
@@ -83,9 +84,7 @@ public class Rigidbody extends Component implements Serializable {
 
   // Update Methods
 
-  /**
-   * Called every physics frame, manages the velocity, forces, position, etc.
-   */
+  /** Called every physics frame, manages the velocity, forces, position, etc. */
   public void update() {
     applyCollisions();
     applyForces();
@@ -95,9 +94,7 @@ public class Rigidbody extends Component implements Serializable {
   }
   // Force Methods
 
-  /**
-   *
-   */
+  /** */
   public void addForce(Vector2 force) {
     forces.add(force);
   }
@@ -142,9 +139,7 @@ public class Rigidbody extends Component implements Serializable {
 
   // Update Methods
 
-  /**
-   * An update method; all collision updates happen here
-   */
+  /** An update method; all collision updates happen here */
   private void applyCollisions() {
     for (Collision c : collisions) {
       if (c.getCollidedObject().getBodyType() == RigidbodyType.STATIC) {
@@ -165,9 +160,7 @@ public class Rigidbody extends Component implements Serializable {
     }
   }
 
-  /**
-   * An update method; all force updates happen here.
-   */
+  /** An update method; all force updates happen here. */
   private void applyForces() {
 
     currentForce = Vector2.Zero();
@@ -200,9 +193,7 @@ public class Rigidbody extends Component implements Serializable {
     }
   }
 
-  /**
-   * An update method; all velocity and acceleration updates happen here
-   */
+  /** An update method; all velocity and acceleration updates happen here */
   private void updateVelocity() {
     lastAcceleration = acceleration;
 
@@ -282,17 +273,13 @@ public class Rigidbody extends Component implements Serializable {
     this.airDrag = airDrag;
   }
 
-  /**
-   * For Testing Purposes Only
-   */
+  /** For Testing Purposes Only */
   public void setGrounded(boolean grounded) {
     this.grounded = grounded;
   }
 }
 
-/**
- * Helper class to apply force over time without needed to thread/coroutine
- */
+/** Helper class to apply force over time without needed to thread/coroutine */
 class ForceTime {
 
   private Vector2 force;

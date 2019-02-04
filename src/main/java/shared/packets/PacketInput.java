@@ -1,13 +1,12 @@
 package shared.packets;
 
-
 public class PacketInput extends Packet {
 
   private boolean leftKey, rightKey, jumpKey, click;
   private double x, y;
 
-  public PacketInput(double x, double y, boolean leftKey, boolean rightKey, boolean jumpKey,
-      boolean click) {
+  public PacketInput(
+      double x, double y, boolean leftKey, boolean rightKey, boolean jumpKey, boolean click) {
     packetID = PacketID.INPUT.getID();
     this.click = click;
     this.leftKey = leftKey;
@@ -16,10 +15,21 @@ public class PacketInput extends Packet {
     this.x = x;
     this.y = y;
 
-    data = (Integer.toString(packetID) + "," + Double.toString(x) + "," +
-        Double.toString(y) + "," + Boolean.toString(leftKey) + "," +
-        Boolean.toString(rightKey) + "," + Boolean.toString(jumpKey) + "," +
-        Boolean.toString(click)).getBytes();
+    data =
+        (Integer.toString(packetID)
+                + ","
+                + Double.toString(x)
+                + ","
+                + Double.toString(y)
+                + ","
+                + Boolean.toString(leftKey)
+                + ","
+                + Boolean.toString(rightKey)
+                + ","
+                + Boolean.toString(jumpKey)
+                + ","
+                + Boolean.toString(click))
+            .getBytes();
   }
 
   public PacketInput(byte[] data) {

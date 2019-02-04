@@ -1,11 +1,12 @@
 package shared.gameObjects;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.UUID;
 import shared.gameObjects.Utils.ObjectID;
 import shared.handlers.levelHandler.GameState;
 import shared.util.maths.Vector2;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.UUID;
 
 public class MapDataObject extends GameObject implements Serializable {
 
@@ -14,7 +15,7 @@ public class MapDataObject extends GameObject implements Serializable {
   private ArrayList<Vector2> spawnPoints;
 
   public MapDataObject(UUID mapUUID, GameState gameState) {
-    super(0, 0, ObjectID.MapDataObject, mapUUID);
+    super(0, 0, 100, 100, ObjectID.MapDataObject, mapUUID);
     this.mapUUID = mapUUID;
     this.gameState = gameState;
     spawnPoints = new ArrayList();
@@ -25,19 +26,13 @@ public class MapDataObject extends GameObject implements Serializable {
   }
 
   @Override
-  public void update() {
-
-  }
+  public void update() {}
 
   @Override
-  public void render() {
-
-  }
+  public void render() {}
 
   @Override
-  public void interpolatePosition(float alpha) {
-
-  }
+  public void interpolatePosition(float alpha) {}
 
   @Override
   public String getState() {
@@ -45,7 +40,5 @@ public class MapDataObject extends GameObject implements Serializable {
   }
 
   @Override
-  public void initialiseAnimation() {
-    
-  }
+  public void initialiseAnimation() {}
 }
