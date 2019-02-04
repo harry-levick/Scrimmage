@@ -8,6 +8,7 @@ import shared.gameObjects.players.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import shared.util.maths.Vector2;
 
 /**
  * The main file for the A* planner. - search(): This function is the core search algorithm,
@@ -73,7 +74,7 @@ public class AStar {
         this.remainingDistance = estimateRemainingDistance(action);
         distanceElapsed = parent.distanceElapsed + (parent.remainingDistance - remainingDistance);
       } else {
-        this.remainingDistance = calcRemainingDist();
+        this.remainingDistance = calcRemainingH(enemy);
         distanceElapsed = 0;
         this.botX = bot.getX();
         this.botY = bot.getY();
@@ -101,18 +102,18 @@ public class AStar {
      * @param enemy the target / goal
      * @return the distance
      */
-    public double calcRemainingDist(Player enemy) {
-      double p1X, p1Y, p2X, p2Y;
-      double changeX, changeY;
-      p1X = bot.getX();
-      p1Y = bot.getY();
-      p2X = enemy.getX();
-      p2Y = enemy.getY();
+    public double calcRemainingH(Player enemy, ArrayList<GameObject> allItems) {
+      Vector2 botPos = new Vector2((float) bot.getX(), (float) bot.getY());
+      Vector2 enemyPos = new Vector2((float) enemy.getX(), (float) enemy.getY());
+      double distanceToEnemy = botPos.exactMagnitude(enemyPos);
 
-      changeX = p1X - p2X;
-      changeY = p1Y - p2Y;
+      GameObject closestItem = findClosestItem(allItems);
+      Vector2 itemPos = new Vector2((float) closestItem.getX(), (float) closestItem.getY());
+      double distanceToItem = botPos.exactMagnitude(itemPos);
+      // The heuristic value is the combined distance of the bot->enemy + bot->item
+      double totalH = distanceToEnemy + distanceToItem;
 
-      return Math.sqrt(Math.pow(changeX, 2) + Math.pow(changeY, 2));
+      return totalH;
     }
 
     /**
@@ -172,6 +173,28 @@ public class AStar {
     public void advanceStep(boolean[] action) {
       // Advance the world scene to a new scene that would be the case if we applied the action.
       // TODO
+    }
+
+    /**
+     * Finds the closest pick-upable item
+     *
+     * @param allItems A list of all the items in the world.
+     * @return The item that is the closest to the bot
+     */
+    private GameObject findClosestItem(List<GameObject> allItems) {
+      Player target = null;
+      double targetDistance = Double.POSITIVE_INFINITY;
+
+      for (GameObject item : allItems) {
+        double distance = calcDistance(bot, p);
+        // Update the target if another player is closer
+        if (distance < targetDistance) {
+          targetDistance = distance;
+          target = p;
+        }
+      }
+
+      return target;
     }
   }
 
@@ -272,15 +295,6 @@ public class AStar {
     return sceneCopy;
   }
 
-  private boolean[] createAction(boolean jump, boolean left, boolean right, boolean click) {
-    boolean[] action = new boolean[5];
-    action[Bot.KEY_JUMP] = jump;
-    action[Bot.KEY_LEFT] = left;
-    action[Bot.KEY_RIGHT] = right;
-    action[Bot.KEY_CLICK] = click;
-
-    return action;
-  }
 
   /**
    * Extract the plan by taking the best node and going back to the root, recording the actions
@@ -327,6 +341,16 @@ public class AStar {
     furthestPosition = startPosition;
   }
 
+  private boolean[] createAction(boolean jump, boolean left, boolean right, boolean click) {
+    boolean[] action = new boolean[5];
+    action[Bot.KEY_JUMP] = jump;
+    action[Bot.KEY_LEFT] = left;
+    action[Bot.KEY_RIGHT] = right;
+    action[Bot.KEY_CLICK] = click;
+
+    return action;
+  }
+
   private ArrayList<boolean[]> createPossibleActions(SearchNode currentPos) {
     ArrayList<boolean[]> possibleActions = new ArrayList<>();
 
@@ -349,7 +373,6 @@ public class AStar {
 
   /**
    * Check to see if the action of jumping makes any difference in the given world state.
-   *
    * @param currentPos The state in which we are going to jump.
    * @param checkParent
    * @return
