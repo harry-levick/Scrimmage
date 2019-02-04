@@ -13,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.Utils.Transform;
+import shared.gameObjects.animator.Animator;
 import shared.gameObjects.components.Component;
 import shared.gameObjects.components.ComponentType;
 import shared.util.maths.Vector2;
@@ -27,6 +28,7 @@ public abstract class GameObject implements Serializable {
   protected transient ImageView imageView;
   protected transient Group root;
   protected transient HashMap<String, Image> spriteLibary;
+  protected transient Animator animation = new Animator();
 
   protected GameObject parent;
   protected Set<GameObject> children;
@@ -51,7 +53,6 @@ public abstract class GameObject implements Serializable {
     this.id = id;
     this.objectUUID = objectUUID;
     spriteLibaryURL.put("baseImage", baseImageURL);
-    animate = false;
     active = true;
     this.transform = new Transform(this, new Vector2((float) x, (float) y));
     components = new ArrayList<>();
