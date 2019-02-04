@@ -27,13 +27,7 @@ public class AiAgent {
   Player targetPlayer;
   AStar pathFinder;
 
-  public AiAgent(
-      double xPos,
-      double yPos,
-      double sizeX,
-      double sizeY,
-      ObjectID id,
-      UUID uuid,
+  public AiAgent(double xPos, double yPos, double sizeX, double sizeY, UUID uuid,
       ArrayList<GameObject> gameObjects) {
     this.bot = new Bot(xPos, yPos, sizeX, sizeY, uuid);
     this.state = FSA.INITIAL_STATE;
@@ -69,6 +63,8 @@ public class AiAgent {
         case IDLE:
           // TODO what to do in the idle state?
         case CHASING:
+          // Find the next best move to take, and execute this move.
+          executeAction(pathFinder.optimise(targetPlayer));
           // TODO calculate and execute the best path to the target.
         case FLEEING:
           // TODO calculate and execute the best path away from the target.
@@ -99,11 +95,10 @@ public class AiAgent {
    * Receives an action and then executes this action. This method will only execute one action at a
    * time (the first action in the list). Since the method will be called inside of the agent loop
    *
-   * @param actions: a list of actions to take.
+   * @param action: an action to exacute.
    */
-  private void executeAction(ArrayList<boolean[]> actions) {
-    // TODO decide on the implementation of action execution.
-    bot.jumpKey = true;
+  private void executeAction(boolean[] action) {
+    // TODO decide on the implementation of action execution
   }
 
   /**
