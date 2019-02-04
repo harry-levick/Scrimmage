@@ -3,26 +3,23 @@ package shared.gameObjects.players;
 import client.handlers.connectionHandler.ConnectionHandler;
 import client.handlers.inputHandler.InputHandler;
 import java.util.UUID;
+import javafx.scene.image.Image;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
-import shared.gameObjects.animator.Animator;
 import shared.gameObjects.weapons.Weapon;
 import shared.packets.PacketInput;
-import javafx.scene.image.Image;
 
 public class Player extends GameObject {
 
   protected int health;
   protected Weapon holding;
   protected final int speed = 500;
-  //private transient Animator animation = new Animator();
   private double vx;
 
   public Player(double x, double y, UUID playerUUID) {
     super(x, y, ObjectID.Player, playerUUID);
     this.health = 100;
     holding = null;
-    System.out.println(animation);
   }
   
   // Initialise the animation 
@@ -46,7 +43,6 @@ public class Player extends GameObject {
     };
     this.animation.supplyAnimation("moveRight", insertImageList);
   }
-
 
   @Override
   public void update() {
