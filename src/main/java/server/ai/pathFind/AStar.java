@@ -2,12 +2,14 @@ package server.ai.pathFind;
 
 /** @author Harry Levick (hxl799) */
 
+import java.util.stream.Collectors;
 import server.ai.Bot;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.players.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import shared.gameObjects.weapons.Weapon;
 import shared.util.maths.Vector2;
 
 /**
@@ -51,7 +53,7 @@ public class AStar {
     // The parent node
     SearchNode parentNode;
     // The list of game objects in this scene
-    List<GameObject> sceneSnapshot;
+    ArrayList<GameObject> sceneSnapshot;
     // The bot that the path-finding is concerned with.
     double botX;
     double botY;
@@ -74,7 +76,7 @@ public class AStar {
         this.remainingDistance = estimateRemainingDistance(action);
         distanceElapsed = parent.distanceElapsed + (parent.remainingDistance - remainingDistance);
       } else {
-        this.remainingDistance = calcRemainingH(enemy);
+        this.remainingDistance = calcRemainingH(enemy, getItems(sceneSnapshot));
         distanceElapsed = 0;
         this.botX = bot.getX();
         this.botY = bot.getY();
@@ -114,6 +116,24 @@ public class AStar {
       double totalH = distanceToEnemy + distanceToItem;
 
       return totalH;
+    }
+
+    /**
+     * Find all items in the world, currently only finds weapons because no such item yet
+     * implemented.
+     * TODO change for items.
+     * @param allObjects all objects in the world
+     * @return list of weapons
+     */
+    private List<Weapon> getItems(ArrayList<GameObject> allObjects) {
+      // Collect all weapons from the world
+      List<Weapon> allWeapons =
+          allObjects.stream()
+              .filter(w -> w instanceof Weapon)
+              .map(Weapon.class::cast)
+              .collect(Collectors.toList());
+
+      return allWeapons;
     }
 
     /**
@@ -161,7 +181,7 @@ public class AStar {
         advanceStep(action);
       }
       // Set the remaining distance after we've simulated the effects of our action.
-      remainingDistance = calcRemainingDist();
+      remainingDistance = calcRemainingH(bot, );
       if (visited) {
         remainingDistance += visitedListPenalty;
       }
