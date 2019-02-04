@@ -26,7 +26,7 @@ public abstract class GameObject implements Serializable {
   protected transient ImageView imageView;
   protected transient Group root;
 
-  protected transient Animator animation = new Animator();
+  protected transient Animator animation;
 
   protected GameObject parent;
   protected Set<GameObject> children;
@@ -54,6 +54,7 @@ public abstract class GameObject implements Serializable {
     components = new ArrayList<>();
     children = new HashSet<>();
     parent = null;
+    animation = new Animator();
     initialiseAnimation();
   }
   
@@ -90,6 +91,8 @@ public abstract class GameObject implements Serializable {
   // Ignore for now, added due to unSerializable objects
   public void initialise(Group root) {
     this.root = root;
+    animation = new Animator();
+    initialiseAnimation();
     imageView = new ImageView();
     root.getChildren().add(this.imageView);
   }

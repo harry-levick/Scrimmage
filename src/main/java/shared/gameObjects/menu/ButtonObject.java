@@ -39,14 +39,14 @@ public abstract class ButtonObject extends GameObject {
     button.setOnMousePressed(new EventHandler<MouseEvent>() {
       @Override
       public void handle(MouseEvent event) {
-        //this.animation.switchDefault();
+        animation.switchAnimation("clicked");
       }
     });
 
     button.setOnMouseReleased(new EventHandler<MouseEvent>() {
       @Override
       public void handle(MouseEvent event) {
-        //this.animation.switchAnimation("clicked");
+        animation.switchDefault();
       }
     });
     button.setStyle("-fx-border-color: transparent;-fx-background-color: transparent;");
