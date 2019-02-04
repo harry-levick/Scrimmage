@@ -23,15 +23,13 @@ public class ExampleObject extends GameObject {
   
   // Initialise the animation 
   public void initialiseAnimation() {
-    Image[] insertImageList = {
-        new Image("images/platforms/stone/elementStone013.png")  
-    };
-    this.animation.supplyAnimation("default", insertImageList);
+    this.animation.supplyAnimation("default", new Image[]{new Image("images/platforms/stone/elementStone013.png")});
   }
     
 
   @Override
   public void update() {
+    super.update();
   }
 
   public int getHealth() {
@@ -50,6 +48,7 @@ public class ExampleObject extends GameObject {
 
   @Override
   public void render() {
+    super.render();
     imageView.relocate(getX(), getY());
     // Example not best way as every frame rechecking and recreating image
     if (health > 60) {
