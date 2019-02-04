@@ -9,7 +9,13 @@ import shared.gameObjects.Utils.ObjectID;
  */
 public abstract class Weapon extends GameObject {
 
-  protected int MAX_COOLDOWN = 81; 
+  /**
+   *  Cooldown of a weapon = MAX_COOLDOWN - fireRate
+   *  For every frame, deduct cooldown by 1
+   *  If cooldown == 0, the weapon can be fired.
+   *  Otherwise, nothing will happen when mouse is left-clicked
+   */
+  protected int MAX_COOLDOWN = 81;
   
   protected double damage;
   protected double weight; // grams
@@ -17,6 +23,8 @@ public abstract class Weapon extends GameObject {
   protected boolean isGun;
   protected boolean isMelee;
   protected int ammo; // -1 = unlimited
+  
+  protected int currentCooldown;
 
   /**
    * Constructor of the weapon class
@@ -44,15 +52,24 @@ public abstract class Weapon extends GameObject {
     this.name = name;
     this.ammo = ammo;
 
+    this.currentCooldown = 0;
   }
 
   public abstract void fire(double mouseX, double mouseY);
   public abstract int getCoolDown();
+  
+  public void deductCooldown() {
+    if (this.currentCooldown > 0)
+      this.currentCooldown -= 1;
+  }
+  
+  public boolean canFire() {
+    return this.currentCooldown <= 0;
+  }
 
   // -------START-------
   // Setters and Getters
   // -------------------
-
   public double getDamage() {
     return this.damage;
   }
@@ -106,7 +123,6 @@ public abstract class Weapon extends GameObject {
       this.ammo = newAmmo;
     }
   }
-
   // -------------------
   // Setters and Getters
   // --------END--------
