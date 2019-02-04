@@ -53,15 +53,22 @@ abstract class Gun extends Weapon {
     this.fireRate = fireRate;
     this.fullAutoFire = fullAutoFire;
     this.singleHanded = singleHanded;
-
+  }
+  
+  @Override
+  public void update() {
+    deductCooldown();
+    super.update();
   }
 
   @Override
   public void fire(double mouseX, double mouseY) {
-    UUID uuid = UUID.randomUUID();
-    Bullet bullet = new Bullet(getX(), getY(), mouseX, mouseY, this.bulletWidth, this.bulletSpeed,
-        uuid);
-    bullet.fire();
+    if (canFire()) {
+      UUID uuid = UUID.randomUUID();
+      Bullet bullet = new Bullet(getX(), getY(), mouseX, mouseY, this.bulletWidth, this.bulletSpeed,
+          uuid);
+      bullet.fire();
+    }
   }
   
   @Override
