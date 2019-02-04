@@ -45,8 +45,6 @@ public class AStar {
   public class SearchNode {
     // The distance from the start of the search to this node.
     private double distanceElapsed;
-    // The optimal (estimated) distance to reach the goal node from this node.
-    public double estimatedDistance = 0;
     // The optimal distance to reach the goal node AFTER simulating with the selected action.
     private double remainingDistance = 0;
     // The parent node
@@ -71,7 +69,8 @@ public class AStar {
       if (parentNode != null) {
         this.botY = parent.botY + calcYChange(parent.action);
         this.botX = parent.botY + calcXChange(parent.action);
-        this.remainingDistance = parent.estimateRemainingDistanceChild(action, repetitions);
+        // Calculate the heuristic value of this node
+        this.remainingDistance = estimateRemainingDistance(action);
         distanceElapsed = parent.distanceElapsed + (parent.remainingDistance - remainingDistance);
       } else {
         this.remainingDistance = calcRemainingDist();
@@ -98,12 +97,22 @@ public class AStar {
     }
 
     /**
-     * Calculate the estimated time to some arbitrary distant target.
-     *
-     * @return The time it will take to reach the target moving at the maximum speed.
+     * Calculate the heuristic value for the node.
+     * @param enemy the target / goal
+     * @return the distance
      */
-    public double calcRemainingDist() {
-      return distanceToTarget(enemy);
+    public double calcRemainingDist(Player enemy) {
+      double p1X, p1Y, p2X, p2Y;
+      double changeX, changeY;
+      p1X = bot.getX();
+      p1Y = bot.getY();
+      p2X = enemy.getX();
+      p2Y = enemy.getY();
+
+      changeX = p1X - p2X;
+      changeY = p1Y - p2Y;
+
+      return Math.sqrt(Math.pow(changeX, 2) + Math.pow(changeY, 2));
     }
 
     /**
@@ -127,16 +136,14 @@ public class AStar {
      * Estimate the time remaining to get to the goal for a child node that uses the action.
      *
      * @param action The action to use.
-     * @param repetitions
      * @return Time remaining.
      */
-    public double estimateRemainingDistanceChild(boolean[] action, int repetitions) {
+    public double estimateRemainingDistance(boolean[] action) {
       return 0.0;
     }
 
     public double getRemainingDistance() {
-      if (remainingDistance > 0) return remainingDistance;
-      else return estimatedDistance;
+      return remainingDistance;
     }
 
     /**
@@ -250,26 +257,6 @@ public class AStar {
 
       // Now act on what we get as a remaining time.
     }
-  }
-
-  /**
-   * The distance covered at maximum acceleration with
-   *
-   * @param enemy the target / goal
-   * @return the distance
-   */
-  private double distanceToTarget(Player enemy) {
-    double p1X, p1Y, p2X, p2Y;
-    double changeX, changeY;
-    p1X = bot.getX();
-    p1Y = bot.getY();
-    p2X = enemy.getX();
-    p2Y = enemy.getY();
-
-    changeX = p1X - p2X;
-    changeY = p1Y - p2Y;
-
-    return Math.sqrt(Math.pow(changeX, 2) + Math.pow(changeY, 2));
   }
 
   /**
