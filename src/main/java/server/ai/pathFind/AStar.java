@@ -45,20 +45,20 @@ public class AStar {
    */
   public class SearchNode {
     // The distance from the start of the search to this node.
-    private double distanceElapsed;
+    double distanceElapsed;
     // The optimal distance to reach the goal node AFTER simulating with the selected action.
-    private double remainingDistance = 0;
+    double remainingDistance = 0;
     // The parent node
-    public SearchNode parentNode;
+    SearchNode parentNode;
     // The list of game objects in this scene
-    public List<GameObject> sceneSnapshot;
+    List<GameObject> sceneSnapshot;
     // The bot that the path-finding is concerned with.
-    public double botX;
-    public double botY;
+    double botX;
+    double botY;
 
     // Not sure on the use yet. - used in mario a*
-    public boolean hasBeenHurt = false;
-    public boolean visited = false;
+    boolean hasBeenHurt = false;
+    boolean visited = false;
     // The action used to get to the child node.
     boolean[] action;
 
@@ -182,19 +182,21 @@ public class AStar {
      * @return The item that is the closest to the bot
      */
     private GameObject findClosestItem(List<GameObject> allItems) {
-      Player target = null;
+      GameObject closestItem = null;
+      Vector2 botPos = new Vector2((float) bot.getX(), (float) bot.getY());
       double targetDistance = Double.POSITIVE_INFINITY;
 
       for (GameObject item : allItems) {
-        double distance = calcDistance(bot, p);
+        Vector2 itemPos = new Vector2((float) item.getX(), (float) item.getY());
+        double distance = botPos.exactMagnitude(itemPos);
         // Update the target if another player is closer
         if (distance < targetDistance) {
           targetDistance = distance;
-          target = p;
+          closestItem = item;
         }
       }
 
-      return target;
+      return closestItem;
     }
   }
 
