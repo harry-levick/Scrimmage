@@ -86,15 +86,15 @@ public class AStar {
 
     private double calcXChange(boolean[] action) {
       if (action[Bot.KEY_LEFT]) {
-        return -X_CHANGE;
+        return -10; // TODO change
       } else if (action[Bot.KEY_RIGHT]) {
-        return X_CHANGE;
+        return 10; // TODO change
       } else return 0;
     }
 
     private double calcYChange(boolean[] action) {
       if (action[Bot.KEY_JUMP]) {
-        return -Y_CHANGE;
+        return -10; // TODO change
       } else return 0;
     }
 
@@ -129,7 +129,7 @@ public class AStar {
      * @return Time remaining.
      */
     public double estimateRemainingDistanceChild(boolean[] action, int repetitions) {
-      return null;
+      return 0.0;
     }
 
     public double getRemainingDistance() {
