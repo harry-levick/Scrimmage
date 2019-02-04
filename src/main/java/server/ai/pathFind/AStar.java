@@ -307,8 +307,20 @@ public class AStar {
         openList.add(current);
       } else {
         // Accept the node
+        currentGood = true;
+        // Put it into the visited list.
+        closedList.add(current);
+        // Add all children of the current node to the open list.
+        openList.addAll(current.generateChildren());
       }
+
+      if (currentGood) {
+        // The current node is the best node
+        bestPosition = current;
+      }
+
     }
+
   }
 
   /**
