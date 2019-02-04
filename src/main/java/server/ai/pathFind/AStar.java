@@ -36,6 +36,8 @@ public class AStar {
   // The bot that the path-finding is concerned with.
   Bot bot;
 
+  public static final int visitedListPenalty = 1500; // penalty for being in the visited-states list
+
   /**
    * A SearchNode is a node in the A* search, consisting of an action (that got to the current node),
    * the world state after this action was used, and information about the parent node.
@@ -356,7 +358,7 @@ public class AStar {
   public boolean canJumpHigher(SearchNode currentPos, boolean checkParent) {
     if (currentPos.parentNode != null && checkParent && canJumpHigher(currentPos.parentNode, false)) { return true; }
 
-    return currentPos.bot.mayJump() || currentPos.bot.jumpTime > 0;
+    return bot.mayJump() || bot.jumpTime > 0;
   }
 
 

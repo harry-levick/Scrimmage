@@ -29,7 +29,7 @@ public class AiAgent {
 
   public AiAgent(double xPos, double yPos, ObjectID id, UUID uuid,
       ArrayList<GameObject> gameObjects) {
-    this.bot = new Bot(xPos, yPos, id, uuid);
+    this.bot = new Bot(xPos, yPos, uuid);
     this.state = FSA.INITIAL_STATE;
     this.active = false;
     this.gameObjects = gameObjects;
