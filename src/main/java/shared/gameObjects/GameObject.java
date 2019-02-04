@@ -11,24 +11,22 @@ import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import shared.gameObjects.Components.Component;
-import shared.gameObjects.Components.ComponentType;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.Utils.Transform;
-import shared.gameObjects.Utils.Version;
+import shared.gameObjects.animator.Animator;
+import shared.gameObjects.components.Component;
+import shared.gameObjects.components.ComponentType;
 import shared.util.maths.Vector2;
 
 public abstract class GameObject implements Serializable {
 
   protected UUID objectUUID;
   protected ObjectID id;
-  protected HashMap<String, String> spriteLibaryURL;
-  protected boolean animate;
-
-  protected transient Version version;
+  
   protected transient ImageView imageView;
   protected transient Group root;
-  protected transient HashMap<String, Image> spriteLibary;
+
+  protected transient Animator animation = new Animator();
 
   protected GameObject parent;
   protected Set<GameObject> children;
@@ -47,49 +45,60 @@ public abstract class GameObject implements Serializable {
    * @param y Y coordinate of object in game world
    * @param id Unique Identifier of every game object
    */
-  public GameObject(double x, double y, ObjectID id, String baseImageURL, UUID objectUUID) {
-    spriteLibaryURL = new HashMap<>();
+  public GameObject(double x, double y, ObjectID id, UUID objectUUID) {
     this.updated = false;
     this.id = id;
     this.objectUUID = objectUUID;
-    spriteLibaryURL.put("baseImage", baseImageURL);
-    animate = false;
-
+    active = true;
     this.transform = new Transform(this, new Vector2((float) x, (float) y));
     components = new ArrayList<>();
     children = new HashSet<>();
     parent = null;
+    initialiseAnimation();
   }
+  
+  // Initialise the animation
+  public abstract void initialiseAnimation();
 
   // Server and Client side
-  public abstract void update();
-
-  // Client Side only
-  public abstract void render();
-
-  public abstract void interpolatePosition(float alpha);
-
-  // Ignore for now, added due to unSerializable objects
-  public void initialise(Group root, Version version, boolean animate) {
-    this.root = root;
-    imageView = new ImageView();
-    spriteLibary = new HashMap<>();
-    // Convert Image URL to Image
-    for (Map.Entry<String, String> imageURL : spriteLibaryURL.entrySet()) {
-      spriteLibary.put(imageURL.getKey(), new Image(imageURL.getValue()));
-    }
-    this.animate = animate;
-
-    this.imageView.setImage(spriteLibary.get("baseImage"));
-    root.getChildren().add(this.imageView);
-    this.version = version;
+  public void update() {
+    animation.update();
   }
 
-  public void AddChild(GameObject child) {
+  // Client Side only
+  public void render() {
+    imageView.setImage(animation.getImage());
+  }
+
+  //Interpolate Position Client only
+  public void interpolatePosition(float alpha) {
+    if (!isActive()) {
+      return;
+    }
+    imageView.setTranslateX(alpha * getX() + (1 - alpha) * imageView.getTranslateX());
+    imageView.setTranslateY(alpha * getY() + (1 - alpha) * imageView.getTranslateY());
+  }
+
+  /**
+   * Contains the state of the object for sending over server Only contains items that need sending
+   * separate by commas
+   *
+   * @return State of object
+   */
+  public abstract String getState();
+
+  // Ignore for now, added due to unSerializable objects
+  public void initialise(Group root) {
+    this.root = root;
+    imageView = new ImageView();
+    root.getChildren().add(this.imageView);
+  }
+
+  public void addChild(GameObject child) {
     children.add(child);
   }
 
-  public void RemoveChild(GameObject child) {
+  public void removeChild(GameObject child) {
     children.remove(child);
   }
 
@@ -97,19 +106,19 @@ public abstract class GameObject implements Serializable {
     return children.contains(child);
   }
 
-  public void AddComponent(Component component) {
+  public void addComponent(Component component) {
     components.add(component);
   }
 
-  public void RemoveComponent(Component component) {
+  public void removeComponent(Component component) {
     components.remove(component);
   }
 
   /**
-   * @param type The type of desired component to return
-   * @return The first attached component found
+   * @param type The type of desired components to return
+   * @return The first attached components found
    */
-  public Component GetComponent(ComponentType type) {
+  public Component getComponent(ComponentType type) {
     for (Component c : components) {
       if (c.getComponentType() == type) {
         return c;
@@ -122,7 +131,7 @@ public abstract class GameObject implements Serializable {
    * @param type The type of desired componenet to return
    * @return ArrayList of all found attached components
    */
-  public ArrayList<Component> GetComponents(ComponentType type) {
+  public ArrayList<Component> getComponents(ComponentType type) {
     ArrayList<Component> ret = new ArrayList<>();
     for (Component c : components) {
       if (c.getComponentType() == type) {
@@ -133,10 +142,10 @@ public abstract class GameObject implements Serializable {
   }
 
   /**
-   * @param type The type of desired component to return
+   * @param type The type of desired components to return
    * @return ArrayList of all found attached components to this object and all of its children
    */
-  public ArrayList<Component> GetComponentsInChildren(ComponentType type) {
+  public ArrayList<Component> getComponentsInChildren(ComponentType type) {
     ArrayList<Component> ret = new ArrayList<>();
     for (Component c : components) {
       if (c.getComponentType() == type) {
@@ -144,12 +153,12 @@ public abstract class GameObject implements Serializable {
       }
     }
     for (GameObject go : children) {
-      ret.addAll(go.GetComponentsInChildren(type));
+      ret.addAll(go.getComponentsInChildren(type));
     }
     return ret;
   }
 
-  public void Destroy() {
+  public void destroy() {
     destroyed = active = false;
   }
 
@@ -176,14 +185,6 @@ public abstract class GameObject implements Serializable {
 
   public ObjectID getId() {
     return id;
-  }
-
-  public Version getVersion() {
-    return version;
-  }
-
-  public void setVersion(Version version) {
-    this.version = version;
   }
 
   public GameObject getParent() {
