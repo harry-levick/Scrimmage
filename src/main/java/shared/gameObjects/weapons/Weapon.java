@@ -9,6 +9,8 @@ import shared.gameObjects.Utils.ObjectID;
  */
 public abstract class Weapon extends GameObject {
 
+  protected int MAX_COOLDOWN = 81; 
+  
   protected double damage;
   protected double weight; // grams
   protected String name; // name of the weapon
@@ -45,6 +47,7 @@ public abstract class Weapon extends GameObject {
   }
 
   public abstract void fire(double mouseX, double mouseY);
+  public abstract int getCoolDown();
 
   // -------START-------
   // Setters and Getters

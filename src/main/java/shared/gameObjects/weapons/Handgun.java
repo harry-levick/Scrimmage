@@ -24,6 +24,7 @@ public class Handgun extends Gun {
    * @param bulletSpeed Speed of the bullets
    * @param fireRate Fire rate of the gun (bullets per minute)
    * @param bulletWidth Width of the bullet
+   * @param uuid UUID of the gun
    */
   public Handgun(
       double x,
@@ -34,7 +35,7 @@ public class Handgun extends Gun {
       String name,
       int ammo,
       double bulletSpeed,
-      double fireRate,
+      int fireRate,
       double bulletWidth,
       UUID uuid) {
     super(x, y, id, damage, weight, name, ammo, bulletSpeed, fireRate, bulletWidth,

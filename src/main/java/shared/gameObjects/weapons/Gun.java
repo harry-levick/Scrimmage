@@ -9,7 +9,7 @@ import shared.gameObjects.Utils.ObjectID;
 abstract class Gun extends Weapon {
 
   protected double bulletSpeed; // pixel per second
-  protected double fireRate; // bullets per minute
+  protected int fireRate; // bullets per minute
   protected double bulletWidth; // width of bullet ==(pixel?)==
   protected boolean fullAutoFire; // able to shoot with full-auto or single-shot
   protected boolean singleHanded; // holding the weapon with one hand or two
@@ -40,7 +40,7 @@ abstract class Gun extends Weapon {
       String name,
       int ammo,
       double bulletSpeed,
-      double fireRate,
+      int fireRate,
       double bulletWidth,
       boolean fullAutoFire,
       boolean singleHanded,
@@ -56,17 +56,22 @@ abstract class Gun extends Weapon {
 
   }
 
+  @Override
   public void fire(double mouseX, double mouseY) {
     UUID uuid = UUID.randomUUID();
     Bullet bullet = new Bullet(getX(), getY(), mouseX, mouseY, this.bulletWidth, this.bulletSpeed,
         uuid);
     bullet.fire();
   }
+  
+  @Override
+  public int getCoolDown() {
+    return MAX_COOLDOWN - this.fireRate;
+  }
 
   // -------START-------
   // Setters and Getters
   // -------------------
-
   public double getBulletSpeed() {
     return this.bulletSpeed;
   }
@@ -77,11 +82,11 @@ abstract class Gun extends Weapon {
     }
   }
 
-  public double getFireRate() {
+  public int getFireRate() {
     return this.fireRate;
   }
 
-  public void setFireRate(double newFireRate) {
+  public void setFireRate(int newFireRate) {
     if (newFireRate > 0) {
       this.fireRate = newFireRate;
     }
