@@ -1,11 +1,10 @@
 package shared.gameObjects.weapons;
 
-import java.util.UUID;
 import shared.gameObjects.Utils.ObjectID;
 
-/**
- * @author hlf764 The abstract class for all guns type weapon.
- */
+import java.util.UUID;
+
+/** @author hlf764 The abstract class for all guns type weapon. */
 abstract class Gun extends Weapon {
 
   protected double bulletSpeed; // pixel per second
@@ -34,6 +33,8 @@ abstract class Gun extends Weapon {
   public Gun(
       double x,
       double y,
+      double sizeX,
+      double sizeY,
       ObjectID id,
       double damage,
       double weight,
@@ -46,20 +47,20 @@ abstract class Gun extends Weapon {
       boolean singleHanded,
       UUID uuid) {
 
-    super(x, y, id, damage, weight, name, true, false, ammo, uuid);
+    super(x, y, sizeX, sizeY, id, damage, weight, name, true, false, ammo, uuid);
 
     this.bulletSpeed = bulletSpeed;
     this.bulletWidth = bulletWidth;
     this.fireRate = fireRate;
     this.fullAutoFire = fullAutoFire;
     this.singleHanded = singleHanded;
-
   }
 
   public void fire(double mouseX, double mouseY) {
     UUID uuid = UUID.randomUUID();
-    Bullet bullet = new Bullet(getX(), getY(), mouseX, mouseY, this.bulletWidth, this.bulletSpeed,
-        uuid);
+    Bullet bullet =
+        new Bullet(
+            getX(), getY(), 30, 30, mouseX, mouseY, this.bulletWidth, this.bulletSpeed, uuid);
     bullet.fire();
   }
 
@@ -109,9 +110,7 @@ abstract class Gun extends Weapon {
   // Setters and Getters
   // --------END--------
 
-  /**
-   * For testing
-   */
+  /** For testing */
   @Override
   public String toString() {
     String s = "";
@@ -127,5 +126,4 @@ abstract class Gun extends Weapon {
 
     return s;
   }
-
 }

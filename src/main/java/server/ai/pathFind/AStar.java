@@ -2,17 +2,17 @@ package server.ai.pathFind;
 
 /** @author Harry Levick (hxl799) */
 
-import java.util.ArrayList;
-import java.util.List;
 import server.ai.Bot;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.players.Player;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * The main file for the A* planner.
- * - search(): This function is the core search algorithm, searching for an optimal path.
- * - optimize(): Function controlling the search and extracting plans to return to the Application
- * Programming Interface.
+ * The main file for the A* planner. - search(): This function is the core search algorithm,
+ * searching for an optimal path. - optimize(): Function controlling the search and extracting plans
+ * to return to the Application Programming Interface.
  */
 public class AStar {
 
@@ -39,8 +39,8 @@ public class AStar {
   public static final int visitedListPenalty = 1500; // penalty for being in the visited-states list
 
   /**
-   * A SearchNode is a node in the A* search, consisting of an action (that got to the current node),
-   * the world state after this action was used, and information about the parent node.
+   * A SearchNode is a node in the A* search, consisting of an action (that got to the current
+   * node), the world state after this action was used, and information about the parent node.
    */
   public class SearchNode {
     // The distance from the start of the search to this node.
@@ -99,6 +99,7 @@ public class AStar {
 
     /**
      * Calculate the estimated time to some arbitrary distant target.
+     *
      * @return The time it will take to reach the target moving at the maximum speed.
      */
     public double calcRemainingDist() {
@@ -108,6 +109,7 @@ public class AStar {
     /**
      * Generate all the possible children of the node by calculating the result of all possible
      * actions.
+     *
      * @return The list of children nodes.
      */
     public ArrayList<SearchNode> generateChildren() {
@@ -123,6 +125,7 @@ public class AStar {
 
     /**
      * Estimate the time remaining to get to the goal for a child node that uses the action.
+     *
      * @param action The action to use.
      * @param repetitions
      * @return Time remaining.
@@ -132,8 +135,7 @@ public class AStar {
     }
 
     public double getRemainingDistance() {
-      if (remainingDistance > 0)
-        return remainingDistance;
+      if (remainingDistance > 0) return remainingDistance;
       else return estimatedDistance;
     }
 
@@ -152,7 +154,9 @@ public class AStar {
       }
       // Set the remaining distance after we've simulated the effects of our action.
       remainingDistance = calcRemainingDist();
-      if (visited) { remainingDistance += visitedListPenalty; }
+      if (visited) {
+        remainingDistance += visitedListPenalty;
+      }
       sceneSnapshot = backupState();
 
       return remainingDistance;
@@ -162,11 +166,11 @@ public class AStar {
       // Advance the world scene to a new scene that would be the case if we applied the action.
       // TODO
     }
-
   }
 
   /**
    * Constructor
+   *
    * @param worldScene The list of gameObject's in the world.
    * @param bot the bot that this path-finding is concerned with.
    */
@@ -177,6 +181,7 @@ public class AStar {
 
   /**
    * Main function, this calls the A* planner and extracts and returns the optimal action.
+   *
    * @return The action to take.
    */
   public boolean[] optimise(Player enemy) {
@@ -185,40 +190,45 @@ public class AStar {
     long startTime = System.currentTimeMillis();
     List<GameObject> currentState = backupState();
 
-    //if (workScene == null) { workScene = worldScene; }
+    // if (workScene == null) { workScene = worldScene; }
 
     // How many ticks to plan ahead into the future
     int planAhead = 1;
     // How many actions the bot takes for each search step
-    int stepsPerSearch = 2;  // TODO not sure what this variable does?
+    int stepsPerSearch = 2; // TODO not sure what this variable does?
 
     ticksBeforeReplanning--;
     if (ticksBeforeReplanning <= 0 || currentPlan.size() == 0) {
-       //We are done planning, extract the plan and prepare the planner for the next planning
-       //iteration.
+      // We are done planning, extract the plan and prepare the planner for the next planning
+      // iteration.
       currentPlan = extractPlan();
-      if (currentPlan.size() < planAhead) { planAhead = currentPlan.size(); }
+      if (currentPlan.size() < planAhead) {
+        planAhead = currentPlan.size();
+      }
 
-      //workScene = backupState();
+      // workScene = backupState();
       startSearch(stepsPerSearch);
       ticksBeforeReplanning = planAhead;
     }
     // Load the future world state used by the planner.
-    //restoreState(workScene);
+    // restoreState(workScene);
     search(startTime, enemy);
-    //workScene = backupState();
+    // workScene = backupState();
 
     // Select the next action from our plan
     boolean[] action = new boolean[5];
-    if (currentPlan.size() > 0) { action = currentPlan.remove(0); }
+    if (currentPlan.size() > 0) {
+      action = currentPlan.remove(0);
+    }
 
-    //restoreState(currentState);
+    // restoreState(currentState);
 
     return action;
   }
 
   /**
    * The main search function
+   *
    * @param startTime
    */
   private void search(long startTime, Player enemy) {
@@ -244,6 +254,7 @@ public class AStar {
 
   /**
    * The distance covered at maximum acceleration with
+   *
    * @param enemy the target / goal
    * @return the distance
    */
@@ -264,10 +275,12 @@ public class AStar {
   /**
    * Make a clone of the current world state (copying the bots state, all enemies, and some level
    * info).
+   *
    * @return The clone state.
    */
   public List<GameObject> backupState() {
-    ArrayList<GameObject> sceneCopy = (ArrayList<GameObject>)((ArrayList<GameObject>)worldScene).clone();
+    ArrayList<GameObject> sceneCopy =
+        (ArrayList<GameObject>) ((ArrayList<GameObject>) worldScene).clone();
 
     return sceneCopy;
   }
@@ -304,7 +317,6 @@ public class AStar {
       for (int i = 0; i < current.repetitions; i++) {
         actions.add(0, current.action);
       }
-
     }
 
     return actions;
@@ -312,6 +324,7 @@ public class AStar {
 
   /**
    * Initialise the planner
+   *
    * @param repetitions
    */
   private void startSearch(int repetitions) {
@@ -326,7 +339,6 @@ public class AStar {
     bestPosition = startPosition;
     furthestPosition = startPosition;
   }
-
 
   private ArrayList<boolean[]> createPossibleActions(SearchNode currentPos) {
     ArrayList<boolean[]> possibleActions = new ArrayList<>();
@@ -350,16 +362,20 @@ public class AStar {
 
   /**
    * Check to see if the action of jumping makes any difference in the given world state.
+   *
    * @param currentPos The state in which we are going to jump.
    * @param checkParent
    * @return
    */
   public boolean canJumpHigher(SearchNode currentPos, boolean checkParent) {
-    if (currentPos.parentNode != null && checkParent && canJumpHigher(currentPos.parentNode, false)) { return true; }
+    if (currentPos.parentNode != null
+        && checkParent
+        && canJumpHigher(currentPos.parentNode, false)) {
+      return true;
+    }
 
     return bot.mayJump() || bot.jumpTime > 0;
   }
-
 
   private SearchNode pickBestPos(ArrayList<SearchNode> openList) {
     SearchNode bestPos = null;
@@ -371,11 +387,9 @@ public class AStar {
         bestPos = current;
         bestPosCost = currentCost;
       }
-
     }
     openList.remove(bestPos);
 
     return bestPos;
   }
-
 }

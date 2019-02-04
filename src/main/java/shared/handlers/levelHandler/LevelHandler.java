@@ -1,13 +1,14 @@
 package shared.handlers.levelHandler;
 
 import client.main.Settings;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.UUID;
 import javafx.scene.Group;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 
 public class LevelHandler {
 
@@ -21,7 +22,7 @@ public class LevelHandler {
 
   public LevelHandler(Settings settings, Group root, boolean isClient) {
     if (isClient) {
-      clientPlayer = new Player(500, 500, UUID.randomUUID());
+      clientPlayer = new Player(500, 500, 100, 100, UUID.randomUUID());
       clientPlayer.initialise(root);
       players.add(clientPlayer);
     }
@@ -58,14 +59,13 @@ public class LevelHandler {
     gameObjects.forEach(gameObject -> gameObject.setActive(false));
     gameObjects.clear();
 
-
     // Create new game objects for map
     gameObjects = MapLoader.loadMap(map.getPath());
     gameObjects.forEach(
         gameObject -> {
           if (gameObject.getId() == ObjectID.MapDataObject && isClient) {
-            //clientPlayer.setX(gameObject.getX());
-            //clientPlayer.setY(gameObject.getY());
+            // clientPlayer.setX(gameObject.getX());
+            // clientPlayer.setY(gameObject.getY());
             gameObjects.remove(gameObject);
           } else {
             gameObject.initialise(root);

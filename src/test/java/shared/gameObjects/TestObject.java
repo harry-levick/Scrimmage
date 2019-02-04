@@ -1,7 +1,8 @@
 package shared.gameObjects;
 
-import java.util.UUID;
 import shared.gameObjects.Utils.ObjectID;
+
+import java.util.UUID;
 
 public class TestObject extends GameObject {
 
@@ -14,16 +15,14 @@ public class TestObject extends GameObject {
    * @param id Unique Identifier of every game object
    */
   public TestObject(int x, int y, ObjectID id, UUID testUUID) {
-    super(x, y, id, testUUID);
+    super(x, y, 100, 100, id, testUUID);
   }
 
   @Override
-  public void update() {
-  }
+  public void update() {}
 
   @Override
-  public void render() {
-  }
+  public void render() {}
 
   @Override
   public String getState() {
@@ -33,6 +32,6 @@ public class TestObject extends GameObject {
   @Override
   public void initialiseAnimation() {
     // TODO Auto-generated method stub
-    
+
   }
 }

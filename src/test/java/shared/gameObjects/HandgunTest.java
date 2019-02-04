@@ -1,14 +1,15 @@
 package shared.gameObjects;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.UUID;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.weapons.Handgun;
 import shared.gameObjects.weapons.Weapon;
+
+import java.util.UUID;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class HandgunTest {
 
@@ -16,19 +17,9 @@ public class HandgunTest {
 
   @BeforeClass
   public static void initHandgun() {
-    handgun = new Handgun(
-        10,
-        10,
-        ObjectID.Weapon,
-        10,
-        30,
-        "HandGun",
-        40,
-        80,
-        3,
-        1,
-        UUID.randomUUID()
-    );
+    handgun =
+        new Handgun(
+            10, 10, 100, 100, ObjectID.Weapon, 10, 30, "HandGun", 40, 80, 3, 1, UUID.randomUUID());
   }
 
   @Test

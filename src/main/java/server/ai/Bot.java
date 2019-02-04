@@ -1,11 +1,10 @@
 package server.ai;
 
-import java.util.UUID;
-import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
 
-/** @author Harry Levick (hxl799) */
+import java.util.UUID;
 
+/** @author Harry Levick (hxl799) */
 public class Bot extends Player {
 
   boolean jumpKey, leftKey, rightKey, click;
@@ -18,11 +17,11 @@ public class Bot extends Player {
   public static final int KEY_RIGHT = 2;
   public static final int KEY_CLICK = 3;
 
-  public Bot(double x, double y, UUID playerUUID) {
-    super(x, y, playerUUID);
-
+  public Bot(double x, double y, double sizeX, double sizeY, UUID playerUUID) {
+    super(x, y, sizeX, sizeY, playerUUID);
   }
 
-  public boolean mayJump() { return mayJump; }
-
+  public boolean mayJump() {
+    return mayJump;
+  }
 }

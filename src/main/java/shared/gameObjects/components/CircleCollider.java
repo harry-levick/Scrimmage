@@ -1,13 +1,12 @@
 package shared.gameObjects.components;
 
-import java.io.Serializable;
 import shared.gameObjects.GameObject;
 import shared.physics.types.ColliderType;
 import shared.util.maths.Vector2;
 
-/**
- * Constructs a Circle shaped Collider
- */
+import java.io.Serializable;
+
+/** Constructs a Circle shaped Collider */
 public class CircleCollider extends Collider implements Serializable {
 
   private float radius;

@@ -1,10 +1,10 @@
 package shared.packets;
 
-
-import static junit.framework.TestCase.assertEquals;
+import org.junit.Test;
 
 import java.util.UUID;
-import org.junit.Test;
+
+import static junit.framework.TestCase.assertEquals;
 
 public class PacketTest {
 
@@ -38,5 +38,4 @@ public class PacketTest {
     assertEquals(output.getClientID(), uuid);
     assertEquals(output.getUsername(), username);
   }
-
 }

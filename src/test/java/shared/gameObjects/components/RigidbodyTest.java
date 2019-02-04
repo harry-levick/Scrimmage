@@ -1,9 +1,5 @@
 package shared.gameObjects.components;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.UUID;
 import org.junit.Before;
 import org.junit.Test;
 import shared.gameObjects.TestObject;
@@ -12,6 +8,11 @@ import shared.physics.data.AngularData;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
+
+import java.util.UUID;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class RigidbodyTest {
 

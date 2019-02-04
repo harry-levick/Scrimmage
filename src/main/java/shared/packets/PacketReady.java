@@ -1,5 +1,3 @@
 package shared.packets;
 
-public class PacketReady extends Packet {
-
-}
+public class PacketReady extends Packet {}

@@ -1,7 +1,8 @@
 package shared.gameObjects.weapons;
 
-import java.util.UUID;
 import shared.gameObjects.Utils.ObjectID;
+
+import java.util.UUID;
 
 public class Sword extends Melee {
 
@@ -22,6 +23,8 @@ public class Sword extends Melee {
   public Sword(
       double x,
       double y,
+      double sizeX,
+      double sizeY,
       ObjectID id,
       double damage,
       double weight,
@@ -32,16 +35,14 @@ public class Sword extends Melee {
       double endAngle,
       UUID uuid) {
 
-    super(x, y, id, damage, weight, name, -1, range, beginAngle, endAngle, uuid);
+    super(x, y, sizeX, sizeY, id, damage, weight, name, -1, range, beginAngle, endAngle, uuid);
   }
 
   @Override
-  public void update() {
-  }
+  public void update() {}
 
   @Override
-  public void render() {
-  }
+  public void render() {}
 
   @Override
   public String getState() {
@@ -49,7 +50,5 @@ public class Sword extends Melee {
   }
 
   @Override
-  public void initialiseAnimation() {
-
-  }
+  public void initialiseAnimation() {}
 }
