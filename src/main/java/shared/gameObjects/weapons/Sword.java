@@ -32,7 +32,7 @@ public class Sword extends Melee {
       double endAngle,
       UUID uuid) {
 
-    super(x, y, id, imagePath, damage, weight, name, -1, range, beginAngle, endAngle, uuid);
+    super(x, y, id, damage, weight, name, -1, range, beginAngle, endAngle, uuid);
   }
 
   @Override
@@ -46,5 +46,10 @@ public class Sword extends Melee {
   @Override
   public String getState() {
     return null;
+  }
+
+  @Override
+  public void initialiseAnimation() {
+
   }
 }

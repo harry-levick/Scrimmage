@@ -13,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.Utils.Transform;
+import shared.gameObjects.animator.Animator;
 import shared.gameObjects.components.Component;
 import shared.gameObjects.components.ComponentType;
 import shared.util.maths.Vector2;
@@ -21,12 +22,11 @@ public abstract class GameObject implements Serializable {
 
   protected UUID objectUUID;
   protected ObjectID id;
-  protected HashMap<String, String> spriteLibaryURL;
-  protected boolean animate;
-
+  
   protected transient ImageView imageView;
   protected transient Group root;
-  protected transient HashMap<String, Image> spriteLibary;
+
+  protected transient Animator animation = new Animator();
 
   protected GameObject parent;
   protected Set<GameObject> children;
@@ -45,25 +45,30 @@ public abstract class GameObject implements Serializable {
    * @param y Y coordinate of object in game world
    * @param id Unique Identifier of every game object
    */
-  public GameObject(double x, double y, ObjectID id, String baseImageURL, UUID objectUUID) {
-    spriteLibaryURL = new HashMap<>();
+  public GameObject(double x, double y, ObjectID id, UUID objectUUID) {
     this.updated = false;
     this.id = id;
     this.objectUUID = objectUUID;
-    spriteLibaryURL.put("baseImage", baseImageURL);
-    animate = false;
     active = true;
     this.transform = new Transform(this, new Vector2((float) x, (float) y));
     components = new ArrayList<>();
     children = new HashSet<>();
     parent = null;
+    initialiseAnimation();
   }
+  
+  // Initialise the animation
+  public abstract void initialiseAnimation();
 
   // Server and Client side
-  public abstract void update();
+  public void update() {
+    animation.update();
+  }
 
   // Client Side only
-  public abstract void render();
+  public void render() {
+    imageView.setImage(animation.getImage());
+  }
 
   //Interpolate Position Client only
   public void interpolatePosition(float alpha) {
@@ -83,17 +88,9 @@ public abstract class GameObject implements Serializable {
   public abstract String getState();
 
   // Ignore for now, added due to unSerializable objects
-  public void initialise(Group root, boolean animate) {
+  public void initialise(Group root) {
     this.root = root;
     imageView = new ImageView();
-    spriteLibary = new HashMap<>();
-    // Convert Image URL to Image
-    for (Map.Entry<String, String> imageURL : spriteLibaryURL.entrySet()) {
-      spriteLibary.put(imageURL.getKey(), new Image(imageURL.getValue()));
-    }
-    this.animate = animate;
-
-    this.imageView.setImage(spriteLibary.get("baseImage"));
     root.getChildren().add(this.imageView);
   }
 

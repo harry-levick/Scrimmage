@@ -22,7 +22,7 @@ public class LevelHandler {
   public LevelHandler(Settings settings, Group root, boolean isClient) {
     if (isClient) {
       clientPlayer = new Player(500, 500, UUID.randomUUID());
-      clientPlayer.initialise(root, true);
+      clientPlayer.initialise(root);
       players.add(clientPlayer);
     }
     maps = MapLoader.getMaps(settings.getMapsPath());
@@ -68,7 +68,7 @@ public class LevelHandler {
             //clientPlayer.setY(gameObject.getY());
             gameObjects.remove(gameObject);
           } else {
-            gameObject.initialise(root, true);
+            gameObject.initialise(root);
           }
         });
     gameObjects.add(clientPlayer);

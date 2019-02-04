@@ -27,7 +27,6 @@ public abstract class Weapon extends GameObject {
       double x,
       double y,
       ObjectID id,
-      String imagePath,
       double damage,
       double weight,
       String name,
@@ -35,7 +34,7 @@ public abstract class Weapon extends GameObject {
       boolean isMelee,
       int ammo,
       UUID uuid) {
-    super(x, y, id, imagePath, uuid);
+    super(x, y, id, uuid);
     this.isGun = isGun;
     this.isMelee = isMelee;
     this.damage = damage;

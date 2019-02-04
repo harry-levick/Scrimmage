@@ -15,7 +15,11 @@ public class ButtonMultiplayer extends ButtonObject {
    * @param id Unique Identifier of every game object
    */
   public ButtonMultiplayer(double x, double y, ObjectID id, UUID objectUUID) {
-    super(x, y, id, "images/buttons/multiplayer_unpressed.png", objectUUID,
-        "images/buttons/multiplayer_pressed.png");
+    super(x, y, id, objectUUID);
+  }
+
+  @Override
+  public void initialiseAnimation() {
+    super.initialiseAnimation("images/buttons/multiplayer_unpressed.png","images/buttons/multiplayer_pressed.png");
   }
 }

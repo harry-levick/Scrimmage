@@ -14,7 +14,7 @@ public class TestObject extends GameObject {
    * @param id Unique Identifier of every game object
    */
   public TestObject(int x, int y, ObjectID id, UUID testUUID) {
-    super(x, y, id, "testobjectimagepath", testUUID);
+    super(x, y, id, testUUID);
   }
 
   @Override
@@ -28,5 +28,11 @@ public class TestObject extends GameObject {
   @Override
   public String getState() {
     return null;
+  }
+
+  @Override
+  public void initialiseAnimation() {
+    // TODO Auto-generated method stub
+    
   }
 }

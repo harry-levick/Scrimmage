@@ -15,7 +15,11 @@ public class ButtonSingleplayer extends ButtonObject {
    * @param id Unique Identifier of every game object
    */
   public ButtonSingleplayer(double x, double y, ObjectID id, UUID objectUUID) {
-    super(x, y, id, "images/buttons/singleplayer_unpressed.png", objectUUID,
-        "images/buttons/singleplayer_pressed.png");
+    super(x, y, id, objectUUID);
+  }
+
+  @Override
+  public void initialiseAnimation() {
+    super.initialiseAnimation("images/buttons/singleplayer_unpressed.png", "images/buttons/singleplayer_pressed.png");
   }
 }

@@ -30,7 +30,7 @@ public class Bullet extends GameObject {
       double speed,         // the speed of the bullet
       UUID uuid) {          // uuid of this bullet
 
-    super(gunX, gunY, ObjectID.Bullet, imagePath, uuid);
+    super(gunX, gunY, ObjectID.Bullet, uuid);
     setWidth(width);
     setSpeed(speed);
 
@@ -65,10 +65,8 @@ public class Bullet extends GameObject {
 
   @Override
   public void render() {
+    super.render();
     imageView.relocate(newX, newY);
-    if (animate) {
-      imageView.setImage(getImage());
-    }
   }
 
   @Override
@@ -113,5 +111,10 @@ public class Bullet extends GameObject {
   // -------------------
   // Setters and Getters
   // --------END--------
+
+  @Override
+  public void initialiseAnimation() {
+    this.animation.supplyAnimation("default", new Image[]{this.bulletImage}); 
+  }
 
 }

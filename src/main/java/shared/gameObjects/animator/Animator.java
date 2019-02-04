@@ -1,44 +1,74 @@
 package shared.gameObjects.animator;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import javafx.scene.image.Image;
 
 public class Animator {
 
   // Helpful variables
-  ArrayList<Image> images;
-  int numberOfImages;
-  int currentImage = 0;
+  private HashMap<String,Image[]> animations;
+  private Image[] currentAnimation;
+  
+  private int intervalSpeed;
+  private int tickCounter;
+  private int currentAnimationCounter;
+  private int currentAnimationSize;
 
-  int animationInterval;
-  int animationTimer;
-
-  public void Animator(ArrayList<String> imagePaths, int animationInterval) {
-    this.images = generateImages(imagePaths);
-    this.currentImage = currentImage;
-    this.numberOfImages = this.images.size();
-
-    this.animationInterval = animationInterval;
-    this.animationTimer = 0;
+  public Animator() {
+    animations = new HashMap<String,Image[]>();
+    intervalSpeed = 10;
+    tickCounter = this.intervalSpeed;
+    currentAnimationCounter = 0;
+  }
+  
+  public void setSpeed(int s) {
+    intervalSpeed = s;
   }
 
-  private ArrayList<Image> generateImages(ArrayList<String> paths) {
-    return null;
+  public void supplyAnimation(String animationName, Image[] images) {
+    animations.put(animationName, images);
+    //Support for the default animation 
+    if (animationName.equals("default")){
+      currentAnimation = animations.get("default");
+      switchDefault();
+    }
+
   }
+  
+  public void switchAnimation(String animationName) {
+    try {
+      Image[] getAnimation = this.animations.get(animationName);
+      if (!currentAnimation.equals(getAnimation)){
+        currentAnimation = getAnimation;
+        currentAnimationSize = currentAnimation.length;
+        currentAnimationCounter = 0;
+        tickCounter = intervalSpeed;
+      }
+    }
+    catch(Exception e){
+      System.out.println("No animation of name "+animationName+" exists. Exepction:"+e);
+    }
+  }
+  
+  public void switchDefault() {
+    switchAnimation("default");
+  }
+
 
   public void update() {
-    // This called every frame.
-    this.animationTimer += 1;
-    if (this.animationTimer > this.animationInterval) {
-      this.animationTimer = 0;
-      this.currentImage += 1;
-      if (this.currentImage > this.numberOfImages) {
-        this.currentImage = 0;
+    // This is called every frame.
+    tickCounter -= 1;
+    if(tickCounter <= 0) {
+      tickCounter = intervalSpeed;
+      currentAnimationCounter += 1; 
+      if(currentAnimationCounter >= currentAnimationSize) {
+        currentAnimationCounter = 0;
       }
     }
   }
 
-  public void render(double X, double Y) {
-    // draw(images.get(currentImage),x,y)
+  public Image getImage() {
+    
+    return currentAnimation[currentAnimationCounter];
   }
-}
+} 
