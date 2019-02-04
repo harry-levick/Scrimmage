@@ -7,6 +7,8 @@ import java.io.File;
  */
 public class Settings {
 
+  private String username = "TestAccount";
+  private int port = 4446;
   private double musicVolume;
   private double soundEffectVolume;
   private String mapsPath =
@@ -68,5 +70,21 @@ public class Settings {
   public void setSoundEffectVolume(double soundEffectVolume) {
     this.soundEffectVolume = soundEffectVolume > 1.0 ? 1.0 : soundEffectVolume;
     this.soundEffectVolume = soundEffectVolume < 0 ? 0 : soundEffectVolume;
+  }
+
+  public String getUsername() {
+    return username;
+  }
+
+  public void setUsername(String username) {
+    this.username = username;
+  }
+
+  public int getPort() {
+    return port;
+  }
+
+  public void setPort(int port) {
+    this.port = port;
   }
 }

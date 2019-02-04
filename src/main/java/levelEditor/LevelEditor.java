@@ -21,6 +21,7 @@ import shared.gameObjects.menu.main.ButtonLeveleditor;
 import shared.gameObjects.menu.main.ButtonMultiplayer;
 import shared.gameObjects.menu.main.ButtonSettings;
 import shared.gameObjects.menu.main.ButtonSingleplayer;
+import shared.gameObjects.menu.multiplayer.join.ButtonConnect;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.Handgun;
 import shared.handlers.levelHandler.MapLoader;
@@ -47,7 +48,7 @@ public class LevelEditor extends Application {
     ChoiceBox cb = new ChoiceBox();
     cb.setItems(FXCollections
         .observableArrayList("ExampleObject", "Player", "Singleplayer Button", "Multiplayer Button",
-            "Settings Button", "Level Editor Button", "Handgun"));
+            "Settings Button", "Level Editor Button", "Handgun", "ButtonConnect"));
     cb.setLayoutX(10);
     cb.setLayoutY(10);
 
@@ -126,6 +127,12 @@ public class LevelEditor extends Application {
               Handgun temp = new Handgun(event.getX(), event.getY(), ObjectID.Weapon, 10, 10,
                   "Handgun", 100, 100, 100, 10, uuid);
               temp.initialise(root, false);
+              gameObjects.add(temp);
+            } else if (cb.getValue() == "ButtonConnect") {
+              ButtonConnect temp = new ButtonConnect(event.getX(), event.getY(),
+                  ObjectID.Bot, uuid);
+              temp.initialise(root, false);
+              gameObjects.add(temp);
             }
           }
         });
