@@ -53,7 +53,7 @@ public class AStar {
     // The parent node
     SearchNode parentNode;
     // The list of game objects in this scene
-    ArrayList<GameObject> sceneSnapshot;
+    List<GameObject> sceneSnapshot;
     // The bot that the path-finding is concerned with.
     double botX;
     double botY;
@@ -67,7 +67,7 @@ public class AStar {
     // Not sure on the use yet. - used in mario a*
     int repetitions;
 
-    public SearchNode(boolean[] action, int repetitions, SearchNode parent) {
+    public SearchNode(boolean[] action, SearchNode parent) {
       this.parentNode = parent;
       if (parentNode != null) {
         this.botY = parent.botY + calcYChange(parent.action);
@@ -104,7 +104,7 @@ public class AStar {
      * @param enemy the target / goal
      * @return the distance
      */
-    public double calcRemainingH(Player enemy, ArrayList<GameObject> allItems) {
+    public double calcRemainingH(Player enemy, List<Weapon> allItems) {
       Vector2 botPos = new Vector2((float) bot.getX(), (float) bot.getY());
       Vector2 enemyPos = new Vector2((float) enemy.getX(), (float) enemy.getY());
       double distanceToEnemy = botPos.exactMagnitude(enemyPos);
@@ -125,7 +125,7 @@ public class AStar {
      * @param allObjects all objects in the world
      * @return list of weapons
      */
-    private List<Weapon> getItems(ArrayList<GameObject> allObjects) {
+    private List<Weapon> getItems(List<GameObject> allObjects) {
       // Collect all weapons from the world
       List<Weapon> allWeapons =
           allObjects.stream()
@@ -147,7 +147,7 @@ public class AStar {
       ArrayList<boolean[]> possibleActions = createPossibleActions(this);
 
       for (boolean[] action : possibleActions) {
-        list.add(new SearchNode(action, repetitions, this));
+        list.add(new SearchNode(action, this));
       }
 
       return list;
@@ -181,7 +181,7 @@ public class AStar {
         advanceStep(action);
       }
       // Set the remaining distance after we've simulated the effects of our action.
-      remainingDistance = calcRemainingH(bot, );
+      remainingDistance = calcRemainingH(bot, getItems(sceneSnapshot));
       if (visited) {
         remainingDistance += visitedListPenalty;
       }
@@ -201,7 +201,7 @@ public class AStar {
      * @param allItems A list of all the items in the world.
      * @return The item that is the closest to the bot
      */
-    private GameObject findClosestItem(List<GameObject> allItems) {
+    private GameObject findClosestItem(List<Weapon> allItems) {
       GameObject closestItem = null;
       Vector2 botPos = new Vector2((float) bot.getX(), (float) bot.getY());
       double targetDistance = Double.POSITIVE_INFINITY;
@@ -259,7 +259,7 @@ public class AStar {
       }
 
       // workScene = backupState();
-      startSearch(stepsPerSearch);
+      startSearch();
       ticksBeforeReplanning = planAhead;
     }
     // Load the future world state used by the planner.
@@ -347,12 +347,9 @@ public class AStar {
 
   /**
    * Initialise the planner
-   *
-   * @param repetitions
    */
-  private void startSearch(int repetitions) {
-    SearchNode startPosition = new SearchNode(null, repetitions, null);
-    startPosition.sceneSnapshot = backupState();
+  private void startSearch() {
+    SearchNode startPosition = new SearchNode(null,null);
 
     openList = new ArrayList<SearchNode>();
     closedList.clear();
