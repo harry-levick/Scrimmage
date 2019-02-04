@@ -33,6 +33,12 @@ public abstract class Melee extends Weapon {
   }
   
   @Override
+  public void update() {
+    deductCooldown();
+    super.update();
+  }
+  
+  @Override
   public void fire(double mouseX, double mouseY) {
 
   }
