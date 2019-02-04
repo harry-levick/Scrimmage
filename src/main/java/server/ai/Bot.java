@@ -18,8 +18,8 @@ public class Bot extends Player {
   public static final int KEY_RIGHT = 2;
   public static final int KEY_CLICK = 3;
 
-  public Bot(double x, double y, ObjectID id, UUID playerUUID) {
-    super(x, y, id, playerUUID);
+  public Bot(double x, double y, UUID playerUUID) {
+    super(x, y, playerUUID);
 
   }
 
