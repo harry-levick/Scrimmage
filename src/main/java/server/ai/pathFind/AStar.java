@@ -43,11 +43,11 @@ public class AStar {
    * the world state after this action was used, and information about the parent node.
    */
   public class SearchNode {
-    // The number of ticks elapsed since the start of the search.
+    // The distance from the start of the search to this node.
     private double distanceElapsed;
-    // The optimal (estimated) time to reach the goal node from this node.
+    // The optimal (estimated) distance to reach the goal node from this node.
     public double estimatedDistance = 0;
-    // The optimal time to reach the goal node AFTER simulating with the selected action.
+    // The optimal distance to reach the goal node AFTER simulating with the selected action.
     private double remainingDistance = 0;
     // The parent node
     public SearchNode parentNode;
@@ -57,21 +57,20 @@ public class AStar {
     public double botX;
     public double botY;
 
-    // Not sure on the use yet.
+    // Not sure on the use yet. - used in mario a*
     public boolean hasBeenHurt = false;
-
     public boolean visited = false;
-    // The action used to get to the next node (child of this node).
+    // The action used to get to the child node.
     boolean[] action;
 
-    // Not sure on the use yet.
+    // Not sure on the use yet. - used in mario a*
     int repetitions;
 
     public SearchNode(boolean[] action, int repetitions, SearchNode parent) {
       this.parentNode = parent;
       if (parentNode != null) {
-        this.botY = parent.botY + calcYChange(action);
-        this.botX = parent.botY + calcXChange(action);
+        this.botY = parent.botY + calcYChange(parent.action);
+        this.botX = parent.botY + calcXChange(parent.action);
         this.remainingDistance = parent.estimateRemainingDistanceChild(action, repetitions);
         distanceElapsed = parent.distanceElapsed + (parent.remainingDistance - remainingDistance);
       } else {
