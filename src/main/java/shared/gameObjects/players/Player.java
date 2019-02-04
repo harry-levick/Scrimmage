@@ -16,8 +16,8 @@ public class Player extends GameObject {
   protected final int speed = 500;
   private double vx;
 
-  public Player(double x, double y, UUID playerUUID) {
-    super(x, y, ObjectID.Player, playerUUID);
+  public Player(double x, double y, double sizeX, double sizeY, UUID playerUUID) {
+    super(x, y, 100, 100, ObjectID.Player, playerUUID);
     this.health = 100;
     holding = null;
   }
