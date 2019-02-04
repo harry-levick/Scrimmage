@@ -15,8 +15,12 @@ public class ButtonSettings extends ButtonObject {
    * @param id Unique Identifier of every game object
    */
   public ButtonSettings(double x, double y, ObjectID id, UUID objectUUID) {
-    super(x, y, id, "images/buttons/settings_unpressed.png", objectUUID,
-        "images/buttons/settings_pressed.png");
+    super(x, y, id, objectUUID);
+  }
+
+  @Override
+  public void initialiseAnimation() {
+    super.initialiseAnimation("images/buttons/settings_unpressed.png","images/buttons/settings_pressed.png");
   }
 
 

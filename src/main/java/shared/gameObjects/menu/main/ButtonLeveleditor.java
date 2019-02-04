@@ -15,8 +15,13 @@ public class ButtonLeveleditor extends ButtonObject {
    * @param id Unique Identifier of every game object
    */
   public ButtonLeveleditor(double x, double y, ObjectID id, UUID objectUUID) {
-    super(x, y, id, "images/buttons/leveleditor_unpressed.png", objectUUID,
-        "images/buttons/leveleditor_pressed.png");
+    super(x, y, id, objectUUID);
+  }
+
+  @Override
+  public void initialiseAnimation() {
+    super.initialiseAnimation("images/buttons/leveleditor_unpressed.png","images/buttons/leveleditor_pressed.png");
+    
   }
 
 }

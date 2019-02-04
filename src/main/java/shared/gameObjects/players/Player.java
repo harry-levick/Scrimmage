@@ -19,15 +19,14 @@ public class Player extends GameObject {
   private double vx;
 
   public Player(double x, double y, UUID playerUUID) {
-    super(x, y, ObjectID.Player, "images/player/player_idle.png", playerUUID);
+    super(x, y, ObjectID.Player, playerUUID);
     this.health = 100;
     holding = null;
     System.out.println(animation);
-    initializeAnimation();
   }
   
   // Initialise the animation 
-  private void initializeAnimation() {
+  public void initialiseAnimation() {
     Image[] insertImageList = {
         new Image("images/player/player_idle.png")  
     };
@@ -51,7 +50,7 @@ public class Player extends GameObject {
 
   @Override
   public void update() {
-    this.animation.update();
+    super.update();
   }
 
   @Override
@@ -59,9 +58,10 @@ public class Player extends GameObject {
     if (!isActive()) {
       return;
     }
+    super.render();
     imageView.setTranslateX(getX());
     imageView.setTranslateY(getY());
-    imageView.setImage(animation.getImage());
+    
   }
 
   @Override

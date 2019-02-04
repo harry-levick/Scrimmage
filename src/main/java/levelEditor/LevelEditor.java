@@ -42,7 +42,7 @@ public class LevelEditor extends Application {
 
     // Example of loading map
     // gameObjects = MapLoader.loadMap("menus.map");
-    gameObjects.forEach(gameObject -> gameObject.initialise(root, false));
+    gameObjects.forEach(gameObject -> gameObject.initialise(root));
 
     ChoiceBox cb = new ChoiceBox();
     cb.setItems(FXCollections
@@ -96,36 +96,36 @@ public class LevelEditor extends Application {
             UUID uuid = UUID.randomUUID();
             if (cb.getValue() == "ExampleObject") {
               GameObject temp = new ExampleObject(event.getX(), event.getY(), ObjectID.Bot, uuid);
-              temp.initialise(root, false);
+              temp.initialise(root);
               gameObjects.add(temp);
             } else if (cb.getValue() == "Player") {
               Player temp = new Player(event.getX(), event.getY(), uuid);
-              temp.initialise(root, false);
+              temp.initialise(root);
               gameObjects.add(temp);
             } else if (cb.getValue() == "Singleplayer Button") {
               ButtonSingleplayer temp = new ButtonSingleplayer(event.getX(), event.getY(),
                   ObjectID.Bot, uuid);
-              temp.initialise(root, false);
+              temp.initialise(root);
               gameObjects.add(temp);
             } else if (cb.getValue() == "Multiplayer Button") {
               ButtonMultiplayer temp = new ButtonMultiplayer(event.getX(), event.getY(),
                   ObjectID.Bot, uuid);
-              temp.initialise(root, false);
+              temp.initialise(root);
               gameObjects.add(temp);
             } else if (cb.getValue() == "Settings Button") {
               ButtonSettings temp = new ButtonSettings(event.getX(), event.getY(), ObjectID.Bot,
                   uuid);
-              temp.initialise(root, false);
+              temp.initialise(root);
               gameObjects.add(temp);
             } else if (cb.getValue() == "Level Editor Button") {
               ButtonLeveleditor temp = new ButtonLeveleditor(event.getX(), event.getY(),
                   ObjectID.Bot, uuid);
-              temp.initialise(root, false);
+              temp.initialise(root);
               gameObjects.add(temp);
             } else if (cb.getValue() == "Handgun") {
               Handgun temp = new Handgun(event.getX(), event.getY(), ObjectID.Weapon, 10, 10,
                   "Handgun", 100, 100, 100, 10, uuid);
-              temp.initialise(root, false);
+              temp.initialise(root);
             }
           }
         });

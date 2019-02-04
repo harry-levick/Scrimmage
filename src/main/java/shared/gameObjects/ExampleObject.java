@@ -17,9 +17,18 @@ public class ExampleObject extends GameObject {
    * @param id Unique Identifier of every game object
    */
   public ExampleObject(double x, double y, ObjectID id, UUID exampleUUID) {
-    super(x, y, id, "images/platforms/stone/elementStone013.png", exampleUUID);
+    super(x, y, id, exampleUUID);
     health = 100;
   }
+  
+  // Initialise the animation 
+  public void initialiseAnimation() {
+    Image[] insertImageList = {
+        new Image("images/platforms/stone/elementStone013.png")  
+    };
+    this.animation.supplyAnimation("default", insertImageList);
+  }
+    
 
   @Override
   public void update() {
