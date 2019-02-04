@@ -54,7 +54,6 @@ public abstract class GameObject implements Serializable {
     children = new HashSet<>();
     parent = null;
     animation = new Animator();
-    rotation = imageView.getRotate();
     initialiseAnimation();
   }
 
