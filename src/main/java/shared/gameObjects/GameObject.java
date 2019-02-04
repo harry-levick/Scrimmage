@@ -1,5 +1,11 @@
 package shared.gameObjects;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
 import shared.gameObjects.Utils.ObjectID;
@@ -9,9 +15,6 @@ import shared.gameObjects.components.Component;
 import shared.gameObjects.components.ComponentType;
 import shared.util.maths.Vector2;
 
-import java.io.Serializable;
-import java.util.*;
-
 public abstract class GameObject implements Serializable {
 
   protected UUID objectUUID;
@@ -19,8 +22,8 @@ public abstract class GameObject implements Serializable {
 
   protected transient ImageView imageView;
   protected transient Group root;
-
   protected transient Animator animation;
+  protected double rotation;
 
   protected GameObject parent;
   protected Set<GameObject> children;
@@ -51,6 +54,7 @@ public abstract class GameObject implements Serializable {
     children = new HashSet<>();
     parent = null;
     animation = new Animator();
+    rotation = imageView.getRotate();
     initialiseAnimation();
   }
 
@@ -96,6 +100,7 @@ public abstract class GameObject implements Serializable {
     animation = new Animator();
     initialiseAnimation();
     imageView = new ImageView();
+    imageView.setRotate(rotation);
     root.getChildren().add(this.imageView);
   }
 
@@ -236,5 +241,13 @@ public abstract class GameObject implements Serializable {
 
   public boolean isDestroyed() {
     return destroyed;
+  }
+
+  public double getRotation() {
+    return rotation;
+  }
+
+  public void rotateImage(double rotation) {
+    imageView.setRotate(imageView.getRotate() + rotation);
   }
 }
