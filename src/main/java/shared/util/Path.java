@@ -13,4 +13,8 @@ public class Path {
     return temp;
   }
 
+  public static String convert(String path) {
+    return path.replace('/', File.separatorChar).trim();
+  }
+
 }
