@@ -15,7 +15,12 @@ public class ButtonHost extends ButtonObject {
    * @param id Unique Identifier of every game object
    */
   public ButtonHost(double x, double y, ObjectID id, UUID objectUUID) {
-    super(x, y, id, "images/buttons/multiplayer_unpressed.png", objectUUID,
+    super(x, y, 50, 50, id, objectUUID);
+  }
+
+  @Override
+  public void initialiseAnimation() {
+    super.initialiseAnimation("images/buttons/multiplayer_unpressed.png",
         "images/buttons/multiplayer_pressed.png");
   }
 }

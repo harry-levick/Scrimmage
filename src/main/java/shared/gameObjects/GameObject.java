@@ -252,4 +252,8 @@ public abstract class GameObject implements Serializable {
   public void rotateImage(double rotation) {
     imageView.setRotate(imageView.getRotate() + rotation);
   }
+
+  public UUID getUUID() {
+    return objectUUID;
+  }
 }

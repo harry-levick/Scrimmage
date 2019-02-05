@@ -15,11 +15,17 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.LevelHandler;
 import shared.handlers.levelHandler.Map;
+import shared.packets.Packet;
+import shared.packets.PacketEnd;
+import shared.packets.PacketPlayerJoin;
+import shared.util.Path;
 
 public class Client extends Application {
 
@@ -28,12 +34,12 @@ public class Client extends Application {
   public static LevelHandler levelHandler;
   public static Settings settings;
   public static boolean multiplayer;
+  public static ConnectionHandler connectionHandler;
 
   private final float timeStep = 0.0166f;
   private final String gameTitle = "Alone in the Dark";
   private final int port = 4445;
 
-  private ConnectionHandler connectionHandler;
   private KeyboardInput keyInput;
   private MouseInput mouseInput;
   private Group root;
@@ -138,6 +144,7 @@ public class Client extends Application {
   private void setupRender(Stage primaryStage) {
     root = new Group();
     primaryStage.setTitle(gameTitle);
+    primaryStage.getIcons().add(new Image(Path.convert("images/logo.png")));
 
     AudioHandler audio = new AudioHandler(settings);
 
@@ -244,6 +251,24 @@ public class Client extends Application {
     if (connectionHandler.received.size() != 0) {
       try {
         String message = (String) connectionHandler.received.take();
+        int messageID = Integer.parseInt(message.substring(0, 1));
+        Packet packet;
+        switch (messageID) {
+          //PlayerJoin
+          case 4:
+            PacketPlayerJoin packetPlayerJoin = new PacketPlayerJoin(message);
+            levelHandler.addPlayer(
+                new Player(packetPlayerJoin.getX(), packetPlayerJoin.getY(), 100, 100,
+                    packetPlayerJoin.getUUID()));
+            break;
+          //End
+          case 6:
+            PacketEnd packetEnd = new PacketEnd(message);
+            multiplayer = false;
+            //Show score board
+            //Main Menu
+
+        }
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
