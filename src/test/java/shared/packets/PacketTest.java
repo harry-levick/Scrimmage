@@ -1,11 +1,11 @@
 package shared.packets;
 
-
 import static junit.framework.TestCase.assertEquals;
 
+import java.util.UUID;
 import org.junit.Test;
 
-public class PacketInputTest {
+public class PacketTest {
 
   private double x = 10;
   private double y = 213.12;
@@ -13,9 +13,11 @@ public class PacketInputTest {
   private boolean rightKey = true;
   private boolean jumpKey = true;
   private boolean click = false;
+  private String username = "TheBigMJ";
+  private UUID uuid = UUID.randomUUID();
 
   @Test
-  public void sameInSameOut() {
+  public void InputPacketTest() {
     PacketInput input = new PacketInput(x, y, leftKey, rightKey, jumpKey, click);
     byte[] simulateNetwork = input.getData();
     PacketInput output = new PacketInput(simulateNetwork);
@@ -27,4 +29,12 @@ public class PacketInputTest {
     assertEquals(output.isClick(), click);
   }
 
+  @Test
+  public void JoinPacketTest() {
+    PacketJoin join = new PacketJoin(uuid, username);
+    byte[] simulateNetwork = join.getData();
+    PacketJoin output = new PacketJoin(simulateNetwork);
+    assertEquals(output.getClientID(), uuid);
+    assertEquals(output.getUsername(), username);
+  }
 }

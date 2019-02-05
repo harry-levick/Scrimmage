@@ -16,13 +16,21 @@ public class ExampleObject extends GameObject {
    * @param y Y coordinate of object in game world
    * @param id Unique Identifier of every game object
    */
-  public ExampleObject(double x, double y, ObjectID id, UUID exampleUUID) {
-    super(x, y, id, "images/platforms/stone/elementStone013.png", exampleUUID);
+  public ExampleObject(
+      double x, double y, double sizeX, double sizeY, ObjectID id, UUID exampleUUID) {
+    super(x, y, sizeX, sizeY, id, exampleUUID);
     health = 100;
+  }
+
+  // Initialise the animation
+  public void initialiseAnimation() {
+    this.animation.supplyAnimation(
+        "default", new Image[]{new Image("images/platforms/stone/elementStone013.png")});
   }
 
   @Override
   public void update() {
+    super.update();
   }
 
   public int getHealth() {
@@ -41,6 +49,7 @@ public class ExampleObject extends GameObject {
 
   @Override
   public void render() {
+    super.render();
     imageView.relocate(getX(), getY());
     // Example not best way as every frame rechecking and recreating image
     if (health > 60) {

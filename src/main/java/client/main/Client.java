@@ -45,7 +45,6 @@ public class Client extends Application {
   private float elapsedSinceFPS = 0f;
   private int framesElapsedSinceFPS = 0;
 
-
   public static void main(String args[]) {
     launch(args);
   }
@@ -84,7 +83,8 @@ public class Client extends Application {
         if (accumulatedTime < timeStep) {
           float timeSinceInterpolation = timeStep - (accumulatedTime - secondElapsed);
           float alphaRemaining = secondElapsed / timeSinceInterpolation;
-          levelHandler.getGameObjects()
+          levelHandler
+              .getGameObjects()
               .forEach(gameObject -> gameObject.interpolatePosition(alphaRemaining));
           return;
         }
@@ -97,6 +97,10 @@ public class Client extends Application {
         levelHandler.getClientPlayer().applyInput(multiplayer, connectionHandler);
         /** Render Game Objects */
         levelHandler.getGameObjects().forEach(gameObject -> gameObject.render());
+        /** Check Collisions */
+        levelHandler
+            .getGameObjects()
+            .forEach(gameObject -> gameObject.updateCollision(levelHandler.getGameObjects()));
         /** Update Game Objects */
         levelHandler.getGameObjects().forEach(gameObject -> gameObject.update());
         accumulatedTime -= timeStep;
@@ -128,7 +132,7 @@ public class Client extends Application {
     keyInput = new KeyboardInput(inputHandler);
     mouseInput = new MouseInput(inputHandler);
     multiplayer = false;
-    //Start off screen
+    // Start off screen
   }
 
   private void setupRender(Stage primaryStage) {
@@ -245,6 +249,4 @@ public class Client extends Application {
       }
     }
   }
-
-
 }

@@ -14,7 +14,7 @@ public class MapDataObject extends GameObject implements Serializable {
   private ArrayList<Vector2> spawnPoints;
 
   public MapDataObject(UUID mapUUID, GameState gameState) {
-    super(0, 0, ObjectID.MapDataObject, "", mapUUID);
+    super(0, 0, 100, 100, ObjectID.MapDataObject, mapUUID);
     this.mapUUID = mapUUID;
     this.gameState = gameState;
     spawnPoints = new ArrayList();
@@ -26,21 +26,22 @@ public class MapDataObject extends GameObject implements Serializable {
 
   @Override
   public void update() {
-
   }
 
   @Override
   public void render() {
-
   }
 
   @Override
   public void interpolatePosition(float alpha) {
-
   }
 
   @Override
   public String getState() {
     return null;
+  }
+
+  @Override
+  public void initialiseAnimation() {
   }
 }

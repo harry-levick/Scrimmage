@@ -14,10 +14,14 @@ public class ButtonSettings extends ButtonObject {
    * @param y Y coordinate of object in game world
    * @param id Unique Identifier of every game object
    */
-  public ButtonSettings(double x, double y, ObjectID id, UUID objectUUID) {
-    super(x, y, id, "images/buttons/settings_unpressed.png", objectUUID,
-        "images/buttons/settings_pressed.png");
+  public ButtonSettings(
+      double x, double y, double sizeX, double sizeY, ObjectID id, UUID objectUUID) {
+    super(x, y, sizeX, sizeY, id, objectUUID);
   }
 
-
+  @Override
+  public void initialiseAnimation() {
+    super.initialiseAnimation(
+        "images/buttons/settings_unpressed.png", "images/buttons/settings_pressed.png");
+  }
 }

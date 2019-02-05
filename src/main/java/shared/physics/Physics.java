@@ -15,7 +15,7 @@ public class Physics {
 
   private Physics() {
   }
-  //TODO complete raycast methods
+  // TODO complete raycast methods
 
   /**
    * Casts a ray that interacts with colliders.

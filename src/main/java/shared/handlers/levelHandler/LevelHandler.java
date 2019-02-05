@@ -21,8 +21,8 @@ public class LevelHandler {
 
   public LevelHandler(Settings settings, Group root, boolean isClient) {
     if (isClient) {
-      clientPlayer = new Player(500, 500, UUID.randomUUID());
-      clientPlayer.initialise(root, true);
+      clientPlayer = new Player(500, 500, 100, 100, UUID.randomUUID());
+      clientPlayer.initialise(root);
       players.add(clientPlayer);
     }
     maps = MapLoader.getMaps(settings.getMapsPath());
@@ -58,17 +58,16 @@ public class LevelHandler {
     gameObjects.forEach(gameObject -> gameObject.setActive(false));
     gameObjects.clear();
 
-
     // Create new game objects for map
     gameObjects = MapLoader.loadMap(map.getPath());
     gameObjects.forEach(
         gameObject -> {
           if (gameObject.getId() == ObjectID.MapDataObject && isClient) {
-            //clientPlayer.setX(gameObject.getX());
-            //clientPlayer.setY(gameObject.getY());
+            // clientPlayer.setX(gameObject.getX());
+            // clientPlayer.setY(gameObject.getY());
             gameObjects.remove(gameObject);
           } else {
-            gameObject.initialise(root, true);
+            gameObject.initialise(root);
           }
         });
     gameObjects.add(clientPlayer);

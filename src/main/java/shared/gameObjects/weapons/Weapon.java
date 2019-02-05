@@ -26,8 +26,9 @@ public abstract class Weapon extends GameObject {
   public Weapon(
       double x,
       double y,
+      double sizeX,
+      double sizeY,
       ObjectID id,
-      String imagePath,
       double damage,
       double weight,
       String name,
@@ -35,14 +36,13 @@ public abstract class Weapon extends GameObject {
       boolean isMelee,
       int ammo,
       UUID uuid) {
-    super(x, y, id, imagePath, uuid);
+    super(x, y, sizeX, sizeY, id, uuid);
     this.isGun = isGun;
     this.isMelee = isMelee;
     this.damage = damage;
     this.weight = weight;
     this.name = name;
     this.ammo = ammo;
-
   }
 
   public abstract void fire(double mouseX, double mouseY);
@@ -108,5 +108,5 @@ public abstract class Weapon extends GameObject {
   // -------------------
   // Setters and Getters
   // --------END--------
-  
+
 }

@@ -46,6 +46,7 @@ public class Transform implements Serializable {
 
   /**
    * [Does not do anything currently]
+   *
    * @param rotation
    */
   public void rotate(Vector2 rotation) {
@@ -54,6 +55,7 @@ public class Transform implements Serializable {
 
   /**
    * Scales an object's size with a given scale factor. It's JavaFX position remains the same.
+   *
    * @param scaleFactor The amount to scale by per axis.
    */
   public void scale(Vector2 scaleFactor) {

@@ -2,17 +2,15 @@ package shared.gameObjects;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import javafx.scene.Group;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.Utils.Transform;
+import shared.gameObjects.animator.Animator;
 import shared.gameObjects.components.Component;
 import shared.gameObjects.components.ComponentType;
 import shared.util.maths.Vector2;
@@ -21,12 +19,11 @@ public abstract class GameObject implements Serializable {
 
   protected UUID objectUUID;
   protected ObjectID id;
-  protected HashMap<String, String> spriteLibaryURL;
-  protected boolean animate;
 
   protected transient ImageView imageView;
   protected transient Group root;
-  protected transient HashMap<String, Image> spriteLibary;
+  protected transient Animator animation;
+  protected double rotation;
 
   protected GameObject parent;
   protected Set<GameObject> children;
@@ -45,27 +42,42 @@ public abstract class GameObject implements Serializable {
    * @param y Y coordinate of object in game world
    * @param id Unique Identifier of every game object
    */
-  public GameObject(double x, double y, ObjectID id, String baseImageURL, UUID objectUUID) {
-    spriteLibaryURL = new HashMap<>();
+  public GameObject(double x, double y, double sizeX, double sizeY, ObjectID id, UUID objectUUID) {
     this.updated = false;
     this.id = id;
     this.objectUUID = objectUUID;
-    spriteLibaryURL.put("baseImage", baseImageURL);
-    animate = false;
     active = true;
-    this.transform = new Transform(this, new Vector2((float) x, (float) y));
+    this.transform =
+        new Transform(
+            this, new Vector2((float) x, (float) y), new Vector2((float) sizeX, (float) sizeY));
     components = new ArrayList<>();
     children = new HashSet<>();
     parent = null;
+    animation = new Animator();
+    initialiseAnimation();
   }
 
+  // Initialise the animation
+  public abstract void initialiseAnimation();
+
   // Server and Client side
-  public abstract void update();
+  public void update() {
+    animation.update();
+  }
 
   // Client Side only
-  public abstract void render();
+  public void render() {
+    imageView.setImage(animation.getImage());
+  }
 
-  //Interpolate Position Client only
+  // Collision engine
+  public void updateCollision(ArrayList<GameObject> gameObjects) {
+    if (getComponent(ComponentType.COLLIDER) != null) {
+      // TODO Collision Checking
+    }
+  }
+
+  // Interpolate Position Client only
   public void interpolatePosition(float alpha) {
     if (!isActive()) {
       return;
@@ -83,17 +95,12 @@ public abstract class GameObject implements Serializable {
   public abstract String getState();
 
   // Ignore for now, added due to unSerializable objects
-  public void initialise(Group root, boolean animate) {
+  public void initialise(Group root) {
     this.root = root;
+    animation = new Animator();
+    initialiseAnimation();
     imageView = new ImageView();
-    spriteLibary = new HashMap<>();
-    // Convert Image URL to Image
-    for (Map.Entry<String, String> imageURL : spriteLibaryURL.entrySet()) {
-      spriteLibary.put(imageURL.getKey(), new Image(imageURL.getValue()));
-    }
-    this.animate = animate;
-
-    this.imageView.setImage(spriteLibary.get("baseImage"));
+    imageView.setRotate(rotation);
     root.getChildren().add(this.imageView);
   }
 
@@ -165,11 +172,9 @@ public abstract class GameObject implements Serializable {
     destroyed = active = false;
   }
 
-
   /**
    * Basic Getters and Setters
    */
-
   public double getX() {
     return this.transform.getPos().getX();
   }
@@ -238,5 +243,13 @@ public abstract class GameObject implements Serializable {
 
   public boolean isDestroyed() {
     return destroyed;
+  }
+
+  public double getRotation() {
+    return rotation;
+  }
+
+  public void rotateImage(double rotation) {
+    imageView.setRotate(imageView.getRotate() + rotation);
   }
 }

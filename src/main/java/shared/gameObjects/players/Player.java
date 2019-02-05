@@ -3,10 +3,12 @@ package shared.gameObjects.players;
 import client.handlers.connectionHandler.ConnectionHandler;
 import client.handlers.inputHandler.InputHandler;
 import java.util.UUID;
+import javafx.scene.image.Image;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.weapons.Weapon;
 import shared.packets.PacketInput;
+import shared.util.Path;
 
 public class Player extends GameObject {
 
@@ -15,17 +17,37 @@ public class Player extends GameObject {
   protected final int speed = 500;
   private double vx;
 
-  public Player(double x, double y, UUID playerUUID) {
-    super(x, y, ObjectID.Player, "images/player/player_idle.png", playerUUID);
+  public Player(double x, double y, double sizeX, double sizeY, UUID playerUUID) {
+    super(x, y, 100, 100, ObjectID.Player, playerUUID);
     this.health = 100;
     holding = null;
   }
 
-  // These are just temporary before physics gets implemented
+  // Initialise the animation 
+  public void initialiseAnimation() {
+    Image[] insertImageList = {
+        new Image(Path.convert("images/player/player_idle.png"))
+    };
+    this.animation.supplyAnimation("default", insertImageList);
+
+    //Running left animation 
+    insertImageList = new Image[]{
+        new Image(Path.convert("images/player/player_left_walk1.png")),
+        new Image(Path.convert("images/player/player_left_walk2.png")),
+    };
+    this.animation.supplyAnimation("moveLeft", insertImageList);
+
+    //Running right animation 
+    insertImageList = new Image[]{
+        new Image(Path.convert("images/player/player_right_walk1.png")),
+        new Image(Path.convert("images/player/player_right_walk2.png")),
+    };
+    this.animation.supplyAnimation("moveRight", insertImageList);
+  }
 
   @Override
   public void update() {
-
+    super.update();
   }
 
   @Override
@@ -33,8 +55,10 @@ public class Player extends GameObject {
     if (!isActive()) {
       return;
     }
+    super.render();
     imageView.setTranslateX(getX());
     imageView.setTranslateY(getY());
+
   }
 
   @Override
@@ -45,12 +69,16 @@ public class Player extends GameObject {
   public void applyInput(boolean multiplayer, ConnectionHandler connectionHandler) {
     if (InputHandler.rightKey) {
       vx = speed;
+      animation.switchAnimation("moveRight");
     }
     if (InputHandler.leftKey) {
       vx = -speed;
+      animation.switchAnimation("moveLeft");
     }
+
     if (!InputHandler.rightKey && !InputHandler.leftKey) {
       vx = 0;
+      animation.switchDefault();
     }
     if (InputHandler.click && holding != null) {
       holding.fire(InputHandler.x, InputHandler.y);

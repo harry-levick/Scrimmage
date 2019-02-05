@@ -6,7 +6,7 @@ public class PacketJoin extends Packet {
 
   private UUID clientID;
   private String username;
-  //private int skin;
+  // private int skin;
 
   public PacketJoin(UUID clientID, String username) {
     packetID = PacketID.JOIN.getID();
@@ -22,7 +22,6 @@ public class PacketJoin extends Packet {
     this.clientID = UUID.fromString(unpackedData[1]);
     this.username = unpackedData[2];
   }
-
 
   public UUID getClientID() {
     return clientID;

@@ -4,6 +4,7 @@ import java.util.UUID;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
@@ -20,37 +21,42 @@ public abstract class ButtonObject extends GameObject {
    * @param y Y coordinate of object in game world
    * @param id Unique Identifier of every game object
    */
-  public ButtonObject(double x, double y, ObjectID id,
-      String baseImageURL, UUID objectUUID, String clickedImageURL) {
-    super(x, y, id, baseImageURL, objectUUID);
-    spriteLibaryURL.put("clickedImage", clickedImageURL);
+  public ButtonObject(
+      double x, double y, double sizeX, double sizeY, ObjectID id, UUID objectUUID) {
+    super(x, y, sizeX, sizeY, id, objectUUID);
     button = new Button("", imageView);
   }
 
   @Override
   public void interpolatePosition(float alpha) {
-
   }
 
   @Override
-  public void initialise(Group root, boolean animate) {
-    super.initialise(root, animate);
+  public void initialise(Group root) {
+    super.initialise(root);
     button = new Button("", imageView);
     root.getChildren().add(button);
-    button.setOnMousePressed(new EventHandler<MouseEvent>() {
-      @Override
-      public void handle(MouseEvent event) {
-        imageView.setImage(spriteLibary.get("clickedImage"));
-      }
-    });
+    button.setOnMousePressed(
+        new EventHandler<MouseEvent>() {
+          @Override
+          public void handle(MouseEvent event) {
+            animation.switchAnimation("clicked");
+          }
+        });
 
-    button.setOnMouseReleased(new EventHandler<MouseEvent>() {
-      @Override
-      public void handle(MouseEvent event) {
-        imageView.setImage(spriteLibary.get("baseImage"));
-      }
-    });
+    button.setOnMouseReleased(
+        new EventHandler<MouseEvent>() {
+          @Override
+          public void handle(MouseEvent event) {
+            animation.switchDefault();
+          }
+        });
     button.setStyle("-fx-border-color: transparent;-fx-background-color: transparent;");
+  }
+
+  public void initialiseAnimation(String defaultPath, String clickedPath) {
+    this.animation.supplyAnimation("default", new Image[]{new Image(defaultPath)});
+    this.animation.supplyAnimation("clicked", new Image[]{new Image(clickedPath)});
   }
 
   @Override
@@ -60,10 +66,12 @@ public abstract class ButtonObject extends GameObject {
 
   @Override
   public void update() {
+    super.update();
   }
 
   @Override
   public void render() {
+    super.render();
     button.relocate(getX(), getY());
   }
 }

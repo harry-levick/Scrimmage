@@ -9,8 +9,9 @@ public class PacketResponse extends Packet {
 
   public PacketResponse(boolean accepted, int numberOfPlayers) {
     packetID = 1;
-    data = ByteUtil.combinedBytes(Integer.toString(packetID).getBytes(),
-        Integer.toString(numberOfPlayers).getBytes());
+    data =
+        ByteUtil.combinedBytes(
+            Integer.toString(packetID).getBytes(), Integer.toString(numberOfPlayers).getBytes());
   }
 
   public PacketResponse(byte[] data) {
@@ -20,14 +21,15 @@ public class PacketResponse extends Packet {
   }
 
   public void addPlayer(double x, double y, UUID uuid) {
-    data = ByteUtil
-        .combinedBytes(data, Double.toString(x).getBytes(), Double.toString(y).getBytes(),
+    data =
+        ByteUtil.combinedBytes(
+            data,
+            Double.toString(x).getBytes(),
+            Double.toString(y).getBytes(),
             ByteUtil.getBytesUUID(uuid));
   }
-
 
   public boolean isAccepted() {
     return accepted;
   }
-
 }

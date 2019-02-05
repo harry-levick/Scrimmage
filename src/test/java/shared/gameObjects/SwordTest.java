@@ -3,10 +3,12 @@ package shared.gameObjects;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.UUID;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.weapons.Melee;
+import shared.gameObjects.weapons.Sword;
 
 public class SwordTest {
 
@@ -14,9 +16,11 @@ public class SwordTest {
   private static double delta = 0.001;
 
   @BeforeClass
-  // public static void initSword() {
-  //  sword = new Sword(10, 10, 10, 10, "Sword", 30, 5, 70, 20);
-//  }
+  public static void initSword() {
+    sword =
+        new Sword(
+            10, 10, 100, 100, ObjectID.Weapon, 10, 10, "test", 5, 70, 20, 20, UUID.randomUUID());
+  }
 
   @Test
   public void testGetX() {
@@ -30,7 +34,7 @@ public class SwordTest {
 
   @Test
   public void testGetId() {
-    assertTrue(sword.getId() == ObjectID.Player);
+    assertTrue(sword.getId() == ObjectID.Weapon);
   }
 
   @Test
@@ -45,22 +49,21 @@ public class SwordTest {
 
   @Test
   public void testGetName() {
-    assertTrue(sword.getName() == "Sword");
+    assertTrue(sword.getName() == "test");
   }
 
   @Test
   public void testRange() {
-    assertEquals(5, ((Melee) sword).getRange(), delta);
+    assertEquals(70, ((Melee) sword).getRange(), delta);
   }
 
   @Test
   public void testBeginAngle() {
-    assertEquals(70, ((Melee) sword).getBeginAngle(), delta);
+    assertEquals(20, ((Melee) sword).getBeginAngle(), delta);
   }
 
   @Test
   public void testEndAngle() {
     assertEquals(20, ((Melee) sword).getEndAngle(), delta);
   }
-
 }

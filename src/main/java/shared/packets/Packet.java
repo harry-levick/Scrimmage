@@ -6,7 +6,6 @@ public abstract class Packet {
   protected byte[] data;
 
   public Packet() {
-
   }
 
   public byte[] getData() {
