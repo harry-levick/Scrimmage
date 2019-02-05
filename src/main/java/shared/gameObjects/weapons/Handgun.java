@@ -9,7 +9,7 @@ import shared.gameObjects.Utils.ObjectID;
  */
 public class Handgun extends Gun {
 
-  private static String imagePath = "images/weapons/handgun.jpg";
+  private static String imagePath = "images/weapons/handgun.png";
 
   /**
    * Constructor of the Handgun class

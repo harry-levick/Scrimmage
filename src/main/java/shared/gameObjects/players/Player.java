@@ -84,6 +84,7 @@ public class Player extends GameObject {
       animation.switchDefault();
     }
     if (InputHandler.click && holding != null) {
+      System.out.println("@Player, input("+InputHandler.x+", "+InputHandler.y+")");
       holding.fire(InputHandler.x, InputHandler.y);
     } //else punch
     setX(getX() + (vx * 0.0166));

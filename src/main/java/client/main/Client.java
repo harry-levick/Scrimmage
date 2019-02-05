@@ -248,5 +248,8 @@ public class Client extends Application {
     }
   }
 
+  public Group getRoot() {
+    return this.root;
+  }
 
 }

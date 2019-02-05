@@ -8,6 +8,7 @@ import javafx.scene.Group;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
+import shared.gameObjects.weapons.Handgun;
 
 public class LevelHandler {
 
@@ -18,10 +19,15 @@ public class LevelHandler {
   private HashMap<String, Map> menus;
   private GameState gameState;
   private Map map;
+  private Group root;
 
   public LevelHandler(Settings settings, Group root, boolean isClient) {
+    this.root = root;
     if (isClient) {
       clientPlayer = new Player(500, 500, UUID.randomUUID());
+      clientPlayer.setHolding(
+          new Handgun(550, 550, ObjectID.Weapon, 10, 10, "Handgun", 100, 5, 20, 10, UUID.randomUUID())
+        );
       clientPlayer.initialise(root);
       players.add(clientPlayer);
     }
@@ -83,6 +89,18 @@ public class LevelHandler {
   public ArrayList<GameObject> getGameObjects() {
     return gameObjects;
   }
+  
+  // Test
+  public void addGameObject(GameObject g) {
+    this.gameObjects.add(g);
+    g.initialise(this.root);
+  }
+  
+  public void delGameObject(GameObject g) {
+    g.destroy();
+    this.gameObjects.remove(g);
+  }
+  // End Test
 
   /**
    * List of all available maps

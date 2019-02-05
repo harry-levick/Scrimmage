@@ -100,6 +100,7 @@ public class LevelEditor extends Application {
               gameObjects.add(temp);
             } else if (cb.getValue() == "Player") {
               Player temp = new Player(event.getX(), event.getY(), uuid);
+              uuid = UUID.randomUUID();
               temp.initialise(root);
               gameObjects.add(temp);
             } else if (cb.getValue() == "Singleplayer Button") {

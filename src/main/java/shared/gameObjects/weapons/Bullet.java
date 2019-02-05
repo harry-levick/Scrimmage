@@ -1,6 +1,7 @@
 package shared.gameObjects.weapons;
 
 import java.util.UUID;
+import client.main.Client;
 import javafx.scene.image.Image;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
@@ -44,13 +45,25 @@ public class Bullet extends GameObject {
     this.deltaY = (this.speed * Math.sin(Math.atan(slope))) * ((mouseY > gunY) ? 1 : -1);
     this.bulletImage = getImage();
     this.isHit = false;
+    
+    Client.levelHandler.addGameObject(this);
 
     render();
   }
 
   public void fire() {
-    this.newX += deltaX;
-    this.newY += deltaY;
+    if (this.getX() < 1920 && this.getY() < 1080) {
+      this.newX += deltaX;
+      this.newY += deltaY;
+    } else {
+      System.out.println(this.toString() + " is to be destroyed");
+      Client.levelHandler.delGameObject(this);
+    }
+  }
+
+  @Override
+  public void initialiseAnimation() {
+    this.animation.supplyAnimation("default", new Image[]{this.bulletImage}); 
   }
 
   @Override
@@ -66,7 +79,9 @@ public class Bullet extends GameObject {
   @Override
   public void render() {
     super.render();
-    imageView.relocate(newX, newY);
+    //imageView.relocate(newX, newY);
+    imageView.setTranslateX(newX);
+    imageView.setTranslateY(newY);
   }
 
   @Override
@@ -80,6 +95,9 @@ public class Bullet extends GameObject {
     return null;
   }
 
+  // -------START-------
+  // Setters and Getters
+  // -------------------
   public Image getImage() {
     // generate a bullet image based on bulletWidth
     Image image = new Image(imagePath);
@@ -89,10 +107,7 @@ public class Bullet extends GameObject {
   public double getWidth() {
     return this.width;
   }
-
-  // -------START-------
-  // Setters and Getters
-  // -------------------
+  
   public void setWidth(double newWidth) {
     if (newWidth > 0) {
       this.width = newWidth;
@@ -111,10 +126,5 @@ public class Bullet extends GameObject {
   // -------------------
   // Setters and Getters
   // --------END--------
-
-  @Override
-  public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", new Image[]{this.bulletImage}); 
-  }
 
 }
