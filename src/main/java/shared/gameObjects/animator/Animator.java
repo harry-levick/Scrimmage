@@ -1,14 +1,15 @@
 package shared.gameObjects.animator;
 
-import javafx.scene.image.Image;
-
+import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import javafx.scene.image.Image;
 
 public class Animator {
 
   // Helpful variables
-  private HashMap<String, Image[]> animations;
-  private Image[] currentAnimation;
+  private HashMap<String, ArrayList<Image>> animations;
+  private ArrayList<Image> currentAnimation;
 
   private int intervalSpeed;
   private int tickCounter;
@@ -16,7 +17,7 @@ public class Animator {
   private int currentAnimationSize;
 
   public Animator() {
-    animations = new HashMap<String, Image[]>();
+    animations = new HashMap<>();
     intervalSpeed = 10;
     tickCounter = this.intervalSpeed;
     currentAnimationCounter = 0;
@@ -26,7 +27,11 @@ public class Animator {
     intervalSpeed = s;
   }
 
-  public void supplyAnimation(String animationName, Image[] images) {
+  public void supplyAnimation(String animationName, String... args) {
+    ArrayList<Image> images = new ArrayList<>();
+    for (String s : args) {
+      images.add(new Image(s.replace('/', File.separatorChar).trim()));
+    }
     animations.put(animationName, images);
     // Support for the default animation
     if (animationName.equals("default")) {
@@ -37,10 +42,10 @@ public class Animator {
 
   public void switchAnimation(String animationName) {
     try {
-      Image[] getAnimation = this.animations.get(animationName);
+      ArrayList<Image> getAnimation = this.animations.get(animationName);
       if (!currentAnimation.equals(getAnimation)) {
         currentAnimation = getAnimation;
-        currentAnimationSize = currentAnimation.length;
+        currentAnimationSize = currentAnimation.size();
         currentAnimationCounter = 0;
         tickCounter = intervalSpeed;
       }
@@ -67,6 +72,6 @@ public class Animator {
 
   public Image getImage() {
 
-    return currentAnimation[currentAnimationCounter];
+    return currentAnimation.get(currentAnimationCounter);
   }
 }

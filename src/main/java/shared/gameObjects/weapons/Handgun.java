@@ -1,14 +1,10 @@
 package shared.gameObjects.weapons;
 
-import javafx.scene.image.Image;
-import shared.gameObjects.Utils.ObjectID;
-
 import java.util.UUID;
+import shared.gameObjects.Utils.ObjectID;
 
 /** @author hlf764 The Handgun class. */
 public class Handgun extends Gun {
-
-  private static String imagePath = "images/weapons/handgun.jpg";
 
   /**
    * Constructor of the Handgun class
@@ -76,6 +72,6 @@ public class Handgun extends Gun {
 
   @Override
   public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", new Image[] {new Image(imagePath)});
+    this.animation.supplyAnimation("default", "images/weapons/handgun.jpg");
   }
 }

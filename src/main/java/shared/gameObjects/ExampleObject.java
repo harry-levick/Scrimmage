@@ -1,9 +1,8 @@
 package shared.gameObjects;
 
+import java.util.UUID;
 import javafx.scene.image.Image;
 import shared.gameObjects.Utils.ObjectID;
-
-import java.util.UUID;
 
 public class ExampleObject extends GameObject {
 
@@ -25,8 +24,7 @@ public class ExampleObject extends GameObject {
 
   // Initialise the animation
   public void initialiseAnimation() {
-    this.animation.supplyAnimation(
-        "default", new Image[] {new Image("images/platforms/stone/elementStone013.png")});
+    this.animation.supplyAnimation("default", "images/platforms/stone/elementStone013.png");
   }
 
   @Override
