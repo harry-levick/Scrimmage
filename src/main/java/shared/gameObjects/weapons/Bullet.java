@@ -1,7 +1,6 @@
 package shared.gameObjects.weapons;
 
 import java.util.UUID;
-import javafx.scene.image.Image;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 
@@ -10,7 +9,6 @@ import shared.gameObjects.Utils.ObjectID;
  */
 public class Bullet extends GameObject {
 
-  private static String imagePath = "images/weapons/bullet.png";
   public boolean isHit; // true if there is an object at that position
   private double width; // width of bullet
   private double speed; // speed of bullet
@@ -19,7 +17,6 @@ public class Bullet extends GameObject {
   private double slope; // the slope of the bullet path
   private double deltaX; // change in x in every update
   private double deltaY; // change in y in every update
-  private Image bulletImage; // image of the bullet
 
   public Bullet(
       double gunX, // gun initial x position
@@ -44,7 +41,6 @@ public class Bullet extends GameObject {
     // positive or negative direction
     this.deltaX = (this.speed * Math.cos(Math.atan(slope))) * ((mouseX > gunX) ? 1 : -1);
     this.deltaY = (this.speed * Math.sin(Math.atan(slope))) * ((mouseY > gunY) ? 1 : -1);
-    this.bulletImage = getImage();
     this.isHit = false;
 
     render();
@@ -82,11 +78,6 @@ public class Bullet extends GameObject {
     return null;
   }
 
-  public Image getImage() {
-    // generate a bullet image based on bulletWidth
-    Image image = new Image(imagePath);
-    return image;
-  }
 
   public double getWidth() {
     return this.width;
@@ -116,6 +107,6 @@ public class Bullet extends GameObject {
 
   @Override
   public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", new Image[]{this.bulletImage});
+    this.animation.supplyAnimation("default", "images/weapons/bullet.png");
   }
 }

@@ -3,12 +3,10 @@ package shared.gameObjects.players;
 import client.handlers.connectionHandler.ConnectionHandler;
 import client.handlers.inputHandler.InputHandler;
 import java.util.UUID;
-import javafx.scene.image.Image;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.weapons.Weapon;
 import shared.packets.PacketInput;
-import shared.util.Path;
 
 public class Player extends GameObject {
 
@@ -25,24 +23,13 @@ public class Player extends GameObject {
 
   // Initialise the animation 
   public void initialiseAnimation() {
-    Image[] insertImageList = {
-        new Image(Path.convert("images/player/player_idle.png"))
-    };
-    this.animation.supplyAnimation("default", insertImageList);
-
-    //Running left animation 
-    insertImageList = new Image[]{
-        new Image(Path.convert("images/player/player_left_walk1.png")),
-        new Image(Path.convert("images/player/player_left_walk2.png")),
-    };
-    this.animation.supplyAnimation("moveLeft", insertImageList);
-
-    //Running right animation 
-    insertImageList = new Image[]{
-        new Image(Path.convert("images/player/player_right_walk1.png")),
-        new Image(Path.convert("images/player/player_right_walk2.png")),
-    };
-    this.animation.supplyAnimation("moveRight", insertImageList);
+    this.animation.supplyAnimation("default", "images/player/player_idle.png");
+    this.animation.supplyAnimation("moveLeft",
+        "images/player/player_left_walk1.png",
+        "images/player/player_left_walk2.png");
+    this.animation.supplyAnimation("moveRight",
+        "images/player/player_right_walk1.png",
+        "images/player/player_right_walk2.png");
   }
 
   @Override
