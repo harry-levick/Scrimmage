@@ -46,11 +46,10 @@ abstract class Gun extends Weapon {
       boolean singleHanded,
       UUID uuid) {
 
-    super(x, y, id, damage, weight, name, true, false, ammo, uuid);
+    super(x, y, id, damage, weight, name, true, false, ammo, fireRate, uuid);
 
     this.bulletSpeed = bulletSpeed;
     this.bulletWidth = bulletWidth;
-    this.fireRate = fireRate;
     this.fullAutoFire = fullAutoFire;
     this.singleHanded = singleHanded;
   }
@@ -86,16 +85,6 @@ abstract class Gun extends Weapon {
   public void setBulletSpeed(double newSpeed) {
     if (newSpeed > 0 && newSpeed < 50.0) {
       this.bulletSpeed = newSpeed;
-    }
-  }
-
-  public int getFireRate() {
-    return this.fireRate;
-  }
-
-  public void setFireRate(int newFireRate) {
-    if (newFireRate > 0) {
-      this.fireRate = newFireRate;
     }
   }
 

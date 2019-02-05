@@ -5,7 +5,6 @@ import shared.gameObjects.Utils.ObjectID;
 
 public abstract class Melee extends Weapon {
   
-  protected int attackRate; // rate of attacking
   protected double range; // radius in pixels
   protected double beginAngle; // swing from beginAngle (relative to arm)
   protected double endAngle; // swing till endAngle (relative to arm)
@@ -18,14 +17,13 @@ public abstract class Melee extends Weapon {
       double weight,
       String name,
       int ammo,
-      int attackRate,
+      int fireRate,
       double range,
       double beginAngle,
       double endAngle,
       UUID uuid) {
 
-    super(x, y, id, damage, weight, name, false, true, -1, uuid);
-    this.attackRate = attackRate;
+    super(x, y, id, damage, weight, name, false, true, -1, fireRate, uuid);
     this.range = range;
     this.beginAngle = beginAngle;
     this.endAngle = endAngle;
@@ -45,21 +43,12 @@ public abstract class Melee extends Weapon {
   
   @Override
   public int getCoolDown() {
-    return MAX_COOLDOWN - this.attackRate;
+    return MAX_COOLDOWN - fireRate;
   }
 
   // -------------------
   // Setters and Getters
   // -------------------
-  public int getAttackRate() {
-    return this.attackRate;
-  }
-  
-  public void setAttackRate(int newAttackRate) {
-    if (newAttackRate > 0)
-      this.attackRate = newAttackRate;
-  }
-  
   public double getRange() {
     return this.range;
   }
