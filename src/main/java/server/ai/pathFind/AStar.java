@@ -78,15 +78,17 @@ public class AStar {
       if (parentNode != null) {
         this.botY = parent.botY + calcYChange(action);
         this.botX = parent.botY + calcXChange(action);
-        // Calculate the heuristic value of this node
-        this.remainingDistance = estimateRemainingDistance(action);
+        // Calculate the distance from the starting node to the current node
         distanceElapsed = parent.distanceElapsed + (parent.remainingDistance - remainingDistance);
       } else {
-        this.remainingDistance = calcRemainingH(enemy, getItems(sceneSnapshot));
+        // This is the starting node so distanceElapsed = 0
         distanceElapsed = 0;
         this.botX = bot.getX();
         this.botY = bot.getY();
       }
+      // Calculate the heuristic value of the node.
+      this.remainingDistance = calcRemainingH(enemy, getItems(sceneSnapshot));
+
       this.action = action;
       this.repetitions = repetitions;
     }
@@ -252,7 +254,7 @@ public class AStar {
     if (currentPlan.size() == 0) {
       // We are done planning, extract the plan and prepare the planner for the next planning
       // iteration.
-      //currentPlan = extractPlan();
+      currentPlan = extractPlan();
       initSearch();
     }
 
@@ -276,7 +278,7 @@ public class AStar {
     boolean currentGood = false;
 
     // Search until we're at the enemy coordinates
-    while ((openList.size() != 0) && (bot.getX() != enemy.getX()) && (bot.getY() != enemy.getY())) {
+    while ((openList.size() != 0) && !atEnemy()) {
       // Pick the best node from the open-list
       current = pickBestPos(openList);
       currentGood = false;
@@ -346,6 +348,19 @@ public class AStar {
   }
 
   /**
+   * Check if the current position of the bot is close enough to the enemy.
+   * @return true if the bot is close enough to the enemy.
+   */
+  private boolean atEnemy() {
+    double xDiff = bot.getX() - enemy.getX();
+    double yDiff = bot.getY() - enemy.getY();
+
+    if (xDiff <= 10 && yDiff <= 10)
+      return true;
+    else return false;
+  }
+
+  /**
    * Make a clone of the current world state (copying the bots state, all enemies, and some level
    * info).
    *
@@ -368,8 +383,6 @@ public class AStar {
 
     // Just do nothing if no best position exists
     if (bestPosition == null) {
-      actions.add(createAction(false, false, false, false));
-
       return actions;
     }
 
