@@ -65,9 +65,6 @@ public class AStar {
     // The action used to get to the child node.
     boolean[] action;
 
-    // Not sure on the use yet. - used in mario a*
-    int repetitions;
-
     public SearchNode(boolean[] action, SearchNode parent) {
       // Instantiate the sceneSnapshot with the world scene so that it is large enough to take
       // the copy of the world scene on the next line.
@@ -81,7 +78,7 @@ public class AStar {
         // Calculate the distance from the starting node to the current node
         distanceElapsed = parent.distanceElapsed + (parent.remainingDistance - remainingDistance);
       } else {
-        // This is the starting node so distanceElapsed = 0
+        // This is the starting node so distanceElapsed is 0
         distanceElapsed = 0;
         this.botX = bot.getX();
         this.botY = bot.getY();
@@ -90,7 +87,6 @@ public class AStar {
       this.remainingDistance = calcRemainingH(enemy, getItems(sceneSnapshot));
 
       this.action = action;
-      this.repetitions = repetitions;
     }
 
     private double calcXChange(boolean[] action) {
@@ -161,16 +157,6 @@ public class AStar {
       }
 
       return list;
-    }
-
-    /**
-     * Estimate the time remaining to get to the goal for a child node that uses the action.
-     *
-     * @param action The action to use.
-     * @return Time remaining.
-     */
-    public double estimateRemainingDistance(boolean[] action) {
-      return 0.0;
     }
 
     public double getRemainingDistance() {
