@@ -1,5 +1,6 @@
 package shared.gameObjects.menu.multiplayer;
 
+import client.Menu;
 import client.handlers.connectionHandler.ConnectionHandler;
 import client.main.Client;
 import java.util.UUID;
@@ -7,6 +8,8 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.menu.ButtonObject;
+import shared.handlers.levelHandler.GameState;
+import shared.handlers.levelHandler.Map;
 
 public class ButtonJoin extends ButtonObject {
 
@@ -31,15 +34,15 @@ public class ButtonJoin extends ButtonObject {
         "images/buttons/multiplayer_unpressed.png", "images/buttons/multiplayer_pressed.png");
   }
 
-  public void startListeners() {
-    button.setOnAction(new EventHandler<ActionEvent>() {
-      @Override
-      public void handle(ActionEvent event) {
-        Client.connectionHandler = new ConnectionHandler(address);
-        Client.connectionHandler.setDaemon(true);
-        Client.connectionHandler.start();
-        button.disarm();
-      }
-    });
+  public void doOnClick(MouseEvent e) {
+    super.doOnClick(e);
+    System.out.println("test");
+    Client.connectionHandler = new ConnectionHandler(address);
+    Client.connectionHandler.setDaemon(true);
+    Client.connectionHandler.start();
+    button.disarm();
+    Client.levelHandler.changeMap(new Map("Lobby", Menu.LOBBY.getMenuPath(), GameState.Lobby));
   }
+
+
 }

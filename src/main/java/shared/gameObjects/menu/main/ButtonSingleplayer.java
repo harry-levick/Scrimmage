@@ -1,6 +1,8 @@
 package shared.gameObjects.menu.main;
 
+import client.main.Client;
 import java.util.UUID;
+import javafx.scene.input.MouseEvent;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.menu.ButtonObject;
 
@@ -24,4 +26,11 @@ public class ButtonSingleplayer extends ButtonObject {
     super.initialiseAnimation(
         "images/buttons/singleplayer_unpressed.png", "images/buttons/singleplayer_pressed.png");
   }
+
+  public void doOnClick(MouseEvent e) {
+    super.doOnClick(e);
+    Client.levelHandler.changeMap(Client.levelHandler.getMaps().get(1));
+  }
+
+
 }
