@@ -252,8 +252,8 @@ public class AStar {
     if (currentPlan.size() == 0) {
       // We are done planning, extract the plan and prepare the planner for the next planning
       // iteration.
-      currentPlan = extractPlan();
-      startSearch();
+      //currentPlan = extractPlan();
+      initSearch();
     }
 
     search(enemy);
@@ -287,6 +287,7 @@ public class AStar {
       // Now act on what we get as a remaining distance.
       if (!current.visited && isInClosed(current)) {
         /**
+         * If the node is not directly visited, but it is close to a node that has been visited.
          * If the node is already in the closed list (i.e. has been explored before), put some
          * penalty on it and put it back into the pool.
          * Closed List -> Nodes too close to a node in the closed list are considered visited, even
@@ -386,7 +387,7 @@ public class AStar {
   /**
    * Initialise the planner
    */
-  private void startSearch() {
+  private void initSearch() {
     SearchNode startPosition = new SearchNode(null,null);
     startPosition.sceneSnapshot = backupState();
 
