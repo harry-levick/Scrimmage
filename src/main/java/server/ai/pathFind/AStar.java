@@ -162,29 +162,7 @@ public class AStar {
     public double getRemainingDistance() {
       return remainingDistance;
     }
-
-    /**
-     * Simulate the world state after we have applied the action of this node, using the parent
-     * state.
-     */
-    public double simulatePos() {
-      // Set the state to the parents scene
-      worldScene = parentNode.sceneSnapshot;
-      parentNode.sceneSnapshot = backupState();
-
-      for (int i = 0; i < repetitions; i++) {
-        // Run the simulator
-        advanceStep(action);
-      }
-      // Set the remaining distance after we've simulated the effects of our action.
-      remainingDistance = calcRemainingH(bot, getItems(sceneSnapshot));
-      if (visited) {
-        remainingDistance += visitedListPenalty;
-      }
-      sceneSnapshot = backupState();
-
-      return remainingDistance;
-    }
+    
 
     public void advanceStep(boolean[] action) {
       // Advance the world scene to a new scene that would be the case if we applied the action.
