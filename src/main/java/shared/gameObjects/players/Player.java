@@ -2,6 +2,8 @@ package shared.gameObjects.players;
 
 import client.handlers.connectionHandler.ConnectionHandler;
 import client.handlers.inputHandler.InputHandler;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.UUID;
 import javafx.scene.image.Image;
 import shared.gameObjects.GameObject;
@@ -24,24 +26,29 @@ public class Player extends GameObject {
   
   // Initialise the animation 
   public void initialiseAnimation() {
-    Image[] insertImageList = {
-        new Image("images/player/player_idle.png")  
-    };
-    this.animation.supplyAnimation("default", insertImageList); 
-    
-    //Running left animation 
-    insertImageList = new Image[]{
-        new Image("images/player/player_left_walk1.png"),  
-        new Image("images/player/player_left_walk2.png"),  
-    };
-    this.animation.supplyAnimation("moveLeft", insertImageList);
-    
-    //Running right animation 
-    insertImageList = new Image[]{
-        new Image("images/player/player_right_walk1.png"),  
-        new Image("images/player/player_right_walk2.png"),  
-    };
-    this.animation.supplyAnimation("moveRight", insertImageList);
+    try {
+      Image[] insertImageList = new Image[0];
+      insertImageList = new Image[]{
+          new Image(new FileInputStream("resources/images/player/player_idle.png"))
+      };
+      this.animation.supplyAnimation("default", insertImageList);
+
+      //Running left animation
+      insertImageList = new Image[]{
+          new Image(new FileInputStream("resources/images/player/player_left_walk1.png")),
+          new Image(new FileInputStream("resources/images/player/player_left_walk2.png")),
+      };
+      this.animation.supplyAnimation("moveLeft", insertImageList);
+
+      //Running right animation
+      insertImageList = new Image[]{
+          new Image(new FileInputStream("resources/images/player/player_right_walk1.png")),
+          new Image(new FileInputStream("resources/images/player/player_right_walk2.png")),
+      };
+      this.animation.supplyAnimation("moveRight", insertImageList);
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
