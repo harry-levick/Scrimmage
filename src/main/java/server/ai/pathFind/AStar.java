@@ -26,7 +26,6 @@ public class AStar {
   public SearchNode bestPosition;
   // The furthest position found by the planner (sometimes different to the best).
   public SearchNode furthestPosition;
-  double startingBotXPos;
   // The open list of A*, contains all the unexplored search nodes.
   ArrayList<SearchNode> openList;
   // The closed list of A*
@@ -59,8 +58,6 @@ public class AStar {
     double botX;
     double botY;
 
-    // Not sure on the use yet. - used in mario a*
-    boolean hasBeenHurt = false;
     boolean visited = false;
     // The action used to get to the child node.
     boolean[] action;
@@ -73,34 +70,38 @@ public class AStar {
       Collections.copy(sceneSnapshot, worldScene);
       this.parentNode = parent;
       if (parentNode != null) {
-        this.botY = parent.botY + calcYChange(action);
-        this.botX = parent.botY + calcXChange(action);
+        double xChange = calcXChange(action);
+        double yChange = calcYChange(action);
+        this.botY = parent.botY + yChange;
+        this.botX = parent.botX + xChange;
+        // Calculate the heuristic value of the node.
+        this.remainingDistance = calcRemainingH(enemy, getItems(sceneSnapshot));
         // Calculate the distance from the starting node to the current node
-        distanceElapsed = parent.distanceElapsed + (parent.remainingDistance - remainingDistance);
+        distanceElapsed = parent.distanceElapsed + Math.sqrt(Math.pow(xChange, 2) + Math.pow(yChange, 2));
       } else {
         // This is the starting node so distanceElapsed is 0
         distanceElapsed = 0;
         this.botX = bot.getX();
         this.botY = bot.getY();
+        // Calculate the heuristic value of the node.
+        this.remainingDistance = calcRemainingH(enemy, getItems(sceneSnapshot));
       }
-      // Calculate the heuristic value of the node.
-      this.remainingDistance = calcRemainingH(enemy, getItems(sceneSnapshot));
 
       this.action = action;
     }
 
     private double calcXChange(boolean[] action) {
       if (action[Bot.KEY_LEFT]) {
-        return -10; // TODO change
+        return -10.0; // TODO change
       } else if (action[Bot.KEY_RIGHT]) {
-        return 10; // TODO change
-      } else return 0;
+        return 10.0; // TODO change
+      } else return 0.0;
     }
 
     private double calcYChange(boolean[] action) {
       if (action[Bot.KEY_JUMP]) {
-        return -10; // TODO change
-      } else return 0;
+        return -10.0; // TODO change
+      } else return 0.0;
     }
 
     /**
@@ -109,7 +110,7 @@ public class AStar {
      * @return the distance
      */
     public double calcRemainingH(Player enemy, List<Weapon> allItems) {
-      Vector2 botPos = new Vector2((float) bot.getX(), (float) bot.getY());
+      Vector2 botPos = new Vector2((float) botX, (float) botY);
       Vector2 enemyPos = new Vector2((float) enemy.getX(), (float) enemy.getY());
       double totalH = botPos.exactMagnitude(enemyPos);
 
@@ -162,7 +163,6 @@ public class AStar {
     public double getRemainingDistance() {
       return remainingDistance;
     }
-    
 
     public void advanceStep(boolean[] action) {
       // Advance the world scene to a new scene that would be the case if we applied the action.
@@ -203,8 +203,6 @@ public class AStar {
   public AStar(List<GameObject> worldScene, Bot bot) {
     this.worldScene = worldScene;
     this.bot = bot;
-
-    closedList = new ArrayList<>();
     currentPlan = new ArrayList<>();
   }
 
@@ -215,14 +213,14 @@ public class AStar {
   public boolean[] optimise(Player enemy) {
     this.enemy = enemy;
 
-    if (currentPlan.size() == 0) {
-      // We are done planning, extract the plan and prepare the planner for the next planning
-      // iteration.
-      currentPlan = extractPlan();
+    // If there is no plan, or if the current plan no longer leads to the enemy, create a new plan.
+    if (currentPlan.size() == 0 || !atEnemy(bestPosition.botX, bestPosition.botY)) {
       initSearch();
+      // Run the search
+      search();
     }
-
-    search(enemy);
+    // Extract the plan from the search.
+    currentPlan = extractPlan();
 
     // Select the next action from our plan
     boolean[] action = new boolean[5];
@@ -236,19 +234,20 @@ public class AStar {
   /**
    * The main search function
    */
-  private void search(Player enemy) {
+  private void search() {
+    // Set the current node to the best position, in case the bot is already at the enemy.
     SearchNode current = bestPosition;
     // Is the current node good (= we're not getting hurt)
     boolean currentGood = false;
 
     // Search until we're at the enemy coordinates
-    while ((openList.size() != 0) && !atEnemy()) {
+    while ((openList.size() != 0) && !atEnemy(current.botX, current.botY)) {
       // Pick the best node from the open-list
       current = pickBestPos(openList);
       currentGood = false;
 
-      // Simulate the consequences of the action associated with the chosen node
-      double realRemainingDistance = current.simulatePos();
+      // get the heuristic value of the best node
+      double nodeH = current.getRemainingDistance();
 
       // Now act on what we get as a remaining distance.
       if (!current.visited && isInClosed(current)) {
@@ -259,16 +258,11 @@ public class AStar {
          * Closed List -> Nodes too close to a node in the closed list are considered visited, even
          * though they are a bit different.
          */
-        realRemainingDistance += visitedListPenalty;
+        nodeH += visitedListPenalty;
         current.visited = true;
-        current.remainingDistance = realRemainingDistance;
+        current.remainingDistance = nodeH;
+        openList.add(current);
 
-        openList.add(current);
-      } else if (realRemainingDistance - current.remainingDistance > 1) {
-        // The current node is not as good as anticipated. Put this back into the open list and
-        // look for the best node again.
-        current.remainingDistance = realRemainingDistance;
-        openList.add(current);
       } else {
         // Accept the node
         currentGood = true;
@@ -276,11 +270,13 @@ public class AStar {
         closedList.add(current);
         // Add all children of the current node to the open list.
         openList.addAll(current.generateChildren());
+
       }
 
       if (currentGood) {
         // The current node is the best node
         bestPosition = current;
+
       }
 
     }
@@ -315,9 +311,9 @@ public class AStar {
    * Check if the current position of the bot is close enough to the enemy.
    * @return true if the bot is close enough to the enemy.
    */
-  private boolean atEnemy() {
-    double xDiff = bot.getX() - enemy.getX();
-    double yDiff = bot.getY() - enemy.getY();
+  private boolean atEnemy(double bX, double bY) {
+    double xDiff = bX - enemy.getX();
+    double yDiff = bY - enemy.getY();
 
     if (xDiff <= 10 && yDiff <= 10)
       return true;
@@ -352,10 +348,8 @@ public class AStar {
 
     SearchNode current = bestPosition;
     while (current.parentNode != null) {
-
-      for (int i = 0; i < current.repetitions; i++) {
         actions.add(0, current.action);
-      }
+        current = current.parentNode;
     }
 
     return actions;
@@ -369,9 +363,8 @@ public class AStar {
     startPosition.sceneSnapshot = backupState();
 
     openList = new ArrayList<SearchNode>();
-    closedList.clear();
+    closedList = new ArrayList<SearchNode>();
     openList.addAll(startPosition.generateChildren());
-    startingBotXPos = bot.getX();
 
     bestPosition = startPosition;
     furthestPosition = startPosition;

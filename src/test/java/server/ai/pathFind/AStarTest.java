@@ -23,7 +23,7 @@ public class AStarTest {
     AStar AStarTest = new AStar(allObjs, testBot);
 
     boolean[] action = AStarTest.optimise(testPlayer);
-
+    
     if (action[Bot.KEY_JUMP])
       System.out.println("JUMP");
     if (action[Bot.KEY_RIGHT])
