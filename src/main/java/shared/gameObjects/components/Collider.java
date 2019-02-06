@@ -1,6 +1,7 @@
 package shared.gameObjects.components;
 
 import shared.gameObjects.GameObject;
+import shared.physics.data.Collision;
 import shared.physics.types.ColliderType;
 import shared.util.maths.Vector2;
 
@@ -27,6 +28,24 @@ public abstract class Collider extends Component implements Serializable {
     this.trigger = trigger;
   }
 
+  public Collision resolveCollision(BoxCollider a, Collider b) {
+    switch (b.getColliderType()) {
+      case BOX:
+        if (boxBoxCollision(a, (BoxCollider) b)) {}
+
+        break;
+      case EDGE:
+        if (boxEdgeCollision(a, (EdgeCollider) b)) {}
+
+        break;
+      case CIRCLE:
+        if (boxCircleCollision(a, (CircleCollider) b)) {}
+
+        break;
+    }
+
+    return null;
+  }
   // Static Collision Methods
   public static boolean boxCircleCollision(BoxCollider box, CircleCollider circle) {
     float clampDist =

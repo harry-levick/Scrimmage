@@ -137,6 +137,22 @@ public class Rigidbody extends Component implements Serializable {
     move(distance, 0);
   }
 
+  public void moveX(float distance) {
+    move(new Vector2(distance, 0));
+  }
+
+  public void moveX(float distance, float time) {
+    move(new Vector2(distance, 0), time);
+  }
+
+  public void moveY(float distance) {
+    move(new Vector2(0, distance));
+  }
+
+  public void moveY(float distance, float time) {
+    move(new Vector2(0, distance), time);
+  }
+
   // Update Methods
 
   /** An update method; all collision updates happen here */
@@ -280,7 +296,7 @@ public class Rigidbody extends Component implements Serializable {
 }
 
 /** Helper class to apply force over time without needed to thread/coroutine */
-class ForceTime {
+class ForceTime implements Serializable {
 
   private Vector2 force;
   private int iterations;

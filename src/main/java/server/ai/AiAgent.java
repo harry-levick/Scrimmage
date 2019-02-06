@@ -2,7 +2,6 @@ package server.ai;
 
 import server.ai.pathFind.AStar;
 import shared.gameObjects.GameObject;
-import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
 
 import java.util.ArrayList;
@@ -27,7 +26,12 @@ public class AiAgent {
   Player targetPlayer;
   AStar pathFinder;
 
-  public AiAgent(double xPos, double yPos, double sizeX, double sizeY, UUID uuid,
+  public AiAgent(
+      double xPos,
+      double yPos,
+      double sizeX,
+      double sizeY,
+      UUID uuid,
       ArrayList<GameObject> gameObjects) {
     this.bot = new Bot(xPos, yPos, sizeX, sizeY, uuid);
     this.state = FSA.INITIAL_STATE;

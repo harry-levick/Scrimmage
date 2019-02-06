@@ -1,11 +1,11 @@
 package shared.gameObject.UI;
 
-import java.util.UUID;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
-import javafx.scene.shape.*;
 
-public class Health extends GameObject{
+import java.util.UUID;
+
+public class Health extends GameObject {
 
   public Health(double x, double y, double sizeX, double sizeY, ObjectID id, UUID objectUUID) {
     super(x, y, sizeX, sizeY, id, objectUUID);
@@ -13,15 +13,11 @@ public class Health extends GameObject{
   }
 
   @Override
-  public void initialiseAnimation() {
-  }
+  public void initialiseAnimation() {}
 
   @Override
   public String getState() {
     // TODO Auto-generated method stub
     return null;
   }
-  
-  
-
 }

@@ -1,9 +1,10 @@
 package shared.util;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 import java.io.File;
-import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class PathTest {
 
@@ -13,5 +14,4 @@ public class PathTest {
     System.out.println(output);
     assertEquals(output, "images" + File.separator + "player" + File.separator + "walking.png");
   }
-
 }

@@ -2,21 +2,20 @@ package server.ai.pathFind;
 
 /** @author Harry Levick (hxl799) */
 
-import java.util.stream.Collectors;
 import server.ai.Bot;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.players.Player;
-
-import java.util.ArrayList;
-import java.util.List;
 import shared.gameObjects.weapons.Weapon;
 import shared.util.maths.Vector2;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
- * The main file for the A* planner.
- * - search(): This function is the core search algorithm, searching for an optimal path.
- * - optimise(): Function controlling the search and extracting plans to return to the
- * Application Programming Interface.
+ * The main file for the A* planner. - search(): This function is the core search algorithm,
+ * searching for an optimal path. - optimise(): Function controlling the search and extracting plans
+ * to return to the Application Programming Interface.
  */
 public class AStar {
 
@@ -102,6 +101,7 @@ public class AStar {
 
     /**
      * Calculate the heuristic value for the node.
+     *
      * @param enemy the target / goal
      * @return the distance
      */
@@ -121,8 +121,8 @@ public class AStar {
 
     /**
      * Find all items in the world, currently only finds weapons because no such item yet
-     * implemented.
-     * TODO change for items.
+     * implemented. TODO change for items.
+     *
      * @param allObjects all objects in the world
      * @return list of weapons
      */
@@ -234,6 +234,7 @@ public class AStar {
 
   /**
    * Main function, this calls the A* planner and extracts and returns the optimal action.
+   *
    * @return The action to take.
    */
   public boolean[] optimise(Player enemy) {
@@ -270,9 +271,7 @@ public class AStar {
     return action;
   }
 
-  /**
-   * The main search function
-   */
+  /** The main search function */
   private void search(Player enemy) {
     SearchNode current = bestPosition;
     // Is the current node good (= we're not getting hurt)
@@ -291,9 +290,8 @@ public class AStar {
       if (!current.visited && isInClosed(current)) {
         /**
          * If the node is already in the closed list (i.e. has been explored before), put some
-         * penalty on it and put it back into the pool.
-         * Closed List -> Nodes too close to a node in the closed list are considered visited, even
-         * though they are a bit different.
+         * penalty on it and put it back into the pool. Closed List -> Nodes too close to a node in
+         * the closed list are considered visited, even though they are a bit different.
          */
         realRemainingDistance += visitedListPenalty;
         current.visited = true;
@@ -313,6 +311,7 @@ public class AStar {
 
   /**
    * Returns if a node is already in the closed list
+   *
    * @param node
    * @return
    */
@@ -326,8 +325,7 @@ public class AStar {
 
     for (SearchNode n : closedList) {
 
-      if ((Math.abs(n.botX) - nodeX < xDiff) &&
-          (Math.abs(n.botY) - nodeY < yDiff)) {
+      if ((Math.abs(n.botX) - nodeX < xDiff) && (Math.abs(n.botY) - nodeY < yDiff)) {
         return true;
       }
     }
@@ -347,7 +345,6 @@ public class AStar {
 
     return sceneCopy;
   }
-
 
   /**
    * Extract the plan by taking the best node and going back to the root, recording the actions
@@ -376,11 +373,9 @@ public class AStar {
     return actions;
   }
 
-  /**
-   * Initialise the planner
-   */
+  /** Initialise the planner */
   private void startSearch() {
-    SearchNode startPosition = new SearchNode(null,null);
+    SearchNode startPosition = new SearchNode(null, null);
 
     openList = new ArrayList<SearchNode>();
     closedList.clear();
@@ -423,6 +418,7 @@ public class AStar {
 
   /**
    * Check to see if the action of jumping makes any difference in the given world state.
+   *
    * @param currentPos The state in which we are going to jump.
    * @param checkParent
    * @return

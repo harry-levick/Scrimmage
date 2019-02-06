@@ -1,11 +1,5 @@
 package shared.gameObjects;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
 import shared.gameObjects.Utils.ObjectID;
@@ -14,6 +8,9 @@ import shared.gameObjects.animator.Animator;
 import shared.gameObjects.components.Component;
 import shared.gameObjects.components.ComponentType;
 import shared.util.maths.Vector2;
+
+import java.io.Serializable;
+import java.util.*;
 
 public abstract class GameObject implements Serializable {
 
