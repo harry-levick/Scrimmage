@@ -50,11 +50,13 @@ public class Handgun extends Gun {
   @Override
   public void render() {
     super.render();
+    imageView.setTranslateX(this.getX());
+    imageView.setTranslateY(this.getY());
   }
 
   @Override
   public void interpolatePosition(float alpha) {
-
+    
   }
 
   @Override
@@ -64,6 +66,7 @@ public class Handgun extends Gun {
   
   @Override
   public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", new Image[]{new Image(imagePath)}); 
+    this.animation.supplyAnimation("default", new Image[]{new Image(imagePath)});
+    System.out.println(this.animation.getImage() != null);
   }
 }
