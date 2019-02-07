@@ -93,6 +93,11 @@ public class Player extends GameObject {
     this.getHolding().setX(this.getX());
     this.getHolding().setY(this.getY());
 
+    if (this.getHolding() != null) {
+      this.getHolding().setX(this.getX());
+      this.getHolding().setY(this.getY());
+    }
+    
     /** If multiplayer then send input to server */
     if (multiplayer) {
       PacketInput input = new PacketInput(InputHandler.x, InputHandler.y, InputHandler.leftKey,
