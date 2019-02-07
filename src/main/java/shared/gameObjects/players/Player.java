@@ -88,6 +88,10 @@ public class Player extends GameObject {
       holding.fire(InputHandler.x, InputHandler.y);
     } //else punch
     setX(getX() + (vx * 0.0166));
+    
+    // Update weapon's position
+    this.getHolding().setX(this.getX());
+    this.getHolding().setY(this.getY());
 
     /** If multiplayer then send input to server */
     if (multiplayer) {
