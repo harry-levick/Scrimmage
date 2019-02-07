@@ -67,6 +67,8 @@ public abstract class GameObject implements Serializable {
 
   // Client Side only
   public void render() {
+    imageView.setFitHeight(transform.getSize().getY());
+    imageView.setFitWidth(transform.getSize().getX());
     imageView.setImage(animation.getImage());
   }
   // Collision engine

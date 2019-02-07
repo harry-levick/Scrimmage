@@ -194,13 +194,15 @@ public class LevelEditor extends Application {
     UUID uuid = UUID.randomUUID();
     if (cb.getValue() == "ExampleObject") {
       GameObject temp =
-          new ExampleObject(getGridX(event.getX()), getGridY(event.getY()), 100, 100,
+          new ExampleObject(getGridX(event.getX()), getGridY(event.getY()), getScaledSize(5),
+              getScaledSize(2),
               ObjectID.Bot, uuid);
       temp.initialise(root);
       gameObjects.add(temp);
     } else if (cb.getValue() == "Player Spawn Point") {
       if (mapDataObject.getSpawnPoints().size() < spawnPointLimit) {
-        Player temp = new Player(getGridX(event.getX()), getGridY(event.getY()), 100, 100,
+        Player temp = new Player(getGridX(event.getX()), getGridY(event.getY()), getScaledSize(2),
+            getScaledSize(3),
             uuid);
         temp.initialise(root);
         playerSpawns.add(temp);
@@ -220,25 +222,29 @@ public class LevelEditor extends Application {
 
     } else if (cb.getValue() == "Singleplayer Button") {
       ButtonSingleplayer temp =
-          new ButtonSingleplayer(getGridX(event.getX()), getGridY(event.getY()), 100, 100,
+          new ButtonSingleplayer(getGridX(event.getX()), getGridY(event.getY()), getScaledSize(6),
+              getScaledSize(2),
               ObjectID.Bot, uuid);
       temp.initialise(root);
       gameObjects.add(temp);
     } else if (cb.getValue() == "Multiplayer Button") {
       ButtonMultiplayer temp =
-          new ButtonMultiplayer(getGridX(event.getX()), getGridY(event.getY()), 100, 100,
+          new ButtonMultiplayer(getGridX(event.getX()), getGridY(event.getY()), getScaledSize(6),
+              getScaledSize(2),
               ObjectID.Bot, uuid);
       temp.initialise(root);
       gameObjects.add(temp);
     } else if (cb.getValue() == "Settings Button") {
       ButtonSettings temp =
-          new ButtonSettings(getGridX(event.getX()), getGridY(event.getY()), 100, 100,
+          new ButtonSettings(getGridX(event.getX()), getGridY(event.getY()), getScaledSize(6),
+              getScaledSize(2),
               ObjectID.Bot, uuid);
       temp.initialise(root);
       gameObjects.add(temp);
     } else if (cb.getValue() == "Level Editor Button") {
       ButtonLeveleditor temp =
-          new ButtonLeveleditor(getGridX(event.getX()), getGridY(event.getY()), 100, 100,
+          new ButtonLeveleditor(getGridX(event.getX()), getGridY(event.getY()), getScaledSize(6),
+              getScaledSize(2),
               ObjectID.Bot, uuid);
       temp.initialise(root);
       gameObjects.add(temp);
@@ -247,8 +253,8 @@ public class LevelEditor extends Application {
           new Handgun(
               getGridX(event.getX()),
               getGridY(event.getY()),
-              100,
-              100,
+              getScaledSize(2),
+              getScaledSize(2),
               ObjectID.Weapon,
               10,
               10,
@@ -275,5 +281,9 @@ public class LevelEditor extends Application {
         //todo add removal
       }
     }
+  }
+
+  private double getScaledSize(int gridSquaresCovered) {
+    return gridSizePX * gridSquaresCovered;
   }
 }

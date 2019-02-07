@@ -16,7 +16,7 @@ public class Player extends GameObject {
   private double vx;
 
   public Player(double x, double y, double sizeX, double sizeY, UUID playerUUID) {
-    super(x, y, 100, 100, ObjectID.Player, playerUUID);
+    super(x, y, sizeX, sizeY, ObjectID.Player, playerUUID);
     this.health = 100;
     holding = null;
   }
