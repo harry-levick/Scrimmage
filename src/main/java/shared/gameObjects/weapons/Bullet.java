@@ -3,8 +3,13 @@ package shared.gameObjects.weapons;
 import java.util.UUID;
 import client.main.Client;
 import javafx.scene.image.Image;
+import shared.util.maths.Vector2;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.components.Rigidbody;
+import shared.physics.data.AngularData;
+import shared.physics.data.MaterialProperty;
+import shared.physics.types.RigidbodyType;
 
 /**
  * @author hlf764
@@ -20,7 +25,9 @@ public class Bullet extends GameObject {
   private double slope;     // the slope of the bullet path
   private double deltaX;    // change in x in every update
   private double deltaY;    // change in y in every update
+  private Vector2 vector;
   private Image bulletImage;// image of the bullet
+  Rigidbody rb = new Rigidbody(RigidbodyType.DYNAMIC, 100f, 100f, 0.1f, new MaterialProperty(0, 0, 0), new AngularData(0, 0, 0, 0), this);
 
   public Bullet(
       double gunX,          // gun initial x position
@@ -43,6 +50,13 @@ public class Bullet extends GameObject {
     // positive or negative direction
     this.deltaX = getDeltaX(mouseX, mouseY, slope);
     this.deltaY = getDeltaY(mouseX, mouseY, slope);
+    
+     
+    addComponent(rb);
+    rb.setVelocity(new Vector2(100f, 0f));
+    
+    
+    
     this.bulletImage = getImage();
     this.isHit = false;
     
@@ -63,13 +77,19 @@ public class Bullet extends GameObject {
 
   @Override
   public void update() {
+    /*
     if ((0 < this.newX && this.newX < 1920) && (0 < this.newY && this.newY < 1080))
       this.fire();
     else {
       System.out.println(this.toString() + " is to be destroyed");
       Client.levelHandler.delGameObject(this);
     }
-
+    */
+    System.out.println(String.format("%f,%f", this.getX(), this.getY()));
+    //rb.move(new Vector2(-15f, -15f));
+    //rb.setVelocity(new Vector2(100f, 0f));
+    rb.update();
+    super.update();
     // if something is in this position (will take width into account later)
     // isHit = true;
     // apply effect (deduct hp, sound, physics)
@@ -80,8 +100,8 @@ public class Bullet extends GameObject {
   public void render() {
     super.render();
     //imageView.relocate(newX, newY);
-    imageView.setTranslateX(newX);
-    imageView.setTranslateY(newY);
+    imageView.setTranslateX(this.getX());
+    imageView.setTranslateY(this.getY());
   }
 
   @Override

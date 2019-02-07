@@ -26,7 +26,7 @@ public class LevelHandler {
     if (isClient) {
       clientPlayer = new Player(500, 500, UUID.randomUUID());
       clientPlayer.setHolding(
-          new Handgun(500, 500, ObjectID.Weapon, 10, 10, "Handgun", 100, 5, 20, 10, UUID.randomUUID())
+          new Handgun(500, 500, ObjectID.Weapon, 10, 10, "Handgun", 100, 1, 50, 10, UUID.randomUUID())
         );
       clientPlayer.initialise(root);
       players.add(clientPlayer);
