@@ -16,6 +16,7 @@ import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 import shared.gameObjects.ExampleObject;
 import shared.gameObjects.GameObject;
+import shared.gameObjects.MapDataObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.menu.main.ButtonLeveleditor;
 import shared.gameObjects.menu.main.ButtonMultiplayer;
@@ -23,11 +24,13 @@ import shared.gameObjects.menu.main.ButtonSettings;
 import shared.gameObjects.menu.main.ButtonSingleplayer;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.Handgun;
+import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.MapLoader;
 
 public class LevelEditor extends Application {
 
   private ArrayList<GameObject> gameObjects;
+  private MapDataObject mapDataObject;
   private boolean snapToGrid = true;
   private ChoiceBox cb = new ChoiceBox();
 
@@ -39,11 +42,11 @@ public class LevelEditor extends Application {
   public void start(Stage primaryStage) {
     primaryStage.setTitle("Level Editor");
     Group root = new Group();
-    gameObjects = new ArrayList<>();
+    initialiseNewMap();
 
     // Example of loading map
     // gameObjects = MapLoader.loadMap("menus.map");
-    gameObjects.forEach(gameObject -> gameObject.initialise(root));
+    //gameObjects.forEach(gameObject -> gameObject.initialise(root));
 
     addButtons(root);
 
@@ -157,7 +160,7 @@ public class LevelEditor extends Application {
         new EventHandler<ActionEvent>() {
           @Override
           public void handle(ActionEvent event) {
-            MapLoader.saveMap(gameObjects, "menu.map");
+            MapLoader.saveMap(gameObjects, mapDataObject, "menu.map");
           }
         });
     btnSave.setLayoutX(200);
@@ -187,5 +190,10 @@ public class LevelEditor extends Application {
     root.getChildren().add(cb);
     root.getChildren().add(btnSave);
     root.getChildren().add(btnToggleGrid);
+  }
+
+  private void initialiseNewMap() {
+    gameObjects = new ArrayList<>();
+    mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.IN_GAME);
   }
 }

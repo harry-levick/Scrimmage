@@ -1,18 +1,27 @@
 package shared.handlers.levelHandler;
 
-import shared.gameObjects.GameObject;
-
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
+import shared.gameObjects.GameObject;
+import shared.gameObjects.MapDataObject;
 
 public class MapLoader {
 
-  public static void saveMap(ArrayList<GameObject> gameObjects, String path) {
+  public static void saveMap(ArrayList<GameObject> gameObjects, MapDataObject mapDataObject,
+      String path) {
     try {
       FileOutputStream fos = new FileOutputStream(path);
       ObjectOutputStream oos = new ObjectOutputStream(fos);
+      gameObjects.add(mapDataObject);
       oos.writeObject(gameObjects);
     } catch (FileNotFoundException e) {
       e.printStackTrace();
