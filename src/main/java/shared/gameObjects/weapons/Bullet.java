@@ -23,8 +23,8 @@ public class Bullet extends GameObject {
   private double newX;      // new x position when update() is called
   private double newY;      // new y position when update() is called
   private double slope;     // the slope of the bullet path
-  private double deltaX;    // change in x in every update
-  private double deltaY;    // change in y in every update
+  private float deltaX;     // change in x in every update
+  private float deltaY;     // change in y in every update
   private Vector2 vector;
   private Image bulletImage;// image of the bullet
   Rigidbody rb = new Rigidbody(RigidbodyType.DYNAMIC, 100f, 100f, 0.1f, new MaterialProperty(0, 0, 0), new AngularData(0, 0, 0, 0), this);
@@ -48,12 +48,13 @@ public class Bullet extends GameObject {
     // deltaX and deltaY show the change in x and y values in every updates
     // The last bit of the expression shows whether x and y should progress in
     // positive or negative direction
-    this.deltaX = getDeltaX(mouseX, mouseY, slope);
-    this.deltaY = getDeltaY(mouseX, mouseY, slope);
+    this.deltaX = getDeltaX(mouseX, mouseY);
+    this.deltaY = getDeltaY(mouseX, mouseY);
     
      
     addComponent(rb);
-    rb.setVelocity(new Vector2(100f, 0f));
+    rb.setVelocity(new Vector2(deltaX * 5f, deltaY * 5f));
+    //rb.move(new Vector2((float)(mouseX-gunX)*1.5f, (float)(mouseY-gunY)*1.5f));
     
     
     
@@ -87,7 +88,6 @@ public class Bullet extends GameObject {
     */
     System.out.println(String.format("%f,%f", this.getX(), this.getY()));
     //rb.move(new Vector2(-15f, -15f));
-    //rb.setVelocity(new Vector2(100f, 0f));
     rb.update();
     super.update();
     // if something is in this position (will take width into account later)
@@ -115,26 +115,16 @@ public class Bullet extends GameObject {
     return null;
   }
   
-  private double getDeltaX(double mouseX, double mouseY, double slope) {
-    double theta = Math.abs(Math.atan(slope));
-    double cosTheta = Math.abs(Math.cos(theta));
-    double deltaX = speed * cosTheta;
+  private float getDeltaX(double mouseX, double mouseY) {
+    double deltaX = mouseX - this.newX;
     
-    if (mouseX < this.newX)
-      deltaX *= -1;
-      
-    return deltaX;
+    return (float)deltaX;
   }
   
-  private double getDeltaY(double mouseX, double mouseY, double slope) {
-    double theta = Math.abs(Math.atan(slope));
-    double cosTheta = Math.abs(Math.cos(theta));
-    double deltaY = speed * cosTheta;
+  private float getDeltaY(double mouseX, double mouseY) {
+    double deltaY = mouseY - this.newY;
     
-    if (mouseY < this.newY)
-      deltaY *= -1;
-      
-    return deltaY;
+    return (float)deltaY;
   }
 
   // -------START-------
