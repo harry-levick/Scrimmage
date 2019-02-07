@@ -34,6 +34,15 @@ public class LevelEditor extends Application {
   private boolean snapToGrid = true;
   private ChoiceBox cb = new ChoiceBox();
 
+
+  private int stageSizeX = 1920; //todo autofetch
+  private int stageSizeY = 1080;
+  private int gridSizePX = 40;
+  private int gridSizeX = stageSizeX / gridSizePX; //40 px blocks
+  private int gridSizeY = stageSizeY / gridSizePX;
+
+
+
   public static void main(String[] args) {
     Application.launch(args);
   }
@@ -50,7 +59,7 @@ public class LevelEditor extends Application {
 
     addButtons(root);
 
-    Scene scene = new Scene(root, 1920, 1080);
+    Scene scene = new Scene(root, stageSizeX, stageSizeY);
     scene.setOnMouseClicked(
         new EventHandler<MouseEvent>() {
           @Override
@@ -58,38 +67,44 @@ public class LevelEditor extends Application {
             UUID uuid = UUID.randomUUID();
             if (cb.getValue() == "ExampleObject") {
               GameObject temp =
-                  new ExampleObject(event.getX(), event.getY(), 100, 100, ObjectID.Bot, uuid);
+                  new ExampleObject(getGridX(event.getX()), getGridY(event.getY()), 100, 100,
+                      ObjectID.Bot, uuid);
               temp.initialise(root);
               gameObjects.add(temp);
             } else if (cb.getValue() == "Player") {
-              Player temp = new Player(event.getX(), event.getY(), 100, 100, uuid);
+              Player temp = new Player(getGridX(event.getX()), getGridY(event.getY()), 100, 100,
+                  uuid);
               temp.initialise(root);
               gameObjects.add(temp);
             } else if (cb.getValue() == "Singleplayer Button") {
               ButtonSingleplayer temp =
-                  new ButtonSingleplayer(event.getX(), event.getY(), 100, 100, ObjectID.Bot, uuid);
+                  new ButtonSingleplayer(getGridX(event.getX()), getGridY(event.getY()), 100, 100,
+                      ObjectID.Bot, uuid);
               temp.initialise(root);
               gameObjects.add(temp);
             } else if (cb.getValue() == "Multiplayer Button") {
               ButtonMultiplayer temp =
-                  new ButtonMultiplayer(event.getX(), event.getY(), 100, 100, ObjectID.Bot, uuid);
+                  new ButtonMultiplayer(getGridX(event.getX()), getGridY(event.getY()), 100, 100,
+                      ObjectID.Bot, uuid);
               temp.initialise(root);
               gameObjects.add(temp);
             } else if (cb.getValue() == "Settings Button") {
               ButtonSettings temp =
-                  new ButtonSettings(event.getX(), event.getY(), 100, 100, ObjectID.Bot, uuid);
+                  new ButtonSettings(getGridX(event.getX()), getGridY(event.getY()), 100, 100,
+                      ObjectID.Bot, uuid);
               temp.initialise(root);
               gameObjects.add(temp);
             } else if (cb.getValue() == "Level Editor Button") {
               ButtonLeveleditor temp =
-                  new ButtonLeveleditor(event.getX(), event.getY(), 100, 100, ObjectID.Bot, uuid);
+                  new ButtonLeveleditor(getGridX(event.getX()), getGridY(event.getY()), 100, 100,
+                      ObjectID.Bot, uuid);
               temp.initialise(root);
               gameObjects.add(temp);
             } else if (cb.getValue() == "Handgun") {
               Handgun temp =
                   new Handgun(
-                      event.getX(),
-                      event.getY(),
+                      getGridX(event.getX()),
+                      getGridY(event.getY()),
                       100,
                       100,
                       ObjectID.Weapon,
@@ -119,21 +134,21 @@ public class LevelEditor extends Application {
 
   private ArrayList<Line> redrawGrid() {
     // sets 10x10 grid based on scene size
-    int sceneX = 1920; // size of scene TODO fetch automatically
-    int sceneY = 1080;
-    int gridX = 20;
-    int gridY = 20;
+    int sceneX = stageSizeX;
+    int sceneY = stageSizeY;
+    int gridX = gridSizeX;
+    int gridY = gridSizeY;
 
     ArrayList<Line> gridlines = new ArrayList<Line>();
     if (snapToGrid) {
       for (int i = 0; i < gridX; i++) {
         int xPos = (sceneX / gridX) * i;
-        Line line = new Line(xPos, 0, xPos, 1080);
+        Line line = new Line(xPos, 0, xPos, stageSizeY);
         gridlines.add(line);
       }
       for (int i = 0; i < gridY; i++) {
         int yPos = (sceneY / gridY) * i;
-        Line line = new Line(0, yPos, 1920, yPos);
+        Line line = new Line(0, yPos, stageSizeX, yPos);
         gridlines.add(line);
       }
     }
@@ -173,10 +188,13 @@ public class LevelEditor extends Application {
           @Override
           public void handle(ActionEvent event) {
             snapToGrid = !snapToGrid;
-            ArrayList<Line> gridlines = redrawGrid();
-            for (Line line : gridlines) {
-              root.getChildren().add(line);
+            String append;
+            if (snapToGrid) {
+              append = "ON";
+            } else {
+              append = "OFF";
             }
+            btnToggleGrid.setText("Toggle Snap to Grid: " + append);
           }
         });
     btnToggleGrid.setLayoutX(300);
@@ -195,5 +213,21 @@ public class LevelEditor extends Application {
   private void initialiseNewMap() {
     gameObjects = new ArrayList<>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.IN_GAME);
+  }
+
+  private double getGridX(double eventX) {
+    if (snapToGrid) {
+      return eventX - (eventX % gridSizePX);
+    } else {
+      return eventX;
+    }
+  }
+
+  private double getGridY(double eventY) {
+    if (snapToGrid) {
+      return eventY - (eventY % gridSizePX);
+    } else {
+      return eventY;
+    }
   }
 }
