@@ -1,5 +1,6 @@
 package shared.gameObjects.menu;
 
+import java.util.UUID;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
@@ -7,8 +8,6 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
-
-import java.util.UUID;
 
 public abstract class ButtonObject extends GameObject {
 

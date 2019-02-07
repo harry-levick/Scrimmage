@@ -1,9 +1,8 @@
 package shared.gameObjects.weapons;
 
+import java.util.UUID;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
-
-import java.util.UUID;
 
 /** @author hlf764 The abstract class for all weapons in the game. */
 public abstract class Weapon extends GameObject {

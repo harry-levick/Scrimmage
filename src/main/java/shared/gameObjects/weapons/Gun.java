@@ -1,8 +1,7 @@
 package shared.gameObjects.weapons;
 
-import shared.gameObjects.Utils.ObjectID;
-
 import java.util.UUID;
+import shared.gameObjects.Utils.ObjectID;
 
 /** @author hlf764 The abstract class for all guns type weapon. */
 abstract class Gun extends Weapon {

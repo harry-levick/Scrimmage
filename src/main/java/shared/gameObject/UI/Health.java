@@ -1,9 +1,8 @@
 package shared.gameObject.UI;
 
+import java.util.UUID;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
-
-import java.util.UUID;
 
 public class Health extends GameObject {
 

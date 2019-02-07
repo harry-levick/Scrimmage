@@ -1,9 +1,8 @@
 package shared.gameObjects.weapons;
 
+import java.util.UUID;
 import javafx.scene.image.Image;
 import shared.gameObjects.Utils.ObjectID;
-
-import java.util.UUID;
 
 /** @author hlf764 The Handgun class. */
 public class Handgun extends Gun {

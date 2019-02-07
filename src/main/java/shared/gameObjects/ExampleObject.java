@@ -1,9 +1,8 @@
 package shared.gameObjects;
 
+import java.util.UUID;
 import javafx.scene.image.Image;
 import shared.gameObjects.Utils.ObjectID;
-
-import java.util.UUID;
 
 public class ExampleObject extends GameObject {
 

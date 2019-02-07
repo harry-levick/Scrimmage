@@ -1,11 +1,11 @@
 package shared.gameObjects.components;
 
+import java.io.Serializable;
 import shared.gameObjects.GameObject;
 import shared.physics.data.Collision;
 import shared.physics.types.ColliderType;
+import shared.physics.types.CollisionDirection;
 import shared.util.maths.Vector2;
-
-import java.io.Serializable;
 
 /**
  * @author fxa579 Primary components responsible for collider info, such as collision state, size,
@@ -28,10 +28,24 @@ public abstract class Collider extends Component implements Serializable {
     this.trigger = trigger;
   }
 
-  public Collision resolveCollision(BoxCollider a, Collider b) {
+  public static Collision resolveCollision(BoxCollider a, Collider b) {
+    Rigidbody collidedBody = (Rigidbody) b.getParent().getComponent(ComponentType.RIGIDBODY);
+    Collision collision = null;
     switch (b.getColliderType()) {
       case BOX:
-        if (boxBoxCollision(a, (BoxCollider) b)) {}
+        if (boxBoxCollision(a, (BoxCollider) b)) {
+          if (a.isTrigger()) {
+            a.collision();
+            break;
+          } else {
+            if (b.isTrigger()) break;
+            collision =
+                new Collision(
+                    collidedBody,
+                    CollisionDirection.getDirection(
+                        a.getCentre().sub(((BoxCollider) b).getCentre()).normalize()));
+          }
+        }
 
         break;
       case EDGE:
@@ -44,8 +58,26 @@ public abstract class Collider extends Component implements Serializable {
         break;
     }
 
+    return collision;
+  }
+
+  public static Collision resolveCollision(CircleCollider a, Collider b) {
+    switch (b.getColliderType()) {
+      case BOX:
+        if (boxCircleCollision((BoxCollider) b, a)) {}
+
+        break;
+      case EDGE:
+        break;
+      case CIRCLE:
+        if (circleCircleCollision(a, (CircleCollider) b)) {}
+
+        break;
+    }
+
     return null;
   }
+
   // Static Collision Methods
   public static boolean boxCircleCollision(BoxCollider box, CircleCollider circle) {
     float clampDist =
@@ -159,7 +191,7 @@ public abstract class Collider extends Component implements Serializable {
     return triggerStay;
   }
 
-  public boolean onTrigger() {
+  public boolean isTrigger() {
     return trigger;
   }
 }

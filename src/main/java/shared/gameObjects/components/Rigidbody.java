@@ -1,5 +1,7 @@
 package shared.gameObjects.components;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import shared.gameObjects.GameObject;
 import shared.physics.Physics;
 import shared.physics.data.AngularData;
@@ -7,9 +9,6 @@ import shared.physics.data.Collision;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
-
-import java.io.Serializable;
-import java.util.ArrayList;
 
 /**
  * @author fxa579 The primary components responsible for all Physics updates; includes data and
@@ -86,11 +85,12 @@ public class Rigidbody extends Component implements Serializable {
 
   /** Called every physics frame, manages the velocity, forces, position, etc. */
   public void update() {
-    applyCollisions();
-    applyForces();
-    updateVelocity();
-
-    grounded = false;
+    if (bodyType == RigidbodyType.DYNAMIC) {
+      applyCollisions();
+      applyForces();
+      updateVelocity();
+      grounded = false;
+    }
   }
   // Force Methods
 
@@ -121,7 +121,7 @@ public class Rigidbody extends Component implements Serializable {
    */
   public void move(Vector2 distance, float time) {
     if (time <= 0) {
-      getParent().getTransform().translate(distance);
+      deltaPosUpdate = deltaPosUpdate.add(distance);
     } else {
       setVelocity(distance.div(time));
     }
@@ -163,17 +163,34 @@ public class Rigidbody extends Component implements Serializable {
           case DOWN:
             grounded = true;
           case UP:
-            setVelocity(getVelocity().mult(Vector2.Right()));
+            impactVelocity =
+                getVelocity()
+                    .mult(
+                        Vector2.Right()
+                            .mult(
+                                -1
+                                    * Math.max(
+                                        getMaterial().getRestitution(),
+                                        c.getCollidedObject().getMaterial().getRestitution())));
             break;
           case LEFT:
           case RIGHT:
-            setVelocity(getVelocity().mult(Vector2.Up()));
+            impactVelocity =
+                getVelocity()
+                    .mult(
+                        Vector2.Right()
+                            .mult(
+                                -1
+                                    * Math.max(
+                                        getMaterial().getRestitution(),
+                                        c.getCollidedObject().getMaterial().getRestitution())));
             break;
         }
       } else if (c.getCollidedObject().getBodyType() == RigidbodyType.DYNAMIC) {
         // TODO Momentum and Impulse Calculation
       }
     }
+    collisions.clear();
   }
 
   /** An update method; all force updates happen here. */
@@ -224,7 +241,7 @@ public class Rigidbody extends Component implements Serializable {
                 .mult(Physics.TIMESTEP)
                 .add(acceleration.mult(0.5f).mult(Physics.TIMESTEP * Physics.TIMESTEP)));
     deltaPos = deltaPosUpdate.add(deltaPos);
-    move(deltaPos);
+    getParent().getTransform().translate(deltaPos);
     deltaPosUpdate = Vector2.Zero();
     deltaPos = Vector2.Zero();
 
@@ -287,6 +304,10 @@ public class Rigidbody extends Component implements Serializable {
 
   public void setAirDrag(float airDrag) {
     this.airDrag = airDrag;
+  }
+
+  public ArrayList<Collision> getCollisions() {
+    return collisions;
   }
 
   /** For Testing Purposes Only */

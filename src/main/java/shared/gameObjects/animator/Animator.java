@@ -1,8 +1,7 @@
 package shared.gameObjects.animator;
 
-import javafx.scene.image.Image;
-
 import java.util.HashMap;
+import javafx.scene.image.Image;
 
 public class Animator {
 

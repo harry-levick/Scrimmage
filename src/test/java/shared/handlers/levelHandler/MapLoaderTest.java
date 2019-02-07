@@ -1,15 +1,14 @@
 package shared.handlers.levelHandler;
 
+import static org.junit.Assert.assertEquals;
+
+import java.util.ArrayList;
+import java.util.UUID;
 import org.junit.Before;
 import org.junit.Test;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.TestObject;
 import shared.gameObjects.Utils.ObjectID;
-
-import java.util.ArrayList;
-import java.util.UUID;
-
-import static org.junit.Assert.assertEquals;
 
 public class MapLoaderTest {
 

@@ -138,6 +138,10 @@ public class Vector2 implements Serializable {
     return new Vector2(x, y);
   }
 
+  public Vector2 normalize() {
+    return this.div(magnitude(Vector2.Zero()));
+  }
+
   @Override
   public String toString() {
     return "X: " + getX() + " Y: " + getY();

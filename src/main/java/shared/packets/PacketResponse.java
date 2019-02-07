@@ -1,8 +1,7 @@
 package shared.packets;
 
-import shared.util.byteFunctions.ByteUtil;
-
 import java.util.UUID;
+import shared.util.byteFunctions.ByteUtil;
 
 public class PacketResponse extends Packet {
 

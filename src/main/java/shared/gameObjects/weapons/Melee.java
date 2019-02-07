@@ -1,8 +1,7 @@
 package shared.gameObjects.weapons;
 
-import shared.gameObjects.Utils.ObjectID;
-
 import java.util.UUID;
+import shared.gameObjects.Utils.ObjectID;
 
 public abstract class Melee extends Weapon {
 

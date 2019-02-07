@@ -1,14 +1,13 @@
 package shared.handlers.levelHandler;
 
 import client.main.Settings;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 import javafx.scene.Group;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.UUID;
 
 public class LevelHandler {
 

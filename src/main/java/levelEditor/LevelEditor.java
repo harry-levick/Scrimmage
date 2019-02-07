@@ -1,5 +1,7 @@
 package levelEditor;
 
+import java.util.ArrayList;
+import java.util.UUID;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -22,9 +24,6 @@ import shared.gameObjects.menu.main.ButtonSingleplayer;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.Handgun;
 import shared.handlers.levelHandler.MapLoader;
-
-import java.util.ArrayList;
-import java.util.UUID;
 
 public class LevelEditor extends Application {
 

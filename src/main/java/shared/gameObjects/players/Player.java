@@ -2,6 +2,7 @@ package shared.gameObjects.players;
 
 import client.handlers.connectionHandler.ConnectionHandler;
 import client.handlers.inputHandler.InputHandler;
+import java.util.UUID;
 import javafx.scene.image.Image;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
@@ -9,13 +10,11 @@ import shared.gameObjects.weapons.Weapon;
 import shared.packets.PacketInput;
 import shared.util.Path;
 
-import java.util.UUID;
-
 public class Player extends GameObject {
 
+  protected final int speed = 500;
   protected int health;
   protected Weapon holding;
-  protected final int speed = 500;
   private double vx;
 
   public Player(double x, double y, double sizeX, double sizeY, UUID playerUUID) {

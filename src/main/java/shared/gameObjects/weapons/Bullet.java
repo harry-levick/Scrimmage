@@ -1,10 +1,9 @@
 package shared.gameObjects.weapons;
 
+import java.util.UUID;
 import javafx.scene.image.Image;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
-
-import java.util.UUID;
 
 /** @author hlf764 */
 public class Bullet extends GameObject {

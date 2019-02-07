@@ -10,10 +10,12 @@ public class Collision {
   private Vector2 pointOfCollision;
   private CollisionDirection direction;
 
-  public Collision(
-      Rigidbody collidedObject, Vector2 pointOfCollision, CollisionDirection direction) {
+  /**
+   * @param collidedObject
+   * @param direction
+   */
+  public Collision(Rigidbody collidedObject, CollisionDirection direction) {
     this.collidedObject = collidedObject;
-    this.pointOfCollision = pointOfCollision;
     this.direction = direction;
   }
 
@@ -27,5 +29,10 @@ public class Collision {
 
   public CollisionDirection getDirection() {
     return direction;
+  }
+
+  @Override
+  public String toString() {
+    return "COLLISION DIR = " + direction.toString();
   }
 }

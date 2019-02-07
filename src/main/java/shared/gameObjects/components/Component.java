@@ -1,8 +1,7 @@
 package shared.gameObjects.components;
 
-import shared.gameObjects.GameObject;
-
 import java.io.Serializable;
+import shared.gameObjects.GameObject;
 
 /** @author fxa579 Base class for components, all GameObject components extend this class */
 public abstract class Component implements Serializable {

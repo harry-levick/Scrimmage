@@ -243,10 +243,9 @@ public enum FSA {
     }
   };
 
-  public abstract FSA next(Player targetPlayer, Player bot, double prevDist, double newDist);
-
   final int HIGH_HEALTH = 66;
   final int MEDIUM_HEALTH = 33;
-
   FSA() {}
+
+  public abstract FSA next(Player targetPlayer, Player bot, double prevDist, double newDist);
 }

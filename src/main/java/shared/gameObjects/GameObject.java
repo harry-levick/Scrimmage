@@ -1,16 +1,25 @@
 package shared.gameObjects;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.Utils.Transform;
 import shared.gameObjects.animator.Animator;
+import shared.gameObjects.components.BoxCollider;
+import shared.gameObjects.components.CircleCollider;
+import shared.gameObjects.components.Collider;
 import shared.gameObjects.components.Component;
 import shared.gameObjects.components.ComponentType;
+import shared.gameObjects.components.Rigidbody;
+import shared.physics.data.Collision;
+import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
-
-import java.io.Serializable;
-import java.util.*;
 
 public abstract class GameObject implements Serializable {
 
@@ -66,10 +75,31 @@ public abstract class GameObject implements Serializable {
   public void render() {
     imageView.setImage(animation.getImage());
   }
+
   // Collision engine
   public void updateCollision(ArrayList<GameObject> gameObjects) {
+    Collider col = (Collider) getComponent(ComponentType.COLLIDER);
+    Rigidbody rb = (Rigidbody) getComponent(ComponentType.RIGIDBODY);
+    if (rb.getBodyType() == RigidbodyType.STATIC) return;
+    Collision collision = null;
     if (getComponent(ComponentType.COLLIDER) != null) {
-      // TODO Collision Checking
+      for (GameObject object : gameObjects) {
+        if (object.getComponent(ComponentType.COLLIDER) != null) {
+          switch (col.getColliderType()) {
+            case BOX:
+              collision =
+                  Collider.resolveCollision(
+                      (BoxCollider) col, (Collider) object.getComponent(ComponentType.COLLIDER));
+              break;
+            case CIRCLE:
+              collision =
+                  Collider.resolveCollision(
+                      (CircleCollider) col, (Collider) object.getComponent(ComponentType.COLLIDER));
+              break;
+          }
+          if (collision != null) rb.getCollisions().add(collision);
+        }
+      }
     }
   }
 
@@ -221,18 +251,18 @@ public abstract class GameObject implements Serializable {
     return active;
   }
 
+  public void setActive(boolean state) {
+    if (!destroyed) {
+      active = state;
+    }
+  }
+
   public boolean isUpdated() {
     return updated;
   }
 
   public void setUpdated(boolean updated) {
     this.updated = updated;
-  }
-
-  public void setActive(boolean state) {
-    if (!destroyed) {
-      active = state;
-    }
   }
 
   public boolean isDestroyed() {
