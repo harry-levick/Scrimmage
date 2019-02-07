@@ -43,7 +43,6 @@ public class Bullet extends GameObject {
     // positive or negative direction
     this.deltaX = getDeltaX(mouseX, mouseY, slope);
     this.deltaY = getDeltaY(mouseX, mouseY, slope);
-    System.out.println(String.format("delta(%f,%f) this(%f,%f) mouse(%f,%f)\n", this.deltaX, this.deltaY, gunX, gunY, mouseX, mouseY));
     this.bulletImage = getImage();
     this.isHit = false;
     
@@ -53,14 +52,8 @@ public class Bullet extends GameObject {
   }
 
   public void fire() {
-    System.out.println(String.format("@Bullet fire %f, %f", this.newX, this.newY));
-    if ((0 < this.newX && this.newX < 1920) && (0 < this.newY && this.newY < 1080)) {
-      this.newX += deltaX;
-      this.newY += deltaY;
-    } else {
-      System.out.println(this.toString() + " is to be destroyed");
-      Client.levelHandler.delGameObject(this);
-    }
+    this.newX += deltaX;
+    this.newY += deltaY;
   }
 
   @Override
@@ -70,7 +63,12 @@ public class Bullet extends GameObject {
 
   @Override
   public void update() {
-    this.fire();
+    if ((0 < this.newX && this.newX < 1920) && (0 < this.newY && this.newY < 1080))
+      this.fire();
+    else {
+      System.out.println(this.toString() + " is to be destroyed");
+      Client.levelHandler.delGameObject(this);
+    }
 
     // if something is in this position (will take width into account later)
     // isHit = true;
