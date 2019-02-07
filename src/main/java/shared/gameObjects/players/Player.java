@@ -89,6 +89,11 @@ public class Player extends GameObject {
     } //else punch
     setX(getX() + (vx * 0.0166));
 
+    if (this.getHolding() != null) {
+      this.getHolding().setX(this.getX());
+      this.getHolding().setY(this.getY());
+    }
+    
     /** If multiplayer then send input to server */
     if (multiplayer) {
       PacketInput input = new PacketInput(InputHandler.x, InputHandler.y, InputHandler.leftKey,
