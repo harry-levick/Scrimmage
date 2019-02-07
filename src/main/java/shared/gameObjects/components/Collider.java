@@ -28,56 +28,6 @@ public abstract class Collider extends Component implements Serializable {
     this.trigger = trigger;
   }
 
-  public static Collision resolveCollision(BoxCollider a, Collider b) {
-    Rigidbody collidedBody = (Rigidbody) b.getParent().getComponent(ComponentType.RIGIDBODY);
-    Collision collision = null;
-    switch (b.getColliderType()) {
-      case BOX:
-        if (boxBoxCollision(a, (BoxCollider) b)) {
-          if (a.isTrigger()) {
-            a.collision();
-            break;
-          } else {
-            if (b.isTrigger()) break;
-            collision =
-                new Collision(
-                    collidedBody,
-                    CollisionDirection.getDirection(
-                        a.getCentre().sub(((BoxCollider) b).getCentre()).normalize()));
-          }
-        }
-
-        break;
-      case EDGE:
-        if (boxEdgeCollision(a, (EdgeCollider) b)) {}
-
-        break;
-      case CIRCLE:
-        if (boxCircleCollision(a, (CircleCollider) b)) {}
-
-        break;
-    }
-
-    return collision;
-  }
-
-  public static Collision resolveCollision(CircleCollider a, Collider b) {
-    switch (b.getColliderType()) {
-      case BOX:
-        if (boxCircleCollision((BoxCollider) b, a)) {}
-
-        break;
-      case EDGE:
-        break;
-      case CIRCLE:
-        if (circleCircleCollision(a, (CircleCollider) b)) {}
-
-        break;
-    }
-
-    return null;
-  }
-
   // Static Collision Methods
   public static boolean boxCircleCollision(BoxCollider box, CircleCollider circle) {
     float clampDist =
@@ -99,10 +49,10 @@ public abstract class Collider extends Component implements Serializable {
   }
 
   public static boolean boxBoxCollision(BoxCollider boxA, BoxCollider boxB) {
-    Vector2[] cornersA = boxA.getCorners();
-    Vector2[] cornersB = boxB.getCorners();
-    if (cornersA[3].getX() > cornersB[1].getX() && cornersA[0].getX() < cornersB[2].getX()) {
-      if (cornersA[3].getY() < cornersB[1].getY() && cornersA[0].getY() < cornersB[2].getY()) {
+    Vector2 extents = boxA.getSize().add(boxB.getSize().mult(0.5f));
+    Vector2 centres = boxB.getCentre().sub(boxA.getCentre());
+    if(Math.abs(centres.getX()) < extents.getX()) {
+      if(Math.abs(centres.getY()) < extents.getY()) {
         return true;
       }
     }

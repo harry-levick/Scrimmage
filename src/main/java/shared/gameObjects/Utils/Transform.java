@@ -1,9 +1,10 @@
 package shared.gameObjects.Utils;
 
-import java.io.Serializable;
 import shared.gameObjects.GameObject;
 import shared.util.maths.Rotation;
 import shared.util.maths.Vector2;
+
+import java.io.Serializable;
 
 public class Transform implements Serializable {
 

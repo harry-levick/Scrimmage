@@ -1,7 +1,8 @@
-package shared.gameObjects;
+package shared.gameObjects.weapons;
 
 import java.util.UUID;
 import javafx.scene.image.Image;
+import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
@@ -9,7 +10,7 @@ import shared.physics.data.AngularData;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.RigidbodyType;
 
-public class ExampleObject extends GameObject {
+public class ExampleFloorObject extends GameObject {
 
   private int health;
 
@@ -21,15 +22,15 @@ public class ExampleObject extends GameObject {
    * @param y Y coordinate of object in game world
    * @param id Unique Identifier of every game object
    */
-  public ExampleObject(
+  public ExampleFloorObject(
       double x, double y, double sizeX, double sizeY, ObjectID id, UUID exampleUUID) {
     super(x, y, sizeX, sizeY, id, exampleUUID);
     health = 100;
     addComponent(
         new Rigidbody(
-            RigidbodyType.DYNAMIC,
-            50,
-            50,
+            RigidbodyType.STATIC,
+            10,
+            1,
             0,
             new MaterialProperty(0.1f, 1, 1),
             new AngularData(0, 0, 0, 0),

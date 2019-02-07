@@ -23,10 +23,6 @@ public class BoxCollider extends Collider implements Serializable {
   public void update() {
     size = getParent().getTransform().getSize();
     centre = getParent().getTransform().getPos().add(size.mult(0.5f));
-    corners[0] = getParent().getTransform().getPos();
-    corners[1] = getParent().getTransform().getPos().add(Vector2.Up().mult(size.getY()));
-    corners[2] = getParent().getTransform().getPos().add(size);
-    corners[3] = getParent().getTransform().getPos().add(Vector2.Right().mult(size.getX()));
   }
 
   // Getters

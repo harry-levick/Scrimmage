@@ -69,6 +69,12 @@ public abstract class GameObject implements Serializable {
   // Server and Client side
   public void update() {
     animation.update();
+    Collider col = (Collider) getComponent(ComponentType.COLLIDER);
+    Rigidbody rb = (Rigidbody) getComponent(ComponentType.RIGIDBODY);
+    if(rb != null)
+      rb.update();
+    if(col != null)
+      col.update();
   }
 
   // Client Side only
@@ -80,20 +86,25 @@ public abstract class GameObject implements Serializable {
   public void updateCollision(ArrayList<GameObject> gameObjects) {
     Collider col = (Collider) getComponent(ComponentType.COLLIDER);
     Rigidbody rb = (Rigidbody) getComponent(ComponentType.RIGIDBODY);
-    if (rb.getBodyType() == RigidbodyType.STATIC) return;
+    if(rb != null) {
+      if (rb.getBodyType() == RigidbodyType.STATIC) return;
+    }
     Collision collision = null;
-    if (getComponent(ComponentType.COLLIDER) != null) {
+    if (col != null) {
       for (GameObject object : gameObjects) {
+        if(object.equals(this)) {
+          continue;
+        }
         if (object.getComponent(ComponentType.COLLIDER) != null) {
           switch (col.getColliderType()) {
             case BOX:
               collision =
-                  Collider.resolveCollision(
+                  Collision.resolveCollision(
                       (BoxCollider) col, (Collider) object.getComponent(ComponentType.COLLIDER));
               break;
             case CIRCLE:
               collision =
-                  Collider.resolveCollision(
+                  Collision.resolveCollision(
                       (CircleCollider) col, (Collider) object.getComponent(ComponentType.COLLIDER));
               break;
           }

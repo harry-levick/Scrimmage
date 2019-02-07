@@ -22,6 +22,7 @@ import shared.gameObjects.menu.main.ButtonMultiplayer;
 import shared.gameObjects.menu.main.ButtonSettings;
 import shared.gameObjects.menu.main.ButtonSingleplayer;
 import shared.gameObjects.players.Player;
+import shared.gameObjects.weapons.ExampleFloorObject;
 import shared.gameObjects.weapons.Handgun;
 import shared.handlers.levelHandler.MapLoader;
 
@@ -48,6 +49,7 @@ public class LevelEditor extends Application {
     cb.setItems(
         FXCollections.observableArrayList(
             "ExampleObject",
+            "ExampleFloor",
             "Player",
             "Singleplayer Button",
             "Multiplayer Button",
@@ -102,11 +104,15 @@ public class LevelEditor extends Application {
             UUID uuid = UUID.randomUUID();
             if (cb.getValue() == "ExampleObject") {
               GameObject temp =
-                  new ExampleObject(event.getX(), event.getY(), 100, 100, ObjectID.Bot, uuid);
+                  new ExampleObject(event.getX(), event.getY(), 220, 70, ObjectID.Bot, uuid);
               temp.initialise(root);
               gameObjects.add(temp);
             } else if (cb.getValue() == "Player") {
               Player temp = new Player(event.getX(), event.getY(), 100, 100, uuid);
+              temp.initialise(root);
+              gameObjects.add(temp);
+            } else if (cb.getValue() == "ExampleFloor") {
+              GameObject temp = new ExampleFloorObject(event.getX(), event.getY(), 220, 70, ObjectID.Bot, uuid);
               temp.initialise(root);
               gameObjects.add(temp);
             } else if (cb.getValue() == "Singleplayer Button") {

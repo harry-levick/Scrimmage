@@ -166,10 +166,9 @@ public class Rigidbody extends Component implements Serializable {
             impactVelocity =
                 getVelocity()
                     .mult(
-                        Vector2.Right()
+                        new Vector2(velocity.getX(), 1)
                             .mult(
-                                -1
-                                    * Math.max(
+                                    Math.max(
                                         getMaterial().getRestitution(),
                                         c.getCollidedObject().getMaterial().getRestitution())));
             break;
@@ -178,14 +177,14 @@ public class Rigidbody extends Component implements Serializable {
             impactVelocity =
                 getVelocity()
                     .mult(
-                        Vector2.Right()
+                        new Vector2(1, velocity.getY())
                             .mult(
-                                -1
-                                    * Math.max(
+                                    Math.max(
                                         getMaterial().getRestitution(),
                                         c.getCollidedObject().getMaterial().getRestitution())));
             break;
         }
+        System.out.println("Impact Velocity: " + velocity);
       } else if (c.getCollidedObject().getBodyType() == RigidbodyType.DYNAMIC) {
         // TODO Momentum and Impulse Calculation
       }
@@ -230,7 +229,7 @@ public class Rigidbody extends Component implements Serializable {
   private void updateVelocity() {
     lastAcceleration = acceleration;
 
-    if (impactVelocity.getX() != 0 && impactVelocity.getY() != 0) {
+    if (impactVelocity.getX() != 0 || impactVelocity.getY() != 0) {
       velocity = Vector2.Unit().mult(impactVelocity);
       impactVelocity = Vector2.Zero();
     }
