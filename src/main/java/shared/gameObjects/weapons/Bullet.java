@@ -41,8 +41,9 @@ public class Bullet extends GameObject {
     // deltaX and deltaY show the change in x and y values in every updates
     // The last bit of the expression shows whether x and y should progress in
     // positive or negative direction
-    this.deltaX = (this.speed * Math.cos(Math.atan(slope))) * ((mouseX > gunX) ? 1 : -1);
-    this.deltaY = (this.speed * Math.sin(Math.atan(slope))) * ((mouseY > gunY) ? 1 : -1);
+    this.deltaX = getDeltaX(mouseX, mouseY, slope);
+    this.deltaY = getDeltaY(mouseX, mouseY, slope);
+    System.out.println(String.format("delta(%f,%f) this(%f,%f) mouse(%f,%f)\n", this.deltaX, this.deltaY, gunX, gunY, mouseX, mouseY));
     this.bulletImage = getImage();
     this.isHit = false;
     
@@ -52,7 +53,8 @@ public class Bullet extends GameObject {
   }
 
   public void fire() {
-    if (this.getX() < 1920 && this.getY() < 1080) {
+    System.out.println(String.format("@Bullet fire %f, %f", this.newX, this.newY));
+    if ((0 < this.newX && this.newX < 1920) && (0 < this.newY && this.newY < 1080)) {
       this.newX += deltaX;
       this.newY += deltaY;
     } else {
@@ -93,6 +95,28 @@ public class Bullet extends GameObject {
   @Override
   public String getState() {
     return null;
+  }
+  
+  private double getDeltaX(double mouseX, double mouseY, double slope) {
+    double theta = Math.abs(Math.atan(slope));
+    double cosTheta = Math.abs(Math.cos(theta));
+    double deltaX = speed * cosTheta;
+    
+    if (mouseX < this.newX)
+      deltaX *= -1;
+      
+    return deltaX;
+  }
+  
+  private double getDeltaY(double mouseX, double mouseY, double slope) {
+    double theta = Math.abs(Math.atan(slope));
+    double cosTheta = Math.abs(Math.cos(theta));
+    double deltaY = speed * cosTheta;
+    
+    if (mouseY < this.newY)
+      deltaY *= -1;
+      
+    return deltaY;
   }
 
   // -------START-------
