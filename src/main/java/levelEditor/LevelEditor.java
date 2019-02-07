@@ -1,5 +1,7 @@
 package levelEditor;
 
+import java.util.ArrayList;
+import java.util.UUID;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -23,13 +25,11 @@ import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.Handgun;
 import shared.handlers.levelHandler.MapLoader;
 
-import java.util.ArrayList;
-import java.util.UUID;
-
 public class LevelEditor extends Application {
 
   private ArrayList<GameObject> gameObjects;
   private boolean snapToGrid = true;
+  private ChoiceBox cb = new ChoiceBox();
 
   public static void main(String[] args) {
     Application.launch(args);
@@ -45,55 +45,7 @@ public class LevelEditor extends Application {
     // gameObjects = MapLoader.loadMap("menus.map");
     gameObjects.forEach(gameObject -> gameObject.initialise(root));
 
-    ChoiceBox cb = new ChoiceBox();
-    cb.setItems(
-        FXCollections.observableArrayList(
-            "ExampleObject",
-            "Player",
-            "Singleplayer Button",
-            "Multiplayer Button",
-            "Settings Button",
-            "Level Editor Button",
-            "Handgun"));
-    cb.setLayoutX(10);
-    cb.setLayoutY(10);
-
-    Button btnSave = new Button();
-    btnSave.setText("Save Map");
-    btnSave.setOnAction(
-        new EventHandler<ActionEvent>() {
-          @Override
-          public void handle(ActionEvent event) {
-            MapLoader.saveMap(gameObjects, "menu.map");
-          }
-        });
-    btnSave.setLayoutX(160);
-    btnSave.setLayoutY(10);
-
-    Button btnToggleGrid = new Button();
-    btnToggleGrid.setText("Toggle Snap to Grid");
-    btnToggleGrid.setOnAction(
-        new EventHandler<ActionEvent>() {
-          @Override
-          public void handle(ActionEvent event) {
-            snapToGrid = !snapToGrid;
-            ArrayList<Line> gridlines = redrawGrid();
-            for (Line line : gridlines) {
-              root.getChildren().add(line);
-            }
-          }
-        });
-    btnToggleGrid.setLayoutX(250);
-    btnToggleGrid.setLayoutY(10);
-
-    ArrayList<Line> gridlines = redrawGrid();
-    for (Line line : gridlines) {
-      root.getChildren().add(line);
-    } // todo remove
-
-    root.getChildren().add(cb);
-    root.getChildren().add(btnSave);
-    root.getChildren().add(btnToggleGrid);
+    addButtons(root);
 
     Scene scene = new Scene(root, 1920, 1080);
     scene.setOnMouseClicked(
@@ -184,5 +136,56 @@ public class LevelEditor extends Application {
     }
 
     return gridlines;
+  }
+
+  private void addButtons(Group root) {
+    cb.setItems(
+        FXCollections.observableArrayList(
+            "ExampleObject",
+            "Player",
+            "Singleplayer Button",
+            "Multiplayer Button",
+            "Settings Button",
+            "Level Editor Button",
+            "Handgun"));
+    cb.setLayoutX(10);
+    cb.setLayoutY(10);
+
+    Button btnSave = new Button();
+    btnSave.setText("Save Map");
+    btnSave.setOnAction(
+        new EventHandler<ActionEvent>() {
+          @Override
+          public void handle(ActionEvent event) {
+            MapLoader.saveMap(gameObjects, "menu.map");
+          }
+        });
+    btnSave.setLayoutX(200);
+    btnSave.setLayoutY(10);
+
+    Button btnToggleGrid = new Button();
+    btnToggleGrid.setText("Toggle Snap to Grid");
+    btnToggleGrid.setOnAction(
+        new EventHandler<ActionEvent>() {
+          @Override
+          public void handle(ActionEvent event) {
+            snapToGrid = !snapToGrid;
+            ArrayList<Line> gridlines = redrawGrid();
+            for (Line line : gridlines) {
+              root.getChildren().add(line);
+            }
+          }
+        });
+    btnToggleGrid.setLayoutX(300);
+    btnToggleGrid.setLayoutY(10);
+
+    ArrayList<Line> gridlines = redrawGrid();
+    for (Line line : gridlines) {
+      root.getChildren().add(line);
+    } // todo remove
+
+    root.getChildren().add(cb);
+    root.getChildren().add(btnSave);
+    root.getChildren().add(btnToggleGrid);
   }
 }
