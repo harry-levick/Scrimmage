@@ -11,6 +11,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
@@ -69,77 +70,14 @@ public class LevelEditor extends Application {
         new EventHandler<MouseEvent>() {
           @Override
           public void handle(MouseEvent event) {
-            UUID uuid = UUID.randomUUID();
-            if (cb.getValue() == "ExampleObject") {
-              GameObject temp =
-                  new ExampleObject(getGridX(event.getX()), getGridY(event.getY()), 100, 100,
-                      ObjectID.Bot, uuid);
-              temp.initialise(root);
-              gameObjects.add(temp);
-            } else if (cb.getValue() == "Player Spawn Point") {
-              if (mapDataObject.getSpawnPoints().size() < spawnPointLimit) {
-                Player temp = new Player(getGridX(event.getX()), getGridY(event.getY()), 100, 100,
-                    uuid);
-                temp.initialise(root);
-                playerSpawns.add(temp);
-                mapDataObject.addSpawnPoint(getGridX(event.getX()), getGridY(event.getY()));
-              } else {
-                final Stage dialog = new Stage();
-                dialog.initModality(Modality.APPLICATION_MODAL);
-                dialog.initOwner(primaryStage);
-                VBox dialogVbox = new VBox(20);
-                Text text = new Text("\n\tWarning: You cannot create more than " + spawnPointLimit
-                    + " spawn points.");
-                dialogVbox.getChildren().add(text);
-                Scene dialogScene = new Scene(dialogVbox, 450, 60);
-                dialog.setScene(dialogScene);
-                dialog.show();
-              }
-
-            } else if (cb.getValue() == "Singleplayer Button") {
-              ButtonSingleplayer temp =
-                  new ButtonSingleplayer(getGridX(event.getX()), getGridY(event.getY()), 100, 100,
-                      ObjectID.Bot, uuid);
-              temp.initialise(root);
-              gameObjects.add(temp);
-            } else if (cb.getValue() == "Multiplayer Button") {
-              ButtonMultiplayer temp =
-                  new ButtonMultiplayer(getGridX(event.getX()), getGridY(event.getY()), 100, 100,
-                      ObjectID.Bot, uuid);
-              temp.initialise(root);
-              gameObjects.add(temp);
-            } else if (cb.getValue() == "Settings Button") {
-              ButtonSettings temp =
-                  new ButtonSettings(getGridX(event.getX()), getGridY(event.getY()), 100, 100,
-                      ObjectID.Bot, uuid);
-              temp.initialise(root);
-              gameObjects.add(temp);
-            } else if (cb.getValue() == "Level Editor Button") {
-              ButtonLeveleditor temp =
-                  new ButtonLeveleditor(getGridX(event.getX()), getGridY(event.getY()), 100, 100,
-                      ObjectID.Bot, uuid);
-              temp.initialise(root);
-              gameObjects.add(temp);
-            } else if (cb.getValue() == "Handgun") {
-              Handgun temp =
-                  new Handgun(
-                      getGridX(event.getX()),
-                      getGridY(event.getY()),
-                      100,
-                      100,
-                      ObjectID.Weapon,
-                      10,
-                      10,
-                      "Handgun",
-                      100,
-                      100,
-                      100,
-                      10,
-                      uuid);
-              temp.initialise(root);
+            if (event.getButton() == MouseButton.PRIMARY) {
+              scenePrimaryClick(primaryStage, root, event);
+            } else if (event.getButton() == MouseButton.SECONDARY) {
+              sceneSecondaryClick(primaryStage, root, event);
             }
           }
         });
+
     primaryStage.setScene(scene);
     primaryStage.show();
     primaryStage.setFullScreen(true);
@@ -249,6 +187,93 @@ public class LevelEditor extends Application {
       return eventY - (eventY % gridSizePX);
     } else {
       return eventY;
+    }
+  }
+
+  private void scenePrimaryClick(Stage primaryStage, Group root, MouseEvent event) {
+    UUID uuid = UUID.randomUUID();
+    if (cb.getValue() == "ExampleObject") {
+      GameObject temp =
+          new ExampleObject(getGridX(event.getX()), getGridY(event.getY()), 100, 100,
+              ObjectID.Bot, uuid);
+      temp.initialise(root);
+      gameObjects.add(temp);
+    } else if (cb.getValue() == "Player Spawn Point") {
+      if (mapDataObject.getSpawnPoints().size() < spawnPointLimit) {
+        Player temp = new Player(getGridX(event.getX()), getGridY(event.getY()), 100, 100,
+            uuid);
+        temp.initialise(root);
+        playerSpawns.add(temp);
+        mapDataObject.addSpawnPoint(getGridX(event.getX()), getGridY(event.getY()));
+      } else {
+        final Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(primaryStage);
+        VBox dialogVbox = new VBox(20);
+        Text text = new Text("\n\tWarning: You cannot create more than " + spawnPointLimit
+            + " spawn points.");
+        dialogVbox.getChildren().add(text);
+        Scene dialogScene = new Scene(dialogVbox, 450, 60);
+        dialog.setScene(dialogScene);
+        dialog.show();
+      }
+
+    } else if (cb.getValue() == "Singleplayer Button") {
+      ButtonSingleplayer temp =
+          new ButtonSingleplayer(getGridX(event.getX()), getGridY(event.getY()), 100, 100,
+              ObjectID.Bot, uuid);
+      temp.initialise(root);
+      gameObjects.add(temp);
+    } else if (cb.getValue() == "Multiplayer Button") {
+      ButtonMultiplayer temp =
+          new ButtonMultiplayer(getGridX(event.getX()), getGridY(event.getY()), 100, 100,
+              ObjectID.Bot, uuid);
+      temp.initialise(root);
+      gameObjects.add(temp);
+    } else if (cb.getValue() == "Settings Button") {
+      ButtonSettings temp =
+          new ButtonSettings(getGridX(event.getX()), getGridY(event.getY()), 100, 100,
+              ObjectID.Bot, uuid);
+      temp.initialise(root);
+      gameObjects.add(temp);
+    } else if (cb.getValue() == "Level Editor Button") {
+      ButtonLeveleditor temp =
+          new ButtonLeveleditor(getGridX(event.getX()), getGridY(event.getY()), 100, 100,
+              ObjectID.Bot, uuid);
+      temp.initialise(root);
+      gameObjects.add(temp);
+    } else if (cb.getValue() == "Handgun") {
+      Handgun temp =
+          new Handgun(
+              getGridX(event.getX()),
+              getGridY(event.getY()),
+              100,
+              100,
+              ObjectID.Weapon,
+              10,
+              10,
+              "Handgun",
+              100,
+              100,
+              100,
+              10,
+              uuid);
+      temp.initialise(root);
+    }
+  }
+
+  private void sceneSecondaryClick(Stage primaryStage, Group root, MouseEvent event) {
+    ArrayList<GameObject> removeList = gameObjects;
+    double x = event.getX();
+    double y = event.getY();
+    for (GameObject object : removeList) {
+      double ulX = object.getX();
+      double ulY = object.getY();
+      double lrX = ulX + object.getTransform().getBotPos().getX();
+      double lrY = ulY + object.getTransform().getBotPos().getY();
+      if ((x >= ulX) && (y >= ulY) && (x <= lrX) && (y <= lrY)) {
+        //todo add removal
+      }
     }
   }
 }
