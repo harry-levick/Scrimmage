@@ -49,7 +49,7 @@ public abstract class Collider extends Component implements Serializable {
   }
 
   public static boolean boxBoxCollision(BoxCollider boxA, BoxCollider boxB) {
-    Vector2 extents = boxA.getSize().add(boxB.getSize().mult(0.5f));
+    Vector2 extents = boxA.getSize().add(boxB.getSize().mult(0.25f));
     Vector2 centres = boxB.getCentre().sub(boxA.getCentre());
     if(Math.abs(centres.getX()) < extents.getX()) {
       if(Math.abs(centres.getY()) < extents.getY()) {

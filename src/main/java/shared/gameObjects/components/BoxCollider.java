@@ -21,8 +21,18 @@ public class BoxCollider extends Collider implements Serializable {
 
   @Override
   public void update() {
+    Vector2 prevCen = centre;
     size = getParent().getTransform().getSize();
     centre = getParent().getTransform().getPos().add(size.mult(0.5f));
+    prevCen = prevCen.sub(centre);
+    if(prevCen.getX() == 0 && prevCen.getY() == 0) {
+
+    }
+    else {
+      for(int i = 0; i < 4; i++) {
+        corners[i] = corners[i].add(prevCen);
+      }
+    }
   }
 
   // Getters

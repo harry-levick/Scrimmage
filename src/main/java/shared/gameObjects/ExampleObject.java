@@ -31,7 +31,7 @@ public class ExampleObject extends GameObject {
             50,
             50,
             0,
-            new MaterialProperty(0.1f, 1, 1),
+            new MaterialProperty(0.5f, 1, 1),
             new AngularData(0, 0, 0, 0),
             this));
     addComponent(new BoxCollider(this, false));
