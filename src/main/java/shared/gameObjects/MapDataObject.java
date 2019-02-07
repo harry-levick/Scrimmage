@@ -1,12 +1,11 @@
 package shared.gameObjects;
 
-import shared.gameObjects.Utils.ObjectID;
-import shared.handlers.levelHandler.GameState;
-import shared.util.maths.Vector2;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
+import shared.gameObjects.Utils.ObjectID;
+import shared.handlers.levelHandler.GameState;
+import shared.util.maths.Vector2;
 
 public class MapDataObject extends GameObject implements Serializable {
 
@@ -23,6 +22,10 @@ public class MapDataObject extends GameObject implements Serializable {
 
   public void addSpawnPoint(double x, double y) {
     spawnPoints.add(new Vector2((float) x, (float) y));
+  }
+
+  public ArrayList<Vector2> getSpawnPoints() {
+    return spawnPoints;
   }
 
   @Override

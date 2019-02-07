@@ -12,7 +12,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import shared.gameObjects.ExampleObject;
 import shared.gameObjects.GameObject;
@@ -30,10 +33,12 @@ import shared.handlers.levelHandler.MapLoader;
 public class LevelEditor extends Application {
 
   private ArrayList<GameObject> gameObjects;
+  private ArrayList<Player> playerSpawns = new ArrayList<Player>();
   private MapDataObject mapDataObject;
   private boolean snapToGrid = true;
   private ChoiceBox cb = new ChoiceBox();
 
+  private int spawnPointLimit = 4; //todo autofetch
 
   private int stageSizeX = 1920; //todo autofetch
   private int stageSizeY = 1080;
@@ -71,11 +76,26 @@ public class LevelEditor extends Application {
                       ObjectID.Bot, uuid);
               temp.initialise(root);
               gameObjects.add(temp);
-            } else if (cb.getValue() == "Player") {
-              Player temp = new Player(getGridX(event.getX()), getGridY(event.getY()), 100, 100,
-                  uuid);
-              temp.initialise(root);
-              gameObjects.add(temp);
+            } else if (cb.getValue() == "Player Spawn Point") {
+              if (mapDataObject.getSpawnPoints().size() < spawnPointLimit) {
+                Player temp = new Player(getGridX(event.getX()), getGridY(event.getY()), 100, 100,
+                    uuid);
+                temp.initialise(root);
+                playerSpawns.add(temp);
+                mapDataObject.addSpawnPoint(getGridX(event.getX()), getGridY(event.getY()));
+              } else {
+                final Stage dialog = new Stage();
+                dialog.initModality(Modality.APPLICATION_MODAL);
+                dialog.initOwner(primaryStage);
+                VBox dialogVbox = new VBox(20);
+                Text text = new Text("\n\tWarning: You cannot create more than " + spawnPointLimit
+                    + " spawn points.");
+                dialogVbox.getChildren().add(text);
+                Scene dialogScene = new Scene(dialogVbox, 450, 60);
+                dialog.setScene(dialogScene);
+                dialog.show();
+              }
+
             } else if (cb.getValue() == "Singleplayer Button") {
               ButtonSingleplayer temp =
                   new ButtonSingleplayer(getGridX(event.getX()), getGridY(event.getY()), 100, 100,
@@ -128,6 +148,7 @@ public class LevelEditor extends Application {
       @Override
       public void handle(long now) {
         gameObjects.forEach(gameObject -> gameObject.render());
+        playerSpawns.forEach(player -> player.render());
       }
     }.start();
   }
@@ -160,7 +181,7 @@ public class LevelEditor extends Application {
     cb.setItems(
         FXCollections.observableArrayList(
             "ExampleObject",
-            "Player",
+            "Player Spawn Point",
             "Singleplayer Button",
             "Multiplayer Button",
             "Settings Button",
