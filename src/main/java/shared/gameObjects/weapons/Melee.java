@@ -40,11 +40,6 @@ public abstract class Melee extends Weapon {
   public void fire(double mouseX, double mouseY) {
 
   }
-  
-  @Override
-  public int getCoolDown() {
-    return MAX_COOLDOWN - fireRate;
-  }
 
   // -------------------
   // Setters and Getters

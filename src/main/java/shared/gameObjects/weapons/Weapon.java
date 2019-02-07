@@ -67,7 +67,11 @@ public abstract class Weapon extends GameObject {
   }
 
   public abstract void fire(double mouseX, double mouseY);
-  public abstract int getCoolDown();
+  
+  
+  public int getDefaultCoolDown() {
+    return MAX_COOLDOWN - this.fireRate;
+  }
   
   public void deductCooldown() {
     if (this.currentCooldown > 0)

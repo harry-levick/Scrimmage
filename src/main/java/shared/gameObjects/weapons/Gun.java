@@ -67,12 +67,8 @@ abstract class Gun extends Weapon {
       Bullet bullet = new Bullet(getX(), getY(), mouseX, mouseY, this.bulletWidth, this.bulletSpeed,
           uuid);
       bullet.fire();
+      this.currentCooldown = getDefaultCoolDown();
     }
-  }
-  
-  @Override
-  public int getCoolDown() {
-    return MAX_COOLDOWN - this.fireRate;
   }
 
   // -------START-------
