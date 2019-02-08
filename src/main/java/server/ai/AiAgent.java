@@ -2,12 +2,9 @@ package server.ai;
 
 import server.ai.pathFind.AStar;
 import shared.gameObjects.GameObject;
-import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import shared.util.maths.Vector2;
 

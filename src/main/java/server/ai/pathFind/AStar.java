@@ -387,7 +387,7 @@ public class AStar {
 
     Vector2 botPosition = this.bot.getTransform().getPos();
     Vector2 botSize = this.bot.getTransform().getSize();
-    
+
     // Box cast to the left
     // TODO possibly change this to .Left()
     Collision viscinityLeft = Physics.boxcast(botPosition, botSize, botPosition.Right().mult(-1),
@@ -410,6 +410,7 @@ public class AStar {
     // Box cast upwards
     Collision viscinityUp = Physics.boxcast(botPosition, botSize, botPosition.Up(),
         10f);
+    // TODO: add a way of detecting if we can jump + (left or right)
     // If no collision, or if collision is far away
     if (viscinityUp == null || botPosition.exactMagnitude(viscinityUp.getPointOfCollision()) > 10) {
       // Just jump

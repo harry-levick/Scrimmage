@@ -29,6 +29,7 @@ public class LevelHandler {
       players.add(clientPlayer);
 
       botPlayer = new Bot(600, 500, 100, 100, UUID.randomUUID());
+      players.add(botPlayer);
     }
     maps = MapLoader.getMaps(settings.getMapsPath());
     // menus = MapLoader.getMaps(settings.getMenuPath());
