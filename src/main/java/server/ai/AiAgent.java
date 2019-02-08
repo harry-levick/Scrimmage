@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import shared.util.maths.Vector2;
 
 /** @author Harry Levick (hxl799) */
 
@@ -53,7 +54,7 @@ public class AiAgent {
 
     // Update the targeted player
     targetPlayer = findTarget(allPlayers);
-
+p
     while (active) {
       /**
        * The ai can be in one of 6 states at any one time. The state it is in determines the actions
@@ -79,12 +80,15 @@ public class AiAgent {
            * us to find the target player for the first time in the default case.
            */
         default:
+          Vector2 botPos = new Vector2((float) bot.getX(), (float) bot.getY());
+          Vector2 targetPos = new Vector2((float) targetPlayer.getX(), (float) targetPlayer.getY());
           // Calculate the distance to the target from the previous loop
-          prevDist = calcDistance(bot, targetPlayer);
+          prevDist = botPos.exactMagnitude(targetPos);
           // Update the target player
           targetPlayer = findTarget(allPlayers);
+          targetPos = new Vector2((float) targetPlayer.getX(), (float) targetPlayer.getY());
           // Calculate the distance to the updated target
-          newDist = calcDistance(bot, targetPlayer);
+          newDist = botPos.exactMagnitude(targetPos);
 
           state = state.next(targetPlayer, bot, prevDist, newDist);
       }
@@ -110,9 +114,11 @@ public class AiAgent {
   private Player findTarget(List<Player> allPlayers) {
     Player target = null;
     double targetDistance = Double.POSITIVE_INFINITY;
+    Vector2 botPos = new Vector2((float) bot.getX(), (float) bot.getY());
 
     for (Player p : allPlayers) {
-      double distance = calcDistance(bot, p);
+      Vector2 playerPos = new Vector2((float) p.getX(), (float) p.getY());
+      double distance = botPos.exactMagnitude(playerPos);
       // Update the target if another player is closer
       if (distance < targetDistance) {
         targetDistance = distance;
@@ -121,26 +127,5 @@ public class AiAgent {
     }
 
     return target;
-  }
-
-  /**
-   * Calculate the distance between two players
-   *
-   * @param p1 player 1
-   * @param p2 player 2
-   * @return the euclidean distance between p1 and p2
-   */
-  private double calcDistance(Player p1, Player p2) {
-    double p1X, p1Y, p2X, p2Y;
-    double changeX, changeY;
-    p1X = p1.getX();
-    p1Y = p1.getY();
-    p2X = p2.getX();
-    p2Y = p2.getY();
-
-    changeX = p1X - p2X;
-    changeY = p1Y - p2Y;
-
-    return Math.sqrt(Math.pow(changeX, 2) + Math.pow(changeY, 2));
   }
 }

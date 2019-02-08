@@ -218,16 +218,16 @@ public class AStar {
       initSearch();
       // Run the search
       search();
+      // Extract the plan from the search.
+      currentPlan = extractPlan();
     }
-    // Extract the plan from the search.
-    currentPlan = extractPlan();
 
     // Select the next action from our plan
     boolean[] action = new boolean[5];
     if (currentPlan.size() > 0) {
       action = currentPlan.remove(0);
     }
-
+    // Before returning the action
     return action;
   }
 

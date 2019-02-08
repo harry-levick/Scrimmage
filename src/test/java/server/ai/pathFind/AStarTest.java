@@ -10,12 +10,12 @@ import shared.gameObjects.players.Player;
 public class AStarTest {
 
   @Test
-  public void testPathFind() {
+  public void testStraightLine() {
     ArrayList<GameObject> allObjs = new ArrayList<GameObject>();
 
 
     Player testPlayer = new Player(20, 20, 50, 20, UUID.randomUUID());
-    Bot testBot = new Bot(100, 20, 50, 20, UUID.randomUUID());
+    Bot testBot = new Bot(50, 20, 50, 20, UUID.randomUUID());
 
     allObjs.add(testBot);
     allObjs.add(testPlayer);
@@ -24,14 +24,22 @@ public class AStarTest {
 
     boolean[] action = AStarTest.optimise(testPlayer);
 
-    if (action[Bot.KEY_JUMP])
-      System.out.println("JUMP");
-    if (action[Bot.KEY_RIGHT])
-      System.out.println("RIGHT");
-    if (action[Bot.KEY_LEFT])
-      System.out.println("LEFT");
-    if (!action[Bot.KEY_JUMP] && !action[Bot.KEY_RIGHT] && !action[Bot.KEY_LEFT])
-      System.out.println("DO NOTHING");
+    while (action[Bot.KEY_LEFT] || action[Bot.KEY_RIGHT] || action[Bot.KEY_JUMP]) {
+
+      if (action[Bot.KEY_JUMP])
+        System.out.println("JUMP");
+      if (action[Bot.KEY_RIGHT])
+        System.out.println("RIGHT");
+      if (action[Bot.KEY_LEFT])
+        System.out.println("LEFT");
+      if (!action[Bot.KEY_JUMP] && !action[Bot.KEY_RIGHT] && !action[Bot.KEY_LEFT])
+        System.out.println("DO NOTHING");
+
+      action = AStarTest.optimise(testPlayer);
+
+      System.out.println("------------------");
+
+    }
   }
 
 }
