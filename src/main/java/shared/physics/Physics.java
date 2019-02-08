@@ -37,7 +37,8 @@ public class Physics {
     return null;
   }
 
-  public static Collision boxcast(Vector2 sourcePos, float distance) {
+  public static Collision boxcast(Vector2 sourcePos, Vector2 size, Vector2 direction,
+      float distance) {
     return null;
   }
 
