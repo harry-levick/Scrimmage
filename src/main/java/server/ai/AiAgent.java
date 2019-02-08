@@ -54,7 +54,7 @@ public class AiAgent {
 
     // Update the targeted player
     targetPlayer = findTarget(allPlayers);
-p
+
     while (active) {
       /**
        * The ai can be in one of 6 states at any one time. The state it is in determines the actions
