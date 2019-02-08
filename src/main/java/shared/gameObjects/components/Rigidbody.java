@@ -1,6 +1,8 @@
-package shared.gameObjects.components;
+package shared.gameObjects.Components;
 
 import shared.gameObjects.GameObject;
+import shared.gameObjects.Components.Component;
+import shared.gameObjects.components.ComponentType;
 import shared.physics.Physics;
 import shared.physics.data.AngularData;
 import shared.physics.data.Collision;
