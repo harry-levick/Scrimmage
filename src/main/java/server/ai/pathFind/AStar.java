@@ -11,6 +11,8 @@ import shared.gameObjects.players.Player;
 import java.util.ArrayList;
 import java.util.List;
 import shared.gameObjects.weapons.Weapon;
+import shared.physics.Physics;
+import shared.physics.data.Collision;
 import shared.util.maths.Vector2;
 
 /**
@@ -383,8 +385,33 @@ public class AStar {
   private ArrayList<boolean[]> createPossibleActions(SearchNode currentPos) {
     ArrayList<boolean[]> possibleActions = new ArrayList<>();
 
-    // Jump
-    if (canJumpHigher(currentPos, true)) {
+    Vector2 botPosition = this.bot.getTransform().getPos();
+    Vector2 botSize = this.bot.getTransform().getSize();
+    
+    // Box cast to the left
+    // TODO possibly change this to .Left()
+    Collision viscinityLeft = Physics.boxcast(botPosition, botSize, botPosition.Right().mult(-1),
+        10f);
+    if (viscinityLeft != null ||
+        botPosition.exactMagnitude(viscinityLeft.getPointOfCollision()) > 10) {
+      // If no collision, or if the collision is far away
+      possibleActions.add(createAction(false, true, false, false));
+    }
+
+    // Box cast to the right
+    Collision viscinityRight = Physics.boxcast(botPosition, botSize, botPosition.Right(),
+        10f);
+    if (viscinityRight == null ||
+        botPosition.exactMagnitude(viscinityRight.getPointOfCollision()) > 10) {
+      // If no collision, or if the collision is far away
+      possibleActions.add(createAction(false, false, true, false));
+    }
+
+    // Box cast upwards
+    Collision viscinityUp = Physics.boxcast(botPosition, botSize, botPosition.Up(),
+        10f);
+    // If no collision, or if collision is far away
+    if (viscinityUp == null || botPosition.exactMagnitude(viscinityUp.getPointOfCollision()) > 10) {
       // Just jump
       possibleActions.add(createAction(true, false, false, false));
       // Jump to the right
@@ -392,10 +419,6 @@ public class AStar {
       // Jump to the left
       possibleActions.add(createAction(true, true, false, false));
     }
-    // Right
-    possibleActions.add(createAction(false, false, true, false));
-    // Left
-    possibleActions.add(createAction(false, true, false, false));
 
     return possibleActions;
   }
