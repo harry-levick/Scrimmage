@@ -28,9 +28,8 @@ public class AiAgent {
   Player targetPlayer;
   AStar pathFinder;
 
-  public AiAgent(double xPos, double yPos, double sizeX, double sizeY, UUID uuid,
-      ArrayList<GameObject> gameObjects) {
-    this.bot = new Bot(xPos, yPos, sizeX, sizeY, uuid);
+  public AiAgent(Bot b, ArrayList<GameObject> gameObjects) {
+    this.bot = b;
     this.state = FSA.INITIAL_STATE;
     this.active = false;
     this.gameObjects = gameObjects;
@@ -63,6 +62,7 @@ public class AiAgent {
       switch (state) {
         case IDLE:
           // TODO what to do in the idle state?
+          executeAction(new boolean[] {false, false, false, false, false});
         case CHASING:
           // Find the next best move to take, and execute this move.
           executeAction(pathFinder.optimise(targetPlayer));
@@ -103,6 +103,10 @@ public class AiAgent {
    */
   private void executeAction(boolean[] action) {
     // TODO decide on the implementation of action execution
+    bot.jumpKey = action[Bot.KEY_JUMP];
+    bot.leftKey = action[Bot.KEY_LEFT];
+    bot.rightKey = action[Bot.KEY_RIGHT];
+    bot.click = action[Bot.KEY_CLICK];
   }
 
   /**

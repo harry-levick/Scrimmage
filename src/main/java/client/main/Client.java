@@ -18,6 +18,7 @@ import javafx.scene.control.Slider;
 import javafx.stage.Stage;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import server.ai.AiAgent;
 import shared.handlers.levelHandler.LevelHandler;
 import shared.handlers.levelHandler.Map;
 
@@ -54,6 +55,10 @@ public class Client extends Application {
     setupRender(primaryStage);
     levelHandler = new LevelHandler(settings, root, true);
     currentMap = levelHandler.getMap();
+
+    AiAgent aiAgent = new AiAgent(levelHandler.getBot(), levelHandler.getGameObjects());
+    // Begin running the ai agent main loop.
+    aiAgent.startAgent();
 
     // Main Game Loop
     new AnimationTimer() {

@@ -15,7 +15,7 @@ public class Player extends GameObject {
   protected int health;
   protected Weapon holding;
   protected final int speed = 500;
-  private double vx;
+  protected double vx;
 
   public Player(double x, double y, double sizeX, double sizeY, UUID playerUUID) {
     super(x, y, 100, 100, ObjectID.Player, playerUUID);
@@ -25,13 +25,13 @@ public class Player extends GameObject {
 
   // Initialise the animation 
   public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", "images/player/player_idle.png");
+    this.animation.supplyAnimation("default", "resources/images/player/player_idle.png");
     this.animation.supplyAnimation("moveLeft",
-        "images/player/player_left_walk1.png",
-        "images/player/player_left_walk2.png");
+        "resources/images/player/player_left_walk1.png",
+        "resources/images/player/player_left_walk2.png");
     this.animation.supplyAnimation("moveRight",
-        "images/player/player_right_walk1.png",
-        "images/player/player_right_walk2.png");
+        "resources/images/player/player_right_walk1.png",
+        "resources/images/player/player_right_walk2.png");
   }
 
   @Override

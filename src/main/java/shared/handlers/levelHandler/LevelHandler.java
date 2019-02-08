@@ -2,6 +2,7 @@ package shared.handlers.levelHandler;
 
 import client.main.Settings;
 import javafx.scene.Group;
+import server.ai.Bot;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
@@ -15,6 +16,7 @@ public class LevelHandler {
   private ArrayList<GameObject> gameObjects = new ArrayList<>();
   private ArrayList<Player> players = new ArrayList<>();
   private Player clientPlayer;
+  private Bot botPlayer;
   private ArrayList<Map> maps;
   private HashMap<String, Map> menus;
   private GameState gameState;
@@ -25,6 +27,8 @@ public class LevelHandler {
       clientPlayer = new Player(500, 500, 100, 100, UUID.randomUUID());
       clientPlayer.initialise(root);
       players.add(clientPlayer);
+
+      botPlayer = new Bot(600, 500, 100, 100, UUID.randomUUID());
     }
     maps = MapLoader.getMaps(settings.getMapsPath());
     // menus = MapLoader.getMaps(settings.getMenuPath());
@@ -131,4 +135,6 @@ public class LevelHandler {
   public Player getClientPlayer() {
     return clientPlayer;
   }
+
+  public Bot getBot() { return botPlayer; }
 }

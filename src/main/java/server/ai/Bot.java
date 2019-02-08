@@ -1,8 +1,11 @@
 package server.ai;
 
+import client.handlers.connectionHandler.ConnectionHandler;
+import client.handlers.inputHandler.InputHandler;
 import shared.gameObjects.players.Player;
 
 import java.util.UUID;
+import shared.packets.PacketInput;
 
 /** @author Harry Levick (hxl799) */
 public class Bot extends Player {
@@ -24,4 +27,32 @@ public class Bot extends Player {
   public boolean mayJump() {
     return mayJump;
   }
+
+  public void applyInput(boolean multiplayer, ConnectionHandler connectionHandler) {
+    if (this.rightKey) {
+      vx = speed;
+      animation.switchAnimation("moveRight");
+    }
+    if (this.leftKey) {
+      vx = -speed;
+      animation.switchAnimation("moveLeft");
+    }
+
+    if (!this.rightKey && !this.leftKey) {
+      vx = 0;
+      animation.switchDefault();
+    }
+    if (this.click && holding != null) {
+      holding.fire(InputHandler.x, InputHandler.y);
+    } //else punch
+    setX(getX() + (vx * 0.0166));
+
+    /** If multiplayer then send input to server */
+    if (multiplayer) {
+      PacketInput input = new PacketInput(InputHandler.x, InputHandler.y, InputHandler.leftKey,
+          InputHandler.rightKey, InputHandler.jumpKey, InputHandler.click);
+      connectionHandler.send(input.getData());
+    }
+  }
+
 }
