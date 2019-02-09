@@ -14,7 +14,7 @@ import shared.physics.types.RigidbodyType;
 /** @author hlf764 */
 public class Bullet extends GameObject {
 
-  private String imagePath = "images/weapons/bullet.png";
+  private static String imagePath = "images/weapons/bullet.png";
   public boolean isHit;     // true if there is an object at that position
   private double width;     // width of bullet
   private double speed;     // speed of bullet
@@ -56,7 +56,7 @@ public class Bullet extends GameObject {
 
   @Override
   public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", this.imagePath); 
+    this.animation.supplyAnimation("default", this.imagePath);
   }
 
   @Override
