@@ -35,13 +35,12 @@ public class LevelHandler {
     maps = MapLoader.getMaps(settings.getMapsPath());
     // menus = MapLoader.getMaps(settings.getMenuPath());
     // menus = MapLoader.getMenuMaps(settings.getMenuPath());
-    // Set inital game level as the Main Menu
+    // Set initial game level as the Main Menu
     map = maps.get(0); // FOR TESTING
     generateLevel(root, isClient);
 
     gameObjects.add(clientPlayer.getHolding());
     clientPlayer.getHolding().initialise(root);
-    System.out.println("-"+ gameObjects);
   }
 
   public boolean changeMap(Map map) {
