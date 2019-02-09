@@ -20,14 +20,9 @@ public class Bullet extends GameObject {
   public boolean isHit;     // true if there is an object at that position
   private double width;     // width of bullet
   private double speed;     // speed of bullet
-  private double newX;      // new x position when update() is called
-  private double newY;      // new y position when update() is called
-  private double slope;     // the slope of the bullet path
-  private float deltaX;     // change in x in every update
-  private float deltaY;     // change in y in every update
-  private Vector2 vector;
+  private Vector2 vector;   // Vector of the force of bullet fire
   private Image bulletImage;// image of the bullet
-  Rigidbody rb = new Rigidbody(RigidbodyType.DYNAMIC, 100f, 100f, 0.1f, new MaterialProperty(0, 0, 0), new AngularData(0, 0, 0, 0), this);
+  private Rigidbody rb = new Rigidbody(RigidbodyType.DYNAMIC, 100f, 100f, 0.1f, new MaterialProperty(0, 0, 0), new AngularData(0, 0, 0, 0), this);
 
   public Bullet(
       double gunX,          // gun initial x position
@@ -41,22 +36,15 @@ public class Bullet extends GameObject {
     super(gunX, gunY, ObjectID.Bullet, uuid);
     setWidth(width);
     setSpeed(speed);
-
-    this.newX = gunX;
-    this.newY = gunY;
-    this.slope = (gunY - mouseY) / (gunX - mouseX);     // slope of the bullet path
-    // deltaX and deltaY show the change in x and y values in every updates
-    // The last bit of the expression shows whether x and y should progress in
-    // positive or negative direction
-    this.deltaX = getDeltaX(mouseX, mouseY);
-    this.deltaY = getDeltaY(mouseX, mouseY);
     
-     
+    // Unit vector of the bullet force
+    vector = new Vector2((float)(mouseX - gunX), (float)(mouseY - gunY));
+    vector = vector.div((float)Math.sqrt(vector.dot(vector)));
+    
     addComponent(rb);
-    rb.setVelocity(new Vector2(deltaX * 5f, deltaY * 5f));
+    // Change the speed of bullet by altering the bulletSpeed variable in any Gun
+    rb.setVelocity(vector.mult((float)speed * 2250f));
     //rb.move(new Vector2((float)(mouseX-gunX)*1.5f, (float)(mouseY-gunY)*1.5f));
-    
-    
     
     this.bulletImage = getImage();
     this.isHit = false;
@@ -66,11 +54,6 @@ public class Bullet extends GameObject {
     render();
   }
 
-  public void fire() {
-    this.newX += deltaX;
-    this.newY += deltaY;
-  }
-
   @Override
   public void initialiseAnimation() {
     this.animation.supplyAnimation("default", new Image[]{this.bulletImage}); 
@@ -78,18 +61,18 @@ public class Bullet extends GameObject {
 
   @Override
   public void update() {
-    /*
-    if ((0 < this.newX && this.newX < 1920) && (0 < this.newY && this.newY < 1080))
-      this.fire();
+    if (isHit) {
+      System.out.println(this.toString() + " is to be destroyed");
+      Client.levelHandler.delGameObject(this);
+    }
+    else if ((0 < getX() && getX() < 1920) && (0 < getY() && getY() < 1080)) {
+      rb.update();
+      super.update();
+    }
     else {
       System.out.println(this.toString() + " is to be destroyed");
       Client.levelHandler.delGameObject(this);
     }
-    */
-    System.out.println(String.format("%f,%f", this.getX(), this.getY()));
-    //rb.move(new Vector2(-15f, -15f));
-    rb.update();
-    super.update();
     // if something is in this position (will take width into account later)
     // isHit = true;
     // apply effect (deduct hp, sound, physics)
@@ -113,18 +96,6 @@ public class Bullet extends GameObject {
   @Override
   public String getState() {
     return null;
-  }
-  
-  private float getDeltaX(double mouseX, double mouseY) {
-    double deltaX = mouseX - this.newX;
-    
-    return (float)deltaX;
-  }
-  
-  private float getDeltaY(double mouseX, double mouseY) {
-    double deltaY = mouseY - this.newY;
-    
-    return (float)deltaY;
   }
 
   // -------START-------
@@ -154,6 +125,14 @@ public class Bullet extends GameObject {
     if (newSpeed > 0) {
       this.speed = newSpeed;
     }
+  }
+  
+  public boolean getIsHit() {
+    return this.isHit;
+  }
+  
+  public void setIsHit(boolean hit) {
+    this.isHit = hit;
   }
   // -------------------
   // Setters and Getters

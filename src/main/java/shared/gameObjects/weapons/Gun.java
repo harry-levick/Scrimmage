@@ -66,7 +66,6 @@ abstract class Gun extends Weapon {
       UUID uuid = UUID.randomUUID();
       Bullet bullet = new Bullet(getX(), getY(), mouseX, mouseY, this.bulletWidth, this.bulletSpeed,
           uuid);
-      bullet.fire();
       this.currentCooldown = getDefaultCoolDown();
     }
   }
