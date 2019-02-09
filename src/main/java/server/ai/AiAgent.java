@@ -1,22 +1,22 @@
 package server.ai;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 import server.ai.pathFind.AStar;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 /** @author Harry Levick (hxl799) */
 
 /**
  * AiAgent is the main body of an ai, creating an AiAgent will create a bot in the world at (x,y).
  * The AiAgent class then has the main loop of the bot, which is inside the startAgent() method,
- * calling this method begins the main loop.
- * Before the startAgent() method is called, you must call the getBot() method so that the bot can
- * be added to the list of gameObjects.
+ * calling this method begins the main loop. Before the startAgent() method is called, you must call
+ * the getBot() method so that the bot can be added to the list of gameObjects.
  */
 public class AiAgent {
 
@@ -27,18 +27,16 @@ public class AiAgent {
   Player targetPlayer;
   AStar pathFinder;
 
-  public AiAgent(double xPos, double yPos, ObjectID id, UUID uuid,
+  public AiAgent(double xPos, double yPos, double sizeX, double sizeY, UUID uuid,
       ArrayList<GameObject> gameObjects) {
-    this.bot = new Bot(xPos, yPos, uuid);
+    this.bot = new Bot(xPos, yPos, sizeX, sizeY, uuid);
     this.state = FSA.INITIAL_STATE;
     this.active = false;
     this.gameObjects = gameObjects;
     this.pathFinder = new AStar(gameObjects, this.bot);
   }
 
-  /**
-   * The method that runs the agent.
-   */
+  /** The method that runs the agent. */
   public void startAgent() {
     active = true;
     double prevDist, newDist;
@@ -47,23 +45,26 @@ public class AiAgent {
      * give a reference to all players that updates with the player updates?
      */
     // Collect all players from the world
-    List<Player> allPlayers = gameObjects.stream()
-        .filter(p -> p instanceof Player)
-        .map(Player.class::cast)
-        .collect(Collectors.toList());
+    List<Player> allPlayers =
+        gameObjects.stream()
+            .filter(p -> p instanceof Player)
+            .map(Player.class::cast)
+            .collect(Collectors.toList());
 
     // Update the targeted player
     targetPlayer = findTarget(allPlayers);
 
     while (active) {
       /**
-       * The ai can be in one of 6 states at any one time.
-       * The state it is in determines the actions that it takes.
+       * The ai can be in one of 6 states at any one time. The state it is in determines the actions
+       * that it takes.
        */
       switch (state) {
         case IDLE:
           // TODO what to do in the idle state?
         case CHASING:
+          // Find the next best move to take, and execute this move.
+          executeAction(pathFinder.optimise(targetPlayer));
           // TODO calculate and execute the best path to the target.
         case FLEEING:
           // TODO calculate and execute the best path away from the target.
@@ -73,10 +74,10 @@ public class AiAgent {
           // TODO calculate and execute the best path to the target whilst attacking.
         case FLEEING_ATTACKING:
           // TODO calculate and execute the best path away from the target whilst attacking.
-        /**
-         * The ai will always be in the initial state on the first loop, so will default
-         * allowing us to find the target player for the first time in the default case.
-         */
+          /**
+           * The ai will always be in the initial state on the first loop, so will default allowing
+           * us to find the target player for the first time in the default case.
+           */
         default:
           // Calculate the distance to the target from the previous loop
           prevDist = calcDistance(bot, targetPlayer);
@@ -88,22 +89,21 @@ public class AiAgent {
           state = state.next(targetPlayer, bot, prevDist, newDist);
       }
     }
-
   }
 
   /**
-   * Receives an action and then executes this action.
-   * This method will only execute one action at a time (the first action in the list). Since the
-   * method will be called inside of the agent loop
-   * @param actions: a list of actions to take.
+   * Receives an action and then executes this action. This method will only execute one action at a
+   * time (the first action in the list). Since the method will be called inside of the agent loop
+   *
+   * @param action: an action to exacute.
    */
-  private void executeAction(ArrayList<boolean[]> actions) {
-    // TODO decide on the implementation of action execution.
-    bot.jumpKey = true;
+  private void executeAction(boolean[] action) {
+    // TODO decide on the implementation of action execution
   }
 
   /**
    * Finds the closest player
+   *
    * @param allPlayers A list of all players in the world
    * @return The player who is the closest to the bot
    */
@@ -125,6 +125,7 @@ public class AiAgent {
 
   /**
    * Calculate the distance between two players
+   *
    * @param p1 player 1
    * @param p2 player 2
    * @return the euclidean distance between p1 and p2

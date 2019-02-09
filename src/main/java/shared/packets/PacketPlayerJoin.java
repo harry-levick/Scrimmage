@@ -1,5 +1,3 @@
 package shared.packets;
 
-public class PacketPlayerJoin extends Packet {
-
-}
+public class PacketPlayerJoin extends Packet {}

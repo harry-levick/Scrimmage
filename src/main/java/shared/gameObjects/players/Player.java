@@ -5,48 +5,32 @@ import client.handlers.inputHandler.InputHandler;
 import java.util.UUID;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
-import shared.gameObjects.animator.Animator;
 import shared.gameObjects.weapons.Weapon;
 import shared.packets.PacketInput;
-import javafx.scene.image.Image;
 
 public class Player extends GameObject {
 
   protected int health;
   protected Weapon holding;
   protected final int speed = 500;
-  //private transient Animator animation = new Animator();
   private double vx;
 
-  public Player(double x, double y, UUID playerUUID) {
-    super(x, y, ObjectID.Player, playerUUID);
+  public Player(double x, double y, double sizeX, double sizeY, UUID playerUUID) {
+    super(x, y, 100, 100, ObjectID.Player, playerUUID);
     this.health = 100;
     holding = null;
-    System.out.println(animation);
-  }
-  
-  // Initialise the animation 
-  public void initialiseAnimation() {
-    Image[] insertImageList = {
-        new Image("images/player/player_idle.png")  
-    };
-    this.animation.supplyAnimation("default", insertImageList); 
-    
-    //Running left animation 
-    insertImageList = new Image[]{
-        new Image("images/player/player_left_walk1.png"),  
-        new Image("images/player/player_left_walk2.png"),  
-    };
-    this.animation.supplyAnimation("moveLeft", insertImageList);
-    
-    //Running right animation 
-    insertImageList = new Image[]{
-        new Image("images/player/player_right_walk1.png"),  
-        new Image("images/player/player_right_walk2.png"),  
-    };
-    this.animation.supplyAnimation("moveRight", insertImageList);
   }
 
+  // Initialise the animation 
+  public void initialiseAnimation() {
+    this.animation.supplyAnimation("default", "images/player/player_idle.png");
+    this.animation.supplyAnimation("moveLeft",
+        "images/player/player_left_walk1.png",
+        "images/player/player_left_walk2.png");
+    this.animation.supplyAnimation("moveRight",
+        "images/player/player_right_walk1.png",
+        "images/player/player_right_walk2.png");
+  }
 
   @Override
   public void update() {
@@ -61,7 +45,7 @@ public class Player extends GameObject {
     super.render();
     imageView.setTranslateX(getX());
     imageView.setTranslateY(getY());
-    
+
   }
 
   @Override
@@ -78,7 +62,7 @@ public class Player extends GameObject {
       vx = -speed;
       animation.switchAnimation("moveLeft");
     }
-  
+
     if (!InputHandler.rightKey && !InputHandler.leftKey) {
       vx = 0;
       animation.switchDefault();

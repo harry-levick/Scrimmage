@@ -1,9 +1,10 @@
 package client.handlers.audioHandler;
 
 import client.main.Settings;
-import java.io.File;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+
+import java.io.File;
 
 public class AudioHandler {
 
@@ -37,9 +38,7 @@ public class AudioHandler {
     }
   }
 
-  /**
-   * Stop any game music from playing
-   */
+  /** Stop any game music from playing */
   public void stopMusic() {
     if (musicPlayer != null) {
       musicPlayer.stop();

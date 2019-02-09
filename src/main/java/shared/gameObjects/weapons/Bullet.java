@@ -11,12 +11,10 @@ import shared.physics.data.AngularData;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.RigidbodyType;
 
-/**
- * @author hlf764
- */
+/** @author hlf764 */
 public class Bullet extends GameObject {
 
-  private static String imagePath = "images/weapons/bullet.png";
+  private String imagePath = "images/weapons/bullet.png";
   public boolean isHit;     // true if there is an object at that position
   private double width;     // width of bullet
   private double speed;     // speed of bullet
@@ -25,15 +23,17 @@ public class Bullet extends GameObject {
   private Rigidbody rb = new Rigidbody(RigidbodyType.DYNAMIC, 100f, 100f, 0.1f, new MaterialProperty(0, 0, 0), new AngularData(0, 0, 0, 0), this);
 
   public Bullet(
-      double gunX,          // gun initial x position
-      double gunY,          // gun initial y position
-      double mouseX,        // mouse initial x position
-      double mouseY,        // mouse initial y position
-      double width,         // the width of the bullet
-      double speed,         // the speed of the bullet
-      UUID uuid) {          // uuid of this bullet
+      double gunX, // gun initial x position
+      double gunY, // gun initial y position
+      double sizeX,
+      double sizeY,
+      double mouseX, // mouse initial x position
+      double mouseY, // mouse initial y position
+      double width, // the width of the bullet
+      double speed, // the speed of the bullet
+      UUID uuid) { // uuid of this bullet
 
-    super(gunX, gunY, ObjectID.Bullet, uuid);
+    super(gunX, gunY, sizeX, sizeY, ObjectID.Bullet, uuid);
     setWidth(width);
     setSpeed(speed);
     
@@ -56,7 +56,7 @@ public class Bullet extends GameObject {
 
   @Override
   public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", new Image[]{this.bulletImage}); 
+    this.animation.supplyAnimation("default", this.imagePath); 
   }
 
   @Override

@@ -16,16 +16,16 @@ public class ExampleObject extends GameObject {
    * @param y Y coordinate of object in game world
    * @param id Unique Identifier of every game object
    */
-  public ExampleObject(double x, double y, ObjectID id, UUID exampleUUID) {
-    super(x, y, id, exampleUUID);
+  public ExampleObject(
+      double x, double y, double sizeX, double sizeY, ObjectID id, UUID exampleUUID) {
+    super(x, y, sizeX, sizeY, id, exampleUUID);
     health = 100;
   }
-  
-  // Initialise the animation 
+
+  // Initialise the animation
   public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", new Image[]{new Image("images/platforms/stone/elementStone013.png")});
+    this.animation.supplyAnimation("default", "images/platforms/stone/elementStone013.png");
   }
-    
 
   @Override
   public void update() {
@@ -61,8 +61,7 @@ public class ExampleObject extends GameObject {
   }
 
   @Override
-  public void interpolatePosition(float alpha) {
-  }
+  public void interpolatePosition(float alpha) {}
 
   @Override
   public String getState() {

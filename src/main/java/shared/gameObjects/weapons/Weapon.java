@@ -1,12 +1,11 @@
 package shared.gameObjects.weapons;
 
-import java.util.UUID;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 
-/**
- * @author hlf764 The abstract class for all weapons in the game.
- */
+import java.util.UUID;
+
+/** @author hlf764 The abstract class for all weapons in the game. */
 public abstract class Weapon extends GameObject {
 
   /**
@@ -45,6 +44,8 @@ public abstract class Weapon extends GameObject {
   public Weapon(
       double x,
       double y,
+      double sizeX,
+      double sizeY,
       ObjectID id,
       double damage,
       double weight,
@@ -54,7 +55,7 @@ public abstract class Weapon extends GameObject {
       int ammo,
       int fireRate,
       UUID uuid) {
-    super(x, y, id, uuid);
+    super(x, y, sizeX, sizeY, id, uuid);
     this.isGun = isGun;
     this.isMelee = isMelee;
     setDamage(damage);
@@ -150,5 +151,5 @@ public abstract class Weapon extends GameObject {
   // -------------------
   // Setters and Getters
   // --------END--------
-  
+
 }

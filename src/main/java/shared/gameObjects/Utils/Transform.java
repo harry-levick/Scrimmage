@@ -1,9 +1,10 @@
 package shared.gameObjects.Utils;
 
-import java.io.Serializable;
 import shared.gameObjects.GameObject;
 import shared.util.maths.Rotation;
 import shared.util.maths.Vector2;
+
+import java.io.Serializable;
 
 public class Transform implements Serializable {
 
@@ -36,9 +37,7 @@ public class Transform implements Serializable {
     gameObject = parent;
   }
 
-  /**
-   * Moves the attached gameObject to the desired position.
-   */
+  /** Moves the attached gameObject to the desired position. */
   public void translate(Vector2 translateFactor) {
     topPos = topPos.add(translateFactor);
     botPos = botPos.add(translateFactor);
@@ -46,6 +45,7 @@ public class Transform implements Serializable {
 
   /**
    * [Does not do anything currently]
+   *
    * @param rotation
    */
   public void rotate(Vector2 rotation) {
@@ -54,6 +54,7 @@ public class Transform implements Serializable {
 
   /**
    * Scales an object's size with a given scale factor. It's JavaFX position remains the same.
+   *
    * @param scaleFactor The amount to scale by per axis.
    */
   public void scale(Vector2 scaleFactor) {

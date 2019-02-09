@@ -1,8 +1,9 @@
 package shared.gameObjects.menu.main;
 
-import java.util.UUID;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.menu.ButtonObject;
+
+import java.util.UUID;
 
 public class ButtonLeveleditor extends ButtonObject {
 
@@ -14,14 +15,14 @@ public class ButtonLeveleditor extends ButtonObject {
    * @param y Y coordinate of object in game world
    * @param id Unique Identifier of every game object
    */
-  public ButtonLeveleditor(double x, double y, ObjectID id, UUID objectUUID) {
-    super(x, y, id, objectUUID);
+  public ButtonLeveleditor(
+      double x, double y, double sizeX, double sizeY, ObjectID id, UUID objectUUID) {
+    super(x, y, sizeX, sizeY, id, objectUUID);
   }
 
   @Override
   public void initialiseAnimation() {
-    super.initialiseAnimation("images/buttons/leveleditor_unpressed.png","images/buttons/leveleditor_pressed.png");
-    
+    super.initialiseAnimation(
+        "images/buttons/leveleditor_unpressed.png", "images/buttons/leveleditor_pressed.png");
   }
-
 }
