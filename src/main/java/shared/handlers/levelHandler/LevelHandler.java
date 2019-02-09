@@ -5,6 +5,7 @@ import javafx.scene.Group;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
+import shared.gameObjects.weapons.Handgun;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,10 +20,15 @@ public class LevelHandler {
   private HashMap<String, Map> menus;
   private GameState gameState;
   private Map map;
+  private Group root;
 
   public LevelHandler(Settings settings, Group root, boolean isClient) {
+    this.root = root;
     if (isClient) {
       clientPlayer = new Player(500, 500, 100, 100, UUID.randomUUID());
+      clientPlayer.setHolding(
+          new Handgun(500, 500, 100, 100, ObjectID.Weapon, 10, 10, "Handgun", 100, 1, 50, 10, UUID.randomUUID())
+        );
       clientPlayer.initialise(root);
       players.add(clientPlayer);
     }
@@ -32,6 +38,10 @@ public class LevelHandler {
     // Set inital game level as the Main Menu
     map = maps.get(0); // FOR TESTING
     generateLevel(root, isClient);
+
+    gameObjects.add(clientPlayer.getHolding());
+    clientPlayer.getHolding().initialise(root);
+    System.out.println("-"+ gameObjects);
   }
 
   public boolean changeMap(Map map) {
@@ -83,6 +93,18 @@ public class LevelHandler {
   public ArrayList<GameObject> getGameObjects() {
     return gameObjects;
   }
+  
+  // Test
+  public void addGameObject(GameObject g) {
+    this.gameObjects.add(g);
+    g.initialise(this.root);
+  }
+  
+  public void delGameObject(GameObject g) {
+    g.destroy();
+    this.gameObjects.remove(g);
+  }
+  // End Test
 
   /**
    * List of all available maps
