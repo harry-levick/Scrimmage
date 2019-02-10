@@ -14,25 +14,31 @@ public class BoxCollider extends Collider implements Serializable {
 
   public BoxCollider(GameObject parent, boolean isTrigger) {
     super(parent, ColliderType.BOX, isTrigger);
-    this.size = parent.getTransform().getSize();
     corners = new Vector2[4];
     update();
   }
 
+  public BoxCollider(Vector2 sourcePos, Vector2 size) {
+    super(null, ColliderType.BOX, false);
+    this.size = size;
+    centre = sourcePos.add(size.mult(0.25f));
+    corners = new Vector2[4];
+
+    corners[0] = sourcePos;
+    corners[1] = sourcePos.add(Vector2.Up().mult(size));
+    corners[2] = sourcePos.add(size);
+    corners[3] = sourcePos.add(Vector2.Right().mult(size));
+  }
+
   @Override
   public void update() {
-    Vector2 prevCen = centre;
     size = getParent().getTransform().getSize();
     centre = getParent().getTransform().getPos().add(size.mult(0.5f));
-    prevCen = prevCen.sub(centre);
-    if(prevCen.getX() == 0 && prevCen.getY() == 0) {
 
-    }
-    else {
-      for(int i = 0; i < 4; i++) {
-        corners[i] = corners[i].add(prevCen);
-      }
-    }
+    corners[0] = getParent().getTransform().getPos();
+    corners[1] = getParent().getTransform().getPos().add(Vector2.Up().mult(size));
+    corners[2] = getParent().getTransform().getBotPos();
+    corners[3] = getParent().getTransform().getPos().add(Vector2.Right().mult(size));
   }
 
   // Getters

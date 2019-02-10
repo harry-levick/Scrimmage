@@ -11,12 +11,11 @@ import javafx.scene.image.ImageView;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.Utils.Transform;
 import shared.gameObjects.animator.Animator;
-import shared.gameObjects.components.BoxCollider;
-import shared.gameObjects.components.CircleCollider;
 import shared.gameObjects.components.Collider;
 import shared.gameObjects.components.Component;
 import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.Rigidbody;
+import shared.physics.Physics;
 import shared.physics.data.Collision;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
@@ -71,10 +70,8 @@ public abstract class GameObject implements Serializable {
     animation.update();
     Collider col = (Collider) getComponent(ComponentType.COLLIDER);
     Rigidbody rb = (Rigidbody) getComponent(ComponentType.RIGIDBODY);
-    if(rb != null)
-      rb.update();
-    if(col != null)
-      col.update();
+    if (rb != null) rb.update();
+    if (col != null) col.update();
   }
 
   // Client Side only
@@ -88,29 +85,15 @@ public abstract class GameObject implements Serializable {
   public void updateCollision(ArrayList<GameObject> gameObjects) {
     Collider col = (Collider) getComponent(ComponentType.COLLIDER);
     Rigidbody rb = (Rigidbody) getComponent(ComponentType.RIGIDBODY);
-    if(rb != null) {
+    if (rb != null) {
       if (rb.getBodyType() == RigidbodyType.STATIC) return;
     }
-    Collision collision = null;
+    ArrayList<Collision> collision = null;
     if (col != null) {
-      for (GameObject object : gameObjects) {
-        if(object.equals(this)) {
-          continue;
-        }
-        if (object.getComponent(ComponentType.COLLIDER) != null) {
-          switch (col.getColliderType()) {
-            case BOX:
-              collision =
-                  Collision.resolveCollision(
-                      (BoxCollider) col, (Collider) object.getComponent(ComponentType.COLLIDER));
-              break;
-            case CIRCLE:
-              collision =
-                  Collision.resolveCollision(
-                      (CircleCollider) col, (Collider) object.getComponent(ComponentType.COLLIDER));
-              break;
-          }
-          if (collision != null) rb.getCollisions().add(collision);
+      collision = Physics.boxcastAll(getTransform().getPos().add(rb.getVelocity().mult(Physics.TIMESTEP)), getTransform().getSize().mult(0.9f), Vector2.Zero(), 0);
+      for (Collision c : collision) {
+        if(!c.getCollidedObject().equals(rb)) {
+          rb.getCollisions().add(c);
         }
       }
     }

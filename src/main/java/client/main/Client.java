@@ -20,6 +20,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import shared.handlers.levelHandler.LevelHandler;
 import shared.handlers.levelHandler.Map;
+import shared.physics.Physics;
 
 public class Client extends Application {
 
@@ -98,6 +99,7 @@ public class Client extends Application {
         /** Render Game Objects */
         levelHandler.getGameObjects().forEach(gameObject -> gameObject.render());
         /** Check Collisions */
+        Physics.gameObjects = levelHandler.getGameObjects();
         levelHandler
             .getGameObjects()
             .forEach(gameObject -> gameObject.updateCollision(levelHandler.getGameObjects()));

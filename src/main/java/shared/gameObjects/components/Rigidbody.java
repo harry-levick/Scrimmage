@@ -157,6 +157,7 @@ public class Rigidbody extends Component implements Serializable {
 
   /** An update method; all collision updates happen here */
   private void applyCollisions() {
+    System.out.println(velocity);
     for (Collision c : collisions) {
       if (c.getCollidedObject().getBodyType() == RigidbodyType.STATIC) {
         switch (c.getDirection()) {
@@ -166,25 +167,24 @@ public class Rigidbody extends Component implements Serializable {
             impactVelocity =
                 getVelocity()
                     .mult(
-                        new Vector2(velocity.getX(), 1)
-                            .mult(
+                        new Vector2(velocity.getX(), -1)
+                            .mult(Vector2.Up().mult(
                                     Math.max(
                                         getMaterial().getRestitution(),
-                                        c.getCollidedObject().getMaterial().getRestitution())));
+                                        c.getCollidedObject().getMaterial().getRestitution()))));
             break;
           case LEFT:
           case RIGHT:
             impactVelocity =
                 getVelocity()
                     .mult(
-                        new Vector2(1, velocity.getY())
-                            .mult(
+                        new Vector2(-1, velocity.getY())
+                            .mult(Vector2.Right().mult(
                                     Math.max(
                                         getMaterial().getRestitution(),
-                                        c.getCollidedObject().getMaterial().getRestitution())));
+                                        c.getCollidedObject().getMaterial().getRestitution()))));
             break;
         }
-        System.out.println("Impact Velocity: " + velocity);
       } else if (c.getCollidedObject().getBodyType() == RigidbodyType.DYNAMIC) {
         // TODO Momentum and Impulse Calculation
       }

@@ -40,6 +40,7 @@ public class Collision {
                     collidedBody,
                     CollisionDirection.getDirection(
                         a.getCentre().sub(((BoxCollider) b).getCentre()).normalize()));
+
           }
         }
 
