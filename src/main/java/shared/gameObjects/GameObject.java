@@ -8,9 +8,11 @@ import java.util.Set;
 import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
+import javax.swing.Box;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.Utils.Transform;
 import shared.gameObjects.animator.Animator;
+import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Collider;
 import shared.gameObjects.components.Component;
 import shared.gameObjects.components.ComponentType;
@@ -90,7 +92,7 @@ public abstract class GameObject implements Serializable {
     }
     ArrayList<Collision> collision = null;
     if (col != null) {
-      collision = Physics.boxcastAll(getTransform().getPos().add(rb.getVelocity().mult(Physics.TIMESTEP)), getTransform().getSize().mult(0.9f), Vector2.Zero(), 0);
+      collision = Physics.boxcastAll(getTransform().getPos().add(0), getTransform().getSize().mult(0.9f), Vector2.Zero(), 0);
       for (Collision c : collision) {
         if(!c.getCollidedObject().equals(rb)) {
           rb.getCollisions().add(c);
@@ -124,6 +126,8 @@ public abstract class GameObject implements Serializable {
     imageView = new ImageView();
     imageView.setRotate(rotation);
     root.getChildren().add(this.imageView);
+    if(getComponent(ComponentType.COLLIDER) != null)
+      ((BoxCollider) getComponent(ComponentType.COLLIDER)).initialise(root);
   }
 
   public void addChild(GameObject child) {

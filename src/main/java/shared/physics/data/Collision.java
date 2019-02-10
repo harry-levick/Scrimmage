@@ -12,7 +12,8 @@ import shared.util.maths.Vector2;
 public class Collision {
 
   private Rigidbody collidedObject;
-  private Vector2 pointOfCollision;
+  private Vector2 normalCollision;
+  private float penetrationDepth;
   private CollisionDirection direction;
 
   /**
@@ -40,7 +41,6 @@ public class Collision {
                     collidedBody,
                     CollisionDirection.getDirection(
                         a.getCentre().sub(((BoxCollider) b).getCentre()).normalize()));
-
           }
         }
 
@@ -77,10 +77,6 @@ public class Collision {
 
   public Rigidbody getCollidedObject() {
     return collidedObject;
-  }
-
-  public Vector2 getPointOfCollision() {
-    return pointOfCollision;
   }
 
   public CollisionDirection getDirection() {

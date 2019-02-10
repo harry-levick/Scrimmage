@@ -1,8 +1,7 @@
-package shared.gameObjects.weapons;
+package shared.gameObjects;
 
 import java.util.UUID;
 import javafx.scene.image.Image;
-import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
@@ -10,7 +9,7 @@ import shared.physics.data.AngularData;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.RigidbodyType;
 
-public class ExampleFloorObject extends GameObject {
+public class ExampleWallObject extends GameObject {
 
   private int health;
 
@@ -22,14 +21,14 @@ public class ExampleFloorObject extends GameObject {
    * @param y Y coordinate of object in game world
    * @param id Unique Identifier of every game object
    */
-  public ExampleFloorObject(
+  public ExampleWallObject(
       double x, double y, double sizeX, double sizeY, ObjectID id, UUID exampleUUID) {
     super(x, y, sizeX, sizeY, id, exampleUUID);
     health = 100;
     addComponent(
         new Rigidbody(
             RigidbodyType.STATIC,
-            10,
+            0,
             1,
             0,
             new MaterialProperty(0.1f, 1, 1),
@@ -40,8 +39,7 @@ public class ExampleFloorObject extends GameObject {
 
   // Initialise the animation
   public void initialiseAnimation() {
-    this.animation.supplyAnimation(
-        "default", new Image[] {new Image("images/platforms/stone/elementStone013.png")});
+    this.animation.supplyAnimation("default", "images/platforms/stone/elementStone013.png");
   }
 
   @Override

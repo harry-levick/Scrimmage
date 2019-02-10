@@ -24,7 +24,7 @@ public class KeyboardInput extends InputHandler implements EventHandler<KeyEvent
           inputHandler.rightKey = true;
           inputHandler.keyPressed = true;
           break;
-        case SPACE:
+        case W:
           inputHandler.jumpKey = true;
           inputHandler.keyPressed = true;
           break;

@@ -15,6 +15,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 import shared.gameObjects.ExampleObject;
+import shared.gameObjects.ExampleWallObject;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.menu.main.ButtonLeveleditor;
@@ -22,7 +23,7 @@ import shared.gameObjects.menu.main.ButtonMultiplayer;
 import shared.gameObjects.menu.main.ButtonSettings;
 import shared.gameObjects.menu.main.ButtonSingleplayer;
 import shared.gameObjects.players.Player;
-import shared.gameObjects.weapons.ExampleFloorObject;
+import shared.gameObjects.ExampleFloorObject;
 import shared.gameObjects.weapons.Handgun;
 import shared.handlers.levelHandler.MapLoader;
 
@@ -50,6 +51,7 @@ public class LevelEditor extends Application {
         FXCollections.observableArrayList(
             "ExampleObject",
             "ExampleFloor",
+            "ExampleWall",
             "Player",
             "Singleplayer Button",
             "Multiplayer Button",
@@ -113,6 +115,10 @@ public class LevelEditor extends Application {
               gameObjects.add(temp);
             } else if (cb.getValue() == "ExampleFloor") {
               GameObject temp = new ExampleFloorObject(event.getX(), event.getY(), 220, 70, ObjectID.Bot, uuid);
+              temp.initialise(root);
+              gameObjects.add(temp);
+            } else if (cb.getValue() == "ExampleWall") {
+              GameObject temp = new ExampleWallObject(event.getX(), event.getY(), 70, 220, ObjectID.Bot, uuid);
               temp.initialise(root);
               gameObjects.add(temp);
             } else if (cb.getValue() == "Singleplayer Button") {
