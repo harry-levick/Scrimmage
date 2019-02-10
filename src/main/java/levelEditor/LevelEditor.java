@@ -275,10 +275,11 @@ public class LevelEditor extends Application {
     for (GameObject object : removeList) {
       double ulX = object.getX();
       double ulY = object.getY();
-      double lrX = ulX + object.getTransform().getBotPos().getX();
-      double lrY = ulY + object.getTransform().getBotPos().getY();
+      double lrX = ulX + object.getTransform().getSize().getX();
+      double lrY = ulY + object.getTransform().getSize().getY();
       if ((x >= ulX) && (y >= ulY) && (x <= lrX) && (y <= lrY)) {
-        //todo add removal
+        root.getChildren().remove(event.getTarget());
+        object.destroy();
       }
     }
   }
