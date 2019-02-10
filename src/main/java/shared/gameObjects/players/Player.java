@@ -68,10 +68,20 @@ public class Player extends GameObject {
       animation.switchDefault();
     }
     if (InputHandler.click && holding != null) {
+      System.out.println("@Player, input("+InputHandler.x+", "+InputHandler.y+")");
       holding.fire(InputHandler.x, InputHandler.y);
     } //else punch
     setX(getX() + (vx * 0.0166));
+    
+    // Update weapon's position
+    this.getHolding().setX(this.getX());
+    this.getHolding().setY(this.getY());
 
+    if (this.getHolding() != null) {
+      this.getHolding().setX(this.getX());
+      this.getHolding().setY(this.getY());
+    }
+    
     /** If multiplayer then send input to server */
     if (multiplayer) {
       PacketInput input = new PacketInput(InputHandler.x, InputHandler.y, InputHandler.leftKey,
