@@ -4,7 +4,6 @@ import java.util.UUID;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
@@ -53,9 +52,9 @@ public abstract class ButtonObject extends GameObject {
     button.setStyle("-fx-border-color: transparent;-fx-background-color: transparent;");
   }
 
-  public void initialiseAnimation(String defaultPath, String clickedPath) {
-    this.animation.supplyAnimation("default", new Image[] {new Image(defaultPath)});
-    this.animation.supplyAnimation("clicked", new Image[] {new Image(clickedPath)});
+  public void initialiseAnimation(String unclickedPath, String clickedPath) {
+    this.animation.supplyAnimation("default", unclickedPath);
+    this.animation.supplyAnimation("clicked", clickedPath);
   }
 
   @Override

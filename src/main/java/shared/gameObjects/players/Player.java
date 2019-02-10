@@ -33,26 +33,15 @@ public class Player extends GameObject {
     holding = null;
   }
 
-  // Initialise the animation
+  // Initialise the animation 
   public void initialiseAnimation() {
-    Image[] insertImageList = {new Image(Path.convert("images/player/player_idle.png"))};
-    this.animation.supplyAnimation("default", insertImageList);
-
-    // Running left animation
-    insertImageList =
-        new Image[] {
-          new Image(Path.convert("images/player/player_left_walk1.png")),
-          new Image(Path.convert("images/player/player_left_walk2.png")),
-        };
-    this.animation.supplyAnimation("moveLeft", insertImageList);
-
-    // Running right animation
-    insertImageList =
-        new Image[] {
-          new Image(Path.convert("images/player/player_right_walk1.png")),
-          new Image(Path.convert("images/player/player_right_walk2.png")),
-        };
-    this.animation.supplyAnimation("moveRight", insertImageList);
+    this.animation.supplyAnimation("default", "images/player/player_idle.png");
+    this.animation.supplyAnimation("moveLeft",
+        "images/player/player_left_walk1.png",
+        "images/player/player_left_walk2.png");
+    this.animation.supplyAnimation("moveRight",
+        "images/player/player_right_walk1.png",
+        "images/player/player_right_walk2.png");
   }
 
   @Override
@@ -93,9 +82,15 @@ public class Player extends GameObject {
       rb.moveY(speed*-1);
     }
     if (InputHandler.click && holding != null) {
+      System.out.println("@Player, input("+InputHandler.x+", "+InputHandler.y+")");
       holding.fire(InputHandler.x, InputHandler.y);
     } // else punch
     //setX(getX() + (vx * 0.0166));
+
+    if (this.getHolding() != null) {
+      this.getHolding().setX(this.getX());
+      this.getHolding().setY(this.getY());
+    }
 
     /** If multiplayer then send input to server */
     if (multiplayer) {
@@ -110,6 +105,7 @@ public class Player extends GameObject {
       connectionHandler.send(input.getData());
     }
   }
+
 
   public int getHealth() {
     return health;

@@ -39,8 +39,7 @@ public class ExampleObject extends GameObject {
 
   // Initialise the animation
   public void initialiseAnimation() {
-    this.animation.supplyAnimation(
-        "default", new Image[] {new Image("images/platforms/stone/elementStone013.png")});
+    this.animation.supplyAnimation("default", "images/platforms/stone/elementStone013.png");
   }
 
   @Override

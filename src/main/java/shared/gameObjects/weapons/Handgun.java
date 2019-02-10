@@ -1,14 +1,12 @@
 package shared.gameObjects.weapons;
 
 import java.util.UUID;
-import javafx.scene.image.Image;
 import shared.gameObjects.Utils.ObjectID;
 
 /** @author hlf764 The Handgun class. */
 public class Handgun extends Gun {
 
-  private static String imagePath = "images/weapons/handgun.jpg";
-
+  private static String imagePath = "images/weapons/handgun.png";
   /**
    * Constructor of the Handgun class
    *
@@ -22,6 +20,7 @@ public class Handgun extends Gun {
    * @param bulletSpeed Speed of the bullets
    * @param fireRate Fire rate of the gun (bullets per minute)
    * @param bulletWidth Width of the bullet
+   * @param uuid UUID of the gun
    */
   public Handgun(
       double x,
@@ -34,7 +33,7 @@ public class Handgun extends Gun {
       String name,
       int ammo,
       double bulletSpeed,
-      double fireRate,
+      int fireRate,
       double bulletWidth,
       UUID uuid) {
     super(
@@ -63,10 +62,14 @@ public class Handgun extends Gun {
   @Override
   public void render() {
     super.render();
+    imageView.setTranslateX(this.getX());
+    imageView.setTranslateY(this.getY());
   }
 
   @Override
-  public void interpolatePosition(float alpha) {}
+  public void interpolatePosition(float alpha) {
+    
+  }
 
   @Override
   public String getState() {
@@ -75,6 +78,6 @@ public class Handgun extends Gun {
 
   @Override
   public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", new Image[] {new Image(imagePath)});
+    this.animation.supplyAnimation("default", imagePath);
   }
 }
