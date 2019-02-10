@@ -72,4 +72,8 @@ public abstract class ButtonObject extends GameObject {
     super.render();
     button.relocate(getX(), getY());
   }
+
+  public Button getButton() {
+    return button;
+  }
 }
