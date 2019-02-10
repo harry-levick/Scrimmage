@@ -12,7 +12,7 @@ import shared.physics.types.RigidbodyType;
  */
 public class HandgunBullet extends Bullet {
   
-  private static String imagePath = "images/weapons/bullet.png";
+  private static String imagePath = "images/weapons/fireBullet.png";
   private Rigidbody rb;
   
   public HandgunBullet(
@@ -31,7 +31,8 @@ public class HandgunBullet extends Bullet {
   
   @Override
   public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", this.imagePath);
+    //this.animation.supplyAnimation("default", this.imagePath);
+    this.animation.supplyAnimationWithSize("default", this.getWidth(), this.getWidth(), true, this.imagePath);
   }
 
   @Override
