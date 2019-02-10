@@ -13,7 +13,6 @@ import shared.physics.types.RigidbodyType;
 public class HandgunBullet extends Bullet {
   
   private static String imagePath = "images/weapons/fireBullet.png";
-  private Rigidbody rb;
   
   public HandgunBullet(
       double gunX,
@@ -36,7 +35,8 @@ public class HandgunBullet extends Bullet {
   }
 
   @Override
-  public void setRigitBody(float gravityScale) {
-    this.rb = new Rigidbody(RigidbodyType.DYNAMIC, 100f, gravityScale, 0.1f, new MaterialProperty(0, 0, 0), new AngularData(0, 0, 0, 0), this);
+  public void setRigitBody() {
+    float gravityScale = 100f;
+    rb = new Rigidbody(RigidbodyType.DYNAMIC, 100f, gravityScale, 0.1f, new MaterialProperty(0, 0, 0), new AngularData(0, 0, 0, 0), this);
   }
 }
