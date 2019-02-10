@@ -30,6 +30,7 @@ import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.Handgun;
 import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.MapLoader;
+import shared.util.maths.Vector2;
 
 public class LevelEditor extends Application {
 
@@ -270,6 +271,7 @@ public class LevelEditor extends Application {
 
   private void sceneSecondaryClick(Stage primaryStage, Group root, MouseEvent event) {
     ArrayList<GameObject> removeList = gameObjects;
+    ArrayList<Player> removeSpawn = playerSpawns;
     double x = event.getX();
     double y = event.getY();
     for (GameObject object : removeList) {
@@ -280,6 +282,26 @@ public class LevelEditor extends Application {
       if ((x >= ulX) && (y >= ulY) && (x <= lrX) && (y <= lrY)) {
         root.getChildren().remove(event.getTarget());
         object.destroy();
+      }
+    }
+    for (Player object : playerSpawns) {
+      double ulX = object.getX();
+      double ulY = object.getY();
+      double lrX = ulX + object.getTransform().getSize().getX();
+      double lrY = ulY + object.getTransform().getSize().getY();
+      if ((x >= ulX) && (y >= ulY) && (x <= lrX) && (y <= lrY)) {
+        root.getChildren().remove(event.getTarget());
+        System.out.println("SPAWNS: " + mapDataObject.getSpawnPoints().size());
+        Vector2 target = object.getTransform().getPos();
+        ArrayList<Vector2> newList = new ArrayList<Vector2>();
+        for (Vector2 spawnpoint : mapDataObject.getSpawnPoints()) {
+          if (!spawnpoint.equals(target)) {
+            newList.add(spawnpoint);
+          }
+        }
+        mapDataObject.setSpawnPoints(newList);
+        object.destroy();
+        System.out.println("\t-> " + mapDataObject.getSpawnPoints().size());
       }
     }
   }

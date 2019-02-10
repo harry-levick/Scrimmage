@@ -143,6 +143,10 @@ public class Vector2 implements Serializable {
     return "X: " + getX() + " Y: " + getY();
   }
 
+  public boolean equals(Vector2 vector) {
+    return (vector.getX() == this.x && vector.getY() == this.y);
+  }
+
   public float getX() {
     return x;
   }
