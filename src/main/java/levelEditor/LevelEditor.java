@@ -137,14 +137,7 @@ public class LevelEditor extends Application {
                       event.getY(),
                       100,
                       100,
-                      ObjectID.Weapon,
-                      10,
-                      10,
-                      "Handgun",
-                      100,
-                      100,
-                      100,
-                      10,
+                      "Handgun@LevelEditor",
                       uuid);
               temp.initialise(root);
             }

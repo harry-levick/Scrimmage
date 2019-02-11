@@ -1,6 +1,7 @@
 package client.handlers.inputHandler;
 
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.scene.input.MouseEvent;
 
 public class MouseInput implements EventHandler<MouseEvent> {
@@ -13,11 +14,13 @@ public class MouseInput implements EventHandler<MouseEvent> {
 
   @Override
   public void handle(MouseEvent event) {
-    if (event.getEventType() == MouseEvent.MOUSE_MOVED) {
+    EventType<MouseEvent> type = (EventType<MouseEvent>) event.getEventType();
+    
+    if (type == MouseEvent.MOUSE_MOVED || type == MouseEvent.MOUSE_DRAGGED) {
       inputHandler.x = event.getX();
       inputHandler.y = event.getY();
     }
-    if (event.getEventType() == MouseEvent.MOUSE_PRESSED) {
+    if (type == MouseEvent.MOUSE_PRESSED) {
       inputHandler.click = true;
     } else if (event.getEventType() == MouseEvent.MOUSE_RELEASED) {
       inputHandler.click = false;

@@ -6,6 +6,7 @@ import shared.gameObjects.Utils.ObjectID;
 /** @author hlf764 The Handgun class. */
 public class Handgun extends Gun {
 
+  private static String imagePath = "images/weapons/handgun.png";
   /**
    * Constructor of the Handgun class
    *
@@ -19,37 +20,41 @@ public class Handgun extends Gun {
    * @param bulletSpeed Speed of the bullets
    * @param fireRate Fire rate of the gun (bullets per minute)
    * @param bulletWidth Width of the bullet
+   * @param uuid UUID of the gun
    */
   public Handgun(
       double x,
       double y,
       double sizeX,
       double sizeY,
-      ObjectID id,
-      double damage,
-      double weight,
       String name,
-      int ammo,
-      double bulletSpeed,
-      double fireRate,
-      double bulletWidth,
       UUID uuid) {
     super(
         x,
         y,
         sizeX,
         sizeY,
-        id,
-        damage,
-        weight,
+        ObjectID.Weapon, // ObjectID
+        10, // damage
+        10, // weight
         name,
-        ammo,
-        bulletSpeed,
-        fireRate,
-        bulletWidth,
-        false,
-        true,
+        30, // ammo
+        1, // bulletSpeed
+        50, // fireRate
+        50, // bulletWidth
+        false, // fullAutoFire
+        true, // singleHanded
         uuid);
+  }
+  
+  @Override
+  public void fire(double mouseX, double mouseY) {
+    if (canFire()) {
+      UUID uuid = UUID.randomUUID();
+      Bullet bullet = new HandgunBullet(getX(), getY(), 10, 10, mouseX, mouseY, this.bulletWidth, this.bulletSpeed,
+          uuid);
+      this.currentCooldown = getDefaultCoolDown();
+    }
   }
 
   @Override
@@ -60,10 +65,14 @@ public class Handgun extends Gun {
   @Override
   public void render() {
     super.render();
+    imageView.setTranslateX(this.getX());
+    imageView.setTranslateY(this.getY());
   }
 
   @Override
-  public void interpolatePosition(float alpha) {}
+  public void interpolatePosition(float alpha) {
+    
+  }
 
   @Override
   public String getState() {
@@ -72,6 +81,6 @@ public class Handgun extends Gun {
 
   @Override
   public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", "images/weapons/handgun.jpg");
+    this.animation.supplyAnimation("default", imagePath);
   }
 }

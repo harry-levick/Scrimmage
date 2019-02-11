@@ -24,7 +24,7 @@ public class Punch extends Melee {
    */
   public Punch(double x, double y, double sizeX, double sizeY, ObjectID id, double damage,
       String name, double range, UUID uuid) {
-    super(x, y, sizeX, sizeY, id, damage, 1, name, -1, range, 1, 1, uuid);
+    super(x, y, sizeX, sizeY, id, damage, 1, name, -1, 60, range, 1, 1, uuid);
 
   }
 

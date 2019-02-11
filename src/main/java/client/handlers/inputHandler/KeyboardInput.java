@@ -8,6 +8,7 @@ public class KeyboardInput extends InputHandler implements EventHandler<KeyEvent
   private InputHandler inputHandler;
 
   public KeyboardInput(InputHandler inputHandler) {
+    super();
     this.inputHandler = inputHandler;
   }
 

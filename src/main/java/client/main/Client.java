@@ -236,6 +236,7 @@ public class Client extends Application {
     scene.setOnMousePressed(mouseInput);
     scene.setOnMouseMoved(mouseInput);
     scene.setOnMouseReleased(mouseInput);
+    scene.setOnMouseDragged(mouseInput);
 
     // Start Music
 
@@ -250,4 +251,5 @@ public class Client extends Application {
       }
     }
   }
+  
 }

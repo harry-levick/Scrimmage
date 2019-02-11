@@ -1,20 +1,24 @@
 package shared.gameObjects.weapons;
 
 import java.util.UUID;
+import client.main.Client;
+import javafx.scene.image.Image;
+import shared.util.maths.Vector2;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.components.Rigidbody;
+import shared.physics.data.AngularData;
+import shared.physics.data.MaterialProperty;
+import shared.physics.types.RigidbodyType;
 
 /** @author hlf764 */
-public class Bullet extends GameObject {
+public abstract class Bullet extends GameObject {
 
-  public boolean isHit; // true if there is an object at that position
-  private double width; // width of bullet
-  private double speed; // speed of bullet
-  private double newX; // new x position when update() is called
-  private double newY; // new y position when update() is called
-  private double slope; // the slope of the bullet path
-  private double deltaX; // change in x in every update
-  private double deltaY; // change in y in every update
+  public boolean isHit;     // true if there is an object at that position
+  private double width;     // width of bullet
+  private double speed;     // speed of bullet
+  private Vector2 vector;   // Vector of the force of bullet fire
+  protected Rigidbody rb;
 
   public Bullet(
       double gunX, // gun initial x position
@@ -30,39 +34,49 @@ public class Bullet extends GameObject {
     super(gunX, gunY, sizeX, sizeY, ObjectID.Bullet, uuid);
     setWidth(width);
     setSpeed(speed);
-
-    this.newX = gunX;
-    this.newY = gunY;
-    this.slope = (gunY - mouseY) / (gunX - mouseX); // slope of the bullet path
-    // deltaX and deltaY show the change in x and y values in every updates
-    // The last bit of the expression shows whether x and y should progress in
-    // positive or negative direction
-    this.deltaX = (this.speed * Math.cos(Math.atan(slope))) * ((mouseX > gunX) ? 1 : -1);
-    this.deltaY = (this.speed * Math.sin(Math.atan(slope))) * ((mouseY > gunY) ? 1 : -1);
+    
+    // Unit vector of the bullet force
+    vector = new Vector2((float)(mouseX - gunX), (float)(mouseY - gunY));
+    vector = vector.div((float)Math.sqrt(vector.dot(vector)));
+    
+    setRigitBody();
+    addComponent(rb);
+    // Change the speed of bullet by altering the bulletSpeed variable in any Gun
+    rb.setVelocity(vector.mult((float)speed * 2250f));
+    //rb.move(new Vector2((float)(mouseX-gunX)*1.5f, (float)(mouseY-gunY)*1.5f));
+    
     this.isHit = false;
+    
+    Client.levelHandler.addGameObject(this);
 
     render();
   }
-
-  public void fire() {
-    this.newX += deltaX;
-    this.newY += deltaY;
-  }
+  
+  public abstract void setRigitBody();
 
   @Override
   public void update() {
-    this.fire();
-
-    // if something is in this position (will take width into account later)
-    // isHit = true;
-    // apply effect (deduct hp, sound, physics)
-    // destroy this object
+    if (isHit) {
+      System.out.println(this.toString() + " is to be destroyed");
+      Client.levelHandler.delGameObject(this);
+      // apply effect (deduct hp, play sound)
+    }
+    else if ((0 < getX() && getX() < 1920) && (0 < getY() && getY() < 1080)) {
+      rb.update();
+      super.update();
+    }
+    else {
+      System.out.println(this.toString() + " is to be destroyed");
+      Client.levelHandler.delGameObject(this);
+    }
   }
 
   @Override
   public void render() {
     super.render();
-    imageView.relocate(newX, newY);
+    //imageView.relocate(newX, newY);
+    imageView.setTranslateX(this.getX());
+    imageView.setTranslateY(this.getY());
   }
 
   @Override
@@ -76,14 +90,13 @@ public class Bullet extends GameObject {
     return null;
   }
 
-
-  public double getWidth() {
-    return this.width;
-  }
-
   // -------START-------
   // Setters and Getters
   // -------------------
+  public double getWidth() {
+    return this.width;
+  }
+  
   public void setWidth(double newWidth) {
     if (newWidth > 0) {
       this.width = newWidth;
@@ -99,12 +112,16 @@ public class Bullet extends GameObject {
       this.speed = newSpeed;
     }
   }
+  
+  public boolean getIsHit() {
+    return this.isHit;
+  }
+  
+  public void setIsHit(boolean hit) {
+    this.isHit = hit;
+  }
   // -------------------
   // Setters and Getters
   // --------END--------
 
-  @Override
-  public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", "images/weapons/bullet.png");
-  }
 }
