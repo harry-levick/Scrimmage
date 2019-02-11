@@ -87,6 +87,7 @@ public class LevelEditor extends Application {
         }
       }
     });
+    cb.setValue(cb.getItems().get(0));
 
     Button btnSave = new Button();
     btnSave.setText("Save Map");
