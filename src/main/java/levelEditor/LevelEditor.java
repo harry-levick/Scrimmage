@@ -310,7 +310,10 @@ public class LevelEditor extends Application {
         break;
         
       case BACKGROUND:
-        temp = new Background("images/backgrounds/background1.png",ObjectID.Bot,uuid);
+        temp = new Background(
+            "images/backgrounds/background1.png",
+            ObjectID.Background,
+            uuid);
         break;
     }
 
