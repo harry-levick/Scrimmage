@@ -7,6 +7,7 @@ import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.Handgun;
 import shared.gameObjects.weapons.MachineGun;
+import shared.gameObjects.weapons.Sword;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
@@ -32,6 +33,7 @@ public class LevelHandler {
       clientPlayer.setHolding(
           //new Handgun(500, 500, 100, 100, "Handgun", UUID.randomUUID())
           new MachineGun(500, 500, 100, 100, "MachineGun@LevelHandler", UUID.randomUUID())
+          //new Sword(500, 500, 100, 100, "Sword@LevelHandler", 100, 50, 20, UUID.randomUUID())
         );
       clientPlayer.initialise(root);
       players.add(clientPlayer);
