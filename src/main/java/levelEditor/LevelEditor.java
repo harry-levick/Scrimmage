@@ -83,7 +83,6 @@ public class LevelEditor extends Application {
           if (con.toString((GameObjectTuple) cb.getItems().get((Integer) number2))
               .equals(con.toString(e.getValue()))) {
             objetTypeSelected = e.getKey();
-            System.out.println("ENUM UPDATED: " + objetTypeSelected);
           }
         }
       }
@@ -341,7 +340,6 @@ public class LevelEditor extends Application {
       double lrY = ulY + object.getTransform().getSize().getY();
       if ((x >= ulX) && (y >= ulY) && (x <= lrX) && (y <= lrY)) {
         root.getChildren().remove(event.getTarget());
-        System.out.println("SPAWNS: " + mapDataObject.getSpawnPoints().size());
         Vector2 target = object.getTransform().getPos();
         ArrayList<Vector2> newList = new ArrayList<Vector2>();
         for (Vector2 spawnpoint : mapDataObject.getSpawnPoints()) {
@@ -351,7 +349,6 @@ public class LevelEditor extends Application {
         }
         mapDataObject.setSpawnPoints(newList);
         object.destroy();
-        System.out.println("\t-> " + mapDataObject.getSpawnPoints().size());
       }
     }
   }
