@@ -40,7 +40,7 @@ public class KeyboardInput extends InputHandler implements EventHandler<KeyEvent
           inputHandler.rightKey = false;
           inputHandler.keyPressed = false;
           break;
-        case SPACE:
+        case W:
           inputHandler.jumpKey = false;
           inputHandler.keyPressed = false;
           break;

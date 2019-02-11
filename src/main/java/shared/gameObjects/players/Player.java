@@ -3,6 +3,8 @@ package shared.gameObjects.players;
 import client.handlers.connectionHandler.ConnectionHandler;
 import client.handlers.inputHandler.InputHandler;
 import java.util.UUID;
+
+import client.main.Settings;
 import javafx.scene.image.Image;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
@@ -19,7 +21,9 @@ import shared.util.maths.Vector2;
 public class Player extends GameObject {
 
   protected final float speed = 10;
-  protected final float jumpForce = -5;
+  protected final float jumpForce = -10;
+  protected final float JUMP_LIMIT = 2.0f;
+  protected float jumpTime;
   protected int health;
   protected Weapon holding;
   private Rigidbody rb;
@@ -28,7 +32,7 @@ public class Player extends GameObject {
   public Player(double x, double y, double sizeX, double sizeY, UUID playerUUID) {
     super(x, y, 120, 120, ObjectID.Player, playerUUID);
     addComponent(new BoxCollider(this, false));
-    rb = new Rigidbody(RigidbodyType.DYNAMIC, 100, 10, 0.3f, new MaterialProperty(0.1f, 0, 0.6f), null, this);
+    rb = new Rigidbody(RigidbodyType.DYNAMIC, 100, 10, 0.7f, new MaterialProperty(0.005f, 0, 0.6f), null, this);
     addComponent(rb);
     this.health = 100;
     holding = null;
@@ -80,7 +84,17 @@ public class Player extends GameObject {
       animation.switchDefault();
     }
     if(InputHandler.jumpKey) {
-      rb.moveY(jumpForce);
+      System.out.println("Jumping!");
+      if(jumpTime > 0) {
+        rb.moveY(jumpForce);
+      }
+      else {
+        jumpTime -= Physics.TIMESTEP;
+      }
+
+    }
+    if(!InputHandler.jumpKey) {
+      jumpTime = JUMP_LIMIT;
     }
     if (InputHandler.click && holding != null) {
       System.out.println("@Player, input("+InputHandler.x+", "+InputHandler.y+")");

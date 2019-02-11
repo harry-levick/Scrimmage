@@ -176,7 +176,7 @@ public class Rigidbody extends Component implements Serializable {
           case UP:
             impactVelocity =
                     getVelocity()
-                            .mult( new Vector2(getVelocity().getX(), -1)
+                            .mult( new Vector2(getVelocity().getX(), 1)
                                     .mult(Vector2.Up().mult(
                                             Math.min(
                                                     getMaterial().getRestitution(),
@@ -321,10 +321,9 @@ public class Rigidbody extends Component implements Serializable {
     lastAcceleration = acceleration;
 
     if (impactVelocity.getX() != 0 || impactVelocity.getY() != 0) {
-      velocity = velocity.add(Vector2.Unit().mult(impactVelocity).mult(2));
+      velocity = Vector2.Unit().mult(impactVelocity).mult(2);
       impactVelocity = Vector2.Zero();
     }
-    velocity = velocity.add(deltaPosUpdate);
 
     if(!canUp && velocity.getY() < 0) {
       velocity = Vector2.Right().mult(velocity);
@@ -338,7 +337,7 @@ public class Rigidbody extends Component implements Serializable {
     if(!canRight && velocity.getX() > 0) {
       velocity = Vector2.Up().mult(velocity);
     }
-
+    deltaPos = deltaPos.add(deltaPosUpdate);
     deltaPos =
         deltaPos.add(
             velocity
