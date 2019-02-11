@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public class Sword extends Melee {
 
-  private static String imagePath = "";
+  private static String imagePath = "images/weapons/sword.jpg";
 
   /**
    * Constructor of the Sword class
@@ -28,18 +28,13 @@ public class Sword extends Melee {
       double y,
       double sizeX,
       double sizeY,
-      ObjectID id,
-      double damage,
-      double weight,
       String name,
-      int ammo,
-      int attackRate,
       double range,
       double beginAngle,
       double endAngle,
       UUID uuid) {
 
-    super(x, y, sizeX, sizeY, id, damage, weight, name, -1, attackRate, range, beginAngle, endAngle, uuid);
+    super(x, y, sizeX, sizeY, ObjectID.Weapon, 20, 10, name, 30, 60, range, beginAngle, endAngle, uuid);
   }
 
   @Override
