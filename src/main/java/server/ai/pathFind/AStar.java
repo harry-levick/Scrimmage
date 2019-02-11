@@ -116,6 +116,8 @@ public class AStar {
       Vector2 enemyPos = new Vector2((float) enemy.getX(), (float) enemy.getY());
       double totalH = botPos.exactMagnitude(enemyPos);
 
+      System.out.println(totalH);
+
       if (!allItems.isEmpty()) {
         GameObject closestItem = findClosestItem(allItems);
         Vector2 itemPos = new Vector2((float) closestItem.getX(), (float) closestItem.getY());
@@ -392,7 +394,7 @@ public class AStar {
     // TODO possibly change this to .Left()
     Collision viscinityLeft = Physics.boxcast(botPosition, botSize, botPosition.Right().mult(-1),
         10f);
-    if (viscinityLeft != null ||
+    if (viscinityLeft == null ||
         botPosition.exactMagnitude(viscinityLeft.getPointOfCollision()) > 10) {
       // If no collision, or if the collision is far away
       possibleActions.add(createAction(false, true, false, false));

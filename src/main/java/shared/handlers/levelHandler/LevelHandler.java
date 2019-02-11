@@ -1,6 +1,7 @@
 package shared.handlers.levelHandler;
 
 import client.main.Settings;
+import java.util.List;
 import javafx.scene.Group;
 import server.ai.Bot;
 import shared.gameObjects.GameObject;
@@ -35,13 +36,20 @@ public class LevelHandler {
       clientPlayer.initialise(root);
       players.add(clientPlayer);
 
-      botPlayer = new Bot(600, 500, 100, 100, UUID.randomUUID(), gameObjects);
-      botPlayer.setHolding(
-          new MachineGun(500, 500, 100, 100, "MachineGun@LevelHandler", UUID.randomUUID())
-      );
-      botPlayer.initialise(root);
-      players.add(botPlayer);
     }
+
+    // Create a list of all GameObject's including players, to give to the bot
+    List<GameObject> allObjs = (List<GameObject>) gameObjects.clone();
+    allObjs.addAll(players);
+
+    botPlayer = new Bot(600, 500, 100, 100, UUID.randomUUID(), allObjs);
+    botPlayer.setHolding(
+        new MachineGun(600, 500, 100, 100, "MachineGun@LevelHandler", UUID.randomUUID())
+    );
+    botPlayer.initialise(root);
+    players.add(botPlayer);
+
+
     maps = MapLoader.getMaps(settings.getMapsPath());
     // menus = MapLoader.getMaps(settings.getMenuPath());
     // menus = MapLoader.getMenuMaps(settings.getMenuPath());
@@ -51,6 +59,9 @@ public class LevelHandler {
 
     gameObjects.add(clientPlayer.getHolding());
     clientPlayer.getHolding().initialise(root);
+
+    gameObjects.add(botPlayer.getHolding());
+    botPlayer.getHolding().initialise(root);
   }
 
   public boolean changeMap(Map map) {
@@ -91,6 +102,7 @@ public class LevelHandler {
           }
         });
     gameObjects.add(clientPlayer);
+    gameObjects.add(botPlayer);
     gameState = map.getGameState();
   }
 

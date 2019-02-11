@@ -2,6 +2,7 @@ package server.ai;
 
 import client.handlers.connectionHandler.ConnectionHandler;
 import client.handlers.inputHandler.InputHandler;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import server.ai.pathFind.AStar;
@@ -33,14 +34,16 @@ public class Bot extends Player {
   public Bot(double x, double y, double sizeX, double sizeY, UUID playerUUID,
       List<GameObject> allObjs) {
     super(x, y, sizeX, sizeY, playerUUID);
+    allPlayers = new ArrayList<>();
     this.state = FSA.INITIAL_STATE;
+    System.out.println("BOT CREATED");
 
     // Collect all players (other than bots) from the world
-    List<Player> allPlayers =
-        allObjs.stream()
+    allPlayers = allObjs.stream()
             .filter(p -> p instanceof Player)
             .map(Player.class::cast)
             .collect(Collectors.toList());
+
 
     targetPlayer = findTarget(allPlayers);
     this.pathFinder = new AStar(allObjs, this);
@@ -79,41 +82,65 @@ public class Bot extends Player {
 
   @Override
   public void update() {
-    // Transfer while loop from AiAgent.startAgent()
     double prevDist, newDist;
-
-    Vector2 botPos = new Vector2((float) this.getX(), (float) this.getY());
-    Vector2 targetPos = new Vector2((float) targetPlayer.getX(), (float) targetPlayer.getY());
     // Calculate the distance to the target from the previous loop
-    prevDist = botPos.exactMagnitude(targetPos);
+    prevDist = calcDist();
     // Update the target player
+    System.out.println(allPlayers.size());
     targetPlayer = findTarget(allPlayers);
-
-    targetPos = new Vector2((float) targetPlayer.getX(), (float) targetPlayer.getY());
     // Calculate the distance to the updated target
-    newDist = botPos.exactMagnitude(targetPos);
+    newDist = calcDist();
 
     state = state.next(targetPlayer, this, prevDist, newDist);
 
     switch (state) {
       case IDLE:
+        System.out.println("IDLE");
         // TODO what to do in the idle state?
         executeAction(new boolean[] {false, false, false, false, false});
+        break;
       case CHASING:
+        System.out.println("CHASING");
         // Find the next best move to take, and execute this move.
         executeAction(pathFinder.optimise(targetPlayer));
         // TODO calculate and execute the best path to the target.
+        break;
       case FLEEING:
+        System.out.println("FLEEING");
+        executeAction(new boolean[] {false, false, false, false, false});
         // TODO calculate and execute the best path away from the target.
+        break;
       case ATTACKING:
+        System.out.println("ATTACKING");
+        boolean[] action = pathFinder.optimise(targetPlayer);
+        System.out.println(printAction(action));
+        executeAction(action);
         // TODO think about how an attacking script would work.
+        break;
       case CHASING_ATTACKING:
+        System.out.println("CHASING-ATTACKING");
+        executeAction(pathFinder.optimise(targetPlayer));
         // TODO calculate and execute the best path to the target whilst attacking.
+        break;
       case FLEEING_ATTACKING:
+        System.out.println("CHASING-ATTACKING");
+        executeAction(new boolean[] {false, false, false, false, false});
         // TODO calculate and execute the best path away from the target whilst attacking.
+        break;
     }
 
     super.update();
+  }
+
+  /**
+   * Calculates the distance from the bot to the current target player
+   * @return The distance to the target player
+   */
+  private double calcDist() {
+    Vector2 botPos = new Vector2((float) this.getX(), (float) this.getY());
+    Vector2 targetPos = new Vector2((float) targetPlayer.getX(), (float) targetPlayer.getY());
+    // Calculate the distance to the target
+    return botPos.exactMagnitude(targetPos);
   }
 
   /**
@@ -151,6 +178,15 @@ public class Bot extends Player {
     this.leftKey = action[Bot.KEY_LEFT];
     this.rightKey = action[Bot.KEY_RIGHT];
     this.click = action[Bot.KEY_CLICK];
+  }
+
+  private String printAction(boolean[] action) {
+    String actionToPrint = "";
+    actionToPrint += "Jump : " + action[Bot.KEY_JUMP];
+    actionToPrint += " Left : " + action[Bot.KEY_LEFT];
+    actionToPrint += " Right : " + action[Bot.KEY_RIGHT];
+
+    return actionToPrint;
   }
 
 }
