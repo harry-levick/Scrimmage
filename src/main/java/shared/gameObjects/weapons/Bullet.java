@@ -12,15 +12,13 @@ import shared.physics.data.MaterialProperty;
 import shared.physics.types.RigidbodyType;
 
 /** @author hlf764 */
-public class Bullet extends GameObject {
+public abstract class Bullet extends GameObject {
 
-  private static String imagePath = "images/weapons/bullet.png";
   public boolean isHit;     // true if there is an object at that position
   private double width;     // width of bullet
   private double speed;     // speed of bullet
   private Vector2 vector;   // Vector of the force of bullet fire
-  private Image bulletImage;// image of the bullet
-  private Rigidbody rb = new Rigidbody(RigidbodyType.DYNAMIC, 100f, 100f, 0.1f, new MaterialProperty(0, 0, 0), new AngularData(0, 0, 0, 0), this);
+  protected Rigidbody rb;
 
   public Bullet(
       double gunX, // gun initial x position
@@ -41,29 +39,27 @@ public class Bullet extends GameObject {
     vector = new Vector2((float)(mouseX - gunX), (float)(mouseY - gunY));
     vector = vector.div((float)Math.sqrt(vector.dot(vector)));
     
+    setRigitBody();
     addComponent(rb);
     // Change the speed of bullet by altering the bulletSpeed variable in any Gun
     rb.setVelocity(vector.mult((float)speed * 2250f));
     //rb.move(new Vector2((float)(mouseX-gunX)*1.5f, (float)(mouseY-gunY)*1.5f));
     
-    this.bulletImage = getImage();
     this.isHit = false;
     
     Client.levelHandler.addGameObject(this);
 
     render();
   }
-
-  @Override
-  public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", this.imagePath);
-  }
+  
+  public abstract void setRigitBody();
 
   @Override
   public void update() {
     if (isHit) {
       System.out.println(this.toString() + " is to be destroyed");
       Client.levelHandler.delGameObject(this);
+      // apply effect (deduct hp, play sound)
     }
     else if ((0 < getX() && getX() < 1920) && (0 < getY() && getY() < 1080)) {
       rb.update();
@@ -73,10 +69,6 @@ public class Bullet extends GameObject {
       System.out.println(this.toString() + " is to be destroyed");
       Client.levelHandler.delGameObject(this);
     }
-    // if something is in this position (will take width into account later)
-    // isHit = true;
-    // apply effect (deduct hp, sound, physics)
-    // destroy this object
   }
 
   @Override
@@ -101,12 +93,6 @@ public class Bullet extends GameObject {
   // -------START-------
   // Setters and Getters
   // -------------------
-  public Image getImage() {
-    // generate a bullet image based on bulletWidth
-    Image image = new Image(imagePath);
-    return image;
-  }
-
   public double getWidth() {
     return this.width;
   }

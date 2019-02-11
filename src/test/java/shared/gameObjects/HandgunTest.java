@@ -18,7 +18,7 @@ public class HandgunTest {
   public static void initHandgun() {
     handgun =
         new Handgun(
-            10, 10, 100, 100, ObjectID.Weapon, 10, 30, "HandGun", 40, 80, 3, 1, UUID.randomUUID());
+            10, 10, 100, 100, "HandGun", UUID.randomUUID());
   }
 
   @Test

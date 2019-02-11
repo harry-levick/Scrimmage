@@ -1,14 +1,15 @@
 package shared.handlers.levelHandler;
 
 import client.main.Settings;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.UUID;
 import javafx.scene.Group;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.Handgun;
+import shared.gameObjects.weapons.MachineGun;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 
 public class LevelHandler {
 
@@ -26,7 +27,8 @@ public class LevelHandler {
     if (isClient) {
       clientPlayer = new Player(500, 500, 100, 100, UUID.randomUUID());
       clientPlayer.setHolding(
-          new Handgun(500, 500, 100, 100, ObjectID.Weapon, 10, 10, "Handgun", 100, 1, 50, 10, UUID.randomUUID())
+          //new Handgun(500, 500, 100, 100, "Handgun", UUID.randomUUID())
+          new MachineGun(500, 500, 100, 100, "MachineGun@LevelHandler", UUID.randomUUID())
         );
       clientPlayer.initialise(root);
       players.add(clientPlayer);

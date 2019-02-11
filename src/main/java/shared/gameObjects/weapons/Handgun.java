@@ -27,31 +27,34 @@ public class Handgun extends Gun {
       double y,
       double sizeX,
       double sizeY,
-      ObjectID id,
-      double damage,
-      double weight,
       String name,
-      int ammo,
-      double bulletSpeed,
-      int fireRate,
-      double bulletWidth,
       UUID uuid) {
     super(
         x,
         y,
         sizeX,
         sizeY,
-        id,
-        damage,
-        weight,
+        ObjectID.Weapon, // ObjectID
+        10, // damage
+        10, // weight
         name,
-        ammo,
-        bulletSpeed,
-        fireRate,
-        bulletWidth,
-        false,
-        true,
+        30, // ammo
+        1, // bulletSpeed
+        50, // fireRate
+        50, // bulletWidth
+        false, // fullAutoFire
+        true, // singleHanded
         uuid);
+  }
+  
+  @Override
+  public void fire(double mouseX, double mouseY) {
+    if (canFire()) {
+      UUID uuid = UUID.randomUUID();
+      Bullet bullet = new HandgunBullet(getX(), getY(), 10, 10, mouseX, mouseY, this.bulletWidth, this.bulletSpeed,
+          uuid);
+      this.currentCooldown = getDefaultCoolDown();
+    }
   }
 
   @Override

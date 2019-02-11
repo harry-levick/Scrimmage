@@ -60,16 +60,6 @@ abstract class Gun extends Weapon {
     super.update();
   }
 
-  @Override
-  public void fire(double mouseX, double mouseY) {
-    if (canFire()) {
-      UUID uuid = UUID.randomUUID();
-      Bullet bullet = new Bullet(getX(), getY(), 10, 10, mouseX, mouseY, this.bulletWidth, this.bulletSpeed,
-          uuid);
-      this.currentCooldown = getDefaultCoolDown();
-    }
-  }
-
   // -------START-------
   // Setters and Getters
   // -------------------
