@@ -1,6 +1,6 @@
 package shared.physics.data;
 
-import shared.gameObjects.Components.Rigidbody;
+import shared.gameObjects.components.Rigidbody;
 import shared.physics.types.CollisionDirection;
 import shared.util.maths.Vector2;
 
