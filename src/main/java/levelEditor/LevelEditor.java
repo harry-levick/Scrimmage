@@ -56,7 +56,7 @@ public class LevelEditor extends Application {
   private int gridSizeY = stageSizeY / gridSizePX;
 
   private HashMap<OBJECT_TYPES, GameObjectTuple> objectMap = new HashMap<>();
-  private OBJECT_TYPES objetTypeSelected = null;
+  private OBJECT_TYPES objetTypeSelected = OBJECT_TYPES.FLOOR; // default
 
   public LevelEditor() {
     objectMap.put(OBJECT_TYPES.FLOOR, new GameObjectTuple("Floor", 5, 2));
@@ -197,99 +197,105 @@ public class LevelEditor extends Application {
 
   private void scenePrimaryClick(Stage primaryStage, Group root, MouseEvent event) {
     UUID uuid = UUID.randomUUID();
-    if (objetTypeSelected == OBJECT_TYPES.FLOOR) {
-      GameObject temp =
-          new ExampleObject(
-              getGridX(event.getX()),
-              getGridY(event.getY()),
-              getScaledSize(objectMap.get(objetTypeSelected).getX()),
-              getScaledSize(objectMap.get(objetTypeSelected).getY()),
-              ObjectID.Bot,
-              uuid);
-      temp.initialise(root);
-      gameObjects.add(temp);
-    } else if (objetTypeSelected == OBJECT_TYPES.PLAYER) {
-      if (mapDataObject.getSpawnPoints().size() < spawnPointLimit) {
-        Player temp = new Player(
+    GameObject temp = null;
+    switch (objetTypeSelected) {
+      case FLOOR:
+      default:
+        temp = new ExampleObject(
             getGridX(event.getX()),
             getGridY(event.getY()),
             getScaledSize(objectMap.get(objetTypeSelected).getX()),
             getScaledSize(objectMap.get(objetTypeSelected).getY()),
+            ObjectID.Bot,
             uuid);
-        temp.initialise(root);
-        playerSpawns.add(temp);
-        mapDataObject.addSpawnPoint(getGridX(event.getX()), getGridY(event.getY()));
-      } else {
-        final Stage dialog = new Stage();
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.initOwner(primaryStage);
-        VBox dialogVbox = new VBox(20);
-        Text text = new Text("\n\tWarning: You cannot create more than " + spawnPointLimit
-            + " spawn points.");
-        dialogVbox.getChildren().add(text);
-        Scene dialogScene = new Scene(dialogVbox, 450, 60);
-        dialog.setScene(dialogScene);
-        dialog.show();
-      }
+        break;
 
-    } else if (objetTypeSelected == OBJECT_TYPES.BTN_SP) {
-      ButtonSingleplayer temp =
-          new ButtonSingleplayer(
+      case PLAYER:
+        if (mapDataObject.getSpawnPoints().size() < spawnPointLimit) {
+          temp = new Player(
               getGridX(event.getX()),
               getGridY(event.getY()),
               getScaledSize(objectMap.get(objetTypeSelected).getX()),
               getScaledSize(objectMap.get(objetTypeSelected).getY()),
-              ObjectID.Bot,
               uuid);
+          mapDataObject.addSpawnPoint(getGridX(event.getX()), getGridY(event.getY()));
+        } else {
+          final Stage dialog = new Stage();
+          dialog.initModality(Modality.APPLICATION_MODAL);
+          dialog.initOwner(primaryStage);
+          VBox dialogVbox = new VBox(20);
+          Text text = new Text("\n\tWarning: You cannot create more than " + spawnPointLimit
+              + " spawn points.");
+          dialogVbox.getChildren().add(text);
+          Scene dialogScene = new Scene(dialogVbox, 450, 60);
+          dialog.setScene(dialogScene);
+          dialog.show();
+        }
+        break;
+
+      case BTN_SP:
+        temp = new ButtonSingleplayer(
+            getGridX(event.getX()),
+            getGridY(event.getY()),
+            getScaledSize(objectMap.get(objetTypeSelected).getX()),
+            getScaledSize(objectMap.get(objetTypeSelected).getY()),
+            ObjectID.Bot,
+            uuid);
+        break;
+
+      case BTN_MP:
+        temp = new ButtonMultiplayer(
+            getGridX(event.getX()),
+            getGridY(event.getY()),
+            getScaledSize(objectMap.get(objetTypeSelected).getX()),
+            getScaledSize(objectMap.get(objetTypeSelected).getY()),
+            ObjectID.Bot,
+            uuid);
+        break;
+
+      case BTN_ST:
+        temp = new ButtonSettings(getGridX(event.getX()),
+            getGridY(event.getY()),
+            getScaledSize(objectMap.get(objetTypeSelected).getX()),
+            getScaledSize(objectMap.get(objetTypeSelected).getY()),
+            ObjectID.Bot,
+            uuid);
+        break;
+
+      case BTN_LE:
+        temp = new ButtonLeveleditor(
+            getGridX(event.getX()),
+            getGridY(event.getY()),
+            getScaledSize(objectMap.get(objetTypeSelected).getX()),
+            getScaledSize(objectMap.get(objetTypeSelected).getY()),
+            ObjectID.Bot, uuid);
+        break;
+
+      case WPN_HG:
+        temp = new Handgun(
+            getGridX(event.getX()),
+            getGridY(event.getY()),
+            getScaledSize(objectMap.get(objetTypeSelected).getX()),
+            getScaledSize(objectMap.get(objetTypeSelected).getY()),
+            ObjectID.Weapon,
+            10,
+            10,
+            "Handgun",
+            100,
+            100,
+            100,
+            10,
+            uuid);
+        break;
+    }
+
+    if (temp != null) {
       temp.initialise(root);
-      gameObjects.add(temp);
-    } else if (objetTypeSelected == OBJECT_TYPES.BTN_MP) {
-      ButtonMultiplayer temp =
-          new ButtonMultiplayer(
-              getGridX(event.getX()),
-              getGridY(event.getY()),
-              getScaledSize(objectMap.get(objetTypeSelected).getX()),
-              getScaledSize(objectMap.get(objetTypeSelected).getY()),
-              ObjectID.Bot,
-              uuid);
-      temp.initialise(root);
-      gameObjects.add(temp);
-    } else if (objetTypeSelected == OBJECT_TYPES.BTN_ST) {
-      ButtonSettings temp =
-          new ButtonSettings(getGridX(event.getX()),
-              getGridY(event.getY()),
-              getScaledSize(objectMap.get(objetTypeSelected).getX()),
-              getScaledSize(objectMap.get(objetTypeSelected).getY()),
-              ObjectID.Bot,
-              uuid);
-      temp.initialise(root);
-      gameObjects.add(temp);
-    } else if (objetTypeSelected == OBJECT_TYPES.BTN_LE) {
-      ButtonLeveleditor temp =
-          new ButtonLeveleditor(getGridX(event.getX()),
-              getGridY(event.getY()),
-              getScaledSize(objectMap.get(objetTypeSelected).getX()),
-              getScaledSize(objectMap.get(objetTypeSelected).getY()),
-              ObjectID.Bot, uuid);
-      temp.initialise(root);
-      gameObjects.add(temp);
-    } else if (objetTypeSelected == OBJECT_TYPES.WPN_HG) {
-      Handgun temp =
-          new Handgun(
-              getGridX(event.getX()),
-              getGridY(event.getY()),
-              getScaledSize(objectMap.get(objetTypeSelected).getX()),
-              getScaledSize(objectMap.get(objetTypeSelected).getY()),
-              ObjectID.Weapon,
-              10,
-              10,
-              "Handgun",
-              100,
-              100,
-              100,
-              10,
-              uuid);
-      temp.initialise(root);
+      if (objetTypeSelected == OBJECT_TYPES.PLAYER) {
+        playerSpawns.add((Player) temp);
+      } else {
+        gameObjects.add(temp);
+      }
     }
   }
 
