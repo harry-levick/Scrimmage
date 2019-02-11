@@ -19,7 +19,7 @@ import shared.util.maths.Vector2;
 public class Player extends GameObject {
 
   protected final float speed = 10;
-  protected final float jumpForce = 5;
+  protected final float jumpForce = -5;
   protected int health;
   protected Weapon holding;
   private Rigidbody rb;
@@ -28,7 +28,7 @@ public class Player extends GameObject {
   public Player(double x, double y, double sizeX, double sizeY, UUID playerUUID) {
     super(x, y, 120, 120, ObjectID.Player, playerUUID);
     addComponent(new BoxCollider(this, false));
-    rb = new Rigidbody(RigidbodyType.DYNAMIC, 100, 10, 0.3f, new MaterialProperty(0.1f, 0, 0.2f), null, this);
+    rb = new Rigidbody(RigidbodyType.DYNAMIC, 100, 10, 0.3f, new MaterialProperty(0.1f, 0, 0.6f), null, this);
     addComponent(rb);
     this.health = 100;
     holding = null;
@@ -80,7 +80,7 @@ public class Player extends GameObject {
       animation.switchDefault();
     }
     if(InputHandler.jumpKey) {
-      rb.setVelocity(new Vector2(rb.getVelocity().getX(), jumpForce*-1));
+      rb.moveY(jumpForce);
     }
     if (InputHandler.click && holding != null) {
       System.out.println("@Player, input("+InputHandler.x+", "+InputHandler.y+")");
