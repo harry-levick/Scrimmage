@@ -1,9 +1,13 @@
 package levelEditor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.UUID;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -11,6 +15,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
@@ -18,6 +23,8 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
+import levelEditor.LevelEditor.OBJECT_TYPES;
 import shared.gameObjects.ExampleObject;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.MapDataObject;
@@ -48,7 +55,80 @@ public class LevelEditor extends Application {
   private int gridSizeX = stageSizeX / gridSizePX; //40 px blocks
   private int gridSizeY = stageSizeY / gridSizePX;
 
+  private HashMap<OBJECT_TYPES, GameObjectTuple> objectMap = new HashMap<>();
+  private OBJECT_TYPES objetTypeSelected = null;
 
+  public LevelEditor() {
+    objectMap.put(OBJECT_TYPES.FLOOR, new GameObjectTuple("Floor", 5, 2));
+    objectMap.put(OBJECT_TYPES.PLAYER, new GameObjectTuple("Player Spawn", 2, 3));
+    objectMap.put(OBJECT_TYPES.BTN_SP, new GameObjectTuple("Singeplayer Button", 6, 2));
+    objectMap.put(OBJECT_TYPES.BTN_MP, new GameObjectTuple("Multiplayer Button", 6, 2));
+    objectMap.put(OBJECT_TYPES.BTN_ST, new GameObjectTuple("Settings Button", 6, 2));
+    objectMap.put(OBJECT_TYPES.BTN_LE, new GameObjectTuple("Level Editor Button", 6, 2));
+    objectMap.put(OBJECT_TYPES.WPN_HG, new GameObjectTuple("Handgun", 2, 2));
+  }
+
+  private void addButtons(Group root) {
+    cb.setConverter(new GameObjectTupleConverter(objectMap));
+    cb.setItems(FXCollections.observableArrayList(objectMap.values()));
+    cb.setLayoutX(10);
+    cb.setLayoutY(10);
+    cb.setTooltip(new Tooltip("Select item to place on the map"));
+    cb.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+      @Override
+      public void changed(ObservableValue<? extends Number> observableValue, Number number,
+          Number number2) {
+        GameObjectTupleConverter con = new GameObjectTupleConverter(objectMap);
+        for (Entry<OBJECT_TYPES, GameObjectTuple> e : objectMap.entrySet()) {
+          if (con.toString((GameObjectTuple) cb.getItems().get((Integer) number2))
+              .equals(con.toString(e.getValue()))) {
+            objetTypeSelected = e.getKey();
+            System.out.println("ENUM UPDATED: " + objetTypeSelected);
+          }
+        }
+      }
+    });
+
+    Button btnSave = new Button();
+    btnSave.setText("Save Map");
+    btnSave.setOnAction(
+        new EventHandler<ActionEvent>() {
+          @Override
+          public void handle(ActionEvent event) {
+            MapLoader.saveMap(gameObjects, mapDataObject, "menu.map");
+          }
+        });
+    btnSave.setLayoutX(200);
+    btnSave.setLayoutY(10);
+
+    Button btnToggleGrid = new Button();
+    btnToggleGrid.setText("Toggle Snap to Grid");
+    btnToggleGrid.setOnAction(
+        new EventHandler<ActionEvent>() {
+          @Override
+          public void handle(ActionEvent event) {
+            snapToGrid = !snapToGrid;
+            String append;
+            if (snapToGrid) {
+              append = "ON";
+            } else {
+              append = "OFF";
+            }
+            btnToggleGrid.setText("Toggle Snap to Grid: " + append);
+          }
+        });
+    btnToggleGrid.setLayoutX(300);
+    btnToggleGrid.setLayoutY(10);
+
+    ArrayList<Line> gridlines = redrawGrid();
+    for (Line line : gridlines) {
+      root.getChildren().add(line);
+    } // todo remove
+
+    root.getChildren().add(cb);
+    root.getChildren().add(btnSave);
+    root.getChildren().add(btnToggleGrid);
+  }
 
   public static void main(String[] args) {
     Application.launch(args);
@@ -116,58 +196,102 @@ public class LevelEditor extends Application {
     return gridlines;
   }
 
-  private void addButtons(Group root) {
-    cb.setItems(
-        FXCollections.observableArrayList(
-            "ExampleObject",
-            "Player Spawn Point",
-            "Singleplayer Button",
-            "Multiplayer Button",
-            "Settings Button",
-            "Level Editor Button",
-            "Handgun"));
-    cb.setLayoutX(10);
-    cb.setLayoutY(10);
+  private void scenePrimaryClick(Stage primaryStage, Group root, MouseEvent event) {
+    UUID uuid = UUID.randomUUID();
+    if (objetTypeSelected == OBJECT_TYPES.FLOOR) {
+      GameObject temp =
+          new ExampleObject(
+              getGridX(event.getX()),
+              getGridY(event.getY()),
+              getScaledSize(objectMap.get(objetTypeSelected).getX()),
+              getScaledSize(objectMap.get(objetTypeSelected).getY()),
+              ObjectID.Bot,
+              uuid);
+      temp.initialise(root);
+      gameObjects.add(temp);
+    } else if (objetTypeSelected == OBJECT_TYPES.PLAYER) {
+      if (mapDataObject.getSpawnPoints().size() < spawnPointLimit) {
+        Player temp = new Player(
+            getGridX(event.getX()),
+            getGridY(event.getY()),
+            getScaledSize(objectMap.get(objetTypeSelected).getX()),
+            getScaledSize(objectMap.get(objetTypeSelected).getY()),
+            uuid);
+        temp.initialise(root);
+        playerSpawns.add(temp);
+        mapDataObject.addSpawnPoint(getGridX(event.getX()), getGridY(event.getY()));
+      } else {
+        final Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(primaryStage);
+        VBox dialogVbox = new VBox(20);
+        Text text = new Text("\n\tWarning: You cannot create more than " + spawnPointLimit
+            + " spawn points.");
+        dialogVbox.getChildren().add(text);
+        Scene dialogScene = new Scene(dialogVbox, 450, 60);
+        dialog.setScene(dialogScene);
+        dialog.show();
+      }
 
-    Button btnSave = new Button();
-    btnSave.setText("Save Map");
-    btnSave.setOnAction(
-        new EventHandler<ActionEvent>() {
-          @Override
-          public void handle(ActionEvent event) {
-            MapLoader.saveMap(gameObjects, mapDataObject, "menu.map");
-          }
-        });
-    btnSave.setLayoutX(200);
-    btnSave.setLayoutY(10);
-
-    Button btnToggleGrid = new Button();
-    btnToggleGrid.setText("Toggle Snap to Grid");
-    btnToggleGrid.setOnAction(
-        new EventHandler<ActionEvent>() {
-          @Override
-          public void handle(ActionEvent event) {
-            snapToGrid = !snapToGrid;
-            String append;
-            if (snapToGrid) {
-              append = "ON";
-            } else {
-              append = "OFF";
-            }
-            btnToggleGrid.setText("Toggle Snap to Grid: " + append);
-          }
-        });
-    btnToggleGrid.setLayoutX(300);
-    btnToggleGrid.setLayoutY(10);
-
-    ArrayList<Line> gridlines = redrawGrid();
-    for (Line line : gridlines) {
-      root.getChildren().add(line);
-    } // todo remove
-
-    root.getChildren().add(cb);
-    root.getChildren().add(btnSave);
-    root.getChildren().add(btnToggleGrid);
+    } else if (objetTypeSelected == OBJECT_TYPES.BTN_SP) {
+      ButtonSingleplayer temp =
+          new ButtonSingleplayer(
+              getGridX(event.getX()),
+              getGridY(event.getY()),
+              getScaledSize(objectMap.get(objetTypeSelected).getX()),
+              getScaledSize(objectMap.get(objetTypeSelected).getY()),
+              ObjectID.Bot,
+              uuid);
+      temp.initialise(root);
+      gameObjects.add(temp);
+    } else if (objetTypeSelected == OBJECT_TYPES.BTN_MP) {
+      ButtonMultiplayer temp =
+          new ButtonMultiplayer(
+              getGridX(event.getX()),
+              getGridY(event.getY()),
+              getScaledSize(objectMap.get(objetTypeSelected).getX()),
+              getScaledSize(objectMap.get(objetTypeSelected).getY()),
+              ObjectID.Bot,
+              uuid);
+      temp.initialise(root);
+      gameObjects.add(temp);
+    } else if (objetTypeSelected == OBJECT_TYPES.BTN_ST) {
+      ButtonSettings temp =
+          new ButtonSettings(getGridX(event.getX()),
+              getGridY(event.getY()),
+              getScaledSize(objectMap.get(objetTypeSelected).getX()),
+              getScaledSize(objectMap.get(objetTypeSelected).getY()),
+              ObjectID.Bot,
+              uuid);
+      temp.initialise(root);
+      gameObjects.add(temp);
+    } else if (objetTypeSelected == OBJECT_TYPES.BTN_LE) {
+      ButtonLeveleditor temp =
+          new ButtonLeveleditor(getGridX(event.getX()),
+              getGridY(event.getY()),
+              getScaledSize(objectMap.get(objetTypeSelected).getX()),
+              getScaledSize(objectMap.get(objetTypeSelected).getY()),
+              ObjectID.Bot, uuid);
+      temp.initialise(root);
+      gameObjects.add(temp);
+    } else if (objetTypeSelected == OBJECT_TYPES.WPN_HG) {
+      Handgun temp =
+          new Handgun(
+              getGridX(event.getX()),
+              getGridY(event.getY()),
+              getScaledSize(objectMap.get(objetTypeSelected).getX()),
+              getScaledSize(objectMap.get(objetTypeSelected).getY()),
+              ObjectID.Weapon,
+              10,
+              10,
+              "Handgun",
+              100,
+              100,
+              100,
+              10,
+              uuid);
+      temp.initialise(root);
+    }
   }
 
   private void initialiseNewMap() {
@@ -191,82 +315,8 @@ public class LevelEditor extends Application {
     }
   }
 
-  private void scenePrimaryClick(Stage primaryStage, Group root, MouseEvent event) {
-    UUID uuid = UUID.randomUUID();
-    if (cb.getValue() == "ExampleObject") {
-      GameObject temp =
-          new ExampleObject(getGridX(event.getX()), getGridY(event.getY()), getScaledSize(5),
-              getScaledSize(2),
-              ObjectID.Bot, uuid);
-      temp.initialise(root);
-      gameObjects.add(temp);
-    } else if (cb.getValue() == "Player Spawn Point") {
-      if (mapDataObject.getSpawnPoints().size() < spawnPointLimit) {
-        Player temp = new Player(getGridX(event.getX()), getGridY(event.getY()), getScaledSize(2),
-            getScaledSize(3),
-            uuid);
-        temp.initialise(root);
-        playerSpawns.add(temp);
-        mapDataObject.addSpawnPoint(getGridX(event.getX()), getGridY(event.getY()));
-      } else {
-        final Stage dialog = new Stage();
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.initOwner(primaryStage);
-        VBox dialogVbox = new VBox(20);
-        Text text = new Text("\n\tWarning: You cannot create more than " + spawnPointLimit
-            + " spawn points.");
-        dialogVbox.getChildren().add(text);
-        Scene dialogScene = new Scene(dialogVbox, 450, 60);
-        dialog.setScene(dialogScene);
-        dialog.show();
-      }
-
-    } else if (cb.getValue() == "Singleplayer Button") {
-      ButtonSingleplayer temp =
-          new ButtonSingleplayer(getGridX(event.getX()), getGridY(event.getY()), getScaledSize(6),
-              getScaledSize(2),
-              ObjectID.Bot, uuid);
-      temp.initialise(root);
-      gameObjects.add(temp);
-    } else if (cb.getValue() == "Multiplayer Button") {
-      ButtonMultiplayer temp =
-          new ButtonMultiplayer(getGridX(event.getX()), getGridY(event.getY()), getScaledSize(6),
-              getScaledSize(2),
-              ObjectID.Bot, uuid);
-      temp.initialise(root);
-      gameObjects.add(temp);
-    } else if (cb.getValue() == "Settings Button") {
-      ButtonSettings temp =
-          new ButtonSettings(getGridX(event.getX()), getGridY(event.getY()), getScaledSize(6),
-              getScaledSize(2),
-              ObjectID.Bot, uuid);
-      temp.initialise(root);
-      gameObjects.add(temp);
-    } else if (cb.getValue() == "Level Editor Button") {
-      ButtonLeveleditor temp =
-          new ButtonLeveleditor(getGridX(event.getX()), getGridY(event.getY()), getScaledSize(6),
-              getScaledSize(2),
-              ObjectID.Bot, uuid);
-      temp.initialise(root);
-      gameObjects.add(temp);
-    } else if (cb.getValue() == "Handgun") {
-      Handgun temp =
-          new Handgun(
-              getGridX(event.getX()),
-              getGridY(event.getY()),
-              getScaledSize(2),
-              getScaledSize(2),
-              ObjectID.Weapon,
-              10,
-              10,
-              "Handgun",
-              100,
-              100,
-              100,
-              10,
-              uuid);
-      temp.initialise(root);
-    }
+  protected enum OBJECT_TYPES {
+    FLOOR, PLAYER, BTN_SP, BTN_MP, BTN_ST, BTN_LE, WPN_HG
   }
 
   private void sceneSecondaryClick(Stage primaryStage, Group root, MouseEvent event) {
@@ -308,5 +358,55 @@ public class LevelEditor extends Application {
 
   private double getScaledSize(int gridSquaresCovered) {
     return gridSizePX * gridSquaresCovered;
+  }
+}
+
+class GameObjectTuple {
+
+  String label;
+  int x;
+  int y;
+
+  protected GameObjectTuple(String label, int x, int y) {
+    this.label = label;
+    this.x = x;
+    this.y = y;
+  }
+
+  String getLabel() {
+    return label;
+  }
+
+  int getX() {
+    return x;
+  }
+
+  int getY() {
+    return y;
+  }
+}
+
+class GameObjectTupleConverter extends StringConverter<GameObjectTuple> {
+
+  private HashMap<OBJECT_TYPES, GameObjectTuple> hashHap;
+
+  public GameObjectTupleConverter(HashMap<OBJECT_TYPES, GameObjectTuple> objectHash) {
+    hashHap = objectHash;
+  }
+
+  public GameObjectTuple fromString(String string) {
+    // convert from a string to a myClass instance
+    GameObjectTuple tuple = new GameObjectTuple("null-error", 1, 1);
+    for (GameObjectTuple listTuple : hashHap.values()) {
+      if (listTuple.getLabel().equals(string)) {
+        tuple = listTuple;
+      }
+    }
+    return tuple;
+  }
+
+  public String toString(GameObjectTuple tuple) {
+    // convert a myClass instance to the text displayed in the choice box
+    return tuple.getLabel();
   }
 }
