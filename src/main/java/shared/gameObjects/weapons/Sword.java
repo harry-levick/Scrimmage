@@ -38,10 +38,24 @@ public class Sword extends Melee {
   }
 
   @Override
-  public void update() {}
+  public void fire(double mouseX, double mouseY) {
+    if (canFire()) {
+      //swing
+      this.currentCooldown = getDefaultCoolDown();
+    }
+  }
+  
+  @Override
+  public void update() {
+    super.update();
+  }
 
   @Override
-  public void render() {}
+  public void render() {
+    super.render();
+    imageView.setTranslateX(this.getX());
+    imageView.setTranslateY(this.getY());
+  }
 
   @Override
   public String getState() {
@@ -49,5 +63,7 @@ public class Sword extends Melee {
   }
 
   @Override
-  public void initialiseAnimation() {}
+  public void initialiseAnimation() {
+    this.animation.supplyAnimationWithSize("default", 50, 50, true, this.imagePath);
+  }
 }
