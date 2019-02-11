@@ -9,10 +9,17 @@ import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.Handgun;
+import shared.gameObjects.weapons.MachineGun;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 
 public class LevelHandler {
 
   private ArrayList<GameObject> gameObjects = new ArrayList<>();
+  /*  toRemove will remove all gameObjects it contains from gameObjects list
+   *  and clear the list for next frame. */
+  private ArrayList<GameObject> toRemove = new ArrayList<>();
   private ArrayList<Player> players = new ArrayList<>();
   private Player clientPlayer;
   private ArrayList<Map> maps;
@@ -34,7 +41,8 @@ public class LevelHandler {
     if (isClient) {
       clientPlayer = new Player(500, 500, 100, 100, UUID.randomUUID());
       clientPlayer.setHolding(
-          new Handgun(500, 500, 100, 100, ObjectID.Weapon, 10, 10, "Handgun", 100, 1, 50, 10, UUID.randomUUID())
+          //new Handgun(500, 500, 100, 100, "Handgun", UUID.randomUUID())
+          new MachineGun(500, 500, 100, 100, "MachineGun@LevelHandler", UUID.randomUUID())
         );
       clientPlayer.initialise(gameRoot);
       players.add(clientPlayer);
@@ -100,20 +108,28 @@ public class LevelHandler {
    * @return All Game Objects
    */
   public ArrayList<GameObject> getGameObjects() {
+    clearToRemove();    // Remove every gameObjects we no longer need
     return gameObjects;
   }
   
-  // Test
+  /**
+   * Add a new bullet to game object list
+   * 
+   * @param g GameObject to be added
+   */
   public void addGameObject(GameObject g) {
     this.gameObjects.add(g);
     g.initialise(this.gameRoot);
   }
   
+  /**
+   * Remove an existing bullet from game object list
+   * 
+   * @param g GameObject to be removed
+   */
   public void delGameObject(GameObject g) {
-    g.destroy();
-    this.gameObjects.remove(g);
+    toRemove.add(g);  // Will be removed on next frame
   }
-  // End Test
 
   /**
    * List of all available maps
@@ -161,5 +177,18 @@ public class LevelHandler {
 
   public Player getClientPlayer() {
     return clientPlayer;
+  }
+  
+  /**
+   *  It removes the image from the imageView,
+   *  destroy the gameObject and
+   *  remove it from gameObjects list.
+   *  Finally clear the list for next frame
+   */
+  private void clearToRemove() {
+    toRemove.forEach(gameObject -> gameObject.removeRender());
+    toRemove.forEach(gameObject -> gameObject.destroy());
+    gameObjects.removeAll(toRemove);
+    toRemove.clear();
   }
 }
