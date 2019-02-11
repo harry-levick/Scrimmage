@@ -311,14 +311,7 @@ public class LevelEditor extends Application {
                   getGridY(event.getY()),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
-                  ObjectID.Weapon,
-                  10,
-                  10,
                   "Handgun",
-                  100,
-                  100,
-                  100,
-                  10,
                   uuid);
           break;
 
