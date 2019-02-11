@@ -29,9 +29,18 @@ public class Animator {
 
   public void supplyAnimation(String animationName, String... args) {
     ArrayList<Image> images = new ArrayList<>();
-    for (String s : args) {
-      images.add(new Image(s.replace('/', File.separatorChar).trim()));
-    }
+    System.out.println("ARGS:"+args);
+
+     for (String s : args) {
+       if(s != null) {
+         images.add(new Image(s.replace('/', File.separatorChar).trim()));
+       }
+       else {
+         images.add(new Image(("images/backgrounds/base.png").replace('/', File.separatorChar).trim()));
+       }
+     }
+    
+    
     animations.put(animationName, images);
     // Support for the default animation
     if (animationName.equals("default")) {

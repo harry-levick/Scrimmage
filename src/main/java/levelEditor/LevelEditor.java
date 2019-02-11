@@ -29,6 +29,7 @@ import shared.gameObjects.ExampleObject;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.MapDataObject;
 import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.background.Background;
 import shared.gameObjects.menu.main.ButtonLeveleditor;
 import shared.gameObjects.menu.main.ButtonMultiplayer;
 import shared.gameObjects.menu.main.ButtonSettings;
@@ -71,10 +72,11 @@ public class LevelEditor extends Application {
     objectMap.put(OBJECT_TYPES.BTN_ST, new GameObjectTuple("Settings Button", 6, 2));
     objectMap.put(OBJECT_TYPES.BTN_LE, new GameObjectTuple("Level Editor Button", 6, 2));
     objectMap.put(OBJECT_TYPES.WPN_HG, new GameObjectTuple("Handgun", 2, 2));
+    objectMap.put(OBJECT_TYPES.BACKGROUND, new GameObjectTuple("Background",0,0));
   }
 
   protected enum OBJECT_TYPES {
-    FLOOR, PLAYER, BTN_SP, BTN_MP, BTN_ST, BTN_LE, WPN_HG
+    FLOOR, PLAYER, BTN_SP, BTN_MP, BTN_ST, BTN_LE, WPN_HG, BACKGROUND
   }
 
   private void addButtons(Group root) {
@@ -147,14 +149,21 @@ public class LevelEditor extends Application {
   @Override
   public void start(Stage primaryStage) {
     primaryStage.setTitle("Level Editor");
+    Group objects = new Group();
+    Group background = new Group();
     Group root = new Group();
+    
+    root.getChildren().add(background);
+    root.getChildren().add(objects);
+
+    
     initialiseNewMap();
 
     // Example of loading map
     // gameObjects = MapLoader.loadMap("menus.map");
     //gameObjects.forEach(gameObject -> gameObject.initialise(root));
 
-    addButtons(root);
+    addButtons(objects);
 
     Scene scene = new Scene(root, stageSizeX, stageSizeY);
     scene.setOnMouseClicked(
@@ -162,9 +171,9 @@ public class LevelEditor extends Application {
           @Override
           public void handle(MouseEvent event) {
             if (event.getButton() == MouseButton.PRIMARY) {
-              scenePrimaryClick(primaryStage, root, event);
+              scenePrimaryClick(primaryStage,root, objects,background, event);
             } else if (event.getButton() == MouseButton.SECONDARY) {
-              sceneSecondaryClick(primaryStage, root, event);
+              sceneSecondaryClick(primaryStage, objects, event);
             }
           }
         });
@@ -206,7 +215,7 @@ public class LevelEditor extends Application {
     return gridlines;
   }
 
-  private void scenePrimaryClick(Stage primaryStage, Group root, MouseEvent event) {
+  private void scenePrimaryClick(Stage primaryStage, Group root, Group objects, Group background, MouseEvent event) {
     UUID uuid = UUID.randomUUID();
     GameObject temp = null;
     switch (objectTypeSelected) {
@@ -299,10 +308,19 @@ public class LevelEditor extends Application {
             10,
             uuid);
         break;
+        
+      case BACKGROUND:
+        temp = new Background("images/backgrounds/background1.png",ObjectID.Bot,uuid);
+        break;
     }
 
     if (temp != null) {
-      temp.initialise(root);
+      if(objectTypeSelected == OBJECT_TYPES.BACKGROUND) {
+        temp.initialise(background);
+      }
+      else {
+        temp.initialise(objects);
+      }
       if (objectTypeSelected == OBJECT_TYPES.PLAYER) {
         playerSpawns.add((Player) temp);
       } else {
