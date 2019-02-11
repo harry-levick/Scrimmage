@@ -63,6 +63,7 @@ public class LevelEditor extends Application {
    * the constructor add the enum mapped to a GameObjectTuple(label in the choicebox, grid x width,
    * grid y height) 3. in scenePrimaryClick, add a new case for the new enum and set temp to be an
    * instance of the new GameObject. Must break; the case.
+   * 4. debug
    */
   public LevelEditor() {
     objectMap.put(OBJECT_TYPES.FLOOR, new GameObjectTuple("Floor", 5, 2));
