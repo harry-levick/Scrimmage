@@ -67,6 +67,8 @@ public abstract class GameObject implements Serializable {
 
   // Client Side only
   public void render() {
+    imageView.setFitHeight(transform.getSize().getY());
+    imageView.setFitWidth(transform.getSize().getX());
     imageView.setImage(animation.getImage());
   }
   // Collision engine
@@ -199,6 +201,10 @@ public abstract class GameObject implements Serializable {
     return id;
   }
 
+  public UUID getUUID() {
+    return objectUUID;
+  }
+
   public GameObject getParent() {
     return parent;
   }
@@ -255,5 +261,16 @@ public abstract class GameObject implements Serializable {
 
   public void rotateImage(double rotation) {
     imageView.setRotate(imageView.getRotate() + rotation);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    try {
+      GameObject gameobj = (GameObject) obj;
+      return this.objectUUID.equals(gameobj.getUUID());
+    } catch (Exception e) {
+      return false;
+    }
+
   }
 }

@@ -1,6 +1,9 @@
 package shared.handlers.levelHandler;
 
 import client.main.Settings;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 import javafx.scene.Group;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
@@ -24,16 +27,24 @@ public class LevelHandler {
   private GameState gameState;
   private Map map;
   private Group root;
+  private Group backgroundRoot;
+  private Group gameRoot;
 
-  public LevelHandler(Settings settings, Group root, boolean isClient) {
+  public LevelHandler(Settings settings, Group root, Group backgroundRoot, Group gameRoot,
+      boolean isClient) {
     this.root = root;
+    this.backgroundRoot = backgroundRoot;
+    this.gameRoot = gameRoot;
+//    this.root.getChildren().add(backgroundRoot);
+//    this.root.getChildren().add(gameRoot);
+
     if (isClient) {
       clientPlayer = new Player(500, 500, 100, 100, UUID.randomUUID());
       clientPlayer.setHolding(
           //new Handgun(500, 500, 100, 100, "Handgun", UUID.randomUUID())
           new MachineGun(500, 500, 100, 100, "MachineGun@LevelHandler", UUID.randomUUID())
         );
-      clientPlayer.initialise(root);
+      clientPlayer.initialise(gameRoot);
       players.add(clientPlayer);
     }
     maps = MapLoader.getMaps(settings.getMapsPath());
@@ -41,10 +52,10 @@ public class LevelHandler {
     // menus = MapLoader.getMenuMaps(settings.getMenuPath());
     // Set initial game level as the Main Menu
     map = maps.get(0); // FOR TESTING
-    generateLevel(root, isClient);
+    generateLevel(root, backgroundRoot, gameRoot, isClient);
 
     gameObjects.add(clientPlayer.getHolding());
-    clientPlayer.getHolding().initialise(root);
+    clientPlayer.getHolding().initialise(gameRoot);
   }
 
   public boolean changeMap(Map map) {
@@ -67,7 +78,8 @@ public class LevelHandler {
    * NOTE: This to change the level use change Map Removes current game objects and creates new ones
    * from Map file
    */
-  public void generateLevel(Group root, boolean isClient) {
+  public void generateLevel(Group root, Group backgroundGroup, Group gameGroup, boolean isClient) {
+
     // Remove current game objects
     gameObjects.forEach(gameObject -> gameObject.setActive(false));
     gameObjects.clear();
@@ -79,9 +91,11 @@ public class LevelHandler {
           if (gameObject.getId() == ObjectID.MapDataObject && isClient) {
             // clientPlayer.setX(gameObject.getX());
             // clientPlayer.setY(gameObject.getY());
-            gameObjects.remove(gameObject);
+            // gameObjects.remove(gameObject); // todo check if this should be done
+          } else if (gameObject.getId() == ObjectID.Background) {
+            gameObject.initialise(backgroundGroup);
           } else {
-            gameObject.initialise(root);
+            gameObject.initialise(gameGroup);
           }
         });
     gameObjects.add(clientPlayer);
@@ -105,7 +119,7 @@ public class LevelHandler {
    */
   public void addGameObject(GameObject g) {
     this.gameObjects.add(g);
-    g.initialise(this.root);
+    g.initialise(this.gameRoot);
   }
   
   /**
