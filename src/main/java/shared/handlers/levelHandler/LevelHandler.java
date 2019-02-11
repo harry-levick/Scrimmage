@@ -1,15 +1,14 @@
 package shared.handlers.levelHandler;
 
 import client.main.Settings;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 import javafx.scene.Group;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.Handgun;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.UUID;
 
 public class LevelHandler {
 
@@ -75,7 +74,7 @@ public class LevelHandler {
           if (gameObject.getId() == ObjectID.MapDataObject && isClient) {
             // clientPlayer.setX(gameObject.getX());
             // clientPlayer.setY(gameObject.getY());
-            gameObjects.remove(gameObject);
+            // gameObjects.remove(gameObject); // todo check if this should be done
           } else {
             gameObject.initialise(root);
           }
