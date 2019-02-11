@@ -216,7 +216,8 @@ public class LevelEditor extends Application {
   }
 
   private void scenePrimaryClick(Stage primaryStage, Group root, Group objects, Group background, MouseEvent event) {
-    if (!isInObject(event.getX(), event.getY())) {
+    if (!isInObject(event.getX(), event.getY(), objectMap.get(objectTypeSelected).getX(),
+        objectMap.get(objectTypeSelected).getY())) {
       UUID uuid = UUID.randomUUID();
       GameObject temp = null;
       switch (objectTypeSelected) {
@@ -362,14 +363,17 @@ public class LevelEditor extends Application {
     }
   }
 
-  private boolean isInObject(double x, double y) {
+  private boolean isInObject(double x, double y, int newObjX, int newObjY) {
     boolean conflict = false;
     for (GameObject object : gameObjects) {
       double ulX = object.getX();
       double ulY = object.getY();
       double lrX = ulX + object.getTransform().getSize().getX();
       double lrY = ulY + object.getTransform().getSize().getY();
-      if ((x >= ulX) && (y >= ulY) && (x <= lrX) && (y <= lrY)) {
+      double lrMX = getGridX(x) + getScaledSize(newObjX);
+      double lrMY = getGridY(y) + getScaledSize(newObjY);
+      if (((x >= ulX) && (y >= ulY) && (x <= lrX) && (y <= lrY))
+          || ((lrMX > ulX) && (lrMY > ulY) && (lrMX <= lrX) && (lrMY <= lrY))) {
         conflict = true;
       }
     }
@@ -378,7 +382,10 @@ public class LevelEditor extends Application {
       double ulY = object.getY();
       double lrX = ulX + object.getTransform().getSize().getX();
       double lrY = ulY + object.getTransform().getSize().getY();
-      if ((x >= ulX) && (y >= ulY) && (x <= lrX) && (y <= lrY)) {
+      double lrMX = getGridX(x) + getScaledSize(newObjX);
+      double lrMY = getGridY(y) + getScaledSize(newObjY);
+      if (((x >= ulX) && (y >= ulY) && (x <= lrX) && (y <= lrY))
+          || ((lrMX > ulX) && (lrMY > ulY) && (lrMX <= lrX) && (lrMY <= lrY))) {
         conflict = true;
       }
     }
