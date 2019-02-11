@@ -14,6 +14,9 @@ import java.util.UUID;
 public class LevelHandler {
 
   private ArrayList<GameObject> gameObjects = new ArrayList<>();
+  /*  toRemove will remove all gameObjects it contains from gameObjects list
+   *  and clear the list for next frame. */
+  private ArrayList<GameObject> toRemove = new ArrayList<>();
   private ArrayList<Player> players = new ArrayList<>();
   private Player clientPlayer;
   private ArrayList<Map> maps;
@@ -91,20 +94,28 @@ public class LevelHandler {
    * @return All Game Objects
    */
   public ArrayList<GameObject> getGameObjects() {
+    clearToRemove();    // Remove every gameObjects we no longer need
     return gameObjects;
   }
   
-  // Test
+  /**
+   * Add a new bullet to game object list
+   * 
+   * @param g GameObject to be added
+   */
   public void addGameObject(GameObject g) {
     this.gameObjects.add(g);
     g.initialise(this.root);
   }
   
+  /**
+   * Remove an existing bullet from game object list
+   * 
+   * @param g GameObject to be removed
+   */
   public void delGameObject(GameObject g) {
-    g.destroy();
-    this.gameObjects.remove(g);
+    toRemove.add(g);  // Will be removed on next frame
   }
-  // End Test
 
   /**
    * List of all available maps
@@ -152,5 +163,18 @@ public class LevelHandler {
 
   public Player getClientPlayer() {
     return clientPlayer;
+  }
+  
+  /**
+   *  It removes the image from the imageView,
+   *  destroy the gameObject and
+   *  remove it from gameObjects list.
+   *  Finally clear the list for next frame
+   */
+  private void clearToRemove() {
+    toRemove.forEach(gameObject -> gameObject.removeRender());
+    toRemove.forEach(gameObject -> gameObject.destroy());
+    gameObjects.removeAll(toRemove);
+    toRemove.clear();
   }
 }
