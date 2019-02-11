@@ -57,6 +57,12 @@ public class LevelEditor extends Application {
   private LinkedHashMap<OBJECT_TYPES, GameObjectTuple> objectMap = new LinkedHashMap<>();
   private OBJECT_TYPES objetTypeSelected = OBJECT_TYPES.FLOOR; // default
 
+  /**
+   * ADDING NEW OBJECTS TO THE MAP CREATOR: 1. add a new object name in the enum OBJECT_TYPES 2. in
+   * the constructor add the enum mapped to a GameObjectTuple(label in the choicebox, grid x width,
+   * grid y height) 3. in scenePrimaryClick, add a new case for the new enum and set temp to be an
+   * instance of the new GameObject. Must break; the case.
+   */
   public LevelEditor() {
     objectMap.put(OBJECT_TYPES.FLOOR, new GameObjectTuple("Floor", 5, 2));
     objectMap.put(OBJECT_TYPES.PLAYER, new GameObjectTuple("Player Spawn", 2, 3));
@@ -65,6 +71,10 @@ public class LevelEditor extends Application {
     objectMap.put(OBJECT_TYPES.BTN_ST, new GameObjectTuple("Settings Button", 6, 2));
     objectMap.put(OBJECT_TYPES.BTN_LE, new GameObjectTuple("Level Editor Button", 6, 2));
     objectMap.put(OBJECT_TYPES.WPN_HG, new GameObjectTuple("Handgun", 2, 2));
+  }
+
+  protected enum OBJECT_TYPES {
+    FLOOR, PLAYER, BTN_SP, BTN_MP, BTN_ST, BTN_LE, WPN_HG
   }
 
   private void addButtons(Group root) {
@@ -319,10 +329,6 @@ public class LevelEditor extends Application {
     } else {
       return eventY;
     }
-  }
-
-  protected enum OBJECT_TYPES {
-    FLOOR, PLAYER, BTN_SP, BTN_MP, BTN_ST, BTN_LE, WPN_HG
   }
 
   private void sceneSecondaryClick(Stage primaryStage, Group root, MouseEvent event) {
