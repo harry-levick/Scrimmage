@@ -35,7 +35,11 @@ public class LevelHandler {
       clientPlayer.initialise(root);
       players.add(clientPlayer);
 
-      botPlayer = new Bot(600, 500, 100, 100, UUID.randomUUID());
+      botPlayer = new Bot(600, 500, 100, 100, UUID.randomUUID(), gameObjects);
+      botPlayer.setHolding(
+          new MachineGun(500, 500, 100, 100, "MachineGun@LevelHandler", UUID.randomUUID())
+      );
+      botPlayer.initialise(root);
       players.add(botPlayer);
     }
     maps = MapLoader.getMaps(settings.getMapsPath());
