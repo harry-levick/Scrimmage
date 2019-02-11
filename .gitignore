@@ -82,7 +82,7 @@ local.properties
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
-
+.idea/.name
 # Generated files
 .idea/**/contentModel.xml
 
@@ -143,6 +143,7 @@ fabric.properties
 ### Intellij Patch ###
 # Comment Reason: https://github.com/joeblau/gitignore.io/issues/186#issuecomment-215987721
 
+
 *.iml
 modules.xml
 .idea/misc.xml
@@ -152,7 +153,6 @@ modules.xml
 .idea/vcs.xml
 google-java-format.xml
 codeStyleConfig.xml
-
 # Sonarlint plugin
 .idea/sonarlint
 
