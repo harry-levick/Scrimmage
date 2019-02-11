@@ -76,6 +76,13 @@ public abstract class GameObject implements Serializable {
     }
   }
 
+  /**
+   *  Remove the image from the imageView by setting the image to null
+   */
+  public void removeRender() {
+    imageView.setImage(null);
+  }
+  
   // Interpolate Position Client only
   public void interpolatePosition(float alpha) {
     if (!isActive()) {
