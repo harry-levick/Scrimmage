@@ -95,7 +95,6 @@ public class Client extends Application {
         }
         /** Apply Input */
         levelHandler.getClientPlayer().applyInput(multiplayer, connectionHandler);
-        levelHandler.getBot().applyInput(multiplayer, connectionHandler);
         /** Render Game Objects */
         levelHandler.getGameObjects().forEach(gameObject -> gameObject.render());
         /** Check Collisions */
