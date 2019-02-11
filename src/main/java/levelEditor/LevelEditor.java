@@ -1,7 +1,7 @@
 package levelEditor;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.UUID;
 import javafx.animation.AnimationTimer;
@@ -55,7 +55,7 @@ public class LevelEditor extends Application {
   private int gridSizeX = stageSizeX / gridSizePX; //40 px blocks
   private int gridSizeY = stageSizeY / gridSizePX;
 
-  private HashMap<OBJECT_TYPES, GameObjectTuple> objectMap = new HashMap<>();
+  private LinkedHashMap<OBJECT_TYPES, GameObjectTuple> objectMap = new LinkedHashMap<>();
   private OBJECT_TYPES objetTypeSelected = OBJECT_TYPES.FLOOR; // default
 
   public LevelEditor() {
@@ -392,9 +392,9 @@ class GameObjectTuple {
 
 class GameObjectTupleConverter extends StringConverter<GameObjectTuple> {
 
-  private HashMap<OBJECT_TYPES, GameObjectTuple> hashHap;
+  private LinkedHashMap<OBJECT_TYPES, GameObjectTuple> hashHap;
 
-  public GameObjectTupleConverter(HashMap<OBJECT_TYPES, GameObjectTuple> objectHash) {
+  public GameObjectTupleConverter(LinkedHashMap<OBJECT_TYPES, GameObjectTuple> objectHash) {
     hashHap = objectHash;
   }
 
