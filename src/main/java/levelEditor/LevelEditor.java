@@ -45,7 +45,6 @@ public class LevelEditor extends Application {
   private ArrayList<Player> playerSpawns = new ArrayList<Player>();
   private MapDataObject mapDataObject;
   private boolean snapToGrid = true;
-  private ChoiceBox cb = new ChoiceBox();
 
   private int spawnPointLimit = 4; //todo autofetch
 
@@ -69,6 +68,7 @@ public class LevelEditor extends Application {
   }
 
   private void addButtons(Group root) {
+    ChoiceBox cb = new ChoiceBox();
     cb.setConverter(new GameObjectTupleConverter(objectMap));
     cb.setItems(FXCollections.observableArrayList(objectMap.values()));
     cb.setLayoutX(10);
@@ -367,9 +367,9 @@ public class LevelEditor extends Application {
 
 class GameObjectTuple {
 
-  String label;
-  int x;
-  int y;
+  private String label;
+  private int x;
+  private int y;
 
   protected GameObjectTuple(String label, int x, int y) {
     this.label = label;
@@ -377,15 +377,15 @@ class GameObjectTuple {
     this.y = y;
   }
 
-  String getLabel() {
+  protected String getLabel() {
     return label;
   }
 
-  int getX() {
+  protected int getX() {
     return x;
   }
 
-  int getY() {
+  protected int getY() {
     return y;
   }
 }
@@ -394,7 +394,7 @@ class GameObjectTupleConverter extends StringConverter<GameObjectTuple> {
 
   private LinkedHashMap<OBJECT_TYPES, GameObjectTuple> hashHap;
 
-  public GameObjectTupleConverter(LinkedHashMap<OBJECT_TYPES, GameObjectTuple> objectHash) {
+  protected GameObjectTupleConverter(LinkedHashMap<OBJECT_TYPES, GameObjectTuple> objectHash) {
     hashHap = objectHash;
   }
 
