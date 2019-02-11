@@ -29,7 +29,6 @@ public class Animator {
 
   public void supplyAnimation(String animationName, String... args) {
     ArrayList<Image> images = new ArrayList<>();
-    System.out.println("ARGS:"+args);
 
      for (String s : args) {
        if(s != null) {

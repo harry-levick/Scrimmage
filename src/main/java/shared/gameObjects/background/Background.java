@@ -17,7 +17,6 @@ public class Background extends GameObject{
 
   @Override
   public void initialiseAnimation() {
-    //System.out.println("imagepath:"+imagePath);
     this.animation.supplyAnimation("default", imagePath); 
   }
 
