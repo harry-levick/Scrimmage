@@ -2,8 +2,6 @@ package shared.gameObjects.players;
 
 import client.handlers.connectionHandler.ConnectionHandler;
 import client.handlers.inputHandler.InputHandler;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.UUID;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
@@ -25,13 +23,13 @@ public class Player extends GameObject {
 
   // Initialise the animation 
   public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", "resources/images/player/player_idle.png");
+    this.animation.supplyAnimation("default", "images/player/player_idle.png");
     this.animation.supplyAnimation("moveLeft",
-        "resources/images/player/player_left_walk1.png",
-        "resources/images/player/player_left_walk2.png");
+        "images/player/player_left_walk1.png",
+        "images/player/player_left_walk2.png");
     this.animation.supplyAnimation("moveRight",
-        "resources/images/player/player_right_walk1.png",
-        "resources/images/player/player_right_walk2.png");
+        "images/player/player_right_walk1.png",
+        "images/player/player_right_walk2.png");
   }
 
   @Override
