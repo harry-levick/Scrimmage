@@ -55,7 +55,7 @@ public class LevelEditor extends Application {
   private int gridSizeY = stageSizeY / gridSizePX;
 
   private LinkedHashMap<OBJECT_TYPES, GameObjectTuple> objectMap = new LinkedHashMap<>();
-  private OBJECT_TYPES objetTypeSelected = OBJECT_TYPES.FLOOR; // default
+  private OBJECT_TYPES objectTypeSelected = OBJECT_TYPES.FLOOR; // default
 
   /**
    * ADDING NEW OBJECTS TO THE MAP CREATOR: 1. add a new object name in the enum OBJECT_TYPES 2. in
@@ -92,7 +92,7 @@ public class LevelEditor extends Application {
         for (Entry<OBJECT_TYPES, GameObjectTuple> e : objectMap.entrySet()) {
           if (con.toString((GameObjectTuple) cb.getItems().get((Integer) number2))
               .equals(con.toString(e.getValue()))) {
-            objetTypeSelected = e.getKey();
+            objectTypeSelected = e.getKey();
           }
         }
       }
@@ -209,14 +209,14 @@ public class LevelEditor extends Application {
   private void scenePrimaryClick(Stage primaryStage, Group root, MouseEvent event) {
     UUID uuid = UUID.randomUUID();
     GameObject temp = null;
-    switch (objetTypeSelected) {
+    switch (objectTypeSelected) {
       case FLOOR:
       default:
         temp = new ExampleObject(
             getGridX(event.getX()),
             getGridY(event.getY()),
-            getScaledSize(objectMap.get(objetTypeSelected).getX()),
-            getScaledSize(objectMap.get(objetTypeSelected).getY()),
+            getScaledSize(objectMap.get(objectTypeSelected).getX()),
+            getScaledSize(objectMap.get(objectTypeSelected).getY()),
             ObjectID.Bot,
             uuid);
         break;
@@ -226,8 +226,8 @@ public class LevelEditor extends Application {
           temp = new Player(
               getGridX(event.getX()),
               getGridY(event.getY()),
-              getScaledSize(objectMap.get(objetTypeSelected).getX()),
-              getScaledSize(objectMap.get(objetTypeSelected).getY()),
+              getScaledSize(objectMap.get(objectTypeSelected).getX()),
+              getScaledSize(objectMap.get(objectTypeSelected).getY()),
               uuid);
           mapDataObject.addSpawnPoint(getGridX(event.getX()), getGridY(event.getY()));
         } else {
@@ -248,8 +248,8 @@ public class LevelEditor extends Application {
         temp = new ButtonSingleplayer(
             getGridX(event.getX()),
             getGridY(event.getY()),
-            getScaledSize(objectMap.get(objetTypeSelected).getX()),
-            getScaledSize(objectMap.get(objetTypeSelected).getY()),
+            getScaledSize(objectMap.get(objectTypeSelected).getX()),
+            getScaledSize(objectMap.get(objectTypeSelected).getY()),
             ObjectID.Bot,
             uuid);
         break;
@@ -258,8 +258,8 @@ public class LevelEditor extends Application {
         temp = new ButtonMultiplayer(
             getGridX(event.getX()),
             getGridY(event.getY()),
-            getScaledSize(objectMap.get(objetTypeSelected).getX()),
-            getScaledSize(objectMap.get(objetTypeSelected).getY()),
+            getScaledSize(objectMap.get(objectTypeSelected).getX()),
+            getScaledSize(objectMap.get(objectTypeSelected).getY()),
             ObjectID.Bot,
             uuid);
         break;
@@ -267,8 +267,8 @@ public class LevelEditor extends Application {
       case BTN_ST:
         temp = new ButtonSettings(getGridX(event.getX()),
             getGridY(event.getY()),
-            getScaledSize(objectMap.get(objetTypeSelected).getX()),
-            getScaledSize(objectMap.get(objetTypeSelected).getY()),
+            getScaledSize(objectMap.get(objectTypeSelected).getX()),
+            getScaledSize(objectMap.get(objectTypeSelected).getY()),
             ObjectID.Bot,
             uuid);
         break;
@@ -277,17 +277,18 @@ public class LevelEditor extends Application {
         temp = new ButtonLeveleditor(
             getGridX(event.getX()),
             getGridY(event.getY()),
-            getScaledSize(objectMap.get(objetTypeSelected).getX()),
-            getScaledSize(objectMap.get(objetTypeSelected).getY()),
-            ObjectID.Bot, uuid);
+            getScaledSize(objectMap.get(objectTypeSelected).getX()),
+            getScaledSize(objectMap.get(objectTypeSelected).getY()),
+            ObjectID.Bot,
+            uuid);
         break;
 
       case WPN_HG:
         temp = new Handgun(
             getGridX(event.getX()),
             getGridY(event.getY()),
-            getScaledSize(objectMap.get(objetTypeSelected).getX()),
-            getScaledSize(objectMap.get(objetTypeSelected).getY()),
+            getScaledSize(objectMap.get(objectTypeSelected).getX()),
+            getScaledSize(objectMap.get(objectTypeSelected).getY()),
             ObjectID.Weapon,
             10,
             10,
@@ -302,7 +303,7 @@ public class LevelEditor extends Application {
 
     if (temp != null) {
       temp.initialise(root);
-      if (objetTypeSelected == OBJECT_TYPES.PLAYER) {
+      if (objectTypeSelected == OBJECT_TYPES.PLAYER) {
         playerSpawns.add((Player) temp);
       } else {
         gameObjects.add(temp);
