@@ -18,7 +18,7 @@ public abstract class Bullet extends GameObject {
   private double width;     // width of bullet
   private double speed;     // speed of bullet
   private Vector2 vector;   // Vector of the force of bullet fire
-  private Rigidbody rb = new Rigidbody(RigidbodyType.DYNAMIC, 100f, 100f, 0.1f, new MaterialProperty(0, 0, 0), new AngularData(0, 0, 0, 0), this);
+  protected Rigidbody rb;
 
   public Bullet(
       double gunX, // gun initial x position
@@ -39,8 +39,7 @@ public abstract class Bullet extends GameObject {
     vector = new Vector2((float)(mouseX - gunX), (float)(mouseY - gunY));
     vector = vector.div((float)Math.sqrt(vector.dot(vector)));
     
-    setRigitBody(100f);
-    
+    setRigitBody();
     addComponent(rb);
     // Change the speed of bullet by altering the bulletSpeed variable in any Gun
     rb.setVelocity(vector.mult((float)speed * 2250f));
@@ -53,7 +52,7 @@ public abstract class Bullet extends GameObject {
     render();
   }
   
-  public abstract void setRigitBody(float gravityScale);
+  public abstract void setRigitBody();
 
   @Override
   public void update() {

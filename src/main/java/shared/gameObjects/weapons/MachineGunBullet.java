@@ -1,20 +1,17 @@
 package shared.gameObjects.weapons;
 
 import java.util.UUID;
+import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.components.Rigidbody;
 import shared.physics.data.AngularData;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.RigidbodyType;
 
-/**
- * @author Henry Fung (hlf764)
- *
- */
-public class HandgunBullet extends Bullet {
+public class MachineGunBullet extends Bullet {
   
-  private static String imagePath = "images/weapons/fireBullet.png";
+  private static String imagePath = "images/weapons/bullet.png";
   
-  public HandgunBullet(
+  public MachineGunBullet(
       double gunX,
       double gunY,
       double sizeX,
