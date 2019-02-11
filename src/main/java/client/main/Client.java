@@ -37,6 +37,8 @@ public class Client extends Application {
   private KeyboardInput keyInput;
   private MouseInput mouseInput;
   private Group root;
+  private Group backgroundRoot;
+  private Group gameRoot;
   private Scene scene;
   private Map currentMap;
   private float maximumStep;
@@ -52,7 +54,7 @@ public class Client extends Application {
   @Override
   public void start(Stage primaryStage) {
     setupRender(primaryStage);
-    levelHandler = new LevelHandler(settings, root, true);
+    levelHandler = new LevelHandler(settings, root, backgroundRoot, gameRoot, true);
     currentMap = levelHandler.getMap();
 
     // Main Game Loop
@@ -66,7 +68,7 @@ public class Client extends Application {
 
         // Changes Map/Level
         if (currentMap != levelHandler.getMap()) {
-          levelHandler.generateLevel(root, true);
+          levelHandler.generateLevel(root, backgroundRoot, gameRoot, true);
           currentMap = levelHandler.getMap();
         }
 
@@ -137,6 +139,12 @@ public class Client extends Application {
 
   private void setupRender(Stage primaryStage) {
     root = new Group();
+    backgroundRoot = new Group();
+    gameRoot = new Group();
+
+    root.getChildren().add(backgroundRoot);
+    root.getChildren().add(gameRoot);
+
     primaryStage.setTitle(gameTitle);
 
     AudioHandler audio = new AudioHandler(settings);
