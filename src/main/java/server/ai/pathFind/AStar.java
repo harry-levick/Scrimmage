@@ -316,8 +316,8 @@ public class AStar {
    * @return true if the bot is close enough to the enemy.
    */
   private boolean atEnemy(double bX, double bY) {
-    double xDiff = bX - enemy.getX();
-    double yDiff = bY - enemy.getY();
+    double xDiff = Math.abs(bX - enemy.getX());
+    double yDiff = Math.abs(bY - enemy.getY());
 
     if (xDiff <= 10 && yDiff <= 10)
       return true;

@@ -31,6 +31,14 @@ public class Bot extends Player {
   AStar pathFinder;
   List<Player> allPlayers;
 
+  /**
+   * @param x
+   * @param y
+   * @param sizeX
+   * @param sizeY
+   * @param playerUUID
+   * @param allObjs Contains a list of all game objects in the world, including players.
+   */
   public Bot(double x, double y, double sizeX, double sizeY, UUID playerUUID,
       List<GameObject> allObjs) {
     super(x, y, sizeX, sizeY, playerUUID);
@@ -86,7 +94,6 @@ public class Bot extends Player {
     // Calculate the distance to the target from the previous loop
     prevDist = calcDist();
     // Update the target player
-    System.out.println(allPlayers.size());
     targetPlayer = findTarget(allPlayers);
     // Calculate the distance to the updated target
     newDist = calcDist();
@@ -113,7 +120,6 @@ public class Bot extends Player {
       case ATTACKING:
         System.out.println("ATTACKING");
         boolean[] action = pathFinder.optimise(targetPlayer);
-        System.out.println(printAction(action));
         executeAction(action);
         // TODO think about how an attacking script would work.
         break;
