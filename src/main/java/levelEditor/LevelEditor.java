@@ -68,12 +68,12 @@ public class LevelEditor extends Application {
   public LevelEditor() {
     objectMap.put(OBJECT_TYPES.FLOOR, new GameObjectTuple("Floor", 5, 2));
     objectMap.put(OBJECT_TYPES.PLAYER, new GameObjectTuple("Player Spawn", 2, 3));
+    objectMap.put(OBJECT_TYPES.BACKGROUND, new GameObjectTuple("Background", 0, 0));
     objectMap.put(OBJECT_TYPES.BTN_SP, new GameObjectTuple("Singeplayer Button", 6, 2));
     objectMap.put(OBJECT_TYPES.BTN_MP, new GameObjectTuple("Multiplayer Button", 6, 2));
     objectMap.put(OBJECT_TYPES.BTN_ST, new GameObjectTuple("Settings Button", 6, 2));
     objectMap.put(OBJECT_TYPES.BTN_LE, new GameObjectTuple("Level Editor Button", 6, 2));
     objectMap.put(OBJECT_TYPES.WPN_HG, new GameObjectTuple("Handgun", 2, 2));
-    objectMap.put(OBJECT_TYPES.BACKGROUND, new GameObjectTuple("Background",0,0));
   }
 
   protected enum OBJECT_TYPES {
@@ -188,6 +188,9 @@ public class LevelEditor extends Application {
       public void handle(long now) {
         gameObjects.forEach(gameObject -> gameObject.render());
         playerSpawns.forEach(player -> player.render());
+        if (mapDataObject.getBackground() != null) {
+          mapDataObject.getBackground().render();
+        }
       }
     }.start();
   }
@@ -261,6 +264,11 @@ public class LevelEditor extends Application {
           }
           break;
 
+        case BACKGROUND:
+          temp = new Background("images/backgrounds/background1.png", ObjectID.Background, uuid);
+          mapDataObject.setBackground((Background) temp);
+          break;
+
         case BTN_SP:
           temp =
               new ButtonSingleplayer(
@@ -315,10 +323,6 @@ public class LevelEditor extends Application {
                   "Handgun",
                   uuid);
           break;
-
-        case BACKGROUND:
-          temp = new Background("images/backgrounds/background1.png", ObjectID.Background, uuid);
-          break;
       }
 
       if (temp != null) {
@@ -329,6 +333,8 @@ public class LevelEditor extends Application {
         }
         if (objectTypeSelected == OBJECT_TYPES.PLAYER) {
           playerSpawns.add((Player) temp);
+        } else if (objectTypeSelected == OBJECT_TYPES.BACKGROUND) {
+          //backgroundObject = (Background)temp;
         } else {
           gameObjects.add(temp);
         }
