@@ -34,9 +34,9 @@ public class Animator {
        if(s != null) {
          images.add(new Image(s.replace('/', File.separatorChar).trim()));
        }
-       else {
-         images.add(new Image(("images/backgrounds/base.png").replace('/', File.separatorChar).trim()));
-       }
+       //else { //todo check if this should be removed
+       // images.add(new Image(("images/backgrounds/base.png").replace('/', File.separatorChar).trim()));
+       //}
      }
     
     
