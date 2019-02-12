@@ -256,11 +256,6 @@ public class LevelEditor extends Application {
     btnToggleGrid.setLayoutX(300);
     btnToggleGrid.setLayoutY(10);
 
-    ArrayList<Line> gridlines = redrawGrid();
-    for (Line line : gridlines) {
-      root.getChildren().add(line);
-    } // todo remove
-
     root.getChildren().add(cb);
     root.getChildren().add(btnSave);
     root.getChildren().add(btnToggleGrid);
@@ -273,12 +268,16 @@ public class LevelEditor extends Application {
   @Override
   public void start(Stage primaryStage) {
     primaryStage.setTitle("Level Editor");
+    Group ui = new Group();
     Group objects = new Group();
     Group background = new Group();
+    Group grid = new Group();
     Group root = new Group();
 
     root.getChildren().add(background);
+    root.getChildren().add(grid);
     root.getChildren().add(objects);
+    root.getChildren().add(ui);
 
     initialiseNewMap();
 
@@ -286,7 +285,12 @@ public class LevelEditor extends Application {
     // gameObjects = MapLoader.loadMap("menus.map");
     //gameObjects.forEach(gameObject -> gameObject.initialise(root));
 
-    addButtons(objects);
+    addButtons(ui);
+
+    ArrayList<Line> gridlines = redrawGrid();
+    for (Line line : gridlines) {
+      grid.getChildren().add(line);
+    } // todo remove
 
     Scene scene = new Scene(root, stageSizeX, stageSizeY);
     scene.setOnMouseClicked(
