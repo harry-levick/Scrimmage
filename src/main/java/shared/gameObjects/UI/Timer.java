@@ -1,9 +1,8 @@
-package shared.gameObject.UI;
+package shared.gameObjects.UI;
 
 import java.util.UUID;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
-import javafx.scene.shape.*;
 
 public class Timer extends GameObject{
 
