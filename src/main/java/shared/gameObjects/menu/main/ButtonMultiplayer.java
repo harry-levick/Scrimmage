@@ -1,8 +1,13 @@
 package shared.gameObjects.menu.main;
 
+import client.Menu;
+import client.main.Client;
 import java.util.UUID;
+import javafx.scene.input.MouseEvent;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.menu.ButtonObject;
+import shared.handlers.levelHandler.GameState;
+import shared.handlers.levelHandler.Map;
 
 public class ButtonMultiplayer extends ButtonObject {
 
@@ -23,5 +28,11 @@ public class ButtonMultiplayer extends ButtonObject {
   public void initialiseAnimation() {
     super.initialiseAnimation(
         "images/buttons/multiplayer_unpressed.png", "images/buttons/multiplayer_pressed.png");
+  }
+
+  public void doOnClick(MouseEvent e) {
+    super.doOnClick(e);
+    Client.levelHandler
+        .changeMap(new Map("Multiplayer", Menu.MULTIPLAYER.getMenuPath(), GameState.Multiplayer));
   }
 }
