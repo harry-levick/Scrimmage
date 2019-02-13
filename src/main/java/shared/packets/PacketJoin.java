@@ -15,9 +15,8 @@ public class PacketJoin extends Packet {
     data = (Integer.toString(packetID) + "," + clientID.toString() + "," + username).getBytes();
   }
 
-  public PacketJoin(byte[] data) {
-    String temp = new String(data).trim();
-    String[] unpackedData = temp.split(",");
+  public PacketJoin(String data) {
+    String[] unpackedData = data.split(",");
     this.packetID = Integer.parseInt(unpackedData[0]);
     this.clientID = UUID.fromString(unpackedData[1]);
     this.username = unpackedData[2];

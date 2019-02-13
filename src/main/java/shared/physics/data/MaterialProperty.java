@@ -1,6 +1,8 @@
 package shared.physics.data;
 
-/** @author fxa579 Contains data affect */
+/**
+ * @author fxa579 Contains data affect
+ */
 public class MaterialProperty {
 
   private float restitution;

@@ -1,6 +1,8 @@
 package shared.physics.data;
 
-/** @author fxa579 The class contains data required for rotational kinematics/dynamics */
+/**
+ * @author fxa579 The class contains data required for rotational kinematics/dynamics
+ */
 public class AngularData {
 
   private float angularRadius;

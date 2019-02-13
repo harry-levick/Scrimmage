@@ -1,24 +1,22 @@
 package shared.gameObjects.weapons;
 
-import java.util.UUID;
 import client.main.Client;
-import javafx.scene.image.Image;
-import shared.util.maths.Vector2;
+import java.util.UUID;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.components.Rigidbody;
-import shared.physics.data.AngularData;
-import shared.physics.data.MaterialProperty;
-import shared.physics.types.RigidbodyType;
+import shared.util.maths.Vector2;
 
-/** @author hlf764 */
+/**
+ * @author hlf764
+ */
 public abstract class Bullet extends GameObject {
 
   public boolean isHit;     // true if there is an object at that position
+  protected Rigidbody rb;
   private double width;     // width of bullet
   private double speed;     // speed of bullet
   private Vector2 vector;   // Vector of the force of bullet fire
-  protected Rigidbody rb;
 
   public Bullet(
       double gunX, // gun initial x position
@@ -34,24 +32,24 @@ public abstract class Bullet extends GameObject {
     super(gunX, gunY, sizeX, sizeY, ObjectID.Bullet, uuid);
     setWidth(width);
     setSpeed(speed);
-    
+
     // Unit vector of the bullet force
-    vector = new Vector2((float)(mouseX - gunX), (float)(mouseY - gunY));
-    vector = vector.div((float)Math.sqrt(vector.dot(vector)));
-    
+    vector = new Vector2((float) (mouseX - gunX), (float) (mouseY - gunY));
+    vector = vector.div((float) Math.sqrt(vector.dot(vector)));
+
     setRigitBody();
     addComponent(rb);
     // Change the speed of bullet by altering the bulletSpeed variable in any Gun
-    rb.setVelocity(vector.mult((float)speed * 2250f));
+    rb.setVelocity(vector.mult((float) speed * 2250f));
     //rb.move(new Vector2((float)(mouseX-gunX)*1.5f, (float)(mouseY-gunY)*1.5f));
-    
+
     this.isHit = false;
-    
+
     Client.levelHandler.addGameObject(this);
 
     render();
   }
-  
+
   public abstract void setRigitBody();
 
   @Override
@@ -60,12 +58,10 @@ public abstract class Bullet extends GameObject {
       System.out.println(this.toString() + " is to be destroyed");
       Client.levelHandler.delGameObject(this);
       // apply effect (deduct hp, play sound)
-    }
-    else if ((0 < getX() && getX() < 1920) && (0 < getY() && getY() < 1080)) {
+    } else if ((0 < getX() && getX() < 1920) && (0 < getY() && getY() < 1080)) {
       rb.update();
       super.update();
-    }
-    else {
+    } else {
       System.out.println(this.toString() + " is to be destroyed");
       Client.levelHandler.delGameObject(this);
     }
@@ -96,7 +92,7 @@ public abstract class Bullet extends GameObject {
   public double getWidth() {
     return this.width;
   }
-  
+
   public void setWidth(double newWidth) {
     if (newWidth > 0) {
       this.width = newWidth;
@@ -112,11 +108,11 @@ public abstract class Bullet extends GameObject {
       this.speed = newSpeed;
     }
   }
-  
+
   public boolean getIsHit() {
     return this.isHit;
   }
-  
+
   public void setIsHit(boolean hit) {
     this.isHit = hit;
   }

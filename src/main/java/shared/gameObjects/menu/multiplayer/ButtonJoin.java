@@ -1,6 +1,7 @@
-package shared.gameObjects.menu.main;
+package shared.gameObjects.menu.multiplayer;
 
 import client.Menu;
+import client.handlers.connectionHandler.ConnectionHandler;
 import client.main.Client;
 import java.util.UUID;
 import javafx.scene.input.MouseEvent;
@@ -9,7 +10,9 @@ import shared.gameObjects.menu.ButtonObject;
 import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.Map;
 
-public class ButtonMultiplayer extends ButtonObject {
+public class ButtonJoin extends ButtonObject {
+
+  private String address;
 
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
@@ -19,9 +22,9 @@ public class ButtonMultiplayer extends ButtonObject {
    * @param y Y coordinate of object in game world
    * @param id Unique Identifier of every game object
    */
-  public ButtonMultiplayer(
-      double x, double y, double sizeX, double sizeY, ObjectID id, UUID objectUUID) {
-    super(x, y, sizeX, sizeY, id, objectUUID);
+  public ButtonJoin(double x, double y, ObjectID id, UUID objectUUID) {
+    super(x, y, 50, 50, id, objectUUID);
+    this.address = "localhost";
   }
 
   @Override
@@ -32,7 +35,13 @@ public class ButtonMultiplayer extends ButtonObject {
 
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
-    Client.levelHandler
-        .changeMap(new Map("Multiplayer", Menu.MULTIPLAYER.getMenuPath(), GameState.Multiplayer));
+    System.out.println("test");
+    Client.connectionHandler = new ConnectionHandler(address);
+    Client.connectionHandler.setDaemon(true);
+    Client.connectionHandler.start();
+    button.disarm();
+    Client.levelHandler.changeMap(new Map("Lobby", Menu.LOBBY.getMenuPath(), GameState.Lobby));
   }
+
+
 }

@@ -10,9 +10,9 @@ import shared.packets.PacketInput;
 
 public class Player extends GameObject {
 
+  protected final int speed = 500;
   protected int health;
   protected Weapon holding;
-  protected final int speed = 500;
   private double vx;
 
   public Player(double x, double y, double sizeX, double sizeY, UUID playerUUID) {
@@ -68,17 +68,17 @@ public class Player extends GameObject {
       animation.switchDefault();
     }
     if (InputHandler.click && holding != null) {
-      System.out.println("@Player, input("+InputHandler.x+", "+InputHandler.y+")");
+      System.out.println("@Player, input(" + InputHandler.x + ", " + InputHandler.y + ")");
       holding.fire(InputHandler.x, InputHandler.y);
     } //else punch
     setX(getX() + (vx * 0.0166));
-    
+
     // Update weapon's position
     if (this.getHolding() != null) {
       this.getHolding().setX(this.getX() + 60);
       this.getHolding().setY(this.getY() + 70);
     }
-    
+
     /** If multiplayer then send input to server */
     if (multiplayer) {
       PacketInput input = new PacketInput(InputHandler.x, InputHandler.y, InputHandler.leftKey,

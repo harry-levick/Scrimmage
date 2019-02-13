@@ -4,7 +4,7 @@ import java.util.UUID;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 
-public class Timer extends GameObject{
+public class Timer extends GameObject {
 
   public Timer(double x, double y, double sizeX, double sizeY, ObjectID id, UUID objectUUID) {
     super(x, y, sizeX, sizeY, id, objectUUID);
@@ -20,7 +20,6 @@ public class Timer extends GameObject{
     // TODO Auto-generated method stub
     return null;
   }
-  
-  
+
 
 }

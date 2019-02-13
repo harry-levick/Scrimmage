@@ -71,6 +71,7 @@ public abstract class GameObject implements Serializable {
     imageView.setFitWidth(transform.getSize().getX());
     imageView.setImage(animation.getImage());
   }
+
   // Collision engine
   public void updateCollision(ArrayList<GameObject> gameObjects) {
     if (getComponent(ComponentType.COLLIDER) != null) {
@@ -79,12 +80,15 @@ public abstract class GameObject implements Serializable {
   }
 
   /**
-   *  Remove the image from the imageView by setting the image to null
+   * Remove the image from the imageView by setting the image to null
    */
   public void removeRender() {
-    imageView.setImage(null);
+    if (imageView != null) {
+      imageView.setImage(null);
+      root.getChildren().remove(imageView);
+    }
   }
-  
+
   // Interpolate Position Client only
   public void interpolatePosition(float alpha) {
     if (!isActive()) {
@@ -180,7 +184,9 @@ public abstract class GameObject implements Serializable {
     destroyed = active = false;
   }
 
-  /** Basic Getters and Setters */
+  /**
+   * Basic Getters and Setters
+   */
   public double getX() {
     return this.transform.getPos().getX();
   }
@@ -237,18 +243,18 @@ public abstract class GameObject implements Serializable {
     return active;
   }
 
+  public void setActive(boolean state) {
+    if (!destroyed) {
+      active = state;
+    }
+  }
+
   public boolean isUpdated() {
     return updated;
   }
 
   public void setUpdated(boolean updated) {
     this.updated = updated;
-  }
-
-  public void setActive(boolean state) {
-    if (!destroyed) {
-      active = state;
-    }
   }
 
   public boolean isDestroyed() {

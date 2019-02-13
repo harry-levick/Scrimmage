@@ -62,8 +62,7 @@ public class LevelEditor extends Application {
    * ADDING NEW OBJECTS TO THE MAP CREATOR: 1. add a new object name in the enum OBJECT_TYPES 2. in
    * the constructor add the enum mapped to a GameObjectTuple(label in the choicebox, grid x width,
    * grid y height) 3. in scenePrimaryClick, add a new case for the new enum and set temp to be an
-   * instance of the new GameObject. Must break; the case.
-   * 4. debug
+   * instance of the new GameObject. Must break; the case. 4. debug
    */
   public LevelEditor() {
     objectMap.put(OBJECT_TYPES.FLOOR, new GameObjectTuple("Floor", 5, 2));
@@ -73,11 +72,11 @@ public class LevelEditor extends Application {
     objectMap.put(OBJECT_TYPES.BTN_ST, new GameObjectTuple("Settings Button", 6, 2));
     objectMap.put(OBJECT_TYPES.BTN_LE, new GameObjectTuple("Level Editor Button", 6, 2));
     objectMap.put(OBJECT_TYPES.WPN_HG, new GameObjectTuple("Handgun", 2, 2));
-    objectMap.put(OBJECT_TYPES.BACKGROUND, new GameObjectTuple("Background",0,0));
+    objectMap.put(OBJECT_TYPES.BACKGROUND, new GameObjectTuple("Background", 0, 0));
   }
 
-  protected enum OBJECT_TYPES {
-    FLOOR, PLAYER, BTN_SP, BTN_MP, BTN_ST, BTN_LE, WPN_HG, BACKGROUND
+  public static void main(String[] args) {
+    Application.launch(args);
   }
 
   private void addButtons(Group root) {
@@ -143,21 +142,16 @@ public class LevelEditor extends Application {
     root.getChildren().add(btnToggleGrid);
   }
 
-  public static void main(String[] args) {
-    Application.launch(args);
-  }
-
   @Override
   public void start(Stage primaryStage) {
     primaryStage.setTitle("Level Editor");
     Group objects = new Group();
     Group background = new Group();
     Group root = new Group();
-    
+
     root.getChildren().add(background);
     root.getChildren().add(objects);
 
-    
     initialiseNewMap();
 
     // Example of loading map
@@ -172,7 +166,7 @@ public class LevelEditor extends Application {
           @Override
           public void handle(MouseEvent event) {
             if (event.getButton() == MouseButton.PRIMARY) {
-              scenePrimaryClick(primaryStage,root, objects,background, event);
+              scenePrimaryClick(primaryStage, root, objects, background, event);
             } else if (event.getButton() == MouseButton.SECONDARY) {
               sceneSecondaryClick(primaryStage, objects, event);
             }
@@ -216,7 +210,8 @@ public class LevelEditor extends Application {
     return gridlines;
   }
 
-  private void scenePrimaryClick(Stage primaryStage, Group root, Group objects, Group background, MouseEvent event) {
+  private void scenePrimaryClick(Stage primaryStage, Group root, Group objects, Group background,
+      MouseEvent event) {
     if (!isInObject(event.getX(), event.getY(), objectMap.get(objectTypeSelected).getX(),
         objectMap.get(objectTypeSelected).getY())) {
       UUID uuid = UUID.randomUUID();
@@ -426,6 +421,10 @@ public class LevelEditor extends Application {
 
   private double getScaledSize(int gridSquaresCovered) {
     return gridSizePX * gridSquaresCovered;
+  }
+
+  protected enum OBJECT_TYPES {
+    FLOOR, PLAYER, BTN_SP, BTN_MP, BTN_ST, BTN_LE, WPN_HG, BACKGROUND
   }
 }
 

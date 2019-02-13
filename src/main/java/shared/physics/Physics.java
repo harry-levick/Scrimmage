@@ -1,18 +1,20 @@
 package shared.physics;
 
+import java.util.ArrayList;
 import shared.physics.data.Collision;
 import shared.util.maths.Vector2;
 
-import java.util.ArrayList;
-
-/** @author fxa579 The singleton class respomsible for raycasting and physics constants/equations */
+/**
+ * @author fxa579 The singleton class respomsible for raycasting and physics constants/equations
+ */
 public class Physics {
 
   public static final float GRAVITY = 9.81f;
   public static final float TIMESTEP = 1f / 60;
   private static Physics ourInstance = new Physics();
 
-  private Physics() {}
+  private Physics() {
+  }
   // TODO complete raycast methods
 
   /**
