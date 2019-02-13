@@ -1,13 +1,11 @@
 package shared.gameObjects.weapons;
 
 import java.util.UUID;
-import javafx.scene.input.MouseDragEvent;
-import javafx.scene.input.MouseEvent;
 import shared.gameObjects.Utils.ObjectID;
 
 public class MachineGun extends Gun {
 
-  private static String imagePath = "images/weapons/machineGun.jpg";  // path to Machine Gun image
+  private static String imagePath = "images/weapons/machinegun.png";  // path to Machine Gun image
   
   public MachineGun(
       double x,

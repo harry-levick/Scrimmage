@@ -74,12 +74,9 @@ public class Player extends GameObject {
     setX(getX() + (vx * 0.0166));
     
     // Update weapon's position
-    this.getHolding().setX(this.getX());
-    this.getHolding().setY(this.getY());
-
     if (this.getHolding() != null) {
-      this.getHolding().setX(this.getX());
-      this.getHolding().setY(this.getY());
+      this.getHolding().setX(this.getX() + 60);
+      this.getHolding().setY(this.getY() + 70);
     }
     
     /** If multiplayer then send input to server */
