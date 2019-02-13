@@ -71,8 +71,12 @@ public abstract class GameObject implements Serializable {
     animation.update();
     Collider col = (Collider) getComponent(ComponentType.COLLIDER);
     Rigidbody rb = (Rigidbody) getComponent(ComponentType.RIGIDBODY);
-    if (rb != null) rb.update();
-    if (col != null) col.update();
+    if (rb != null) {
+      rb.update();
+    }
+    if (col != null) {
+      col.update();
+    }
   }
 
   // Client Side only
@@ -87,13 +91,17 @@ public abstract class GameObject implements Serializable {
     Collider col = (Collider) getComponent(ComponentType.COLLIDER);
     Rigidbody rb = (Rigidbody) getComponent(ComponentType.RIGIDBODY);
     if (rb != null) {
-      if (rb.getBodyType() == RigidbodyType.STATIC) return;
+      if (rb.getBodyType() == RigidbodyType.STATIC) {
+        return;
+      }
     }
     ArrayList<Collision> collision = null;
     if (col != null) {
-      collision = Physics.boxcastAll(getTransform().getPos().add(rb.getVelocity().mult(Physics.TIMESTEP)), getTransform().getSize().mult(0.9f), Vector2.Zero(), 0);
+      collision = Physics
+          .boxcastAll(getTransform().getPos().add(rb.getVelocity().mult(Physics.TIMESTEP)),
+              getTransform().getSize().mult(0.9f), Vector2.Zero(), 0);
       for (Collision c : collision) {
-        if(!c.getCollidedObject().equals(rb)) {
+        if (!c.getCollidedObject().equals(rb)) {
           rb.getCollisions().add(c);
         }
       }
@@ -135,8 +143,9 @@ public abstract class GameObject implements Serializable {
     imageView = new ImageView();
     imageView.setRotate(rotation);
     root.getChildren().add(this.imageView);
-    if(getComponent(ComponentType.COLLIDER) != null && Physics.showColliders)
+    if (getComponent(ComponentType.COLLIDER) != null && Physics.showColliders) {
       ((BoxCollider) getComponent(ComponentType.COLLIDER)).initialise(root);
+    }
   }
 
   public void addChild(GameObject child) {

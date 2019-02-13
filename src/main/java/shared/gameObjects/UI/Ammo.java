@@ -12,7 +12,8 @@ public class Ammo extends GameObject {
   }
 
   @Override
-  public void initialiseAnimation() {}
+  public void initialiseAnimation() {
+  }
 
   @Override
   public String getState() {

@@ -27,7 +27,8 @@ public class Player extends GameObject {
   public Player(double x, double y, double sizeX, double sizeY, UUID playerUUID) {
     super(x, y, 120, 120, ObjectID.Player, playerUUID);
     addComponent(new BoxCollider(this, false));
-    rb = new Rigidbody(RigidbodyType.DYNAMIC, 100, 10, 0.7f, new MaterialProperty(0.005f, 0, 0.6f), null, this);
+    rb = new Rigidbody(RigidbodyType.DYNAMIC, 100, 10, 0.7f, new MaterialProperty(0.005f, 0, 0.6f),
+        null, this);
     addComponent(rb);
     this.health = 100;
     holding = null;
@@ -69,7 +70,7 @@ public class Player extends GameObject {
       imageView.setScaleX(1);
     }
     if (InputHandler.leftKey) {
-      rb.moveX(speed*-1);
+      rb.moveX(speed * -1);
       animation.switchAnimation("walk");
       imageView.setScaleX(-1);
     }
@@ -79,22 +80,21 @@ public class Player extends GameObject {
       animation.switchDefault();
 
     }
-    if(InputHandler.jumpKey) {
-      if(jumpTime > 0) {
+    if (InputHandler.jumpKey) {
+      if (jumpTime > 0) {
         animation.switchAnimation("jump");
         rb.moveY(jumpForce);
         jumpTime -= Physics.TIMESTEP;
-      }
-      else {
+      } else {
 
       }
 
     }
-    if(!InputHandler.jumpKey) {
+    if (!InputHandler.jumpKey) {
       jumpTime = JUMP_LIMIT;
     }
     if (InputHandler.click && holding != null) {
-      System.out.println("@Player, input("+InputHandler.x+", "+InputHandler.y+")");
+      System.out.println("@Player, input(" + InputHandler.x + ", " + InputHandler.y + ")");
       holding.fire(InputHandler.x, InputHandler.y);
     } // else punch
     //setX(getX() + (vx * 0.0166));
