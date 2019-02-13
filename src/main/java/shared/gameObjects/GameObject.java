@@ -67,20 +67,25 @@ public abstract class GameObject implements Serializable {
 
   // Client Side only
   public void render() {
+    imageView.setFitHeight(transform.getSize().getY());
+    imageView.setFitWidth(transform.getSize().getX());
     imageView.setImage(animation.getImage());
   }
-
-  public void delete() {
-    imageView.setImage(null);
-    root.getChildren().remove(imageView);
-  }
-
-  ;
 
   // Collision engine
   public void updateCollision(ArrayList<GameObject> gameObjects) {
     if (getComponent(ComponentType.COLLIDER) != null) {
       // TODO Collision Checking
+    }
+  }
+
+  /**
+   * Remove the image from the imageView by setting the image to null
+   */
+  public void removeRender() {
+    if (imageView != null) {
+      imageView.setImage(null);
+      root.getChildren().remove(imageView);
     }
   }
 
@@ -202,6 +207,10 @@ public abstract class GameObject implements Serializable {
     return id;
   }
 
+  public UUID getUUID() {
+    return objectUUID;
+  }
+
   public GameObject getParent() {
     return parent;
   }
@@ -234,18 +243,18 @@ public abstract class GameObject implements Serializable {
     return active;
   }
 
+  public void setActive(boolean state) {
+    if (!destroyed) {
+      active = state;
+    }
+  }
+
   public boolean isUpdated() {
     return updated;
   }
 
   public void setUpdated(boolean updated) {
     this.updated = updated;
-  }
-
-  public void setActive(boolean state) {
-    if (!destroyed) {
-      active = state;
-    }
   }
 
   public boolean isDestroyed() {
@@ -260,7 +269,14 @@ public abstract class GameObject implements Serializable {
     imageView.setRotate(imageView.getRotate() + rotation);
   }
 
-  public UUID getUUID() {
-    return objectUUID;
+  @Override
+  public boolean equals(Object obj) {
+    try {
+      GameObject gameobj = (GameObject) obj;
+      return this.objectUUID.equals(gameobj.getUUID());
+    } catch (Exception e) {
+      return false;
+    }
+
   }
 }

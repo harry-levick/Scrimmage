@@ -46,8 +46,6 @@ public class Transform implements Serializable {
 
   /**
    * [Does not do anything currently]
-   *
-   * @param rotation
    */
   public void rotate(Vector2 rotation) {
     // TODO Add Rotation Methods

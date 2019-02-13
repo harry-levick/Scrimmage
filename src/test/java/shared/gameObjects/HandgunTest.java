@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.UUID;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.weapons.Handgun;
 import shared.gameObjects.weapons.Weapon;
 
@@ -18,7 +17,7 @@ public class HandgunTest {
   public static void initHandgun() {
     handgun =
         new Handgun(
-            10, 10, 100, 100, ObjectID.Weapon, 10, 30, "HandGun", 40, 80, 3, 1, UUID.randomUUID());
+            10, 10, 100, 100, "HandGun", UUID.randomUUID());
   }
 
   @Test

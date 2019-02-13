@@ -12,7 +12,7 @@ import shared.util.maths.Vector2;
 
 /**
  * @author fxa579 The primary components responsible for all Physics updates; includes data and
- *     methods to process forces and gravity
+ * methods to process forces and gravity
  */
 public class Rigidbody extends Component implements Serializable {
 
@@ -142,7 +142,9 @@ public class Rigidbody extends Component implements Serializable {
 
   // Update Methods
 
-  /** An update method; all collision updates happen here */
+  /**
+   * An update method; all collision updates happen here
+   */
   private void applyCollisions() {
     for (Collision c : collisions) {
       if (c.getCollidedObject().getBodyType() == RigidbodyType.STATIC) {
@@ -163,7 +165,9 @@ public class Rigidbody extends Component implements Serializable {
     }
   }
 
-  /** An update method; all force updates happen here. */
+  /**
+   * An update method; all force updates happen here.
+   */
   private void applyForces() {
 
     currentForce = Vector2.Zero();
@@ -196,7 +200,9 @@ public class Rigidbody extends Component implements Serializable {
     }
   }
 
-  /** An update method; all velocity and acceleration updates happen here */
+  /**
+   * An update method; all velocity and acceleration updates happen here
+   */
   private void updateVelocity() {
     lastAcceleration = acceleration;
 
@@ -219,6 +225,7 @@ public class Rigidbody extends Component implements Serializable {
     acceleration = lastAcceleration.add(acceleration).div(2);
     velocity = velocity.add(acceleration.mult(Physics.TIMESTEP));
   }
+
   // Getters and Setters
   public Vector2 getVelocity() {
     return velocity;
@@ -276,13 +283,17 @@ public class Rigidbody extends Component implements Serializable {
     this.airDrag = airDrag;
   }
 
-  /** For Testing Purposes Only */
+  /**
+   * For Testing Purposes Only
+   */
   public void setGrounded(boolean grounded) {
     this.grounded = grounded;
   }
 }
 
-/** Helper class to apply force over time without needed to thread/coroutine */
+/**
+ * Helper class to apply force over time without needed to thread/coroutine
+ */
 class ForceTime {
 
   private Vector2 force;

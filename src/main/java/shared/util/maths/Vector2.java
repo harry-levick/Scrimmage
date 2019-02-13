@@ -119,7 +119,9 @@ public class Vector2 implements Serializable {
         Math.sqrt(Math.pow(vector.getX() - getX(), 2) + Math.pow(vector.getY() - getY(), 2));
   }
 
-  /** Angle between two vectors, approximated */
+  /**
+   * Angle between two vectors, approximated
+   */
   public float angleBetween(Vector2 vector) {
     if (vector.magnitude(Zero()) == 0) {
       return (float) Math.tan(getY() / getX());
@@ -127,7 +129,9 @@ public class Vector2 implements Serializable {
     return (float) Math.acos(dot(vector) / (magnitude(Zero()) * vector.magnitude(Zero())));
   }
 
-  /** Angle of the vector with respect to world space */
+  /**
+   * Angle of the vector with respect to world space
+   */
   public float angle() {
     return angleBetween(Zero());
   }
@@ -145,6 +149,10 @@ public class Vector2 implements Serializable {
   @Override
   public String toString() {
     return "X: " + getX() + " Y: " + getY();
+  }
+
+  public boolean equals(Vector2 vector) {
+    return (vector.getX() == this.x && vector.getY() == this.y);
   }
 
   public float getX() {

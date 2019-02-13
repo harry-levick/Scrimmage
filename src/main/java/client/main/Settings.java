@@ -16,7 +16,9 @@ public class Settings {
   private String menuPath =
       "src" + File.separator + "main" + File.separator + "resources" + File.separator + "menus";
 
-  /** Default Constructor Music volume set to 100 and sound effects to 75 */
+  /**
+   * Default Constructor Music volume set to 100 and sound effects to 75
+   */
   public Settings() {
     musicVolume = 0.5f;
     soundEffectVolume = 0.75f;
@@ -55,7 +57,9 @@ public class Settings {
     this.musicVolume = musicVolume < 0 ? 0 : musicVolume;
   }
 
-  /** @return Current game sound effect volume */
+  /**
+   * @return Current game sound effect volume
+   */
   public double getSoundEffectVolume() {
     return soundEffectVolume;
   }

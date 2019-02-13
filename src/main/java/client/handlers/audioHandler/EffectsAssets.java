@@ -20,6 +20,8 @@ public class EffectsAssets {
   public EffectsAssets() {
     // put tracks into hashmap
     tracks.put("CHOOSE_YOUR_CHARACTER", "choose_your_character.mp3");
+    tracks.put("STEPS_1", "steps_platform.mp3");
+    tracks.put("STEPS_2", "steps_platform2.mp3");
   }
 
   protected String getTrackPath(String trackIndex) {

@@ -19,24 +19,32 @@ public abstract class Melee extends Weapon {
       double weight,
       String name,
       int ammo,
+      int fireRate,
       double range,
       double beginAngle,
       double endAngle,
       UUID uuid) {
 
-    super(x, y, sizeX, sizeY, id, damage, weight, name, false, true, -1, uuid);
+    super(x, y, sizeX, sizeY, id, damage, weight, name, false, true, -1, fireRate, uuid);
     this.range = range;
     this.beginAngle = beginAngle;
     this.endAngle = endAngle;
   }
 
+  @Override
+  public void update() {
+    deductCooldown();
+    super.update();
+  }
+
+  @Override
   public void fire(double mouseX, double mouseY) {
+
   }
 
   // -------------------
   // Setters and Getters
   // -------------------
-
   public double getRange() {
     return this.range;
   }

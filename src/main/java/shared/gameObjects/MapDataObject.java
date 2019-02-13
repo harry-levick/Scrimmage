@@ -24,6 +24,14 @@ public class MapDataObject extends GameObject implements Serializable {
     spawnPoints.add(new Vector2((float) x, (float) y));
   }
 
+  public ArrayList<Vector2> getSpawnPoints() {
+    return spawnPoints;
+  }
+
+  public void setSpawnPoints(ArrayList<Vector2> spawnPoints) {
+    this.spawnPoints = spawnPoints;
+  }
+
   @Override
   public void update() {
   }

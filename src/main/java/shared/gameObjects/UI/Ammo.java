@@ -1,4 +1,4 @@
-package shared.gameObject.UI;
+package shared.gameObjects.UI;
 
 import java.util.UUID;
 import shared.gameObjects.GameObject;

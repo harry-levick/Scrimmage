@@ -3,49 +3,43 @@ package shared.gameObjects.weapons;
 import java.util.UUID;
 import shared.gameObjects.Utils.ObjectID;
 
-/**
- * @author hlf764 The Handgun class.
- */
-public class Handgun extends Gun {
+public class MachineGun extends Gun {
 
-  /**
-   * Constructor of the Handgun class
-   *
-   * @param x The x position of the gun
-   * @param y The y position of the gun
-   * @param name Name of the gun
-   * @param uuid UUID of the gun
-   */
-  public Handgun(
+  private static String imagePath = "images/weapons/machinegun.png";  // path to Machine Gun image
+
+  public MachineGun(
       double x,
       double y,
       double sizeX,
       double sizeY,
       String name,
       UUID uuid) {
+
     super(
         x,
         y,
         sizeX,
         sizeY,
-        ObjectID.Weapon, // ObjectID
-        10, // damage
+        ObjectID.Weapon, // ObjectID 
+        5, // damage
         10, // weight
         name,
-        30, // ammo
-        1, // bulletSpeed
-        50, // fireRate
+        50, // ammo
+        1, // bulletSpeed 
+        70, // fireRate
         50, // bulletWidth
-        false, // fullAutoFire
-        true, // singleHanded
-        uuid);
+        true, // fullAutoFire 
+        false, // singleHanded
+        uuid
+    );
+
   }
 
   @Override
   public void fire(double mouseX, double mouseY) {
     if (canFire()) {
       UUID uuid = UUID.randomUUID();
-      Bullet bullet = new HandgunBullet(getX(), getY(), 10, 10, mouseX, mouseY, this.bulletWidth,
+      Bullet bullet = new MachineGunBullet(getX(), getY(), 10, 10, mouseX, mouseY, this.bulletWidth,
           this.bulletSpeed,
           uuid);
       this.currentCooldown = getDefaultCoolDown();
@@ -66,6 +60,7 @@ public class Handgun extends Gun {
 
   @Override
   public void interpolatePosition(float alpha) {
+
   }
 
   @Override
@@ -75,6 +70,7 @@ public class Handgun extends Gun {
 
   @Override
   public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", "images/weapons/handgun.jpg");
+    //this.animation.supplyAnimation("default", imagePath);
+    this.animation.supplyAnimationWithSize("default", 40, 40, true, imagePath);
   }
 }

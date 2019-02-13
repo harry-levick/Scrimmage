@@ -35,6 +35,7 @@ public class Client extends Application {
   public static Settings settings;
   public static boolean multiplayer;
   public static ConnectionHandler connectionHandler;
+  public static AudioHandler audio;
 
   private final float timeStep = 0.0166f;
   private final String gameTitle = "Alone in the Dark";
@@ -44,6 +45,8 @@ public class Client extends Application {
   private KeyboardInput keyInput;
   private MouseInput mouseInput;
   private Group root;
+  private Group backgroundRoot;
+  private Group gameRoot;
   private Scene scene;
   private Map currentMap;
   private float maximumStep;
@@ -59,7 +62,8 @@ public class Client extends Application {
   @Override
   public void start(Stage primaryStage) {
     setupRender(primaryStage);
-    levelHandler = new LevelHandler(settings, root, true);
+    levelHandler = new LevelHandler(settings, root, backgroundRoot, gameRoot, true);
+    audio = new AudioHandler(settings);
     currentMap = levelHandler.getMap();
 
     // Main Game Loop
@@ -77,7 +81,7 @@ public class Client extends Application {
 
         // Changes Map/Level
         if (currentMap != levelHandler.getMap()) {
-          levelHandler.generateLevel(root, true);
+          levelHandler.generateLevel(root, backgroundRoot, gameRoot, true);
           currentMap = levelHandler.getMap();
         }
 
@@ -148,10 +152,14 @@ public class Client extends Application {
 
   private void setupRender(Stage primaryStage) {
     root = new Group();
+    backgroundRoot = new Group();
+    gameRoot = new Group();
+
+    root.getChildren().add(backgroundRoot);
+    root.getChildren().add(gameRoot);
+
     primaryStage.setTitle(gameTitle);
     primaryStage.getIcons().add(new Image(Path.convert("images/logo.png")));
-
-    AudioHandler audio = new AudioHandler(settings);
 
     // todo TESTING: change controls here
     Button btnPlay = new Button();
@@ -247,6 +255,7 @@ public class Client extends Application {
     scene.setOnMousePressed(mouseInput);
     scene.setOnMouseMoved(mouseInput);
     scene.setOnMouseReleased(mouseInput);
+    scene.setOnMouseDragged(mouseInput);
 
     // Start Music
 
@@ -279,4 +288,5 @@ public class Client extends Application {
       }
     }
   }
+
 }

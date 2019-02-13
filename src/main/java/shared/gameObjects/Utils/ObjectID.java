@@ -6,5 +6,6 @@ public enum ObjectID {
   MapDataObject,
   Weapon,
   Bullet,
+  Background,
   Button
 }
