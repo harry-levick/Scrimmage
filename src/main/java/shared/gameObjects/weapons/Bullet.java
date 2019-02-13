@@ -5,6 +5,9 @@ import java.util.UUID;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.components.Rigidbody;
+import shared.physics.data.AngularData;
+import shared.physics.data.MaterialProperty;
+import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
 
 /**
@@ -36,8 +39,14 @@ public abstract class Bullet extends GameObject {
     // Unit vector of the bullet force
     vector = new Vector2((float) (mouseX - gunX), (float) (mouseY - gunY));
     vector = vector.div((float) Math.sqrt(vector.dot(vector)));
-
-    setRigitBody();
+    rb = new Rigidbody(
+        RigidbodyType.DYNAMIC,
+        100f,
+        1,
+        0.1f,
+        new MaterialProperty(0.1f, 1, 1),
+        new AngularData(0, 0, 0, 0),
+        this);//TODO FIX
     addComponent(rb);
     // Change the speed of bullet by altering the bulletSpeed variable in any Gun
     rb.setVelocity(vector.mult((float) speed * 2250f));
@@ -50,7 +59,7 @@ public abstract class Bullet extends GameObject {
     render();
   }
 
-  public abstract void setRigitBody();
+
 
   @Override
   public void update() {
@@ -59,7 +68,6 @@ public abstract class Bullet extends GameObject {
       Client.levelHandler.delGameObject(this);
       // apply effect (deduct hp, play sound)
     } else if ((0 < getX() && getX() < 1920) && (0 < getY() && getY() < 1080)) {
-      rb.update();
       super.update();
     } else {
       System.out.println(this.toString() + " is to be destroyed");
@@ -70,9 +78,7 @@ public abstract class Bullet extends GameObject {
   @Override
   public void render() {
     super.render();
-    //imageView.relocate(newX, newY);
-    imageView.setTranslateX(this.getX());
-    imageView.setTranslateY(this.getY());
+    imageView.relocate(getX(), getY());
   }
 
   @Override
