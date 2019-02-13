@@ -60,7 +60,6 @@ public abstract class Bullet extends GameObject {
   }
 
 
-
   @Override
   public void update() {
     if (isHit) {

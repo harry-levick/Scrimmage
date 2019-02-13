@@ -2,7 +2,9 @@ package shared.physics.data;
 
 import java.io.Serializable;
 
-/** @author fxa579 The class contains data required for rotational kinematics/dynamics */
+/**
+ * @author fxa579 The class contains data required for rotational kinematics/dynamics
+ */
 public class AngularData implements Serializable {
 
   private float angularRadius;
