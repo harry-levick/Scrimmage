@@ -79,12 +79,12 @@ public class Player extends GameObject {
       animation.switchDefault();
     }
     if(InputHandler.jumpKey) {
-      System.out.println("Jumping!");
       if(jumpTime > 0) {
         rb.moveY(jumpForce);
+        jumpTime -= Physics.TIMESTEP;
       }
       else {
-        jumpTime -= Physics.TIMESTEP;
+
       }
 
     }

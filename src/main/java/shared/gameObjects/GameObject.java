@@ -135,7 +135,7 @@ public abstract class GameObject implements Serializable {
     imageView = new ImageView();
     imageView.setRotate(rotation);
     root.getChildren().add(this.imageView);
-    if(getComponent(ComponentType.COLLIDER) != null)
+    if(getComponent(ComponentType.COLLIDER) != null && Physics.showColliders)
       ((BoxCollider) getComponent(ComponentType.COLLIDER)).initialise(root);
   }
 
