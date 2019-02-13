@@ -2,6 +2,7 @@ package shared.packets;
 
 import static junit.framework.TestCase.assertEquals;
 
+import java.util.Arrays;
 import java.util.UUID;
 import org.junit.Test;
 
@@ -33,7 +34,7 @@ public class PacketTest {
   public void JoinPacketTest() {
     PacketJoin join = new PacketJoin(uuid, username);
     byte[] simulateNetwork = join.getData();
-    PacketJoin output = new PacketJoin(simulateNetwork);
+    PacketJoin output = new PacketJoin(Arrays.toString(simulateNetwork));
     assertEquals(output.getClientID(), uuid);
     assertEquals(output.getUsername(), username);
   }

@@ -1,14 +1,12 @@
 package shared.gameObjects.weapons;
 
 import java.util.UUID;
-import javafx.scene.input.MouseDragEvent;
-import javafx.scene.input.MouseEvent;
 import shared.gameObjects.Utils.ObjectID;
 
 public class MachineGun extends Gun {
 
-  private static String imagePath = "images/weapons/machineGun.jpg";  // path to Machine Gun image
-  
+  private static String imagePath = "images/weapons/machinegun.png";  // path to Machine Gun image
+
   public MachineGun(
       double x,
       double y,
@@ -16,16 +14,16 @@ public class MachineGun extends Gun {
       double sizeY,
       String name,
       UUID uuid) {
-    
+
     super(
-        x, 
+        x,
         y,
         sizeX,
-        sizeY, 
+        sizeY,
         ObjectID.Weapon, // ObjectID 
         5, // damage
         10, // weight
-        name, 
+        name,
         50, // ammo
         1, // bulletSpeed 
         70, // fireRate
@@ -34,19 +32,20 @@ public class MachineGun extends Gun {
         false, // singleHanded
         uuid
     );
-    
+
   }
-  
+
   @Override
   public void fire(double mouseX, double mouseY) {
     if (canFire()) {
       UUID uuid = UUID.randomUUID();
-      Bullet bullet = new MachineGunBullet(getX(), getY(), 10, 10, mouseX, mouseY, this.bulletWidth, this.bulletSpeed,
+      Bullet bullet = new MachineGunBullet(getX(), getY(), 10, 10, mouseX, mouseY, this.bulletWidth,
+          this.bulletSpeed,
           uuid);
       this.currentCooldown = getDefaultCoolDown();
     }
   }
-  
+
   @Override
   public void update() {
     super.update();
@@ -61,7 +60,7 @@ public class MachineGun extends Gun {
 
   @Override
   public void interpolatePosition(float alpha) {
-    
+
   }
 
   @Override

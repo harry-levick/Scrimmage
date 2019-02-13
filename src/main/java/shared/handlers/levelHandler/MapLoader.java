@@ -12,13 +12,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 import shared.gameObjects.GameObject;
+import shared.gameObjects.MapDataObject;
 
 public class MapLoader {
 
-  public static void saveMap(ArrayList<GameObject> gameObjects, String path) {
+  public static void saveMap(ArrayList<GameObject> gameObjects, MapDataObject mapDataObject,
+      String path) {
     try {
       FileOutputStream fos = new FileOutputStream(path);
       ObjectOutputStream oos = new ObjectOutputStream(fos);
+      gameObjects.add(mapDataObject);
       oos.writeObject(gameObjects);
     } catch (FileNotFoundException e) {
       e.printStackTrace();

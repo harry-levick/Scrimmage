@@ -8,7 +8,6 @@ import java.util.Set;
 import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
-import javax.swing.Box;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.Utils.Transform;
 import shared.gameObjects.animator.Animator;
@@ -98,6 +97,16 @@ public abstract class GameObject implements Serializable {
           rb.getCollisions().add(c);
         }
       }
+    }
+  }
+
+  /**
+   * Remove the image from the imageView by setting the image to null
+   */
+  public void removeRender() {
+    if (imageView != null) {
+      imageView.setImage(null);
+      root.getChildren().remove(imageView);
     }
   }
 
@@ -198,7 +207,9 @@ public abstract class GameObject implements Serializable {
     destroyed = active = false;
   }
 
-  /** Basic Getters and Setters */
+  /**
+   * Basic Getters and Setters
+   */
   public double getX() {
     return this.transform.getPos().getX();
   }
@@ -217,6 +228,10 @@ public abstract class GameObject implements Serializable {
 
   public ObjectID getId() {
     return id;
+  }
+
+  public UUID getUUID() {
+    return objectUUID;
   }
 
   public GameObject getParent() {
@@ -275,5 +290,16 @@ public abstract class GameObject implements Serializable {
 
   public void rotateImage(double rotation) {
     imageView.setRotate(imageView.getRotate() + rotation);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    try {
+      GameObject gameobj = (GameObject) obj;
+      return this.objectUUID.equals(gameobj.getUUID());
+    } catch (Exception e) {
+      return false;
+    }
+
   }
 }

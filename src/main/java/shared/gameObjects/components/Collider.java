@@ -2,14 +2,12 @@ package shared.gameObjects.components;
 
 import java.io.Serializable;
 import shared.gameObjects.GameObject;
-import shared.physics.data.Collision;
 import shared.physics.types.ColliderType;
-import shared.physics.types.CollisionDirection;
 import shared.util.maths.Vector2;
 
 /**
  * @author fxa579 Primary components responsible for collider info, such as collision state, size,
- *     shape
+ * shape
  */
 public abstract class Collider extends Component implements Serializable {
 

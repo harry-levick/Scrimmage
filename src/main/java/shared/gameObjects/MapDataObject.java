@@ -24,14 +24,25 @@ public class MapDataObject extends GameObject implements Serializable {
     spawnPoints.add(new Vector2((float) x, (float) y));
   }
 
-  @Override
-  public void update() {}
+  public ArrayList<Vector2> getSpawnPoints() {
+    return spawnPoints;
+  }
+
+  public void setSpawnPoints(ArrayList<Vector2> spawnPoints) {
+    this.spawnPoints = spawnPoints;
+  }
 
   @Override
-  public void render() {}
+  public void update() {
+  }
 
   @Override
-  public void interpolatePosition(float alpha) {}
+  public void render() {
+  }
+
+  @Override
+  public void interpolatePosition(float alpha) {
+  }
 
   @Override
   public String getState() {
@@ -39,5 +50,6 @@ public class MapDataObject extends GameObject implements Serializable {
   }
 
   @Override
-  public void initialiseAnimation() {}
+  public void initialiseAnimation() {
+  }
 }

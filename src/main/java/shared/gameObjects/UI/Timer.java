@@ -1,4 +1,4 @@
-package shared.gameObject.UI;
+package shared.gameObjects.UI;
 
 import java.util.UUID;
 import shared.gameObjects.GameObject;
@@ -12,11 +12,14 @@ public class Timer extends GameObject {
   }
 
   @Override
-  public void initialiseAnimation() {}
+  public void initialiseAnimation() {
+  }
 
   @Override
   public String getState() {
     // TODO Auto-generated method stub
     return null;
   }
+
+
 }

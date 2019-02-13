@@ -15,7 +15,7 @@ public class MouseInput implements EventHandler<MouseEvent> {
   @Override
   public void handle(MouseEvent event) {
     EventType<MouseEvent> type = (EventType<MouseEvent>) event.getEventType();
-    
+
     if (type == MouseEvent.MOUSE_MOVED || type == MouseEvent.MOUSE_DRAGGED) {
       inputHandler.x = event.getX();
       inputHandler.y = event.getY();

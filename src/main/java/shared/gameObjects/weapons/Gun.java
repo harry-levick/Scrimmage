@@ -3,7 +3,9 @@ package shared.gameObjects.weapons;
 import java.util.UUID;
 import shared.gameObjects.Utils.ObjectID;
 
-/** @author hlf764 The abstract class for all guns type weapon. */
+/**
+ * @author hlf764 The abstract class for all guns type weapon.
+ */
 abstract class Gun extends Weapon {
 
   protected double bulletSpeed; // pixel per second
@@ -18,7 +20,6 @@ abstract class Gun extends Weapon {
    *
    * @param x The x position of the gun
    * @param y The y position of the gun
-   * @param imagePath The image path to the gun image
    * @param damage Damage of the gun
    * @param weight Weight of the gun
    * @param name Name of the gun
@@ -53,7 +54,7 @@ abstract class Gun extends Weapon {
     this.fullAutoFire = fullAutoFire;
     this.singleHanded = singleHanded;
   }
-  
+
   @Override
   public void update() {
     deductCooldown();
@@ -95,7 +96,9 @@ abstract class Gun extends Weapon {
   // Setters and Getters
   // --------END--------
 
-  /** For testing */
+  /**
+   * For testing
+   */
   @Override
   public String toString() {
     String s = "";

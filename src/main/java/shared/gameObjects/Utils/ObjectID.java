@@ -5,5 +5,7 @@ public enum ObjectID {
   Bot,
   MapDataObject,
   Weapon,
-  Bullet
+  Bullet,
+  Background,
+  Button
 }

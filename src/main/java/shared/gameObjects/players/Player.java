@@ -3,9 +3,6 @@ package shared.gameObjects.players;
 import client.handlers.connectionHandler.ConnectionHandler;
 import client.handlers.inputHandler.InputHandler;
 import java.util.UUID;
-
-import client.main.Settings;
-import javafx.scene.image.Image;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.components.BoxCollider;
@@ -15,8 +12,6 @@ import shared.packets.PacketInput;
 import shared.physics.Physics;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.RigidbodyType;
-import shared.util.Path;
-import shared.util.maths.Vector2;
 
 public class Player extends GameObject {
 
@@ -103,8 +98,8 @@ public class Player extends GameObject {
     //setX(getX() + (vx * 0.0166));
 
     if (this.getHolding() != null) {
-      this.getHolding().setX(this.getX());
-      this.getHolding().setY(this.getY());
+      this.getHolding().setX(this.getX() + 60);
+      this.getHolding().setY(this.getY() + 70);
     }
 
     /** If multiplayer then send input to server */

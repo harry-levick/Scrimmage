@@ -1,3 +1,5 @@
 package shared.packets;
 
-public class PacketGameState extends Packet {}
+public class PacketGameState extends Packet {
+
+}

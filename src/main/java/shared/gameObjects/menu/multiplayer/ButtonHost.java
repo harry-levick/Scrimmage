@@ -1,4 +1,4 @@
-package shared.gameObjects.menu.main;
+package shared.gameObjects.menu.multiplayer;
 
 import client.Menu;
 import client.main.Client;
@@ -9,7 +9,7 @@ import shared.gameObjects.menu.ButtonObject;
 import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.Map;
 
-public class ButtonMultiplayer extends ButtonObject {
+public class ButtonHost extends ButtonObject {
 
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
@@ -19,20 +19,18 @@ public class ButtonMultiplayer extends ButtonObject {
    * @param y Y coordinate of object in game world
    * @param id Unique Identifier of every game object
    */
-  public ButtonMultiplayer(
-      double x, double y, double sizeX, double sizeY, ObjectID id, UUID objectUUID) {
-    super(x, y, sizeX, sizeY, id, objectUUID);
+  public ButtonHost(double x, double y, ObjectID id, UUID objectUUID) {
+    super(x, y, 50, 50, id, objectUUID);
   }
 
   @Override
   public void initialiseAnimation() {
-    super.initialiseAnimation(
-        "images/buttons/multiplayer_unpressed.png", "images/buttons/multiplayer_pressed.png");
+    super.initialiseAnimation("images/buttons/multiplayer_unpressed.png",
+        "images/buttons/multiplayer_pressed.png");
   }
 
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
-    Client.levelHandler
-        .changeMap(new Map("Multiplayer", Menu.MULTIPLAYER.getMenuPath(), GameState.Multiplayer));
+    Client.levelHandler.changeMap(new Map("Host", Menu.HOST.getMenuPath(), GameState.MAIN_MENU));
   }
 }

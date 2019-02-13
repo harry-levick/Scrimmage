@@ -29,9 +29,16 @@ public class Animator {
 
   public void supplyAnimation(String animationName, String... args) {
     ArrayList<Image> images = new ArrayList<>();
+
     for (String s : args) {
-      images.add(new Image(s.replace('/', File.separatorChar).trim()));
+      if (s != null) {
+        images.add(new Image(s.replace('/', File.separatorChar).trim()));
+      } else {
+        images.add(
+            new Image(("images/backgrounds/base.png").replace('/', File.separatorChar).trim()));
+      }
     }
+
     animations.put(animationName, images);
     // Support for the default animation
     if (animationName.equals("default")) {
@@ -39,20 +46,22 @@ public class Animator {
       switchDefault();
     }
   }
-  
+
   /**
    * This method scales the image to the given width and height
-   * 
+   *
    * @param animationName The name of the animation
    * @param h Height of the image after scaling
    * @param w Width of the image after scaling
    * @param ratio True if ratio is preserved
    * @param paths Multiple paths to images
    */
-  public void supplyAnimationWithSize(String animationName, double h, double w, boolean ratio, String... paths) {
+  public void supplyAnimationWithSize(String animationName, double h, double w, boolean ratio,
+      String... paths) {
     ArrayList<Image> images = new ArrayList<>();
-    for (String path: paths)
+    for (String path : paths) {
       images.add(new Image(path.replace('/', File.separatorChar).trim(), w, h, ratio, true));
+    }
     animations.put(animationName, images);
     // Support for the default animation
     if (animationName.equals("default")) {
@@ -60,7 +69,7 @@ public class Animator {
       switchDefault();
     }
   }
-  
+
   public void switchAnimation(String animationName) {
     try {
       ArrayList<Image> getAnimation = this.animations.get(animationName);
