@@ -39,6 +39,7 @@ public class Client extends Application {
   private final float timeStep = 0.0166f;
   private final String gameTitle = "Alone in the Dark";
   private final int port = 4445;
+  private boolean test = false;
 
   private KeyboardInput keyInput;
   private MouseInput mouseInput;
@@ -68,6 +69,10 @@ public class Client extends Application {
 
         if (multiplayer) {
           processServerPackets();
+        }
+
+        if (test) {
+          levelHandler.changeMap(levelHandler.getMaps().get(1));
         }
 
         // Changes Map/Level

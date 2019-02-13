@@ -5,8 +5,8 @@ public class PacketInput extends Packet {
   private boolean leftKey, rightKey, jumpKey, click;
   private double x, y;
 
-  public PacketInput(
-      double x, double y, boolean leftKey, boolean rightKey, boolean jumpKey, boolean click) {
+  public PacketInput(double x, double y, boolean leftKey, boolean rightKey, boolean jumpKey,
+      boolean click) {
     packetID = PacketID.INPUT.getID();
     this.click = click;
     this.leftKey = leftKey;

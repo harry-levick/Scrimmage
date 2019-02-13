@@ -13,7 +13,7 @@ public class PacketPlayerJoin extends Packet {
     this.x = x;
     this.y = y;
     this.uuid = uuid;
-    data = (packetID + x + y + uuid.toString()).getBytes();
+    data = (packetID + "," + x + "," + y + "," + uuid.toString()).getBytes();
   }
 
   public PacketPlayerJoin(String data) {

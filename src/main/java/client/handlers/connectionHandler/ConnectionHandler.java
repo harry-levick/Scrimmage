@@ -53,7 +53,7 @@ public class ConnectionHandler extends Thread {
       if (Integer.parseInt(response.substring(0, 1)) == PacketID.RESPONSE.getID()) {
         PacketResponse responsePacket = new PacketResponse(response);
         if (responsePacket.isAccepted()) {
-          addressRecieve = InetAddress.getByName(responsePacket.getMutliAddress());
+          addressRecieve = InetAddress.getByName(responsePacket.getMultiAddress());
           Client.multiplayer = true;
           //Client.levelHandler.changeMap(lobby)
         }

@@ -70,6 +70,13 @@ public abstract class GameObject implements Serializable {
     imageView.setImage(animation.getImage());
   }
 
+  public void delete() {
+    imageView.setImage(null);
+    root.getChildren().remove(imageView);
+  }
+
+  ;
+
   // Collision engine
   public void updateCollision(ArrayList<GameObject> gameObjects) {
     if (getComponent(ComponentType.COLLIDER) != null) {

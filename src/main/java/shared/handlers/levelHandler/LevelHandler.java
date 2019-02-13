@@ -8,6 +8,7 @@ import javafx.scene.Group;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
+import shared.util.Path;
 
 public class LevelHandler {
 
@@ -29,7 +30,9 @@ public class LevelHandler {
     // menus = MapLoader.getMaps(settings.getMenuPath());
     // menus = MapLoader.getMenuMaps(settings.getMenuPath());
     // Set inital game level as the Main Menu
-    map = maps.get(0); // FOR TESTING
+    map = new Map("MainMenu", Path.convert("src/main/resources/menus/main_menu.map"),
+        GameState.MAIN_MENU);
+    //maps.get(0); // FOR TESTING
     generateLevel(root, isClient);
   }
 
@@ -55,7 +58,8 @@ public class LevelHandler {
    */
   public void generateLevel(Group root, boolean isClient) {
     // Remove current game objects
-    gameObjects.forEach(gameObject -> gameObject.setActive(false));
+    gameObjects.forEach(gameObject -> gameObject.delete());
+    gameObjects.forEach(gameObject -> gameObject = null);
     gameObjects.clear();
 
     // Create new game objects for map
@@ -72,6 +76,7 @@ public class LevelHandler {
         });
     gameObjects.add(clientPlayer);
     gameState = map.getGameState();
+    System.gc();
   }
 
   /**

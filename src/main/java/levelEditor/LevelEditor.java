@@ -21,6 +21,8 @@ import shared.gameObjects.menu.main.ButtonLeveleditor;
 import shared.gameObjects.menu.main.ButtonMultiplayer;
 import shared.gameObjects.menu.main.ButtonSettings;
 import shared.gameObjects.menu.main.ButtonSingleplayer;
+import shared.gameObjects.menu.multiplayer.ButtonHost;
+import shared.gameObjects.menu.multiplayer.ButtonJoin;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.Handgun;
 import shared.handlers.levelHandler.MapLoader;
@@ -53,6 +55,8 @@ public class LevelEditor extends Application {
             "Multiplayer Button",
             "Settings Button",
             "Level Editor Button",
+            "ButtonHost",
+            "ButtonJoin",
             "Handgun"));
     cb.setLayoutX(10);
     cb.setLayoutY(10);
@@ -146,6 +150,14 @@ public class LevelEditor extends Application {
                       10,
                       uuid);
               temp.initialise(root);
+            } else if (cb.getValue() == "ButtonHost") {
+              ButtonHost temp = new ButtonHost(event.getX(), event.getY(), ObjectID.Weapon, uuid);
+              temp.initialise(root);
+              gameObjects.add(temp);
+            } else if (cb.getValue() == "ButtonJoin") {
+              ButtonJoin temp = new ButtonJoin(event.getX(), event.getY(), ObjectID.Weapon, uuid);
+              temp.initialise(root);
+              gameObjects.add(temp);
             }
           }
         });
