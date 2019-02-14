@@ -379,8 +379,10 @@ public class LevelEditor extends Application {
       double lrY = ulY + object.getTransform().getSize().getY();
       double lrMX = getGridX(x) + getScaledSize(newObjX);
       double lrMY = getGridY(y) + getScaledSize(newObjY);
-      if (((x >= ulX) && (y >= ulY) && (x <= lrX) && (y <= lrY))
-          || ((lrMX > ulX) && (lrMY > ulY) && (lrMX <= lrX) && (lrMY <= lrY))) {
+      if (((x >= ulX) && (y >= ulY) && (x <= lrX) && (y <= lrY)) // ul inside
+          || ((lrMX > ulX) && (lrMY > ulY) && (lrMX <= lrX) && (lrMY <= lrY)) //lr inside
+          || ((lrMX > ulX) && (y > ulY) && (lrMX <= lrX) && (y <= lrY)) //ur inside
+          || ((x > ulX) && (lrMY > ulY) && (x <= lrX) && lrMY <= lrY)) { //ll inside
         conflict = true;
       }
     }
@@ -391,8 +393,10 @@ public class LevelEditor extends Application {
       double lrY = ulY + object.getTransform().getSize().getY();
       double lrMX = getGridX(x) + getScaledSize(newObjX);
       double lrMY = getGridY(y) + getScaledSize(newObjY);
-      if (((x >= ulX) && (y >= ulY) && (x <= lrX) && (y <= lrY))
-          || ((lrMX > ulX) && (lrMY > ulY) && (lrMX <= lrX) && (lrMY <= lrY))) {
+      if (((x >= ulX) && (y >= ulY) && (x <= lrX) && (y <= lrY)) // ul inside
+          || ((lrMX > ulX) && (lrMY > ulY) && (lrMX <= lrX) && (lrMY <= lrY)) //lr inside
+          || ((lrMX > ulX) && (y > ulY) && (lrMX <= lrX) && (y <= lrY)) //ur inside
+          || ((x > ulX) && (lrMY > ulY) && (x <= lrX) && lrMY <= lrY)) { //ll inside
         conflict = true;
       }
     }
