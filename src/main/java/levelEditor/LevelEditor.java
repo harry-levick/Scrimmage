@@ -67,157 +67,22 @@ public class LevelEditor extends Application {
    */
   public LevelEditor() {
     objectMap.put(OBJECT_TYPES.FLOOR, new GameObjectTuple("Floor", 5, 2));
-    objectMap.put(OBJECT_TYPES.WALL, new GameObjectTuple("Wall", 5, 2));
+    objectMap.put(OBJECT_TYPES.WALL, new GameObjectTuple("Wall", 2, 2));
     objectMap.put(OBJECT_TYPES.PLAYER, new GameObjectTuple("Player Spawn", 2, 3));
+    objectMap.put(OBJECT_TYPES.BACKGROUND, new GameObjectTuple("Background", 0, 0));
+    objectMap.put(OBJECT_TYPES.BACKGROUND1, new GameObjectTuple("Background 2", 0, 0));
     objectMap.put(OBJECT_TYPES.BTN_SP, new GameObjectTuple("Singeplayer Button", 6, 2));
     objectMap.put(OBJECT_TYPES.BTN_MP, new GameObjectTuple("Multiplayer Button", 6, 2));
     objectMap.put(OBJECT_TYPES.BTN_ST, new GameObjectTuple("Settings Button", 6, 2));
     objectMap.put(OBJECT_TYPES.BTN_LE, new GameObjectTuple("Level Editor Button", 6, 2));
     objectMap.put(OBJECT_TYPES.WPN_HG, new GameObjectTuple("Handgun", 2, 2));
-    objectMap.put(OBJECT_TYPES.BACKGROUND, new GameObjectTuple("Background", 0, 0));
   }
 
-  public static void main(String[] args) {
-    Application.launch(args);
-  }
-
-  private void addButtons(Group root) {
-    ChoiceBox cb = new ChoiceBox();
-    cb.setConverter(new GameObjectTupleConverter(objectMap));
-    cb.setItems(FXCollections.observableArrayList(objectMap.values()));
-    cb.setLayoutX(10);
-    cb.setLayoutY(10);
-    cb.setTooltip(new Tooltip("Select item to place on the map"));
-    cb.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-      @Override
-      public void changed(ObservableValue<? extends Number> observableValue, Number number,
-          Number number2) {
-        GameObjectTupleConverter con = new GameObjectTupleConverter(objectMap);
-        for (Entry<OBJECT_TYPES, GameObjectTuple> e : objectMap.entrySet()) {
-          if (con.toString((GameObjectTuple) cb.getItems().get((Integer) number2))
-              .equals(con.toString(e.getValue()))) {
-            objectTypeSelected = e.getKey();
-          }
-        }
-      }
-    });
-    cb.setValue(cb.getItems().get(0));
-
-    Button btnSave = new Button();
-    btnSave.setText("Save Map");
-    btnSave.setOnAction(
-        new EventHandler<ActionEvent>() {
-          @Override
-          public void handle(ActionEvent event) {
-            MapLoader.saveMap(gameObjects, mapDataObject, "menu.map");
-          }
-        });
-    btnSave.setLayoutX(200);
-    btnSave.setLayoutY(10);
-
-    Button btnToggleGrid = new Button();
-    btnToggleGrid.setText("Toggle Snap to Grid");
-    btnToggleGrid.setOnAction(
-        new EventHandler<ActionEvent>() {
-          @Override
-          public void handle(ActionEvent event) {
-            snapToGrid = !snapToGrid;
-            String append;
-            if (snapToGrid) {
-              append = "ON";
-            } else {
-              append = "OFF";
-            }
-            btnToggleGrid.setText("Toggle Snap to Grid: " + append);
-          }
-        });
-    btnToggleGrid.setLayoutX(300);
-    btnToggleGrid.setLayoutY(10);
-
-    ArrayList<Line> gridlines = redrawGrid();
-    for (Line line : gridlines) {
-      root.getChildren().add(line);
-    } // todo remove
-
-    root.getChildren().add(cb);
-    root.getChildren().add(btnSave);
-    root.getChildren().add(btnToggleGrid);
-  }
-
-  @Override
-  public void start(Stage primaryStage) {
-    primaryStage.setTitle("Level Editor");
-    Group objects = new Group();
-    Group background = new Group();
-    Group root = new Group();
-
-    root.getChildren().add(background);
-    root.getChildren().add(objects);
-
-    initialiseNewMap();
-
-    // Example of loading map
-    // gameObjects = MapLoader.loadMap("menus.map");
-    //gameObjects.forEach(gameObject -> gameObject.initialise(root));
-
-    addButtons(objects);
-
-    Scene scene = new Scene(root, stageSizeX, stageSizeY);
-    scene.setOnMouseClicked(
-        new EventHandler<MouseEvent>() {
-          @Override
-          public void handle(MouseEvent event) {
-            if (event.getButton() == MouseButton.PRIMARY) {
-              scenePrimaryClick(primaryStage, root, objects, background, event);
-            } else if (event.getButton() == MouseButton.SECONDARY) {
-              sceneSecondaryClick(primaryStage, objects, event);
-            }
-          }
-        });
-
-    primaryStage.setScene(scene);
-    primaryStage.show();
-    primaryStage.setFullScreen(false);
-
-    new AnimationTimer() {
-      @Override
-      public void handle(long now) {
-        gameObjects.forEach(gameObject -> gameObject.render());
-        playerSpawns.forEach(player -> player.render());
-      }
-    }.start();
-  }
-
-  private ArrayList<Line> redrawGrid() {
-    // sets 10x10 grid based on scene size
-    int sceneX = stageSizeX;
-    int sceneY = stageSizeY;
-    int gridX = gridSizeX;
-    int gridY = gridSizeY;
-
-    ArrayList<Line> gridlines = new ArrayList<Line>();
-    if (snapToGrid) {
-      for (int i = 0; i < gridX; i++) {
-        int xPos = (sceneX / gridX) * i;
-        Line line = new Line(xPos, 0, xPos, stageSizeY);
-        gridlines.add(line);
-      }
-      for (int i = 0; i < gridY; i++) {
-        int yPos = (sceneY / gridY) * i;
-        Line line = new Line(0, yPos, stageSizeX, yPos);
-        gridlines.add(line);
-      }
-    }
-
-    return gridlines;
-  }
-
-  private void scenePrimaryClick(Stage primaryStage, Group root, Group objects, Group background,
-      MouseEvent event) {
+  private void scenePrimaryClick(Stage primaryStage, Group root, Group objects, Group background, MouseEvent event) {
     if (!isInObject(event.getX(), event.getY(), objectMap.get(objectTypeSelected).getX(),
         objectMap.get(objectTypeSelected).getY())) {
-      UUID uuid = UUID.randomUUID();
       GameObject temp = null;
+      UUID uuid = UUID.randomUUID();
       switch (objectTypeSelected) {
         case FLOOR:
         default:
@@ -267,6 +132,16 @@ public class LevelEditor extends Application {
             dialog.setScene(dialogScene);
             dialog.show();
           }
+          break;
+
+        case BACKGROUND:
+          temp = new Background("images/backgrounds/background1.png", ObjectID.Background, uuid);
+          mapDataObject.setBackground((Background) temp);
+          break;
+
+        case BACKGROUND1:
+          temp = new Background("images/backgrounds/base.png", ObjectID.Background, uuid);
+          mapDataObject.setBackground((Background) temp);
           break;
 
         case BTN_SP:
@@ -323,25 +198,163 @@ public class LevelEditor extends Application {
                   "Handgun",
                   uuid);
           break;
-
-        case BACKGROUND:
-          temp = new Background("images/backgrounds/background1.png", ObjectID.Background, uuid);
-          break;
       }
 
       if (temp != null) {
-        if (objectTypeSelected == OBJECT_TYPES.BACKGROUND) {
+        if (temp.getId() == ObjectID.Background) {
           temp.initialise(background);
         } else {
           temp.initialise(objects);
         }
-        if (objectTypeSelected == OBJECT_TYPES.PLAYER) {
+        if (objectTypeSelected == OBJECT_TYPES.PLAYER && temp.getId() != ObjectID.Background) {
           playerSpawns.add((Player) temp);
-        } else {
+        } else if (temp.getId() != ObjectID.Background) {
           gameObjects.add(temp);
         }
       }
     }
+  }
+
+  private void addButtons(Group root) {
+    ChoiceBox cb = new ChoiceBox();
+    cb.setConverter(new GameObjectTupleConverter(objectMap));
+    cb.setItems(FXCollections.observableArrayList(objectMap.values()));
+    cb.setLayoutX(10);
+    cb.setLayoutY(10);
+    cb.setTooltip(new Tooltip("Select item to place on the map"));
+    cb.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+      @Override
+      public void changed(ObservableValue<? extends Number> observableValue, Number number,
+          Number number2) {
+        GameObjectTupleConverter con = new GameObjectTupleConverter(objectMap);
+        for (Entry<OBJECT_TYPES, GameObjectTuple> e : objectMap.entrySet()) {
+          if (con.toString((GameObjectTuple) cb.getItems().get((Integer) number2))
+              .equals(con.toString(e.getValue()))) {
+            objectTypeSelected = e.getKey();
+          }
+        }
+      }
+    });
+    cb.setValue(cb.getItems().get(0));
+
+    Button btnSave = new Button();
+    btnSave.setText("Save Map");
+    btnSave.setOnAction(
+        new EventHandler<ActionEvent>() {
+          @Override
+          public void handle(ActionEvent event) {
+            MapLoader.saveMap(gameObjects, mapDataObject, "menu.map");
+          }
+        });
+    btnSave.setLayoutX(200);
+    btnSave.setLayoutY(10);
+
+    Button btnToggleGrid = new Button();
+    btnToggleGrid.setText("Toggle Snap to Grid");
+    btnToggleGrid.setOnAction(
+        new EventHandler<ActionEvent>() {
+          @Override
+          public void handle(ActionEvent event) {
+            snapToGrid = !snapToGrid;
+            String append;
+            if (snapToGrid) {
+              append = "ON";
+            } else {
+              append = "OFF";
+            }
+            btnToggleGrid.setText("Toggle Snap to Grid: " + append);
+          }
+        });
+    btnToggleGrid.setLayoutX(300);
+    btnToggleGrid.setLayoutY(10);
+
+    root.getChildren().add(cb);
+    root.getChildren().add(btnSave);
+    root.getChildren().add(btnToggleGrid);
+  }
+
+  @Override
+  public void start(Stage primaryStage) {
+    primaryStage.setTitle("Level Editor");
+    Group ui = new Group();
+    Group objects = new Group();
+    Group background = new Group();
+    Group grid = new Group();
+    Group root = new Group();
+
+    root.getChildren().add(background);
+    root.getChildren().add(grid);
+    root.getChildren().add(objects);
+    root.getChildren().add(ui);
+
+    initialiseNewMap();
+
+    // Example of loading map
+    // gameObjects = MapLoader.loadMap("menus.map");
+    //gameObjects.forEach(gameObject -> gameObject.initialise(root));
+
+    addButtons(ui);
+
+    ArrayList<Line> gridlines = redrawGrid();
+    for (Line line : gridlines) {
+      grid.getChildren().add(line);
+    } // todo remove
+
+    Scene scene = new Scene(root, stageSizeX, stageSizeY);
+    scene.setOnMouseClicked(
+        new EventHandler<MouseEvent>() {
+          @Override
+          public void handle(MouseEvent event) {
+            if (event.getButton() == MouseButton.PRIMARY) {
+              scenePrimaryClick(primaryStage, root, objects, background, event);
+            } else if (event.getButton() == MouseButton.SECONDARY) {
+              sceneSecondaryClick(primaryStage, objects, event);
+            }
+          }
+        });
+
+    primaryStage.setScene(scene);
+    primaryStage.show();
+    primaryStage.setFullScreen(false);
+
+    new AnimationTimer() {
+      @Override
+      public void handle(long now) {
+        gameObjects.forEach(gameObject -> gameObject.render());
+        playerSpawns.forEach(player -> player.render());
+        if (mapDataObject.getBackground() != null) {
+          mapDataObject.getBackground().render();
+        }
+      }
+    }.start();
+  }
+
+  private ArrayList<Line> redrawGrid() {
+    // sets 10x10 grid based on scene size
+    int sceneX = stageSizeX;
+    int sceneY = stageSizeY;
+    int gridX = gridSizeX;
+    int gridY = gridSizeY;
+
+    ArrayList<Line> gridlines = new ArrayList<Line>();
+    if (snapToGrid) {
+      for (int i = 0; i < gridX; i++) {
+        int xPos = (sceneX / gridX) * i;
+        Line line = new Line(xPos, 0, xPos, stageSizeY);
+        gridlines.add(line);
+      }
+      for (int i = 0; i < gridY; i++) {
+        int yPos = (sceneY / gridY) * i;
+        Line line = new Line(0, yPos, stageSizeX, yPos);
+        gridlines.add(line);
+      }
+    }
+
+    return gridlines;
+  }
+
+  protected enum OBJECT_TYPES {
+    FLOOR, WALL, PLAYER, BTN_SP, BTN_MP, BTN_ST, BTN_LE, WPN_HG, BACKGROUND, BACKGROUND1
   }
 
   private void initialiseNewMap() {
@@ -374,8 +387,10 @@ public class LevelEditor extends Application {
       double lrY = ulY + object.getTransform().getSize().getY();
       double lrMX = getGridX(x) + getScaledSize(newObjX);
       double lrMY = getGridY(y) + getScaledSize(newObjY);
-      if (((x >= ulX) && (y >= ulY) && (x <= lrX) && (y <= lrY))
-          || ((lrMX > ulX) && (lrMY > ulY) && (lrMX <= lrX) && (lrMY <= lrY))) {
+      if (((x >= ulX) && (y >= ulY) && (x <= lrX) && (y <= lrY)) // ul inside
+          || ((lrMX > ulX) && (lrMY > ulY) && (lrMX <= lrX) && (lrMY <= lrY)) //lr inside
+          || ((lrMX > ulX) && (y > ulY) && (lrMX <= lrX) && (y <= lrY)) //ur inside
+          || ((x > ulX) && (lrMY > ulY) && (x <= lrX) && lrMY <= lrY)) { //ll inside
         conflict = true;
       }
     }
@@ -386,8 +401,10 @@ public class LevelEditor extends Application {
       double lrY = ulY + object.getTransform().getSize().getY();
       double lrMX = getGridX(x) + getScaledSize(newObjX);
       double lrMY = getGridY(y) + getScaledSize(newObjY);
-      if (((x >= ulX) && (y >= ulY) && (x <= lrX) && (y <= lrY))
-          || ((lrMX > ulX) && (lrMY > ulY) && (lrMX <= lrX) && (lrMY <= lrY))) {
+      if (((x >= ulX) && (y >= ulY) && (x <= lrX) && (y <= lrY)) // ul inside
+          || ((lrMX > ulX) && (lrMY > ulY) && (lrMX <= lrX) && (lrMY <= lrY)) //lr inside
+          || ((lrMX > ulX) && (y > ulY) && (lrMX <= lrX) && (y <= lrY)) //ur inside
+          || ((x > ulX) && (lrMY > ulY) && (x <= lrX) && lrMY <= lrY)) { //ll inside
         conflict = true;
       }
     }
@@ -436,10 +453,6 @@ public class LevelEditor extends Application {
 
   private double getScaledSize(int gridSquaresCovered) {
     return gridSizePX * gridSquaresCovered;
-  }
-
-  protected enum OBJECT_TYPES {
-    FLOOR, PLAYER, BTN_SP, BTN_MP, BTN_ST, BTN_LE, WPN_HG, BACKGROUND, WALL
   }
 }
 
