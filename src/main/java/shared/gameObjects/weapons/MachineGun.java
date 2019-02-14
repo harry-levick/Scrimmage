@@ -26,7 +26,7 @@ public class MachineGun extends Gun {
         5, // damage
         10, // weight
         name, 
-        50, // ammo
+        5, // ammo
         1, // bulletSpeed 
         70, // fireRate
         50, // bulletWidth
@@ -44,6 +44,7 @@ public class MachineGun extends Gun {
       Bullet bullet = new MachineGunBullet(getX(), getY(), 10, 10, mouseX, mouseY, this.bulletWidth, this.bulletSpeed,
           uuid);
       this.currentCooldown = getDefaultCoolDown();
+      deductAmmo();
     }
   }
   
