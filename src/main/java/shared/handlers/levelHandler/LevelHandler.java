@@ -174,9 +174,9 @@ public class LevelHandler {
    *  Finally clear the list for next frame
    */
   private void clearToRemove() {
+    gameObjects.removeAll(toRemove);
     toRemove.forEach(gameObject -> gameObject.removeRender());
     toRemove.forEach(gameObject -> gameObject.destroy());
-    gameObjects.removeAll(toRemove);
     toRemove.clear();
   }
 }
