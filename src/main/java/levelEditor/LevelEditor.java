@@ -67,10 +67,10 @@ public class LevelEditor extends Application {
    */
   public LevelEditor() {
     objectMap.put(OBJECT_TYPES.FLOOR, new GameObjectTuple("Floor", 5, 2));
-    objectMap.put(OBJECT_TYPES.WALL, new GameObjectTuple("Wall", 5, 2));
+    objectMap.put(OBJECT_TYPES.WALL, new GameObjectTuple("Wall", 2, 2));
     objectMap.put(OBJECT_TYPES.PLAYER, new GameObjectTuple("Player Spawn", 2, 3));
     objectMap.put(OBJECT_TYPES.BACKGROUND, new GameObjectTuple("Background", 0, 0));
-    objectMap.put(OBJECT_TYPES.BACKGROUND2, new GameObjectTuple("Background 2", 0, 0));
+    objectMap.put(OBJECT_TYPES.BACKGROUND1, new GameObjectTuple("Background 2", 0, 0));
     objectMap.put(OBJECT_TYPES.BTN_SP, new GameObjectTuple("Singeplayer Button", 6, 2));
     objectMap.put(OBJECT_TYPES.BTN_MP, new GameObjectTuple("Multiplayer Button", 6, 2));
     objectMap.put(OBJECT_TYPES.BTN_ST, new GameObjectTuple("Settings Button", 6, 2));
@@ -87,7 +87,18 @@ public class LevelEditor extends Application {
         case FLOOR:
         default:
           temp =
-              new ExampleObject(
+              new ExampleFloorObject(
+                  getGridX(event.getX()),
+                  getGridY(event.getY()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getX()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getY()),
+                  ObjectID.Bot,
+                  uuid);
+          break;
+
+        case WALL:
+          temp =
+              new ExampleWallObject(
                   getGridX(event.getX()),
                   getGridY(event.getY()),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
@@ -128,7 +139,7 @@ public class LevelEditor extends Application {
           mapDataObject.setBackground((Background) temp);
           break;
 
-        case BACKGROUND2:
+        case BACKGROUND1:
           temp = new Background("images/backgrounds/base.png", ObjectID.Background, uuid);
           mapDataObject.setBackground((Background) temp);
           break;
@@ -343,7 +354,7 @@ public class LevelEditor extends Application {
   }
 
   protected enum OBJECT_TYPES {
-    FLOOR, PLAYER, BTN_SP, BTN_MP, BTN_ST, BTN_LE, WPN_HG, BACKGROUND, BACKGROUND2
+    FLOOR, WALL, PLAYER, BTN_SP, BTN_MP, BTN_ST, BTN_LE, WPN_HG, BACKGROUND, BACKGROUND1
   }
 
   private void initialiseNewMap() {
@@ -440,10 +451,6 @@ public class LevelEditor extends Application {
 
   private double getScaledSize(int gridSquaresCovered) {
     return gridSizePX * gridSquaresCovered;
-  }
-
-  protected enum OBJECT_TYPES {
-    FLOOR, PLAYER, BTN_SP, BTN_MP, BTN_ST, BTN_LE, WPN_HG, BACKGROUND, WALL
   }
 }
 

@@ -6,9 +6,9 @@ import client.main.Client;
 import java.util.UUID;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
-import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
+import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.weapons.Weapon;
 import shared.packets.PacketInput;
 import shared.physics.Physics;
@@ -27,7 +27,7 @@ public class Player extends GameObject {
   private double vx;
 
   public Player(double x, double y, double sizeX, double sizeY, UUID playerUUID) {
-    super(x, y, 120, 120, ObjectID.Player, playerUUID);
+    super(x, y, sizeX, sizeY, ObjectID.Player, playerUUID);
     addComponent(new BoxCollider(this, false));
     rb = new Rigidbody(RigidbodyType.DYNAMIC, 100, 10, 0.7f, new MaterialProperty(0.005f, 0, 0.6f),
         null, this);
