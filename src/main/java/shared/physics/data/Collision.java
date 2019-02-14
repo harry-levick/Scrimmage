@@ -88,6 +88,9 @@ public class Collision {
     return direction;
   }
 
+  public Vector2 getPointOfCollision() {
+    return null;
+  }
   @Override
   public String toString() {
     return "COLLISION DIR = " + direction.toString();
