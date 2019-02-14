@@ -44,12 +44,10 @@ public class Player extends GameObject {
   // Initialise the animation
   public void initialiseAnimation() {
     this.animation.supplyAnimation("default", "images/player/player_idle.png");
-    this.animation.supplyAnimation(
-        "moveLeft", "images/player/player_left_walk1.png", "images/player/player_left_walk2.png");
-    this.animation.supplyAnimation(
-        "moveRight",
-        "images/player/player_right_walk1.png",
-        "images/player/player_right_walk2.png");
+    this.animation.supplyAnimation("walk",
+        "images/player/player_walk1.png",
+        "images/player/player_walk2.png");
+    this.animation.supplyAnimation("jump", "images/player/player_jump.png");
   }
 
   @Override
@@ -75,24 +73,29 @@ public class Player extends GameObject {
   public void applyInput(boolean multiplayer, ConnectionHandler connectionHandler) {
     if (InputHandler.rightKey) {
       rb.moveX(speed);
-      animation.switchAnimation("moveRight");
+      animation.switchAnimation("walk");
+      imageView.setScaleX(1);
     }
     if (InputHandler.leftKey) {
-      rb.moveX(speed * -1);
-      animation.switchAnimation("moveLeft");
+      rb.moveX(speed*-1);
+      animation.switchAnimation("walk");
+      imageView.setScaleX(-1);
     }
 
     if (!InputHandler.rightKey && !InputHandler.leftKey) {
       vx = 0;
       animation.switchDefault();
+
     }
-    if (InputHandler.jumpKey) {
-      if (jumpTime > 0) {
+    if(InputHandler.jumpKey) {
+      if(jumpTime > 0) {
+        animation.switchAnimation("jump");
         rb.moveY(jumpForce);
         jumpTime -= Physics.TIMESTEP;
       } else {
 
       }
+
     }
     if (!InputHandler.jumpKey) {
       jumpTime = JUMP_LIMIT;
@@ -121,6 +124,7 @@ public class Player extends GameObject {
       connectionHandler.send(input.getData());
     }
   }
+
 
   public int getHealth() {
     return health;
