@@ -2,6 +2,8 @@ package shared.gameObjects.weapons;
 
 import java.util.UUID;
 import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.components.CircleCollider;
+import shared.physics.Physics;
 
 public abstract class Melee extends Weapon {
 
@@ -39,7 +41,14 @@ public abstract class Melee extends Weapon {
 
   @Override
   public void fire(double mouseX, double mouseY) {
-
+    if (canFire()) {
+      UUID uuid = UUID.randomUUID();
+      // TODO: add circle cast
+      // maybe use box cast?
+      // ArrayList<Collision> collisions = Physics.circlecastAll(sourcePos, distance);
+      this.currentCooldown = getDefaultCoolDown();
+      deductAmmo();
+    }
   }
 
   // -------------------
