@@ -81,8 +81,8 @@ public class LevelEditor extends Application {
   private void scenePrimaryClick(Stage primaryStage, Group root, Group objects, Group background, MouseEvent event) {
     if (!isInObject(event.getX(), event.getY(), objectMap.get(objectTypeSelected).getX(),
         objectMap.get(objectTypeSelected).getY())) {
-      UUID uuid = UUID.randomUUID();
       GameObject temp = null;
+      UUID uuid = UUID.randomUUID();
       switch (objectTypeSelected) {
         case FLOOR:
         default:
@@ -208,7 +208,7 @@ public class LevelEditor extends Application {
         }
         if (objectTypeSelected == OBJECT_TYPES.PLAYER && temp.getId() != ObjectID.Background) {
           playerSpawns.add((Player) temp);
-        } else {
+        } else if (temp.getId() != ObjectID.Background) {
           gameObjects.add(temp);
         }
       }
