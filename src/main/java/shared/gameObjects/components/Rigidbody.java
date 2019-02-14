@@ -91,7 +91,7 @@ public class Rigidbody extends Component implements Serializable {
     if (bodyType == RigidbodyType.DYNAMIC) {
       applyCollisions();
       applyForces();
-      checkMovements();
+     // checkMovements();
       updateVelocity();
       grounded = false;
       canUp = true;
@@ -391,6 +391,7 @@ public class Rigidbody extends Component implements Serializable {
 
   public void setVelocity(Vector2 velocity) {
     this.velocity = velocity;
+    acceleration = Vector2.Zero();
   }
 
   public RigidbodyType getBodyType() {
