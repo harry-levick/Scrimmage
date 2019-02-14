@@ -444,7 +444,7 @@ public class LevelEditor extends Application {
         }
         mapDataObject.setSpawnPoints(newList);
         object.destroy();
-        gameObjects.remove(object); //todo find alternative non breaking way of removing
+        playerSpawns.remove(object); //todo find alternative non breaking way of removing
       }
     }
   }
