@@ -5,6 +5,8 @@ import client.handlers.connectionHandler.ConnectionHandler;
 import client.handlers.inputHandler.InputHandler;
 import client.handlers.inputHandler.KeyboardInput;
 import client.handlers.inputHandler.MouseInput;
+import java.util.HashMap;
+import java.util.UUID;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.beans.InvalidationListener;
@@ -22,8 +24,8 @@ import org.apache.logging.log4j.Logger;
 import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.LevelHandler;
 import shared.handlers.levelHandler.Map;
-import shared.packets.Packet;
 import shared.packets.PacketEnd;
+import shared.packets.PacketGameState;
 import shared.packets.PacketPlayerJoin;
 import shared.physics.Physics;
 import shared.util.Path;
@@ -41,7 +43,6 @@ public class Client extends Application {
   private final float timeStep = 0.0166f;
   private final String gameTitle = "Alone in the Dark";
   private final int port = 4445;
-  private boolean test = false;
 
   private KeyboardInput keyInput;
   private MouseInput mouseInput;
@@ -74,10 +75,6 @@ public class Client extends Application {
 
         if (multiplayer) {
           processServerPackets();
-        }
-
-        if (test) {
-          levelHandler.changeMap(levelHandler.getMaps().get(1));
         }
 
         // Changes Map/Level
@@ -268,7 +265,6 @@ public class Client extends Application {
       try {
         String message = (String) connectionHandler.received.take();
         int messageID = Integer.parseInt(message.substring(0, 1));
-        Packet packet;
         switch (messageID) {
           //PlayerJoin
           case 4:
@@ -283,7 +279,12 @@ public class Client extends Application {
             multiplayer = false;
             //Show score board
             //Main Menu
-
+            break;
+          case 7:
+            PacketGameState gameState = new PacketGameState(message);
+            HashMap<UUID, String> data = gameState.getGameObjects();
+            levelHandler.getGameObjects()
+                .forEach(gameObject -> gameObject.setState(data.get(gameObject.getUUID())));
         }
       } catch (InterruptedException e) {
         e.printStackTrace();

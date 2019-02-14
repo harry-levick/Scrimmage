@@ -133,7 +133,16 @@ public abstract class GameObject implements Serializable {
    *
    * @return State of object
    */
-  public abstract String getState();
+  public String getState() {
+    return objectUUID + ";" + getX() + ";" + getY() + ";" + animation.getName();
+  }
+
+  public void setState(String data) {
+    String[] unpackedData = data.split(";");
+    setX(Double.parseDouble(unpackedData[1]));
+    setY(Double.parseDouble(unpackedData[2]));
+    this.animation.switchAnimation(unpackedData[3]);
+  }
 
   // Ignore for now, added due to unSerializable objects
   public void initialise(Group root) {

@@ -60,7 +60,17 @@ public class Player extends GameObject {
 
   @Override
   public String getState() {
-    return null;
+    return objectUUID + ";" + getX() + ";" + getY() + ";" + animation.getName() + ";" + health + ";"
+        + holding.getUUID();
+  }
+
+  @Override
+  public void setState(String data) {
+    String[] unpackedData = data.split(";");
+    setX(Double.parseDouble(unpackedData[1]));
+    setY(Double.parseDouble(unpackedData[2]));
+    this.animation.switchAnimation(unpackedData[3]);
+    this.health = Integer.parseInt(unpackedData[4]);
   }
 
   public void applyInput(boolean multiplayer, ConnectionHandler connectionHandler) {
