@@ -1,14 +1,13 @@
 package shared.gameObjects.components;
 
+import java.io.Serializable;
 import shared.gameObjects.GameObject;
 import shared.physics.types.ColliderType;
 import shared.util.maths.Vector2;
 
-import java.io.Serializable;
-
 /**
  * @author fxa579 Primary components responsible for collider info, such as collision state, size,
- *     shape
+ * shape
  */
 public abstract class Collider extends Component implements Serializable {
 
@@ -48,10 +47,10 @@ public abstract class Collider extends Component implements Serializable {
   }
 
   public static boolean boxBoxCollision(BoxCollider boxA, BoxCollider boxB) {
-    Vector2[] cornersA = boxA.getCorners();
-    Vector2[] cornersB = boxB.getCorners();
-    if (cornersA[3].getX() > cornersB[1].getX() && cornersA[0].getX() < cornersB[2].getX()) {
-      if (cornersA[3].getY() < cornersB[1].getY() && cornersA[0].getY() < cornersB[2].getY()) {
+    Vector2 extents = boxA.getSize().add(boxB.getSize().mult(0.25f));
+    Vector2 centres = boxB.getCentre().sub(boxA.getCentre());
+    if (Math.abs(centres.getX()) < extents.getX()) {
+      if (Math.abs(centres.getY()) < extents.getY()) {
         return true;
       }
     }
@@ -140,7 +139,7 @@ public abstract class Collider extends Component implements Serializable {
     return triggerStay;
   }
 
-  public boolean onTrigger() {
+  public boolean isTrigger() {
     return trigger;
   }
 }

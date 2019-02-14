@@ -4,19 +4,16 @@ import java.util.UUID;
 import shared.gameObjects.Utils.ObjectID;
 
 /**
- *  Default holding weapon of a player
- *
+ * Default holding weapon of a player
  */
 public class Punch extends Melee {
 
   /**
    * Constructor for Punch
-   * 
+   *
    * @param x x position of player's hand
    * @param y y position of player's hand
-   * @param sizeX
-   * @param sizeY
-   * @param id ObjectID 
+   * @param id ObjectID
    * @param damage Damage of a punch
    * @param name Name
    * @param range Range of punch, measured forward

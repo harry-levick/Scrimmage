@@ -1,16 +1,16 @@
 package server.ai;
 
-import server.ai.pathFind.AStar;
-import shared.gameObjects.GameObject;
-import shared.gameObjects.Utils.ObjectID;
-import shared.gameObjects.players.Player;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import server.ai.pathFind.AStar;
+import shared.gameObjects.GameObject;
+import shared.gameObjects.players.Player;
 
-/** @author Harry Levick (hxl799) */
+/**
+ * @author Harry Levick (hxl799)
+ */
 
 /**
  * AiAgent is the main body of an ai, creating an AiAgent will create a bot in the world at (x,y).
@@ -27,7 +27,12 @@ public class AiAgent {
   Player targetPlayer;
   AStar pathFinder;
 
-  public AiAgent(double xPos, double yPos, double sizeX, double sizeY, UUID uuid,
+  public AiAgent(
+      double xPos,
+      double yPos,
+      double sizeX,
+      double sizeY,
+      UUID uuid,
       ArrayList<GameObject> gameObjects) {
     this.bot = new Bot(xPos, yPos, sizeX, sizeY, uuid);
     this.state = FSA.INITIAL_STATE;
@@ -36,7 +41,9 @@ public class AiAgent {
     this.pathFinder = new AStar(gameObjects, this.bot);
   }
 
-  /** The method that runs the agent. */
+  /**
+   * The method that runs the agent.
+   */
   public void startAgent() {
     active = true;
     double prevDist, newDist;

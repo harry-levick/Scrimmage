@@ -25,7 +25,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import levelEditor.LevelEditor.OBJECT_TYPES;
-import shared.gameObjects.ExampleObject;
+import shared.gameObjects.ExampleFloorObject;
+import shared.gameObjects.ExampleWallObject;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.MapDataObject;
 import shared.gameObjects.Utils.ObjectID;
@@ -62,11 +63,11 @@ public class LevelEditor extends Application {
    * ADDING NEW OBJECTS TO THE MAP CREATOR: 1. add a new object name in the enum OBJECT_TYPES 2. in
    * the constructor add the enum mapped to a GameObjectTuple(label in the choicebox, grid x width,
    * grid y height) 3. in scenePrimaryClick, add a new case for the new enum and set temp to be an
-   * instance of the new GameObject. Must break; the case.
-   * 4. debug
+   * instance of the new GameObject. Must break; the case. 4. debug
    */
   public LevelEditor() {
     objectMap.put(OBJECT_TYPES.FLOOR, new GameObjectTuple("Floor", 5, 2));
+    objectMap.put(OBJECT_TYPES.WALL, new GameObjectTuple("Wall", 5, 2));
     objectMap.put(OBJECT_TYPES.PLAYER, new GameObjectTuple("Player Spawn", 2, 3));
     objectMap.put(OBJECT_TYPES.BACKGROUND, new GameObjectTuple("Background", 0, 0));
     objectMap.put(OBJECT_TYPES.BACKGROUND2, new GameObjectTuple("Background 2", 0, 0));
@@ -261,10 +262,6 @@ public class LevelEditor extends Application {
     root.getChildren().add(btnToggleGrid);
   }
 
-  public static void main(String[] args) {
-    Application.launch(args);
-  }
-
   @Override
   public void start(Stage primaryStage) {
     primaryStage.setTitle("Level Editor");
@@ -443,6 +440,10 @@ public class LevelEditor extends Application {
 
   private double getScaledSize(int gridSquaresCovered) {
     return gridSizePX * gridSquaresCovered;
+  }
+
+  protected enum OBJECT_TYPES {
+    FLOOR, PLAYER, BTN_SP, BTN_MP, BTN_ST, BTN_LE, WPN_HG, BACKGROUND, WALL
   }
 }
 

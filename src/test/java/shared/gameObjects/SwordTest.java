@@ -1,15 +1,14 @@
 package shared.gameObjects;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.util.UUID;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.weapons.Melee;
 import shared.gameObjects.weapons.Sword;
-
-import java.util.UUID;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class SwordTest {
 
@@ -20,7 +19,7 @@ public class SwordTest {
   public static void initSword() {
     sword =
         new Sword(
-            10, 10, 100, 100, ObjectID.Weapon, 10, 10, "test", 100, 5, 70, 20, 20, UUID.randomUUID());
+            10, 10, 100, 100, "test", 70, 20, 20, UUID.randomUUID());
   }
 
   @Test

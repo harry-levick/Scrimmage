@@ -1,10 +1,11 @@
 package shared.gameObjects.components;
 
+import java.io.Serializable;
 import shared.gameObjects.GameObject;
 
-import java.io.Serializable;
-
-/** @author fxa579 Base class for components, all GameObject components extend this class */
+/**
+ * @author fxa579 Base class for components, all GameObject components extend this class
+ */
 public abstract class Component implements Serializable {
 
   private boolean isActive;
@@ -36,5 +37,6 @@ public abstract class Component implements Serializable {
     return componentType;
   }
 
-  public void update() {}
+  public void update() {
+  }
 }

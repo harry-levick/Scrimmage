@@ -1,12 +1,11 @@
 package shared.gameObjects.weapons;
 
-import shared.gameObjects.Utils.ObjectID;
-
 import java.util.UUID;
+import shared.gameObjects.Utils.ObjectID;
 
 public class Sword extends Melee {
 
-  private static String imagePath = "";
+  private static String imagePath = "images/weapons/sword.jpg";
 
   /**
    * Constructor of the Sword class
@@ -28,25 +27,34 @@ public class Sword extends Melee {
       double y,
       double sizeX,
       double sizeY,
-      ObjectID id,
-      double damage,
-      double weight,
       String name,
-      int ammo,
-      int attackRate,
       double range,
       double beginAngle,
       double endAngle,
       UUID uuid) {
 
-    super(x, y, sizeX, sizeY, id, damage, weight, name, -1, attackRate, range, beginAngle, endAngle, uuid);
+    super(x, y, sizeX, sizeY, ObjectID.Weapon, 20, 10, name, 30, 60, range, beginAngle, endAngle, uuid);
   }
 
   @Override
-  public void update() {}
+  public void fire(double mouseX, double mouseY) {
+    if (canFire()) {
+      //swing
+      this.currentCooldown = getDefaultCoolDown();
+    }
+  }
+  
+  @Override
+  public void update() {
+    super.update();
+  }
 
   @Override
-  public void render() {}
+  public void render() {
+    super.render();
+    imageView.setTranslateX(this.getX());
+    imageView.setTranslateY(this.getY());
+  }
 
   @Override
   public String getState() {
@@ -54,5 +62,7 @@ public class Sword extends Melee {
   }
 
   @Override
-  public void initialiseAnimation() {}
+  public void initialiseAnimation() {
+    this.animation.supplyAnimationWithSize("default", 50, 50, true, this.imagePath);
+  }
 }

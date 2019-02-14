@@ -1,13 +1,14 @@
 package shared.gameObjects.components;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import shared.gameObjects.GameObject;
 import shared.physics.types.ColliderType;
 import shared.util.maths.Vector2;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-
-/** An edge collider, primarily for use with static obbjects (eg. floor) */
+/**
+ * An edge collider, primarily for use with static obbjects (eg. floor)
+ */
 public class EdgeCollider extends Collider implements Serializable {
 
   ArrayList<Vector2> nodes;

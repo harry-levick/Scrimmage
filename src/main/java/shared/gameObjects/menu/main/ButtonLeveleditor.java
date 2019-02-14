@@ -1,9 +1,8 @@
 package shared.gameObjects.menu.main;
 
+import java.util.UUID;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.menu.ButtonObject;
-
-import java.util.UUID;
 
 public class ButtonLeveleditor extends ButtonObject {
 

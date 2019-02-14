@@ -8,11 +8,9 @@ import javafx.scene.Group;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
-import shared.gameObjects.weapons.Handgun;
 import shared.gameObjects.weapons.MachineGun;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.UUID;
+import shared.gameObjects.weapons.Sword;
+import shared.util.Path;
 
 public class LevelHandler {
 
@@ -39,11 +37,11 @@ public class LevelHandler {
 //    this.root.getChildren().add(gameRoot);
 
     if (isClient) {
-      clientPlayer = new Player(500, 500, 100, 100, UUID.randomUUID());
+      clientPlayer = new Player(500, 892, 80, 110, UUID.randomUUID());
       clientPlayer.setHolding(
           //new Handgun(500, 500, 100, 100, "Handgun", UUID.randomUUID())
-          new MachineGun(500, 500, 100, 100, "MachineGun@LevelHandler", UUID.randomUUID())
-        );
+          new MachineGun(500, 500, 116, 33, "MachineGun@LevelHandler", UUID.randomUUID())
+      );
       clientPlayer.initialise(gameRoot);
       players.add(clientPlayer);
     }
@@ -51,7 +49,8 @@ public class LevelHandler {
     // menus = MapLoader.getMaps(settings.getMenuPath());
     // menus = MapLoader.getMenuMaps(settings.getMenuPath());
     // Set initial game level as the Main Menu
-    map = maps.get(0); // FOR TESTING
+    map = new Map("MainMenu", Path.convert("src/main/resources/menus/main_menu.map"),
+        GameState.MAIN_MENU);
     generateLevel(root, backgroundRoot, gameRoot, isClient);
 
     gameObjects.add(clientPlayer.getHolding());
@@ -81,7 +80,9 @@ public class LevelHandler {
   public void generateLevel(Group root, Group backgroundGroup, Group gameGroup, boolean isClient) {
 
     // Remove current game objects
-    gameObjects.forEach(gameObject -> gameObject.setActive(false));
+    gameObjects.remove(clientPlayer);
+    gameObjects.forEach(gameObject -> gameObject.removeRender());
+    gameObjects.forEach(gameObject -> gameObject = null);
     gameObjects.clear();
 
     // Create new game objects for map
@@ -100,6 +101,7 @@ public class LevelHandler {
         });
     gameObjects.add(clientPlayer);
     gameState = map.getGameState();
+    System.gc();
   }
 
   /**
@@ -111,20 +113,20 @@ public class LevelHandler {
     clearToRemove();    // Remove every gameObjects we no longer need
     return gameObjects;
   }
-  
+
   /**
    * Add a new bullet to game object list
-   * 
+   *
    * @param g GameObject to be added
    */
   public void addGameObject(GameObject g) {
     this.gameObjects.add(g);
     g.initialise(this.gameRoot);
   }
-  
+
   /**
    * Remove an existing bullet from game object list
-   * 
+   *
    * @param g GameObject to be removed
    */
   public void delGameObject(GameObject g) {
@@ -178,17 +180,15 @@ public class LevelHandler {
   public Player getClientPlayer() {
     return clientPlayer;
   }
-  
+
   /**
-   *  It removes the image from the imageView,
-   *  destroy the gameObject and
-   *  remove it from gameObjects list.
-   *  Finally clear the list for next frame
+   * It removes the image from the imageView, destroy the gameObject and remove it from gameObjects
+   * list. Finally clear the list for next frame
    */
   private void clearToRemove() {
+    gameObjects.removeAll(toRemove);
     toRemove.forEach(gameObject -> gameObject.removeRender());
     toRemove.forEach(gameObject -> gameObject.destroy());
-    gameObjects.removeAll(toRemove);
     toRemove.clear();
   }
 }

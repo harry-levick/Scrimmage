@@ -15,11 +15,18 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.LevelHandler;
 import shared.handlers.levelHandler.Map;
+import shared.packets.Packet;
+import shared.packets.PacketEnd;
+import shared.packets.PacketPlayerJoin;
+import shared.physics.Physics;
+import shared.util.Path;
 
 public class Client extends Application {
 
@@ -28,12 +35,14 @@ public class Client extends Application {
   public static LevelHandler levelHandler;
   public static Settings settings;
   public static boolean multiplayer;
+  public static ConnectionHandler connectionHandler;
+  public static AudioHandler audio;
 
   private final float timeStep = 0.0166f;
   private final String gameTitle = "Alone in the Dark";
   private final int port = 4445;
+  private boolean test = false;
 
-  private ConnectionHandler connectionHandler;
   private KeyboardInput keyInput;
   private MouseInput mouseInput;
   private Group root;
@@ -55,6 +64,7 @@ public class Client extends Application {
   public void start(Stage primaryStage) {
     setupRender(primaryStage);
     levelHandler = new LevelHandler(settings, root, backgroundRoot, gameRoot, true);
+    audio = new AudioHandler(settings);
     currentMap = levelHandler.getMap();
 
     // Main Game Loop
@@ -64,6 +74,10 @@ public class Client extends Application {
 
         if (multiplayer) {
           processServerPackets();
+        }
+
+        if (test) {
+          levelHandler.changeMap(levelHandler.getMaps().get(1));
         }
 
         // Changes Map/Level
@@ -100,6 +114,7 @@ public class Client extends Application {
         /** Render Game Objects */
         levelHandler.getGameObjects().forEach(gameObject -> gameObject.render());
         /** Check Collisions */
+        Physics.gameObjects = levelHandler.getGameObjects();
         levelHandler
             .getGameObjects()
             .forEach(gameObject -> gameObject.updateCollision(levelHandler.getGameObjects()));
@@ -146,8 +161,7 @@ public class Client extends Application {
     root.getChildren().add(gameRoot);
 
     primaryStage.setTitle(gameTitle);
-
-    AudioHandler audio = new AudioHandler(settings);
+    primaryStage.getIcons().add(new Image(Path.convert("images/logo.png")));
 
     // todo TESTING: change controls here
     Button btnPlay = new Button();
@@ -253,10 +267,28 @@ public class Client extends Application {
     if (connectionHandler.received.size() != 0) {
       try {
         String message = (String) connectionHandler.received.take();
+        int messageID = Integer.parseInt(message.substring(0, 1));
+        Packet packet;
+        switch (messageID) {
+          //PlayerJoin
+          case 4:
+            PacketPlayerJoin packetPlayerJoin = new PacketPlayerJoin(message);
+            levelHandler.addPlayer(
+                new Player(packetPlayerJoin.getX(), packetPlayerJoin.getY(), 100, 100,
+                    packetPlayerJoin.getUUID()));
+            break;
+          //End
+          case 6:
+            PacketEnd packetEnd = new PacketEnd(message);
+            multiplayer = false;
+            //Show score board
+            //Main Menu
+
+        }
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
     }
   }
-  
+
 }

@@ -5,19 +5,19 @@ import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 
 
-public class Background extends GameObject{
+public class Background extends GameObject {
 
   private String imagePath;
-  
+
   public Background(String imgPath, ObjectID id, UUID objectUUID) {
-    super(0,0,1920,1080, id, objectUUID);
+    super(0, 0, 1920, 1080, id, objectUUID);
     imagePath = imgPath;
     initialiseAnimation();
   }
 
   @Override
   public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", imagePath); 
+    this.animation.supplyAnimation("default", imagePath);
   }
 
   @Override
@@ -26,7 +26,7 @@ public class Background extends GameObject{
     return null;
   }
 
-public void render() {
-  super.render();
-}
+  public void render() {
+    super.render();
+  }
 }

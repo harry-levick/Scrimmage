@@ -11,8 +11,14 @@ import javafx.scene.image.ImageView;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.Utils.Transform;
 import shared.gameObjects.animator.Animator;
+import shared.gameObjects.components.BoxCollider;
+import shared.gameObjects.components.Collider;
 import shared.gameObjects.components.Component;
 import shared.gameObjects.components.ComponentType;
+import shared.gameObjects.components.Rigidbody;
+import shared.physics.Physics;
+import shared.physics.data.Collision;
+import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
 
 public abstract class GameObject implements Serializable {
@@ -63,6 +69,14 @@ public abstract class GameObject implements Serializable {
   // Server and Client side
   public void update() {
     animation.update();
+    Collider col = (Collider) getComponent(ComponentType.COLLIDER);
+    Rigidbody rb = (Rigidbody) getComponent(ComponentType.RIGIDBODY);
+    if (rb != null) {
+      rb.update();
+    }
+    if (col != null) {
+      col.update();
+    }
   }
 
   // Client Side only
@@ -71,20 +85,39 @@ public abstract class GameObject implements Serializable {
     imageView.setFitWidth(transform.getSize().getX());
     imageView.setImage(animation.getImage());
   }
+
   // Collision engine
   public void updateCollision(ArrayList<GameObject> gameObjects) {
-    if (getComponent(ComponentType.COLLIDER) != null) {
-      // TODO Collision Checking
+    Collider col = (Collider) getComponent(ComponentType.COLLIDER);
+    Rigidbody rb = (Rigidbody) getComponent(ComponentType.RIGIDBODY);
+    if (rb != null) {
+      if (rb.getBodyType() == RigidbodyType.STATIC) {
+        return;
+      }
+    }
+    ArrayList<Collision> collision = null;
+    if (col != null) {
+      collision = Physics
+          .boxcastAll(getTransform().getPos().add(rb.getVelocity().mult(Physics.TIMESTEP)),
+              getTransform().getSize().mult(0.9f), Vector2.Zero(), 0);
+      for (Collision c : collision) {
+        if (!c.getCollidedObject().equals(rb)) {
+          rb.getCollisions().add(c);
+        }
+      }
     }
   }
 
   /**
-   *  Remove the image from the imageView by setting the image to null
+   * Remove the image from the imageView by setting the image to null
    */
   public void removeRender() {
-    imageView.setImage(null);
+    if (imageView != null) {
+      imageView.setImage(null);
+      root.getChildren().remove(imageView);
+    }
   }
-  
+
   // Interpolate Position Client only
   public void interpolatePosition(float alpha) {
     if (!isActive()) {
@@ -110,6 +143,9 @@ public abstract class GameObject implements Serializable {
     imageView = new ImageView();
     imageView.setRotate(rotation);
     root.getChildren().add(this.imageView);
+    if (getComponent(ComponentType.COLLIDER) != null && Physics.showColliders) {
+      ((BoxCollider) getComponent(ComponentType.COLLIDER)).initialise(root);
+    }
   }
 
   public void addChild(GameObject child) {
@@ -180,7 +216,9 @@ public abstract class GameObject implements Serializable {
     destroyed = active = false;
   }
 
-  /** Basic Getters and Setters */
+  /**
+   * Basic Getters and Setters
+   */
   public double getX() {
     return this.transform.getPos().getX();
   }
@@ -237,18 +275,18 @@ public abstract class GameObject implements Serializable {
     return active;
   }
 
+  public void setActive(boolean state) {
+    if (!destroyed) {
+      active = state;
+    }
+  }
+
   public boolean isUpdated() {
     return updated;
   }
 
   public void setUpdated(boolean updated) {
     this.updated = updated;
-  }
-
-  public void setActive(boolean state) {
-    if (!destroyed) {
-      active = state;
-    }
   }
 
   public boolean isDestroyed() {

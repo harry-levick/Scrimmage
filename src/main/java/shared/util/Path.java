@@ -16,5 +16,4 @@ public class Path {
   public static String convert(String path) {
     return path.replace('/', File.separatorChar).trim();
   }
-
 }
