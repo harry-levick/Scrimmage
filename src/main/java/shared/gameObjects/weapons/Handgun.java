@@ -54,6 +54,7 @@ public class Handgun extends Gun {
       Bullet bullet = new HandgunBullet(getX(), getY(), 10, 10, mouseX, mouseY, this.bulletWidth, this.bulletSpeed,
           uuid);
       this.currentCooldown = getDefaultCoolDown();
+      deductAmmo();
     }
   }
 
