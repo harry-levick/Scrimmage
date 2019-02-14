@@ -1,11 +1,10 @@
 package shared.gameObjects.weapons;
 
+import java.util.UUID;
 import shared.gameObjects.Utils.ObjectID;
 
-import java.util.UUID;
-
 public abstract class Melee extends Weapon {
-  
+
   protected double range; // radius in pixels
   protected double beginAngle; // swing from beginAngle (relative to arm)
   protected double endAngle; // swing till endAngle (relative to arm)
@@ -26,18 +25,18 @@ public abstract class Melee extends Weapon {
       double endAngle,
       UUID uuid) {
 
-    super(x, y, sizeX, sizeY, id, damage, weight, name, false, true, -1, fireRate, uuid);
+    super(x, y, sizeX, sizeY, id, damage, weight, name, false, true, 10, fireRate, uuid);
     this.range = range;
     this.beginAngle = beginAngle;
     this.endAngle = endAngle;
   }
-  
+
   @Override
   public void update() {
     deductCooldown();
     super.update();
   }
-  
+
   @Override
   public void fire(double mouseX, double mouseY) {
 

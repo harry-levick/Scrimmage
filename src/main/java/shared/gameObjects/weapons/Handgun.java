@@ -3,23 +3,17 @@ package shared.gameObjects.weapons;
 import java.util.UUID;
 import shared.gameObjects.Utils.ObjectID;
 
-/** @author hlf764 The Handgun class. */
+/**
+ * @author hlf764 The Handgun class.
+ */
 public class Handgun extends Gun {
 
-  private static String imagePath = "images/weapons/handgun.png";
   /**
    * Constructor of the Handgun class
    *
    * @param x The x position of the gun
    * @param y The y position of the gun
-   * @param id The ObjectID of the gun
-   * @param damage Damage of the gun
-   * @param weight Weight of the gun
    * @param name Name of the gun
-   * @param ammo Total amount of ammo
-   * @param bulletSpeed Speed of the bullets
-   * @param fireRate Fire rate of the gun (bullets per minute)
-   * @param bulletWidth Width of the bullet
    * @param uuid UUID of the gun
    */
   public Handgun(
@@ -46,14 +40,16 @@ public class Handgun extends Gun {
         true, // singleHanded
         uuid);
   }
-  
+
   @Override
   public void fire(double mouseX, double mouseY) {
     if (canFire()) {
       UUID uuid = UUID.randomUUID();
-      Bullet bullet = new HandgunBullet(getX(), getY(), 10, 10, mouseX, mouseY, this.bulletWidth, this.bulletSpeed,
+      Bullet bullet = new HandgunBullet(getX(), getY(), 10, 10, mouseX, mouseY, this.bulletWidth,
+          this.bulletSpeed,
           uuid);
       this.currentCooldown = getDefaultCoolDown();
+      deductAmmo();
     }
   }
 
@@ -71,7 +67,6 @@ public class Handgun extends Gun {
 
   @Override
   public void interpolatePosition(float alpha) {
-    
   }
 
   @Override
@@ -81,6 +76,6 @@ public class Handgun extends Gun {
 
   @Override
   public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", imagePath);
+    this.animation.supplyAnimation("default", "images/weapons/handgun.jpg");
   }
 }

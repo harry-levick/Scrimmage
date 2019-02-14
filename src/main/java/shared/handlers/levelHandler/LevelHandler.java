@@ -1,22 +1,26 @@
 package shared.handlers.levelHandler;
 
 import client.main.Settings;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 import javafx.scene.Group;
 import server.ai.Bot;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
-import shared.gameObjects.weapons.Handgun;
 import shared.gameObjects.weapons.MachineGun;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.UUID;
 import shared.gameObjects.weapons.Sword;
+import shared.util.Path;
 
 public class LevelHandler {
 
   private ArrayList<GameObject> gameObjects = new ArrayList<>();
+  /*  toRemove will remove all gameObjects it contains from gameObjects list
+   *  and clear the list for next frame. */
+  private ArrayList<GameObject> toRemove = new ArrayList<>();
   private ArrayList<Player> players = new ArrayList<>();
   private Player clientPlayer;
   private Bot botPlayer;
@@ -25,17 +29,25 @@ public class LevelHandler {
   private GameState gameState;
   private Map map;
   private Group root;
+  private Group backgroundRoot;
+  private Group gameRoot;
 
-  public LevelHandler(Settings settings, Group root, boolean isClient) {
+  public LevelHandler(Settings settings, Group root, Group backgroundRoot, Group gameRoot,
+      boolean isClient) {
     this.root = root;
+    this.backgroundRoot = backgroundRoot;
+    this.gameRoot = gameRoot;
+//    this.root.getChildren().add(backgroundRoot);
+//    this.root.getChildren().add(gameRoot);
+
     if (isClient) {
-      clientPlayer = new Player(500, 500, 100, 100, UUID.randomUUID());
+      clientPlayer = new Player(500, 892, 80, 110, UUID.randomUUID());
       clientPlayer.setHolding(
           //new Handgun(500, 500, 100, 100, "Handgun", UUID.randomUUID())
-          new MachineGun(500, 500, 100, 100, "MachineGun@LevelHandler",
-              UUID.randomUUID())
-        );
-      clientPlayer.initialise(root);
+
+          new MachineGun(500, 500, 116, 33, "MachineGun@LevelHandler", UUID.randomUUID())
+      );
+      clientPlayer.initialise(gameRoot);
       players.add(clientPlayer);
 
     }
@@ -46,9 +58,8 @@ public class LevelHandler {
 
     botPlayer = new Bot(600, 500, 100, 100, UUID.randomUUID(), allObjs);
     botPlayer.setHolding(
-        new Sword(600, 500, 100, 100, 2, 2,
-            "Sword@LevelHandler", 0, 200, 0,
-            0, UUID.randomUUID())
+        new Sword(600, 500, 100, 100, "Sword@LevelHandler",200,
+            0, 0, UUID.randomUUID())
     );
     botPlayer.initialise(root);
     players.add(botPlayer);
@@ -58,14 +69,16 @@ public class LevelHandler {
     // menus = MapLoader.getMaps(settings.getMenuPath());
     // menus = MapLoader.getMenuMaps(settings.getMenuPath());
     // Set initial game level as the Main Menu
-    map = maps.get(0); // FOR TESTING
-    generateLevel(root, isClient);
+    map = new Map("MainMenu", Path.convert("src/main/resources/menus/main_menu.map"),
+        GameState.MAIN_MENU);
+    generateLevel(root, backgroundRoot, gameRoot, isClient);
 
     gameObjects.add(clientPlayer.getHolding());
     clientPlayer.getHolding().initialise(root);
 
     gameObjects.add(botPlayer.getHolding());
     botPlayer.getHolding().initialise(root);
+
   }
 
   public boolean changeMap(Map map) {
@@ -88,9 +101,12 @@ public class LevelHandler {
    * NOTE: This to change the level use change Map Removes current game objects and creates new ones
    * from Map file
    */
-  public void generateLevel(Group root, boolean isClient) {
+  public void generateLevel(Group root, Group backgroundGroup, Group gameGroup, boolean isClient) {
+
     // Remove current game objects
-    gameObjects.forEach(gameObject -> gameObject.setActive(false));
+    gameObjects.remove(clientPlayer);
+    gameObjects.forEach(gameObject -> gameObject.removeRender());
+    gameObjects.forEach(gameObject -> gameObject = null);
     gameObjects.clear();
 
     // Create new game objects for map
@@ -100,14 +116,17 @@ public class LevelHandler {
           if (gameObject.getId() == ObjectID.MapDataObject && isClient) {
             // clientPlayer.setX(gameObject.getX());
             // clientPlayer.setY(gameObject.getY());
-            gameObjects.remove(gameObject);
+            // gameObjects.remove(gameObject); // todo check if this should be done
+          } else if (gameObject.getId() == ObjectID.Background) {
+            gameObject.initialise(backgroundGroup);
           } else {
-            gameObject.initialise(root);
+            gameObject.initialise(gameGroup);
           }
         });
     gameObjects.add(clientPlayer);
     gameObjects.add(botPlayer);
     gameState = map.getGameState();
+    System.gc();
   }
 
   /**
@@ -116,20 +135,28 @@ public class LevelHandler {
    * @return All Game Objects
    */
   public ArrayList<GameObject> getGameObjects() {
+    clearToRemove();    // Remove every gameObjects we no longer need
     return gameObjects;
   }
-  
-  // Test
+
+  /**
+   * Add a new bullet to game object list
+   *
+   * @param g GameObject to be added
+   */
   public void addGameObject(GameObject g) {
     this.gameObjects.add(g);
-    g.initialise(this.root);
+    g.initialise(this.gameRoot);
   }
-  
+
+  /**
+   * Remove an existing bullet from game object list
+   *
+   * @param g GameObject to be removed
+   */
   public void delGameObject(GameObject g) {
-    g.destroy();
-    this.gameObjects.remove(g);
+    toRemove.add(g);  // Will be removed on next frame
   }
-  // End Test
 
   /**
    * List of all available maps
@@ -180,4 +207,15 @@ public class LevelHandler {
   }
 
   public Bot getBot() { return botPlayer; }
+
+  /**
+   * It removes the image from the imageView, destroy the gameObject and remove it from gameObjects
+   * list. Finally clear the list for next frame
+   */
+  private void clearToRemove() {
+    gameObjects.removeAll(toRemove);
+    toRemove.forEach(gameObject -> gameObject.removeRender());
+    toRemove.forEach(gameObject -> gameObject.destroy());
+    toRemove.clear();
+  }
 }

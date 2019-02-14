@@ -1,5 +1,7 @@
 package shared.gameObjects.components;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.components.Component;
 import shared.gameObjects.components.ComponentType;
@@ -10,12 +12,9 @@ import shared.physics.data.MaterialProperty;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-
 /**
  * @author fxa579 The primary components responsible for all Physics updates; includes data and
- *     methods to process forces and gravity
+ * methods to process forces and gravity
  */
 public class Rigidbody extends Component implements Serializable {
 
@@ -41,7 +40,7 @@ public class Rigidbody extends Component implements Serializable {
   private float gravityScale;
   private float airDrag;
 
-  private boolean grounded;
+  private boolean grounded, canUp, canRight, canDown, canLeft;
 
   /**
    * The main component responsible for Physics calculations. Attach this to a GameObject to have it
@@ -70,6 +69,9 @@ public class Rigidbody extends Component implements Serializable {
     this.material = material;
     this.angularData = angularData;
     this.bodyType = bodyType;
+    if (bodyType == RigidbodyType.STATIC) {
+      this.mass = Integer.MAX_VALUE;
+    }
 
     collisions = new ArrayList<>();
     forces = new ArrayList<>();
@@ -86,17 +88,29 @@ public class Rigidbody extends Component implements Serializable {
 
   // Update Methods
 
-  /** Called every physics frame, manages the velocity, forces, position, etc. */
+  /**
+   * Called every physics frame, manages the velocity, forces, position, etc.
+   */
   public void update() {
-    applyCollisions();
-    applyForces();
-    updateVelocity();
-
-    grounded = false;
+    if (bodyType == RigidbodyType.DYNAMIC) {
+      applyCollisions();
+      applyForces();
+      //checkMovements();
+      updateVelocity();
+      grounded = false;
+      canUp = true;
+      canDown = true;
+      canLeft = true;
+      canRight = true;
+    } else {
+      velocity = Vector2.Zero();
+    }
   }
   // Force Methods
 
-  /** */
+  /**
+   *
+   */
   public void addForce(Vector2 force) {
     forces.add(force);
   }
@@ -123,7 +137,7 @@ public class Rigidbody extends Component implements Serializable {
    */
   public void move(Vector2 distance, float time) {
     if (time <= 0) {
-      getParent().getTransform().translate(distance);
+      deltaPosUpdate = deltaPosUpdate.add(distance);
     } else {
       setVelocity(distance.div(time));
     }
@@ -139,30 +153,70 @@ public class Rigidbody extends Component implements Serializable {
     move(distance, 0);
   }
 
+  public void moveX(float distance) {
+    move(new Vector2(distance, 0));
+  }
+
+  public void moveX(float distance, float time) {
+    move(new Vector2(distance, 0), time);
+  }
+
+  public void moveY(float distance) {
+    move(new Vector2(0, distance));
+  }
+
+  public void moveY(float distance, float time) {
+    move(new Vector2(0, distance), time);
+  }
+
   // Update Methods
 
-  /** An update method; all collision updates happen here */
+  /**
+   * An update method; all collision updates happen here
+   */
   private void applyCollisions() {
     for (Collision c : collisions) {
+
       if (c.getCollidedObject().getBodyType() == RigidbodyType.STATIC) {
         switch (c.getDirection()) {
           case DOWN:
             grounded = true;
           case UP:
-            setVelocity(getVelocity().mult(Vector2.Right()));
+            impactVelocity =
+                getVelocity()
+                    .mult(new Vector2(getVelocity().getX(), 1)
+                        .mult(Vector2.Up().mult(
+                            Math.min(
+                                getMaterial().getRestitution(),
+                                c.getCollidedObject().getMaterial().getRestitution()))));
             break;
           case LEFT:
           case RIGHT:
-            setVelocity(getVelocity().mult(Vector2.Up()));
+            impactVelocity =
+                getVelocity()
+                    .mult(
+                        (Vector2.Up().mult(
+                            Math.min(
+                                getMaterial().getRestitution(),
+                                c.getCollidedObject().getMaterial().getRestitution()))));
             break;
         }
+
       } else if (c.getCollidedObject().getBodyType() == RigidbodyType.DYNAMIC) {
         // TODO Momentum and Impulse Calculation
       }
+
+      /*
+      Rigidbody rb = c.getCollidedObject();
+      impactVelocity = impactVelocity.add(velocity.mult(getMass() - rb.getMass()).add(rb.getVelocity().mult(2*rb.getMass()/(getMass() + rb.getMass()))).mult(Math.max(getMaterial().getRestitution(), rb.getMaterial().getRestitution())));
+    */
     }
+    collisions.clear();
   }
 
-  /** An update method; all force updates happen here. */
+  /**
+   * An update method; all force updates happen here.
+   */
   private void applyForces() {
 
     currentForce = Vector2.Zero();
@@ -195,22 +249,123 @@ public class Rigidbody extends Component implements Serializable {
     }
   }
 
-  /** An update method; all velocity and acceleration updates happen here */
+  void ResolveCollision(Rigidbody A, Rigidbody B) {
+    Vector2 normal = Vector2.Unit();
+    // Calculate relative velocity
+    Vector2 rv = B.velocity.sub(A.velocity);
+    float invA, invB;
+    if (A.mass == 0) {
+      invA = 0;
+    } else {
+      invA = 1 / A.mass;
+    }
+    if (B.mass == 0) {
+      invB = 0;
+    } else {
+      invB = 1 / B.mass;
+    }
+
+    // Calculate relative velocity in terms of the normal direction
+    float velAlongNormal = rv.dot(normal);
+
+    // Do not resolve if velocities are separating
+    if (velAlongNormal > 0) {
+      return;
+    }
+
+    // Calculate restitution
+    float e = Math.min(A.getMaterial().getRestitution(), B.getMaterial().getRestitution());
+
+    // Calculate impulse scalar
+    float j = -(e) * velAlongNormal;
+    j /= invA + invB;
+
+    // Apply impulse
+
+    Vector2 impulse = normal.mult(j);
+    float mass_sum = A.mass + B.mass;
+    if (mass_sum == A.mass) {
+      float ratio = 1f;
+      A.velocity = A.velocity.sub(impulse.mult(ratio));
+    } else {
+      float ratio = A.mass / mass_sum;
+      A.velocity = A.velocity.sub(impulse.mult(ratio));
+
+      ratio = B.mass / mass_sum;
+      B.velocity = B.velocity.add(impulse.mult(ratio));
+    }
+  }
+
+  void PositionalCorrection(Rigidbody A, Rigidbody B) {
+
+  }
+
+  private void checkMovements() {
+    ArrayList<Collision> moveCols;
+    moveCols = Physics.boxcastAll(getParent().getTransform().getPos()
+            .add(Vector2.Up().mult(-0.06f * getParent().getTransform().getSize().getY())),
+        getParent().getTransform().getSize(), Vector2.Zero(), 0);
+    for (Collision c : moveCols) {
+      if (c.getCollidedObject().getBodyType() == RigidbodyType.STATIC) {
+        canUp = false;
+      }
+    }
+    moveCols = Physics.boxcastAll(getParent().getTransform().getPos()
+            .add(Vector2.Up().mult(0.06f * getParent().getTransform().getSize().getY())),
+        getParent().getTransform().getSize(), Vector2.Zero(), 0);
+    for (Collision c : moveCols) {
+      if (c.getCollidedObject().getBodyType() == RigidbodyType.STATIC) {
+        canDown = false;
+      }
+    }
+    moveCols = Physics.boxcastAll(getParent().getTransform().getPos()
+            .add(Vector2.Right().mult(0.06f * getParent().getTransform().getSize().getY())),
+        getParent().getTransform().getSize(), Vector2.Zero(), 0);
+    for (Collision c : moveCols) {
+      if (c.getCollidedObject().getBodyType() == RigidbodyType.STATIC) {
+        canRight = false;
+      }
+    }
+    moveCols = Physics.boxcastAll(getParent().getTransform().getPos()
+            .add(Vector2.Right().mult(-0.06f * getParent().getTransform().getSize().getX())),
+        getParent().getTransform().getSize(), Vector2.Zero(), 0);
+    for (Collision c : moveCols) {
+      if (c.getCollidedObject().getBodyType() == RigidbodyType.STATIC) {
+        canLeft = false;
+      }
+    }
+  }
+
+  /**
+   * An update method; all velocity and acceleration updates happen here
+   */
   private void updateVelocity() {
     lastAcceleration = acceleration;
 
-    if (impactVelocity.getX() != 0 && impactVelocity.getY() != 0) {
-      velocity = Vector2.Unit().mult(impactVelocity);
+    if (impactVelocity.getX() != 0 || impactVelocity.getY() != 0) {
+      velocity = Vector2.Unit().mult(impactVelocity).mult(2);
       impactVelocity = Vector2.Zero();
     }
 
+    if (!canUp && velocity.getY() < 0) {
+      velocity = Vector2.Right().mult(velocity);
+    }
+    if (!canDown && velocity.getY() > 0) {
+      velocity = Vector2.Right().mult(velocity);
+    }
+    if (!canLeft && velocity.getX() < 0) {
+      velocity = Vector2.Up().mult(velocity);
+    }
+    if (!canRight && velocity.getX() > 0) {
+      velocity = Vector2.Up().mult(velocity);
+    }
+    deltaPos = deltaPos.add(deltaPosUpdate);
     deltaPos =
         deltaPos.add(
             velocity
                 .mult(Physics.TIMESTEP)
                 .add(acceleration.mult(0.5f).mult(Physics.TIMESTEP * Physics.TIMESTEP)));
-    deltaPos = deltaPosUpdate.add(deltaPos);
-    move(deltaPos);
+    getParent().getTransform().translate(deltaPos);
     deltaPosUpdate = Vector2.Zero();
     deltaPos = Vector2.Zero();
 
@@ -218,6 +373,7 @@ public class Rigidbody extends Component implements Serializable {
     acceleration = lastAcceleration.add(acceleration).div(2);
     velocity = velocity.add(acceleration.mult(Physics.TIMESTEP));
   }
+
   // Getters and Setters
   public Vector2 getVelocity() {
     return velocity;
@@ -275,14 +431,22 @@ public class Rigidbody extends Component implements Serializable {
     this.airDrag = airDrag;
   }
 
-  /** For Testing Purposes Only */
+  public ArrayList<Collision> getCollisions() {
+    return collisions;
+  }
+
+  /**
+   * For Testing Purposes Only
+   */
   public void setGrounded(boolean grounded) {
     this.grounded = grounded;
   }
 }
 
-/** Helper class to apply force over time without needed to thread/coroutine */
-class ForceTime {
+/**
+ * Helper class to apply force over time without needed to thread/coroutine
+ */
+class ForceTime implements Serializable {
 
   private Vector2 force;
   private int iterations;

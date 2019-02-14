@@ -13,18 +13,20 @@ import java.util.UUID;
 import shared.packets.PacketInput;
 import shared.util.maths.Vector2;
 
-/** @author Harry Levick (hxl799) */
-public class Bot extends Player {
 
-  boolean jumpKey, leftKey, rightKey, click;
-  double mouseX, mouseY;
-  boolean mayJump = true;
-  public int jumpTime = 0;
+/**
+ * @author Harry Levick (hxl799)
+ */
+public class Bot extends Player {
 
   public static final int KEY_JUMP = 0;
   public static final int KEY_LEFT = 1;
   public static final int KEY_RIGHT = 2;
   public static final int KEY_CLICK = 3;
+  public int jumpTime = 0;
+  boolean jumpKey, leftKey, rightKey, click;
+  double mouseX, mouseY;
+  boolean mayJump = true;
 
   FSA state;
   Player targetPlayer;

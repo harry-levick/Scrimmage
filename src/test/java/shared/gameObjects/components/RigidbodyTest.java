@@ -1,5 +1,9 @@
 package shared.gameObjects.components;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.util.UUID;
 import org.junit.Before;
 import org.junit.Test;
 import shared.gameObjects.TestObject;
@@ -8,11 +12,6 @@ import shared.physics.data.AngularData;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
-
-import java.util.UUID;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class RigidbodyTest {
 
@@ -32,9 +31,9 @@ public class RigidbodyTest {
     e = new TestObject(20, 20, ObjectID.Player, UUID.randomUUID());
     f = new TestObject(21, 21, ObjectID.Player, UUID.randomUUID());
 
-    boxA = new BoxCollider(a, new Vector2(2, 2), false);
-    boxB = new BoxCollider(b, new Vector2(2, 2), false);
-    boxC = new BoxCollider(c, new Vector2(2, 2), false);
+    boxA = new BoxCollider(a, false);
+    boxB = new BoxCollider(b, false);
+    boxC = new BoxCollider(c, false);
     circleD = new CircleCollider(d, 1, false);
     circleE = new CircleCollider(e, 2, false);
     circleF = new CircleCollider(f, 2, false);
@@ -102,6 +101,7 @@ public class RigidbodyTest {
   public void addDistanceNoTime() {
     assertEquals(a.getTransform().getPos().getY(), 2, 0);
     rbA.move(new Vector2(10, 10));
+    rbA.update();
     assertEquals(12, a.getX(), 0.5);
   }
 
