@@ -43,6 +43,7 @@ public class MachineGun extends Gun {
           this.bulletSpeed,
           uuid);
       this.currentCooldown = getDefaultCoolDown();
+      deductAmmo();
     }
   }
 

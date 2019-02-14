@@ -2,9 +2,11 @@ package shared.gameObjects.players;
 
 import client.handlers.connectionHandler.ConnectionHandler;
 import client.handlers.inputHandler.InputHandler;
+import client.main.Client;
 import java.util.UUID;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.weapons.Weapon;
@@ -45,6 +47,9 @@ public class Player extends GameObject {
 
   @Override
   public void update() {
+    // Check if the current holding is valid
+    // Change the weapon to Punch if it is not
+    badWeapon();
     super.update();
   }
 
@@ -94,11 +99,10 @@ public class Player extends GameObject {
       jumpTime = JUMP_LIMIT;
     }
     if (InputHandler.click && holding != null) {
-      System.out.println("@Player, input(" + InputHandler.x + ", " + InputHandler.y + ")");
       holding.fire(InputHandler.x, InputHandler.y);
-    } // else punch
+    } //else punch
     //setX(getX() + (vx * 0.0166));
-
+    
     if (this.getHolding() != null) {
       this.getHolding().setX(this.getX() + 60);
       this.getHolding().setY(this.getY() + 70);
@@ -117,7 +121,26 @@ public class Player extends GameObject {
       connectionHandler.send(input.getData());
     }
   }
-
+  
+  /**
+   * Check if the current holding weapon is valid or not
+   * 
+   * @return True if the weapon is a bad weapon (out of ammo)
+   * @return False if the weapon is a good weapon, or there is no weapon
+   */
+  public boolean badWeapon() {
+     if (this.holding == null) return false;
+     if (this.holding.getAmmo() == 0) {
+       this.holding.destroyWeapon();
+       this.setHolding(null);
+       
+       Weapon sword = new Sword(this.getX(), this.getY(), 50, 50, "newSword@Player", 10, 50, 20, UUID.randomUUID());
+       Client.levelHandler.addGameObject(sword);
+       this.setHolding(sword);
+       return true;
+     }
+     return false;
+  }
 
   public int getHealth() {
     return health;

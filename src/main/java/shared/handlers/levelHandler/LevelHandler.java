@@ -9,6 +9,7 @@ import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.MachineGun;
+import shared.gameObjects.weapons.Sword;
 import shared.util.Path;
 
 public class LevelHandler {
@@ -185,9 +186,9 @@ public class LevelHandler {
    * list. Finally clear the list for next frame
    */
   private void clearToRemove() {
+    gameObjects.removeAll(toRemove);
     toRemove.forEach(gameObject -> gameObject.removeRender());
     toRemove.forEach(gameObject -> gameObject.destroy());
-    gameObjects.removeAll(toRemove);
     toRemove.clear();
   }
 }
