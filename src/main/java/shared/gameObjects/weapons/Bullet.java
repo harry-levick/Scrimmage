@@ -57,7 +57,6 @@ public abstract class Bullet extends GameObject {
   @Override
   public void update() {
     if (isHit) {
-      System.out.println(this.toString() + " is to be destroyed");
       Client.levelHandler.delGameObject(this);
       // apply effect (deduct hp, play sound)
     }
@@ -66,7 +65,6 @@ public abstract class Bullet extends GameObject {
       super.update();
     }
     else {
-      System.out.println(this.toString() + " is to be destroyed");
       Client.levelHandler.delGameObject(this);
     }
   }
