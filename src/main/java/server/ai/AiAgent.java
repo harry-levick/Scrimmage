@@ -8,9 +8,7 @@ import server.ai.pathFind.AStar;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.players.Player;
 
-/**
- * @author Harry Levick (hxl799)
- */
+/** @author Harry Levick (hxl799) */
 
 /**
  * AiAgent is the main body of an ai, creating an AiAgent will create a bot in the world at (x,y).
@@ -41,9 +39,7 @@ public class AiAgent {
     this.pathFinder = new AStar(gameObjects, this.bot);
   }
 
-  /**
-   * The method that runs the agent.
-   */
+  /** The method that runs the agent. */
   public void startAgent() {
     active = true;
     double prevDist, newDist;

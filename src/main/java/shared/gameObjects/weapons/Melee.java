@@ -38,9 +38,7 @@ public abstract class Melee extends Weapon {
   }
 
   @Override
-  public void fire(double mouseX, double mouseY) {
-
-  }
+  public void fire(double mouseX, double mouseY) {}
 
   // -------------------
   // Setters and Getters

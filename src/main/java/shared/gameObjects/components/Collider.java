@@ -7,7 +7,7 @@ import shared.util.maths.Vector2;
 
 /**
  * @author fxa579 Primary components responsible for collider info, such as collision state, size,
- * shape
+ *     shape
  */
 public abstract class Collider extends Component implements Serializable {
 
@@ -47,12 +47,11 @@ public abstract class Collider extends Component implements Serializable {
   }
 
   public static boolean boxBoxCollision(BoxCollider boxA, BoxCollider boxB) {
-    Vector2 extents = boxA.getSize().add(boxB.getSize().mult(0.25f));
-    Vector2 centres = boxB.getCentre().sub(boxA.getCentre());
-    if(Math.abs(centres.getX()) < extents.getX()) {
-      if(Math.abs(centres.getY()) < extents.getY()) {
-        return true;
-      }
+    if (boxA.getCorners()[0].getX() < boxB.getCorners()[3].getX()
+        && (boxA.getCorners()[3].getX() > boxB.getCorners()[0].getX()
+            && (boxA.getCorners()[0].getY() < boxB.getCorners()[1].getY()
+                && (boxA.getCorners()[1].getY() > boxB.getCorners()[0].getY())))) {
+      return true;
     }
     return false;
   }

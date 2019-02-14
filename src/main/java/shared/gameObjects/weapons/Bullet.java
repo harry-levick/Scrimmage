@@ -10,16 +10,14 @@ import shared.physics.data.MaterialProperty;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
 
-/**
- * @author hlf764
- */
+/** @author hlf764 */
 public abstract class Bullet extends GameObject {
 
-  public boolean isHit;     // true if there is an object at that position
+  public boolean isHit; // true if there is an object at that position
   protected Rigidbody rb;
-  private double width;     // width of bullet
-  private double speed;     // speed of bullet
-  private Vector2 vector;   // Vector of the force of bullet fire
+  private double width; // width of bullet
+  private double speed; // speed of bullet
+  private Vector2 vector; // Vector of the force of bullet fire
 
   public Bullet(
       double gunX, // gun initial x position
@@ -39,18 +37,19 @@ public abstract class Bullet extends GameObject {
     // Unit vector of the bullet force
     vector = new Vector2((float) (mouseX - gunX), (float) (mouseY - gunY));
     vector = vector.div((float) Math.sqrt(vector.dot(vector)));
-    rb = new Rigidbody(
-        RigidbodyType.DYNAMIC,
-        100f,
-        1,
-        0.1f,
-        new MaterialProperty(0.1f, 1, 1),
-        new AngularData(0, 0, 0, 0),
-        this);//TODO FIX
+    rb =
+        new Rigidbody(
+            RigidbodyType.DYNAMIC,
+            100f,
+            1,
+            0.1f,
+            new MaterialProperty(0.1f, 1, 1),
+            new AngularData(0, 0, 0, 0),
+            this); // TODO FIX
     addComponent(rb);
     // Change the speed of bullet by altering the bulletSpeed variable in any Gun
     rb.setVelocity(vector.mult((float) speed * 2250f));
-    //rb.move(new Vector2((float)(mouseX-gunX)*1.5f, (float)(mouseY-gunY)*1.5f));
+    // rb.move(new Vector2((float)(mouseX-gunX)*1.5f, (float)(mouseY-gunY)*1.5f));
 
     this.isHit = false;
 
@@ -58,8 +57,6 @@ public abstract class Bullet extends GameObject {
 
     render();
   }
-
-
 
   @Override
   public void update() {

@@ -11,5 +11,4 @@ public class PacketEnd extends Packet {
     String[] unpackedData = data.split(",");
     this.packetID = Integer.parseInt(unpackedData[0]);
   }
-
 }

@@ -2,7 +2,6 @@ package shared.gameObjects;
 
 import java.util.UUID;
 import javafx.scene.image.Image;
-import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;

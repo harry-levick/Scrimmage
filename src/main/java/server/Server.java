@@ -10,9 +10,7 @@ public class Server extends Application {
     launch(args);
   }
 
-  public void init() {
-
-  }
+  public void init() {}
 
   @Override
   public void start(Stage primaryStage) throws Exception {
@@ -20,10 +18,7 @@ public class Server extends Application {
     new AnimationTimer() {
 
       @Override
-      public void handle(long now) {
-
-      }
+      public void handle(long now) {}
     }.start();
-
   }
 }

@@ -37,9 +37,7 @@ public class AudioHandler {
     }
   }
 
-  /**
-   * Stop any game music from playing
-   */
+  /** Stop any game music from playing */
   public void stopMusic() {
     if (musicPlayer != null) {
       musicPlayer.stop();

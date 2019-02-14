@@ -33,16 +33,13 @@ public class MapDataObject extends GameObject implements Serializable {
   }
 
   @Override
-  public void update() {
-  }
+  public void update() {}
 
   @Override
-  public void render() {
-  }
+  public void render() {}
 
   @Override
-  public void interpolatePosition(float alpha) {
-  }
+  public void interpolatePosition(float alpha) {}
 
   @Override
   public String getState() {
@@ -50,6 +47,5 @@ public class MapDataObject extends GameObject implements Serializable {
   }
 
   @Override
-  public void initialiseAnimation() {
-  }
+  public void initialiseAnimation() {}
 }

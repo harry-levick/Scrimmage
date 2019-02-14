@@ -91,18 +91,21 @@ public abstract class GameObject implements Serializable {
     }
     ArrayList<Collision> collision = null;
     if (col != null) {
-      collision = Physics.boxcastAll(getTransform().getPos().add(rb.getVelocity().mult(Physics.TIMESTEP)), getTransform().getSize().mult(0.9f), Vector2.Zero(), 0);
+      collision =
+          Physics.boxcastAll(
+              getTransform().getPos().add(rb.getVelocity().mult(Physics.TIMESTEP)),
+              getTransform().getSize().mult(0.9f),
+              Vector2.Zero(),
+              0);
       for (Collision c : collision) {
-        if(!c.getCollidedObject().equals(rb)) {
+        if (!c.getCollidedObject().equals(rb)) {
           rb.getCollisions().add(c);
         }
       }
     }
   }
 
-  /**
-   * Remove the image from the imageView by setting the image to null
-   */
+  /** Remove the image from the imageView by setting the image to null */
   public void removeRender() {
     if (imageView != null) {
       imageView.setImage(null);
@@ -135,7 +138,7 @@ public abstract class GameObject implements Serializable {
     imageView = new ImageView();
     imageView.setRotate(rotation);
     root.getChildren().add(this.imageView);
-    if(getComponent(ComponentType.COLLIDER) != null && Physics.showColliders)
+    if (getComponent(ComponentType.COLLIDER) != null && Physics.showColliders)
       ((BoxCollider) getComponent(ComponentType.COLLIDER)).initialise(root);
   }
 
@@ -207,9 +210,7 @@ public abstract class GameObject implements Serializable {
     destroyed = active = false;
   }
 
-  /**
-   * Basic Getters and Setters
-   */
+  /** Basic Getters and Setters */
   public double getX() {
     return this.transform.getPos().getX();
   }
@@ -300,6 +301,5 @@ public abstract class GameObject implements Serializable {
     } catch (Exception e) {
       return false;
     }
-
   }
 }

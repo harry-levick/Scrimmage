@@ -1,9 +1,6 @@
 package server.ai.pathFind;
 
-/**
- * @author Harry Levick (hxl799)
- */
-
+/** @author Harry Levick (hxl799) */
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -53,6 +50,7 @@ public class AStar {
 
   /**
    * Main function, this calls the A* planner and extracts and returns the optimal action.
+   *
    * @return The action to take.
    */
   public boolean[] optimise(Player enemy) {
@@ -89,9 +87,7 @@ public class AStar {
     return action;
   }
 
-  /**
-   * The main search function
-   */
+  /** The main search function */
   private void search(Player enemy) {
     SearchNode current = bestPosition;
     // Is the current node good (= we're not getting hurt)
@@ -110,9 +106,8 @@ public class AStar {
       if (!current.visited && isInClosed(current)) {
         /**
          * If the node is already in the closed list (i.e. has been explored before), put some
-         * penalty on it and put it back into the pool.
-         * Closed List -> Nodes too close to a node in the closed list are considered visited, even
-         * though they are a bit different.
+         * penalty on it and put it back into the pool. Closed List -> Nodes too close to a node in
+         * the closed list are considered visited, even though they are a bit different.
          */
         realRemainingDistance += visitedListPenalty;
         current.visited = true;
@@ -146,8 +141,7 @@ public class AStar {
 
     for (SearchNode n : closedList) {
 
-      if ((Math.abs(n.botX) - nodeX < xDiff) &&
-          (Math.abs(n.botY) - nodeY < yDiff)) {
+      if ((Math.abs(n.botX) - nodeX < xDiff) && (Math.abs(n.botY) - nodeY < yDiff)) {
         return true;
       }
     }
@@ -195,9 +189,7 @@ public class AStar {
     return actions;
   }
 
-  /**
-   * Initialise the planner
-   */
+  /** Initialise the planner */
   private void startSearch() {
     SearchNode startPosition = new SearchNode(null, null);
 

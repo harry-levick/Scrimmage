@@ -3,9 +3,7 @@ package shared.gameObjects.weapons;
 import java.util.UUID;
 import shared.gameObjects.Utils.ObjectID;
 
-/**
- * Default holding weapon of a player
- */
+/** Default holding weapon of a player */
 public class Punch extends Melee {
 
   /**
@@ -19,10 +17,17 @@ public class Punch extends Melee {
    * @param range Range of punch, measured forward
    * @param uuid UUID
    */
-  public Punch(double x, double y, double sizeX, double sizeY, ObjectID id, double damage,
-      String name, double range, UUID uuid) {
+  public Punch(
+      double x,
+      double y,
+      double sizeX,
+      double sizeY,
+      ObjectID id,
+      double damage,
+      String name,
+      double range,
+      UUID uuid) {
     super(x, y, sizeX, sizeY, id, damage, 1, name, -1, 60, range, 1, 1, uuid);
-
   }
 
   @Override
@@ -36,5 +41,4 @@ public class Punch extends Melee {
     // TODO Auto-generated method stub
     return null;
   }
-
 }

@@ -27,20 +27,19 @@ public class LevelHandler {
   private Group backgroundRoot;
   private Group gameRoot;
 
-  public LevelHandler(Settings settings, Group root, Group backgroundRoot, Group gameRoot,
-      boolean isClient) {
+  public LevelHandler(
+      Settings settings, Group root, Group backgroundRoot, Group gameRoot, boolean isClient) {
     this.root = root;
     this.backgroundRoot = backgroundRoot;
     this.gameRoot = gameRoot;
-//    this.root.getChildren().add(backgroundRoot);
-//    this.root.getChildren().add(gameRoot);
+    //    this.root.getChildren().add(backgroundRoot);
+    //    this.root.getChildren().add(gameRoot);
 
     if (isClient) {
       clientPlayer = new Player(500, 892, 80, 110, UUID.randomUUID());
       clientPlayer.setHolding(
-          //new Handgun(500, 500, 100, 100, "Handgun", UUID.randomUUID())
-          new MachineGun(500, 500, 116, 33, "MachineGun@LevelHandler", UUID.randomUUID())
-      );
+          // new Handgun(500, 500, 100, 100, "Handgun", UUID.randomUUID())
+          new MachineGun(500, 500, 116, 33, "MachineGun@LevelHandler", UUID.randomUUID()));
       clientPlayer.initialise(gameRoot);
       players.add(clientPlayer);
     }
@@ -48,8 +47,11 @@ public class LevelHandler {
     // menus = MapLoader.getMaps(settings.getMenuPath());
     // menus = MapLoader.getMenuMaps(settings.getMenuPath());
     // Set initial game level as the Main Menu
-    map = new Map("MainMenu", Path.convert("src/main/resources/menus/main_menu.map"),
-        GameState.MAIN_MENU);
+    map =
+        new Map(
+            "MainMenu",
+            Path.convert("src/main/resources/menus/main_menu.map"),
+            GameState.MAIN_MENU);
     generateLevel(root, backgroundRoot, gameRoot, isClient);
 
     gameObjects.add(clientPlayer.getHolding());
@@ -109,7 +111,7 @@ public class LevelHandler {
    * @return All Game Objects
    */
   public ArrayList<GameObject> getGameObjects() {
-    clearToRemove();    // Remove every gameObjects we no longer need
+    clearToRemove(); // Remove every gameObjects we no longer need
     return gameObjects;
   }
 
@@ -129,7 +131,7 @@ public class LevelHandler {
    * @param g GameObject to be removed
    */
   public void delGameObject(GameObject g) {
-    toRemove.add(g);  // Will be removed on next frame
+    toRemove.add(g); // Will be removed on next frame
   }
 
   /**

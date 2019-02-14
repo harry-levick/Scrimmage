@@ -12,14 +12,11 @@ public class Timer extends GameObject {
   }
 
   @Override
-  public void initialiseAnimation() {
-  }
+  public void initialiseAnimation() {}
 
   @Override
   public String getState() {
     // TODO Auto-generated method stub
     return null;
   }
-
-
 }

@@ -48,12 +48,12 @@ public class LevelEditor extends Application {
   private MapDataObject mapDataObject;
   private boolean snapToGrid = true;
 
-  private int spawnPointLimit = 4; //todo autofetch
+  private int spawnPointLimit = 4; // todo autofetch
 
-  private int stageSizeX = 1920; //todo autofetch
+  private int stageSizeX = 1920; // todo autofetch
   private int stageSizeY = 1080;
   private int gridSizePX = 40;
-  private int gridSizeX = stageSizeX / gridSizePX; //40 px blocks
+  private int gridSizeX = stageSizeX / gridSizePX; // 40 px blocks
   private int gridSizeY = stageSizeY / gridSizePX;
 
   private LinkedHashMap<OBJECT_TYPES, GameObjectTuple> objectMap = new LinkedHashMap<>();
@@ -88,19 +88,24 @@ public class LevelEditor extends Application {
     cb.setLayoutX(10);
     cb.setLayoutY(10);
     cb.setTooltip(new Tooltip("Select item to place on the map"));
-    cb.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-      @Override
-      public void changed(ObservableValue<? extends Number> observableValue, Number number,
-          Number number2) {
-        GameObjectTupleConverter con = new GameObjectTupleConverter(objectMap);
-        for (Entry<OBJECT_TYPES, GameObjectTuple> e : objectMap.entrySet()) {
-          if (con.toString((GameObjectTuple) cb.getItems().get((Integer) number2))
-              .equals(con.toString(e.getValue()))) {
-            objectTypeSelected = e.getKey();
-          }
-        }
-      }
-    });
+    cb.getSelectionModel()
+        .selectedIndexProperty()
+        .addListener(
+            new ChangeListener<Number>() {
+              @Override
+              public void changed(
+                  ObservableValue<? extends Number> observableValue,
+                  Number number,
+                  Number number2) {
+                GameObjectTupleConverter con = new GameObjectTupleConverter(objectMap);
+                for (Entry<OBJECT_TYPES, GameObjectTuple> e : objectMap.entrySet()) {
+                  if (con.toString((GameObjectTuple) cb.getItems().get((Integer) number2))
+                      .equals(con.toString(e.getValue()))) {
+                    objectTypeSelected = e.getKey();
+                  }
+                }
+              }
+            });
     cb.setValue(cb.getItems().get(0));
 
     Button btnSave = new Button();
@@ -158,7 +163,7 @@ public class LevelEditor extends Application {
 
     // Example of loading map
     // gameObjects = MapLoader.loadMap("menus.map");
-    //gameObjects.forEach(gameObject -> gameObject.initialise(root));
+    // gameObjects.forEach(gameObject -> gameObject.initialise(root));
 
     addButtons(objects);
 
@@ -212,9 +217,12 @@ public class LevelEditor extends Application {
     return gridlines;
   }
 
-  private void scenePrimaryClick(Stage primaryStage, Group root, Group objects, Group background,
-      MouseEvent event) {
-    if (!isInObject(event.getX(), event.getY(), objectMap.get(objectTypeSelected).getX(),
+  private void scenePrimaryClick(
+      Stage primaryStage, Group root, Group objects, Group background, MouseEvent event) {
+    if (!isInObject(
+        event.getX(),
+        event.getY(),
+        objectMap.get(objectTypeSelected).getX(),
         objectMap.get(objectTypeSelected).getY())) {
       UUID uuid = UUID.randomUUID();
       GameObject temp = null;
@@ -407,7 +415,7 @@ public class LevelEditor extends Application {
       if ((x >= ulX) && (y >= ulY) && (x <= lrX) && (y <= lrY)) {
         root.getChildren().remove(event.getTarget());
         object.destroy();
-        gameObjects.remove(object);  //todo find alternative non breaking way of removing
+        gameObjects.remove(object); // todo find alternative non breaking way of removing
       }
     }
 
@@ -427,7 +435,7 @@ public class LevelEditor extends Application {
         }
         mapDataObject.setSpawnPoints(newList);
         object.destroy();
-        gameObjects.remove(object); //todo find alternative non breaking way of removing
+        gameObjects.remove(object); // todo find alternative non breaking way of removing
       }
     }
   }
@@ -437,7 +445,15 @@ public class LevelEditor extends Application {
   }
 
   protected enum OBJECT_TYPES {
-    FLOOR, PLAYER, BTN_SP, BTN_MP, BTN_ST, BTN_LE, WPN_HG, BACKGROUND, WALL
+    FLOOR,
+    PLAYER,
+    BTN_SP,
+    BTN_MP,
+    BTN_ST,
+    BTN_LE,
+    WPN_HG,
+    BACKGROUND,
+    WALL
   }
 }
 
