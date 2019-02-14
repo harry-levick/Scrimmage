@@ -20,7 +20,7 @@ public class SwordTest {
   public static void initSword() {
     sword =
         new Sword(
-            10, 10, 100, 100, ObjectID.Weapon, 10, 10, "test", 100, 5, 70, 20, 20, UUID.randomUUID());
+            10, 10, 100, 100,10, 10, "test", 100, 5, 70, 20, UUID.randomUUID());
   }
 
   @Test

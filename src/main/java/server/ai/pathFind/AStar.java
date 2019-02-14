@@ -10,6 +10,7 @@ import shared.gameObjects.players.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import shared.gameObjects.weapons.Melee;
 import shared.gameObjects.weapons.Weapon;
 import shared.physics.Physics;
 import shared.physics.data.Collision;
@@ -94,15 +95,15 @@ public class AStar {
 
     private double calcXChange(boolean[] action) {
       if (action[Bot.KEY_LEFT]) {
-        return -10.0; // TODO change
+        return -0.1; // TODO change
       } else if (action[Bot.KEY_RIGHT]) {
-        return 10.0; // TODO change
+        return 0.1; // TODO change
       } else return 0.0;
     }
 
     private double calcYChange(boolean[] action) {
       if (action[Bot.KEY_JUMP]) {
-        return -10.0; // TODO change
+        return -0.1; // TODO change
       } else return 0.0;
     }
 
@@ -116,14 +117,13 @@ public class AStar {
       Vector2 enemyPos = new Vector2((float) enemy.getX(), (float) enemy.getY());
       double totalH = botPos.exactMagnitude(enemyPos);
 
-      System.out.println(totalH);
-
       if (!allItems.isEmpty()) {
         GameObject closestItem = findClosestItem(allItems);
         Vector2 itemPos = new Vector2((float) closestItem.getX(), (float) closestItem.getY());
         double distanceToItem = botPos.exactMagnitude(itemPos);
         // The heuristic value is the combined distance of the bot->enemy + bot->item
-        totalH += distanceToItem;
+        // The heuristic value for the item is weighted to add preference to pick the items up.
+        totalH += (distanceToItem * 2);
       }
 
       return totalH;
@@ -318,10 +318,15 @@ public class AStar {
   private boolean atEnemy(double bX, double bY) {
     double xDiff = Math.abs(bX - enemy.getX());
     double yDiff = Math.abs(bY - enemy.getY());
+    Melee tempMelee;
 
-    if (xDiff <= 10 && yDiff <= 10)
-      return true;
-    else return false;
+    if (bot.getHolding().isMelee()) {
+      if (xDiff <= (tempMelee = (Melee) bot.getHolding()).getRange())
+        return true;
+      else return false;
+    } else if (xDiff <= 100 && yDiff <= 100) {
+        return true;
+    } else return false;
   }
 
   /**

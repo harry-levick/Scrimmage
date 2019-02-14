@@ -12,6 +12,7 @@ import shared.gameObjects.weapons.MachineGun;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
+import shared.gameObjects.weapons.Sword;
 
 public class LevelHandler {
 
@@ -45,8 +46,9 @@ public class LevelHandler {
 
     botPlayer = new Bot(600, 500, 100, 100, UUID.randomUUID(), allObjs);
     botPlayer.setHolding(
-        new MachineGun(600, 500, 100, 100, "MachineGun@LevelHandler",
-            UUID.randomUUID())
+        new Sword(600, 500, 100, 100, 2, 2,
+            "Sword@LevelHandler", 0, 200, 0,
+            0, UUID.randomUUID())
     );
     botPlayer.initialise(root);
     players.add(botPlayer);

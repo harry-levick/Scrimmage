@@ -49,7 +49,6 @@ public enum FSA {
       double weaponRange = StateInfo.weaponRange;
       int ammoLeft = StateInfo.ammoLeft;
       int botHealth = StateInfo.botHealth;
-      int enemyHealth = StateInfo.enemyHealth;
 
       if ((newDist <= weaponRange)
           && ((ammoLeft > 0) && targetPlayer.getHolding().isGun()
