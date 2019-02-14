@@ -13,15 +13,6 @@ import shared.handlers.levelHandler.LevelHandler;
 public class AStarTest {
 
   @Test
-  public void testStraightLineLeft() {
-    Settings settings = new Settings();
-    Group root = new Group();
-
-    LevelHandler lh = new LevelHandler(settings, root, true);
-    lh.getBot().update();
-  }
-
-  @Test
   public void testStraightLineRight() {
     ArrayList<GameObject> allObjs = new ArrayList<GameObject>();
 
