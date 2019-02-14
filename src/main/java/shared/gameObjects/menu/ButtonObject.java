@@ -1,7 +1,6 @@
 package shared.gameObjects.menu;
 
 import java.util.UUID;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
@@ -27,29 +26,25 @@ public abstract class ButtonObject extends GameObject {
   }
 
   @Override
-  public void interpolatePosition(float alpha) {}
+  public void interpolatePosition(float alpha) {
+  }
+
+  public void doOnClick(MouseEvent e) {
+    animation.switchAnimation("clicked");
+  }
+
+  public void doOnUnClick(MouseEvent e) {
+    animation.switchDefault();
+  }
 
   @Override
   public void initialise(Group root) {
     super.initialise(root);
     button = new Button("", imageView);
-    root.getChildren().add(button);
-    button.setOnMousePressed(
-        new EventHandler<MouseEvent>() {
-          @Override
-          public void handle(MouseEvent event) {
-            animation.switchAnimation("clicked");
-          }
-        });
-
-    button.setOnMouseReleased(
-        new EventHandler<MouseEvent>() {
-          @Override
-          public void handle(MouseEvent event) {
-            animation.switchDefault();
-          }
-        });
     button.setStyle("-fx-border-color: transparent;-fx-background-color: transparent;");
+    root.getChildren().add(button);
+    button.setOnMousePressed(event -> doOnClick(event));
+    button.setOnMouseReleased(event -> doOnUnClick(event));
   }
 
   public void initialiseAnimation(String unclickedPath, String clickedPath) {
@@ -71,5 +66,9 @@ public abstract class ButtonObject extends GameObject {
   public void render() {
     super.render();
     button.relocate(getX(), getY());
+  }
+
+  public Button getButton() {
+    return button;
   }
 }

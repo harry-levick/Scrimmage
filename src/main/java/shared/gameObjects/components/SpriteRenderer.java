@@ -1,10 +1,11 @@
 package shared.gameObjects.components;
 
+import java.io.Serializable;
 import shared.gameObjects.GameObject;
 
-import java.io.Serializable;
-
-/** Sprite Rendering Component called on by the game loop to render assets */
+/**
+ * Sprite Rendering Component called on by the game loop to render assets
+ */
 public class SpriteRenderer extends Component implements Serializable {
   // INCLUDE: Image or Sprite
   // LAYERS? POSITIONS? MIGHT BE POSSIBLE, PLACED HERE

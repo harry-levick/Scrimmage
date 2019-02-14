@@ -1,8 +1,7 @@
 package shared.gameObjects;
 
-import shared.gameObjects.Utils.ObjectID;
-
 import java.util.UUID;
+import shared.gameObjects.Utils.ObjectID;
 
 public class TestObject extends GameObject {
 
@@ -18,11 +17,17 @@ public class TestObject extends GameObject {
     super(x, y, 100, 100, id, testUUID);
   }
 
-  @Override
-  public void update() {}
+  public TestObject(int x, int y, int sizeX, int sizeY, ObjectID id, UUID testUUID) {
+    super(x, y, sizeX, sizeY, id, testUUID);
+  }
 
   @Override
-  public void render() {}
+  public void update() {
+  }
+
+  @Override
+  public void render() {
+  }
 
   @Override
   public String getState() {

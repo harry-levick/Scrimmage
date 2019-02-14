@@ -1,18 +1,26 @@
 package shared.physics;
 
+import java.util.ArrayList;
+import shared.gameObjects.GameObject;
+import shared.gameObjects.components.BoxCollider;
+import shared.gameObjects.components.Collider;
+import shared.gameObjects.components.ComponentType;
 import shared.physics.data.Collision;
 import shared.util.maths.Vector2;
 
-import java.util.ArrayList;
-
-/** @author fxa579 The singleton class respomsible for raycasting and physics constants/equations */
+/**
+ * @author fxa579 The singleton class respomsible for raycasting and physics constants/equations
+ */
 public class Physics {
 
-  public static final float GRAVITY = 9.81f;
+  public static final float GRAVITY = 100f;
   public static final float TIMESTEP = 1f / 60;
+  public static boolean showColliders = false;
+  public static ArrayList<GameObject> gameObjects;
   private static Physics ourInstance = new Physics();
 
-  private Physics() {}
+  private Physics() {
+  }
   // TODO complete raycast methods
 
   /**
@@ -37,12 +45,39 @@ public class Physics {
     return null;
   }
 
-  public static Collision boxcast(Vector2 sourcePos, float distance) {
+  public static Collision boxcast(Vector2 sourcePos, Vector2 size, Vector2 direction,
+      float distance) {
+    direction = direction.normalize().mult(distance);
+    BoxCollider castCollider = new BoxCollider(sourcePos, size.mult(direction));
+    Collision collision;
+    for (GameObject object : gameObjects) {
+      if (object.getComponent(ComponentType.COLLIDER) != null) {
+        collision = Collision
+            .resolveCollision(castCollider, (Collider) object.getComponent(ComponentType.COLLIDER));
+        if (collision != null) {
+          return collision;
+        }
+      }
+    }
     return null;
   }
 
-  public static ArrayList<Collision> boxcastAll(Vector2 sourcePos, float distance) {
-    return null;
+  public static ArrayList<Collision> boxcastAll(Vector2 sourcePos, Vector2 size, Vector2 direction,
+      float distance) {
+    direction = direction.normalize().add(distance);
+    BoxCollider castCollider = new BoxCollider(sourcePos, size);
+    Collision collision;
+    ArrayList<Collision> collisions = new ArrayList<>();
+    for (GameObject object : gameObjects) {
+      if (object.getComponent(ComponentType.COLLIDER) != null) {
+        collision = Collision
+            .resolveCollision(castCollider, (Collider) object.getComponent(ComponentType.COLLIDER));
+        if (collision != null) {
+          collisions.add(collision);
+        }
+      }
+    }
+    return collisions;
   }
 
   public static Collision circlecast(Vector2 sourcePos, float distance) {
