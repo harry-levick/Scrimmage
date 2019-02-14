@@ -25,7 +25,7 @@ public class MachineGun extends Gun {
         10, // weight
         name,
         50, // ammo
-        1, // bulletSpeed 
+        50, // bulletSpeed
         70, // fireRate
         50, // bulletWidth
         true, // fullAutoFire 
@@ -39,7 +39,7 @@ public class MachineGun extends Gun {
   public void fire(double mouseX, double mouseY) {
     if (canFire()) {
       UUID uuid = UUID.randomUUID();
-      Bullet bullet = new MachineGunBullet(getX(), getY(), 10, 10, mouseX, mouseY, this.bulletWidth,
+      Bullet bullet = new MachineGunBullet(getX(), getY(), 100, 100, mouseX, mouseY, this.bulletWidth,
           this.bulletSpeed,
           uuid);
       this.currentCooldown = getDefaultCoolDown();

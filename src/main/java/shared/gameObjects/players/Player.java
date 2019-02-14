@@ -14,10 +14,11 @@ import shared.packets.PacketInput;
 import shared.physics.Physics;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.RigidbodyType;
+import shared.util.maths.Vector2;
 
 public class Player extends GameObject {
 
-  protected final float speed = 10;
+  protected final float speed = 1000;
   protected final float jumpForce = -10;
   protected final float JUMP_LIMIT = 2.0f;
   protected float jumpTime;
@@ -29,7 +30,7 @@ public class Player extends GameObject {
   public Player(double x, double y, double sizeX, double sizeY, UUID playerUUID) {
     super(x, y, 120, 120, ObjectID.Player, playerUUID);
     addComponent(new BoxCollider(this, false));
-    rb = new Rigidbody(RigidbodyType.DYNAMIC, 100, 10, 0.7f, new MaterialProperty(0.005f, 0, 0.6f),
+    rb = new Rigidbody(RigidbodyType.DYNAMIC, 100, 10, 0.7f, new MaterialProperty(0.005f, 0, 0),
         null, this);
     addComponent(rb);
     this.health = 100;
@@ -70,12 +71,12 @@ public class Player extends GameObject {
 
   public void applyInput(boolean multiplayer, ConnectionHandler connectionHandler) {
     if (InputHandler.rightKey) {
-      rb.moveX(speed);
+        rb.setVelocity(new Vector2(speed, rb.getVelocity().getY()));
       animation.switchAnimation("walk");
       imageView.setScaleX(1);
     }
     if (InputHandler.leftKey) {
-      rb.moveX(speed * -1);
+      rb.setVelocity(new Vector2(speed*-1, rb.getVelocity().getY()));
       animation.switchAnimation("walk");
       imageView.setScaleX(-1);
     }
