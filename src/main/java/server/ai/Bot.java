@@ -8,9 +8,9 @@ import java.util.stream.Collectors;
 import server.ai.pathFind.AStar;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.players.Player;
-
 import java.util.UUID;
 import shared.packets.PacketInput;
+import shared.physics.Physics;
 import shared.util.maths.Vector2;
 
 
@@ -23,7 +23,7 @@ public class Bot extends Player {
   public static final int KEY_LEFT = 1;
   public static final int KEY_RIGHT = 2;
   public static final int KEY_CLICK = 3;
-  public int jumpTime = 0;
+  public float jumpTime;
   boolean jumpKey, leftKey, rightKey, click;
   double mouseX, mouseY;
   boolean mayJump = true;
@@ -46,14 +46,12 @@ public class Bot extends Player {
     super(x, y, sizeX, sizeY, playerUUID);
     allPlayers = new ArrayList<>();
     this.state = FSA.INITIAL_STATE;
-    System.out.println("BOT CREATED");
 
     // Collect all players (other than bots) from the world
     allPlayers = allObjs.stream()
             .filter(p -> p instanceof Player)
             .map(Player.class::cast)
             .collect(Collectors.toList());
-
 
     targetPlayer = findTarget(allPlayers);
     this.pathFinder = new AStar(allObjs, this);
@@ -63,32 +61,61 @@ public class Bot extends Player {
     return mayJump;
   }
 
+  @Override
   public void applyInput(boolean multiplayer, ConnectionHandler connectionHandler) {
     if (this.rightKey) {
-      vx = speed;
-      animation.switchAnimation("moveRight");
+      rb.moveX(speed);
+      animation.switchAnimation("walk");
+      imageView.setScaleX(1);
     }
     if (this.leftKey) {
-      vx = -speed;
-      animation.switchAnimation("moveLeft");
+      rb.moveX(speed * -1);
+      animation.switchAnimation("walk");
+      imageView.setScaleX(-1);
     }
 
     if (!this.rightKey && !this.leftKey) {
       vx = 0;
       animation.switchDefault();
+
+    }
+    if (this.jumpKey) {
+      if (jumpTime > 0) {
+        animation.switchAnimation("jump");
+        rb.moveY(jumpForce);
+        jumpTime -= Physics.TIMESTEP;
+      } else {
+
+      }
+
+    }
+    if (!this.jumpKey) {
+      jumpTime = JUMP_LIMIT;
     }
     if (this.click && holding != null) {
-      holding.fire(InputHandler.x, InputHandler.y);
+      holding.fire(this.mouseX, this.mouseY);
     } //else punch
-    setX(getX() + (vx * 0.0166));
+    //setX(getX() + (vx * 0.0166));
 
-    /** If multiplayer then send input to server */
+    if (this.getHolding() != null) {
+      this.getHolding().setX(this.getX() + 60);
+      this.getHolding().setY(this.getY() + 70);
+    }
+
+    // If multiplayer then send input to server
     if (multiplayer) {
-      PacketInput input = new PacketInput(InputHandler.x, InputHandler.y, InputHandler.leftKey,
-          InputHandler.rightKey, InputHandler.jumpKey, InputHandler.click);
+      PacketInput input =
+          new PacketInput(
+              InputHandler.x,
+              InputHandler.y,
+              InputHandler.leftKey,
+              InputHandler.rightKey,
+              InputHandler.jumpKey,
+              InputHandler.click);
       connectionHandler.send(input.getData());
     }
   }
+
 
   @Override
   public void update() {
@@ -121,13 +148,12 @@ public class Bot extends Player {
         break;
       case ATTACKING:
         System.out.println("ATTACKING");
-        boolean[] action = pathFinder.optimise(targetPlayer);
-        executeAction(action);
+        //executeAction(pathFinder.optimise(targetPlayer));
         // TODO think about how an attacking script would work.
         break;
       case CHASING_ATTACKING:
         System.out.println("CHASING-ATTACKING");
-        executeAction(pathFinder.optimise(targetPlayer));
+        //executeAction(pathFinder.optimise(targetPlayer));
         // TODO calculate and execute the best path to the target whilst attacking.
         break;
       case FLEEING_ATTACKING:
@@ -181,20 +207,10 @@ public class Bot extends Player {
    * @param action: an action to exacute.
    */
   private void executeAction(boolean[] action) {
-    // TODO decide on the implementation of action execution
     this.jumpKey = action[Bot.KEY_JUMP];
     this.leftKey = action[Bot.KEY_LEFT];
     this.rightKey = action[Bot.KEY_RIGHT];
     this.click = action[Bot.KEY_CLICK];
-  }
-
-  private String printAction(boolean[] action) {
-    String actionToPrint = "";
-    actionToPrint += "Jump : " + action[Bot.KEY_JUMP];
-    actionToPrint += " Left : " + action[Bot.KEY_LEFT];
-    actionToPrint += " Right : " + action[Bot.KEY_RIGHT];
-
-    return actionToPrint;
   }
 
 }

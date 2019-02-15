@@ -23,8 +23,8 @@ public class Player extends GameObject {
   protected float jumpTime;
   protected int health;
   protected Weapon holding;
-  private Rigidbody rb;
-  private double vx;
+  protected Rigidbody rb;
+  protected double vx;
 
   public Player(double x, double y, double sizeX, double sizeY, UUID playerUUID) {
     super(x, y, sizeX, sizeY, ObjectID.Player, playerUUID);
@@ -37,6 +37,7 @@ public class Player extends GameObject {
   }
 
   // Initialise the animation
+  @Override
   public void initialiseAnimation() {
     this.animation.supplyAnimation("default", "images/player/player_idle.png");
     this.animation.supplyAnimation("walk",
