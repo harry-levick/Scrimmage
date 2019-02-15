@@ -92,15 +92,15 @@ public class AStar {
 
     private double calcXChange(boolean[] action) {
       if (action[Bot.KEY_LEFT]) {
-        return -0.1; // TODO change
+        return -10; // TODO change
       } else if (action[Bot.KEY_RIGHT]) {
-        return 0.1; // TODO change
+        return 10; // TODO change
       } else return 0.0;
     }
 
     private double calcYChange(boolean[] action) {
       if (action[Bot.KEY_JUMP]) {
-        return -0.1; // TODO change
+        return -10; // TODO change
       } else return 0.0;
     }
 
@@ -395,8 +395,8 @@ public class AStar {
     // TODO possibly change this to .Left()
     Collision viscinityLeft = Physics.boxcast(botPosition, botSize, botPosition.Right().mult(-1),
         10f);
-    if (viscinityLeft == null ||
-        botPosition.exactMagnitude(viscinityLeft.getPointOfCollision()) > 10) {
+    if (viscinityLeft == null /**||
+        botPosition.exactMagnitude(viscinityLeft.getPointOfCollision()) > 10*/) {
       // If no collision, or if the collision is far away
       possibleActions.add(createAction(false, true, false, false));
     }
@@ -404,8 +404,8 @@ public class AStar {
     // Box cast to the right
     Collision viscinityRight = Physics.boxcast(botPosition, botSize, botPosition.Right(),
         10f);
-    if (viscinityRight == null ||
-        botPosition.exactMagnitude(viscinityRight.getPointOfCollision()) > 10) {
+    if (viscinityRight == null /**||
+        botPosition.exactMagnitude(viscinityRight.getPointOfCollision()) > 10*/) {
       // If no collision, or if the collision is far away
       possibleActions.add(createAction(false, false, true, false));
     }
