@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 import javafx.scene.Group;
+import server.ai.Bot;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
@@ -20,6 +21,7 @@ public class LevelHandler {
   private ArrayList<GameObject> toRemove = new ArrayList<>();
   private ArrayList<Player> players = new ArrayList<>();
   private Player clientPlayer;
+  private Bot botPlayer;
   private ArrayList<Map> maps;
   private HashMap<String, Map> menus;
   private GameState gameState;
@@ -37,14 +39,28 @@ public class LevelHandler {
 //    this.root.getChildren().add(gameRoot);
 
     if (isClient) {
-      clientPlayer = new Player(500, 500, 80, 110, UUID.randomUUID());
+      clientPlayer = new Player(500, 300, 80, 110, UUID.randomUUID());
       clientPlayer.setHolding(
           //new Handgun(500, 500, 100, 100, "Handgun", UUID.randomUUID())
-          new MachineGun(500, 500, 116, 33, "MachineGun@LevelHandler", UUID.randomUUID())
+          new MachineGun(500, 300, 116, 33, "MachineGun@LevelHandler", UUID.randomUUID())
       );
       clientPlayer.initialise(gameRoot);
       players.add(clientPlayer);
     }
+
+    // Create a list of all GameObject's including players - to give to the bot
+    ArrayList<GameObject> allObjs = (ArrayList<GameObject>) gameObjects.clone();
+    allObjs.addAll(players);
+
+    botPlayer = new Bot(500, 300, 80, 110, UUID.randomUUID(), allObjs);
+    botPlayer.setHolding(
+        new Sword(800, 500, 50, 50, "Sword@LevelHandler", 20,
+            0, 0, UUID.randomUUID())
+    );
+    botPlayer.initialise(gameRoot);
+    players.add(botPlayer);
+
+
     maps = MapLoader.getMaps(settings.getMapsPath());
     // menus = MapLoader.getMaps(settings.getMenuPath());
     // menus = MapLoader.getMenuMaps(settings.getMenuPath());
@@ -55,6 +71,10 @@ public class LevelHandler {
 
     gameObjects.add(clientPlayer.getHolding());
     clientPlayer.getHolding().initialise(gameRoot);
+
+    gameObjects.add(botPlayer);
+    gameObjects.add(botPlayer.getHolding());
+    botPlayer.getHolding().initialise(gameRoot);
   }
 
   public boolean changeMap(Map map) {
@@ -179,6 +199,10 @@ public class LevelHandler {
 
   public Player getClientPlayer() {
     return clientPlayer;
+  }
+
+  public Bot getBotPlayer() {
+    return botPlayer;
   }
 
   /**
