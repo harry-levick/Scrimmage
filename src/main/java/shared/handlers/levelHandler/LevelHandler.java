@@ -37,14 +37,13 @@ public class LevelHandler {
     this.root = root;
     this.backgroundRoot = backgroundRoot;
     this.gameRoot = gameRoot;
-//    this.root.getChildren().add(backgroundRoot);
-//    this.root.getChildren().add(gameRoot);
+//  this.root.getChildren().add(backgroundRoot);
+//  this.root.getChildren().add(gameRoot);
 
     if (isClient) {
       clientPlayer = new Player(500, 892, 80, 110, UUID.randomUUID());
       clientPlayer.setHolding(
           //new Handgun(500, 500, 100, 100, "Handgun", UUID.randomUUID())
-
           new MachineGun(500, 500, 116, 33, "MachineGun@LevelHandler", UUID.randomUUID())
       );
       clientPlayer.initialise(gameRoot);
@@ -56,13 +55,12 @@ public class LevelHandler {
     List<GameObject> allObjs = (List<GameObject>) gameObjects.clone();
     allObjs.addAll(players);
 
-    botPlayer = new Bot(600, 500, 100, 100, UUID.randomUUID(), allObjs);
-    botPlayer.setHolding(
-        new Sword(600, 500, 100, 100, "Sword@LevelHandler",200,
-            0, 0, UUID.randomUUID())
-    );
-    botPlayer.initialise(root);
-    players.add(botPlayer);
+    //botPlayer = new Bot(600, 500, 100, 100, UUID.randomUUID(), allObjs);
+    //botPlayer.setHolding(
+        //new MachineGun(600, 600, 116, 33, "MachineGun@LevelHandler", UUID.randomUUID())
+    //);
+    //botPlayer.initialise(root);
+    //players.add(botPlayer);
 
 
     maps = MapLoader.getMaps(settings.getMapsPath());
@@ -76,8 +74,8 @@ public class LevelHandler {
     gameObjects.add(clientPlayer.getHolding());
     clientPlayer.getHolding().initialise(root);
 
-    gameObjects.add(botPlayer.getHolding());
-    botPlayer.getHolding().initialise(root);
+    //gameObjects.add(botPlayer.getHolding());
+    //botPlayer.getHolding().initialise(root);
 
   }
 
