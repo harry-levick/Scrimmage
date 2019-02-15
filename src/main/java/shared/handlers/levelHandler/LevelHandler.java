@@ -1,13 +1,10 @@
 package shared.handlers.levelHandler;
 
 import client.main.Settings;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 import javafx.scene.Group;
-import server.ai.Bot;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
@@ -23,7 +20,6 @@ public class LevelHandler {
   private ArrayList<GameObject> toRemove = new ArrayList<>();
   private ArrayList<Player> players = new ArrayList<>();
   private Player clientPlayer;
-  private Bot botPlayer;
   private ArrayList<Map> maps;
   private HashMap<String, Map> menus;
   private GameState gameState;
@@ -37,32 +33,18 @@ public class LevelHandler {
     this.root = root;
     this.backgroundRoot = backgroundRoot;
     this.gameRoot = gameRoot;
-//  this.root.getChildren().add(backgroundRoot);
-//  this.root.getChildren().add(gameRoot);
+//    this.root.getChildren().add(backgroundRoot);
+//    this.root.getChildren().add(gameRoot);
 
     if (isClient) {
-      clientPlayer = new Player(500, 892, 80, 110, UUID.randomUUID());
+      clientPlayer = new Player(500, 500, 80, 110, UUID.randomUUID());
       clientPlayer.setHolding(
           //new Handgun(500, 500, 100, 100, "Handgun", UUID.randomUUID())
           new MachineGun(500, 500, 116, 33, "MachineGun@LevelHandler", UUID.randomUUID())
       );
       clientPlayer.initialise(gameRoot);
       players.add(clientPlayer);
-
     }
-
-    // Create a list of all GameObject's including players, to give to the bot
-    //List<GameObject> allObjs = (List<GameObject>) gameObjects.clone();
-    //allObjs.addAll(players);
-
-    //botPlayer = new Bot(600, 500, 100, 100, UUID.randomUUID(), allObjs);
-    //botPlayer.setHolding(
-        //new MachineGun(600, 600, 116, 33, "MachineGun@LevelHandler", UUID.randomUUID())
-    //);
-    //botPlayer.initialise(root);
-    //players.add(botPlayer);
-
-
     maps = MapLoader.getMaps(settings.getMapsPath());
     // menus = MapLoader.getMaps(settings.getMenuPath());
     // menus = MapLoader.getMenuMaps(settings.getMenuPath());
@@ -72,11 +54,7 @@ public class LevelHandler {
     generateLevel(root, backgroundRoot, gameRoot, isClient);
 
     gameObjects.add(clientPlayer.getHolding());
-    clientPlayer.getHolding().initialise(root);
-
-    //gameObjects.add(botPlayer.getHolding());
-    //botPlayer.getHolding().initialise(root);
-
+    clientPlayer.getHolding().initialise(gameRoot);
   }
 
   public boolean changeMap(Map map) {
@@ -122,7 +100,6 @@ public class LevelHandler {
           }
         });
     gameObjects.add(clientPlayer);
-    gameObjects.add(botPlayer);
     gameState = map.getGameState();
     System.gc();
   }
@@ -203,8 +180,6 @@ public class LevelHandler {
   public Player getClientPlayer() {
     return clientPlayer;
   }
-
-  public Bot getBot() { return botPlayer; }
 
   /**
    * It removes the image from the imageView, destroy the gameObject and remove it from gameObjects
