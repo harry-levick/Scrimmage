@@ -17,14 +17,14 @@ import shared.physics.types.RigidbodyType;
 
 public class Player extends GameObject {
 
+  protected final float speed = 10;
   protected final float jumpForce = -10;
   protected final float JUMP_LIMIT = 2.0f;
   protected float jumpTime;
   protected int health;
   protected Weapon holding;
-  protected final int speed = 500;
-  protected double vx;
   private Rigidbody rb;
+  private double vx;
 
   public Player(double x, double y, double sizeX, double sizeY, UUID playerUUID) {
     super(x, y, sizeX, sizeY, ObjectID.Player, playerUUID);
@@ -36,7 +36,7 @@ public class Player extends GameObject {
     holding = null;
   }
 
-  // Initialise the animation 
+  // Initialise the animation
   public void initialiseAnimation() {
     this.animation.supplyAnimation("default", "images/player/player_idle.png");
     this.animation.supplyAnimation("walk",
@@ -102,7 +102,7 @@ public class Player extends GameObject {
       holding.fire(InputHandler.x, InputHandler.y);
     } //else punch
     //setX(getX() + (vx * 0.0166));
-    
+
     if (this.getHolding() != null) {
       this.getHolding().setX(this.getX() + 60);
       this.getHolding().setY(this.getY() + 70);
@@ -121,25 +121,25 @@ public class Player extends GameObject {
       connectionHandler.send(input.getData());
     }
   }
-  
+
   /**
    * Check if the current holding weapon is valid or not
-   * 
+   *
    * @return True if the weapon is a bad weapon (out of ammo)
    * @return False if the weapon is a good weapon, or there is no weapon
    */
   public boolean badWeapon() {
-     if (this.holding == null) return false;
-     if (this.holding.getAmmo() == 0) {
-       this.holding.destroyWeapon();
-       this.setHolding(null);
-       
-       Weapon sword = new Sword(this.getX(), this.getY(), 50, 50, "newSword@Player", 10, 50, 20, UUID.randomUUID());
-       Client.levelHandler.addGameObject(sword);
-       this.setHolding(sword);
-       return true;
-     }
-     return false;
+    if (this.holding == null) return false;
+    if (this.holding.getAmmo() == 0) {
+      this.holding.destroyWeapon();
+      this.setHolding(null);
+
+      Weapon sword = new Sword(this.getX(), this.getY(), 50, 50, "newSword@Player", 10, 50, 20, UUID.randomUUID());
+      Client.levelHandler.addGameObject(sword);
+      this.setHolding(sword);
+      return true;
+    }
+    return false;
   }
 
   public int getHealth() {
