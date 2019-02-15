@@ -52,8 +52,8 @@ public class LevelHandler {
     }
 
     // Create a list of all GameObject's including players, to give to the bot
-    List<GameObject> allObjs = (List<GameObject>) gameObjects.clone();
-    allObjs.addAll(players);
+    //List<GameObject> allObjs = (List<GameObject>) gameObjects.clone();
+    //allObjs.addAll(players);
 
     //botPlayer = new Bot(600, 500, 100, 100, UUID.randomUUID(), allObjs);
     //botPlayer.setHolding(
