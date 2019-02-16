@@ -39,10 +39,10 @@ public class LevelHandler {
 //    this.root.getChildren().add(gameRoot);
 
     if (isClient) {
-      clientPlayer = new Player(1400, 0, 80, 110, UUID.randomUUID());
+      clientPlayer = new Player(500, 500, 80, 110, UUID.randomUUID());
       clientPlayer.setHolding(
           //new Handgun(500, 500, 100, 100, "Handgun", UUID.randomUUID())
-          new MachineGun(500, 300, 116, 33, "MachineGun@LevelHandler", UUID.randomUUID())
+          new MachineGun(500, 500, 116, 33, "MachineGun@LevelHandler", UUID.randomUUID())
       );
       clientPlayer.initialise(gameRoot);
       players.add(clientPlayer);
@@ -54,7 +54,7 @@ public class LevelHandler {
 
     botPlayer = new Bot(500, 500, 80, 110, UUID.randomUUID(), allObjs);
     botPlayer.setHolding(
-        new Sword(800, 500, 50, 50, "Sword@LevelHandler", 80,
+        new Sword(500, 500, 50, 50, "Sword@LevelHandler", 80,
             0, 0, UUID.randomUUID())
     );
     botPlayer.initialise(gameRoot);
