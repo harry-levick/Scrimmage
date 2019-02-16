@@ -77,18 +77,15 @@ public class Bot extends Player {
       animation.switchDefault();
 
     }
-    if (this.jumpKey) {
-      if (jumpTime > 0) {
-        animation.switchAnimation("jump");
-        rb.moveY(jumpForce);
-        jumpTime -= Physics.TIMESTEP;
-      } else {
-
-      }
-
+    if (this.jumpKey && !jumped) {
+      rb.moveY(jumpForce, 0.33333f);
+      jumped = true;
     }
-    if (!this.jumpKey) {
-      jumpTime = JUMP_LIMIT;
+    if (jumped) {
+      animation.switchAnimation("jump");
+    }
+    if(grounded) {
+      jumped = false;
     }
     if (this.click && holding != null) {
       holding.fire(this.mouseX, this.mouseY);
