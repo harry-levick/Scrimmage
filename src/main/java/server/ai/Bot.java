@@ -14,9 +14,7 @@ import shared.physics.Physics;
 import shared.util.maths.Vector2;
 
 
-/**
- * @author Harry Levick (hxl799)
- */
+/** @author Harry Levick (hxl799) */
 public class Bot extends Player {
 
   public static final int KEY_JUMP = 0;

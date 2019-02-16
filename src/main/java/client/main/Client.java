@@ -272,19 +272,23 @@ public class Client extends Application {
         int messageID = Integer.parseInt(message.substring(0, 1));
         Packet packet;
         switch (messageID) {
-          //PlayerJoin
+            // PlayerJoin
           case 4:
             PacketPlayerJoin packetPlayerJoin = new PacketPlayerJoin(message);
             levelHandler.addPlayer(
-                new Player(packetPlayerJoin.getX(), packetPlayerJoin.getY(), 100, 100,
+                new Player(
+                    packetPlayerJoin.getX(),
+                    packetPlayerJoin.getY(),
+                    100,
+                    100,
                     packetPlayerJoin.getUUID()));
             break;
-          //End
+            // End
           case 6:
             PacketEnd packetEnd = new PacketEnd(message);
             multiplayer = false;
-            //Show score board
-            //Main Menu
+            // Show score board
+            // Main Menu
 
         }
       } catch (InterruptedException e) {
@@ -292,5 +296,4 @@ public class Client extends Application {
       }
     }
   }
-
 }

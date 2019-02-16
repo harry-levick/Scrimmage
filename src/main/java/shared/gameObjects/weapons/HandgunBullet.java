@@ -2,9 +2,7 @@ package shared.gameObjects.weapons;
 
 import java.util.UUID;
 
-/**
- * @author Henry Fung (hlf764)
- */
+/** @author Henry Fung (hlf764) */
 public class HandgunBullet extends Bullet {
 
   private static String imagePath = "images/weapons/fireBullet.png";
@@ -25,9 +23,8 @@ public class HandgunBullet extends Bullet {
 
   @Override
   public void initialiseAnimation() {
-    //this.animation.supplyAnimation("default", this.imagePath);
-    this.animation
-        .supplyAnimationWithSize("default", this.getWidth(), this.getWidth(), true, this.imagePath);
+    // this.animation.supplyAnimation("default", this.imagePath);
+    this.animation.supplyAnimationWithSize(
+        "default", this.getWidth(), this.getWidth(), true, this.imagePath);
   }
-
 }

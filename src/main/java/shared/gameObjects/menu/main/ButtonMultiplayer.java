@@ -32,7 +32,7 @@ public class ButtonMultiplayer extends ButtonObject {
 
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
-    Client.levelHandler
-        .changeMap(new Map("Multiplayer", Menu.MULTIPLAYER.getMenuPath(), GameState.Multiplayer));
+    Client.levelHandler.changeMap(
+        new Map("Multiplayer", Menu.MULTIPLAYER.getMenuPath(), GameState.Multiplayer));
   }
 }

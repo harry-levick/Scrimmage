@@ -3,6 +3,9 @@ package shared.gameObjects.players;
 import client.handlers.connectionHandler.ConnectionHandler;
 import client.handlers.inputHandler.InputHandler;
 import client.main.Client;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.UUID;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
@@ -12,15 +15,19 @@ import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.weapons.Weapon;
 import shared.packets.PacketInput;
 import shared.physics.Physics;
+import shared.physics.data.Collision;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.RigidbodyType;
+import shared.util.maths.Vector2;
 
 public class Player extends GameObject {
 
   protected final float speed = 10;
-  protected final float jumpForce = -10;
+  protected final float jumpForce = -200;
   protected final float JUMP_LIMIT = 2.0f;
   protected float jumpTime;
+  protected boolean jumped;
+  protected boolean grounded;
   protected int health;
   protected Weapon holding;
   protected Rigidbody rb;
@@ -48,6 +55,7 @@ public class Player extends GameObject {
 
   @Override
   public void update() {
+    checkGrounded(); //Checks if the player is grounded
     // Check if the current holding is valid
     // Change the weapon to Punch if it is not
     badWeapon();
@@ -69,6 +77,20 @@ public class Player extends GameObject {
     return null;
   }
 
+  public void checkGrounded() {
+    ArrayList<Collision> cols = Physics.boxcastAll(getTransform().getPos().add(Vector2.Down().mult(getTransform().getSize().getY())), getTransform().getSize().mult(new Vector2(1, 0.05f)));
+    if (cols.isEmpty()) {
+      grounded = false;
+    }
+    else {
+      for (Collision c : cols) {
+        if (c.getCollidedObject().getBodyType() == RigidbodyType.STATIC) {
+          grounded = true;
+          return;
+        }
+      }
+    }
+  }
   public void applyInput(boolean multiplayer, ConnectionHandler connectionHandler) {
     if (InputHandler.rightKey) {
       rb.moveX(speed);
@@ -86,18 +108,15 @@ public class Player extends GameObject {
       animation.switchDefault();
 
     }
-    if (InputHandler.jumpKey) {
-      if (jumpTime > 0) {
-        animation.switchAnimation("jump");
-        rb.moveY(jumpForce);
-        jumpTime -= Physics.TIMESTEP;
-      } else {
-
-      }
-
+    if (InputHandler.jumpKey && !jumped) {
+        rb.moveY(jumpForce, 0.33333f);
+        jumped = true;
     }
-    if (!InputHandler.jumpKey) {
-      jumpTime = JUMP_LIMIT;
+    if (jumped) {
+      animation.switchAnimation("jump");
+    }
+    if(grounded) {
+      jumped = false;
     }
     if (InputHandler.click && holding != null) {
       holding.fire(InputHandler.x, InputHandler.y);

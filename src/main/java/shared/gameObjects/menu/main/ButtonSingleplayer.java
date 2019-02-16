@@ -31,6 +31,4 @@ public class ButtonSingleplayer extends ButtonObject {
     super.doOnClick(e);
     Client.levelHandler.changeMap(Client.levelHandler.getMaps().get(1));
   }
-
-
 }

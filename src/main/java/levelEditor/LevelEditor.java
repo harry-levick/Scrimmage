@@ -243,7 +243,7 @@ public class LevelEditor extends Application {
         new EventHandler<ActionEvent>() {
           @Override
           public void handle(ActionEvent event) {
-            MapLoader.saveMap(gameObjects, mapDataObject, "menu.map");
+            MapLoader.saveMap(gameObjects, mapDataObject, "main_menu.map");
           }
         });
     btnSave.setLayoutX(200);
