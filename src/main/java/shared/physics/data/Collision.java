@@ -89,7 +89,7 @@ public class Collision {
   }
 
   public Vector2 getPointOfCollision() {
-    return null;
+    return new Vector2(0, 0);
   }
   @Override
   public String toString() {
