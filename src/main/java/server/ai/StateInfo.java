@@ -9,7 +9,6 @@ public class StateInfo {
   protected static double weaponRange;
   protected static int ammoLeft;
   protected static int botHealth;
-  protected static int enemyHealth;
 
   protected static void setInfo(Player target, Player bot) {
     weaponRange =
@@ -19,6 +18,5 @@ public class StateInfo {
     ammoLeft = (bot.getHolding().isGun()) ? bot.getHolding().getAmmo() : 0;
 
     botHealth = bot.getHealth();
-    enemyHealth = target.getHealth();
   }
 }
