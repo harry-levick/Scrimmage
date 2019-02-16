@@ -54,7 +54,7 @@ public class LevelHandler {
 
     botPlayer = new Bot(500, 300, 80, 110, UUID.randomUUID(), allObjs);
     botPlayer.setHolding(
-        new Sword(800, 500, 50, 50, "Sword@LevelHandler", 100,
+        new Sword(800, 500, 50, 50, "Sword@LevelHandler", 80,
             0, 0, UUID.randomUUID())
     );
     botPlayer.initialise(gameRoot);

@@ -56,9 +56,7 @@ public enum FSA {
       if ((newDist <= weaponRange)
           && ((ammoLeft > 0) && bot.getHolding().isGun()
           || bot.getHolding().isMelee())
-          && (botHealth >= this.HIGH_HEALTH)
-          // Target staying relatively still
-          /**&& (prevDist * 1.05 <= newDist && newDist <= prevDist * 1.05)*/) {
+          && (botHealth >= this.HIGH_HEALTH)) {
         return ATTACKING;
 
       } else if ((newDist <= weaponRange)
