@@ -15,6 +15,7 @@ import shared.gameObjects.weapons.Melee;
 import shared.gameObjects.weapons.Weapon;
 import shared.physics.Physics;
 import shared.physics.data.Collision;
+import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
 
 /**
@@ -395,8 +396,9 @@ public class AStar {
     // TODO possibly change this to .Left()
     Collision viscinityLeft = Physics.boxcast(botPosition, botSize, botPosition.Right().mult(-1),
         10f);
-    if (viscinityLeft == null /**||
-        botPosition.exactMagnitude(viscinityLeft.getPointOfCollision()) > 10*/) {
+    if (viscinityLeft == null ||
+        viscinityLeft.getCollidedObject().getBodyType() != RigidbodyType.STATIC ||
+        botPosition.exactMagnitude(viscinityLeft.getPointOfCollision()) > 10) {
       // If no collision, or if the collision is far away
       possibleActions.add(createAction(false, true, false, false));
     }
@@ -404,8 +406,10 @@ public class AStar {
     // Box cast to the right
     Collision viscinityRight = Physics.boxcast(botPosition, botSize, botPosition.Right(),
         10f);
-    if (viscinityRight == null /**||
-        botPosition.exactMagnitude(viscinityRight.getPointOfCollision()) > 10*/) {
+
+    if (viscinityRight == null ||
+        viscinityRight.getCollidedObject().getBodyType() != RigidbodyType.STATIC ||
+        botPosition.exactMagnitude(viscinityRight.getPointOfCollision()) > 10) {
       // If no collision, or if the collision is far away
       possibleActions.add(createAction(false, false, true, false));
     }
@@ -415,7 +419,9 @@ public class AStar {
         10f);
     // TODO: add a way of detecting if we can jump + (left or right)
     // If no collision, or if collision is far away
-    if (viscinityUp == null || botPosition.exactMagnitude(viscinityUp.getPointOfCollision()) > 10) {
+    if (viscinityUp == null ||
+      viscinityUp.getCollidedObject().getBodyType() != RigidbodyType.STATIC /**||
+      botPosition.exactMagnitude(viscinityUp.getPointOfCollision()) > 10*/) {
       // Just jump
       possibleActions.add(createAction(true, false, false, false));
       // Jump to the right
