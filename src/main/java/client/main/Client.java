@@ -23,7 +23,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.LevelHandler;
-import shared.handlers.levelHandler.Map;
 import shared.packets.PacketEnd;
 import shared.packets.PacketGameState;
 import shared.packets.PacketPlayerJoin;
@@ -50,7 +49,6 @@ public class Client extends Application {
   private Group backgroundRoot;
   private Group gameRoot;
   private Scene scene;
-  private Map currentMap;
   private float maximumStep;
   private long previousTime;
   private float accumulatedTime;
@@ -66,7 +64,6 @@ public class Client extends Application {
     setupRender(primaryStage);
     levelHandler = new LevelHandler(settings, root, backgroundRoot, gameRoot, true);
     audio = new AudioHandler(settings);
-    currentMap = levelHandler.getMap();
 
     // Main Game Loop
     new AnimationTimer() {
@@ -75,12 +72,6 @@ public class Client extends Application {
 
         if (multiplayer) {
           processServerPackets();
-        }
-
-        // Changes Map/Level
-        if (currentMap != levelHandler.getMap()) {
-          levelHandler.generateLevel(root, backgroundRoot, gameRoot, true);
-          currentMap = levelHandler.getMap();
         }
 
         if (previousTime == 0) {

@@ -2,76 +2,57 @@ package shared.handlers.levelHandler;
 
 import client.main.Settings;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.UUID;
 import javafx.scene.Group;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.MachineGun;
-import shared.gameObjects.weapons.Sword;
 import shared.util.Path;
 
 public class LevelHandler {
 
-  private ArrayList<GameObject> gameObjects = new ArrayList<>();
-  /*  toRemove will remove all gameObjects it contains from gameObjects list
-   *  and clear the list for next frame. */
-  private ArrayList<GameObject> toRemove = new ArrayList<>();
-  private ArrayList<Player> players = new ArrayList<>();
+  private ArrayList<GameObject> gameObjects;
+  private ArrayList<GameObject> toRemove;
+  private ArrayList<Player> players;
   private Player clientPlayer;
   private ArrayList<Map> maps;
-  private HashMap<String, Map> menus;
   private GameState gameState;
   private Map map;
   private Group root;
   private Group backgroundRoot;
   private Group gameRoot;
+  private boolean isClient;
 
   public LevelHandler(Settings settings, Group root, Group backgroundRoot, Group gameRoot,
       boolean isClient) {
-    this.root = root;
-    this.backgroundRoot = backgroundRoot;
-    this.gameRoot = gameRoot;
-//    this.root.getChildren().add(backgroundRoot);
-//    this.root.getChildren().add(gameRoot);
-
+    this.isClient = isClient;
+    gameObjects = new ArrayList<>();
+    toRemove = new ArrayList<>();
+    players = new ArrayList<>();
+    maps = MapLoader.getMaps(settings.getMapsPath());
     if (isClient) {
-      clientPlayer = new Player(500, 892, 80, 110, UUID.randomUUID());
+      this.root = root;
+      this.backgroundRoot = backgroundRoot;
+      this.gameRoot = gameRoot;
+      clientPlayer = new Player(500, 200, 80, 110, UUID.randomUUID());
       clientPlayer.setHolding(
-          //new Handgun(500, 500, 100, 100, "Handgun", UUID.randomUUID())
-          new MachineGun(500, 500, 116, 33, "MachineGun@LevelHandler", UUID.randomUUID())
-      );
+          new MachineGun(500, 500, 116, 33, "MachineGun@LevelHandler", UUID.randomUUID()));
       clientPlayer.initialise(gameRoot);
       players.add(clientPlayer);
+      gameObjects.add(clientPlayer.getHolding());
+      clientPlayer.getHolding().initialise(gameRoot);
+      changeMap(new Map("main_menu.map", Path.convert("src/main/resources/menus/main_menu.map"),
+          GameState.IN_GAME));
+      //Test
     }
-    maps = MapLoader.getMaps(settings.getMapsPath());
-    // menus = MapLoader.getMaps(settings.getMenuPath());
-    // menus = MapLoader.getMenuMaps(settings.getMenuPath());
-    // Set initial game level as the Main Menu
-    map = new Map("MainMenu", Path.convert("src/main/resources/menus/main_menu.map"),
-        GameState.MAIN_MENU);
-    generateLevel(root, backgroundRoot, gameRoot, isClient);
-
-    gameObjects.add(clientPlayer.getHolding());
-    clientPlayer.getHolding().initialise(gameRoot);
   }
 
-  public boolean changeMap(Map map) {
-    if (maps.contains(map)) {
+  public void changeMap(Map map) {
       this.map = map;
-      return true;
-    }
-    return false;
+    generateLevel(root, backgroundRoot, gameRoot, isClient);
   }
 
-  public boolean changeMenu(Map menu) {
-    if (menus.containsValue(menu)) {
-      this.map = menu;
-      return true;
-    }
-    return false;
-  }
 
   /**
    * NOTE: This to change the level use change Map Removes current game objects and creates new ones
@@ -80,7 +61,9 @@ public class LevelHandler {
   public void generateLevel(Group root, Group backgroundGroup, Group gameGroup, boolean isClient) {
 
     // Remove current game objects
-    gameObjects.remove(clientPlayer);
+    if (isClient) {
+      gameObjects.remove(clientPlayer);
+    }
     gameObjects.forEach(gameObject -> gameObject.removeRender());
     gameObjects.forEach(gameObject -> gameObject = null);
     gameObjects.clear();
@@ -89,11 +72,7 @@ public class LevelHandler {
     gameObjects = MapLoader.loadMap(map.getPath());
     gameObjects.forEach(
         gameObject -> {
-          if (gameObject.getId() == ObjectID.MapDataObject && isClient) {
-            // clientPlayer.setX(gameObject.getX());
-            // clientPlayer.setY(gameObject.getY());
-            // gameObjects.remove(gameObject); // todo check if this should be done
-          } else if (gameObject.getId() == ObjectID.Background) {
+          if (gameObject.getId() == ObjectID.Background) {
             gameObject.initialise(backgroundGroup);
           } else {
             gameObject.initialise(gameGroup);
@@ -142,14 +121,6 @@ public class LevelHandler {
     return maps;
   }
 
-  /**
-   * List of all available menus,
-   *
-   * @return All Menus
-   */
-  public HashMap<String, Map> getMenus() {
-    return menus;
-  }
 
   /**
    * Current State of Game, eg Main_Menu or In_Game

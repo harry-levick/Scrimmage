@@ -81,6 +81,7 @@ public abstract class GameObject implements Serializable {
 
   // Client Side only
   public void render() {
+
     imageView.setFitHeight(transform.getSize().getY());
     imageView.setFitWidth(transform.getSize().getX());
     imageView.setImage(animation.getImage());
@@ -146,12 +147,14 @@ public abstract class GameObject implements Serializable {
 
   // Ignore for now, added due to unSerializable objects
   public void initialise(Group root) {
-    this.root = root;
-    animation = new Animator();
-    initialiseAnimation();
-    imageView = new ImageView();
-    imageView.setRotate(rotation);
-    root.getChildren().add(this.imageView);
+    if (root != null) {
+      this.root = root;
+      animation = new Animator();
+      initialiseAnimation();
+      imageView = new ImageView();
+      imageView.setRotate(rotation);
+      root.getChildren().add(this.imageView);
+    }
     if (getComponent(ComponentType.COLLIDER) != null && Physics.showColliders) {
       ((BoxCollider) getComponent(ComponentType.COLLIDER)).initialise(root);
     }
