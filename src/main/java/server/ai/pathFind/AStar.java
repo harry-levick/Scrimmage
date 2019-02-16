@@ -394,8 +394,7 @@ public class AStar {
 
     // Box cast to the left
     // TODO possibly change this to .Left()
-    Collision viscinityLeft = Physics.boxcast(botPosition, botSize, botPosition.Right().mult(-1),
-        10f);
+    Collision viscinityLeft = Physics.boxcast(botPosition.add(Vector2.Left().mult(botSize)), botSize);
     if (viscinityLeft == null ||
         viscinityLeft.getCollidedObject().getBodyType() != RigidbodyType.STATIC ||
         botPosition.exactMagnitude(viscinityLeft.getPointOfCollision()) > 10) {
@@ -404,8 +403,7 @@ public class AStar {
     }
 
     // Box cast to the right
-    Collision viscinityRight = Physics.boxcast(botPosition, botSize, botPosition.Right(),
-        10f);
+    Collision viscinityRight = Physics.boxcast(botPosition.add(Vector2.Right().mult(botSize)), botSize);
 
     if (viscinityRight == null ||
         viscinityRight.getCollidedObject().getBodyType() != RigidbodyType.STATIC ||
@@ -415,8 +413,7 @@ public class AStar {
     }
 
     // Box cast upwards
-    Collision viscinityUp = Physics.boxcast(botPosition, botSize, botPosition.Up(),
-        10f);
+    Collision viscinityUp = Physics.boxcast(botPosition.add(Vector2.Up().mult(botSize)), botSize);
     // TODO: add a way of detecting if we can jump + (left or right)
     // If no collision, or if collision is far away
     if (viscinityUp == null ||
