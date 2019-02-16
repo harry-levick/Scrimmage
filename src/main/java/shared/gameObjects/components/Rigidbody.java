@@ -131,9 +131,9 @@ public class Rigidbody extends Component implements Serializable {
    */
   public void move(Vector2 distance, float time) {
     if (time <= 0) {
-      deltaPosUpdate = deltaPosUpdate.add(distance);
+      velocity = velocity.add(distance.div(Physics.TIMESTEP));
     } else {
-      this.velocity = distance.div(time);
+      this.velocity = velocity.add(distance.div(time));
     }
   }
 
@@ -194,7 +194,7 @@ public class Rigidbody extends Component implements Serializable {
                     .mult(
                         new Vector2(1, getVelocity().getY())
                             .mult(
-                                Vector2.Down()
+                                Vector2.Right()
                                     .mult(
                                         Math.min(
                                             getMaterial().getRestitution(),
@@ -238,7 +238,7 @@ public class Rigidbody extends Component implements Serializable {
       currentForce =
           currentForce.add(Vector2.Down().mult(airDrag).mult(velocity).mult(-0.5f * mass));
     } else {
-      if (currentForce.getX() > gravityForce * material.getStaticFriction()) {
+      if (currentForce.getX() >= gravityForce * material.getStaticFriction()) {
         currentForce =
             currentForce.add(
                 Vector2.Right()
