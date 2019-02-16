@@ -127,9 +127,6 @@ public class AStar {
 
   /**
    * Returns if a node is already in the closed list
-   *
-   * @param node
-   * @return
    */
   private boolean isInClosed(SearchNode node) {
     // Is the x and y coords of the given node too close the the coords of a node in the visited

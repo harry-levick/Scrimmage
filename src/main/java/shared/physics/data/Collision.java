@@ -17,8 +17,7 @@ public class Collision {
   private CollisionDirection direction;
 
   /**
-   * @param collidedObject
-   * @param direction
+   *
    */
   public Collision(Rigidbody collidedObject, CollisionDirection direction) {
     this.collidedObject = collidedObject;
@@ -35,7 +34,9 @@ public class Collision {
             a.collision();
             break;
           } else {
-            if (b.isTrigger()) break;
+            if (b.isTrigger()) {
+              break;
+            }
             collision =
                 new Collision(
                     collidedBody,
@@ -46,11 +47,13 @@ public class Collision {
 
         break;
       case EDGE:
-        if (Collider.boxEdgeCollision(a, (EdgeCollider) b)) {}
+        if (Collider.boxEdgeCollision(a, (EdgeCollider) b)) {
+        }
 
         break;
       case CIRCLE:
-        if (Collider.boxCircleCollision(a, (CircleCollider) b)) {}
+        if (Collider.boxCircleCollision(a, (CircleCollider) b)) {
+        }
 
         break;
     }
@@ -61,13 +64,15 @@ public class Collision {
   public static Collision resolveCollision(CircleCollider a, Collider b) {
     switch (b.getColliderType()) {
       case BOX:
-        if (Collider.boxCircleCollision((BoxCollider) b, a)) {}
+        if (Collider.boxCircleCollision((BoxCollider) b, a)) {
+        }
 
         break;
       case EDGE:
         break;
       case CIRCLE:
-        if (Collider.circleCircleCollision(a, (CircleCollider) b)) {}
+        if (Collider.circleCircleCollision(a, (CircleCollider) b)) {
+        }
 
         break;
     }

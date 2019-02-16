@@ -35,6 +35,7 @@ public class MachineGun extends Gun {
           new MachineGunBullet(
               getX(), getY(), 10, 10, mouseX, mouseY, this.bulletWidth, this.bulletSpeed, uuid);
       this.currentCooldown = getDefaultCoolDown();
+      deductAmmo();
     }
   }
 

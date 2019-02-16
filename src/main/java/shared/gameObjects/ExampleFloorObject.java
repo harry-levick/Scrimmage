@@ -76,7 +76,8 @@ public class ExampleFloorObject extends GameObject {
   }
 
   @Override
-  public void interpolatePosition(float alpha) {}
+  public void interpolatePosition(float alpha) {
+  }
 
   @Override
   public String getState() {
