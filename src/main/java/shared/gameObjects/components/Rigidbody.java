@@ -133,7 +133,7 @@ public class Rigidbody extends Component implements Serializable {
     if (time <= 0) {
       deltaPosUpdate = deltaPosUpdate.add(distance);
     } else {
-      setVelocity(distance.div(time));
+      this.velocity = distance.div(time);
     }
   }
 
@@ -305,9 +305,8 @@ public class Rigidbody extends Component implements Serializable {
                 .getTransform()
                 .getPos()
                 .add(Vector2.Down().mult(-0.06f * getParent().getTransform().getSize().getY())),
-            getParent().getTransform().getSize(),
-            Vector2.Zero(),
-            0);
+            getParent().getTransform().getSize()
+        );
     for (Collision c : moveCols) {
       if (c.getCollidedObject().getBodyType() == RigidbodyType.STATIC) canUp = false;
     }
@@ -317,9 +316,8 @@ public class Rigidbody extends Component implements Serializable {
                 .getTransform()
                 .getPos()
                 .add(Vector2.Down().mult(0.06f * getParent().getTransform().getSize().getY())),
-            getParent().getTransform().getSize(),
-            Vector2.Zero(),
-            0);
+            getParent().getTransform().getSize()
+        );
     for (Collision c : moveCols) {
       if (c.getCollidedObject().getBodyType() == RigidbodyType.STATIC) canDown = false;
     }
@@ -329,9 +327,8 @@ public class Rigidbody extends Component implements Serializable {
                 .getTransform()
                 .getPos()
                 .add(Vector2.Right().mult(0.06f * getParent().getTransform().getSize().getY())),
-            getParent().getTransform().getSize(),
-            Vector2.Zero(),
-            0);
+            getParent().getTransform().getSize()
+        );
     for (Collision c : moveCols) {
       if (c.getCollidedObject().getBodyType() == RigidbodyType.STATIC) canRight = false;
     }
@@ -341,9 +338,8 @@ public class Rigidbody extends Component implements Serializable {
                 .getTransform()
                 .getPos()
                 .add(Vector2.Right().mult(-0.06f * getParent().getTransform().getSize().getX())),
-            getParent().getTransform().getSize(),
-            Vector2.Zero(),
-            0);
+            getParent().getTransform().getSize()
+        );
     for (Collision c : moveCols) {
       if (c.getCollidedObject().getBodyType() == RigidbodyType.STATIC) canLeft = false;
     }
@@ -392,6 +388,7 @@ public class Rigidbody extends Component implements Serializable {
   public void setVelocity(Vector2 velocity) {
     this.velocity = velocity;
     acceleration = Vector2.Zero();
+    System.out.println(this.velocity);
   }
 
   public RigidbodyType getBodyType() {

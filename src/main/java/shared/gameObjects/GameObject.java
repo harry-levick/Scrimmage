@@ -94,9 +94,8 @@ public abstract class GameObject implements Serializable {
       collision =
           Physics.boxcastAll(
               getTransform().getPos().add(rb.getVelocity().mult(Physics.TIMESTEP)),
-              getTransform().getSize().mult(0.9f),
-              Vector2.Zero(),
-              0);
+              getTransform().getSize()
+          );
       for (Collision c : collision) {
         if (!c.getCollidedObject().equals(rb)) {
           rb.getCollisions().add(c);

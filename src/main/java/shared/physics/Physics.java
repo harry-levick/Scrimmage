@@ -24,10 +24,10 @@ public class Physics {
    * Casts a ray that interacts with colliders.
    *
    * @param sourcePos The point to start casting the ray
-   * @param distance The length of the ray
+   * @param line The length and direction of the ray
    * @return The first collider hit in the path, null if nothing was hit.
    */
-  public static Collision raycast(Vector2 sourcePos, float distance) {
+  public static Collision raycast(Vector2 sourcePos, Vector2 line) {
     return null;
   }
 
@@ -35,17 +35,21 @@ public class Physics {
    * Casts a ray that interacts with colliders.
    *
    * @param sourcePos The point to start casting the ray
-   * @param distance The length of the ray
-   * @return All colliders hit in the path, null if nothing was hit.
+   * @param line The length and direction of the ray
+   * @return All colliders hit in the path, empty if nothing was hit.
    */
-  public static ArrayList<Collision> raycastAll(Vector2 sourcePos, float distance) {
+  public static ArrayList<Collision> raycastAll(Vector2 sourcePos, Vector2 line) {
     return null;
   }
 
-  public static Collision boxcast(
-      Vector2 sourcePos, Vector2 size, Vector2 direction, float distance) {
-    direction = direction.normalize().mult(distance);
-    BoxCollider castCollider = new BoxCollider(sourcePos, size.mult(direction));
+    /**
+     * Creates a box collider that returns all collisions it hits
+     * @param sourcePos The top-right corner of the box
+     * @param size The extents of the box
+     * @return The first collider hit in the path, null if nothing was hit
+     */
+  public static Collision boxcast(Vector2 sourcePos, Vector2 size) {
+    BoxCollider castCollider = new BoxCollider(sourcePos, size);
     Collision collision;
     for (GameObject object : gameObjects) {
       if (object.getComponent(ComponentType.COLLIDER) != null) {
@@ -57,10 +61,13 @@ public class Physics {
     }
     return null;
   }
-
-  public static ArrayList<Collision> boxcastAll(
-      Vector2 sourcePos, Vector2 size, Vector2 direction, float distance) {
-    direction = direction.normalize().add(distance);
+    /**
+     * Creates a box collider that returns all collisions it hits
+     * @param sourcePos The top-right corner of the box
+     * @param size The extents of the box
+     * @return All colliders hit in the path, null if nothing was hit
+     */
+  public static ArrayList<Collision> boxcastAll(Vector2 sourcePos, Vector2 size) {
     BoxCollider castCollider = new BoxCollider(sourcePos, size);
     Collision collision;
     ArrayList<Collision> collisions = new ArrayList<>();
@@ -77,11 +84,11 @@ public class Physics {
     return collisions;
   }
 
-  public static Collision circlecast(Vector2 sourcePos, float distance) {
+  public static Collision circlecast(Vector2 sourcePos, float radius) {
     return null;
   }
 
-  public static ArrayList<Collision> circlecastAll(Vector2 sourcePos, float distance) {
+  public static ArrayList<Collision> circlecastAll(Vector2 sourcePos, float radius) {
     return null;
   }
 }
