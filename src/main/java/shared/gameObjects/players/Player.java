@@ -34,7 +34,7 @@ public class Player extends GameObject {
   public Player(double x, double y, double sizeX, double sizeY, UUID playerUUID) {
     super(x, y, sizeX, sizeY, ObjectID.Player, playerUUID);
     addComponent(new BoxCollider(this, false));
-    rb = new Rigidbody(RigidbodyType.DYNAMIC, 100, 10, 0.7f, new MaterialProperty(0.005f, 0, 0.6f),
+    rb = new Rigidbody(RigidbodyType.DYNAMIC, 100, 10, 0.7f, new MaterialProperty(0.005f, 0, 0),
         null, this);
     addComponent(rb);
     this.health = 100;
@@ -102,12 +102,12 @@ public class Player extends GameObject {
   }
   public void applyInput(boolean multiplayer, ConnectionHandler connectionHandler) {
     if (InputHandler.rightKey) {
-      rb.moveX(speed);
+        rb.setVelocity(new Vector2(speed, rb.getVelocity().getY()));
       animation.switchAnimation("walk");
       imageView.setScaleX(1);
     }
     if (InputHandler.leftKey) {
-      rb.moveX(speed * -1);
+      rb.setVelocity(new Vector2(speed*-1, rb.getVelocity().getY()));
       animation.switchAnimation("walk");
       imageView.setScaleX(-1);
     }
@@ -173,6 +173,17 @@ public class Player extends GameObject {
       return true;
     }
     return false;
+  }
+  
+  public void deductHp(Weapon w) {
+    this.health -= w.getDamage();
+    if (this.health <= 0) {
+      // die
+    }
+  }
+  
+  public void setHealth(int hp) {
+    this.health = hp;
   }
 
   public int getHealth() {
