@@ -60,7 +60,7 @@ public class Client extends Application {
   @Override
   public void start(Stage primaryStage) {
     setupRender(primaryStage);
-    levelHandler = new LevelHandler(settings, root, backgroundRoot, gameRoot, true);
+    levelHandler = new LevelHandler(settings, root, backgroundRoot, gameRoot);
     keyInput = new KeyboardInput();
     mouseInput = new MouseInput();
     // Setup Input

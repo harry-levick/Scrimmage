@@ -18,6 +18,8 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import javafx.animation.AnimationTimer;
+import javafx.application.Application;
+import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import shared.gameObjects.players.Player;
@@ -30,7 +32,7 @@ import shared.packets.PacketMap;
 import shared.physics.Physics;
 import shared.util.Path;
 
-public class Server implements Runnable {
+public class Server extends Application {
 
   private static final Logger LOGGER = LogManager.getLogger(Client.class.getName());
 
@@ -48,19 +50,19 @@ public class Server implements Runnable {
   private final int maxPlayers = 4;
   public ServerState serverState;
   public ConcurrentMap<UUID, BlockingQueue<PacketInput>> clientTable = new ConcurrentHashMap<>();
-  private Thread t;
   private String threadName;
   private DatagramSocket socket;
   private InetAddress group;
   private LinkedList<Map> playlist;
 
-  public Server() {
+  public static void main(String args[]) {
+    launch(args);
+  }
+
+  public void init() {
     threadName = "Server";
     settings = new Settings();
     playlist = new LinkedList();
-    levelHandler = new LevelHandler(settings, null, null, null, false);
-    levelHandler.changeMap(
-        new Map("Lobby", Path.convert("src/main/resources/menus/lobby.map"), GameState.Lobby));
 
     //Testing code
     playlist
@@ -69,12 +71,57 @@ public class Server implements Runnable {
         .add(new Map("Map2", Path.convert("src/main/resources/maps/map2.map"), GameState.IN_GAME));
   }
 
-  public void start() {
-    LOGGER.debug("Starting " + threadName);
-    if (t == null) {
-      t = new Thread(this, threadName);
-      t.start();
-    }
+  @Override
+  public void start(Stage primaryStage) throws Exception {
+    levelHandler = new LevelHandler(settings);
+    levelHandler.changeMap(
+        new Map("Lobby", Path.convert("src/main/resources/menus/lobby.map"), GameState.Lobby));
+    running.set(true);
+    LOGGER.debug("Running " + threadName);
+    serverState = ServerState.WAITING_FOR_PLAYERS;
+    setupSocket();
+    /** Receiver from clients */
+    ServerReceiver receiver = new ServerReceiver(this);
+    receiver.start();
+
+    /** Setup Game timer */
+    TimerTask task = new TimerTask() {
+      @Override
+      public void run() {
+        gameOver.set(true);
+      }
+    };
+    Timer timer = new Timer("Timer", true);
+    timer.schedule(task, 300000L);
+
+    new AnimationTimer() {
+
+      @Override
+      public void handle(long now) {
+        if (!running.get()) {
+          this.stop();
+        }
+        counter.getAndIncrement();
+        if (playerCount.get() == maxPlayers) {
+          serverState = ServerState.WAITING_FOR_READYUP;
+        }
+        if (playerCount.get() > 1 && readyCount.get() == playerCount.get()) {
+          startMatch();
+        }
+
+        checkConditions();
+
+        /** Process Inputs and Update */
+        processInputs();
+        updateSimulation();
+
+        /** Send update to all clients */
+        if (counter.get() == serverUpdateRate) {
+          counter.set(0);
+          sendWorldState();
+        }
+      }
+    }.start();
   }
 
   public void stop() {
@@ -95,7 +142,12 @@ public class Server implements Runnable {
   public void processInputs() {
     for (Player player : levelHandler.getPlayers()) {
       PacketInput input = clientTable.get(player.getUUID()).poll();
-      //set for each
+      player.mouseY = input.getY();
+      player.mouseX = input.getX();
+      player.leftKey = input.isLeftKey();
+      player.rightKey = input.isRightKey();
+      player.jumpKey = input.isJumpKey();
+      player.click = input.isClick();
     }
   }
 
@@ -140,7 +192,7 @@ public class Server implements Runnable {
           dead++;
         }
       }
-      if (dead == playerCount.get() || dead == (playerCount.get() - 1)) {
+      if (playerCount.get() > 0 && dead == playerCount.get() || dead == (playerCount.get() - 1)) {
         nextMap();
       }
     }
@@ -156,56 +208,6 @@ public class Server implements Runnable {
       LOGGER.error("Failed to create server group");
     }
 
-  }
-
-  @Override
-  public void run() {
-    running.set(true);
-    LOGGER.debug("Running " + threadName);
-    serverState = ServerState.WAITING_FOR_PLAYERS;
-    setupSocket();
-    /** Receiver from clients */
-    ServerReceiver receiver = new ServerReceiver(this);
-    receiver.start();
-
-    /** Setup Game timer */
-    TimerTask task = new TimerTask() {
-      @Override
-      public void run() {
-        gameOver.set(true);
-      }
-    };
-    Timer timer = new Timer("Timer", true);
-    timer.schedule(task, 300000L);
-
-    new AnimationTimer() {
-
-      @Override
-      public void handle(long now) {
-        if (!running.get()) {
-          this.stop();
-        }
-        counter.getAndIncrement();
-        if (playerCount.get() == maxPlayers) {
-          serverState = ServerState.WAITING_FOR_READYUP;
-        }
-        if (readyCount.get() == playerCount.get()) {
-          startMatch();
-        }
-
-        checkConditions();
-
-        /** Process Inputs and Update */
-        processInputs();
-        updateSimulation();
-
-        /** Send update to all clients */
-        if (counter.get() == serverUpdateRate) {
-          counter.set(0);
-          sendWorldState();
-        }
-      }
-    }.start();
   }
 
   public ConcurrentMap<UUID, BlockingQueue<PacketInput>> getClientTable() {

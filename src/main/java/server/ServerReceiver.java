@@ -13,6 +13,7 @@ import shared.gameObjects.players.Player;
 import shared.packets.PacketInput;
 import shared.packets.PacketPlayerJoin;
 import shared.packets.PacketReady;
+import shared.packets.PacketResponse;
 
 public class ServerReceiver implements Runnable {
 
@@ -30,6 +31,7 @@ public class ServerReceiver implements Runnable {
     try {
       socket = new DatagramSocket(4445);
     } catch (SocketException e) {
+      e.printStackTrace();
       LOGGER.error("Error - Couldn't create socket in " + threadName);
     }
   }
@@ -39,7 +41,6 @@ public class ServerReceiver implements Runnable {
     if (t == null) {
       t = new Thread(this, threadName);
       t.start();
-      t.setDaemon(true);
     }
   }
 
@@ -67,7 +68,14 @@ public class ServerReceiver implements Runnable {
                 new Player(joinPacket.getX(), joinPacket.getY(), 80, 110, joinPacket.getUUID()));
             server.clientTable.put(joinPacket.getUUID(), new LinkedBlockingQueue<>());
             server.playerCount.getAndIncrement();
-            //Send response to client
+            PacketResponse responsePacket = new PacketResponse(true, "192.0.0.0");
+            packet = new DatagramPacket(responsePacket.getData(), responsePacket.getData().length,
+                address, port);
+            try {
+              socket.send(packet);
+            } catch (IOException e) {
+              e.printStackTrace();
+            }
           }
           break;
         case 2:

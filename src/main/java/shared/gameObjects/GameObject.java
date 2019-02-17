@@ -68,7 +68,7 @@ public abstract class GameObject implements Serializable {
 
   // Server and Client side
   public void update() {
-    animation.update();
+    //animation.update();
     Collider col = (Collider) getComponent(ComponentType.COLLIDER);
     Rigidbody rb = (Rigidbody) getComponent(ComponentType.RIGIDBODY);
     if (rb != null) {
