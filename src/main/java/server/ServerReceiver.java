@@ -11,9 +11,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import shared.gameObjects.players.Player;
 import shared.packets.PacketInput;
-import shared.packets.PacketPlayerJoin;
+import shared.packets.PacketJoin;
 import shared.packets.PacketReady;
-import shared.packets.PacketResponse;
 
 public class ServerReceiver implements Runnable {
 
@@ -60,14 +59,16 @@ public class ServerReceiver implements Runnable {
       int packetID = Integer.parseInt(received.split(",")[0]);
 
       switch (packetID) {
-        case 4:
+        case 0:
           if (server.playerCount.get() < 4
               && server.serverState == ServerState.WAITING_FOR_PLAYERS) {
-            PacketPlayerJoin joinPacket = new PacketPlayerJoin(received);
-            Server.levelHandler.addPlayer(
-                new Player(joinPacket.getX(), joinPacket.getY(), 80, 110, joinPacket.getUUID()));
-            server.clientTable.put(joinPacket.getUUID(), new LinkedBlockingQueue<>());
+            PacketJoin joinPacket = new PacketJoin(received);
+            Player newPlayer = new Player(joinPacket.getX(), joinPacket.getY(), 80, 110, joinPacket.getClientID());
+            newPlayer.initialise(null);
+            Server.levelHandler.addPlayer(newPlayer);
+            server.clientTable.put(joinPacket.getClientID(), new LinkedBlockingQueue<>());
             server.playerCount.getAndIncrement();
+            /**
             PacketResponse responsePacket = new PacketResponse(true, "192.0.0.0");
             packet = new DatagramPacket(responsePacket.getData(), responsePacket.getData().length,
                 address, port);
@@ -76,6 +77,8 @@ public class ServerReceiver implements Runnable {
             } catch (IOException e) {
               e.printStackTrace();
             }
+             **/
+            System.out.println("test");
           }
           break;
         case 2:

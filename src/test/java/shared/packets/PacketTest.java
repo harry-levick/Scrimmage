@@ -31,7 +31,7 @@ public class PacketTest {
 
   @Test
   public void JoinPacketTest() {
-    PacketJoin join = new PacketJoin(uuid, username);
+    PacketJoin join = new PacketJoin(uuid, username, x ,y);
     byte[] simulateNetwork = join.getData();
     PacketJoin output = new PacketJoin(Arrays.toString(simulateNetwork));
     assertEquals(output.getClientID(), uuid);

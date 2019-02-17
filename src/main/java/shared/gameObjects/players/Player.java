@@ -86,8 +86,8 @@ public class Player extends GameObject {
 
   @Override
   public String getState() {
-    return objectUUID + ";" + getX() + ";" + getY() + ";" + animation.getName() + ";" + health + ";"
-        + holding.getUUID();
+    return objectUUID + ";" + getX() + ";" + getY() + ";" + animation.getName() + ";" + health;
+    //add holding
   }
 
   @Override

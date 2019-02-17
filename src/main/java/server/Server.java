@@ -45,8 +45,8 @@ public class Server extends Application {
   private final AtomicBoolean gameOver = new AtomicBoolean(false);
   private final AtomicInteger counter = new AtomicInteger(0);
   private final int serverUpdateRate = 10;
-  private final int port = 4446;
-  private final String address = "230.0.0.0";
+  private final int multicastPort = 4446;
+  private final String multicastAddress = "230.0.0.0";
   private final int maxPlayers = 4;
   public ServerState serverState;
   public ConcurrentMap<UUID, BlockingQueue<PacketInput>> clientTable = new ConcurrentHashMap<>();
@@ -109,7 +109,7 @@ public class Server extends Application {
           startMatch();
         }
 
-        checkConditions();
+        if (serverState == ServerState.IN_GAME) checkConditions();
 
         /** Process Inputs and Update */
         processInputs();
@@ -142,17 +142,19 @@ public class Server extends Application {
   public void processInputs() {
     for (Player player : levelHandler.getPlayers()) {
       PacketInput input = clientTable.get(player.getUUID()).poll();
-      player.mouseY = input.getY();
-      player.mouseX = input.getX();
-      player.leftKey = input.isLeftKey();
-      player.rightKey = input.isRightKey();
-      player.jumpKey = input.isJumpKey();
-      player.click = input.isClick();
+      if (input != null) {
+        player.mouseY = input.getY();
+        player.mouseX = input.getX();
+        player.leftKey = input.isLeftKey();
+        player.rightKey = input.isRightKey();
+        player.jumpKey = input.isJumpKey();
+        player.click = input.isClick();
+      }
     }
   }
 
   public void sendToClients(byte[] buffer) {
-    DatagramPacket packet = new DatagramPacket(buffer, buffer.length, group, port);
+    DatagramPacket packet = new DatagramPacket(buffer, buffer.length, group, multicastPort);
     try {
       socket.send(packet);
     } catch (IOException e) {
@@ -201,7 +203,7 @@ public class Server extends Application {
   public void setupSocket() {
     try {
       socket = new DatagramSocket();
-      group = InetAddress.getByName(address);
+      group = InetAddress.getByName(multicastAddress);
     } catch (SocketException e) {
       LOGGER.error("Failed to create server socket");
     } catch (UnknownHostException e) {

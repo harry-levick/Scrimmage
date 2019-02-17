@@ -274,6 +274,11 @@ public class Client extends Application {
             HashMap<UUID, String> data = gameState.getGameObjects();
             levelHandler.getGameObjects()
                 .forEach(gameObject -> gameObject.setState(data.get(gameObject.getUUID())));
+            break;
+          default:
+            System.out.println(messageID);
+            System.out.println(message);
+
         }
       } catch (InterruptedException e) {
         e.printStackTrace();
