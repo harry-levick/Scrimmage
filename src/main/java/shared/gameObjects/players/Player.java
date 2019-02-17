@@ -174,10 +174,11 @@ public class Player extends GameObject {
     return false;
   }
   
-  public void deductHp(Weapon w) {
-    this.health -= w.getDamage();
+  public void deductHp(int damage) {
+    this.health -= damage;
     if (this.health <= 0) {
-      // die
+      this.setActive(false);
+      this.imageView.setRotate(90);
     }
   }
   
