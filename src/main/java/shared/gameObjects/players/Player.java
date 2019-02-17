@@ -143,6 +143,13 @@ public class Player extends GameObject {
      return false;
   }
   
+  public void deductHp(Weapon w) {
+    this.health -= w.getDamage();
+    if (this.health <= 0) {
+      // die
+    }
+  }
+  
   public void setHealth(int hp) {
     this.health = hp;
   }
