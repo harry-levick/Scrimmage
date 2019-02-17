@@ -1,6 +1,7 @@
 package levelEditor;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
@@ -476,11 +477,16 @@ public class LevelEditor extends Application {
     root.getChildren().add(text);
     text.setTranslateX(20);
     text.setTranslateY(20);
+    Text errorText = new Text("");
+    root.getChildren().add(errorText);
+    errorText.setStyle("-fx-fill: red;");
+    errorText.setTranslateX(20);
+    errorText.setTranslateY(60);
     TextField field = new TextField();
     field.setPromptText("Enter the name of the map...");
     root.getChildren().add(field);
     field.setTranslateX(20);
-    field.setTranslateY(50);
+    field.setTranslateY(70);
     Button save = new Button();
     save.setText("Save");
     save.setOnAction(
@@ -488,13 +494,26 @@ public class LevelEditor extends Application {
           @Override
           public void handle(ActionEvent event) {
             filename = field.getText();
-            MapLoader.saveMap(gameObjects, mapDataObject, filename);
-            dialog.close();
+            File f = new File(filename);
+            boolean valid = false;
+            try {
+              f.getCanonicalPath();
+              valid = true;
+            } catch (IOException e) {
+              valid = false;
+            }
+            if (valid) {
+              MapLoader.saveMap(gameObjects, mapDataObject, filename + ".map");
+              errorText.setStyle("-fx-fill: green");
+              errorText.setText("Saved");
+              dialog.close();
+            } else {
+              errorText.setText("Invalid file name");
+            }
           }
-        }
-    );
+        });
     save.setLayoutX(20);
-    save.setLayoutY(90);
+    save.setLayoutY(110);
     root.getChildren().add(save);
     Button cancel = new Button();
     cancel.setText("Cancel");
@@ -508,10 +527,10 @@ public class LevelEditor extends Application {
         }
     );
     cancel.setLayoutX(80);
-    cancel.setLayoutY(90);
+    cancel.setLayoutY(110);
     root.getChildren().add(cancel);
 
-    Scene dialogScene = new Scene(root, 450, 130);
+    Scene dialogScene = new Scene(root, 450, 150);
     dialog.setScene(dialogScene);
     dialog.show();
 
