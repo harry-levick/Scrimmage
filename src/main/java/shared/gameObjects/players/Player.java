@@ -21,7 +21,7 @@ import shared.util.maths.Vector2;
 
 public class Player extends GameObject {
 
-  protected final float speed = 10;
+  protected final float speed = 100;
   protected final float jumpForce = -200;
   protected final float JUMP_LIMIT = 2.0f;
   protected float jumpTime;
