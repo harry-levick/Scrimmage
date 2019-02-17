@@ -42,7 +42,6 @@ public abstract class Melee extends Weapon {
     this.angles = generateAngles();
     this.attacking = false;
     this.currentAngleIndex = 0;
-    System.out.println("@Melee angles[0]="+this.angles[0]);
     
     addComponent(new CircleCollider(this, (float)range, false));
     rb = new Rigidbody(
