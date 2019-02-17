@@ -1,12 +1,18 @@
 package shared.gameObjects.weapons;
 
 import client.main.Client;
+import java.util.ArrayList;
 import java.util.UUID;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.components.BoxCollider;
+import shared.gameObjects.components.Collider;
+import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.Rigidbody;
+import shared.gameObjects.players.Player;
+import shared.physics.Physics;
 import shared.physics.data.AngularData;
+import shared.physics.data.Collision;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
@@ -21,6 +27,7 @@ public abstract class Bullet extends GameObject {
   private double width;     // width of bullet
   private double speed;     // speed of bullet
   private Vector2 vector;   // Vector of the force of bullet fire
+  private int damage;       // Damage of this bullet
 
   public Bullet(
       double gunX, // gun initial x position
@@ -31,11 +38,13 @@ public abstract class Bullet extends GameObject {
       double mouseY, // mouse initial y position
       double width, // the width of the bullet
       double speed, // the speed of the bullet
+      int damage,  // damage of this bullet
       UUID uuid) { // uuid of this bullet
 
     super(gunX, gunY, sizeX, sizeY, ObjectID.Bullet, uuid);
     setWidth(width);
     setSpeed(speed);
+    this.damage = damage;
 
     // Unit vector of the bullet force
     vector = new Vector2((float) (mouseX - gunX), (float) (mouseY - gunY));
@@ -64,11 +73,38 @@ public abstract class Bullet extends GameObject {
 
   @Override
   public void update() {
+    ArrayList<Collision> collision = Physics.boxcastAll(
+        new Vector2((float)getX(), (float)getY()), new Vector2((float)this.width, (float)this.width));
+    ArrayList<Player> playersBeingHit = new ArrayList<>();
+    
+    System.out.println("=============start==============");
+    for (Collision c: collision) {
+      GameObject g = c.getCollidedObject().getParent();
+      if (g.getId() == ObjectID.Player) {
+        System.out.print(g.toString() + " -> ");
+        System.out.println(((Player)g).getHealth());
+        playersBeingHit.add((Player)g);
+        isHit = true;
+      }
+    }
+    System.out.println("================end===========");
+    
+    if (((Collider)(getComponent(ComponentType.COLLIDER))).onCollisionEnter()) {
+      isHit = true;
+      // Probably use raycast and check collision type
+      System.out.println("==============================================");
+      System.out.println(getComponent(ComponentType.COLLIDER).getParent());
+      System.out.println("==============================================");
+    }
+    
     if (isHit) {
       Client.levelHandler.delGameObject(this);
+      for (Player p : playersBeingHit) {
+        p.deductHp(this.damage);
+      }
       // apply effect (deduct hp, play sound)
     } else if ((0 < getX() && getX() < 1920) && (0 < getY() && getY() < 1080)) {
-        rb.move(vector.mult((float) speed));
+      rb.move(vector.mult((float) speed));
       super.update();
     }
     else {
