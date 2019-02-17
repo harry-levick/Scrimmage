@@ -19,8 +19,16 @@ public class Punch extends Melee {
    * @param range Range of punch, measured forward
    * @param uuid UUID
    */
-  public Punch(double x, double y, double sizeX, double sizeY, ObjectID id, double damage,
-      String name, double range, UUID uuid) {
+  public Punch(
+      double x,
+      double y, 
+      double sizeX, 
+      double sizeY, 
+      ObjectID id, 
+      int damage,
+      String name, 
+      double range, 
+      UUID uuid) {
     super(x, y, sizeX, sizeY, id, damage, 1, name, -1, 60, range, 1, 1, uuid);
 
   }

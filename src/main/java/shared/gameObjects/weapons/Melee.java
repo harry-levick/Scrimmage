@@ -17,7 +17,7 @@ public abstract class Melee extends Weapon {
       double sizeX,
       double sizeY,
       ObjectID id,
-      double damage,
+      int damage,
       double weight,
       String name,
       int ammo,
