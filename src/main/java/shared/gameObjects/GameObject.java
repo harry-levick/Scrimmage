@@ -136,7 +136,8 @@ public abstract class GameObject implements Serializable {
    * @return State of object
    */
   public String getState() {
-    return objectUUID + ";" + getX() + ";" + getY() + ";" + animation.getName();
+    String test = objectUUID + ";" + getX() + ";" + getY() + ";" + animation.getName();
+    return test;
   }
 
   public void setState(String data) {
@@ -148,12 +149,12 @@ public abstract class GameObject implements Serializable {
 
   // Ignore for now, added due to unSerializable objects
   public void initialise(Group root) {
-    if (root != null) {
-      this.root = root;
       animation = new Animator();
       initialiseAnimation();
       imageView = new ImageView();
       imageView.setRotate(rotation);
+    if (root != null) {
+      this.root = root;
       root.getChildren().add(this.imageView);
     }
     if (getComponent(ComponentType.COLLIDER) != null && Physics.showColliders) {

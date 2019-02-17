@@ -38,6 +38,7 @@ import shared.gameObjects.menu.main.ButtonLeveleditor;
 import shared.gameObjects.menu.main.ButtonMultiplayer;
 import shared.gameObjects.menu.main.ButtonSettings;
 import shared.gameObjects.menu.main.ButtonSingleplayer;
+import shared.gameObjects.menu.multiplayer.ButtonJoin;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.Handgun;
 import shared.handlers.levelHandler.GameState;
@@ -89,6 +90,7 @@ public class LevelEditor extends Application {
     objectMap.put(OBJECT_TYPES.BTN_ST, new GameObjectTuple("Settings Button", 6, 2));
     objectMap.put(OBJECT_TYPES.BTN_LE, new GameObjectTuple("Level Editor Button", 6, 2));
     objectMap.put(OBJECT_TYPES.WPN_HG, new GameObjectTuple("Handgun", 2, 2));
+    objectMap.put(OBJECT_TYPES.BTN_JOIN, new GameObjectTuple("ButtonJoin", 6,2));
   }
 
   private void scenePrimaryClick(Stage primaryStage, Group root, Group objects, Group background, MouseEvent event) {
@@ -160,6 +162,17 @@ public class LevelEditor extends Application {
         case BTN_SP:
           temp =
               new ButtonSingleplayer(
+                  getGridX(event.getX()),
+                  getGridY(event.getY()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getX()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getY()),
+                  ObjectID.Bot,
+                  uuid);
+          break;
+
+        case BTN_JOIN:
+          temp =
+              new ButtonJoin(
                   getGridX(event.getX()),
                   getGridY(event.getY()),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
@@ -368,7 +381,7 @@ public class LevelEditor extends Application {
   }
 
   protected enum OBJECT_TYPES {
-    FLOOR, WALL, PLAYER, BTN_SP, BTN_MP, BTN_ST, BTN_LE, WPN_HG, BACKGROUND, BACKGROUND1
+    FLOOR, WALL, PLAYER, BTN_SP, BTN_MP, BTN_ST, BTN_LE, WPN_HG, BACKGROUND, BACKGROUND1, BTN_JOIN
   }
 
   private void initialiseNewMap() {
