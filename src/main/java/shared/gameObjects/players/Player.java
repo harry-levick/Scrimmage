@@ -165,8 +165,7 @@ public class Player extends GameObject {
       this.holding.destroyWeapon();
       this.setHolding(null);
 
-      Weapon sword = new Sword(this.getX(), this.getY(), 50, 50, "newSword@Player", 10, 50, 20,
-          UUID.randomUUID());
+      Weapon sword = new Sword(this.getX(), this.getY(), 50, 50, "newSword@Player", UUID.randomUUID());
       sword.initialise(root);
       Client.levelHandler.addGameObject(sword);
       this.setHolding(sword);
