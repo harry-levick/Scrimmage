@@ -160,6 +160,7 @@ public class LevelHandler {
 
   public void addPlayer(Player newPlayer) {
     players.add(newPlayer);
+    gameObjects.add(newPlayer);
   }
 
   public Player getClientPlayer() {

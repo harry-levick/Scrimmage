@@ -146,7 +146,8 @@ public class Player extends GameObject {
               InputHandler.leftKey,
               InputHandler.rightKey,
               InputHandler.jumpKey,
-              InputHandler.click);
+              InputHandler.click,
+              getUUID());
       connectionHandler.send(input.getData());
     }
   }
