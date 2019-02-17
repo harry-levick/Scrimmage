@@ -142,6 +142,10 @@ public class Player extends GameObject {
      }
      return false;
   }
+  
+  public void setHealth(int hp) {
+    this.health = hp;
+  }
 
   public int getHealth() {
     return health;
