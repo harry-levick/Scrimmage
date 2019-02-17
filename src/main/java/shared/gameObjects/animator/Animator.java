@@ -58,8 +58,8 @@ public class Animator {
    * @param ratio True if ratio is preserved
    * @param paths Multiple paths to images
    */
-  public void supplyAnimationWithSize(String animationName, double h, double w, boolean ratio,
-      String... paths) {
+  public void supplyAnimationWithSize(
+      String animationName, double h, double w, boolean ratio, String... paths) {
     ArrayList<Image> images = new ArrayList<>();
     for (String path : paths) {
       images.add(new Image(path.replace('/', File.separatorChar).trim(), w, h, ratio, true));

@@ -19,6 +19,4 @@ public enum PacketID {
   public int getID() {
     return this.packetID;
   }
-
-
 }

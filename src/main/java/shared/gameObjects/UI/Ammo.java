@@ -20,6 +20,4 @@ public class Ammo extends GameObject {
     // TODO Auto-generated method stub
     return null;
   }
-
-
 }

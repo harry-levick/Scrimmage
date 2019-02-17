@@ -25,9 +25,8 @@ public class HandgunBullet extends Bullet {
 
   @Override
   public void initialiseAnimation() {
-    //this.animation.supplyAnimation("default", this.imagePath);
-    this.animation
-        .supplyAnimationWithSize("default", this.getWidth(), this.getWidth(), true, this.imagePath);
+    // this.animation.supplyAnimation("default", this.imagePath);
+    this.animation.supplyAnimationWithSize(
+        "default", this.getWidth(), this.getWidth(), true, this.imagePath);
   }
-
 }

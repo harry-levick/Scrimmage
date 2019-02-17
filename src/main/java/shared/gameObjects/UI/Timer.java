@@ -20,6 +20,4 @@ public class Timer extends GameObject {
     // TODO Auto-generated method stub
     return null;
   }
-
-
 }

@@ -86,6 +86,7 @@ local.properties
 
 # Generated files
 .idea/**/contentModel.xml
+.idea/**/compiler.xml
 
 # Sensitive or high-churn files
 .idea/**/dataSources/
@@ -154,7 +155,6 @@ modules.xml
 .idea/vcs.xml
 google-java-format.xml
 codeStyleConfig.xml
-
 # Sonarlint plugin
 .idea/sonarlint
 

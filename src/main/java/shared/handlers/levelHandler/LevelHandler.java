@@ -4,10 +4,12 @@ import client.main.Settings;
 import java.util.ArrayList;
 import java.util.UUID;
 import javafx.scene.Group;
+import server.ai.Bot;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.MachineGun;
+import shared.gameObjects.weapons.Sword;
 import shared.util.Path;
 
 public class LevelHandler {
@@ -15,7 +17,9 @@ public class LevelHandler {
   private ArrayList<GameObject> gameObjects;
   private ArrayList<GameObject> toRemove;
   private ArrayList<Player> players;
+  private ArrayList<Bot> bots;
   private Player clientPlayer;
+  private Bot botPlayer;
   private ArrayList<Map> maps;
   private GameState gameState;
   private Map map;
@@ -30,7 +34,9 @@ public class LevelHandler {
     gameObjects = new ArrayList<>();
     toRemove = new ArrayList<>();
     players = new ArrayList<>();
+    bots = new ArrayList<>();
     maps = MapLoader.getMaps(settings.getMapsPath());
+
     if (isClient) {
       this.root = root;
       this.backgroundRoot = backgroundRoot;
@@ -44,7 +50,16 @@ public class LevelHandler {
       clientPlayer.getHolding().initialise(gameRoot);
       changeMap(new Map("main_menu.map", Path.convert("src/main/resources/menus/main_menu.map"),
           GameState.IN_GAME));
-      //Test
+      botPlayer = new Bot(500, 500, 80, 110, UUID.randomUUID(), gameObjects);
+      botPlayer.setHolding(
+          new Sword(500, 500, 50, 50, "Sword@LevelHandler", 80,
+              0, 0, UUID.randomUUID())
+      );
+      botPlayer.getHolding().initialise(gameRoot);
+      botPlayer.initialise(gameRoot);
+      bots.add(botPlayer);
+      gameObjects.add(botPlayer);
+      gameObjects.add(botPlayer.getHolding());
     }
   }
 
@@ -60,10 +75,8 @@ public class LevelHandler {
    */
   public void generateLevel(Group root, Group backgroundGroup, Group gameGroup, boolean isClient) {
 
-    // Remove current game objects
-    if (isClient) {
-      gameObjects.remove(clientPlayer);
-    }
+    gameObjects.removeAll(players);
+    gameObjects.removeAll(bots);
     gameObjects.forEach(gameObject -> gameObject.removeRender());
     gameObjects.forEach(gameObject -> gameObject = null);
     gameObjects.clear();
@@ -78,7 +91,8 @@ public class LevelHandler {
             gameObject.initialise(gameGroup);
           }
         });
-    gameObjects.add(clientPlayer);
+    gameObjects.addAll(players);
+    gameObjects.addAll(bots);
     gameState = map.getGameState();
     System.gc();
   }
@@ -150,6 +164,10 @@ public class LevelHandler {
 
   public Player getClientPlayer() {
     return clientPlayer;
+  }
+
+  public Bot getBotPlayer() {
+    return botPlayer;
   }
 
   /**

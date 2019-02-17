@@ -81,7 +81,6 @@ public abstract class GameObject implements Serializable {
 
   // Client Side only
   public void render() {
-
     imageView.setFitHeight(transform.getSize().getY());
     imageView.setFitWidth(transform.getSize().getX());
     imageView.setImage(animation.getImage());
@@ -98,9 +97,11 @@ public abstract class GameObject implements Serializable {
     }
     ArrayList<Collision> collision = null;
     if (col != null) {
-      collision = Physics
-          .boxcastAll(getTransform().getPos().add(rb.getVelocity().mult(Physics.TIMESTEP)),
-              getTransform().getSize().mult(0.9f), Vector2.Zero(), 0);
+      collision =
+          Physics.boxcastAll(
+              getTransform().getPos().add(rb.getVelocity().mult(Physics.TIMESTEP)),
+              getTransform().getSize()
+          );
       for (Collision c : collision) {
         if (!c.getCollidedObject().equals(rb)) {
           rb.getCollisions().add(c);
@@ -321,6 +322,5 @@ public abstract class GameObject implements Serializable {
     } catch (Exception e) {
       return false;
     }
-
   }
 }
