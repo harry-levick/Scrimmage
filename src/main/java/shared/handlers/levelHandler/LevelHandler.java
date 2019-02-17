@@ -43,7 +43,8 @@ public class LevelHandler {
       this.gameRoot = gameRoot;
       clientPlayer = new Player(500, 200, 80, 110, UUID.randomUUID());
       clientPlayer.setHolding(
-          //new MachineGun(500, 500, 116, 33, "MachineGun@LevelHandler", UUID.randomUUID());
+          new MachineGun(500, 500, 116, 33, "MachineGun@LevelHandler", UUID.randomUUID())
+          /*
           new Sword(
               500, 
               200, 
@@ -52,6 +53,7 @@ public class LevelHandler {
               "Sword@LevelHandler",
               UUID.randomUUID()
           )
+          */
       );
       
       clientPlayer.initialise(gameRoot);
