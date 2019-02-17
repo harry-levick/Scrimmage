@@ -5,22 +5,16 @@ import shared.gameObjects.Utils.ObjectID;
 
 public class MachineGun extends Gun {
 
-  private static String imagePath = "images/weapons/machinegun.png";  // path to Machine Gun image
+  private static String imagePath = "images/weapons/machinegun.png"; // path to Machine Gun image
 
-  public MachineGun(
-      double x,
-      double y,
-      double sizeX,
-      double sizeY,
-      String name,
-      UUID uuid) {
+  public MachineGun(double x, double y, double sizeX, double sizeY, String name, UUID uuid) {
 
     super(
         x,
         y,
         sizeX,
         sizeY,
-        ObjectID.Weapon, // ObjectID 
+        ObjectID.Weapon, // ObjectID
         5, // damage
         10, // weight
         name,
@@ -28,20 +22,18 @@ public class MachineGun extends Gun {
         50, // bulletSpeed
         70, // fireRate
         50, // bulletWidth
-        true, // fullAutoFire 
+        true, // fullAutoFire
         false, // singleHanded
-        uuid
-    );
-
+        uuid);
   }
 
   @Override
   public void fire(double mouseX, double mouseY) {
     if (canFire()) {
       UUID uuid = UUID.randomUUID();
-      Bullet bullet = new MachineGunBullet(getX(), getY(), 100, 100, mouseX, mouseY, this.bulletWidth,
-          this.bulletSpeed,
-          uuid);
+      Bullet bullet =
+          new MachineGunBullet(
+              getX(), getY(), 10, 10, mouseX, mouseY, this.bulletWidth, this.bulletSpeed, uuid);
       this.currentCooldown = getDefaultCoolDown();
       deductAmmo();
     }
@@ -61,7 +53,6 @@ public class MachineGun extends Gun {
 
   @Override
   public void interpolatePosition(float alpha) {
-
   }
 
   @Override
@@ -71,7 +62,7 @@ public class MachineGun extends Gun {
 
   @Override
   public void initialiseAnimation() {
-    //this.animation.supplyAnimation("default", imagePath);
+    // this.animation.supplyAnimation("default", imagePath);
     this.animation.supplyAnimationWithSize("default", 40, 40, true, imagePath);
   }
 }

@@ -16,13 +16,7 @@ public class Handgun extends Gun {
    * @param name Name of the gun
    * @param uuid UUID of the gun
    */
-  public Handgun(
-      double x,
-      double y,
-      double sizeX,
-      double sizeY,
-      String name,
-      UUID uuid) {
+  public Handgun(double x, double y, double sizeX, double sizeY, String name, UUID uuid) {
     super(
         x,
         y,
@@ -45,9 +39,9 @@ public class Handgun extends Gun {
   public void fire(double mouseX, double mouseY) {
     if (canFire()) {
       UUID uuid = UUID.randomUUID();
-      Bullet bullet = new HandgunBullet(getX(), getY(), 10, 10, mouseX, mouseY, this.bulletWidth,
-          this.bulletSpeed,
-          uuid);
+      Bullet bullet =
+          new HandgunBullet(
+              getX(), getY(), 10, 10, mouseX, mouseY, this.bulletWidth, this.bulletSpeed, uuid);
       this.currentCooldown = getDefaultCoolDown();
       deductAmmo();
     }

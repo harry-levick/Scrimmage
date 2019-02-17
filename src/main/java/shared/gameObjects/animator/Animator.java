@@ -10,6 +10,7 @@ public class Animator {
   // Helpful variables
   private HashMap<String, ArrayList<Image>> animations;
   private ArrayList<Image> currentAnimation;
+  private String currentAnimationName;
 
   private int intervalSpeed;
   private int tickCounter;
@@ -43,6 +44,7 @@ public class Animator {
     // Support for the default animation
     if (animationName.equals("default")) {
       currentAnimation = animations.get("default");
+      currentAnimationName = "default";
       switchDefault();
     }
   }
@@ -56,8 +58,8 @@ public class Animator {
    * @param ratio True if ratio is preserved
    * @param paths Multiple paths to images
    */
-  public void supplyAnimationWithSize(String animationName, double h, double w, boolean ratio,
-      String... paths) {
+  public void supplyAnimationWithSize(
+      String animationName, double h, double w, boolean ratio, String... paths) {
     ArrayList<Image> images = new ArrayList<>();
     for (String path : paths) {
       images.add(new Image(path.replace('/', File.separatorChar).trim(), w, h, ratio, true));
@@ -78,6 +80,7 @@ public class Animator {
         currentAnimationSize = currentAnimation.size();
         currentAnimationCounter = 0;
         tickCounter = intervalSpeed;
+        currentAnimationName = animationName;
       }
     } catch (Exception e) {
       System.out.println("No animation of name " + animationName + " exists. Exepction:" + e);
@@ -103,5 +106,9 @@ public class Animator {
   public Image getImage() {
 
     return currentAnimation.get(currentAnimationCounter);
+  }
+
+  public String getName() {
+    return currentAnimationName;
   }
 }

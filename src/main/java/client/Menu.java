@@ -17,5 +17,4 @@ public enum Menu {
   public String getMenuPath() {
     return this.menuPath;
   }
-
 }

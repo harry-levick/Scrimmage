@@ -97,9 +97,11 @@ public abstract class GameObject implements Serializable {
     }
     ArrayList<Collision> collision = null;
     if (col != null) {
-      collision = Physics
-          .boxcastAll(getTransform().getPos().add(rb.getVelocity().mult(Physics.TIMESTEP)),
-              getTransform().getSize().mult(0.9f), Vector2.Zero(), 0);
+      collision =
+          Physics.boxcastAll(
+              getTransform().getPos().add(rb.getVelocity().mult(Physics.TIMESTEP)),
+              getTransform().getSize()
+          );
       for (Collision c : collision) {
         if (!c.getCollidedObject().equals(rb)) {
           rb.getCollisions().add(c);
@@ -133,16 +135,27 @@ public abstract class GameObject implements Serializable {
    *
    * @return State of object
    */
-  public abstract String getState();
+  public String getState() {
+    return objectUUID + ";" + getX() + ";" + getY() + ";" + animation.getName();
+  }
+
+  public void setState(String data) {
+    String[] unpackedData = data.split(";");
+    setX(Double.parseDouble(unpackedData[1]));
+    setY(Double.parseDouble(unpackedData[2]));
+    this.animation.switchAnimation(unpackedData[3]);
+  }
 
   // Ignore for now, added due to unSerializable objects
   public void initialise(Group root) {
-    this.root = root;
-    animation = new Animator();
-    initialiseAnimation();
-    imageView = new ImageView();
-    imageView.setRotate(rotation);
-    root.getChildren().add(this.imageView);
+    if (root != null) {
+      this.root = root;
+      animation = new Animator();
+      initialiseAnimation();
+      imageView = new ImageView();
+      imageView.setRotate(rotation);
+      root.getChildren().add(this.imageView);
+    }
     if (getComponent(ComponentType.COLLIDER) != null && Physics.showColliders) {
       ((BoxCollider) getComponent(ComponentType.COLLIDER)).initialise(root);
     }
@@ -309,6 +322,5 @@ public abstract class GameObject implements Serializable {
     } catch (Exception e) {
       return false;
     }
-
   }
 }

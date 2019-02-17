@@ -27,10 +27,9 @@ public class Punch extends Melee {
       ObjectID id, 
       int damage,
       String name, 
-      double range, 
+      double range,
       UUID uuid) {
     super(x, y, sizeX, sizeY, id, damage, 1, name, -1, 60, range, 1, 1, uuid);
-
   }
 
   @Override
@@ -44,5 +43,4 @@ public class Punch extends Melee {
     // TODO Auto-generated method stub
     return null;
   }
-
 }

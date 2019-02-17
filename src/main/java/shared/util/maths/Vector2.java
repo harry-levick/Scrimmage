@@ -27,8 +27,16 @@ public class Vector2 implements Serializable {
     return new Vector2(1, 0);
   }
 
-  public static Vector2 Up() {
+  public static Vector2 Left() {
+    return new Vector2(-1, 0);
+  }
+
+  public static Vector2 Down() {
     return new Vector2(0, 1);
+  }
+
+  public static Vector2 Up() {
+    return new Vector2(0, -1);
   }
 
   public Vector2 mult(float scalar) {
@@ -129,16 +137,22 @@ public class Vector2 implements Serializable {
     return (float) Math.acos(dot(vector) / (magnitude(Zero()) * vector.magnitude(Zero())));
   }
 
-  /**
-   * Angle of the vector with respect to world space
-   */
+  /** Angle of the vector with respect to world space */
   public float angle() {
     return angleBetween(Zero());
   }
 
   /**
-   * Clamps the vector between the two values
+   * Computes the cross product between two vectors.
    */
+  public Vector2 cross(Vector2 vector) {
+    float x, y;
+    x = getX() * vector.getY();
+    y = -1 * getY() * vector.getX();
+    return new Vector2(x, y);
+  }
+
+  /** Clamps the vector between the two values */
   public Vector2 clamp(Vector2 min, Vector2 max) {
     float x, y;
     x = Math.max(min.getX(), Math.min(max.getX(), getX()));

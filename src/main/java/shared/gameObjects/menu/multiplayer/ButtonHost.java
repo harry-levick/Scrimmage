@@ -25,8 +25,8 @@ public class ButtonHost extends ButtonObject {
 
   @Override
   public void initialiseAnimation() {
-    super.initialiseAnimation("images/buttons/multiplayer_unpressed.png",
-        "images/buttons/multiplayer_pressed.png");
+    super.initialiseAnimation(
+        "images/buttons/multiplayer_unpressed.png", "images/buttons/multiplayer_pressed.png");
   }
 
   public void doOnClick(MouseEvent e) {

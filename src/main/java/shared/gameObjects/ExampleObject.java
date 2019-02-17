@@ -75,7 +75,6 @@ public class ExampleObject extends GameObject {
     }
   }
 
-
   @Override
   public void interpolatePosition(float alpha) {
   }

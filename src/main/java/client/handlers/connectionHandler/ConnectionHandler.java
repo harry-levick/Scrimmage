@@ -43,8 +43,9 @@ public class ConnectionHandler extends Thread {
 
   public void run() {
     try {
-      Packet joinPacket = new PacketJoin(Client.levelHandler.getClientPlayer().getUUID(),
-          Client.settings.getUsername());
+      Packet joinPacket =
+          new PacketJoin(
+              Client.levelHandler.getClientPlayer().getUUID(), Client.settings.getUsername());
       this.send(joinPacket.getData());
       socket.setSoTimeout(60000);
       DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
@@ -55,7 +56,7 @@ public class ConnectionHandler extends Thread {
         if (responsePacket.isAccepted()) {
           addressRecieve = InetAddress.getByName(responsePacket.getMultiAddress());
           Client.multiplayer = true;
-          //Client.levelHandler.changeMap(lobby)
+          // Client.levelHandler.changeMap(lobby)
         }
       }
     } catch (IOException e) {
