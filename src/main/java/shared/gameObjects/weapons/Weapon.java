@@ -91,10 +91,6 @@ public abstract class Weapon extends GameObject {
     return this.currentCooldown <= 0;
   }
   
-  public void deductHp(Player p) {
-    //p.setHealth(p.getHealth() - this.damage);
-  }
-  
   public void destroyWeapon() {
     Client.levelHandler.delGameObject(this);
   }
