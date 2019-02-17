@@ -18,9 +18,10 @@ public class HandgunBullet extends Bullet {
       double mouseY,
       double width,
       double speed,
+      int damage,
       UUID uuid) {
 
-    super(gunX, gunY, sizeX, sizeY, mouseX, mouseY, width, speed, uuid);
+    super(gunX, gunY, sizeX, sizeY, mouseX, mouseY, width, speed, damage, uuid);
   }
 
   @Override
