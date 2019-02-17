@@ -38,7 +38,6 @@ public class LevelCreator extends Application {
 
   @Override
   public void start(Stage primaryStage) {
-    System.out.println("START");
     Group root = new Group();
     // CLASS TO AUTO RECREATE MAPS
     String filename = "";
@@ -54,12 +53,13 @@ public class LevelCreator extends Application {
     ////////////////////////////////////////
     // MAIN MENU
     ////////////////////////////////////////
-    filename = "mainmenu";
+    filename = "main_menu";
     gameObjects = new ArrayList<GameObject>();
     playerSpawns = new ArrayList<Player>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.MAIN_MENU);
     mapDataObject.setBackground(
-        new Background("images/backgrounds/base.png", ObjectID.Background, UUID.randomUUID()));
+        new Background("images/backgrounds/background1.png", ObjectID.Background,
+            UUID.randomUUID()));
     gameObjects.add(
         new ButtonSingleplayer(getAbs(20), getAbs(7), getAbs(8), getAbs(2), ObjectID.Button,
             UUID.randomUUID()));
@@ -93,7 +93,7 @@ public class LevelCreator extends Application {
 
     MapLoader.saveMap(gameObjects, mapDataObject, filepath + filename + ".map");
 
-    System.out.println("END");
+    System.out.println("RECREATED MAP FILES");
     Platform.exit();
   }
 }
