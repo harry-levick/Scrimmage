@@ -31,7 +31,7 @@ public class BoxCollider extends Collider implements Serializable {
     corners = new Vector2[4];
 
     corners[0] = sourcePos;
-    corners[1] = sourcePos.add(Vector2.Up().mult(size));
+    corners[1] = sourcePos.add(Vector2.Down().mult(size));
     corners[2] = sourcePos.add(size);
     corners[3] = sourcePos.add(Vector2.Right().mult(size));
   }
@@ -54,7 +54,7 @@ public class BoxCollider extends Collider implements Serializable {
     centre = getParent().getTransform().getPos().add(size.mult(0.5f));
 
     corners[0] = getParent().getTransform().getPos();
-    corners[1] = getParent().getTransform().getPos().add(Vector2.Up().mult(size));
+    corners[1] = getParent().getTransform().getPos().add(Vector2.Down().mult(size));
     corners[2] = getParent().getTransform().getBotPos();
     corners[3] = getParent().getTransform().getPos().add(Vector2.Right().mult(size));
 
@@ -64,7 +64,6 @@ public class BoxCollider extends Collider implements Serializable {
       polygon.setWidth(size.getX());
       polygon.setHeight(size.getY());
     }
-
   }
 
   // Getters

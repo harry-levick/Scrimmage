@@ -4,7 +4,6 @@ import java.util.UUID;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 
-
 public class Background extends GameObject {
 
   private String imagePath;

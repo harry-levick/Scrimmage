@@ -16,8 +16,8 @@ import shared.gameObjects.MapDataObject;
 
 public class MapLoader {
 
-  public static void saveMap(ArrayList<GameObject> gameObjects, MapDataObject mapDataObject,
-      String path) {
+  public static void saveMap(
+      ArrayList<GameObject> gameObjects, MapDataObject mapDataObject, String path) {
     try {
       FileOutputStream fos = new FileOutputStream(path);
       ObjectOutputStream oos = new ObjectOutputStream(fos);

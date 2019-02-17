@@ -1,9 +1,9 @@
 package shared.gameObjects.weapons;
 
+import client.main.Client;
 import java.util.UUID;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
-import client.main.Client;
 
 /**
  * @author hlf764 The abstract class for all weapons in the game.
@@ -23,7 +23,7 @@ public abstract class Weapon extends GameObject {
   protected boolean isGun;
   protected boolean isMelee;
   protected int ammo; // -1 = unlimited
-  protected int fireRate;   // max = MAX_COOLDOWN - 1
+  protected int fireRate; // max = MAX_COOLDOWN - 1
 
   protected int currentCooldown;
 
@@ -69,7 +69,6 @@ public abstract class Weapon extends GameObject {
   }
 
   public abstract void fire(double mouseX, double mouseY);
-
 
   public int getDefaultCoolDown() {
     return MAX_COOLDOWN - this.fireRate;
