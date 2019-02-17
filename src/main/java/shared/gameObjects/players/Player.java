@@ -3,8 +3,6 @@ package shared.gameObjects.players;
 import client.handlers.connectionHandler.ConnectionHandler;
 import client.handlers.inputHandler.InputHandler;
 import client.main.Client;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.UUID;
 import shared.gameObjects.GameObject;
@@ -74,15 +72,26 @@ public class Player extends GameObject {
 
   @Override
   public String getState() {
-    return null;
+    return objectUUID + ";" + getX() + ";" + getY() + ";" + animation.getName() + ";" + health + ";"
+        + holding.getUUID();
+  }
+
+  @Override
+  public void setState(String data) {
+    String[] unpackedData = data.split(";");
+    setX(Double.parseDouble(unpackedData[1]));
+    setY(Double.parseDouble(unpackedData[2]));
+    this.animation.switchAnimation(unpackedData[3]);
+    this.health = Integer.parseInt(unpackedData[4]);
   }
 
   public void checkGrounded() {
-    ArrayList<Collision> cols = Physics.boxcastAll(getTransform().getPos().add(Vector2.Down().mult(getTransform().getSize().getY())), getTransform().getSize().mult(new Vector2(1, 0.05f)));
+    ArrayList<Collision> cols = Physics.boxcastAll(
+        getTransform().getPos().add(Vector2.Down().mult(getTransform().getSize().getY())),
+        getTransform().getSize().mult(new Vector2(1, 0.05f)));
     if (cols.isEmpty()) {
       grounded = false;
-    }
-    else {
+    } else {
       for (Collision c : cols) {
         if (c.getCollidedObject().getBodyType() == RigidbodyType.STATIC) {
           grounded = true;
@@ -109,13 +118,13 @@ public class Player extends GameObject {
 
     }
     if (InputHandler.jumpKey && !jumped) {
-        rb.moveY(jumpForce, 0.33333f);
-        jumped = true;
+      rb.moveY(jumpForce, 0.33333f);
+      jumped = true;
     }
     if (jumped) {
       animation.switchAnimation("jump");
     }
-    if(grounded) {
+    if (grounded) {
       jumped = false;
     }
     if (InputHandler.click && holding != null) {
@@ -149,12 +158,16 @@ public class Player extends GameObject {
    * @return False if the weapon is a good weapon, or there is no weapon
    */
   public boolean badWeapon() {
-    if (this.holding == null) return false;
+    if (this.holding == null) {
+      return false;
+    }
     if (this.holding.getAmmo() == 0) {
       this.holding.destroyWeapon();
       this.setHolding(null);
 
-      Weapon sword = new Sword(this.getX(), this.getY(), 50, 50, "newSword@Player", 10, 50, 20, UUID.randomUUID());
+      Weapon sword = new Sword(this.getX(), this.getY(), 50, 50, "newSword@Player", 10, 50, 20,
+          UUID.randomUUID());
+      sword.initialise(root);
       Client.levelHandler.addGameObject(sword);
       this.setHolding(sword);
       return true;

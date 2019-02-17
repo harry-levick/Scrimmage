@@ -2,7 +2,9 @@ package client.main;
 
 import java.io.File;
 
-/** @author Brett Saunders */
+/**
+ * @author Brett Saunders
+ */
 public class Settings {
 
   private String username = "TestAccount";
@@ -14,7 +16,9 @@ public class Settings {
   private String menuPath =
       "src" + File.separator + "main" + File.separator + "resources" + File.separator + "menus";
 
-  /** Default Constructor Music volume set to 100 and sound effects to 75 */
+  /**
+   * Default Constructor Music volume set to 100 and sound effects to 75
+   */
   public Settings() {
     musicVolume = 0.5f;
     soundEffectVolume = 0.75f;

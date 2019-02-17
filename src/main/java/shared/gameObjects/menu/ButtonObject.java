@@ -26,7 +26,8 @@ public abstract class ButtonObject extends GameObject {
   }
 
   @Override
-  public void interpolatePosition(float alpha) {}
+  public void interpolatePosition(float alpha) {
+  }
 
   public void doOnClick(MouseEvent e) {
     animation.switchAnimation("clicked");

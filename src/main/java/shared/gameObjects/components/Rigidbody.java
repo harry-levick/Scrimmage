@@ -3,8 +3,6 @@ package shared.gameObjects.components;
 import java.io.Serializable;
 import java.util.ArrayList;
 import shared.gameObjects.GameObject;
-import shared.gameObjects.components.Component;
-import shared.gameObjects.components.ComponentType;
 import shared.physics.Physics;
 import shared.physics.data.AngularData;
 import shared.physics.data.Collision;
@@ -88,12 +86,14 @@ public class Rigidbody extends Component implements Serializable {
 
   // Update Methods
 
-  /** Called every physics frame, manages the velocity, forces, position, etc. */
+  /**
+   * Called every physics frame, manages the velocity, forces, position, etc.
+   */
   public void update() {
     if (bodyType == RigidbodyType.DYNAMIC) {
       applyCollisions();
       applyForces();
-     // checkMovements();
+      // checkMovements();
       updateVelocity();
       grounded = false;
       canUp = true;
@@ -106,7 +106,9 @@ public class Rigidbody extends Component implements Serializable {
   }
   // Force Methods
 
-  /** */
+  /**
+   *
+   */
   public void addForce(Vector2 force) {
     forces.add(force);
   }
@@ -272,7 +274,9 @@ public class Rigidbody extends Component implements Serializable {
     float velAlongNormal = rv.dot(normal);
 
     // Do not resolve if velocities are separating
-    if (velAlongNormal > 0) return;
+    if (velAlongNormal > 0) {
+      return;
+    }
 
     // Calculate restitution
     float e = Math.min(A.getMaterial().getRestitution(), B.getMaterial().getRestitution());
@@ -310,7 +314,9 @@ public class Rigidbody extends Component implements Serializable {
             getParent().getTransform().getSize()
         );
     for (Collision c : moveCols) {
-      if (c.getCollidedObject().getBodyType() == RigidbodyType.STATIC) canUp = false;
+      if (c.getCollidedObject().getBodyType() == RigidbodyType.STATIC) {
+        canUp = false;
+      }
     }
     moveCols =
         Physics.boxcastAll(
@@ -321,7 +327,9 @@ public class Rigidbody extends Component implements Serializable {
             getParent().getTransform().getSize()
         );
     for (Collision c : moveCols) {
-      if (c.getCollidedObject().getBodyType() == RigidbodyType.STATIC) canDown = false;
+      if (c.getCollidedObject().getBodyType() == RigidbodyType.STATIC) {
+        canDown = false;
+      }
     }
     moveCols =
         Physics.boxcastAll(
@@ -332,7 +340,9 @@ public class Rigidbody extends Component implements Serializable {
             getParent().getTransform().getSize()
         );
     for (Collision c : moveCols) {
-      if (c.getCollidedObject().getBodyType() == RigidbodyType.STATIC) canRight = false;
+      if (c.getCollidedObject().getBodyType() == RigidbodyType.STATIC) {
+        canRight = false;
+      }
     }
     moveCols =
         Physics.boxcastAll(
@@ -343,7 +353,9 @@ public class Rigidbody extends Component implements Serializable {
             getParent().getTransform().getSize()
         );
     for (Collision c : moveCols) {
-      if (c.getCollidedObject().getBodyType() == RigidbodyType.STATIC) canLeft = false;
+      if (c.getCollidedObject().getBodyType() == RigidbodyType.STATIC) {
+        canLeft = false;
+      }
     }
   }
 

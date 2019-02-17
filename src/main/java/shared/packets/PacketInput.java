@@ -17,18 +17,18 @@ public class PacketInput extends Packet {
 
     data =
         (Integer.toString(packetID)
-                + ","
-                + Double.toString(x)
-                + ","
-                + Double.toString(y)
-                + ","
-                + Boolean.toString(leftKey)
-                + ","
-                + Boolean.toString(rightKey)
-                + ","
-                + Boolean.toString(jumpKey)
-                + ","
-                + Boolean.toString(click))
+            + ","
+            + Double.toString(x)
+            + ","
+            + Double.toString(y)
+            + ","
+            + Boolean.toString(leftKey)
+            + ","
+            + Boolean.toString(rightKey)
+            + ","
+            + Boolean.toString(jumpKey)
+            + ","
+            + Boolean.toString(click))
             .getBytes();
   }
 

@@ -2,7 +2,9 @@ package shared.util.maths;
 
 import java.io.Serializable;
 
-/** @author fxa579 Base class for Vector mathematics in 2-Dimensions */
+/**
+ * @author fxa579 Base class for Vector mathematics in 2-Dimensions
+ */
 public class Vector2 implements Serializable {
 
   private float x;
@@ -125,7 +127,9 @@ public class Vector2 implements Serializable {
         Math.sqrt(Math.pow(vector.getX() - getX(), 2) + Math.pow(vector.getY() - getY(), 2));
   }
 
-  /** Angle between two vectors, approximated */
+  /**
+   * Angle between two vectors, approximated
+   */
   public float angleBetween(Vector2 vector) {
     if (vector.magnitude(Zero()) == 0) {
       return (float) Math.tan(getY() / getX());
@@ -137,13 +141,17 @@ public class Vector2 implements Serializable {
   public float angle() {
     return angleBetween(Zero());
   }
-  /** Computes the cross product between two vectors. */
+
+  /**
+   * Computes the cross product between two vectors.
+   */
   public Vector2 cross(Vector2 vector) {
     float x, y;
     x = getX() * vector.getY();
     y = -1 * getY() * vector.getX();
     return new Vector2(x, y);
   }
+
   /** Clamps the vector between the two values */
   public Vector2 clamp(Vector2 min, Vector2 max) {
     float x, y;

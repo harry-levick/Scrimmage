@@ -44,7 +44,7 @@ import shared.util.maths.Vector2;
 public class LevelEditor extends Application {
 
   private ArrayList<GameObject> gameObjects;
-  private ArrayList<Player> playerSpawns = new ArrayList<Player>();
+  private ArrayList<Player> playerSpawns = new ArrayList<>();
   private MapDataObject mapDataObject;
   private boolean snapToGrid = true;
 
@@ -243,7 +243,7 @@ public class LevelEditor extends Application {
         new EventHandler<ActionEvent>() {
           @Override
           public void handle(ActionEvent event) {
-            MapLoader.saveMap(gameObjects, mapDataObject, "main_menu.map");
+            MapLoader.saveMap(gameObjects, mapDataObject, "menu.map");
           }
         });
     btnSave.setLayoutX(200);
@@ -315,7 +315,7 @@ public class LevelEditor extends Application {
 
     primaryStage.setScene(scene);
     primaryStage.show();
-    primaryStage.setFullScreen(true);
+    primaryStage.setFullScreen(false);
 
     new AnimationTimer() {
       @Override
@@ -425,6 +425,7 @@ public class LevelEditor extends Application {
         root.getChildren().remove(event.getTarget());
         object.destroy();
         gameObjects.remove(object);  //todo find alternative non breaking way of removing
+        //test
       }
     }
 
@@ -445,6 +446,7 @@ public class LevelEditor extends Application {
         mapDataObject.setSpawnPoints(newList);
         object.destroy();
         gameObjects.remove(object); //todo find alternative non breaking way of removing
+        //test
       }
     }
   }

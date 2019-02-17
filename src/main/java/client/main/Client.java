@@ -5,6 +5,8 @@ import client.handlers.connectionHandler.ConnectionHandler;
 import client.handlers.inputHandler.InputHandler;
 import client.handlers.inputHandler.KeyboardInput;
 import client.handlers.inputHandler.MouseInput;
+import java.util.HashMap;
+import java.util.UUID;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.beans.InvalidationListener;
@@ -21,9 +23,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.LevelHandler;
-import shared.handlers.levelHandler.Map;
-import shared.packets.Packet;
 import shared.packets.PacketEnd;
+import shared.packets.PacketGameState;
 import shared.packets.PacketPlayerJoin;
 import shared.physics.Physics;
 import shared.util.Path;
@@ -41,7 +42,6 @@ public class Client extends Application {
   private final float timeStep = 0.0166f;
   private final String gameTitle = "Alone in the Dark";
   private final int port = 4445;
-  private boolean test = false;
 
   private KeyboardInput keyInput;
   private MouseInput mouseInput;
@@ -49,7 +49,6 @@ public class Client extends Application {
   private Group backgroundRoot;
   private Group gameRoot;
   private Scene scene;
-  private Map currentMap;
   private float maximumStep;
   private long previousTime;
   private float accumulatedTime;
@@ -65,7 +64,6 @@ public class Client extends Application {
     setupRender(primaryStage);
     levelHandler = new LevelHandler(settings, root, backgroundRoot, gameRoot, true);
     audio = new AudioHandler(settings);
-    currentMap = levelHandler.getMap();
 
     // Main Game Loop
     new AnimationTimer() {
@@ -74,16 +72,6 @@ public class Client extends Application {
 
         if (multiplayer) {
           processServerPackets();
-        }
-
-        if (test) {
-          levelHandler.changeMap(levelHandler.getMaps().get(1));
-        }
-
-        // Changes Map/Level
-        if (currentMap != levelHandler.getMap()) {
-          levelHandler.generateLevel(root, backgroundRoot, gameRoot, true);
-          currentMap = levelHandler.getMap();
         }
 
         if (previousTime == 0) {
@@ -270,26 +258,26 @@ public class Client extends Application {
       try {
         String message = (String) connectionHandler.received.take();
         int messageID = Integer.parseInt(message.substring(0, 1));
-        Packet packet;
         switch (messageID) {
-            // PlayerJoin
+          //PlayerJoin
           case 4:
             PacketPlayerJoin packetPlayerJoin = new PacketPlayerJoin(message);
             levelHandler.addPlayer(
-                new Player(
-                    packetPlayerJoin.getX(),
-                    packetPlayerJoin.getY(),
-                    100,
-                    100,
+                new Player(packetPlayerJoin.getX(), packetPlayerJoin.getY(), 100, 100,
                     packetPlayerJoin.getUUID()));
             break;
-            // End
+          //End
           case 6:
             PacketEnd packetEnd = new PacketEnd(message);
             multiplayer = false;
-            // Show score board
-            // Main Menu
-
+            //Show score board
+            //Main Menu
+            break;
+          case 7:
+            PacketGameState gameState = new PacketGameState(message);
+            HashMap<UUID, String> data = gameState.getGameObjects();
+            levelHandler.getGameObjects()
+                .forEach(gameObject -> gameObject.setState(data.get(gameObject.getUUID())));
         }
       } catch (InterruptedException e) {
         e.printStackTrace();

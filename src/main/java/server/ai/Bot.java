@@ -4,17 +4,18 @@ import client.handlers.connectionHandler.ConnectionHandler;
 import client.handlers.inputHandler.InputHandler;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import server.ai.pathFind.AStar;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.players.Player;
-import java.util.UUID;
 import shared.packets.PacketInput;
-import shared.physics.Physics;
 import shared.util.maths.Vector2;
 
 
-/** @author Harry Levick (hxl799) */
+/**
+ * @author Harry Levick (hxl799)
+ */
 public class Bot extends Player {
 
   public static final int KEY_JUMP = 0;
@@ -32,11 +33,6 @@ public class Bot extends Player {
   List<Player> allPlayers;
 
   /**
-   * @param x
-   * @param y
-   * @param sizeX
-   * @param sizeY
-   * @param playerUUID
    * @param allObjs Contains a list of all game objects in the world, including players.
    */
   public Bot(double x, double y, double sizeX, double sizeY, UUID playerUUID,
@@ -47,9 +43,9 @@ public class Bot extends Player {
 
     // Collect all players (other than bots) from the world
     allPlayers = allObjs.stream()
-            .filter(p -> p instanceof Player)
-            .map(Player.class::cast)
-            .collect(Collectors.toList());
+        .filter(p -> p instanceof Player)
+        .map(Player.class::cast)
+        .collect(Collectors.toList());
 
     targetPlayer = findTarget(allPlayers);
     this.pathFinder = new AStar(allObjs, this);
@@ -84,7 +80,7 @@ public class Bot extends Player {
     if (jumped) {
       animation.switchAnimation("jump");
     }
-    if(grounded) {
+    if (grounded) {
       jumped = false;
     }
     if (this.click && holding != null) {
@@ -128,7 +124,7 @@ public class Bot extends Player {
       case IDLE:
         System.out.println("IDLE");
         // TODO what to do in the idle state?
-        executeAction(new boolean[] {false, false, false, false, false});
+        executeAction(new boolean[]{false, false, false, false, false});
         break;
       case CHASING:
         System.out.println("CHASING");
@@ -138,7 +134,7 @@ public class Bot extends Player {
         break;
       case FLEEING:
         System.out.println("FLEEING");
-        executeAction(new boolean[] {false, false, false, false, false});
+        executeAction(new boolean[]{false, false, false, false, false});
         // TODO calculate and execute the best path away from the target.
         break;
       case ATTACKING:
@@ -153,7 +149,7 @@ public class Bot extends Player {
         break;
       case FLEEING_ATTACKING:
         System.out.println("CHASING-ATTACKING");
-        executeAction(new boolean[] {false, false, false, false, false});
+        executeAction(new boolean[]{false, false, false, false, false});
         // TODO calculate and execute the best path away from the target whilst attacking.
         break;
     }
@@ -163,6 +159,7 @@ public class Bot extends Player {
 
   /**
    * Calculates the distance from the bot to the current target player
+   *
    * @return The distance to the target player
    */
   private double calcDist() {

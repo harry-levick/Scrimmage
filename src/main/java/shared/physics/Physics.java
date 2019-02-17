@@ -8,7 +8,9 @@ import shared.gameObjects.components.ComponentType;
 import shared.physics.data.Collision;
 import shared.util.maths.Vector2;
 
-/** @author fxa579 The singleton class respomsible for raycasting and physics constants/equations */
+/**
+ * @author fxa579 The singleton class respomsible for raycasting and physics constants/equations
+ */
 public class Physics {
 
   public static final float GRAVITY = 100f;
@@ -17,7 +19,8 @@ public class Physics {
   public static ArrayList<GameObject> gameObjects;
   private static Physics ourInstance = new Physics();
 
-  private Physics() {}
+  private Physics() {
+  }
   // TODO complete raycast methods
 
   /**
@@ -42,12 +45,13 @@ public class Physics {
     return null;
   }
 
-    /**
-     * Creates a box collider that returns all collisions it hits
-     * @param sourcePos The top-right corner of the box
-     * @param size The extents of the box
-     * @return The first collider hit in the path, null if nothing was hit
-     */
+  /**
+   * Creates a box collider that returns all collisions it hits
+   *
+   * @param sourcePos The top-right corner of the box
+   * @param size The extents of the box
+   * @return The first collider hit in the path, null if nothing was hit
+   */
   public static Collision boxcast(Vector2 sourcePos, Vector2 size) {
     BoxCollider castCollider = new BoxCollider(sourcePos, size);
     Collision collision;
@@ -56,17 +60,21 @@ public class Physics {
         collision =
             Collision.resolveCollision(
                 castCollider, (Collider) object.getComponent(ComponentType.COLLIDER));
-        if (collision != null) return collision;
+        if (collision != null) {
+          return collision;
+        }
       }
     }
     return null;
   }
-    /**
-     * Creates a box collider that returns all collisions it hits
-     * @param sourcePos The top-right corner of the box
-     * @param size The extents of the box
-     * @return All colliders hit in the path, null if nothing was hit
-     */
+
+  /**
+   * Creates a box collider that returns all collisions it hits
+   *
+   * @param sourcePos The top-right corner of the box
+   * @param size The extents of the box
+   * @return All colliders hit in the path, null if nothing was hit
+   */
   public static ArrayList<Collision> boxcastAll(Vector2 sourcePos, Vector2 size) {
     BoxCollider castCollider = new BoxCollider(sourcePos, size);
     Collision collision;

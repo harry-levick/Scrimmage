@@ -3,7 +3,9 @@ package shared.gameObjects.weapons;
 import java.util.UUID;
 import shared.gameObjects.Utils.ObjectID;
 
-/** @author hlf764 The Handgun class. */
+/**
+ * @author hlf764 The Handgun class.
+ */
 public class Handgun extends Gun {
 
   /**
@@ -58,7 +60,8 @@ public class Handgun extends Gun {
   }
 
   @Override
-  public void interpolatePosition(float alpha) {}
+  public void interpolatePosition(float alpha) {
+  }
 
   @Override
   public String getState() {
