@@ -107,7 +107,8 @@ public class Client extends Application {
         /** Apply Input */
         levelHandler.getClientPlayer().applyInput(multiplayer, connectionHandler);
         // Update bot
-        levelHandler.getBotPlayer().applyInput(multiplayer, connectionHandler);
+        levelHandler.getBotPlayerList()
+            .forEach(bot -> bot.applyInput(multiplayer, connectionHandler));
         /** Render Game Objects */
         levelHandler.getGameObjects().forEach(gameObject -> gameObject.render());
         levelHandler.getBackground().render();
@@ -260,7 +261,7 @@ public class Client extends Application {
           case 4:
             PacketPlayerJoin packetPlayerJoin = new PacketPlayerJoin(message);
             levelHandler.addPlayer(
-                new Player(packetPlayerJoin.getX(), packetPlayerJoin.getY(), 100, 100,
+                new Player(packetPlayerJoin.getX(), packetPlayerJoin.getY(),
                     packetPlayerJoin.getUUID()));
             break;
           //End

@@ -40,22 +40,19 @@ public class LevelHandler {
     this.backgroundRoot = backgroundRoot;
     this.gameRoot = gameRoot;
     
-    clientPlayer = new Player(500, 200, 80, 110, UUID.randomUUID());
+    clientPlayer = new Player(500, 200, UUID.randomUUID());
     clientPlayer.setHolding(
-        //new MachineGun(500, 500, 116, 33, "MachineGun@LevelHandler", clientPlayer, UUID.randomUUID()));
-        new Sword(500, 500, 50, 50, "Sword@LevelHandler", clientPlayer, UUID.randomUUID()));
+        new MachineGun(500, 500, "MachineGun@LevelHandler", clientPlayer,
+            UUID.randomUUID()));
     clientPlayer.initialise(gameRoot);
     players.add(clientPlayer);
     
     changeMap(new Map("main_menu.map", Path.convert("src/main/resources/menus/main_menu.map"),
         GameState.IN_GAME));
     
-    gameObjects.add(clientPlayer.getHolding());
-    clientPlayer.getHolding().initialise(gameRoot);
-    
-    botPlayer = new Bot(500, 500, 80, 110, UUID.randomUUID(), gameObjects);
+    botPlayer = new Bot(500, 500, UUID.randomUUID(), gameObjects);
     botPlayer.setHolding(
-        new Sword(500, 500, 50, 50, "Sword@LevelHandler", botPlayer, UUID.randomUUID())
+        new Sword(500, 500, "Sword@LevelHandler", botPlayer, UUID.randomUUID())
     );
     botPlayer.getHolding().initialise(gameRoot);
     botPlayer.initialise(gameRoot);
@@ -182,8 +179,8 @@ public class LevelHandler {
     return clientPlayer;
   }
 
-  public Bot getBotPlayer() {
-    return botPlayer;
+  public ArrayList<Bot> getBotPlayerList() {
+    return bots;
   }
 
   /**

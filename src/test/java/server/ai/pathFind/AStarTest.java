@@ -13,8 +13,8 @@ public class AStarTest {
   public void testStraightLineRight() {
     ArrayList<GameObject> allObjs = new ArrayList<GameObject>();
 
-    Player testPlayer = new Player(50, 20, 50, 20, UUID.randomUUID());
-    Bot testBot = new Bot(20, 20, 50, 20, UUID.randomUUID(), allObjs);
+    Player testPlayer = new Player(50, 20, UUID.randomUUID());
+    Bot testBot = new Bot(20, 20, UUID.randomUUID(), allObjs);
 
     allObjs.add(testBot);
     allObjs.add(testPlayer);
