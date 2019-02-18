@@ -75,6 +75,7 @@ public class Sword extends Melee {
 
   @Override
   public void initialiseAnimation() {
-    this.animation.supplyAnimationWithSize("default", this.range, this.range, true, Path.convert(this.imagePath));
+    this.animation.supplyAnimationWithSize("default", this.range, this.range, true,
+        Path.convert(this.imagePath));
   }
 }

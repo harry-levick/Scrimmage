@@ -76,25 +76,25 @@ public abstract class Melee extends Weapon {
       // maybe use box cast?
       // ArrayList<Collision> collisions = Physics.circlecastAll(sourcePos, distance);
       ArrayList<Collision> collisions = Physics.boxcastAll(
-          new Vector2((float)(this.getX()+this.range), (float)(this.getY()-this.range)), 
-          new Vector2((float)this.range, (float)this.range));
+          new Vector2((float) (this.getX() + this.range), (float) (this.getY() - this.range)),
+          new Vector2((float) this.range, (float) this.range));
       ArrayList<Player> playersBeingHit = new ArrayList<>();
-      
+
       System.out.println("=============start==============");
-      for (Collision c: collisions) {
+      for (Collision c : collisions) {
         GameObject g = c.getCollidedObject().getParent();
         if (g.getId() == ObjectID.Player && !g.equals(holder)) {
           System.out.print(g.toString() + " -> ");
-          System.out.println(((Player)g).getHealth());
-          playersBeingHit.add((Player)g);
+          System.out.println(((Player) g).getHealth());
+          playersBeingHit.add((Player) g);
         }
       }
       System.out.println("================end===========");
       
       
       this.currentCooldown = getDefaultCoolDown();
-      
-      for (Player p: playersBeingHit) {
+
+      for (Player p : playersBeingHit) {
         p.deductHp(this.damage);
       }
       
