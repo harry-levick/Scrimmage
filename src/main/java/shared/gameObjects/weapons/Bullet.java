@@ -6,8 +6,6 @@ import java.util.UUID;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.components.BoxCollider;
-import shared.gameObjects.components.Collider;
-import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Player;
 import shared.physics.Physics;
@@ -78,16 +76,17 @@ public abstract class Bullet extends GameObject {
   public void update() {
     System.out.println("@Bullet.update start");
     ArrayList<Collision> collision = Physics.boxcastAll(
-        new Vector2((float)getX(), (float)getY()), new Vector2((float)this.width, (float)this.width));
+        new Vector2((float) getX(), (float) getY()),
+        new Vector2((float) this.width, (float) this.width));
     ArrayList<Player> playersBeingHit = new ArrayList<>();
-    
+
     System.out.println("=============start==============");
-    for (Collision c: collision) {
+    for (Collision c : collision) {
       GameObject g = c.getCollidedObject().getParent();
       if (g.getId() == ObjectID.Player && !g.equals(holder)) {
         System.out.print(g.toString() + " -> ");
-        System.out.println(((Player)g).getHealth());
-        playersBeingHit.add((Player)g);
+        System.out.println(((Player) g).getHealth());
+        playersBeingHit.add((Player) g);
         isHit = true;
       }
     }

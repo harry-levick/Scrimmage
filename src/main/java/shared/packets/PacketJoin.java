@@ -6,16 +6,17 @@ public class PacketJoin extends Packet {
 
   private UUID clientID;
   private String username;
-  private double x,y;
+  private double x, y;
   // private int skin;
 
-  public PacketJoin(UUID clientID, String username, double x , double y) {
+  public PacketJoin(UUID clientID, String username, double x, double y) {
     packetID = PacketID.JOIN.getID();
     this.clientID = clientID;
     this.username = username;
     this.x = x;
     this.y = y;
-    data = (Integer.toString(packetID) + "," + clientID.toString() + "," + username + "," + x + "," + y).getBytes();
+    data = (Integer.toString(packetID) + "," + clientID.toString() + "," + username + "," + x + ","
+        + y).getBytes();
   }
 
   public PacketJoin(String data) {

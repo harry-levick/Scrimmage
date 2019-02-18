@@ -5,7 +5,6 @@ import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.components.CircleCollider;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Player;
-import shared.physics.Physics;
 import shared.physics.data.AngularData;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.RigidbodyType;
@@ -44,8 +43,8 @@ public abstract class Melee extends Weapon {
     this.angles = generateAngles();
     this.attacking = false;
     this.currentAngleIndex = 0;
-    
-    addComponent(new CircleCollider(this, (float)range, false));
+
+    addComponent(new CircleCollider(this, (float) range, false));
     rb = new Rigidbody(
         RigidbodyType.STATIC,
         50f,
@@ -75,7 +74,7 @@ public abstract class Melee extends Weapon {
       deductAmmo();
     }
   }
-  
+
   private double[] generateAngles() {
     double[] angle = new double[(int) (beginAngle + endAngle) + 1];
     int k = 0;
@@ -83,7 +82,7 @@ public abstract class Melee extends Weapon {
       angle[k] = i;
       ++k;
     }
-    
+
     return angle;
   }
 
@@ -91,8 +90,9 @@ public abstract class Melee extends Weapon {
   // Setters and Getters
   // -------------------
   public double getAngle(int index) {
-    if (index < (int)(beginAngle + endAngle + 1))
+    if (index < (int) (beginAngle + endAngle + 1)) {
       return angles[index];
+    }
     return 0;
   }
   

@@ -6,7 +6,9 @@ import java.util.UUID;
 import javafx.scene.Group;
 import server.ai.Bot;
 import shared.gameObjects.GameObject;
+import shared.gameObjects.MapDataObject;
 import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.background.Background;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.MachineGun;
 import shared.gameObjects.weapons.Sword;
@@ -26,6 +28,7 @@ public class LevelHandler {
   private Group root;
   private Group backgroundRoot;
   private Group gameRoot;
+  private Background background;
 
   public LevelHandler(Settings settings, Group root, Group backgroundRoot, Group gameRoot) {
     gameObjects = new ArrayList<>();
@@ -38,7 +41,8 @@ public class LevelHandler {
     this.gameRoot = gameRoot;
     clientPlayer = new Player(500, 200, 80, 110, UUID.randomUUID());
     clientPlayer.setHolding(
-        new MachineGun(500, 500, 116, 33, "MachineGun@LevelHandler", clientPlayer, UUID.randomUUID()));
+        new MachineGun(500, 500, 116, 33, "MachineGun@LevelHandler", clientPlayer,
+            UUID.randomUUID()));
     clientPlayer.initialise(gameRoot);
     players.add(clientPlayer);
     gameObjects.add(clientPlayer.getHolding());
@@ -86,8 +90,10 @@ public class LevelHandler {
     gameObjects = MapLoader.loadMap(map.getPath());
     gameObjects.forEach(
         gameObject -> {
-          if (gameObject.getId() == ObjectID.Background) {
-            gameObject.initialise(backgroundGroup);
+          if (gameObject.getId() == ObjectID.MapDataObject) {
+            this.background = ((MapDataObject) gameObject).getBackground();
+            background.initialise(backgroundGroup);
+
           } else {
             gameObject.initialise(gameGroup);
           }
@@ -106,6 +112,10 @@ public class LevelHandler {
   public ArrayList<GameObject> getGameObjects() {
     clearToRemove();    // Remove every gameObjects we no longer need
     return gameObjects;
+  }
+
+  public Background getBackground() {
+    return this.background;
   }
 
   /**

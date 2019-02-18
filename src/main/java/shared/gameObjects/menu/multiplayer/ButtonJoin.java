@@ -41,6 +41,7 @@ public class ButtonJoin extends ButtonObject {
     Client.connectionHandler.setDaemon(true);
     Client.connectionHandler.start();
     button.disarm();
-    Client.levelHandler.changeMap(new Map("Lobby", Path.convert("src/main/resources/menus/lobby.map"), GameState.Lobby));
+    Client.levelHandler.changeMap(
+        new Map("Lobby", Path.convert("src/main/resources/menus/lobby.map"), GameState.Lobby));
   }
 }
