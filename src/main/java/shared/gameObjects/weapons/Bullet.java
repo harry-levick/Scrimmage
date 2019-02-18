@@ -73,6 +73,7 @@ public abstract class Bullet extends GameObject {
 
   @Override
   public void update() {
+    System.out.println("@Bullet.update start");
     ArrayList<Collision> collision = Physics.boxcastAll(
         new Vector2((float)getX(), (float)getY()), new Vector2((float)this.width, (float)this.width));
     ArrayList<Player> playersBeingHit = new ArrayList<>();
@@ -89,13 +90,12 @@ public abstract class Bullet extends GameObject {
     }
     System.out.println("================end===========");
     
+    /*
     if (((Collider)(getComponent(ComponentType.COLLIDER))).onCollisionEnter()) {
       isHit = true;
       // Probably use raycast and check collision type
-      System.out.println("==============================================");
-      System.out.println(getComponent(ComponentType.COLLIDER).getParent());
-      System.out.println("==============================================");
     }
+    */
     
     if (isHit) {
       Client.levelHandler.delGameObject(this);
@@ -110,6 +110,7 @@ public abstract class Bullet extends GameObject {
     else {
       Client.levelHandler.delGameObject(this);
     }
+    System.out.println("@Bullet.update end");
   }
 
   @Override

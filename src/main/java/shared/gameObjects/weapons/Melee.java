@@ -4,6 +4,7 @@ import java.util.UUID;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.components.CircleCollider;
 import shared.gameObjects.components.Rigidbody;
+import shared.gameObjects.players.Player;
 import shared.physics.Physics;
 import shared.physics.data.AngularData;
 import shared.physics.data.MaterialProperty;
@@ -30,12 +31,13 @@ public abstract class Melee extends Weapon {
       String name,
       int ammo,
       int fireRate,
+      Player holder,
       double range,
       double beginAngle,
       double endAngle,
       UUID uuid) {
 
-    super(x, y, sizeX, sizeY, id, damage, weight, name, false, true, 10, fireRate, uuid);
+    super(x, y, sizeX, sizeY, id, damage, weight, name, false, true, 10, fireRate, holder, uuid);
     this.range = range;
     this.beginAngle = beginAngle;
     this.endAngle = endAngle;

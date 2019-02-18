@@ -2,12 +2,13 @@ package shared.gameObjects.weapons;
 
 import java.util.UUID;
 import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.players.Player;
 
 public class MachineGun extends Gun {
 
   private static String imagePath = "images/weapons/machinegun.png"; // path to Machine Gun image
 
-  public MachineGun(double x, double y, double sizeX, double sizeY, String name, UUID uuid) {
+  public MachineGun(double x, double y, double sizeX, double sizeY, String name, Player holder, UUID uuid) {
 
     super(
         x,
@@ -22,6 +23,7 @@ public class MachineGun extends Gun {
         50, // bulletSpeed
         70, // fireRate
         50, // bulletWidth
+        holder,
         true, // fullAutoFire
         false, // singleHanded
         uuid);

@@ -2,6 +2,7 @@ package shared.gameObjects.weapons;
 
 import java.util.UUID;
 import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.players.Player;
 
 public class Sword extends Melee {
 
@@ -22,7 +23,7 @@ public class Sword extends Melee {
    * @param endAngle The ending angle when the sword swing
    * @param uuid The UUID of the sword
    */
-  public Sword(double x, double y, double sizeX, double sizeY, String name, UUID uuid) {
+  public Sword(double x, double y, double sizeX, double sizeY, String name, Player holder, UUID uuid) {
     super(
         x,
         y,
@@ -34,6 +35,7 @@ public class Sword extends Melee {
         name, 
         30,  // ammo
         60,  // fireRate
+        holder,
         30,  // range
         50,  // beginAngle
         20,  // endAngle

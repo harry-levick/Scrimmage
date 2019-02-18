@@ -209,6 +209,7 @@ public class LevelEditor extends Application {
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
                   "Handgun",
+                  null, // holder
                   uuid);
           break;
       }
