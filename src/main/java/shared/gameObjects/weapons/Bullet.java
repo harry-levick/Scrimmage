@@ -28,6 +28,7 @@ public abstract class Bullet extends GameObject {
   private double speed;     // speed of bullet
   private Vector2 vector;   // Vector of the force of bullet fire
   private int damage;       // Damage of this bullet
+  private Player holder;    // Holder of the gun that fired this bullet
 
   public Bullet(
       double gunX, // gun initial x position
@@ -39,12 +40,14 @@ public abstract class Bullet extends GameObject {
       double width, // the width of the bullet
       double speed, // the speed of the bullet
       int damage,  // damage of this bullet
+      Player holder, // holder of the gun that fired this bullet
       UUID uuid) { // uuid of this bullet
 
     super(gunX, gunY, sizeX, sizeY, ObjectID.Bullet, uuid);
     setWidth(width);
     setSpeed(speed);
     this.damage = damage;
+    this.holder = holder;
 
     // Unit vector of the bullet force
     vector = new Vector2((float) (mouseX - gunX), (float) (mouseY - gunY));
@@ -81,7 +84,7 @@ public abstract class Bullet extends GameObject {
     System.out.println("=============start==============");
     for (Collision c: collision) {
       GameObject g = c.getCollidedObject().getParent();
-      if (g.getId() == ObjectID.Player) {
+      if (g.getId() == ObjectID.Player && !g.equals(holder)) {
         System.out.print(g.toString() + " -> ");
         System.out.println(((Player)g).getHealth());
         playersBeingHit.add((Player)g);
