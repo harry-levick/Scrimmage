@@ -35,8 +35,8 @@ public class Player extends GameObject {
   public double mouseX, mouseY;
   private BoxCollider bc;
 
-  public Player(double x, double y, double sizeX, double sizeY, UUID playerUUID) {
-    super(x, y, sizeX, sizeY, ObjectID.Player, playerUUID);
+  public Player(double x, double y, UUID playerUUID) {
+    super(x, y, 80, 110, ObjectID.Player, playerUUID);
     addComponent(new BoxCollider(this, false));
     rb = new Rigidbody(RigidbodyType.DYNAMIC, 100, 10, 0.2f, new MaterialProperty(0.005f, 0, 0),
         null, this);
@@ -180,7 +180,7 @@ public class Player extends GameObject {
       this.holding.destroyWeapon();
       this.setHolding(null);
 
-      Weapon sword = new Sword(this.getX(), this.getY(), 50, 50, "newSword@Player", this,
+      Weapon sword = new Sword(this.getX(), this.getY(), "newSword@Player", this,
           UUID.randomUUID());
       sword.initialise(root);
       Client.levelHandler.addGameObject(sword);

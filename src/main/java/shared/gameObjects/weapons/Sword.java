@@ -16,18 +16,15 @@ public class Sword extends Melee {
    * @param x The x position of the sword
    * @param y The y position of the sword
    * @param name Name of the sword
-   * @param range Range of the sword
-   * @param beginAngle The starting angle when the sword swing
-   * @param endAngle The ending angle when the sword swing
    * @param uuid The UUID of the sword
    */
-  public Sword(double x, double y, double sizeX, double sizeY, String name, Player holder,
+  public Sword(double x, double y, String name, Player holder,
       UUID uuid) {
     super(
         x,
         y,
-        sizeX,
-        sizeY,
+        50,
+        50,
         ObjectID.Weapon,
         20,  // damage
         10,  // weight

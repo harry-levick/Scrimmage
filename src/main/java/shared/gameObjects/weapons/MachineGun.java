@@ -8,14 +8,14 @@ public class MachineGun extends Gun {
 
   private static String imagePath = "images/weapons/machinegun.png"; // path to Machine Gun image
 
-  public MachineGun(double x, double y, double sizeX, double sizeY, String name, Player holder,
+  public MachineGun(double x, double y, String name, Player holder,
       UUID uuid) {
 
     super(
         x,
         y,
-        sizeX,
-        sizeY,
+        116,
+        33,
         ObjectID.Weapon, // ObjectID
         5, // damage
         10, // weight
