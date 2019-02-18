@@ -7,6 +7,7 @@ import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.components.CircleCollider;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Player;
+import shared.physics.Physics;
 import shared.physics.data.AngularData;
 import shared.physics.data.Collision;
 import shared.physics.data.MaterialProperty;
