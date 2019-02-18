@@ -8,6 +8,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -22,6 +23,8 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import shared.gameObjects.GameObject;
+import shared.gameObjects.MapDataObject;
 import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.LevelHandler;
@@ -118,7 +121,7 @@ public class Server extends Application {
         updateSimulation();
 
         /** Send update to all clients */
-        if (counter.get() == serverUpdateRate) {
+        if (counter.get() == serverUpdateRate && playerCount.get() > 0) {
           counter.set(0);
           sendWorldState();
         }
@@ -165,7 +168,14 @@ public class Server extends Application {
   }
 
   public void sendWorldState() {
-    PacketGameState gameState = new PacketGameState(levelHandler.getGameObjects());
+    ArrayList<GameObject> gameObjectsFiltered = new ArrayList<>();
+    for (GameObject gameObject : levelHandler.getGameObjects()) {
+      if (!(gameObject instanceof MapDataObject)) {
+        gameObjectsFiltered.add(gameObject);
+      }
+    }
+    PacketGameState gameState = new PacketGameState(gameObjectsFiltered);
+
     byte[] buffer = gameState.getData();
     sendToClients(buffer);
   }
