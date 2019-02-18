@@ -106,17 +106,21 @@ public class Client extends Application {
           accumulatedTime -= timeStep;
         }
         /**Calculate Score*/
-        ArrayList<Player> alive = new ArrayList<>();
-        for (Player p : levelHandler.getPlayers()) {
-          if (p.isActive()) {
-            alive.add(p);
+        if (levelHandler.getPlayers().size() > 1) {
+          ArrayList<Player> alive = new ArrayList<>();
+          for (Player p : levelHandler.getPlayers()) {
+            if (p.isActive()) {
+              alive.add(p);
+            }
+            if (alive.size() > 1) {
+              break;
+            }
           }
-          if (alive.size() > 1) {
-            break;
+          if (alive.size() == 1) {
+            alive.forEach(player -> player.increaseScore());
+            levelHandler.getPlayers().forEach(player -> player.reset());
+            //Change level
           }
-        }
-        if (alive.size() == 1) {
-          alive.forEach(player -> player.increaseScore());
         }
         /** Apply Input */
         levelHandler.getClientPlayer().applyInput(multiplayer, connectionHandler);
@@ -125,7 +129,9 @@ public class Client extends Application {
             .forEach(bot -> bot.applyInput(multiplayer, connectionHandler));
         /** Render Game Objects */
         levelHandler.getGameObjects().forEach(gameObject -> gameObject.render());
-        levelHandler.getBackground().render();
+        if (levelHandler.getBackground() != null) {
+          levelHandler.getBackground().render();
+        }
         /** Check Collisions */
         Physics.gameObjects = levelHandler.getGameObjects();
         levelHandler
@@ -147,7 +153,9 @@ public class Client extends Application {
     framesElapsedSinceFPS++;
     if (elapsedSinceFPS >= 0.5f) {
       int fps = Math.round(framesElapsedSinceFPS / elapsedSinceFPS);
-      primaryStage.setTitle(gameTitle + "   --    FPS: " + fps);
+      primaryStage.setTitle(
+          gameTitle + "   --    FPS: " + fps + "    Score: " + Client.levelHandler.getClientPlayer()
+              .getScore());
       elapsedSinceFPS = 0;
       framesElapsedSinceFPS = 0;
     }

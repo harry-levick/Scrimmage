@@ -205,12 +205,15 @@ public class Player extends GameObject {
   }
 
   public void reset() {
-    score = 0;
     health = 100;
-    active = true;
-    this.addComponent(bc);
-    this.imageView.setRotate(-90);
-    this.imageView.setTranslateY(getY() - 70);
+    if (this.active == false) {
+      this.imageView.setRotate(0);
+      this.imageView.setTranslateY(getY() - 70);
+      this.setActive(true);
+      this.addComponent(bc);
+    }
+
+
   }
 
   public void increaseScore() {
@@ -235,5 +238,9 @@ public class Player extends GameObject {
 
   public void setHolding(Weapon holding) {
     this.holding = holding;
+  }
+
+  public int getScore() {
+    return score;
   }
 }

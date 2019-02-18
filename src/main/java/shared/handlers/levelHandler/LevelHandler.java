@@ -10,7 +10,6 @@ import shared.gameObjects.MapDataObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.background.Background;
 import shared.gameObjects.players.Player;
-import shared.gameObjects.weapons.MachineGun;
 import shared.util.Path;
 
 public class LevelHandler {
@@ -38,17 +37,11 @@ public class LevelHandler {
     this.backgroundRoot = backgroundRoot;
     this.gameRoot = gameRoot;
     clientPlayer = new Player(500, 200, UUID.randomUUID());
-    clientPlayer.setHolding(
-        new MachineGun(500, 500, "MachineGun@LevelHandler", clientPlayer,
-            UUID.randomUUID()));
     clientPlayer.initialise(gameRoot);
     players.add(clientPlayer);
-    gameObjects.add(clientPlayer.getHolding());
-    clientPlayer.getHolding().initialise(gameRoot);
     changeMap(new Map("main_menu.map", Path.convert("src/main/resources/menus/main_menu.map"),
         GameState.IN_GAME));
   }
-
 
   public LevelHandler(Settings settings) {
     gameObjects = new ArrayList<>();
@@ -81,16 +74,18 @@ public class LevelHandler {
         gameObject -> {
           if (gameObject.getId() == ObjectID.MapDataObject) {
             this.background = ((MapDataObject) gameObject).getBackground();
-            background.initialise(backgroundGroup);
+            if (this.background != null) {
+              background.initialise(backgroundGroup);
+            }
 
           } else {
             gameObject.initialise(gameGroup);
           }
         });
     gameObjects.addAll(players);
-    gameObjects.addAll(bots);
+    //gameObjects.addAll(bots);
     gameState = map.getGameState();
-    //System.gc();
+    System.gc();
   }
 
   /**
