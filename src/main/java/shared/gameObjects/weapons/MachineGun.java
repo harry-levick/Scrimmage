@@ -3,6 +3,7 @@ package shared.gameObjects.weapons;
 import java.util.UUID;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
+import shared.util.Path;
 
 public class MachineGun extends Gun {
 
@@ -76,6 +77,6 @@ public class MachineGun extends Gun {
   @Override
   public void initialiseAnimation() {
     // this.animation.supplyAnimation("default", imagePath);
-    this.animation.supplyAnimationWithSize("default", 40, 40, true, imagePath);
+    this.animation.supplyAnimationWithSize("default", 40, 40, true, Path.convert(this.imagePath));
   }
 }

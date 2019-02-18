@@ -3,6 +3,7 @@ package shared.gameObjects.weapons;
 import java.util.UUID;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
+import shared.util.Path;
 
 public class Sword extends Melee {
 
@@ -32,7 +33,7 @@ public class Sword extends Melee {
         30,  // ammo
         60,  // fireRate
         holder,
-        30,  // range
+        50,  // range
         50,  // beginAngle
         20,  // endAngle
         uuid);
@@ -74,6 +75,7 @@ public class Sword extends Melee {
 
   @Override
   public void initialiseAnimation() {
-    this.animation.supplyAnimationWithSize("default", 50, 50, true, this.imagePath);
+    this.animation.supplyAnimationWithSize("default", this.range, this.range, true,
+        Path.convert(this.imagePath));
   }
 }
