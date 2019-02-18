@@ -35,7 +35,7 @@ public class ConnectionHandler extends Thread {
     try {
       this.multicastSocket = new MulticastSocket(multicastPort);
       this.socket = new DatagramSocket();
-      this.address = InetAddress.getByName("localhost");
+      this.address = InetAddress.getByName("192.168.0.13");
       this.multicastAddress = InetAddress.getByName("230.0.0.0");
     } catch (SocketException | UnknownHostException e) {
       e.printStackTrace();
@@ -55,6 +55,7 @@ public class ConnectionHandler extends Thread {
         joinPacket.getData().length, address, port);
     try {
       socket.send(sendPacket);
+      System.out.println("sent");
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -83,7 +84,9 @@ public class ConnectionHandler extends Thread {
       connected = false;
       e.printStackTrace();
     }
+    Client.multiplayer = true;
     while (connected) {
+      buffer = new byte[1024];
       DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
       try {
         multicastSocket.receive(packet);

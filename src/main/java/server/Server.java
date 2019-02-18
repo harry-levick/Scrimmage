@@ -13,9 +13,6 @@ import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import javafx.animation.AnimationTimer;
@@ -30,7 +27,6 @@ import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.LevelHandler;
 import shared.handlers.levelHandler.Map;
 import shared.packets.PacketGameState;
-import shared.packets.PacketInput;
 import shared.packets.PacketMap;
 import shared.physics.Physics;
 import shared.util.Path;
@@ -52,7 +48,6 @@ public class Server extends Application {
   private final String multicastAddress = "230.0.0.0";
   private final int maxPlayers = 4;
   public ServerState serverState;
-  public ConcurrentMap<UUID, BlockingQueue<PacketInput>> clientTable = new ConcurrentHashMap<>();
   private String threadName;
   private DatagramSocket socket;
   private InetAddress group;
@@ -116,8 +111,7 @@ public class Server extends Application {
           checkConditions();
         }
 
-        /** Process Inputs and Update */
-        processInputs();
+        /** Process Update */
         updateSimulation();
 
         /** Send update to all clients */
@@ -142,21 +136,6 @@ public class Server extends Application {
         .forEach(gameObject -> gameObject.updateCollision(levelHandler.getGameObjects()));
     /** Update Game Objects */
     levelHandler.getGameObjects().forEach(gameObject -> gameObject.update());
-  }
-
-  public void processInputs() {
-    for (Player player : levelHandler.getPlayers()) {
-      PacketInput input = clientTable.get(player.getUUID()).poll();
-      if (input != null) {
-        player.mouseY = input.getY();
-        player.mouseX = input.getX();
-        player.leftKey = input.isLeftKey();
-        player.rightKey = input.isRightKey();
-        player.jumpKey = input.isJumpKey();
-        player.click = input.isClick();
-        System.out.println("");
-      }
-    }
   }
 
   public void sendToClients(byte[] buffer) {
@@ -225,7 +204,4 @@ public class Server extends Application {
 
   }
 
-  public ConcurrentMap<UUID, BlockingQueue<PacketInput>> getClientTable() {
-    return clientTable;
-  }
 }
