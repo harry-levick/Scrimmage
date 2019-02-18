@@ -1,5 +1,6 @@
 package shared.handlers.levelHandler;
 
+import client.handlers.audioHandler.AudioHandler;
 import client.main.Settings;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -26,6 +27,7 @@ public class LevelHandler {
   private Group backgroundRoot;
   private Group gameRoot;
   private Background background;
+  private AudioHandler musicPlayer;
 
   public LevelHandler(Settings settings, Group root, Group backgroundRoot, Group gameRoot) {
     gameObjects = new ArrayList<>();
@@ -36,6 +38,7 @@ public class LevelHandler {
     this.root = root;
     this.backgroundRoot = backgroundRoot;
     this.gameRoot = gameRoot;
+    musicPlayer = new AudioHandler(settings);
     clientPlayer = new Player(500, 200, UUID.randomUUID());
     clientPlayer.initialise(gameRoot);
     players.add(clientPlayer);
@@ -48,6 +51,7 @@ public class LevelHandler {
     toRemove = new ArrayList<>();
     players = new ArrayList<>();
     bots = new ArrayList<>();
+    musicPlayer = new AudioHandler(settings);
   }
 
   public void changeMap(Map map) {
@@ -85,6 +89,8 @@ public class LevelHandler {
     gameObjects.addAll(players);
     //gameObjects.addAll(bots);
     gameState = map.getGameState();
+
+    musicPlayer.playMusicPlaylist();
     System.gc();
   }
 

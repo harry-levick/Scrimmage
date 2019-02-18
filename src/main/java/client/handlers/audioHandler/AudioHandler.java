@@ -2,6 +2,7 @@ package client.handlers.audioHandler;
 
 import client.main.Settings;
 import java.io.File;
+import java.util.ArrayList;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
@@ -12,6 +13,8 @@ public class AudioHandler {
   private Media musicMedia;
   private Media effectMedia;
   private Settings settings;
+
+  private int trackPos = 0;
 
   private MusicAssets musicAssets = new MusicAssets();
   private EffectsAssets effectsAssets = new EffectsAssets();
@@ -35,6 +38,22 @@ public class AudioHandler {
     } else {
       // todo log error
     }
+  }
+
+  public void playMusicPlaylist() {
+    ArrayList<String> playlist = musicAssets.getPlaylist();
+    playMusic(playlist.get(trackPos));
+    musicPlayer.setOnEndOfMedia(new Runnable() {
+      @Override
+      public void run() {
+        trackPos++;
+        if (trackPos == playlist.size()) {
+          trackPos = 0;
+        }
+        playMusicPlaylist();
+      }
+    });
+
   }
 
   /**
