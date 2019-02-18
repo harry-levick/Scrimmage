@@ -52,6 +52,7 @@ public class LevelHandler {
 
   public void changeMap(Map map) {
     this.map = map;
+    players.forEach(player -> player.reset());
     generateLevel(root, backgroundRoot, gameRoot);
   }
 

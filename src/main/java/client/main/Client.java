@@ -22,8 +22,9 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import shared.gameObjects.players.Player;
+import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.LevelHandler;
-import shared.packets.PacketEnd;
+import shared.handlers.levelHandler.Map;
 import shared.packets.PacketGameState;
 import shared.packets.PacketPlayerJoin;
 import shared.physics.Physics;
@@ -105,28 +106,31 @@ public class Client extends Application {
           levelHandler.getGameObjects().forEach(gameObject -> gameObject.update());
           accumulatedTime -= timeStep;
         }
-        /**Calculate Score*/
-        if (levelHandler.getPlayers().size() > 1) {
-          ArrayList<Player> alive = new ArrayList<>();
-          for (Player p : levelHandler.getPlayers()) {
-            if (p.isActive()) {
-              alive.add(p);
-            }
-            if (alive.size() > 1) {
-              break;
-            }
-          }
-          if (alive.size() == 1) {
-            alive.forEach(player -> player.increaseScore());
-            levelHandler.getPlayers().forEach(player -> player.reset());
-            //Change level
-          }
-        }
+
         /** Apply Input */
         levelHandler.getClientPlayer().applyInput(multiplayer, connectionHandler);
-        // Update bot
-        levelHandler.getBotPlayerList()
-            .forEach(bot -> bot.applyInput(multiplayer, connectionHandler));
+
+        if (!multiplayer) {
+          /**Calculate Score*/
+          if (levelHandler.getPlayers().size() > 1) {
+            ArrayList<Player> alive = new ArrayList<>();
+            for (Player p : levelHandler.getPlayers()) {
+              if (p.isActive()) {
+                alive.add(p);
+              }
+              if (alive.size() > 1) {
+                break;
+              }
+            }
+            if (alive.size() == 1) {
+              alive.forEach(player -> player.increaseScore());
+              //Change level
+            }
+          }
+          levelHandler.getBotPlayerList()
+              .forEach(bot -> bot.applyInput(multiplayer, connectionHandler));
+        }
+
         /** Render Game Objects */
         levelHandler.getGameObjects().forEach(gameObject -> gameObject.render());
         if (levelHandler.getBackground() != null) {
@@ -288,10 +292,14 @@ public class Client extends Application {
             break;
           //End
           case 6:
-            PacketEnd packetEnd = new PacketEnd(message);
-            multiplayer = false;
+            Client.connectionHandler.end();
+            Client.connectionHandler = null;
             //Show score board
-            //Main Menu
+            multiplayer = false;
+            Client.levelHandler.changeMap(
+                new Map("main_menu", Path.convert("src/main/resources/menus/main_menu.map"),
+                    GameState.IN_GAME));
+
             break;
           case 7:
             PacketGameState gameState = new PacketGameState(message);

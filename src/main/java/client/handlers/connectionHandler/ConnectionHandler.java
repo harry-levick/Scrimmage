@@ -99,6 +99,16 @@ public class ConnectionHandler extends Thread {
         }
       }
     }
+    try {
+      multicastSocket.leaveGroup(multicastAddress);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    multicastSocket.close();
+  }
+
+  public void end() {
+    connected = false;
   }
 
   public void send(byte[] data) {
