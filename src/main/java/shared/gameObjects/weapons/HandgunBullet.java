@@ -2,6 +2,7 @@ package shared.gameObjects.weapons;
 
 import java.util.UUID;
 import shared.gameObjects.players.Player;
+import shared.util.Path;
 
 /**
  * @author Henry Fung (hlf764)
@@ -30,6 +31,6 @@ public class HandgunBullet extends Bullet {
   public void initialiseAnimation() {
     // this.animation.supplyAnimation("default", this.imagePath);
     this.animation.supplyAnimationWithSize(
-        "default", this.getWidth(), this.getWidth(), true, this.imagePath);
+        "default", this.getWidth(), this.getWidth(), true, Path.convert(this.imagePath));
   }
 }
