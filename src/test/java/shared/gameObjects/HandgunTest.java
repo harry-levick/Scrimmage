@@ -15,7 +15,7 @@ public class HandgunTest {
 
   @BeforeClass
   public static void initHandgun() {
-    handgun = new Handgun(10, 10, 100, 100, "HandGun", UUID.randomUUID());
+    handgun = new Handgun(10, 10, 100, 100, "HandGun", null, UUID.randomUUID());
   }
 
   @Test

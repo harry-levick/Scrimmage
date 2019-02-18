@@ -2,6 +2,7 @@ package shared.gameObjects.weapons;
 
 import java.util.UUID;
 import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.players.Player;
 
 /**
  * Default holding weapon of a player
@@ -27,9 +28,10 @@ public class Punch extends Melee {
       ObjectID id, 
       int damage,
       String name, 
+      Player holder,
       double range,
       UUID uuid) {
-    super(x, y, sizeX, sizeY, id, damage, 1, name, -1, 60, range, 1, 1, uuid);
+    super(x, y, sizeX, sizeY, id, damage, 1, name, -1, 60, holder, range, 1, 1, uuid);
   }
 
   @Override

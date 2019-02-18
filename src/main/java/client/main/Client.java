@@ -2,7 +2,6 @@ package client.main;
 
 import client.handlers.audioHandler.AudioHandler;
 import client.handlers.connectionHandler.ConnectionHandler;
-import client.handlers.inputHandler.InputHandler;
 import client.handlers.inputHandler.KeyboardInput;
 import client.handlers.inputHandler.MouseInput;
 import java.util.HashMap;
@@ -32,7 +31,6 @@ import shared.util.Path;
 public class Client extends Application {
 
   private static final Logger LOGGER = LogManager.getLogger(Client.class.getName());
-  public static InputHandler inputHandler;
   public static LevelHandler levelHandler;
   public static Settings settings;
   public static boolean multiplayer;
@@ -62,7 +60,16 @@ public class Client extends Application {
   @Override
   public void start(Stage primaryStage) {
     setupRender(primaryStage);
-    levelHandler = new LevelHandler(settings, root, backgroundRoot, gameRoot, true);
+    levelHandler = new LevelHandler(settings, root, backgroundRoot, gameRoot);
+    keyInput = new KeyboardInput();
+    mouseInput = new MouseInput();
+    // Setup Input
+    scene.setOnKeyPressed(keyInput);
+    scene.setOnKeyReleased(keyInput);
+    scene.setOnMousePressed(mouseInput);
+    scene.setOnMouseMoved(mouseInput);
+    scene.setOnMouseReleased(mouseInput);
+    scene.setOnMouseDragged(mouseInput);
     audio = new AudioHandler(settings);
 
     // Main Game Loop
@@ -135,9 +142,6 @@ public class Client extends Application {
     previousTime = 0;
     accumulatedTime = 0;
     settings = new Settings();
-    inputHandler = new InputHandler();
-    keyInput = new KeyboardInput(inputHandler);
-    mouseInput = new MouseInput(inputHandler);
     multiplayer = false;
     // Start off screen
   }
@@ -241,14 +245,6 @@ public class Client extends Application {
     primaryStage.setFullScreen(false);
     primaryStage.show();
 
-    // Setup Input
-    scene.setOnKeyPressed(keyInput);
-    scene.setOnKeyReleased(keyInput);
-    scene.setOnMousePressed(mouseInput);
-    scene.setOnMouseMoved(mouseInput);
-    scene.setOnMouseReleased(mouseInput);
-    scene.setOnMouseDragged(mouseInput);
-
     // Start Music
 
   }
@@ -278,6 +274,11 @@ public class Client extends Application {
             HashMap<UUID, String> data = gameState.getGameObjects();
             levelHandler.getGameObjects()
                 .forEach(gameObject -> gameObject.setState(data.get(gameObject.getUUID())));
+            break;
+          default:
+            System.out.println(messageID);
+            System.out.println(message);
+
         }
       } catch (InterruptedException e) {
         e.printStackTrace();
