@@ -3,6 +3,7 @@ package client.handlers.connectionHandler;
 import client.main.Client;
 import java.io.IOException;
 import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.SocketException;
@@ -11,29 +12,31 @@ import java.util.Arrays;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import shared.packets.Packet;
-import shared.packets.PacketID;
 import shared.packets.PacketJoin;
-import shared.packets.PacketResponse;
 
 public class ConnectionHandler extends Thread {
 
   public BlockingQueue received;
 
+  private InetAddress multicastAddress;
   private InetAddress address;
-  private InetAddress addressRecieve;
-  private MulticastSocket socket;
+  private MulticastSocket multicastSocket;
+  private DatagramSocket socket;
   private byte[] buffer;
+  private int multicastPort;
   private int port;
   private boolean connected;
 
   public ConnectionHandler(String address) {
     connected = true;
-    port = 4446;
-    buffer = new byte[256];
+    multicastPort = 4446;
+    port = 4445;
     received = new LinkedBlockingQueue<String>();
     try {
-      this.socket = new MulticastSocket(port);
-      this.address = InetAddress.getByName(address);
+      this.multicastSocket = new MulticastSocket(multicastPort);
+      this.socket = new DatagramSocket();
+      this.address = InetAddress.getByName("localhost");
+      this.multicastAddress = InetAddress.getByName("230.0.0.0");
     } catch (SocketException | UnknownHostException e) {
       e.printStackTrace();
     } catch (IOException e) {
@@ -42,13 +45,22 @@ public class ConnectionHandler extends Thread {
   }
 
   public void run() {
-    try {
+    //try {
       Packet joinPacket =
           new PacketJoin(
-              Client.levelHandler.getClientPlayer().getUUID(), Client.settings.getUsername());
-      this.send(joinPacket.getData());
-      socket.setSoTimeout(60000);
-      DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+              Client.levelHandler.getClientPlayer().getUUID(), Client.settings.getUsername(),
+              Client.levelHandler.getClientPlayer().getX(),
+              Client.levelHandler.getClientPlayer().getY());
+    DatagramPacket sendPacket = new DatagramPacket(joinPacket.getData(),
+        joinPacket.getData().length, address, port);
+    try {
+      socket.send(sendPacket);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    // socket.setSoTimeout(60000);
+    //DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+    /**
       socket.receive(packet);
       String response = Arrays.toString(packet.getData());
       if (Integer.parseInt(response.substring(0, 1)) == PacketID.RESPONSE.getID()) {
@@ -64,8 +76,9 @@ public class ConnectionHandler extends Thread {
       connected = false;
       return;
     }
+     **/
     try {
-      socket.joinGroup(addressRecieve);
+      multicastSocket.joinGroup(multicastAddress);
     } catch (IOException e) {
       connected = false;
       e.printStackTrace();
@@ -73,14 +86,14 @@ public class ConnectionHandler extends Thread {
     while (connected) {
       DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
       try {
-        socket.receive(packet);
+        multicastSocket.receive(packet);
         received.add(Arrays.toString(packet.getData()));
       } catch (IOException e) {
         e.printStackTrace();
       } finally {
         try {
-          socket.leaveGroup(address);
-          socket.close();
+          multicastSocket.leaveGroup(multicastAddress);
+          multicastSocket.close();
         } catch (IOException e) {
           e.printStackTrace();
         }
@@ -89,7 +102,7 @@ public class ConnectionHandler extends Thread {
   }
 
   public void send(byte[] data) {
-    DatagramPacket packet = new DatagramPacket(data, data.length, address, 4445);
+    DatagramPacket packet = new DatagramPacket(data, data.length, address, port);
     try {
       socket.send(packet);
     } catch (IOException e) {

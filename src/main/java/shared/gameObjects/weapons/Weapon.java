@@ -5,7 +5,6 @@ import java.util.UUID;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
-import client.main.Client;
 
 /**
  * @author hlf764 The abstract class for all weapons in the game.
@@ -26,6 +25,7 @@ public abstract class Weapon extends GameObject {
   protected boolean isMelee;
   protected int ammo; // -1 = unlimited
   protected int fireRate; // max = MAX_COOLDOWN - 1
+  protected Player holder; // holder of the weapon
 
   protected int currentCooldown;
 
@@ -57,6 +57,7 @@ public abstract class Weapon extends GameObject {
       boolean isMelee,
       int ammo,
       int fireRate,
+      Player holder,
       UUID uuid) {
     super(x, y, sizeX, sizeY, id, uuid);
     this.isGun = isGun;
@@ -66,6 +67,7 @@ public abstract class Weapon extends GameObject {
     this.name = name;
     setAmmo(ammo);
     setFireRate(fireRate);
+    this.holder = holder;
 
     this.currentCooldown = 0;
   }
@@ -164,6 +166,10 @@ public abstract class Weapon extends GameObject {
     if (newFireRate > 0) {
       this.fireRate = newFireRate;
     }
+  }
+
+  public Player getHolder() {
+    return this.holder;
   }
   // -------------------
   // Setters and Getters

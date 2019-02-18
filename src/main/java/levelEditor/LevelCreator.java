@@ -94,6 +94,7 @@ public class LevelCreator extends Application {
     MapLoader.saveMap(gameObjects, mapDataObject, filepath + filename + ".map");
 
     System.out.println("RECREATED MAP FILES");
+
     Platform.exit();
   }
 }

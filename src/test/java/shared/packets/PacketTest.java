@@ -19,9 +19,8 @@ public class PacketTest {
 
   @Test
   public void InputPacketTest() {
-    PacketInput input = new PacketInput(x, y, leftKey, rightKey, jumpKey, click);
-    byte[] simulateNetwork = input.getData();
-    PacketInput output = new PacketInput(simulateNetwork);
+    PacketInput input = new PacketInput(x, y, leftKey, rightKey, jumpKey, click, uuid);
+    PacketInput output = new PacketInput(input.getData().toString());
     assertEquals(output.getX(), x);
     assertEquals(output.getY(), y);
     assertEquals(output.isLeftKey(), leftKey);
@@ -32,7 +31,7 @@ public class PacketTest {
 
   @Test
   public void JoinPacketTest() {
-    PacketJoin join = new PacketJoin(uuid, username);
+    PacketJoin join = new PacketJoin(uuid, username, x, y);
     byte[] simulateNetwork = join.getData();
     PacketJoin output = new PacketJoin(Arrays.toString(simulateNetwork));
     assertEquals(output.getClientID(), uuid);
