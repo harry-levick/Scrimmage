@@ -3,10 +3,14 @@ package shared.gameObjects.menu.main;
 import client.main.Client;
 import java.util.UUID;
 import javafx.scene.input.MouseEvent;
+import server.ai.Bot;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.menu.ButtonObject;
+import shared.gameObjects.weapons.Sword;
 
 public class ButtonSingleplayer extends ButtonObject {
+
+  private final int maxPlayers = 4;
 
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
@@ -30,5 +34,16 @@ public class ButtonSingleplayer extends ButtonObject {
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
     Client.levelHandler.changeMap(Client.levelHandler.getMaps().get(1));
+    int botsToAdd = maxPlayers - Client.levelHandler.getPlayers().size();
+    for (int b = 0; b < botsToAdd; b++) {
+      Bot botPlayer = new Bot(500, 500, UUID.randomUUID(), Client.levelHandler.getGameObjects());
+      botPlayer.setHolding(
+          new Sword(500, 500, "Sword@LevelHandler", botPlayer, UUID.randomUUID())
+      );
+      botPlayer.getHolding().initialise(Client.gameRoot);
+      botPlayer.initialise(Client.gameRoot);
+      Client.levelHandler.getPlayers().add(botPlayer);
+      Client.levelHandler.getGameObjects().add(botPlayer.getHolding());
+    }
   }
 }

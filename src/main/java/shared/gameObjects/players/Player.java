@@ -33,10 +33,12 @@ public class Player extends GameObject {
   protected double vx;
   public boolean leftKey, rightKey, jumpKey, click;
   public double mouseX, mouseY;
+  public int score;
   private BoxCollider bc;
 
   public Player(double x, double y, UUID playerUUID) {
     super(x, y, 80, 110, ObjectID.Player, playerUUID);
+    score = 0;
     bc = new BoxCollider(this, false);
     addComponent(bc);
     rb = new Rigidbody(RigidbodyType.DYNAMIC, 100, 10, 0.2f, new MaterialProperty(0.005f, 0, 0),
@@ -200,6 +202,23 @@ public class Player extends GameObject {
       this.removeComponent(bc);
       this.imageView.setRotate(90);
     }
+  }
+
+  public void reset() {
+    score = 0;
+    health = 100;
+    active = true;
+    this.addComponent(bc);
+    this.imageView.setRotate(-90);
+    this.imageView.setTranslateY(getY() - 70);
+  }
+
+  public void increaseScore() {
+    score++;
+  }
+
+  public void increaseScore(int amount) {
+    score += amount;
   }
 
   public void setHealth(int hp) {

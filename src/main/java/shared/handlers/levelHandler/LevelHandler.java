@@ -11,7 +11,6 @@ import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.background.Background;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.MachineGun;
-import shared.gameObjects.weapons.Sword;
 import shared.util.Path;
 
 public class LevelHandler {
@@ -21,7 +20,6 @@ public class LevelHandler {
   private ArrayList<Player> players;
   private ArrayList<Bot> bots;
   private Player clientPlayer;
-  private Bot botPlayer;
   private ArrayList<Map> maps;
   private GameState gameState;
   private Map map;
@@ -49,15 +47,6 @@ public class LevelHandler {
     clientPlayer.getHolding().initialise(gameRoot);
     changeMap(new Map("main_menu.map", Path.convert("src/main/resources/menus/main_menu.map"),
         GameState.IN_GAME));
-    botPlayer = new Bot(500, 500, UUID.randomUUID(), gameObjects);
-    botPlayer.setHolding(
-        new Sword(500, 500, "Sword@LevelHandler", botPlayer, UUID.randomUUID())
-    );
-    botPlayer.getHolding().initialise(gameRoot);
-    botPlayer.initialise(gameRoot);
-    bots.add(botPlayer);
-    gameObjects.add(botPlayer);
-    gameObjects.add(botPlayer.getHolding());
   }
 
 
@@ -191,5 +180,9 @@ public class LevelHandler {
     toRemove.forEach(gameObject -> gameObject.removeRender());
     toRemove.forEach(gameObject -> gameObject.destroy());
     toRemove.clear();
+  }
+
+  public Group getGameRoot() {
+    return gameRoot;
   }
 }

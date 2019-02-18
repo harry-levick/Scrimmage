@@ -4,6 +4,7 @@ import client.handlers.audioHandler.AudioHandler;
 import client.handlers.connectionHandler.ConnectionHandler;
 import client.handlers.inputHandler.KeyboardInput;
 import client.handlers.inputHandler.MouseInput;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 import javafx.animation.AnimationTimer;
@@ -45,7 +46,7 @@ public class Client extends Application {
   private MouseInput mouseInput;
   private Group root;
   private Group backgroundRoot;
-  private Group gameRoot;
+  public static Group gameRoot;
   private Scene scene;
   private float maximumStep;
   private long previousTime;
@@ -103,6 +104,19 @@ public class Client extends Application {
         while (accumulatedTime >= 2 * timeStep) {
           levelHandler.getGameObjects().forEach(gameObject -> gameObject.update());
           accumulatedTime -= timeStep;
+        }
+        /**Calculate Score*/
+        ArrayList<Player> alive = new ArrayList<>();
+        for (Player p : levelHandler.getPlayers()) {
+          if (p.isActive()) {
+            alive.add(p);
+          }
+          if (alive.size() > 1) {
+            break;
+          }
+        }
+        if (alive.size() == 1) {
+          alive.forEach(player -> player.increaseScore());
         }
         /** Apply Input */
         levelHandler.getClientPlayer().applyInput(multiplayer, connectionHandler);
