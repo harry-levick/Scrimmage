@@ -1,10 +1,11 @@
 package shared.gameObjects.players;
 
 import client.handlers.connectionHandler.ConnectionHandler;
-import client.handlers.inputHandler.InputHandler;
 import client.main.Client;
 import java.util.ArrayList;
 import java.util.UUID;
+import javafx.scene.Group;
+import server.ai.Bot;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.components.BoxCollider;
@@ -20,7 +21,7 @@ import shared.util.maths.Vector2;
 
 public class Player extends GameObject {
 
-  protected final float speed = 10;
+  protected final float speed = 100;
   protected final float jumpForce = -200;
   protected final float JUMP_LIMIT = 2.0f;
   protected float jumpTime;
@@ -31,6 +32,9 @@ public class Player extends GameObject {
   protected Rigidbody rb;
   protected double vx;
   private BoxCollider bc;
+
+  public boolean leftKey, rightKey, jumpKey, click;
+  public double mouseX, mouseY;
 
   public Player(double x, double y, double sizeX, double sizeY, UUID playerUUID) {
     super(x, y, sizeX, sizeY, ObjectID.Player, playerUUID);
@@ -53,6 +57,15 @@ public class Player extends GameObject {
     this.animation.supplyAnimation("jump", "images/player/player_jump.png");
   }
 
+  public void initialise(Group root) {
+    super.initialise(root);
+    this.leftKey = false;
+    this.rightKey = false;
+    this.jumpKey = false;
+    this.click = false;
+  }
+
+
   @Override
   public void update() {
     checkGrounded(); //Checks if the player is grounded
@@ -61,6 +74,7 @@ public class Player extends GameObject {
     badWeapon();
     super.update();
   }
+
 
   @Override
   public void render() {
@@ -74,8 +88,8 @@ public class Player extends GameObject {
 
   @Override
   public String getState() {
-    return objectUUID + ";" + getX() + ";" + getY() + ";" + animation.getName() + ";" + health + ";"
-        + holding.getUUID();
+    return objectUUID + ";" + getX() + ";" + getY() + ";" + animation.getName() + ";" + health;
+    //add holding
   }
 
   @Override
@@ -103,23 +117,23 @@ public class Player extends GameObject {
     }
   }
   public void applyInput(boolean multiplayer, ConnectionHandler connectionHandler) {
-    if (InputHandler.rightKey) {
+    if (rightKey) {
         rb.setVelocity(new Vector2(speed, rb.getVelocity().getY()));
       animation.switchAnimation("walk");
       imageView.setScaleX(1);
     }
-    if (InputHandler.leftKey) {
+    if (leftKey) {
       rb.setVelocity(new Vector2(speed*-1, rb.getVelocity().getY()));
       animation.switchAnimation("walk");
       imageView.setScaleX(-1);
     }
 
-    if (!InputHandler.rightKey && !InputHandler.leftKey) {
+    if (!rightKey && !leftKey) {
       vx = 0;
       animation.switchDefault();
 
     }
-    if (InputHandler.jumpKey && !jumped) {
+    if (jumpKey && !jumped) {
       rb.moveY(jumpForce, 0.33333f);
       jumped = true;
     }
@@ -129,8 +143,8 @@ public class Player extends GameObject {
     if (grounded) {
       jumped = false;
     }
-    if (InputHandler.click && holding != null) {
-      holding.fire(InputHandler.x, InputHandler.y);
+    if (click && holding != null) {
+      holding.fire(mouseX, mouseY);
     } //else punch
     //setX(getX() + (vx * 0.0166));
 
@@ -140,15 +154,16 @@ public class Player extends GameObject {
     }
 
     /** If multiplayer then send input to server */
-    if (multiplayer) {
+    if (multiplayer && !(this instanceof Bot)) {
       PacketInput input =
           new PacketInput(
-              InputHandler.x,
-              InputHandler.y,
-              InputHandler.leftKey,
-              InputHandler.rightKey,
-              InputHandler.jumpKey,
-              InputHandler.click);
+              mouseX,
+              mouseY,
+              leftKey,
+              rightKey,
+              jumpKey,
+              click,
+              getUUID());
       connectionHandler.send(input.getData());
     }
   }
@@ -184,7 +199,7 @@ public class Player extends GameObject {
       this.imageView.setRotate(90);
     }
   }
-  
+
   public void setHealth(int hp) {
     this.health = hp;
   }

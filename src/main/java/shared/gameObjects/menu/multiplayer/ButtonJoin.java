@@ -1,6 +1,5 @@
 package shared.gameObjects.menu.multiplayer;
 
-import client.Menu;
 import client.handlers.connectionHandler.ConnectionHandler;
 import client.main.Client;
 import java.util.UUID;
@@ -9,6 +8,7 @@ import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.menu.ButtonObject;
 import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.Map;
+import shared.util.Path;
 
 public class ButtonJoin extends ButtonObject {
 
@@ -22,8 +22,9 @@ public class ButtonJoin extends ButtonObject {
    * @param y Y coordinate of object in game world
    * @param id Unique Identifier of every game object
    */
-  public ButtonJoin(double x, double y, ObjectID id, UUID objectUUID) {
-    super(x, y, 50, 50, id, objectUUID);
+  public ButtonJoin(
+      double x, double y, double sizeX, double sizeY, ObjectID id, UUID objectUUID) {
+    super(x, y, sizeX, sizeY, id, objectUUID);
     this.address = "localhost";
   }
 
@@ -36,10 +37,10 @@ public class ButtonJoin extends ButtonObject {
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
     System.out.println("test");
-    Client.connectionHandler = new ConnectionHandler(address);
+    Client.connectionHandler = new ConnectionHandler("230.0.0.0");
     Client.connectionHandler.setDaemon(true);
     Client.connectionHandler.start();
     button.disarm();
-    Client.levelHandler.changeMap(new Map("Lobby", Menu.LOBBY.getMenuPath(), GameState.Lobby));
+    Client.levelHandler.changeMap(new Map("Lobby", Path.convert("src/main/resources/menus/lobby.map"), GameState.Lobby));
   }
 }

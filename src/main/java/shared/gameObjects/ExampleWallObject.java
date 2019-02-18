@@ -78,9 +78,4 @@ public class ExampleWallObject extends GameObject {
   @Override
   public void interpolatePosition(float alpha) {
   }
-
-  @Override
-  public String getState() {
-    return null;
-  }
 }

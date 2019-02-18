@@ -1,7 +1,5 @@
 package server.ai;
 
-import client.handlers.connectionHandler.ConnectionHandler;
-import client.handlers.inputHandler.InputHandler;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -9,7 +7,6 @@ import java.util.stream.Collectors;
 import server.ai.pathFind.AStar;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.players.Player;
-import shared.packets.PacketInput;
 import shared.util.maths.Vector2;
 
 
@@ -23,8 +20,6 @@ public class Bot extends Player {
   public static final int KEY_RIGHT = 2;
   public static final int KEY_CLICK = 3;
   public float jumpTime;
-  boolean jumpKey, leftKey, rightKey, click;
-  double mouseX, mouseY;
   boolean mayJump = true;
 
   FSA state;
@@ -54,59 +49,6 @@ public class Bot extends Player {
   public boolean mayJump() {
     return mayJump;
   }
-
-  @Override
-  public void applyInput(boolean multiplayer, ConnectionHandler connectionHandler) {
-    if (this.rightKey) {
-      rb.moveX(speed);
-      animation.switchAnimation("walk");
-      imageView.setScaleX(1);
-    }
-    if (this.leftKey) {
-      rb.moveX(speed * -1);
-      animation.switchAnimation("walk");
-      imageView.setScaleX(-1);
-    }
-
-    if (!this.rightKey && !this.leftKey) {
-      vx = 0;
-      animation.switchDefault();
-
-    }
-    if (this.jumpKey && !jumped) {
-      rb.moveY(jumpForce, 0.33333f);
-      jumped = true;
-    }
-    if (jumped) {
-      animation.switchAnimation("jump");
-    }
-    if (grounded) {
-      jumped = false;
-    }
-    if (this.click && holding != null) {
-      holding.fire(this.mouseX, this.mouseY);
-    } //else punch
-    //setX(getX() + (vx * 0.0166));
-
-    if (this.getHolding() != null) {
-      this.getHolding().setX(this.getX() + 60);
-      this.getHolding().setY(this.getY() + 70);
-    }
-
-    // If multiplayer then send input to server
-    if (multiplayer) {
-      PacketInput input =
-          new PacketInput(
-              InputHandler.x,
-              InputHandler.y,
-              InputHandler.leftKey,
-              InputHandler.rightKey,
-              InputHandler.jumpKey,
-              InputHandler.click);
-      connectionHandler.send(input.getData());
-    }
-  }
-
 
   @Override
   public void update() {
