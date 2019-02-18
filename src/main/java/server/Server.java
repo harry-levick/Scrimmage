@@ -4,10 +4,6 @@ import client.main.Client;
 import client.main.Settings;
 import java.io.IOException;
 import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Timer;
@@ -28,6 +24,7 @@ import shared.handlers.levelHandler.LevelHandler;
 import shared.handlers.levelHandler.Map;
 import shared.packets.PacketGameState;
 import shared.packets.PacketMap;
+import shared.packets.Socket;
 import shared.physics.Physics;
 import shared.util.Path;
 
@@ -44,14 +41,11 @@ public class Server extends Application {
   private final AtomicBoolean gameOver = new AtomicBoolean(false);
   private final AtomicInteger counter = new AtomicInteger(0);
   private final int serverUpdateRate = 10;
-  private final int multicastPort = 4446;
-  private final String multicastAddress = "230.0.0.0";
   private final int maxPlayers = 4;
   public ServerState serverState;
   private String threadName;
-  private DatagramSocket socket;
-  private InetAddress group;
   private LinkedList<Map> playlist;
+  private Socket multicastSocket;
 
   public static void main(String args[]) {
     launch(args);
@@ -77,7 +71,7 @@ public class Server extends Application {
     running.set(true);
     LOGGER.debug("Running " + threadName);
     serverState = ServerState.WAITING_FOR_PLAYERS;
-    setupSocket();
+    multicastSocket = new Socket();
     /** Receiver from clients */
     ServerReceiver receiver = new ServerReceiver(this);
     receiver.start();
@@ -139,9 +133,10 @@ public class Server extends Application {
   }
 
   public void sendToClients(byte[] buffer) {
-    DatagramPacket packet = new DatagramPacket(buffer, buffer.length, group, multicastPort);
+    DatagramPacket packet = new DatagramPacket(buffer, buffer.length,
+        multicastSocket.getMulticastAddress(), multicastSocket.getMulticastPort());
     try {
-      socket.send(packet);
+      multicastSocket.get().send(packet);
     } catch (IOException e) {
       LOGGER.error("Error sending server message");
     }
@@ -190,18 +185,6 @@ public class Server extends Application {
         nextMap();
       }
     }
-  }
-
-  public void setupSocket() {
-    try {
-      socket = new DatagramSocket();
-      group = InetAddress.getByName(multicastAddress);
-    } catch (SocketException e) {
-      LOGGER.error("Failed to create server socket");
-    } catch (UnknownHostException e) {
-      LOGGER.error("Failed to create server group");
-    }
-
   }
 
 }
