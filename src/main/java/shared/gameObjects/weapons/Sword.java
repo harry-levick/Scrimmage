@@ -8,8 +8,6 @@ public class Sword extends Melee {
 
   //private static String imagePath = "images/weapons/sword.jpg";
   private static String imagePath = "images/weapons/sword1.png";
-  private double rotate;
-  private double[] angles;
   private int currentAngleIndex;
 
   /**
