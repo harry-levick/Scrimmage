@@ -30,10 +30,12 @@ public class Player extends GameObject {
   protected Weapon holding;
   protected Rigidbody rb;
   protected double vx;
+  private BoxCollider bc;
 
   public Player(double x, double y, double sizeX, double sizeY, UUID playerUUID) {
     super(x, y, sizeX, sizeY, ObjectID.Player, playerUUID);
-    addComponent(new BoxCollider(this, false));
+    bc = new BoxCollider(this, false);
+    addComponent(bc);
     rb = new Rigidbody(RigidbodyType.DYNAMIC, 100, 10, 0.7f, new MaterialProperty(0.005f, 0, 0),
         null, this);
     addComponent(rb);
@@ -178,6 +180,7 @@ public class Player extends GameObject {
     this.health -= damage;
     if (this.health <= 0) {
       this.setActive(false);
+      this.removeComponent(bc);
       this.imageView.setRotate(90);
     }
   }
