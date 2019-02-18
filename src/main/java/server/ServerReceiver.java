@@ -6,6 +6,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -85,7 +86,9 @@ public class ServerReceiver implements Runnable {
         case 2:
           PacketInput inputPacket = new PacketInput(received);
           if (server.clientTable.containsKey(inputPacket.getUuid())) {
-            server.clientTable.get(inputPacket.getUuid()).add(inputPacket);
+            BlockingQueue<PacketInput> temp = server.clientTable.get(inputPacket.getUuid());
+            temp.add(inputPacket);
+            System.out.println("");
           }
           break;
         case 5:

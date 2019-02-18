@@ -154,6 +154,7 @@ public class Server extends Application {
         player.rightKey = input.isRightKey();
         player.jumpKey = input.isJumpKey();
         player.click = input.isClick();
+        System.out.println("");
       }
     }
   }
