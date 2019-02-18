@@ -49,8 +49,8 @@ public abstract class Collider extends Component implements Serializable {
   public static boolean boxBoxCollision(BoxCollider boxA, BoxCollider boxB) {
     if (boxA.getCorners()[0].getX() < boxB.getCorners()[3].getX()
         && (boxA.getCorners()[3].getX() > boxB.getCorners()[0].getX()
-            && (boxA.getCorners()[0].getY() < boxB.getCorners()[1].getY()
-                && (boxA.getCorners()[1].getY() > boxB.getCorners()[0].getY())))) {
+        && (boxA.getCorners()[0].getY() < boxB.getCorners()[1].getY()
+        && (boxA.getCorners()[1].getY() > boxB.getCorners()[0].getY())))) {
       return true;
     }
     return false;

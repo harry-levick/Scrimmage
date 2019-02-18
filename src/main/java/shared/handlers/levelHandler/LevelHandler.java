@@ -2,9 +2,9 @@ package shared.handlers.levelHandler;
 
 import client.main.Settings;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.UUID;
 import javafx.scene.Group;
+import server.ai.Bot;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
@@ -14,66 +14,62 @@ import shared.util.Path;
 
 public class LevelHandler {
 
-  private ArrayList<GameObject> gameObjects = new ArrayList<>();
-  /*  toRemove will remove all gameObjects it contains from gameObjects list
-   *  and clear the list for next frame. */
-  private ArrayList<GameObject> toRemove = new ArrayList<>();
-  private ArrayList<Player> players = new ArrayList<>();
+  private ArrayList<GameObject> gameObjects;
+  private ArrayList<GameObject> toRemove;
+  private ArrayList<Player> players;
+  private ArrayList<Bot> bots;
   private Player clientPlayer;
+  private Bot botPlayer;
   private ArrayList<Map> maps;
-  private HashMap<String, Map> menus;
   private GameState gameState;
   private Map map;
   private Group root;
   private Group backgroundRoot;
   private Group gameRoot;
+  private boolean isClient;
 
-  public LevelHandler(
-      Settings settings, Group root, Group backgroundRoot, Group gameRoot, boolean isClient) {
-    this.root = root;
-    this.backgroundRoot = backgroundRoot;
-    this.gameRoot = gameRoot;
-    //    this.root.getChildren().add(backgroundRoot);
-    //    this.root.getChildren().add(gameRoot);
+  public LevelHandler(Settings settings, Group root, Group backgroundRoot, Group gameRoot,
+      boolean isClient) {
+    this.isClient = isClient;
+    gameObjects = new ArrayList<>();
+    toRemove = new ArrayList<>();
+    players = new ArrayList<>();
+    bots = new ArrayList<>();
+    maps = MapLoader.getMaps(settings.getMapsPath());
 
     if (isClient) {
-      clientPlayer = new Player(500, 500, 80, 110, UUID.randomUUID());
+      this.root = root;
+      this.backgroundRoot = backgroundRoot;
+      this.gameRoot = gameRoot;
+      clientPlayer = new Player(500, 200, 80, 110, UUID.randomUUID());
       clientPlayer.setHolding(
-          // new Handgun(500, 500, 100, 100, "Handgun", UUID.randomUUID())
           new MachineGun(500, 500, 116, 33, "MachineGun@LevelHandler", UUID.randomUUID()));
       clientPlayer.initialise(gameRoot);
       players.add(clientPlayer);
-    }
-    maps = MapLoader.getMaps(settings.getMapsPath());
-    // menus = MapLoader.getMaps(settings.getMenuPath());
-    // menus = MapLoader.getMenuMaps(settings.getMenuPath());
-    // Set initial game level as the Main Menu
-    map =
-        new Map(
-            "MainMenu",
-            Path.convert("src/main/resources/menus/main_menu.map"),
-            GameState.MAIN_MENU);
-    generateLevel(root, backgroundRoot, gameRoot, isClient);
+      gameObjects.add(clientPlayer.getHolding());
+      clientPlayer.getHolding().initialise(gameRoot);
+      changeMap(new Map("main_menu.map", Path.convert("src/main/resources/menus/main_menu.map"),
+          GameState.IN_GAME));
 
-    gameObjects.add(clientPlayer.getHolding());
-    clientPlayer.getHolding().initialise(gameRoot);
+      botPlayer = new Bot(500, 500, 80, 110, UUID.randomUUID(), gameObjects);
+      botPlayer.setHolding(
+          new Sword(500, 500, 50, 50, "Sword@LevelHandler", 80,
+              0, 0, UUID.randomUUID())
+      );
+      botPlayer.getHolding().initialise(gameRoot);
+      botPlayer.initialise(gameRoot);
+      bots.add(botPlayer);
+      gameObjects.add(botPlayer);
+      gameObjects.add(botPlayer.getHolding());
+
+    }
   }
 
-  public boolean changeMap(Map map) {
-    if (maps.contains(map)) {
+  public void changeMap(Map map) {
       this.map = map;
-      return true;
-    }
-    return false;
+    generateLevel(root, backgroundRoot, gameRoot, isClient);
   }
 
-  public boolean changeMenu(Map menu) {
-    if (menus.containsValue(menu)) {
-      this.map = menu;
-      return true;
-    }
-    return false;
-  }
 
   /**
    * NOTE: This to change the level use change Map Removes current game objects and creates new ones
@@ -81,8 +77,8 @@ public class LevelHandler {
    */
   public void generateLevel(Group root, Group backgroundGroup, Group gameGroup, boolean isClient) {
 
-    // Remove current game objects
-    gameObjects.remove(clientPlayer);
+    gameObjects.removeAll(players);
+    gameObjects.removeAll(bots);
     gameObjects.forEach(gameObject -> gameObject.removeRender());
     gameObjects.forEach(gameObject -> gameObject = null);
     gameObjects.clear();
@@ -91,17 +87,14 @@ public class LevelHandler {
     gameObjects = MapLoader.loadMap(map.getPath());
     gameObjects.forEach(
         gameObject -> {
-          if (gameObject.getId() == ObjectID.MapDataObject && isClient) {
-            // clientPlayer.setX(gameObject.getX());
-            // clientPlayer.setY(gameObject.getY());
-            // gameObjects.remove(gameObject); // todo check if this should be done
-          } else if (gameObject.getId() == ObjectID.Background) {
+          if (gameObject.getId() == ObjectID.Background) {
             gameObject.initialise(backgroundGroup);
           } else {
             gameObject.initialise(gameGroup);
           }
         });
-    gameObjects.add(clientPlayer);
+    gameObjects.addAll(players);
+    gameObjects.addAll(bots);
     gameState = map.getGameState();
     System.gc();
   }
@@ -112,7 +105,7 @@ public class LevelHandler {
    * @return All Game Objects
    */
   public ArrayList<GameObject> getGameObjects() {
-    clearToRemove(); // Remove every gameObjects we no longer need
+    clearToRemove();    // Remove every gameObjects we no longer need
     return gameObjects;
   }
 
@@ -132,7 +125,7 @@ public class LevelHandler {
    * @param g GameObject to be removed
    */
   public void delGameObject(GameObject g) {
-    toRemove.add(g); // Will be removed on next frame
+    toRemove.add(g);  // Will be removed on next frame
   }
 
   /**
@@ -144,14 +137,6 @@ public class LevelHandler {
     return maps;
   }
 
-  /**
-   * List of all available menus,
-   *
-   * @return All Menus
-   */
-  public HashMap<String, Map> getMenus() {
-    return menus;
-  }
 
   /**
    * Current State of Game, eg Main_Menu or In_Game
@@ -181,6 +166,10 @@ public class LevelHandler {
 
   public Player getClientPlayer() {
     return clientPlayer;
+  }
+
+  public Bot getBotPlayer() {
+    return botPlayer;
   }
 
   /**

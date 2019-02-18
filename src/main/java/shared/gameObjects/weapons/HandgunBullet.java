@@ -2,7 +2,9 @@ package shared.gameObjects.weapons;
 
 import java.util.UUID;
 
-/** @author Henry Fung (hlf764) */
+/**
+ * @author Henry Fung (hlf764)
+ */
 public class HandgunBullet extends Bullet {
 
   private static String imagePath = "images/weapons/fireBullet.png";

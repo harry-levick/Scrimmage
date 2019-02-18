@@ -4,6 +4,7 @@ import client.main.Client;
 import java.util.UUID;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
 import shared.physics.data.AngularData;
 import shared.physics.data.MaterialProperty;
@@ -39,17 +40,18 @@ public abstract class Bullet extends GameObject {
     // Unit vector of the bullet force
     vector = new Vector2((float) (mouseX - gunX), (float) (mouseY - gunY));
     vector = vector.div((float) Math.sqrt(vector.dot(vector)));
+    addComponent(new BoxCollider(this, false));
     rb = new Rigidbody(
         RigidbodyType.DYNAMIC,
         100f,
-        1,
+        0,
         0.1f,
         new MaterialProperty(0.1f, 1, 1),
         new AngularData(0, 0, 0, 0),
         this);//TODO FIX
     addComponent(rb);
     // Change the speed of bullet by altering the bulletSpeed variable in any Gun
-    rb.setVelocity(vector.mult((float) speed * 2250f));
+
     //rb.move(new Vector2((float)(mouseX-gunX)*1.5f, (float)(mouseY-gunY)*1.5f));
 
     this.isHit = false;
@@ -66,6 +68,7 @@ public abstract class Bullet extends GameObject {
       Client.levelHandler.delGameObject(this);
       // apply effect (deduct hp, play sound)
     } else if ((0 < getX() && getX() < 1920) && (0 < getY() && getY() < 1080)) {
+        rb.move(vector.mult((float) speed));
       super.update();
     }
     else {

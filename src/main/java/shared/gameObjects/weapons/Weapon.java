@@ -1,11 +1,15 @@
 package shared.gameObjects.weapons;
 
+import client.main.Client;
 import java.util.UUID;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.players.Player;
 import client.main.Client;
 
-/** @author hlf764 The abstract class for all weapons in the game. */
+/**
+ * @author hlf764 The abstract class for all weapons in the game.
+ */
 public abstract class Weapon extends GameObject {
 
   /**
@@ -15,7 +19,7 @@ public abstract class Weapon extends GameObject {
    */
   protected int MAX_COOLDOWN = 81;
 
-  protected double damage;
+  protected int damage;
   protected double weight; // grams
   protected String name; // name of the weapon
   protected boolean isGun;
@@ -46,7 +50,7 @@ public abstract class Weapon extends GameObject {
       double sizeX,
       double sizeY,
       ObjectID id,
-      double damage,
+      int damage,
       double weight,
       String name,
       boolean isGun,
@@ -98,11 +102,11 @@ public abstract class Weapon extends GameObject {
     return this.currentCooldown;
   }
   
-  public double getDamage() {
+  public int getDamage() {
     return this.damage;
   }
 
-  public void setDamage(double newDamage) {
+  public void setDamage(int newDamage) {
     if (newDamage > 0 && newDamage < 100.0f) {
       this.damage = newDamage;
     }

@@ -19,7 +19,7 @@ public class MachineGun extends Gun {
         10, // weight
         name,
         50, // ammo
-        1, // bulletSpeed
+        50, // bulletSpeed
         70, // fireRate
         50, // bulletWidth
         true, // fullAutoFire
@@ -52,7 +52,8 @@ public class MachineGun extends Gun {
   }
 
   @Override
-  public void interpolatePosition(float alpha) {}
+  public void interpolatePosition(float alpha) {
+  }
 
   @Override
   public String getState() {
