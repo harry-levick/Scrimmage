@@ -54,11 +54,14 @@ public class LevelHandler {
     botPlayer.setHolding(
         new Sword(500, 500, "Sword@LevelHandler", botPlayer, UUID.randomUUID())
     );
-    botPlayer.getHolding().initialise(gameRoot);
     botPlayer.initialise(gameRoot);
     bots.add(botPlayer);
     gameObjects.add(botPlayer);
+    
+    gameObjects.add(clientPlayer.getHolding());
     gameObjects.add(botPlayer.getHolding());
+    clientPlayer.getHolding().initialise(gameRoot);
+    botPlayer.getHolding().initialise(gameRoot);
   }
 
 
