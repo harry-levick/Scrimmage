@@ -68,7 +68,6 @@ public class LevelHandler {
     bots.add(newbot);
     gameObjects.add(newbot);
     gameObjects.add(newbot.getHolding());
-    System.out.println("PRINT");
   }
 
 

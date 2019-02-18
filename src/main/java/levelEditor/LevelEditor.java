@@ -518,7 +518,7 @@ public class LevelEditor extends Application {
               valid = false;
             }
             if (valid) {
-              MapLoader.saveMap(gameObjects, mapDataObject, filename + ".map");
+              MapLoader.saveMap(gameObjects, mapDataObject, filepath + filename + ".map");
               errorText.setStyle("-fx-fill: green");
               errorText.setText("Saved");
               dialog.close();
