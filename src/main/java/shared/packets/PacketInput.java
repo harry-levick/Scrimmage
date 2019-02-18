@@ -1,13 +1,18 @@
 package shared.packets;
 
+import java.util.UUID;
+
 public class PacketInput extends Packet {
 
   private boolean leftKey, rightKey, jumpKey, click;
   private double x, y;
+  private UUID uuid;
 
   public PacketInput(
-      double x, double y, boolean leftKey, boolean rightKey, boolean jumpKey, boolean click) {
+      double x, double y, boolean leftKey, boolean rightKey, boolean jumpKey, boolean click,
+      UUID uuid) {
     packetID = PacketID.INPUT.getID();
+    this.uuid = uuid;
     this.click = click;
     this.leftKey = leftKey;
     this.rightKey = rightKey;
@@ -16,32 +21,34 @@ public class PacketInput extends Packet {
     this.y = y;
 
     data =
-        (Integer.toString(packetID)
-                + ","
-                + Double.toString(x)
-                + ","
-                + Double.toString(y)
-                + ","
-                + Boolean.toString(leftKey)
-                + ","
-                + Boolean.toString(rightKey)
-                + ","
-                + Boolean.toString(jumpKey)
-                + ","
-                + Boolean.toString(click))
+        (packetID
+            + ","
+            + uuid
+            + ","
+            + x
+            + ","
+            + y
+            + ","
+            + leftKey
+            + ","
+            + rightKey
+            + ","
+            + jumpKey
+            + ","
+            + click)
             .getBytes();
   }
 
-  public PacketInput(byte[] data) {
-    String temp = new String(data).trim();
-    String[] unpackedData = temp.split(",");
+  public PacketInput(String data) {
+    String[] unpackedData = data.split(",");
     this.packetID = Integer.parseInt(unpackedData[0]);
-    this.x = Double.parseDouble(unpackedData[1]);
-    this.y = Double.parseDouble(unpackedData[2]);
-    this.leftKey = Boolean.parseBoolean(unpackedData[3]);
-    this.rightKey = Boolean.parseBoolean(unpackedData[4]);
-    this.jumpKey = Boolean.parseBoolean(unpackedData[5]);
-    this.click = Boolean.parseBoolean(unpackedData[6]);
+    this.uuid = UUID.fromString(unpackedData[1]);
+    this.x = Double.parseDouble(unpackedData[2]);
+    this.y = Double.parseDouble(unpackedData[3]);
+    this.leftKey = Boolean.parseBoolean(unpackedData[4]);
+    this.rightKey = Boolean.parseBoolean(unpackedData[5]);
+    this.jumpKey = Boolean.parseBoolean(unpackedData[6]);
+    this.click = Boolean.parseBoolean(unpackedData[7]);
   }
 
   public boolean isLeftKey() {
@@ -66,5 +73,9 @@ public class PacketInput extends Packet {
 
   public double getY() {
     return y;
+  }
+
+  public UUID getUuid() {
+    return uuid;
   }
 }

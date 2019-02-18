@@ -1,15 +1,17 @@
 package client.handlers.inputHandler;
 
+import client.main.Client;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.scene.input.MouseEvent;
+import shared.gameObjects.players.Player;
 
 public class MouseInput implements EventHandler<MouseEvent> {
 
-  private InputHandler inputHandler;
+  private Player clientPlayer;
 
-  public MouseInput(InputHandler inputHandler) {
-    this.inputHandler = inputHandler;
+  public MouseInput() {
+    this.clientPlayer = Client.levelHandler.getClientPlayer();
   }
 
   @Override
@@ -17,13 +19,13 @@ public class MouseInput implements EventHandler<MouseEvent> {
     EventType<MouseEvent> type = (EventType<MouseEvent>) event.getEventType();
 
     if (type == MouseEvent.MOUSE_MOVED || type == MouseEvent.MOUSE_DRAGGED) {
-      inputHandler.x = event.getX();
-      inputHandler.y = event.getY();
+      clientPlayer.mouseX = event.getX();
+      clientPlayer.mouseY = event.getY();
     }
     if (type == MouseEvent.MOUSE_PRESSED) {
-      inputHandler.click = true;
+      clientPlayer.click = true;
     } else if (event.getEventType() == MouseEvent.MOUSE_RELEASED) {
-      inputHandler.click = false;
+      clientPlayer.click = false;
     }
   }
 }

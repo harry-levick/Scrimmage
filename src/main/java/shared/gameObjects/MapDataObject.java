@@ -43,19 +43,19 @@ public class MapDataObject extends GameObject implements Serializable {
   }
 
   @Override
-  public void update() {}
-
-  @Override
-  public void render() {}
-
-  @Override
-  public void interpolatePosition(float alpha) {}
-
-  @Override
-  public String getState() {
-    return null;
+  public void update() {
   }
 
   @Override
-  public void initialiseAnimation() {}
+  public void render() {
+  }
+
+  @Override
+  public void interpolatePosition(float alpha) {
+  }
+
+
+  @Override
+  public void initialiseAnimation() {
+  }
 }

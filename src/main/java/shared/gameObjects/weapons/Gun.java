@@ -2,8 +2,11 @@ package shared.gameObjects.weapons;
 
 import java.util.UUID;
 import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.players.Player;
 
-/** @author hlf764 The abstract class for all guns type weapon. */
+/**
+ * @author hlf764 The abstract class for all guns type weapon.
+ */
 abstract class Gun extends Weapon {
 
   protected double bulletSpeed; // pixel per second
@@ -34,18 +37,19 @@ abstract class Gun extends Weapon {
       double sizeX,
       double sizeY,
       ObjectID id,
-      double damage,
+      int damage,
       double weight,
       String name,
       int ammo,
       double bulletSpeed,
       int fireRate,
       double bulletWidth,
+      Player holder,
       boolean fullAutoFire,
       boolean singleHanded,
       UUID uuid) {
 
-    super(x, y, sizeX, sizeY, id, damage, weight, name, true, false, ammo, fireRate, uuid);
+    super(x, y, sizeX, sizeY, id, damage, weight, name, true, false, ammo, fireRate, holder, uuid);
 
     this.bulletSpeed = bulletSpeed;
     this.bulletWidth = bulletWidth;
@@ -94,7 +98,9 @@ abstract class Gun extends Weapon {
   // Setters and Getters
   // --------END--------
 
-  /** For testing */
+  /**
+   * For testing
+   */
   @Override
   public String toString() {
     String s = "";

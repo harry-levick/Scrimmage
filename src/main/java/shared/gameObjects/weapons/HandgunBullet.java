@@ -1,8 +1,11 @@
 package shared.gameObjects.weapons;
 
 import java.util.UUID;
+import shared.gameObjects.players.Player;
 
-/** @author Henry Fung (hlf764) */
+/**
+ * @author Henry Fung (hlf764)
+ */
 public class HandgunBullet extends Bullet {
 
   private static String imagePath = "images/weapons/fireBullet.png";
@@ -16,9 +19,11 @@ public class HandgunBullet extends Bullet {
       double mouseY,
       double width,
       double speed,
+      int damage,
+      Player holder,
       UUID uuid) {
 
-    super(gunX, gunY, sizeX, sizeY, mouseX, mouseY, width, speed, uuid);
+    super(gunX, gunY, sizeX, sizeY, mouseX, mouseY, width, speed, damage, holder, uuid);
   }
 
   @Override

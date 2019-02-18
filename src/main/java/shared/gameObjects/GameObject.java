@@ -71,8 +71,12 @@ public abstract class GameObject implements Serializable {
     animation.update();
     Collider col = (Collider) getComponent(ComponentType.COLLIDER);
     Rigidbody rb = (Rigidbody) getComponent(ComponentType.RIGIDBODY);
-    if (rb != null) rb.update();
-    if (col != null) col.update();
+    if (rb != null) {
+      rb.update();
+    }
+    if (col != null) {
+      col.update();
+    }
   }
 
   // Client Side only
@@ -87,7 +91,9 @@ public abstract class GameObject implements Serializable {
     Collider col = (Collider) getComponent(ComponentType.COLLIDER);
     Rigidbody rb = (Rigidbody) getComponent(ComponentType.RIGIDBODY);
     if (rb != null) {
-      if (rb.getBodyType() == RigidbodyType.STATIC) return;
+      if (rb.getBodyType() == RigidbodyType.STATIC) {
+        return;
+      }
     }
     ArrayList<Collision> collision = null;
     if (col != null) {
@@ -104,7 +110,9 @@ public abstract class GameObject implements Serializable {
     }
   }
 
-  /** Remove the image from the imageView by setting the image to null */
+  /**
+   * Remove the image from the imageView by setting the image to null
+   */
   public void removeRender() {
     if (imageView != null) {
       imageView.setImage(null);
@@ -127,18 +135,31 @@ public abstract class GameObject implements Serializable {
    *
    * @return State of object
    */
-  public abstract String getState();
+  public String getState() {
+    String test = objectUUID + ";" + getX() + ";" + getY() + ";" + animation.getName();
+    return test;
+  }
+
+  public void setState(String data) {
+    String[] unpackedData = data.split(";");
+    setX(Double.parseDouble(unpackedData[1]));
+    setY(Double.parseDouble(unpackedData[2]));
+    this.animation.switchAnimation(unpackedData[3]);
+  }
 
   // Ignore for now, added due to unSerializable objects
   public void initialise(Group root) {
-    this.root = root;
-    animation = new Animator();
-    initialiseAnimation();
-    imageView = new ImageView();
-    imageView.setRotate(rotation);
-    root.getChildren().add(this.imageView);
-    if (getComponent(ComponentType.COLLIDER) != null && Physics.showColliders)
+      animation = new Animator();
+      initialiseAnimation();
+      imageView = new ImageView();
+      imageView.setRotate(rotation);
+    if (root != null) {
+      this.root = root;
+      root.getChildren().add(this.imageView);
+    }
+    if (getComponent(ComponentType.COLLIDER) != null && Physics.showColliders) {
       ((BoxCollider) getComponent(ComponentType.COLLIDER)).initialise(root);
+    }
   }
 
   public void addChild(GameObject child) {
@@ -209,7 +230,9 @@ public abstract class GameObject implements Serializable {
     destroyed = active = false;
   }
 
-  /** Basic Getters and Setters */
+  /**
+   * Basic Getters and Setters
+   */
   public double getX() {
     return this.transform.getPos().getX();
   }

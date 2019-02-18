@@ -1,5 +1,7 @@
 package levelEditor;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
@@ -15,6 +17,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -35,6 +38,7 @@ import shared.gameObjects.menu.main.ButtonLeveleditor;
 import shared.gameObjects.menu.main.ButtonMultiplayer;
 import shared.gameObjects.menu.main.ButtonSettings;
 import shared.gameObjects.menu.main.ButtonSingleplayer;
+import shared.gameObjects.menu.multiplayer.ButtonJoin;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.Handgun;
 import shared.handlers.levelHandler.GameState;
@@ -44,7 +48,7 @@ import shared.util.maths.Vector2;
 public class LevelEditor extends Application {
 
   private ArrayList<GameObject> gameObjects;
-  private ArrayList<Player> playerSpawns = new ArrayList<Player>();
+  private ArrayList<Player> playerSpawns = new ArrayList<>();
   private MapDataObject mapDataObject;
   private boolean snapToGrid = true;
 
@@ -58,6 +62,16 @@ public class LevelEditor extends Application {
 
   private LinkedHashMap<OBJECT_TYPES, GameObjectTuple> objectMap = new LinkedHashMap<>();
   private OBJECT_TYPES objectTypeSelected = OBJECT_TYPES.FLOOR; // default
+
+  private String filename = "";
+  private String filepath = "src"
+      + File.separator
+      + "main"
+      + File.separator
+      + "resources"
+      + File.separator
+      + "menus"
+      + File.separator;
 
   /**
    * ADDING NEW OBJECTS TO THE MAP CREATOR: 1. add a new object name in the enum OBJECT_TYPES 2. in
@@ -76,6 +90,7 @@ public class LevelEditor extends Application {
     objectMap.put(OBJECT_TYPES.BTN_ST, new GameObjectTuple("Settings Button", 6, 2));
     objectMap.put(OBJECT_TYPES.BTN_LE, new GameObjectTuple("Level Editor Button", 6, 2));
     objectMap.put(OBJECT_TYPES.WPN_HG, new GameObjectTuple("Handgun", 2, 2));
+    objectMap.put(OBJECT_TYPES.BTN_JOIN, new GameObjectTuple("ButtonJoin", 6,2));
   }
 
   private void scenePrimaryClick(Stage primaryStage, Group root, Group objects, Group background, MouseEvent event) {
@@ -155,6 +170,17 @@ public class LevelEditor extends Application {
                   uuid);
           break;
 
+        case BTN_JOIN:
+          temp =
+              new ButtonJoin(
+                  getGridX(event.getX()),
+                  getGridY(event.getY()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getX()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getY()),
+                  ObjectID.Bot,
+                  uuid);
+          break;
+
         case BTN_MP:
           temp =
               new ButtonMultiplayer(
@@ -196,6 +222,7 @@ public class LevelEditor extends Application {
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
                   "Handgun",
+                  null, // holder
                   uuid);
           break;
       }
@@ -215,7 +242,7 @@ public class LevelEditor extends Application {
     }
   }
 
-  private void addButtons(Group root) {
+  private void addButtons(Stage primaryStage, Group root) {
     ChoiceBox cb = new ChoiceBox();
     cb.setConverter(new GameObjectTupleConverter(objectMap));
     cb.setItems(FXCollections.observableArrayList(objectMap.values()));
@@ -243,9 +270,10 @@ public class LevelEditor extends Application {
         new EventHandler<ActionEvent>() {
           @Override
           public void handle(ActionEvent event) {
-            MapLoader.saveMap(gameObjects, mapDataObject, "main_menu.map");
+            saveMap(primaryStage);
           }
-        });
+        }
+    );
     btnSave.setLayoutX(200);
     btnSave.setLayoutY(10);
 
@@ -293,7 +321,7 @@ public class LevelEditor extends Application {
     // gameObjects = MapLoader.loadMap("menus.map");
     //gameObjects.forEach(gameObject -> gameObject.initialise(root));
 
-    addButtons(ui);
+    addButtons(primaryStage, ui);
 
     ArrayList<Line> gridlines = redrawGrid();
     for (Line line : gridlines) {
@@ -315,7 +343,7 @@ public class LevelEditor extends Application {
 
     primaryStage.setScene(scene);
     primaryStage.show();
-    primaryStage.setFullScreen(true);
+    primaryStage.setFullScreen(false);
 
     new AnimationTimer() {
       @Override
@@ -354,7 +382,7 @@ public class LevelEditor extends Application {
   }
 
   protected enum OBJECT_TYPES {
-    FLOOR, WALL, PLAYER, BTN_SP, BTN_MP, BTN_ST, BTN_LE, WPN_HG, BACKGROUND, BACKGROUND1
+    FLOOR, WALL, PLAYER, BTN_SP, BTN_MP, BTN_ST, BTN_LE, WPN_HG, BACKGROUND, BACKGROUND1, BTN_JOIN
   }
 
   private void initialiseNewMap() {
@@ -425,6 +453,7 @@ public class LevelEditor extends Application {
         root.getChildren().remove(event.getTarget());
         object.destroy();
         gameObjects.remove(object);  //todo find alternative non breaking way of removing
+        //test
       }
     }
 
@@ -444,13 +473,82 @@ public class LevelEditor extends Application {
         }
         mapDataObject.setSpawnPoints(newList);
         object.destroy();
-        gameObjects.remove(object); //todo find alternative non breaking way of removing
+        playerSpawns.remove(object); //todo find alternative non breaking way of removing
       }
     }
   }
 
   private double getScaledSize(int gridSquaresCovered) {
     return gridSizePX * gridSquaresCovered;
+  }
+
+  private void saveMap(Stage primaryStage) {
+    final Stage dialog = new Stage();
+    dialog.initModality(Modality.APPLICATION_MODAL);
+    dialog.initOwner(primaryStage);
+    Group root = new Group();
+    VBox dialogVbox = new VBox(20);
+    Text text = new Text("Map Name:\n" + filepath);
+    root.getChildren().add(text);
+    text.setTranslateX(20);
+    text.setTranslateY(20);
+    Text errorText = new Text("");
+    root.getChildren().add(errorText);
+    errorText.setStyle("-fx-fill: red;");
+    errorText.setTranslateX(20);
+    errorText.setTranslateY(60);
+    TextField field = new TextField();
+    field.setPromptText("Enter the name of the map...");
+    root.getChildren().add(field);
+    field.setTranslateX(20);
+    field.setTranslateY(70);
+    Button save = new Button();
+    save.setText("Save");
+    save.setOnAction(
+        new EventHandler<ActionEvent>() {
+          @Override
+          public void handle(ActionEvent event) {
+            filename = field.getText();
+            File f = new File(filename);
+            boolean valid = false;
+            try {
+              f.getCanonicalPath();
+              valid = true;
+            } catch (IOException e) {
+              valid = false;
+            }
+            if (valid) {
+              MapLoader.saveMap(gameObjects, mapDataObject, filename + ".map");
+              errorText.setStyle("-fx-fill: green");
+              errorText.setText("Saved");
+              dialog.close();
+            } else {
+              errorText.setText("Invalid file name");
+            }
+          }
+        });
+    save.setLayoutX(20);
+    save.setLayoutY(110);
+    root.getChildren().add(save);
+    Button cancel = new Button();
+    cancel.setText("Cancel");
+    cancel.setOnAction(
+        new EventHandler<ActionEvent>() {
+          @Override
+          public void handle(ActionEvent event) {
+            System.out.println("CANCEL");
+            dialog.close();
+          }
+        }
+    );
+    cancel.setLayoutX(80);
+    cancel.setLayoutY(110);
+    root.getChildren().add(cancel);
+
+    Scene dialogScene = new Scene(root, 450, 150);
+    dialog.setScene(dialogScene);
+    dialog.show();
+
   }
 }
 

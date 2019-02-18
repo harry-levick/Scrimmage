@@ -1,15 +1,16 @@
 package client.handlers.inputHandler;
 
+import client.main.Client;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
+import shared.gameObjects.players.Player;
 
-public class KeyboardInput extends InputHandler implements EventHandler<KeyEvent> {
+public class KeyboardInput implements EventHandler<KeyEvent> {
 
-  private InputHandler inputHandler;
+  private Player clientPlayer;
 
-  public KeyboardInput(InputHandler inputHandler) {
-    super();
-    this.inputHandler = inputHandler;
+  public KeyboardInput() {
+    this.clientPlayer = Client.levelHandler.getClientPlayer();
   }
 
   @Override
@@ -17,32 +18,26 @@ public class KeyboardInput extends InputHandler implements EventHandler<KeyEvent
     if (event.getEventType() == KeyEvent.KEY_PRESSED) {
       switch (event.getCode()) {
         case A:
-          inputHandler.leftKey = true;
-          inputHandler.keyPressed = true;
+          clientPlayer.leftKey = true;
           break;
         case D:
-          inputHandler.rightKey = true;
-          inputHandler.keyPressed = true;
+          clientPlayer.rightKey = true;
           break;
         case W:
-          inputHandler.jumpKey = true;
-          inputHandler.keyPressed = true;
+          clientPlayer.jumpKey = true;
           break;
         default:
       }
     } else if (event.getEventType() == KeyEvent.KEY_RELEASED) {
       switch (event.getCode()) {
         case A:
-          inputHandler.leftKey = false;
-          inputHandler.keyPressed = false;
+          clientPlayer.leftKey = false;
           break;
         case D:
-          inputHandler.rightKey = false;
-          inputHandler.keyPressed = false;
+          clientPlayer.rightKey = false;
           break;
         case W:
-          inputHandler.jumpKey = false;
-          inputHandler.keyPressed = false;
+          clientPlayer.jumpKey = false;
           break;
         default:
       }
