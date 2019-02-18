@@ -109,7 +109,9 @@ public class Server extends Application {
           startMatch();
         }
 
-        if (serverState == ServerState.IN_GAME) checkConditions();
+        if (serverState == ServerState.IN_GAME) {
+          checkConditions();
+        }
 
         /** Process Inputs and Update */
         processInputs();

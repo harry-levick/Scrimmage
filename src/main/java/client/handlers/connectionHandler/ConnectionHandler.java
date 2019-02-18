@@ -48,16 +48,19 @@ public class ConnectionHandler extends Thread {
     //try {
       Packet joinPacket =
           new PacketJoin(
-              Client.levelHandler.getClientPlayer().getUUID(), Client.settings.getUsername(), Client.levelHandler.getClientPlayer().getX(), Client.levelHandler.getClientPlayer().getY());
-      DatagramPacket sendPacket = new DatagramPacket(joinPacket.getData(), joinPacket.getData().length, address, port);
-      try {
-        socket.send(sendPacket);
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-      // socket.setSoTimeout(60000);
-      //DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
-      /**
+              Client.levelHandler.getClientPlayer().getUUID(), Client.settings.getUsername(),
+              Client.levelHandler.getClientPlayer().getX(),
+              Client.levelHandler.getClientPlayer().getY());
+    DatagramPacket sendPacket = new DatagramPacket(joinPacket.getData(),
+        joinPacket.getData().length, address, port);
+    try {
+      socket.send(sendPacket);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    // socket.setSoTimeout(60000);
+    //DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+    /**
       socket.receive(packet);
       String response = Arrays.toString(packet.getData());
       if (Integer.parseInt(response.substring(0, 1)) == PacketID.RESPONSE.getID()) {
@@ -73,7 +76,7 @@ public class ConnectionHandler extends Thread {
       connected = false;
       return;
     }
-       **/
+     **/
     try {
       multicastSocket.joinGroup(multicastAddress);
     } catch (IOException e) {

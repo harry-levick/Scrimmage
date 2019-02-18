@@ -21,7 +21,7 @@ import shared.util.maths.Vector2;
 
 public class Player extends GameObject {
 
-  protected final float speed = 100;
+  protected final float speed = 255;
   protected final float jumpForce = -200;
   protected final float JUMP_LIMIT = 2.0f;
   protected float jumpTime;
@@ -31,16 +31,14 @@ public class Player extends GameObject {
   protected Weapon holding;
   protected Rigidbody rb;
   protected double vx;
-  private BoxCollider bc;
-
   public boolean leftKey, rightKey, jumpKey, click;
   public double mouseX, mouseY;
+  private BoxCollider bc;
 
   public Player(double x, double y, double sizeX, double sizeY, UUID playerUUID) {
     super(x, y, sizeX, sizeY, ObjectID.Player, playerUUID);
-    bc = new BoxCollider(this, false);
-    addComponent(bc);
-    rb = new Rigidbody(RigidbodyType.DYNAMIC, 100, 10, 0.7f, new MaterialProperty(0.005f, 0, 0),
+    addComponent(new BoxCollider(this, false));
+    rb = new Rigidbody(RigidbodyType.DYNAMIC, 100, 10, 0.2f, new MaterialProperty(0.005f, 0, 0),
         null, this);
     addComponent(rb);
     this.health = 100;
@@ -182,7 +180,8 @@ public class Player extends GameObject {
       this.holding.destroyWeapon();
       this.setHolding(null);
 
-      Weapon sword = new Sword(this.getX(), this.getY(), 50, 50, "newSword@Player", this, UUID.randomUUID());
+      Weapon sword = new Sword(this.getX(), this.getY(), 50, 50, "newSword@Player", this,
+          UUID.randomUUID());
       sword.initialise(root);
       Client.levelHandler.addGameObject(sword);
       this.setHolding(sword);
@@ -190,7 +189,7 @@ public class Player extends GameObject {
     }
     return false;
   }
-  
+
   public void deductHp(int damage) {
     this.health -= damage;
     if (this.health <= 0) {

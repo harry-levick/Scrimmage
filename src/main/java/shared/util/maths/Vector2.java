@@ -35,6 +35,10 @@ public class Vector2 implements Serializable {
     return new Vector2(0, 1);
   }
 
+  public static Vector2 max(Vector2 a, Vector2 b) {
+    return a.magnitude() > b.magnitude() ? a : b;
+  }
+
   public static Vector2 Up() {
     return new Vector2(0, -1);
   }
@@ -115,6 +119,15 @@ public class Vector2 implements Serializable {
         ax = Math.abs(vector.getX() - getX()),
         by = Math.abs(vector.getY() - getY());
     return a * (Math.max(ax, by)) + b * (Math.min(ax, by));
+  }
+
+  /**
+   * Approximates the magnitude of a vector
+   *
+   * @return Approximated Magnitude of Vectors as float
+   */
+  public float magnitude() {
+    return magnitude(Vector2.Zero());
   }
 
   /**

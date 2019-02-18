@@ -63,20 +63,21 @@ public class ServerReceiver implements Runnable {
           if (server.playerCount.get() < 4
               && server.serverState == ServerState.WAITING_FOR_PLAYERS) {
             PacketJoin joinPacket = new PacketJoin(received);
-            Player newPlayer = new Player(joinPacket.getX(), joinPacket.getY(), 80, 110, joinPacket.getClientID());
+            Player newPlayer = new Player(joinPacket.getX(), joinPacket.getY(), 80, 110,
+                joinPacket.getClientID());
             newPlayer.initialise(null);
             Server.levelHandler.addPlayer(newPlayer);
             server.clientTable.put(joinPacket.getClientID(), new LinkedBlockingQueue<>());
             server.playerCount.getAndIncrement();
             /**
-            PacketResponse responsePacket = new PacketResponse(true, "192.0.0.0");
-            packet = new DatagramPacket(responsePacket.getData(), responsePacket.getData().length,
-                address, port);
-            try {
-              socket.send(packet);
-            } catch (IOException e) {
-              e.printStackTrace();
-            }
+             PacketResponse responsePacket = new PacketResponse(true, "192.0.0.0");
+             packet = new DatagramPacket(responsePacket.getData(), responsePacket.getData().length,
+             address, port);
+             try {
+             socket.send(packet);
+             } catch (IOException e) {
+             e.printStackTrace();
+             }
              **/
             System.out.println("test");
           }
