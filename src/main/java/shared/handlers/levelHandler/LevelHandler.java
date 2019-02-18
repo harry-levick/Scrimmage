@@ -38,7 +38,7 @@ public class LevelHandler {
     this.gameRoot = gameRoot;
     clientPlayer = new Player(500, 200, 80, 110, UUID.randomUUID());
     clientPlayer.setHolding(
-        new MachineGun(500, 500, 116, 33, "MachineGun@LevelHandler", UUID.randomUUID()));
+        new MachineGun(500, 500, 116, 33, "MachineGun@LevelHandler", clientPlayer, UUID.randomUUID()));
     clientPlayer.initialise(gameRoot);
     players.add(clientPlayer);
     gameObjects.add(clientPlayer.getHolding());
@@ -47,8 +47,7 @@ public class LevelHandler {
         GameState.IN_GAME));
     botPlayer = new Bot(500, 500, 80, 110, UUID.randomUUID(), gameObjects);
     botPlayer.setHolding(
-        new Sword(500, 500, 50, 50, "Sword@LevelHandler", 80,
-            0, 0, UUID.randomUUID())
+        new Sword(500, 500, 50, 50, "Sword@LevelHandler", botPlayer, UUID.randomUUID())
     );
     botPlayer.getHolding().initialise(gameRoot);
     botPlayer.initialise(gameRoot);
@@ -56,6 +55,7 @@ public class LevelHandler {
     gameObjects.add(botPlayer);
     gameObjects.add(botPlayer.getHolding());
   }
+
 
   public LevelHandler(Settings settings) {
     gameObjects = new ArrayList<>();

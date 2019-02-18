@@ -31,13 +31,15 @@ public class Player extends GameObject {
   protected Weapon holding;
   protected Rigidbody rb;
   protected double vx;
+  private BoxCollider bc;
 
   public boolean leftKey, rightKey, jumpKey, click;
   public double mouseX, mouseY;
 
   public Player(double x, double y, double sizeX, double sizeY, UUID playerUUID) {
     super(x, y, sizeX, sizeY, ObjectID.Player, playerUUID);
-    addComponent(new BoxCollider(this, false));
+    bc = new BoxCollider(this, false);
+    addComponent(bc);
     rb = new Rigidbody(RigidbodyType.DYNAMIC, 100, 10, 0.7f, new MaterialProperty(0.005f, 0, 0),
         null, this);
     addComponent(rb);
@@ -180,8 +182,7 @@ public class Player extends GameObject {
       this.holding.destroyWeapon();
       this.setHolding(null);
 
-      Weapon sword = new Sword(this.getX(), this.getY(), 50, 50, "newSword@Player", 10, 50, 20,
-          UUID.randomUUID());
+      Weapon sword = new Sword(this.getX(), this.getY(), 50, 50, "newSword@Player", this, UUID.randomUUID());
       sword.initialise(root);
       Client.levelHandler.addGameObject(sword);
       this.setHolding(sword);
@@ -189,11 +190,13 @@ public class Player extends GameObject {
     }
     return false;
   }
-
-  public void deductHp(Weapon w) {
-    this.health -= w.getDamage();
+  
+  public void deductHp(int damage) {
+    this.health -= damage;
     if (this.health <= 0) {
-      // die
+      this.setActive(false);
+      this.removeComponent(bc);
+      this.imageView.setRotate(90);
     }
   }
 
