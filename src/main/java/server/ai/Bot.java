@@ -187,11 +187,12 @@ public class Bot extends Player {
       Vector2 playerPos = new Vector2((float) p.getX(), (float) p.getY());
       double distance = botPos.exactMagnitude(playerPos);
       // Update the target if another player is closer
-      if (distance < targetDistance) {
+      if (distance < targetDistance && p.isActive()) {
         targetDistance = distance;
         target = p;
       }
     }
+    // Returns null if no active player is found.
     return target;
   }
 

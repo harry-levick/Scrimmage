@@ -9,6 +9,10 @@ import shared.gameObjects.weapons.Melee;
 public enum FSA {
   ATTACKING() {
     public FSA next(Player targetPlayer, Player bot, double prevDist, double newDist) {
+
+      if (targetPlayer == null) {
+        return IDLE;
+      }
       StateInfo.setInfo(targetPlayer, bot);
 
       double weaponRange = StateInfo.weaponRange;
@@ -47,6 +51,10 @@ public enum FSA {
   },
   CHASING() {
     public FSA next(Player targetPlayer, Player bot, double prevDist, double newDist) {
+
+      if (targetPlayer == null) {
+        return IDLE;
+      }
       StateInfo.setInfo(targetPlayer, bot);
 
       double weaponRange = StateInfo.weaponRange;
@@ -85,6 +93,10 @@ public enum FSA {
   },
   CHASING_ATTACKING() {
     public FSA next(Player targetPlayer, Player bot, double prevDist, double newDist) {
+
+      if (targetPlayer == null) {
+        return IDLE;
+      }
       StateInfo.setInfo(targetPlayer, bot);
 
       double weaponRange = StateInfo.weaponRange;
@@ -124,6 +136,10 @@ public enum FSA {
   },
   FLEEING() {
     public FSA next(Player targetPlayer, Player bot, double prevDist, double newDist) {
+
+      if (targetPlayer == null) {
+        return IDLE;
+      }
       StateInfo.setInfo(targetPlayer, bot);
 
       double weaponRange = StateInfo.weaponRange;
@@ -173,6 +189,10 @@ public enum FSA {
   },
   FLEEING_ATTACKING() {
     public FSA next(Player targetPlayer, Player bot, double prevDist, double newDist) {
+
+      if (targetPlayer == null) {
+        return IDLE;
+      }
       StateInfo.setInfo(targetPlayer, bot);
 
       double weaponRange = StateInfo.weaponRange;
@@ -205,6 +225,10 @@ public enum FSA {
   },
   IDLE() {
     public FSA next(Player targetPlayer, Player bot, double prevDist, double newDist) {
+
+      if (targetPlayer == null) {
+        return IDLE;
+      }
       StateInfo.setInfo(targetPlayer, bot);
 
       double weaponRange = StateInfo.weaponRange;
