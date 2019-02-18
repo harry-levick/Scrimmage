@@ -178,8 +178,8 @@ public class LevelHandler {
     return clientPlayer;
   }
 
-  public Bot getBotPlayer() {
-    return botPlayer;
+  public ArrayList<Bot> getBotPlayerList() {
+    return bots;
   }
 
   /**

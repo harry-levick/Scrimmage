@@ -63,7 +63,7 @@ public class ServerReceiver implements Runnable {
           if (server.playerCount.get() < 4
               && server.serverState == ServerState.WAITING_FOR_PLAYERS) {
             PacketJoin joinPacket = new PacketJoin(received);
-            Player newPlayer = new Player(joinPacket.getX(), joinPacket.getY(), 80, 110,
+            Player newPlayer = new Player(joinPacket.getX(), joinPacket.getY(),
                 joinPacket.getClientID());
             newPlayer.initialise(null);
             Server.levelHandler.addPlayer(newPlayer);
