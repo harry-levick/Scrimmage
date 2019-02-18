@@ -58,12 +58,12 @@ public class Bot extends Player {
   @Override
   public void applyInput(boolean multiplayer, ConnectionHandler connectionHandler) {
     if (this.rightKey) {
-      rb.moveX(speed);
+      rb.setVelocity(new Vector2(speed, rb.getVelocity().getY()));
       animation.switchAnimation("walk");
       imageView.setScaleX(1);
     }
     if (this.leftKey) {
-      rb.moveX(speed * -1);
+      rb.setVelocity(new Vector2(speed*-1, rb.getVelocity().getY()));
       animation.switchAnimation("walk");
       imageView.setScaleX(-1);
     }

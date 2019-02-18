@@ -50,6 +50,7 @@ public class LevelHandler {
       clientPlayer.getHolding().initialise(gameRoot);
       changeMap(new Map("main_menu.map", Path.convert("src/main/resources/menus/main_menu.map"),
           GameState.IN_GAME));
+
       botPlayer = new Bot(500, 500, 80, 110, UUID.randomUUID(), gameObjects);
       botPlayer.setHolding(
           new Sword(500, 500, 50, 50, "Sword@LevelHandler", 80,
@@ -60,6 +61,7 @@ public class LevelHandler {
       bots.add(botPlayer);
       gameObjects.add(botPlayer);
       gameObjects.add(botPlayer.getHolding());
+
     }
   }
 
