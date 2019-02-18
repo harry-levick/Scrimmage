@@ -177,9 +177,6 @@ public class Client extends Application {
     primaryStage.setScene(scene);
     primaryStage.setFullScreen(false);
     primaryStage.show();
-
-    // Start Music
-
   }
 
   private void processServerPackets() {
