@@ -15,7 +15,7 @@ public class Physics {
 
   public static final float GRAVITY = 100f;
   public static final float TIMESTEP = 1f / 60;
-  public static boolean showColliders = false;
+  public static boolean showColliders = true;
   public static ArrayList<GameObject> gameObjects;
   private static Physics ourInstance = new Physics();
 

@@ -9,6 +9,8 @@ import shared.gameObjects.components.Rigidbody;
 import shared.physics.types.CollisionDirection;
 import shared.util.maths.Vector2;
 
+import javax.jnlp.DownloadService;
+
 public class Collision {
 
   private Rigidbody collidedObject;
@@ -34,7 +36,6 @@ public class Collision {
         this.normalCollision = Vector2.Down();
         break;
     }
-    this.normalCollision = Vector2.Up();
     this.collidedObject = collidedObject;
     this.direction = direction;
     this.penDepth = depth;
@@ -120,27 +121,32 @@ public class Collision {
 
   public static CollisionDirection getDirection(BoxCollider boxA, BoxCollider boxB) {
     Vector2 toRet;
-    float A = boxA.getCorners()[0].magnitude(boxB.getCentre());
-    float B = boxA.getCorners()[1].magnitude(boxB.getCentre());
-    float C = boxA.getCorners()[2].magnitude(boxB.getCentre());
-    float D = boxA.getCorners()[3].magnitude(boxB.getCentre());
-    if (A <= B && A <= C && A <= D) {
-      toRet = boxA.getCorners()[0].sub(boxB.getCorners()[2]);
-      return toRet.getX() > toRet.getY() ? CollisionDirection.LEFT : CollisionDirection.UP;
+    if (boxA.getParent() == null) {
+      float A = boxA.getCorners()[0].magnitude(boxB.getCentre());
+      float B = boxA.getCorners()[1].magnitude(boxB.getCentre());
+      float C = boxA.getCorners()[2].magnitude(boxB.getCentre());
+      float D = boxA.getCorners()[3].magnitude(boxB.getCentre());
+      if (A <= B && A <= C && A <= D) {
+        toRet = boxA.getCorners()[0].sub(boxB.getCorners()[2]);
+        return toRet.getX() > toRet.getY() ? CollisionDirection.LEFT : CollisionDirection.UP;
+      } else if (B <= C && B <= D) {
+        toRet = boxA.getCorners()[1].sub(boxB.getCorners()[3]);
+        return toRet.getX() > toRet.getY() ? CollisionDirection.LEFT : CollisionDirection.DOWN;
+      } else if (C <= D) {
+        toRet = boxA.getCorners()[2].sub(boxB.getCorners()[0]);
+        return toRet.getX() > toRet.getY() ? CollisionDirection.RIGHT : CollisionDirection.DOWN;
+      } else {
+        toRet = boxA.getCorners()[3].sub(boxB.getCorners()[1]);
+        return toRet.getX() > toRet.getY() ? CollisionDirection.RIGHT : CollisionDirection.UP;
+      }
+    } else {
+      Rigidbody rb = (Rigidbody) boxA.getParent().getComponent(ComponentType.RIGIDBODY);
+      if (rb != null) {
+        return CollisionDirection.DOWN;
+      }
+      return CollisionDirection.DOWN;
     }
-    else if (B <= C && B <= D) {
-      toRet = boxA.getCorners()[1].sub(boxB.getCorners()[3]);
-      return toRet.getX() > toRet.getY() ? CollisionDirection.LEFT : CollisionDirection.DOWN;
     }
-    else if (C <= D) {
-      toRet = boxA.getCorners()[2].sub(boxB.getCorners()[0]);
-      return toRet.getX() > toRet.getY() ? CollisionDirection.RIGHT : CollisionDirection.DOWN;
-    }
-    else {
-      toRet = boxA.getCorners()[3].sub(boxB.getCorners()[1]);
-      return toRet.getX() > toRet.getY() ? CollisionDirection.RIGHT : CollisionDirection.UP;
-    }
-  }
 
   public Rigidbody getCollidedObject() {
     return collidedObject;

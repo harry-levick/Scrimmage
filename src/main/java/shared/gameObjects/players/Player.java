@@ -34,7 +34,7 @@ public class Player extends GameObject {
   public Player(double x, double y, double sizeX, double sizeY, UUID playerUUID) {
     super(x, y, sizeX, sizeY, ObjectID.Player, playerUUID);
     addComponent(new BoxCollider(this, false));
-    rb = new Rigidbody(RigidbodyType.DYNAMIC, 100, 10, 0.2f, new MaterialProperty(0.005f, 0, 0),
+    rb = new Rigidbody(RigidbodyType.DYNAMIC, 100, 10, 0.2f, new MaterialProperty(0.005f, 0, 0.2f),
         null, this);
     addComponent(rb);
     this.health = 100;
