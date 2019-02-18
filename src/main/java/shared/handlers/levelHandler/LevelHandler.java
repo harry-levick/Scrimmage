@@ -6,7 +6,9 @@ import java.util.UUID;
 import javafx.scene.Group;
 import server.ai.Bot;
 import shared.gameObjects.GameObject;
+import shared.gameObjects.MapDataObject;
 import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.background.Background;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.MachineGun;
 import shared.gameObjects.weapons.Sword;
@@ -26,6 +28,7 @@ public class LevelHandler {
   private Group root;
   private Group backgroundRoot;
   private Group gameRoot;
+  private Background background;
 
   public LevelHandler(Settings settings, Group root, Group backgroundRoot, Group gameRoot) {
     gameObjects = new ArrayList<>();
@@ -38,13 +41,14 @@ public class LevelHandler {
     this.gameRoot = gameRoot;
     clientPlayer = new Player(500, 200, 80, 110, UUID.randomUUID());
     clientPlayer.setHolding(
-        new MachineGun(500, 500, 116, 33, "MachineGun@LevelHandler", clientPlayer, UUID.randomUUID()));
+        new MachineGun(500, 500, 116, 33, "MachineGun@LevelHandler", clientPlayer,
+            UUID.randomUUID()));
     clientPlayer.initialise(gameRoot);
     players.add(clientPlayer);
-    gameObjects.add(clientPlayer.getHolding());
-    clientPlayer.getHolding().initialise(gameRoot);
     changeMap(new Map("main_menu.map", Path.convert("src/main/resources/menus/main_menu.map"),
         GameState.IN_GAME));
+    gameObjects.add(clientPlayer.getHolding());
+    clientPlayer.getHolding().initialise(gameRoot);
     botPlayer = new Bot(500, 500, 80, 110, UUID.randomUUID(), gameObjects);
     botPlayer.setHolding(
         new Sword(500, 500, 50, 50, "Sword@LevelHandler", botPlayer, UUID.randomUUID())
@@ -54,6 +58,17 @@ public class LevelHandler {
     bots.add(botPlayer);
     gameObjects.add(botPlayer);
     gameObjects.add(botPlayer.getHolding());
+
+    Bot newbot = new Bot(1000, 500, 80, 110, UUID.randomUUID(), gameObjects);
+    newbot.setHolding(
+        new Sword(500, 500, 50, 50, "Sword@LevelHandlerBot2", newbot, UUID.randomUUID())
+    );
+    newbot.getHolding().initialise(gameRoot);
+    newbot.initialise(gameRoot);
+    bots.add(newbot);
+    gameObjects.add(newbot);
+    gameObjects.add(newbot.getHolding());
+    System.out.println("PRINT");
   }
 
 
@@ -86,8 +101,10 @@ public class LevelHandler {
     gameObjects = MapLoader.loadMap(map.getPath());
     gameObjects.forEach(
         gameObject -> {
-          if (gameObject.getId() == ObjectID.Background) {
-            gameObject.initialise(backgroundGroup);
+          if (gameObject.getId() == ObjectID.MapDataObject) {
+            this.background = ((MapDataObject) gameObject).getBackground();
+            background.initialise(backgroundGroup);
+
           } else {
             gameObject.initialise(gameGroup);
           }
@@ -106,6 +123,10 @@ public class LevelHandler {
   public ArrayList<GameObject> getGameObjects() {
     clearToRemove();    // Remove every gameObjects we no longer need
     return gameObjects;
+  }
+
+  public Background getBackground() {
+    return this.background;
   }
 
   /**
@@ -168,8 +189,8 @@ public class LevelHandler {
     return clientPlayer;
   }
 
-  public Bot getBotPlayer() {
-    return botPlayer;
+  public ArrayList<Bot> getBotPlayerList() {
+    return bots;
   }
 
   /**

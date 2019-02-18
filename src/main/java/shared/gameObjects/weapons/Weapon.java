@@ -5,7 +5,6 @@ import java.util.UUID;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
-import client.main.Client;
 
 /**
  * @author hlf764 The abstract class for all weapons in the game.
@@ -168,7 +167,7 @@ public abstract class Weapon extends GameObject {
       this.fireRate = newFireRate;
     }
   }
-  
+
   public Player getHolder() {
     return this.holder;
   }
