@@ -1,6 +1,7 @@
 package shared.gameObjects.weapons;
 
 import java.util.UUID;
+import shared.gameObjects.players.Player;
 
 public class MachineGunBullet extends Bullet {
 
@@ -16,9 +17,10 @@ public class MachineGunBullet extends Bullet {
       double width,
       double speed,
       int damage,
+      Player holder,
       UUID uuid) {
 
-    super(gunX, gunY, sizeX, sizeY, mouseX, mouseY, width, speed, damage, uuid);
+    super(gunX, gunY, sizeX, sizeY, mouseX, mouseY, width, speed, damage, holder, uuid);
   }
 
   @Override

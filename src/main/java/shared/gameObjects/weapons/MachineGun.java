@@ -35,7 +35,17 @@ public class MachineGun extends Gun {
       UUID uuid = UUID.randomUUID();
       Bullet bullet =
           new MachineGunBullet(
-              getX()+106, getY(), 20, 20, mouseX, mouseY, this.bulletWidth, this.bulletSpeed, this.damage, uuid);
+              getX()+106, 
+              getY(),
+              20,
+              20, 
+              mouseX, 
+              mouseY, 
+              this.bulletWidth,
+              this.bulletSpeed, 
+              this.damage, 
+              this.holder,
+              uuid);
       this.currentCooldown = getDefaultCoolDown();
       deductAmmo();
     }
