@@ -57,7 +57,7 @@ public class ServerReceiver implements Runnable {
       packet = new DatagramPacket(buffer, buffer.length, address, port);
       String received = new String(packet.getData(), 0, packet.getLength());
       int packetID = Integer.parseInt(received.split(",")[0]);
-
+      System.out.println(received);
       switch (packetID) {
         case 0:
           if (server.playerCount.get() < 4

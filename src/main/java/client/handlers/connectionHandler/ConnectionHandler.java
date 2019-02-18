@@ -87,6 +87,7 @@ public class ConnectionHandler extends Thread {
       DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
       try {
         multicastSocket.receive(packet);
+        System.out.println(Arrays.toString(packet.getData()));
         received.add(Arrays.toString(packet.getData()));
       } catch (IOException e) {
         e.printStackTrace();
