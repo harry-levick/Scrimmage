@@ -2,6 +2,7 @@ package shared.gameObjects.weapons;
 
 import java.util.UUID;
 import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.players.Player;
 
 /**
  * @author hlf764 The abstract class for all guns type weapon.
@@ -43,11 +44,12 @@ abstract class Gun extends Weapon {
       double bulletSpeed,
       int fireRate,
       double bulletWidth,
+      Player holder,
       boolean fullAutoFire,
       boolean singleHanded,
       UUID uuid) {
 
-    super(x, y, sizeX, sizeY, id, damage, weight, name, true, false, ammo, fireRate, uuid);
+    super(x, y, sizeX, sizeY, id, damage, weight, name, true, false, ammo, fireRate, holder, uuid);
 
     this.bulletSpeed = bulletSpeed;
     this.bulletWidth = bulletWidth;
