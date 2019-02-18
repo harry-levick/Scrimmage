@@ -39,7 +39,7 @@ public class Rigidbody extends Component implements Serializable {
   private float gravityScale;
   private float airDrag;
 
-  private boolean grounded, canUp, canRight, canDown, canLeft;
+  private boolean grounded;
 
   /**
    * The main component responsible for Physics calculations. Attach this to a GameObject to have it
@@ -95,13 +95,8 @@ public class Rigidbody extends Component implements Serializable {
     if (bodyType == RigidbodyType.DYNAMIC) {
       applyCollisions();
       applyForces();
-      // checkMovements();
       updateVelocity();
       grounded = false;
-      canUp = true;
-      canDown = true;
-      canLeft = true;
-      canRight = true;
     } else {
       velocity = Vector2.Zero();
     }
@@ -240,111 +235,6 @@ public class Rigidbody extends Component implements Serializable {
                     .mult(currentForce.getX() > 0 ? -1 : 1 * material.getKineticFriction()));
       } else {
         currentForce.setX(0);
-      }
-    }
-  }
-
-  void ResolveCollision(Rigidbody A, Rigidbody B) {
-    Vector2 normal = Vector2.Unit();
-    // Calculate relative velocity
-    Vector2 rv = B.velocity.sub(A.velocity);
-    float invA, invB;
-    if (A.mass == 0) {
-      invA = 0;
-    } else {
-      invA = 1 / A.mass;
-    }
-    if (B.mass == 0) {
-      invB = 0;
-    } else {
-      invB = 1 / B.mass;
-    }
-
-    // Calculate relative velocity in terms of the normal direction
-    float velAlongNormal = rv.dot(normal);
-
-    // Do not resolve if velocities are separating
-    if (velAlongNormal > 0) {
-      return;
-    }
-
-    // Calculate restitution
-    float e = Math.min(A.getMaterial().getRestitution(), B.getMaterial().getRestitution());
-
-    // Calculate impulse scalar
-    float j = -(e) * velAlongNormal;
-    j /= invA + invB;
-
-    // Apply impulse
-
-    Vector2 impulse = normal.mult(j);
-    float mass_sum = A.mass + B.mass;
-    if (mass_sum == A.mass) {
-      float ratio = 1f;
-      A.velocity = A.velocity.sub(impulse.mult(ratio));
-    } else {
-      float ratio = A.mass / mass_sum;
-      A.velocity = A.velocity.sub(impulse.mult(ratio));
-
-      ratio = B.mass / mass_sum;
-      B.velocity = B.velocity.add(impulse.mult(ratio));
-    }
-  }
-
-  void PositionalCorrection(Rigidbody A, Rigidbody B) {}
-
-  private void checkMovements() {
-    ArrayList<Collision> moveCols;
-    moveCols =
-        Physics.boxcastAll(
-            getParent()
-                .getTransform()
-                .getPos()
-                .add(Vector2.Down().mult(-0.06f * getParent().getTransform().getSize().getY())),
-            getParent().getTransform().getSize()
-        );
-    for (Collision c : moveCols) {
-      if (c.getCollidedObject().getBodyType() == RigidbodyType.STATIC) {
-        canUp = false;
-      }
-    }
-    moveCols =
-        Physics.boxcastAll(
-            getParent()
-                .getTransform()
-                .getPos()
-                .add(Vector2.Down().mult(0.06f * getParent().getTransform().getSize().getY())),
-            getParent().getTransform().getSize()
-        );
-    for (Collision c : moveCols) {
-      if (c.getCollidedObject().getBodyType() == RigidbodyType.STATIC) {
-        canDown = false;
-      }
-    }
-    moveCols =
-        Physics.boxcastAll(
-            getParent()
-                .getTransform()
-                .getPos()
-                .add(Vector2.Right().mult(0.06f * getParent().getTransform().getSize().getY())),
-            getParent().getTransform().getSize()
-        );
-    for (Collision c : moveCols) {
-      if (c.getCollidedObject().getBodyType() == RigidbodyType.STATIC) {
-        canRight = false;
-      }
-    }
-    moveCols =
-        Physics.boxcastAll(
-            getParent()
-                .getTransform()
-                .getPos()
-                .add(Vector2.Right().mult(-0.06f * getParent().getTransform().getSize().getX())),
-            getParent().getTransform().getSize()
-        );
-    for (Collision c : moveCols) {
-      if (c.getCollidedObject().getBodyType() == RigidbodyType.STATIC) {
-        canLeft = false;
       }
     }
   }
