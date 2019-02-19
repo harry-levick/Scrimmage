@@ -1,6 +1,7 @@
 package server.ai;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -37,7 +38,7 @@ public class Bot extends Player {
   // Get the LevelHandler through the constructor
   LevelHandler levelHandler;
   BotThread botThread;
-  ArrayList<boolean[]> plan;
+  List<boolean[]> plan;
 
   /**
    *
@@ -53,11 +54,14 @@ public class Bot extends Player {
     this.levelHandler = levelHandler;
     this.allPlayers = levelHandler.getPlayers();
     this.targetPlayer = findTarget();
-    this.plan = new ArrayList<>();
+    this.plan = Collections.synchronizedList(new ArrayList<>());
     this.botThread = new BotThread(this, plan);
+
+  }
+
+  public void startThread() {
     // Start the thread concurrently
     botThread.start();
-
   }
 
   public boolean mayJump() {
@@ -142,7 +146,12 @@ public class Bot extends Player {
 
   private void executeAction() {
 
-    boolean[] action = plan.remove(0);
+    boolean[] action = new boolean[] {false, false, false, false};
+
+    synchronized (plan) {
+      if (plan.size() > 0)
+        action = plan.remove(0);
+    }
 
     Random r = new Random();
     // 75% chance of jumping when asked to.

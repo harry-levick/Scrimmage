@@ -13,7 +13,7 @@ public class BotThread extends Thread {
   Player targetPlayer;
   public List<boolean[]> plan;
 
-  public BotThread(Bot bot, ArrayList<boolean[]> plan) {
+  public BotThread(Bot bot, List<boolean[]> plan) {
     this.bot = bot;
     this.plan = plan;
     pathFinder = new AStar(bot, bot.getLevelHandler());
@@ -21,10 +21,11 @@ public class BotThread extends Thread {
 
   public void run() {
     while (true) {
-      System.out.println("THREAD RUNNING");
       targetPlayer = bot.targetPlayer;
-      plan.clear();
-      plan.addAll(pathFinder.optimise(targetPlayer));
+      synchronized (plan) {
+        plan.clear();
+        plan.addAll(pathFinder.optimise(targetPlayer));
+      }
     }
   }
 

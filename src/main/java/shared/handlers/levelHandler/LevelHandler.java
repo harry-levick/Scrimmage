@@ -55,6 +55,7 @@ public class LevelHandler {
     gameObjects.add(bot1);
     gameObjects.add(bot1.getHolding());
 
+    bot1.startThread();
   }
 
   public LevelHandler(Settings settings) {
