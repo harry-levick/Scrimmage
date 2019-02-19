@@ -43,6 +43,166 @@ public class AStar {
   Bot bot;
 
   /**
+   * A SearchNode is a node in the A* search, consisting of an action (that got to the current
+   * node), the world state after this action was used, and information about the parent node.
+   */
+  public class SearchNode {
+
+    // The distance from the start of the search to this node.
+    double distanceElapsed;
+    // The optimal distance to reach the goal node AFTER simulating with the selected action.
+    double remainingDistance = 0;
+    // The parent node
+    SearchNode parentNode;
+    // The list of game objects in this scene
+    List<GameObject> sceneSnapshot;
+    // The bot that the path-finding is concerned with.
+    double botX;
+    double botY;
+
+    boolean visited = false;
+    // The action used to get to the child node.
+    boolean[] action;
+
+    public SearchNode(boolean[] action, SearchNode parent) {
+      // Instantiate the sceneSnapshot with the world scene so that it is large enough to take
+      // the copy of the world scene on the next line.
+      sceneSnapshot = new ArrayList<>(worldScene);
+      // Take a copy of the current world state
+      Collections.copy(sceneSnapshot, worldScene);
+      this.parentNode = parent;
+      if (parentNode != null) {
+        double xChange = calcXChange(action);
+        double yChange = calcYChange(action);
+        this.botY = parent.botY + yChange;
+        this.botX = parent.botX + xChange;
+        // Calculate the heuristic value of the node.
+        this.remainingDistance = calcRemainingH(enemy, getItems(sceneSnapshot));
+        // Calculate the distance from the starting node to the current node
+        distanceElapsed =
+            parent.distanceElapsed + Math.sqrt(Math.pow(xChange, 2) + Math.pow(yChange, 2));
+      } else {
+        // This is the starting node so distanceElapsed is 0
+        distanceElapsed = 0;
+        this.botX = bot.getX();
+        this.botY = bot.getY();
+        // Calculate the heuristic value of the node.
+        this.remainingDistance = calcRemainingH(enemy, getItems(sceneSnapshot));
+      }
+
+      this.action = action;
+    }
+
+    private double calcXChange(boolean[] action) {
+      if (action[Bot.KEY_LEFT]) {
+        return -10; // TODO change
+      } else if (action[Bot.KEY_RIGHT]) {
+        return 10; // TODO change
+      } else {
+        return 0.0;
+      }
+    }
+
+    private double calcYChange(boolean[] action) {
+      if (action[Bot.KEY_JUMP]) {
+        return -10; // TODO change
+      } else {
+        return 0.0;
+      }
+    }
+
+    /**
+     * Calculate the heuristic value for the node.
+     * @param enemy the target / goal
+     * @return the distance
+     */
+    public double calcRemainingH(Player enemy, List<Weapon> allItems) {
+      Vector2 botPos = new Vector2((float) botX, (float) botY);
+      Vector2 enemyPos = new Vector2((float) enemy.getX(), (float) enemy.getY());
+      double totalH = botPos.exactMagnitude(enemyPos);
+
+      if (!allItems.isEmpty()) {
+        GameObject closestItem = findClosestItem(allItems);
+        Vector2 itemPos = new Vector2((float) closestItem.getX(), (float) closestItem.getY());
+        double distanceToItem = botPos.exactMagnitude(itemPos);
+        // The heuristic value is the combined distance of the bot->enemy + bot->item
+        // The heuristic value for the item is weighted to add preference to pick the items up.
+        totalH += (distanceToItem * 2);
+      }
+
+      return totalH;
+    }
+
+    /**
+     * Find all items in the world, currently only finds weapons because no such item yet
+     * implemented.
+     * TODO change for items.
+     * @param allObjects all objects in the world
+     * @return list of weapons
+     */
+    private List<Weapon> getItems(List<GameObject> allObjects) {
+      // Collect all weapons from the world
+      List<Weapon> allWeapons =
+          allObjects.stream()
+              .filter(w -> w instanceof Weapon)
+              .map(Weapon.class::cast)
+              .collect(Collectors.toList());
+
+      return allWeapons;
+    }
+
+    /**
+     * Generate all the possible children of the node by calculating the result of all possible
+     * actions.
+     *
+     * @return The list of children nodes.
+     */
+    public ArrayList<SearchNode> generateChildren() {
+      ArrayList<SearchNode> list = new ArrayList<>();
+      ArrayList<boolean[]> possibleActions = createPossibleActions(this);
+
+      for (boolean[] action : possibleActions) {
+        list.add(new SearchNode(action, this));
+      }
+
+      return list;
+    }
+
+    public double getRemainingDistance() {
+      return remainingDistance;
+    }
+
+    public void advanceStep(boolean[] action) {
+      // Advance the world scene to a new scene that would be the case if we applied the action.
+      // TODO
+    }
+
+    /**
+     * Finds the closest pick-upable item
+     *
+     * @param allItems A list of all the items in the world.
+     * @return The item that is the closest to the bot
+     */
+    private GameObject findClosestItem(List<Weapon> allItems) {
+      GameObject closestItem = null;
+      Vector2 botPos = new Vector2((float) bot.getX(), (float) bot.getY());
+      double targetDistance = Double.POSITIVE_INFINITY;
+
+      for (GameObject item : allItems) {
+        Vector2 itemPos = new Vector2((float) item.getX(), (float) item.getY());
+        double distance = botPos.exactMagnitude(itemPos);
+        // Update the target if another player is closer
+        if (distance < targetDistance) {
+          targetDistance = distance;
+          closestItem = item;
+        }
+      }
+
+      return closestItem;
+    }
+  }
+
+  /**
    * Constructor
    *
    * @param worldScene The list of gameObject's in the world.
@@ -133,8 +293,8 @@ public class AStar {
   }
 
   /**
-   * Check if the current position of the bot is close enough to the enemy.
-   *
+   * Check if the current position of the bot is close enough to the enemy to attack them, and
+   * if they are in sight of the enemy.
    * @return true if the bot is close enough to the enemy.
    */
   private boolean atEnemy(double bX, double bY) {
@@ -142,17 +302,24 @@ public class AStar {
     double yDiff = Math.abs(bY - enemy.getY());
     Melee tempMelee;
 
-    if (bot.getHolding().isMelee()) {
+
+    if (bot.getHolding().isGun()) {
+
+      Collision inSight = Physics.raycast(new Vector2((float)  bot.getX(), (float) bot.getY()),
+          new Vector2((float) enemy.getX(), (float) enemy.getY()));
+
+      if (inSight == null)
+        return true;
+      else return false;
+
+    } else { // melee weapon
       if (xDiff <= (tempMelee = (Melee) bot.getHolding()).getRange()) {
         return true;
       } else {
         return false;
       }
-    } else if (xDiff <= 100 && yDiff <= 100) {
-      return true;
-    } else {
-      return false;
     }
+
   }
 
   /**
@@ -313,164 +480,5 @@ public class AStar {
     return bestPos;
   }
 
-  /**
-   * A SearchNode is a node in the A* search, consisting of an action (that got to the current
-   * node), the world state after this action was used, and information about the parent node.
-   */
-  public class SearchNode {
-
-    // The distance from the start of the search to this node.
-    double distanceElapsed;
-    // The optimal distance to reach the goal node AFTER simulating with the selected action.
-    double remainingDistance = 0;
-    // The parent node
-    SearchNode parentNode;
-    // The list of game objects in this scene
-    List<GameObject> sceneSnapshot;
-    // The bot that the path-finding is concerned with.
-    double botX;
-    double botY;
-
-    boolean visited = false;
-    // The action used to get to the child node.
-    boolean[] action;
-
-    public SearchNode(boolean[] action, SearchNode parent) {
-      // Instantiate the sceneSnapshot with the world scene so that it is large enough to take
-      // the copy of the world scene on the next line.
-      sceneSnapshot = new ArrayList<>(worldScene);
-      // Take a copy of the current world state
-      Collections.copy(sceneSnapshot, worldScene);
-      this.parentNode = parent;
-      if (parentNode != null) {
-        double xChange = calcXChange(action);
-        double yChange = calcYChange(action);
-        this.botY = parent.botY + yChange;
-        this.botX = parent.botX + xChange;
-        // Calculate the heuristic value of the node.
-        this.remainingDistance = calcRemainingH(enemy, getItems(sceneSnapshot));
-        // Calculate the distance from the starting node to the current node
-        distanceElapsed =
-            parent.distanceElapsed + Math.sqrt(Math.pow(xChange, 2) + Math.pow(yChange, 2));
-      } else {
-        // This is the starting node so distanceElapsed is 0
-        distanceElapsed = 0;
-        this.botX = bot.getX();
-        this.botY = bot.getY();
-        // Calculate the heuristic value of the node.
-        this.remainingDistance = calcRemainingH(enemy, getItems(sceneSnapshot));
-      }
-
-      this.action = action;
-    }
-
-    private double calcXChange(boolean[] action) {
-      if (action[Bot.KEY_LEFT]) {
-        return -10; // TODO change
-      } else if (action[Bot.KEY_RIGHT]) {
-        return 10; // TODO change
-      } else {
-        return 0.0;
-      }
-    }
-
-    private double calcYChange(boolean[] action) {
-      if (action[Bot.KEY_JUMP]) {
-        return -10; // TODO change
-      } else {
-        return 0.0;
-      }
-    }
-
-    /**
-     * Calculate the heuristic value for the node.
-     * @param enemy the target / goal
-     * @return the distance
-     */
-    public double calcRemainingH(Player enemy, List<Weapon> allItems) {
-      Vector2 botPos = new Vector2((float) botX, (float) botY);
-      Vector2 enemyPos = new Vector2((float) enemy.getX(), (float) enemy.getY());
-      double totalH = botPos.exactMagnitude(enemyPos);
-
-      if (!allItems.isEmpty()) {
-        GameObject closestItem = findClosestItem(allItems);
-        Vector2 itemPos = new Vector2((float) closestItem.getX(), (float) closestItem.getY());
-        double distanceToItem = botPos.exactMagnitude(itemPos);
-        // The heuristic value is the combined distance of the bot->enemy + bot->item
-        // The heuristic value for the item is weighted to add preference to pick the items up.
-        totalH += (distanceToItem * 2);
-      }
-
-      return totalH;
-    }
-
-    /**
-     * Find all items in the world, currently only finds weapons because no such item yet
-     * implemented.
-     * TODO change for items.
-     * @param allObjects all objects in the world
-     * @return list of weapons
-     */
-    private List<Weapon> getItems(List<GameObject> allObjects) {
-      // Collect all weapons from the world
-      List<Weapon> allWeapons =
-          allObjects.stream()
-              .filter(w -> w instanceof Weapon)
-              .map(Weapon.class::cast)
-              .collect(Collectors.toList());
-
-      return allWeapons;
-    }
-
-    /**
-     * Generate all the possible children of the node by calculating the result of all possible
-     * actions.
-     *
-     * @return The list of children nodes.
-     */
-    public ArrayList<SearchNode> generateChildren() {
-      ArrayList<SearchNode> list = new ArrayList<>();
-      ArrayList<boolean[]> possibleActions = createPossibleActions(this);
-
-      for (boolean[] action : possibleActions) {
-        list.add(new SearchNode(action, this));
-      }
-
-      return list;
-    }
-
-    public double getRemainingDistance() {
-      return remainingDistance;
-    }
-
-    public void advanceStep(boolean[] action) {
-      // Advance the world scene to a new scene that would be the case if we applied the action.
-      // TODO
-    }
-
-    /**
-     * Finds the closest pick-upable item
-     *
-     * @param allItems A list of all the items in the world.
-     * @return The item that is the closest to the bot
-     */
-    private GameObject findClosestItem(List<Weapon> allItems) {
-      GameObject closestItem = null;
-      Vector2 botPos = new Vector2((float) bot.getX(), (float) bot.getY());
-      double targetDistance = Double.POSITIVE_INFINITY;
-
-      for (GameObject item : allItems) {
-        Vector2 itemPos = new Vector2((float) item.getX(), (float) item.getY());
-        double distance = botPos.exactMagnitude(itemPos);
-        // Update the target if another player is closer
-        if (distance < targetDistance) {
-          targetDistance = distance;
-          closestItem = item;
-        }
-      }
-
-      return closestItem;
-    }
-  }
 
 }

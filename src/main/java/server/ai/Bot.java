@@ -7,8 +7,14 @@ import java.util.stream.Collectors;
 import server.ai.pathFind.AStar;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.players.Player;
+import shared.handlers.levelHandler.LevelHandler;
+import shared.physics.Physics;
+import shared.physics.data.Collision;
 import shared.util.maths.Vector2;
 
+/** TODO : When the bot is created, create the bot on a new thread, and run the update method on
+ *         a constant while loop.
+ */
 
 /**
  * @author Harry Levick (hxl799)
@@ -26,6 +32,8 @@ public class Bot extends Player {
   Player targetPlayer;
   AStar pathFinder;
   List<Player> allPlayers;
+  // Get the LevelHandler through the constructor
+  LevelHandler lh;
 
   /**
    * @param allObjs Contains a list of all game objects in the world, including players.
@@ -65,34 +73,54 @@ public class Bot extends Player {
     switch (state) {
       case IDLE:
         System.out.println("IDLE");
-        // TODO what to do in the idle state?
         executeAction(new boolean[]{false, false, false, false, false});
+        click = false;
+
         break;
       case CHASING:
         System.out.println("CHASING");
         // Find the next best move to take, and execute this move.
         executeAction(pathFinder.optimise(targetPlayer));
-        // TODO calculate and execute the best path to the target.
+        click = false;
+
         break;
       case FLEEING:
         System.out.println("FLEEING");
         executeAction(new boolean[]{false, false, false, false, false});
         // TODO calculate and execute the best path away from the target.
+        click = false;
+
         break;
       case ATTACKING:
         System.out.println("ATTACKING");
-        //executeAction(pathFinder.optimise(targetPlayer));
         // TODO think about how an attacking script would work.
+        Collision inSight = Physics.raycast(new Vector2((float) this.getX(), (float) this.getY()),
+            new Vector2((float) targetPlayer.getX(), (float) targetPlayer.getY()));
+        // If the target player is in sight of the bot, they can shoot.
+        if (inSight == null) {
+          mouseX = targetPlayer.getX();
+          mouseY = targetPlayer.getY();
+          click = true;
+        }
+
         break;
       case CHASING_ATTACKING:
         System.out.println("CHASING-ATTACKING");
         //executeAction(pathFinder.optimise(targetPlayer));
         // TODO calculate and execute the best path to the target whilst attacking.
+        mouseX = targetPlayer.getX();
+        mouseY = targetPlayer.getY();
+        click = true;
+
         break;
       case FLEEING_ATTACKING:
         System.out.println("CHASING-ATTACKING");
         executeAction(new boolean[]{false, false, false, false, false});
         // TODO calculate and execute the best path away from the target whilst attacking.
+        mouseX = targetPlayer.getX();
+        mouseY = targetPlayer.getY();
+        click = true;
+
         break;
     }
 
