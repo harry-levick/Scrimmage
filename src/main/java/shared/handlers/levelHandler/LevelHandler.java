@@ -41,8 +41,6 @@ public class LevelHandler {
     players.add(clientPlayer);
     changeMap(new Map("main_menu.map", Path.convert("src/main/resources/menus/main_menu.map"),
         GameState.IN_GAME));
-    gameObjects.add(clientPlayer.getHolding());
-    clientPlayer.getHolding().initialise(gameRoot);
     /*
     botPlayer = new Bot(500, 500, 80, 110, UUID.randomUUID(), gameObjects);
     botPlayer.setHolding(
