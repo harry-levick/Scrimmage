@@ -2,6 +2,7 @@ package server.ai;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import server.ai.pathFind.AStar;
@@ -170,10 +171,31 @@ public class Bot extends Player {
    * @param action: an action to exacute.
    */
   private void executeAction(boolean[] action) {
-    this.jumpKey = action[Bot.KEY_JUMP];
-    this.leftKey = action[Bot.KEY_LEFT];
-    this.rightKey = action[Bot.KEY_RIGHT];
-    this.click = action[Bot.KEY_CLICK];
+
+    Random r = new Random();
+    // 75% chance of jumping when asked to.
+    boolean jump = r.nextDouble() <= 0.75;
+    if (jump) {
+      this.jumpKey = action[Bot.KEY_JUMP];
+    } else this.jumpKey = false;
+
+    // 80% chance of moving left when asked to.
+    boolean left = r.nextDouble() <= 0.8;
+    if (left) {
+      this.leftKey = action[Bot.KEY_LEFT];
+    } else this.leftKey = false;
+
+    // 80% chance of moving right when asked to
+    boolean right = r.nextDouble() <= 0.8;
+    if (right) {
+      this.rightKey = action[Bot.KEY_RIGHT];
+    } else this.rightKey = false;
+
+    // 50% chance of shooting when asked to
+    boolean shoot = r.nextDouble() <= 0.5;
+    if (shoot) {
+      this.click = action[Bot.KEY_CLICK];
+    } else this.click = false;
   }
 
 }
