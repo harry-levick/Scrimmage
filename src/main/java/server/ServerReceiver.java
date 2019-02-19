@@ -43,6 +43,7 @@ public class ServerReceiver implements Runnable {
     } catch (IOException e) {
       e.printStackTrace();
     }
+    System.out.println(message);
     int packetID = Integer.parseInt(message.split(",")[0]);
     if (packetID == 0 && server.playerCount.get() < 4
         && server.serverState == ServerState.WAITING_FOR_PLAYERS) {
@@ -63,6 +64,7 @@ public class ServerReceiver implements Runnable {
       while (true) {
         try {
           message = input.readLine();
+          System.out.println(message);
         } catch (SocketTimeoutException e) {
           server.playerCount.decrementAndGet();
           connected.remove(socket.getRemoteSocketAddress().toString());

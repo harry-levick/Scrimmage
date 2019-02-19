@@ -75,7 +75,7 @@ public class Server extends Application {
     settings = new Settings();
     playlist = new LinkedList();
     try {
-      this.serverSocket = new ServerSocket(serverPort);
+      this.serverSocket = new ServerSocket(4445);
       this.socket = new DatagramSocket();
     } catch (IOException e) {
       e.printStackTrace();
