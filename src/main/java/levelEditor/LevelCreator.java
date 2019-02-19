@@ -90,7 +90,24 @@ public class LevelCreator extends Application {
           new ExampleFloorObject(getAbs(i * 4), getAbs(25), getAbs(4), getAbs(2), ObjectID.Bot,
               UUID.randomUUID()));
     }
+    MapLoader.saveMap(gameObjects, mapDataObject, filepath + filename + ".map");
 
+    ////////////////////////////////////////
+    // SINGLEPLAYER MAP
+    ////////////////////////////////////////
+    filename = "menu";
+    gameObjects = new ArrayList<GameObject>();
+    playerSpawns = new ArrayList<Player>();
+    mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.IN_GAME);
+    mapDataObject.setBackground(
+        new Background("images/backgrounds/background1.png", ObjectID.Background,
+            UUID.randomUUID()));
+    for (int i = 0; i < 13; i++) {
+      // bottom row floor
+      gameObjects.add(
+          new ExampleFloorObject(getAbs(i * 4), getAbs(25), getAbs(4), getAbs(2), ObjectID.Bot,
+              UUID.randomUUID()));
+    }
     MapLoader.saveMap(gameObjects, mapDataObject, filepath + filename + ".map");
 
     System.out.println("RECREATED MAP FILES");
