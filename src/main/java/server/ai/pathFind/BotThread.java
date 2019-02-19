@@ -21,10 +21,15 @@ public class BotThread extends Thread {
 
   public void run() {
     while (true) {
-      targetPlayer = bot.targetPlayer;
+      targetPlayer = bot.findTarget();
       synchronized (plan) {
         plan.clear();
         plan.addAll(pathFinder.optimise(targetPlayer));
+      }
+      try {
+        Thread.sleep(1000);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
       }
     }
   }

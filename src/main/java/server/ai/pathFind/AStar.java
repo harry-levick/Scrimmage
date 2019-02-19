@@ -226,13 +226,14 @@ public class AStar {
     this.enemy = enemy;
 
     // If there is no plan, or if the current plan no longer leads to the enemy, create a new plan.
-    if (currentPlan.size() == 0 || !atEnemy(bestPosition.botX, bestPosition.botY)) {
-      initSearch();
-      // Run the search
-      search();
-      // Extract the plan from the search.
-      currentPlan = extractPlan();
-    }
+    //if (currentPlan.size() == 0 || !atEnemy(bestPosition.botX, bestPosition.botY)) {
+    //}
+
+    initSearch();
+    // Run the search
+    search();
+    // Extract the plan from the search.
+    currentPlan = extractPlan();
 
     return currentPlan;
   }

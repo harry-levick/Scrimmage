@@ -153,24 +153,21 @@ public class Bot extends Player {
         action = plan.remove(0);
     }
 
-    if (action[Bot.KEY_RIGHT] && action[Bot.KEY_LEFT]) {
-      System.out.println("SAME");
-    }
     Random r = new Random();
-    // 75% chance of jumping when asked to.
+    // 60% chance of jumping when asked to.
     boolean jump = r.nextDouble() <= 0.60;
     if (jump) {
       this.jumpKey = action[Bot.KEY_JUMP];
     } else this.jumpKey = false;
 
-    // 80% chance of moving left when asked to.
-    boolean left = r.nextDouble() <= 0.70;
+    // 60% chance of moving left when asked to.
+    boolean left = r.nextDouble() <= 0.60;
     if (left) {
       this.leftKey = action[Bot.KEY_LEFT];
     } else this.leftKey = false;
 
-    // 80% chance of moving right when asked to
-    boolean right = r.nextDouble() <= 0.70;
+    // 60% chance of moving right when asked to
+    boolean right = r.nextDouble() <= 0.60;
     if (right) {
       this.rightKey = action[Bot.KEY_RIGHT];
     } else this.rightKey = false;
