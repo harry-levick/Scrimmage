@@ -52,15 +52,18 @@ public class KeyboardInput implements EventHandler<KeyEvent> {
   }
 
   public void sendInput() {
-    PacketInput input =
-        new PacketInput(
-            clientPlayer.mouseX,
-            clientPlayer.mouseY,
-            clientPlayer.leftKey,
-            clientPlayer.rightKey,
-            clientPlayer.jumpKey,
-            clientPlayer.click,
-            clientPlayer.getUUID());
-    Client.connectionHandler.send(input.getData());
+    if (Client.multiplayer) {
+      PacketInput input =
+          new PacketInput(
+              clientPlayer.mouseX,
+              clientPlayer.mouseY,
+              clientPlayer.leftKey,
+              clientPlayer.rightKey,
+              clientPlayer.jumpKey,
+              clientPlayer.click,
+              clientPlayer.getUUID());
+      Client.connectionHandler.send(input.getData());
+    }
   }
+
 }

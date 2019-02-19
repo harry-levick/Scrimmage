@@ -34,15 +34,17 @@ public class MouseInput implements EventHandler<MouseEvent> {
   }
 
   public void sendInput() {
-    PacketInput input =
-        new PacketInput(
-            clientPlayer.mouseX,
-            clientPlayer.mouseY,
-            clientPlayer.leftKey,
-            clientPlayer.rightKey,
-            clientPlayer.jumpKey,
-            clientPlayer.click,
-            clientPlayer.getUUID());
-    Client.connectionHandler.send(input.getData());
+    if (Client.multiplayer) {
+      PacketInput input =
+          new PacketInput(
+              clientPlayer.mouseX,
+              clientPlayer.mouseY,
+              clientPlayer.leftKey,
+              clientPlayer.rightKey,
+              clientPlayer.jumpKey,
+              clientPlayer.click,
+              clientPlayer.getUUID());
+      Client.connectionHandler.send(input.getData());
+    }
   }
 }
