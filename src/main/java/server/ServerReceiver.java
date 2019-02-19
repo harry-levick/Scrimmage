@@ -76,17 +76,19 @@ public class ServerReceiver implements Runnable {
         }
         packetID = Integer.parseInt(message.split(",")[0]);
         System.out.println(message);
+        System.out.println(player.getX());
         switch (packetID) {
           case 2:
             PacketInput inputPacket = new PacketInput(message);
-            if (inputPacket.getUuid() == player.getUUID()) {
+            //if (inputPacket.getUuid() == player.getUUID()) {
+            //Change to add to list
               player.mouseY = inputPacket.getY();
               player.mouseX = inputPacket.getX();
               player.leftKey = inputPacket.isLeftKey();
               player.rightKey = inputPacket.isRightKey();
               player.jumpKey = inputPacket.isJumpKey();
               player.click = inputPacket.isClick();
-            }
+            //}
             break;
           case 5:
             PacketReady readyPacket = new PacketReady(message);

@@ -25,6 +25,7 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import server.ai.Bot;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.MapDataObject;
 import shared.gameObjects.players.Player;
@@ -122,6 +123,13 @@ public class Server extends Application {
           executor.execute(new ServerReceiver(server, serverSocket, connected));
         }
 
+        if (playerCount.get() == 5) {
+          Bot bot = new Bot(500, 500, UUID.randomUUID(), levelHandler.getGameObjects());
+          bot.initialise(null);
+          levelHandler.getPlayers().add(bot);
+          levelHandler.getBotPlayerList().add(bot);
+          levelHandler.getGameObjects().add(bot);
+        }
         counter.getAndIncrement();
         if (playerCount.get() == maxPlayers) {
           serverState = ServerState.WAITING_FOR_READYUP;
@@ -154,11 +162,13 @@ public class Server extends Application {
   public void updateSimulation() {
     /** Check Collisions */
     Physics.gameObjects = levelHandler.getGameObjects();
+    levelHandler.getPlayers().forEach(player -> player.applyInput(false, null));
     levelHandler
         .getGameObjects()
         .forEach(gameObject -> gameObject.updateCollision(levelHandler.getGameObjects()));
     /** Update Game Objects */
     levelHandler.getGameObjects().forEach(gameObject -> gameObject.update());
+    //System.out.println("Updated World");
   }
 
   public void sendToClients(byte[] buffer) {
