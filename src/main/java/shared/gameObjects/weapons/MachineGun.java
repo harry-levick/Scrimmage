@@ -3,19 +3,20 @@ package shared.gameObjects.weapons;
 import java.util.UUID;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
+import shared.util.Path;
 
 public class MachineGun extends Gun {
 
   private static String imagePath = "images/weapons/machinegun.png"; // path to Machine Gun image
 
-  public MachineGun(double x, double y, double sizeX, double sizeY, String name, Player holder,
+  public MachineGun(double x, double y, String name, Player holder,
       UUID uuid) {
 
     super(
         x,
         y,
-        sizeX,
-        sizeY,
+        116,
+        33,
         ObjectID.Weapon, // ObjectID
         5, // damage
         10, // weight
@@ -76,6 +77,6 @@ public class MachineGun extends Gun {
   @Override
   public void initialiseAnimation() {
     // this.animation.supplyAnimation("default", imagePath);
-    this.animation.supplyAnimationWithSize("default", 40, 40, true, imagePath);
+    this.animation.supplyAnimationWithSize("default", 40, 40, true, Path.convert(this.imagePath));
   }
 }

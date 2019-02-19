@@ -4,6 +4,7 @@ import client.handlers.audioHandler.AudioHandler;
 import client.handlers.connectionHandler.ConnectionHandler;
 import client.handlers.inputHandler.KeyboardInput;
 import client.handlers.inputHandler.MouseInput;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 import javafx.animation.AnimationTimer;
@@ -45,7 +46,7 @@ public class Client extends Application {
   private MouseInput mouseInput;
   private Group root;
   private Group backgroundRoot;
-  private Group gameRoot;
+  public static Group gameRoot;
   private Scene scene;
   private float maximumStep;
   private long previousTime;
@@ -104,6 +105,23 @@ public class Client extends Application {
           levelHandler.getGameObjects().forEach(gameObject -> gameObject.update());
           accumulatedTime -= timeStep;
         }
+        /**Calculate Score*/
+        if (levelHandler.getPlayers().size() > 1) {
+          ArrayList<Player> alive = new ArrayList<>();
+          for (Player p : levelHandler.getPlayers()) {
+            if (p.isActive()) {
+              alive.add(p);
+            }
+            if (alive.size() > 1) {
+              break;
+            }
+          }
+          if (alive.size() == 1) {
+            alive.forEach(player -> player.increaseScore());
+            levelHandler.getPlayers().forEach(player -> player.reset());
+            //Change level
+          }
+        }
         /** Apply Input */
         levelHandler.getClientPlayer().applyInput(multiplayer, connectionHandler);
         // Update bot
@@ -111,7 +129,9 @@ public class Client extends Application {
             .forEach(bot -> bot.applyInput(multiplayer, connectionHandler));
         /** Render Game Objects */
         levelHandler.getGameObjects().forEach(gameObject -> gameObject.render());
-        levelHandler.getBackground().render();
+        if (levelHandler.getBackground() != null) {
+          levelHandler.getBackground().render();
+        }
         /** Check Collisions */
         Physics.gameObjects = levelHandler.getGameObjects();
         levelHandler
@@ -133,7 +153,9 @@ public class Client extends Application {
     framesElapsedSinceFPS++;
     if (elapsedSinceFPS >= 0.5f) {
       int fps = Math.round(framesElapsedSinceFPS / elapsedSinceFPS);
-      primaryStage.setTitle(gameTitle + "   --    FPS: " + fps);
+      primaryStage.setTitle(
+          gameTitle + "   --    FPS: " + fps + "    Score: " + Client.levelHandler.getClientPlayer()
+              .getScore());
       elapsedSinceFPS = 0;
       framesElapsedSinceFPS = 0;
     }
@@ -261,7 +283,7 @@ public class Client extends Application {
           case 4:
             PacketPlayerJoin packetPlayerJoin = new PacketPlayerJoin(message);
             levelHandler.addPlayer(
-                new Player(packetPlayerJoin.getX(), packetPlayerJoin.getY(), 100, 100,
+                new Player(packetPlayerJoin.getX(), packetPlayerJoin.getY(),
                     packetPlayerJoin.getUUID()));
             break;
           //End

@@ -3,6 +3,7 @@ package shared.gameObjects.weapons;
 import java.util.UUID;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
+import shared.util.Path;
 
 /**
  * @author hlf764 The Handgun class.
@@ -74,6 +75,6 @@ public class Handgun extends Gun {
 
   @Override
   public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", "images/weapons/handgun.jpg");
+    this.animation.supplyAnimation("default", Path.convert("images/weapons/handgun.jpg"));
   }
 }

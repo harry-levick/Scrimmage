@@ -130,8 +130,6 @@ public class LevelEditor extends Application {
                 new Player(
                     getGridX(event.getX()),
                     getGridY(event.getY()),
-                    getScaledSize(objectMap.get(objectTypeSelected).getX()),
-                    getScaledSize(objectMap.get(objectTypeSelected).getY()),
                     uuid);
             mapDataObject.addSpawnPoint(getGridX(event.getX()), getGridY(event.getY()));
           } else {
@@ -531,7 +529,7 @@ public class LevelEditor extends Application {
               valid = false;
             }
             if (valid) {
-              MapLoader.saveMap(gameObjects, mapDataObject, filename + ".map");
+              MapLoader.saveMap(gameObjects, mapDataObject, filepath + filename + ".map");
               errorText.setStyle("-fx-fill: green");
               errorText.setText("Saved");
               dialog.close();
