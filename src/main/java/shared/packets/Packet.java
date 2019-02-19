@@ -12,7 +12,8 @@ public abstract class Packet {
     return data.getBytes();
   }
 
-  public String getString() {
+  @Override
+  public String toString() {
     return data;
   }
 

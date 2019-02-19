@@ -22,7 +22,6 @@ public class MouseInput implements EventHandler<MouseEvent> {
     if (type == MouseEvent.MOUSE_MOVED || type == MouseEvent.MOUSE_DRAGGED) {
       clientPlayer.mouseX = event.getX();
       clientPlayer.mouseY = event.getY();
-      sendInput();
     }
     if (type == MouseEvent.MOUSE_PRESSED) {
       clientPlayer.click = true;

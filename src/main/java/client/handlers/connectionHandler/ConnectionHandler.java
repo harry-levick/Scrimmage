@@ -54,6 +54,7 @@ public class ConnectionHandler extends Thread {
       DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
       try {
         clientSocket.receive(packet);
+        System.out.println(packet.getData().toString());
         received.add(Arrays.toString(packet.getData()));
       } catch (IOException e) {
         e.printStackTrace();
@@ -75,6 +76,8 @@ public class ConnectionHandler extends Thread {
 
 
   public void send(String data) {
+    System.out.println(data);
+    System.out.println(Client.levelHandler.getClientPlayer().getX());
     out.println(data);
   }
 }
