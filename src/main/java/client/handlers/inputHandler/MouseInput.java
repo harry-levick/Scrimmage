@@ -44,7 +44,7 @@ public class MouseInput implements EventHandler<MouseEvent> {
               clientPlayer.jumpKey,
               clientPlayer.click,
               clientPlayer.getUUID());
-      Client.connectionHandler.send(input.getData());
+      Client.connectionHandler.send(input.toString());
     }
   }
 }

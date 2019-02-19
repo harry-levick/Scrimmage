@@ -20,8 +20,7 @@ public class PacketInput extends Packet {
     this.x = x;
     this.y = y;
 
-    data =
-        (packetID
+    data = packetID
             + ","
             + uuid
             + ","
@@ -35,8 +34,7 @@ public class PacketInput extends Packet {
             + ","
             + jumpKey
             + ","
-            + click)
-            .getBytes();
+        + click;
   }
 
   public PacketInput(String data) {
