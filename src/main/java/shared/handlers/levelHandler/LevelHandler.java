@@ -154,7 +154,8 @@ public class LevelHandler {
     return players;
   }
 
-  public void addPlayer(Player newPlayer) {
+  public void addPlayer(Player newPlayer, Group root) {
+    newPlayer.initialise(root);
     players.add(newPlayer);
     gameObjects.add(newPlayer);
   }

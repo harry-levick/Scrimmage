@@ -4,11 +4,20 @@ import client.main.Client;
 import client.main.Settings;
 import java.io.IOException;
 import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import javafx.animation.AnimationTimer;
@@ -24,7 +33,6 @@ import shared.handlers.levelHandler.LevelHandler;
 import shared.handlers.levelHandler.Map;
 import shared.packets.PacketGameState;
 import shared.packets.PacketMap;
-import shared.packets.SocketMulti;
 import shared.physics.Physics;
 import shared.util.Path;
 
@@ -35,6 +43,8 @@ public class Server extends Application {
   public static LevelHandler levelHandler;
 
   private Settings settings;
+  private ArrayList<String> connectedList = new ArrayList<>();
+  private List connected = Collections.synchronizedList(connectedList);
   public final AtomicInteger playerCount = new AtomicInteger(0);
   public final AtomicInteger readyCount = new AtomicInteger(0);
   private final AtomicBoolean running = new AtomicBoolean(false);
@@ -45,16 +55,31 @@ public class Server extends Application {
   public ServerState serverState;
   private String threadName;
   private LinkedList<Map> playlist;
-  private SocketMulti multicastSocketMulti;
+
+  private int playerLastCount = 0;
+  private ServerSocket serverSocket = null;
+  private int serverPort = 4446;
+  private ExecutorService executor;
+  private Server server;
+
+  private DatagramSocket socket;
 
   public static void main(String args[]) {
     launch(args);
   }
 
   public void init() {
+    server = this;
+    executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     threadName = "Server";
     settings = new Settings();
     playlist = new LinkedList();
+    try {
+      this.serverSocket = new ServerSocket(serverPort);
+      this.socket = new DatagramSocket();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
     //Testing code
     playlist
@@ -71,10 +96,8 @@ public class Server extends Application {
     running.set(true);
     LOGGER.debug("Running " + threadName);
     serverState = ServerState.WAITING_FOR_PLAYERS;
-    multicastSocketMulti = new SocketMulti();
     /** Receiver from clients */
-    ServerReceiver receiver = new ServerReceiver(this);
-    receiver.start();
+    executor.execute(new ServerReceiver(this, serverSocket, connected));
 
     /** Setup Game timer */
     TimerTask task = new TimerTask() {
@@ -93,6 +116,12 @@ public class Server extends Application {
         if (!running.get()) {
           this.stop();
         }
+
+        if (playerLastCount < playerCount.get()) {
+          playerLastCount++;
+          executor.execute(new ServerReceiver(server, serverSocket, connected));
+        }
+
         counter.getAndIncrement();
         if (playerCount.get() == maxPlayers) {
           serverState = ServerState.WAITING_FOR_READYUP;
@@ -133,12 +162,19 @@ public class Server extends Application {
   }
 
   public void sendToClients(byte[] buffer) {
-    DatagramPacket packet = new DatagramPacket(buffer, buffer.length,
-        multicastSocketMulti.getMulticastAddress(), multicastSocketMulti.getMulticastPort());
-    try {
-      multicastSocketMulti.get().send(packet);
-    } catch (IOException e) {
-      LOGGER.error("Error sending server message");
+    synchronized (connected) {
+      Iterator address = connected.iterator();
+      while (address.hasNext()) {
+        try {
+          DatagramPacket packet = new DatagramPacket(buffer, buffer.length,
+              InetAddress.getByName((String) address.next()), serverPort);
+          socket.send(packet);
+        } catch (UnknownHostException e) {
+          e.printStackTrace();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
     }
   }
 

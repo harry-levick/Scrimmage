@@ -288,7 +288,7 @@ public class Client extends Application {
             PacketPlayerJoin packetPlayerJoin = new PacketPlayerJoin(message);
             levelHandler.addPlayer(
                 new Player(packetPlayerJoin.getX(), packetPlayerJoin.getY(),
-                    packetPlayerJoin.getUUID()));
+                    packetPlayerJoin.getUUID()), gameRoot);
             break;
           //End
           case 6:
