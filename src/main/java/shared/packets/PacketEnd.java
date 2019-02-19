@@ -4,7 +4,7 @@ public class PacketEnd extends Packet {
 
   public PacketEnd() {
     packetID = PacketID.END.getID();
-    data = (Integer.toString(packetID)).getBytes();
+    data = Integer.toString(packetID);
   }
 
   public PacketEnd(String data) {

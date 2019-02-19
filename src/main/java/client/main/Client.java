@@ -124,6 +124,7 @@ public class Client extends Application {
             }
             if (alive.size() == 1) {
               alive.forEach(player -> player.increaseScore());
+              levelHandler.getPlayers().forEach(player -> player.reset());
               //Change level
             }
           }

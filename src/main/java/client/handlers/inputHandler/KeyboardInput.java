@@ -62,7 +62,7 @@ public class KeyboardInput implements EventHandler<KeyEvent> {
               clientPlayer.jumpKey,
               clientPlayer.click,
               clientPlayer.getUUID());
-      Client.connectionHandler.send(input.getData());
+      Client.connectionHandler.send(input.toString());
     }
   }
 
