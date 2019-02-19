@@ -90,7 +90,7 @@ public class LevelEditor extends Application {
     objectMap.put(OBJECT_TYPES.BTN_ST, new GameObjectTuple("Settings Button", 6, 2));
     objectMap.put(OBJECT_TYPES.BTN_LE, new GameObjectTuple("Level Editor Button", 6, 2));
     objectMap.put(OBJECT_TYPES.WPN_HG, new GameObjectTuple("Handgun", 2, 2));
-    objectMap.put(OBJECT_TYPES.BTN_JOIN, new GameObjectTuple("ButtonJoin", 6,2));
+    objectMap.put(OBJECT_TYPES.BTN_JOIN, new GameObjectTuple("ButtonJoin", 6, 2));
   }
 
   private void scenePrimaryClick(Stage primaryStage, Group root, Group objects, Group background, MouseEvent event) {
@@ -128,8 +128,6 @@ public class LevelEditor extends Application {
                 new Player(
                     getGridX(event.getX()),
                     getGridY(event.getY()),
-                    getScaledSize(objectMap.get(objectTypeSelected).getX()),
-                    getScaledSize(objectMap.get(objectTypeSelected).getY()),
                     uuid);
             mapDataObject.addSpawnPoint(getGridX(event.getX()), getGridY(event.getY()));
           } else {
@@ -518,7 +516,7 @@ public class LevelEditor extends Application {
               valid = false;
             }
             if (valid) {
-              MapLoader.saveMap(gameObjects, mapDataObject, filename + ".map");
+              MapLoader.saveMap(gameObjects, mapDataObject, filepath + filename + ".map");
               errorText.setStyle("-fx-fill: green");
               errorText.setText("Saved");
               dialog.close();

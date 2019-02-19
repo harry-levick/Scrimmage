@@ -3,6 +3,7 @@ package shared.gameObjects.weapons;
 import java.util.UUID;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
+import shared.util.Path;
 
 public class Sword extends Melee {
 
@@ -16,25 +17,23 @@ public class Sword extends Melee {
    * @param x The x position of the sword
    * @param y The y position of the sword
    * @param name Name of the sword
-   * @param range Range of the sword
-   * @param beginAngle The starting angle when the sword swing
-   * @param endAngle The ending angle when the sword swing
    * @param uuid The UUID of the sword
    */
-  public Sword(double x, double y, double sizeX, double sizeY, String name, Player holder, UUID uuid) {
+  public Sword(double x, double y, String name, Player holder,
+      UUID uuid) {
     super(
         x,
         y,
-        sizeX, 
-        sizeY, 
+        50,
+        50,
         ObjectID.Weapon,
         20,  // damage
         10,  // weight
-        name, 
+        name,
         30,  // ammo
         60,  // fireRate
         holder,
-        30,  // range
+        50,  // range
         50,  // beginAngle
         20,  // endAngle
         uuid);
@@ -55,13 +54,13 @@ public class Sword extends Melee {
     super.render();
     imageView.setTranslateX(this.getX());
     imageView.setTranslateY(this.getY());
-    
+
     // set rotation of the sword
     if (this.attacking) {
       this.imageView.setRotate(45 + (-1 * getAngle(currentAngleIndex)));
       // set incrementation of angles for frames
       currentAngleIndex += 4;
-      if (currentAngleIndex >= (int)(beginAngle + endAngle + 1)) {
+      if (currentAngleIndex >= (int) (beginAngle + endAngle + 1)) {
         attacking = false;
         currentAngleIndex = 0;
         this.imageView.setRotate(0);
@@ -76,6 +75,7 @@ public class Sword extends Melee {
 
   @Override
   public void initialiseAnimation() {
-    this.animation.supplyAnimationWithSize("default", 50, 50, true, this.imagePath);
+    this.animation.supplyAnimationWithSize("default", this.range, this.range, true,
+        Path.convert(this.imagePath));
   }
 }

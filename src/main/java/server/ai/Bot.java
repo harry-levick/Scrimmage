@@ -39,9 +39,9 @@ public class Bot extends Player {
   /**
    * @param allObjs Contains a list of all game objects in the world, including players.
    */
-  public Bot(double x, double y, double sizeX, double sizeY, UUID playerUUID,
+  public Bot(double x, double y, UUID playerUUID,
       List<GameObject> allObjs) {
-    super(x, y, sizeX, sizeY, playerUUID);
+    super(x, y, playerUUID);
     allPlayers = new ArrayList<>();
     this.state = FSA.INITIAL_STATE;
 

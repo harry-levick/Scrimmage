@@ -95,14 +95,18 @@ public abstract class GameObject implements Serializable {
         return;
       }
     }
-    ArrayList<Collision> collision = null;
+    ArrayList<Collision> collisions = new ArrayList<>();
     if (col != null) {
-      collision =
-          Physics.boxcastAll(
-              getTransform().getPos().add(rb.getVelocity().mult(Physics.TIMESTEP)),
-              getTransform().getSize()
-          );
-      for (Collision c : collision) {
+      for (GameObject o : Physics.gameObjects) {
+       Collider o_col = (Collider) o.getComponent(ComponentType.COLLIDER);
+       if(o_col != null) {
+         Collision o_collision = Collision.resolveCollision((BoxCollider) col, o_col);
+         if(o_collision != null) {
+           collisions.add(o_collision);
+         }
+       }
+      }
+      for (Collision c : collisions) {
         if (!c.getCollidedObject().equals(rb)) {
           rb.getCollisions().add(c);
         }

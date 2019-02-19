@@ -27,7 +27,7 @@ public class Punch extends Melee {
       double sizeY, 
       ObjectID id, 
       int damage,
-      String name, 
+      String name,
       Player holder,
       double range,
       UUID uuid) {

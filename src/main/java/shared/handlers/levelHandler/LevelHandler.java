@@ -6,10 +6,10 @@ import java.util.UUID;
 import javafx.scene.Group;
 import server.ai.Bot;
 import shared.gameObjects.GameObject;
+import shared.gameObjects.MapDataObject;
 import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.background.Background;
 import shared.gameObjects.players.Player;
-import shared.gameObjects.weapons.MachineGun;
-import shared.gameObjects.weapons.Sword;
 import shared.util.Path;
 
 public class LevelHandler {
@@ -19,13 +19,13 @@ public class LevelHandler {
   private ArrayList<Player> players;
   private ArrayList<Bot> bots;
   private Player clientPlayer;
-  private Bot botPlayer;
   private ArrayList<Map> maps;
   private GameState gameState;
   private Map map;
   private Group root;
   private Group backgroundRoot;
   private Group gameRoot;
+  private Background background;
 
   public LevelHandler(Settings settings, Group root, Group backgroundRoot, Group gameRoot) {
     gameObjects = new ArrayList<>();
@@ -36,26 +36,12 @@ public class LevelHandler {
     this.root = root;
     this.backgroundRoot = backgroundRoot;
     this.gameRoot = gameRoot;
-    clientPlayer = new Player(500, 200, 80, 110, UUID.randomUUID());
-    clientPlayer.setHolding(
-        new MachineGun(500, 500, 116, 33, "MachineGun@LevelHandler", clientPlayer, UUID.randomUUID()));
+    clientPlayer = new Player(500, 200, UUID.randomUUID());
     clientPlayer.initialise(gameRoot);
     players.add(clientPlayer);
-    gameObjects.add(clientPlayer.getHolding());
-    clientPlayer.getHolding().initialise(gameRoot);
     changeMap(new Map("main_menu.map", Path.convert("src/main/resources/menus/main_menu.map"),
         GameState.IN_GAME));
-    botPlayer = new Bot(500, 500, 80, 110, UUID.randomUUID(), gameObjects);
-    botPlayer.setHolding(
-        new Sword(500, 500, 50, 50, "Sword@LevelHandler", botPlayer, UUID.randomUUID())
-    );
-    botPlayer.getHolding().initialise(gameRoot);
-    botPlayer.initialise(gameRoot);
-    bots.add(botPlayer);
-    gameObjects.add(botPlayer);
-    gameObjects.add(botPlayer.getHolding());
   }
-
 
   public LevelHandler(Settings settings) {
     gameObjects = new ArrayList<>();
@@ -86,16 +72,20 @@ public class LevelHandler {
     gameObjects = MapLoader.loadMap(map.getPath());
     gameObjects.forEach(
         gameObject -> {
-          if (gameObject.getId() == ObjectID.Background) {
-            gameObject.initialise(backgroundGroup);
+          if (gameObject.getId() == ObjectID.MapDataObject) {
+            this.background = ((MapDataObject) gameObject).getBackground();
+            if (this.background != null) {
+              background.initialise(backgroundGroup);
+            }
+
           } else {
             gameObject.initialise(gameGroup);
           }
         });
     gameObjects.addAll(players);
-    gameObjects.addAll(bots);
+    //gameObjects.addAll(bots);
     gameState = map.getGameState();
-    //System.gc();
+    System.gc();
   }
 
   /**
@@ -106,6 +96,10 @@ public class LevelHandler {
   public ArrayList<GameObject> getGameObjects() {
     clearToRemove();    // Remove every gameObjects we no longer need
     return gameObjects;
+  }
+
+  public Background getBackground() {
+    return this.background;
   }
 
   /**
@@ -168,8 +162,8 @@ public class LevelHandler {
     return clientPlayer;
   }
 
-  public Bot getBotPlayer() {
-    return botPlayer;
+  public ArrayList<Bot> getBotPlayerList() {
+    return bots;
   }
 
   /**
@@ -181,5 +175,9 @@ public class LevelHandler {
     toRemove.forEach(gameObject -> gameObject.removeRender());
     toRemove.forEach(gameObject -> gameObject.destroy());
     toRemove.clear();
+  }
+
+  public Group getGameRoot() {
+    return gameRoot;
   }
 }
