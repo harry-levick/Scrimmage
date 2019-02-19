@@ -153,6 +153,9 @@ public class Bot extends Player {
         action = plan.remove(0);
     }
 
+    if (action[Bot.KEY_RIGHT] && action[Bot.KEY_LEFT]) {
+      System.out.println("SAME");
+    }
     Random r = new Random();
     // 75% chance of jumping when asked to.
     boolean jump = r.nextDouble() <= 0.60;
