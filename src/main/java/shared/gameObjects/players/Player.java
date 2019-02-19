@@ -122,9 +122,11 @@ public class Player extends GameObject {
       imageView.setScaleX(1);
     }
     if (leftKey) {
+      System.out.println("moved from " + getX());
       rb.moveX(speed * -1);
       animation.switchAnimation("walk");
       imageView.setScaleX(-1);
+      System.out.println("to " + getX());
     }
 
     if (!rightKey && !leftKey) {
