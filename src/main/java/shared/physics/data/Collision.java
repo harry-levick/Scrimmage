@@ -27,13 +27,13 @@ public class Collision {
         this.normalCollision = Vector2.Up();
         break;
       case LEFT:
-        this.normalCollision = Vector2.Right();
+        this.normalCollision = Vector2.Left();
         break;
       case RIGHT:
         this.normalCollision = Vector2.Left();
         break;
       case UP:
-        this.normalCollision = Vector2.Down();
+        this.normalCollision = Vector2.Up();
         break;
     }
     this.collidedObject = collidedObject;
@@ -121,31 +121,23 @@ public class Collision {
 
   public static CollisionDirection getDirection(BoxCollider boxA, BoxCollider boxB) {
     Vector2 toRet;
-    if (boxA.getParent() == null) {
       float A = boxA.getCorners()[0].magnitude(boxB.getCentre());
       float B = boxA.getCorners()[1].magnitude(boxB.getCentre());
       float C = boxA.getCorners()[2].magnitude(boxB.getCentre());
       float D = boxA.getCorners()[3].magnitude(boxB.getCentre());
       if (A <= B && A <= C && A <= D) {
         toRet = boxA.getCorners()[0].sub(boxB.getCorners()[2]);
-        return toRet.getX() > toRet.getY() ? CollisionDirection.LEFT : CollisionDirection.UP;
+        return Math.abs(toRet.getX()) < Math.abs(toRet.getY()) ? CollisionDirection.LEFT : CollisionDirection.UP;
       } else if (B <= C && B <= D) {
         toRet = boxA.getCorners()[1].sub(boxB.getCorners()[3]);
-        return toRet.getX() > toRet.getY() ? CollisionDirection.LEFT : CollisionDirection.DOWN;
+        return Math.abs(toRet.getX()) < Math.abs(toRet.getY()) ? CollisionDirection.LEFT : CollisionDirection.DOWN;
       } else if (C <= D) {
         toRet = boxA.getCorners()[2].sub(boxB.getCorners()[0]);
-        return toRet.getX() > toRet.getY() ? CollisionDirection.RIGHT : CollisionDirection.DOWN;
+        return Math.abs(toRet.getX()) < Math.abs(toRet.getY()) ? CollisionDirection.RIGHT : CollisionDirection.DOWN;
       } else {
         toRet = boxA.getCorners()[3].sub(boxB.getCorners()[1]);
-        return toRet.getX() > toRet.getY() ? CollisionDirection.RIGHT : CollisionDirection.UP;
+        return Math.abs(toRet.getX()) < Math.abs(toRet.getY()) ? CollisionDirection.RIGHT : CollisionDirection.UP;
       }
-    } else {
-      Rigidbody rb = (Rigidbody) boxA.getParent().getComponent(ComponentType.RIGIDBODY);
-      if (rb != null) {
-        return CollisionDirection.DOWN;
-      }
-      return CollisionDirection.DOWN;
-    }
     }
 
   public Rigidbody getCollidedObject() {

@@ -29,6 +29,7 @@ import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import levelEditor.LevelEditor.OBJECT_TYPES;
 import shared.gameObjects.ExampleFloorObject;
+import shared.gameObjects.ExampleObject;
 import shared.gameObjects.ExampleWallObject;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.MapDataObject;
@@ -82,6 +83,7 @@ public class LevelEditor extends Application {
   public LevelEditor() {
     objectMap.put(OBJECT_TYPES.FLOOR, new GameObjectTuple("Floor", 5, 2));
     objectMap.put(OBJECT_TYPES.WALL, new GameObjectTuple("Wall", 2, 2));
+    objectMap.put(OBJECT_TYPES.BOX, new GameObjectTuple("Box", 1, 1));
     objectMap.put(OBJECT_TYPES.PLAYER, new GameObjectTuple("Player Spawn", 2, 3));
     objectMap.put(OBJECT_TYPES.BACKGROUND, new GameObjectTuple("Background", 0, 0));
     objectMap.put(OBJECT_TYPES.BACKGROUND1, new GameObjectTuple("Background 2", 0, 0));
@@ -225,6 +227,17 @@ public class LevelEditor extends Application {
                   null, // holder
                   uuid);
           break;
+
+        case BOX:
+          temp =
+              new ExampleObject(
+                  getGridX(event.getX()),
+                  getGridY(event.getY()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getX()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getY()),
+                  ObjectID.Bot,
+                  uuid
+              );
       }
 
       if (temp != null) {
@@ -382,7 +395,7 @@ public class LevelEditor extends Application {
   }
 
   protected enum OBJECT_TYPES {
-    FLOOR, WALL, PLAYER, BTN_SP, BTN_MP, BTN_ST, BTN_LE, WPN_HG, BACKGROUND, BACKGROUND1, BTN_JOIN
+    FLOOR, WALL, PLAYER, BOX, BTN_SP, BTN_MP, BTN_ST, BTN_LE, WPN_HG, BACKGROUND, BACKGROUND1, BTN_JOIN
   }
 
   private void initialiseNewMap() {

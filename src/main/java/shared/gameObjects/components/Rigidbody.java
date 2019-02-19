@@ -176,7 +176,7 @@ public class Rigidbody extends Component implements Serializable {
           continue;
         }
 
-        float e = Math.min(getMaterial().getRestitution(), c.getCollidedObject().getMaterial().getRestitution());
+        float e = Math.max(getMaterial().getRestitution(), c.getCollidedObject().getMaterial().getRestitution());
 
         float j = -1*(1 + e) * vOnNormal;
         j /= inv_mass;
@@ -185,7 +185,21 @@ public class Rigidbody extends Component implements Serializable {
         velocity = velocity.add(impulse.mult(inv_mass));
 
       } else if (c.getCollidedObject().getBodyType() == RigidbodyType.DYNAMIC) {
-        // TODO Momentum and Impulse Calculation
+        Rigidbody b = c.getCollidedObject();
+        deltaPosUpdate.add(correctPosition(c));
+        Vector2 velocityCol = velocity.sub(b.getVelocity());
+        float vOnNormal = velocityCol.dot(c.getNormalCollision());
+        if(vOnNormal > 0) {
+          continue;
+        }
+
+        float e = Math.max(getMaterial().getRestitution(), b.getMaterial().getRestitution());
+
+        float j = -1*(1 + e) * vOnNormal;
+        j /= (inv_mass + b.inv_mass);
+
+        Vector2 impulse = c.getNormalCollision().mult(j);
+        velocity = velocity.add(impulse.mult(inv_mass + b.inv_mass));
       }
 
       /*
@@ -197,7 +211,7 @@ public class Rigidbody extends Component implements Serializable {
   }
 
   private Vector2 correctPosition(Collision c) {
-    float percent = 0.4f;
+    float percent = 0.7f;
     float slop = 0.01f;
     System.out.println(c);
     Vector2 correction = c.getNormalCollision().mult(c.getPenetrationDepth());
