@@ -28,8 +28,10 @@ public class LevelHandler {
   private Group gameRoot;
   private Background background;
   private AudioHandler musicPlayer;
+  private Settings settings;
 
   public LevelHandler(Settings settings, Group root, Group backgroundRoot, Group gameRoot) {
+    this.settings = settings;
     gameObjects = new ArrayList<>();
     toRemove = new ArrayList<>();
     players = new ArrayList<>();
@@ -47,6 +49,7 @@ public class LevelHandler {
   }
 
   public LevelHandler(Settings settings) {
+    this.settings = settings;
     gameObjects = new ArrayList<>();
     toRemove = new ArrayList<>();
     players = new ArrayList<>();
@@ -88,9 +91,10 @@ public class LevelHandler {
         });
     gameObjects.addAll(players);
     //gameObjects.addAll(bots);
+    gameObjects.forEach(gameObject -> gameObject.setSettings(settings));
     gameState = map.getGameState();
 
-    musicPlayer.playMusicPlaylist();
+    //musicPlayer.playMusicPlaylist();
     System.gc();
   }
 
