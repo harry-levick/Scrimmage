@@ -10,6 +10,7 @@ import shared.gameObjects.MapDataObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.background.Background;
 import shared.gameObjects.players.Player;
+import shared.gameObjects.weapons.Sword;
 import shared.util.Path;
 
 public class LevelHandler {
@@ -41,6 +42,19 @@ public class LevelHandler {
     players.add(clientPlayer);
     changeMap(new Map("main_menu.map", Path.convert("src/main/resources/menus/main_menu.map"),
         GameState.IN_GAME));
+
+    Bot bot1 = new Bot(800, 200, UUID.randomUUID(), this);
+    bot1.initialise(gameRoot);
+    bots.add(bot1);
+
+    bot1.setHolding(
+        new Sword(500, 500, "Sword@LevelHandler", bot1, UUID.randomUUID())
+    );
+
+    bot1.getHolding().initialise(gameRoot);
+    gameObjects.add(bot1);
+    gameObjects.add(bot1.getHolding());
+
   }
 
   public LevelHandler(Settings settings) {

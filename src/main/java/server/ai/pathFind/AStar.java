@@ -7,12 +7,14 @@ package server.ai.pathFind;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 import server.ai.Bot;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.Melee;
 import shared.gameObjects.weapons.Weapon;
+import shared.handlers.levelHandler.LevelHandler;
 import shared.physics.Physics;
 import shared.physics.data.Collision;
 import shared.physics.types.RigidbodyType;
@@ -25,6 +27,7 @@ import shared.util.maths.Vector2;
  */
 public class AStar {
 
+  LevelHandler levelHandler;
   List<GameObject> worldScene;
   public static final int visitedListPenalty = 1500; // penalty for being in the visited-states list
   // The current best position fouond by the planner.
@@ -205,11 +208,11 @@ public class AStar {
   /**
    * Constructor
    *
-   * @param worldScene The list of gameObject's in the world.
    * @param bot the bot that this path-finding is concerned with.
    */
-  public AStar(List<GameObject> worldScene, Bot bot) {
-    this.worldScene = worldScene;
+  public AStar(Bot bot, LevelHandler levelHandler) {
+    this.levelHandler = levelHandler;
+    this.worldScene = levelHandler.getGameObjects();
     this.bot = bot;
     currentPlan = new ArrayList<>();
   }
@@ -219,7 +222,7 @@ public class AStar {
    *
    * @return The action to take.
    */
-  public boolean[] optimise(Player enemy) {
+  public List<boolean[]> optimise(Player enemy) {
     this.enemy = enemy;
 
     // If there is no plan, or if the current plan no longer leads to the enemy, create a new plan.
@@ -231,13 +234,7 @@ public class AStar {
       currentPlan = extractPlan();
     }
 
-    // Select the next action from our plan
-    boolean[] action = new boolean[5];
-    if (currentPlan.size() > 0) {
-      action = currentPlan.remove(0);
-    }
-    // Before returning the action
-    return action;
+    return currentPlan;
   }
 
   /**

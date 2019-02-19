@@ -6,6 +6,7 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import server.ai.pathFind.AStar;
+import server.ai.pathFind.BotThread;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.LevelHandler;
@@ -30,29 +31,33 @@ public class Bot extends Player {
   boolean mayJump = true;
 
   FSA state;
-  Player targetPlayer;
+  public Player targetPlayer;
   AStar pathFinder;
   List<Player> allPlayers;
   // Get the LevelHandler through the constructor
-  LevelHandler lh;
+  LevelHandler levelHandler;
+  BotThread botThread;
+  ArrayList<boolean[]> plan;
 
   /**
-   * @param allObjs Contains a list of all game objects in the world, including players.
+   *
+   * @param x x pos of the bot
+   * @param y y pos of the bot
+   * @param playerUUID
+   * @param levelHandler
    */
   public Bot(double x, double y, UUID playerUUID,
-      List<GameObject> allObjs) {
+      LevelHandler levelHandler) {
     super(x, y, playerUUID);
-    allPlayers = new ArrayList<>();
     this.state = FSA.INITIAL_STATE;
+    this.levelHandler = levelHandler;
+    this.allPlayers = levelHandler.getPlayers();
+    this.targetPlayer = findTarget();
+    this.plan = new ArrayList<>();
+    this.botThread = new BotThread(this, plan);
+    // Start the thread concurrently
+    botThread.start();
 
-    // Collect all players (other than bots) from the world
-    allPlayers = allObjs.stream()
-        .filter(p -> p instanceof Player)
-        .map(Player.class::cast)
-        .collect(Collectors.toList());
-
-    targetPlayer = findTarget(allPlayers);
-    this.pathFinder = new AStar(allObjs, this);
   }
 
   public boolean mayJump() {
@@ -64,32 +69,28 @@ public class Bot extends Player {
     double prevDist, newDist;
     // Calculate the distance to the target from the previous loop
     prevDist = calcDist();
-    // Update the target player
-    targetPlayer = findTarget(allPlayers);
     // Calculate the distance to the updated target
     newDist = calcDist();
+    targetPlayer = findTarget();
 
     state = state.next(targetPlayer, this, prevDist, newDist);
 
     switch (state) {
       case IDLE:
         System.out.println("IDLE");
-        executeAction(new boolean[]{false, false, false, false, false});
-        click = false;
+        executeAction();
 
         break;
       case CHASING:
         System.out.println("CHASING");
         // Find the next best move to take, and execute this move.
-        executeAction(pathFinder.optimise(targetPlayer));
-        click = false;
+        executeAction();
 
         break;
       case FLEEING:
         System.out.println("FLEEING");
-        executeAction(new boolean[]{false, false, false, false, false});
+        executeAction();
         // TODO calculate and execute the best path away from the target.
-        click = false;
 
         break;
       case ATTACKING:
@@ -101,26 +102,23 @@ public class Bot extends Player {
         if (inSight == null) {
           mouseX = targetPlayer.getX();
           mouseY = targetPlayer.getY();
-          click = true;
         }
 
         break;
       case CHASING_ATTACKING:
         System.out.println("CHASING-ATTACKING");
-        //executeAction(pathFinder.optimise(targetPlayer));
+        //executeAction();
         // TODO calculate and execute the best path to the target whilst attacking.
         mouseX = targetPlayer.getX();
         mouseY = targetPlayer.getY();
-        click = true;
 
         break;
       case FLEEING_ATTACKING:
         System.out.println("CHASING-ATTACKING");
-        executeAction(new boolean[]{false, false, false, false, false});
+        executeAction();
         // TODO calculate and execute the best path away from the target whilst attacking.
         mouseX = targetPlayer.getX();
         mouseY = targetPlayer.getY();
-        click = true;
 
         break;
     }
@@ -134,23 +132,55 @@ public class Bot extends Player {
    * @return The distance to the target player
    */
   private double calcDist() {
+    System.out.println("x = " + targetPlayer.getX() + ", y = " + targetPlayer.getY());
     Vector2 botPos = new Vector2((float) this.getX(), (float) this.getY());
-    Vector2 targetPos = new Vector2((float) targetPlayer.getX(), (float) targetPlayer.getY());
+    Vector2 targetPos = new Vector2((float) targetPlayer.getX(),
+        (float) targetPlayer.getY());
     // Calculate the distance to the target
     return botPos.exactMagnitude(targetPos);
   }
 
+  private void executeAction() {
+
+    boolean[] action = plan.remove(0);
+
+    Random r = new Random();
+    // 75% chance of jumping when asked to.
+    boolean jump = r.nextDouble() <= 0.60;
+    if (jump) {
+      this.jumpKey = action[Bot.KEY_JUMP];
+    } else this.jumpKey = false;
+
+    // 80% chance of moving left when asked to.
+    boolean left = r.nextDouble() <= 0.70;
+    if (left) {
+      this.leftKey = action[Bot.KEY_LEFT];
+    } else this.leftKey = false;
+
+    // 80% chance of moving right when asked to
+    boolean right = r.nextDouble() <= 0.70;
+    if (right) {
+      this.rightKey = action[Bot.KEY_RIGHT];
+    } else this.rightKey = false;
+
+    // 50% chance of shooting when asked to
+    boolean shoot = r.nextDouble() <= 0.5;
+    if (shoot) {
+      this.click = action[Bot.KEY_CLICK];
+    } else this.click = false;
+  }
+
   /**
    * Finds the closest player
-   *
-   * @param allPlayers A list of all players in the world
    * @return The player who is the closest to the bot
    */
-  private Player findTarget(List<Player> allPlayers) {
+  public Player findTarget() {
     Player target = null;
     double targetDistance = Double.POSITIVE_INFINITY;
     Vector2 botPos = new Vector2((float) this.getX(), (float) this.getY());
 
+
+    System.out.println("PLAYERS LENGTH: " + allPlayers.size());
     for (Player p : allPlayers) {
       Vector2 playerPos = new Vector2((float) p.getX(), (float) p.getY());
       double distance = botPos.exactMagnitude(playerPos);
@@ -164,39 +194,8 @@ public class Bot extends Player {
     return target;
   }
 
-  /**
-   * Receives an action and then executes this action. This method will only execute one action at a
-   * time (the first action in the list). Since the method will be called inside of the agent loop
-   *
-   * @param action: an action to exacute.
-   */
-  private void executeAction(boolean[] action) {
-
-    Random r = new Random();
-    // 75% chance of jumping when asked to.
-    boolean jump = r.nextDouble() <= 0.75;
-    if (jump) {
-      this.jumpKey = action[Bot.KEY_JUMP];
-    } else this.jumpKey = false;
-
-    // 80% chance of moving left when asked to.
-    boolean left = r.nextDouble() <= 0.8;
-    if (left) {
-      this.leftKey = action[Bot.KEY_LEFT];
-    } else this.leftKey = false;
-
-    // 80% chance of moving right when asked to
-    boolean right = r.nextDouble() <= 0.8;
-    if (right) {
-      this.rightKey = action[Bot.KEY_RIGHT];
-    } else this.rightKey = false;
-
-    // 50% chance of shooting when asked to
-    boolean shoot = r.nextDouble() <= 0.5;
-    if (shoot) {
-      this.click = action[Bot.KEY_CLICK];
-    } else this.click = false;
+  public LevelHandler getLevelHandler() {
+    return levelHandler;
   }
-
 }
 
