@@ -9,7 +9,7 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Enumeration;
 
-public class Socket {
+public class SocketMulti {
 
   private NetworkInterface networkInterface;
   private InetAddress ip;
@@ -17,7 +17,7 @@ public class Socket {
   private MulticastSocket multicastSocket;
   private int multicastPort;
 
-  public Socket() {
+  public SocketMulti() {
     multicastPort = 4446;
     try {
       multicastAddress = InetAddress.getByName("230.0.0.0");

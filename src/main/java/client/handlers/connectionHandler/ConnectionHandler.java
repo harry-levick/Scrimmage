@@ -2,41 +2,39 @@ package client.handlers.connectionHandler;
 
 import client.main.Client;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
+import java.net.Socket;
 import java.util.Arrays;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import shared.packets.Packet;
 import shared.packets.PacketJoin;
-import shared.packets.Socket;
+import shared.packets.SocketMulti;
 
 public class ConnectionHandler extends Thread {
 
   public BlockingQueue received;
 
 
-  private InetAddress address;
-  private DatagramSocket socket;
   private byte[] buffer;
+  private String address;
   private int port;
   private boolean connected;
-  private Socket multicastSocket;
+  private SocketMulti multicastSocketMulti;
+  private Socket socket;
+  private PrintWriter out;
 
 
   public ConnectionHandler(String address) {
-    multicastSocket = new Socket();
+    multicastSocketMulti = new SocketMulti();
     connected = true;
     port = 4445;
     received = new LinkedBlockingQueue<String>();
+    this.address = "192.168.0.13";
     try {
-      this.socket = new DatagramSocket();
-      this.address = InetAddress.getByName("192.168.0.13");
-    } catch (SocketException | UnknownHostException e) {
-      e.printStackTrace();
+      socket = new Socket(address, port);
+      out = new PrintWriter(socket.getOutputStream(), true);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -49,14 +47,7 @@ public class ConnectionHandler extends Thread {
               Client.levelHandler.getClientPlayer().getUUID(), Client.settings.getUsername(),
               Client.levelHandler.getClientPlayer().getX(),
               Client.levelHandler.getClientPlayer().getY());
-    DatagramPacket sendPacket = new DatagramPacket(joinPacket.getData(),
-        joinPacket.getData().length, address, port);
-    try {
-      socket.send(sendPacket);
-      System.out.println("sent");
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    send(joinPacket.getData());
     // socket.setSoTimeout(60000);
     //DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
     /**
@@ -81,39 +72,40 @@ public class ConnectionHandler extends Thread {
       buffer = new byte[1024];
       DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
       try {
-        multicastSocket.get().receive(packet);
+        multicastSocketMulti.get().receive(packet);
         System.out.println(Arrays.toString(packet.getData()));
         received.add(Arrays.toString(packet.getData()));
       } catch (IOException e) {
         e.printStackTrace();
       } finally {
         try {
-          multicastSocket.get().leaveGroup(multicastSocket.getMulticastAddress());
-          multicastSocket.get().close();
+          multicastSocketMulti.get().leaveGroup(multicastSocketMulti.getMulticastAddress());
+          multicastSocketMulti.get().close();
         } catch (IOException e) {
           e.printStackTrace();
         }
       }
     }
     try {
-      multicastSocket.get().leaveGroup(multicastSocket.getMulticastAddress());
+      multicastSocketMulti.get().leaveGroup(multicastSocketMulti.getMulticastAddress());
     } catch (IOException e) {
       e.printStackTrace();
     }
-    multicastSocket.get().close();
+    multicastSocketMulti.get().close();
   }
 
   public void end() {
     connected = false;
+    out.close();
+    try {
+      socket.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
 
   public void send(byte[] data) {
-    DatagramPacket packet = new DatagramPacket(data, data.length, address, port);
-    try {
-      socket.send(packet);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    out.println(data.toString());
   }
 }

@@ -24,7 +24,7 @@ import shared.handlers.levelHandler.LevelHandler;
 import shared.handlers.levelHandler.Map;
 import shared.packets.PacketGameState;
 import shared.packets.PacketMap;
-import shared.packets.Socket;
+import shared.packets.SocketMulti;
 import shared.physics.Physics;
 import shared.util.Path;
 
@@ -45,7 +45,7 @@ public class Server extends Application {
   public ServerState serverState;
   private String threadName;
   private LinkedList<Map> playlist;
-  private Socket multicastSocket;
+  private SocketMulti multicastSocketMulti;
 
   public static void main(String args[]) {
     launch(args);
@@ -71,7 +71,7 @@ public class Server extends Application {
     running.set(true);
     LOGGER.debug("Running " + threadName);
     serverState = ServerState.WAITING_FOR_PLAYERS;
-    multicastSocket = new Socket();
+    multicastSocketMulti = new SocketMulti();
     /** Receiver from clients */
     ServerReceiver receiver = new ServerReceiver(this);
     receiver.start();
@@ -134,9 +134,9 @@ public class Server extends Application {
 
   public void sendToClients(byte[] buffer) {
     DatagramPacket packet = new DatagramPacket(buffer, buffer.length,
-        multicastSocket.getMulticastAddress(), multicastSocket.getMulticastPort());
+        multicastSocketMulti.getMulticastAddress(), multicastSocketMulti.getMulticastPort());
     try {
-      multicastSocket.get().send(packet);
+      multicastSocketMulti.get().send(packet);
     } catch (IOException e) {
       LOGGER.error("Error sending server message");
     }
