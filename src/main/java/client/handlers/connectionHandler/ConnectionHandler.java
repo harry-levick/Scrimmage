@@ -46,7 +46,7 @@ public class ConnectionHandler extends Thread {
               Client.levelHandler.getClientPlayer().getUUID(), Client.settings.getUsername(),
               Client.levelHandler.getClientPlayer().getX(),
               Client.levelHandler.getClientPlayer().getY());
-    send(joinPacket.toString());
+    send(joinPacket.getString());
 
     Client.multiplayer = true;
     while (connected) {
