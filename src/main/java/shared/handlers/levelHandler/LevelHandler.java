@@ -74,6 +74,7 @@ public class LevelHandler {
 
   public void changeMap(Map map) {
     this.map = map;
+    players.forEach(player -> player.reset());
     generateLevel(root, backgroundRoot, gameRoot);
   }
 
@@ -175,7 +176,8 @@ public class LevelHandler {
     return players;
   }
 
-  public void addPlayer(Player newPlayer) {
+  public void addPlayer(Player newPlayer, Group root) {
+    newPlayer.initialise(root);
     players.add(newPlayer);
     gameObjects.add(newPlayer);
   }

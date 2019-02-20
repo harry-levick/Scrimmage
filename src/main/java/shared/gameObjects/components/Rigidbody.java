@@ -213,7 +213,7 @@ public class Rigidbody extends Component implements Serializable {
   private Vector2 correctPosition(Collision c) {
     float percent = 0.7f;
     float slop = 0.01f;
-    System.out.println(c);
+    //System.out.println(c);
     Vector2 correction = c.getNormalCollision().mult(c.getPenetrationDepth());
     getParent().getTransform().translate(correction.mult(percent));
     return correction;
@@ -280,7 +280,7 @@ public class Rigidbody extends Component implements Serializable {
   public void setVelocity(Vector2 velocity) {
     this.velocity = velocity;
     acceleration = Vector2.Zero();
-    System.out.println(this.velocity);
+    //System.out.println(this.velocity);
   }
 
   public RigidbodyType getBodyType() {

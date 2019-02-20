@@ -5,14 +5,12 @@ import client.main.Client;
 import java.util.ArrayList;
 import java.util.UUID;
 import javafx.scene.Group;
-import server.ai.Bot;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.weapons.Weapon;
-import shared.packets.PacketInput;
 import shared.physics.Physics;
 import shared.physics.data.Collision;
 import shared.physics.data.MaterialProperty;
@@ -153,20 +151,6 @@ public class Player extends GameObject {
     if (this.getHolding() != null) {
       this.getHolding().setX(this.getX() + 60);
       this.getHolding().setY(this.getY() + 70);
-    }
-
-    /** If multiplayer then send input to server */
-    if (multiplayer && !(this instanceof Bot)) {
-      PacketInput input =
-          new PacketInput(
-              mouseX,
-              mouseY,
-              leftKey,
-              rightKey,
-              jumpKey,
-              click,
-              getUUID());
-      connectionHandler.send(input.getData());
     }
   }
 
