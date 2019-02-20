@@ -25,11 +25,13 @@ public class ServerReceiver implements Runnable {
   private ServerSocket serverSocket;
   private List connected;
 
+
   public ServerReceiver(Server server, ServerSocket serverSocket, List connected) {
     this.server = server;
     this.serverSocket = serverSocket;
     this.connected = connected;
   }
+
 
   @Override
   public void run() {
@@ -53,7 +55,7 @@ public class ServerReceiver implements Runnable {
       Server.levelHandler.addPlayer(player, null);
       server.playerCount.getAndIncrement();
       connected.add(socket.getRemoteSocketAddress().toString());
-
+      server.add(player);
       try {
         socket.setSoTimeout(5000);
       } catch (SocketException e) {
@@ -68,6 +70,10 @@ public class ServerReceiver implements Runnable {
         } catch (SocketTimeoutException e) {
           server.playerCount.decrementAndGet();
           connected.remove(socket.getRemoteSocketAddress().toString());
+          System.out.println(socket.getRemoteSocketAddress().toString());
+          System.out.println(socket.getLocalAddress());
+          System.out.println(socket.getInetAddress().getHostAddress());
+          System.out.println(socket.getInetAddress().toString());
           server.levelHandler.getPlayers().remove(player);
           server.levelHandler.getGameObjects().remove(player);
           break;
@@ -82,12 +88,7 @@ public class ServerReceiver implements Runnable {
             PacketInput inputPacket = new PacketInput(message);
             //if (inputPacket.getUuid() == player.getUUID()) {
             //Change to add to list
-              player.mouseY = inputPacket.getY();
-              player.mouseX = inputPacket.getX();
-              player.leftKey = inputPacket.isLeftKey();
-              player.rightKey = inputPacket.isRightKey();
-              player.jumpKey = inputPacket.isJumpKey();
-              player.click = inputPacket.isClick();
+            server.getQueue(player).add(inputPacket);
             //}
             break;
           case 5:
