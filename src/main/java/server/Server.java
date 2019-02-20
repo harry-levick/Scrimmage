@@ -141,11 +141,11 @@ public class Server extends Application {
           serverState = ServerState.WAITING_FOR_READYUP;
         }
         if (playerCount.get() > 1 && readyCount.get() == playerCount.get()) {
-          startMatch();
+          //startMatch();
         }
 
         if (serverState == ServerState.IN_GAME) {
-          checkConditions();
+          //checkConditions();
         }
 
         /** Process Update */
