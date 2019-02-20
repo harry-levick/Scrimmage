@@ -61,7 +61,6 @@ public class ServerReceiver implements Runnable {
       while (true) {
         try {
           message = input.readLine();
-          System.out.println(message);
         } catch (SocketTimeoutException e) {
           server.playerCount.decrementAndGet();
           connected.remove(socket.getInetAddress().getHostAddress());
@@ -72,7 +71,6 @@ public class ServerReceiver implements Runnable {
           e.printStackTrace();
         }
         packetID = Integer.parseInt(message.split(",")[0]);
-        System.out.println(player.getX());
         switch (packetID) {
           case 2:
             PacketInput inputPacket = new PacketInput(message);

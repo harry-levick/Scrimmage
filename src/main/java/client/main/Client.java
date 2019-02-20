@@ -293,7 +293,7 @@ public class Client extends Application {
             levelHandler.getClientPlayer().click,
             levelHandler.getClientPlayer().getUUID(),
             inputCount);
-    connectionHandler.send(input.toString());
+    connectionHandler.send(input.getString());
     inputCount++;
   }
 

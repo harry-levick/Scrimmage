@@ -173,6 +173,8 @@ public class Server extends Application {
         ((player, packetInputs) -> {
           PacketInput temp = packetInputs.poll();
           if (temp != null) {
+            System.out.println(temp.getString());
+            System.out.println("Before " + player.getX());
             player.click = temp.isClick();
             player.rightKey = temp.isRightKey();
             player.leftKey = temp.isLeftKey();
@@ -182,6 +184,7 @@ public class Server extends Application {
           }
         }));
     levelHandler.getPlayers().forEach(player -> player.applyInput(false, null));
+
     levelHandler
         .getGameObjects()
         .forEach(gameObject -> gameObject.updateCollision(levelHandler.getGameObjects()));
