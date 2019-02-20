@@ -9,7 +9,7 @@ public class PacketReady extends Packet {
   public PacketReady(double x, double y, UUID uuid, String username) {
     packetID = PacketID.PLAYERJOIN.getID();
     this.uuid = uuid;
-    data = (packetID + "," + uuid).getBytes();
+    data = packetID + "," + uuid;
   }
 
   public PacketReady(String data) {

@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
@@ -25,11 +24,13 @@ public class ServerReceiver implements Runnable {
   private ServerSocket serverSocket;
   private List connected;
 
+
   public ServerReceiver(Server server, ServerSocket serverSocket, List connected) {
     this.server = server;
     this.serverSocket = serverSocket;
     this.connected = connected;
   }
+
 
   @Override
   public void run() {
@@ -43,6 +44,7 @@ public class ServerReceiver implements Runnable {
     } catch (IOException e) {
       e.printStackTrace();
     }
+    System.out.println(message);
     int packetID = Integer.parseInt(message.split(",")[0]);
     if (packetID == 0 && server.playerCount.get() < 4
         && server.serverState == ServerState.WAITING_FOR_PLAYERS) {
@@ -51,13 +53,9 @@ public class ServerReceiver implements Runnable {
           joinPacket.getClientID());
       Server.levelHandler.addPlayer(player, null);
       server.playerCount.getAndIncrement();
-      connected.add(socket.getRemoteSocketAddress().toString());
-
-      try {
-        socket.setSoTimeout(5000);
-      } catch (SocketException e) {
-        e.printStackTrace();
-      }
+      connected.add(socket.getInetAddress().getHostAddress());
+      server.add(player);
+      //socket.setSoTimeout(5000);
 
       /** Main Loop */
       while (true) {
@@ -65,7 +63,7 @@ public class ServerReceiver implements Runnable {
           message = input.readLine();
         } catch (SocketTimeoutException e) {
           server.playerCount.decrementAndGet();
-          connected.remove(socket.getRemoteSocketAddress().toString());
+          connected.remove(socket.getInetAddress().getHostAddress());
           server.levelHandler.getPlayers().remove(player);
           server.levelHandler.getGameObjects().remove(player);
           break;
@@ -73,18 +71,13 @@ public class ServerReceiver implements Runnable {
           e.printStackTrace();
         }
         packetID = Integer.parseInt(message.split(",")[0]);
-        System.out.println(message);
         switch (packetID) {
           case 2:
             PacketInput inputPacket = new PacketInput(message);
-            if (inputPacket.getUuid() == player.getUUID()) {
-              player.mouseY = inputPacket.getY();
-              player.mouseX = inputPacket.getX();
-              player.leftKey = inputPacket.isLeftKey();
-              player.rightKey = inputPacket.isRightKey();
-              player.jumpKey = inputPacket.isJumpKey();
-              player.click = inputPacket.isClick();
-            }
+            //if (inputPacket.getUuid() == player.getUUID()) {
+            //Change to add to list
+            server.getQueue(player).add(inputPacket);
+            //}
             break;
           case 5:
             PacketReady readyPacket = new PacketReady(message);

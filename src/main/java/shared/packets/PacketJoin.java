@@ -15,8 +15,8 @@ public class PacketJoin extends Packet {
     this.username = username;
     this.x = x;
     this.y = y;
-    data = (Integer.toString(packetID) + "," + clientID.toString() + "," + username + "," + x + ","
-        + y).getBytes();
+    data = packetID + "," + clientID.toString() + "," + username + "," + x + ","
+        + y;
   }
 
   public PacketJoin(String data) {
