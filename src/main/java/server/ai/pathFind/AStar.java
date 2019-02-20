@@ -405,7 +405,7 @@ public class AStar {
         viscinityLeft.getCollidedObject().getBodyType() != RigidbodyType.STATIC ||
         botPosition.exactMagnitude(viscinityLeft.getPointOfCollision()) > 10) {
       // If no collision, or if the collision is far away
-      possibleActions.add(createAction(false, true, false, false));
+      possibleActions.add(createAction(false, true, false));
     }
 
     // Box cast to the right
@@ -416,7 +416,7 @@ public class AStar {
         viscinityRight.getCollidedObject().getBodyType() != RigidbodyType.STATIC ||
         botPosition.exactMagnitude(viscinityRight.getPointOfCollision()) > 10) {
       // If no collision, or if the collision is far away
-      possibleActions.add(createAction(false, false, true, false));
+      possibleActions.add(createAction(false, false, true));
     }
 
     // Box cast upwards
@@ -427,22 +427,21 @@ public class AStar {
         viscinityUp.getCollidedObject().getBodyType() != RigidbodyType.STATIC /**||
      botPosition.exactMagnitude(viscinityUp.getPointOfCollision()) > 10*/) {
       // Just jump
-      possibleActions.add(createAction(true, false, false, false));
+      possibleActions.add(createAction(true, false, false));
       // Jump to the right
-      possibleActions.add(createAction(true, false, true, false));
+      possibleActions.add(createAction(true, false, true));
       // Jump to the left
-      possibleActions.add(createAction(true, true, false, false));
+      possibleActions.add(createAction(true, true, false));
     }
 
     return possibleActions;
   }
 
-  private boolean[] createAction(boolean jump, boolean left, boolean right, boolean click) {
+  private boolean[] createAction(boolean jump, boolean left, boolean right) {
     boolean[] action = new boolean[5];
     action[Bot.KEY_JUMP] = jump;
     action[Bot.KEY_LEFT] = left;
     action[Bot.KEY_RIGHT] = right;
-    action[Bot.KEY_CLICK] = click;
 
     return action;
   }
