@@ -72,7 +72,6 @@ public class ServerReceiver implements Runnable {
           e.printStackTrace();
         }
         packetID = Integer.parseInt(message.split(",")[0]);
-        System.out.println(message);
         System.out.println(player.getX());
         switch (packetID) {
           case 2:
