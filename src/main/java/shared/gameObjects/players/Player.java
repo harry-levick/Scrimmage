@@ -29,10 +29,11 @@ public class Player extends GameObject {
   protected Weapon holding;
   protected Rigidbody rb;
   protected double vx;
+  private BoxCollider bc;
+
   public boolean leftKey, rightKey, jumpKey, click;
   public double mouseX, mouseY;
   public int score;
-  private BoxCollider bc;
 
   public Player(double x, double y, UUID playerUUID) {
     super(x, y, 80, 110, ObjectID.Player, playerUUID);
@@ -102,8 +103,8 @@ public class Player extends GameObject {
 
   public void checkGrounded() {
     ArrayList<Collision> cols = Physics.boxcastAll(
-        getTransform().getPos().add(Vector2.Down().mult(getTransform().getSize().getY())),
-        getTransform().getSize().mult(new Vector2(1, 0.05f)));
+        getTransform().getPos().add(Vector2.Down().mult(getTransform().getSize().getY())).add(Vector2.Right().mult(getTransform().getSize().getX()*0.125f)),
+        getTransform().getSize().mult(new Vector2(0.75f, 0.05f)));
     if (cols.isEmpty()) {
       grounded = false;
     } else {

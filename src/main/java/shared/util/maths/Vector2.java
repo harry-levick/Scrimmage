@@ -137,7 +137,8 @@ public class Vector2 implements Serializable {
    */
   public float exactMagnitude(Vector2 vector) {
     return (float)
-        Math.sqrt(Math.pow(vector.getX() - getX(), 2) + Math.pow(vector.getY() - getY(), 2));
+       // Math.sqrt(Math.pow(vector.getX() - getX(), 2) + Math.pow(vector.getY() - getY(), 2));
+        magnitude(vector);
   }
 
   /**
