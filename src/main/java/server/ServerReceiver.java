@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
@@ -54,13 +53,9 @@ public class ServerReceiver implements Runnable {
           joinPacket.getClientID());
       Server.levelHandler.addPlayer(player, null);
       server.playerCount.getAndIncrement();
-      connected.add(socket.getRemoteSocketAddress().toString());
+      connected.add(socket.getInetAddress().getHostAddress());
       server.add(player);
-      try {
-        socket.setSoTimeout(5000);
-      } catch (SocketException e) {
-        e.printStackTrace();
-      }
+      //socket.setSoTimeout(5000);
 
       /** Main Loop */
       while (true) {
@@ -69,11 +64,7 @@ public class ServerReceiver implements Runnable {
           System.out.println(message);
         } catch (SocketTimeoutException e) {
           server.playerCount.decrementAndGet();
-          connected.remove(socket.getRemoteSocketAddress().toString());
-          System.out.println(socket.getRemoteSocketAddress().toString());
-          System.out.println(socket.getLocalAddress());
-          System.out.println(socket.getInetAddress().getHostAddress());
-          System.out.println(socket.getInetAddress().toString());
+          connected.remove(socket.getInetAddress().getHostAddress());
           server.levelHandler.getPlayers().remove(player);
           server.levelHandler.getGameObjects().remove(player);
           break;

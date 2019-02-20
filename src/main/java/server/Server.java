@@ -169,15 +169,18 @@ public class Server extends Application {
   public void updateSimulation() {
     /** Check Collisions */
     Physics.gameObjects = levelHandler.getGameObjects();
-    inputQueue.forEach(((player, packetInputs) -> {
-      PacketInput temp = packetInputs.poll();
-      player.click = temp.isClick();
-      player.rightKey = temp.isRightKey();
-      player.leftKey = temp.isLeftKey();
-      player.mouseX = temp.getX();
-      player.mouseY = temp.getY();
-      player.jumpKey = temp.isJumpKey();
-    }));
+    inputQueue.forEach(
+        ((player, packetInputs) -> {
+          PacketInput temp = packetInputs.poll();
+          if (temp != null) {
+            player.click = temp.isClick();
+            player.rightKey = temp.isRightKey();
+            player.leftKey = temp.isLeftKey();
+            player.mouseX = temp.getX();
+            player.mouseY = temp.getY();
+            player.jumpKey = temp.isJumpKey();
+          }
+        }));
     levelHandler.getPlayers().forEach(player -> player.applyInput(false, null));
     levelHandler
         .getGameObjects()
