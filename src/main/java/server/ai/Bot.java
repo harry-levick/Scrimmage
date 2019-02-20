@@ -33,7 +33,6 @@ public class Bot extends Player {
 
   FSA state;
   public Player targetPlayer;
-  AStar pathFinder;
   List<Player> allPlayers;
   // Get the LevelHandler through the constructor
   LevelHandler levelHandler;
@@ -71,9 +70,12 @@ public class Bot extends Player {
   @Override
   public void update() {
 
+    /*
+
     if (!active) {
       botThread.terminate();
     }
+     */
 
     double prevDist, newDist;
     // Calculate the distance to the target from the previous loop
@@ -99,6 +101,7 @@ public class Bot extends Player {
       case FLEEING:
         System.out.println("FLEEING");
         executeAction();
+
         // TODO calculate and execute the best path away from the target.
 
         break;
@@ -117,6 +120,7 @@ public class Bot extends Player {
       case CHASING_ATTACKING:
         System.out.println("CHASING-ATTACKING");
         executeAction();
+
         // TODO calculate and execute the best path to the target whilst attacking.
         mouseX = targetPlayer.getX();
         mouseY = targetPlayer.getY();
@@ -151,12 +155,15 @@ public class Bot extends Player {
 
   private void executeAction() {
 
+
     boolean[] action = new boolean[] {false, false, false, false};
 
-    synchronized (plan) {
-      if (plan.size() > 0)
-        action = plan.remove(0);
+    if (plan.size() > 0) {
+      action = plan.remove(0);
+    } else {
+      System.out.println("NO MORE ACTIONS -----------------------------------");
     }
+
 
     Random r = new Random();
     // 60% chance of jumping when asked to.
@@ -177,11 +184,6 @@ public class Bot extends Player {
       this.rightKey = action[Bot.KEY_RIGHT];
     } else this.rightKey = false;
 
-    // 50% chance of shooting when asked to
-    boolean shoot = r.nextDouble() <= 0.5;
-    if (shoot) {
-      this.click = action[Bot.KEY_CLICK];
-    } else this.click = false;
   }
 
   /**

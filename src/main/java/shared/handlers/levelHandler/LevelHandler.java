@@ -10,6 +10,7 @@ import shared.gameObjects.MapDataObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.background.Background;
 import shared.gameObjects.players.Player;
+import shared.gameObjects.weapons.Sword;
 import shared.util.Path;
 
 public class LevelHandler {
@@ -52,17 +53,20 @@ public class LevelHandler {
     gameObjects.add(botPlayer);
     gameObjects.add(botPlayer.getHolding());
 
-    Bot newbot = new Bot(1000, 500, 80, 110, UUID.randomUUID(), gameObjects);
+    System.out.println("PRINT");
+    */
+
+    Bot newbot = new Bot(600, 200, UUID.randomUUID(), this);
     newbot.setHolding(
-        new Sword(500, 500, 50, 50, "Sword@LevelHandlerBot2", newbot, UUID.randomUUID())
+        new Sword(600, 200,"Sword@LevelHandlerBot2", newbot, UUID.randomUUID())
     );
     newbot.getHolding().initialise(gameRoot);
     newbot.initialise(gameRoot);
     bots.add(newbot);
     gameObjects.add(newbot);
     gameObjects.add(newbot.getHolding());
-    System.out.println("PRINT");
-    */
+
+    newbot.startThread();
   }
 
   public LevelHandler(Settings settings) {

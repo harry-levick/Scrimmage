@@ -251,7 +251,7 @@ public class AStar {
     boolean currentGood = false;
 
     // Search until we're at the enemy coordinates
-    while ((openList.size() != 0) && !atEnemy()) {
+    while ((openList.size() != 0) && !atEnemy((float) current.botX, (float) current.botY)) {
       // Pick the best node from the open-list
       current = pickBestPos(openList);
       currentGood = false;
@@ -298,8 +298,8 @@ public class AStar {
    * if they are in sight of the enemy.
    * @return true if the bot is close enough to the enemy.
    */
-  private boolean atEnemy() {
-    Vector2 botPos = bot.getTransform().getPos();
+  private boolean atEnemy(float botX, float botY) {
+    Vector2 botPos = new Vector2(botX, botY);
     Vector2 enemyPos = enemy.getTransform().getPos();
 
     double dist = botPos.exactMagnitude(enemyPos);
