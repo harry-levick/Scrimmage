@@ -10,7 +10,6 @@ import java.net.ServerSocket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
@@ -49,7 +48,7 @@ public class Server extends Application {
   public static LevelHandler levelHandler;
 
   private Settings settings;
-  private ArrayList<String> connectedList = new ArrayList<>();
+  private ArrayList<InetAddress> connectedList = new ArrayList<>();
   private List connected = Collections.synchronizedList(connectedList);
   public final AtomicInteger playerCount = new AtomicInteger(0);
   public final AtomicInteger readyCount = new AtomicInteger(0);
@@ -153,7 +152,7 @@ public class Server extends Application {
         updateSimulation();
 
         /** Send update to all clients */
-        if (counter.get() == serverUpdateRate && playerCount.get() > 0) {
+        if (playerCount.get() > 0) {
           counter.set(0);
           sendWorldState();
         }
@@ -190,23 +189,22 @@ public class Server extends Application {
         .forEach(gameObject -> gameObject.updateCollision(levelHandler.getGameObjects()));
     /** Update Game Objects */
     levelHandler.getGameObjects().forEach(gameObject -> gameObject.update());
-    //System.out.println("Updated World");
   }
 
   public void sendToClients(byte[] buffer) {
     synchronized (connected) {
-      Iterator address = connected.iterator();
-      while (address.hasNext()) {
+      connected.forEach(address -> {
         try {
           DatagramPacket packet = new DatagramPacket(buffer, buffer.length,
-              InetAddress.getByName((String) address.next()), serverPort);
+              (InetAddress) address, serverPort);
           socket.send(packet);
+          System.out.println(packet.getData().toString());
         } catch (UnknownHostException e) {
           e.printStackTrace();
         } catch (IOException e) {
           e.printStackTrace();
         }
-      }
+      });
     }
   }
 
