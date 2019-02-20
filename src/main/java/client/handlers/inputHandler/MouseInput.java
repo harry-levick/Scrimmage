@@ -25,10 +25,10 @@ public class MouseInput implements EventHandler<MouseEvent> {
     }
     if (type == MouseEvent.MOUSE_PRESSED) {
       clientPlayer.click = true;
-      sendInput();
+      //sendInput();
     } else if (event.getEventType() == MouseEvent.MOUSE_RELEASED) {
       clientPlayer.click = false;
-      sendInput();
+      //sendInput();
     }
   }
 
