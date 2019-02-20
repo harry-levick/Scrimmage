@@ -42,5 +42,7 @@ public class ButtonJoin extends ButtonObject {
     button.disarm();
     Client.levelHandler.changeMap(
         new Map("Lobby", Path.convert("src/main/resources/menus/lobby.map"), GameState.Lobby));
+    System.out.println("sdf");
   }
+
 }

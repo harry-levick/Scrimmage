@@ -21,6 +21,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import shared.gameObjects.MapDataObject;
 import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.LevelHandler;
@@ -326,7 +327,11 @@ public class Client extends Application {
             PacketGameState gameState = new PacketGameState(message);
             HashMap<UUID, String> data = gameState.getGameObjects();
             levelHandler.getGameObjects()
-                .forEach(gameObject -> gameObject.setState(data.get(gameObject.getUUID())));
+                .forEach(gameObject -> {
+                  if (!(gameObject instanceof MapDataObject)) {
+                    gameObject.setState(data.get(gameObject.getUUID()));
+                  }
+                });
             break;
           default:
             System.out.println(messageID);
