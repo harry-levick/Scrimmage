@@ -40,6 +40,7 @@ public class Client extends Application {
   public static boolean multiplayer;
   public static ConnectionHandler connectionHandler;
   public static AudioHandler audio;
+  public static boolean sendUpdate;
 
   private final float timeStep = 0.0166f;
   private final String gameTitle = "Alone in the Dark";
@@ -66,6 +67,7 @@ public class Client extends Application {
   public void start(Stage primaryStage) {
     setupRender(primaryStage);
     inputCount = 0;
+    sendUpdate = false;
     levelHandler = new LevelHandler(settings, root, backgroundRoot, gameRoot);
     keyInput = new KeyboardInput();
     mouseInput = new MouseInput();
@@ -84,7 +86,6 @@ public class Client extends Application {
       public void handle(long now) {
 
         if (multiplayer) {
-          sendInput();
           processServerPackets();
         }
 
@@ -114,6 +115,11 @@ public class Client extends Application {
 
         /** Apply Input */
         levelHandler.getClientPlayer().applyInput(multiplayer, connectionHandler);
+
+        if (multiplayer && sendUpdate) {
+          sendInput();
+          sendUpdate = false;
+        }
 
         if (!multiplayer) {
           /**Calculate Score*/
