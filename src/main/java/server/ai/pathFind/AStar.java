@@ -147,7 +147,7 @@ public class AStar {
       // Collect all weapons from the world
       List<Weapon> allWeapons =
           allObjects.stream()
-              .filter(w -> w instanceof Weapon)
+              .filter(w -> w instanceof Weapon && (((Weapon) w).getHolder() == null))
               .map(Weapon.class::cast)
               .collect(Collectors.toList());
 
@@ -210,9 +210,9 @@ public class AStar {
    *
    * @param bot the bot that this path-finding is concerned with.
    */
-  public AStar(Bot bot, LevelHandler levelHandler) {
-    this.levelHandler = levelHandler;
-    this.worldScene = levelHandler.getGameObjects();
+  public AStar(Bot bot, List<GameObject> worldScene) {
+    //this.levelHandler = levelHandler;
+    this.worldScene = worldScene;
     this.bot = bot;
     currentPlan = new ArrayList<>();
   }
@@ -226,14 +226,17 @@ public class AStar {
     this.enemy = enemy;
 
     // If there is no plan, or if the current plan no longer leads to the enemy, create a new plan.
-    //if (currentPlan.size() == 0 || !atEnemy(bestPosition.botX, bestPosition.botY)) {
-    //}
-
+    //if (currentPlan.size() == 0 || !atEnemy()) {
     initSearch();
     // Run the search
     search();
     // Extract the plan from the search.
     currentPlan = extractPlan();
+    //}
+
+    //boolean[] action = new boolean[] {false, false, false};
+    //if (currentPlan.size() > 0)
+      //action = currentPlan.remove(0);
 
     return currentPlan;
   }
@@ -248,7 +251,7 @@ public class AStar {
     boolean currentGood = false;
 
     // Search until we're at the enemy coordinates
-    while ((openList.size() != 0) && !atEnemy(current.botX, current.botY)) {
+    while ((openList.size() != 0) && !atEnemy()) {
       // Pick the best node from the open-list
       current = pickBestPos(openList);
       currentGood = false;
@@ -295,23 +298,24 @@ public class AStar {
    * if they are in sight of the enemy.
    * @return true if the bot is close enough to the enemy.
    */
-  private boolean atEnemy(double bX, double bY) {
-    double xDiff = Math.abs(bX - enemy.getX());
-    double yDiff = Math.abs(bY - enemy.getY());
+  private boolean atEnemy() {
+    Vector2 botPos = bot.getTransform().getPos();
+    Vector2 enemyPos = enemy.getTransform().getPos();
+
+    double dist = botPos.exactMagnitude(enemyPos);
     Melee tempMelee;
 
+    Collision inSight = Physics.raycast(botPos, enemyPos);
 
     if (bot.getHolding().isGun()) {
-
-      Collision inSight = Physics.raycast(new Vector2((float)  bot.getX(), (float) bot.getY()),
-          new Vector2((float) enemy.getX(), (float) enemy.getY()));
 
       if (inSight == null)
         return true;
       else return false;
 
     } else { // melee weapon
-      if (xDiff <= (tempMelee = (Melee) bot.getHolding()).getRange()) {
+      tempMelee = (Melee) bot.getHolding();
+      if (dist <= tempMelee.getRange() && inSight == null) {
         return true;
       } else {
         return false;
@@ -424,21 +428,36 @@ public class AStar {
     // TODO: add a way of detecting if we can jump + (left or right)
     // If no collision, or if collision is far away
     if (viscinityUp == null ||
-        viscinityUp.getCollidedObject().getBodyType() != RigidbodyType.STATIC /**||
-     botPosition.exactMagnitude(viscinityUp.getPointOfCollision()) > 10*/) {
+        viscinityUp.getCollidedObject().getBodyType() != RigidbodyType.STATIC) {
+
+      Collision viscinityUpLeft = Physics.boxcast(
+          botPosition.add(Vector2.Up().mult(botSize)).add(Vector2.Left().mult(botSize)), botSize);
+
+      Collision viscinityUpRight = Physics.boxcast(
+          botPosition.add(Vector2.Up().mult(botSize)).add(Vector2.Right().mult(botSize)), botSize);
+
       // Just jump
       possibleActions.add(createAction(true, false, false));
-      // Jump to the right
-      possibleActions.add(createAction(true, false, true));
-      // Jump to the left
-      possibleActions.add(createAction(true, true, false));
+
+      if (viscinityUpRight == null ||
+          viscinityUpRight.getCollidedObject().getBodyType() != RigidbodyType.STATIC) {
+        // Jump to the right
+        possibleActions.add(createAction(true, false, true));
+      }
+
+      if (viscinityUpLeft == null ||
+          viscinityUpLeft.getCollidedObject().getBodyType() != RigidbodyType.STATIC) {
+        // Jump to the left
+        possibleActions.add(createAction(true, true, false));
+      }
+
     }
 
     return possibleActions;
   }
 
   private boolean[] createAction(boolean jump, boolean left, boolean right) {
-    boolean[] action = new boolean[5];
+    boolean[] action = new boolean[3];
     action[Bot.KEY_JUMP] = jump;
     action[Bot.KEY_LEFT] = left;
     action[Bot.KEY_RIGHT] = right;
