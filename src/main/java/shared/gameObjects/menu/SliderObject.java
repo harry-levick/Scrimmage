@@ -24,17 +24,19 @@ public abstract class SliderObject extends GameObject {
   public void initialise(Group root) {
     slider = new Slider();
     super.initialise(root);
-    slider.setStyle(
-        ".slider {-fx-border-color: transparent;-fx-background-color: transparent;}" +
-            ".slider .thumb {-fx-background-image: url(\"images/buttons/slider.thumb.png\"); " +
-            ".slider .track {-fx-background-color: red;}");
+    //   slider.setStyle( todo fix this
+    //  ".slider {-fx-border-color: red;-fx-background-color: transparent;}" +
+    //".thumb {-fx-background-image: url(\"images/buttons/slider_thumb.png\");}} " +
+    // ".track {-fx-background-color: red;}");
     // + "-fx-background-color: transparent;}");
-    //   + ".slider .track {-fx-background-image: url(\"images/buttons/slider.bar.png\");}"
+    //   + ".slider .track {-fx-background-image: url(\"images/buttons/slider_bar.png\");}"
     //  + "-fx-background-color: transparent;");
     slider.setLayoutX(getX());
     slider.setLayoutY(getY());
 //    slider.setScaleX(transform.getSize().getX());
 //    slider.setScaleY(transform.getSize().getY());
+    slider.setMinSize(transform.getSize().getX(), transform.getSize().getY());
+    slider.setMaxSize(transform.getSize().getX(), transform.getSize().getY());
     root.getChildren().add(slider);
   }
 
