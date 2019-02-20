@@ -16,6 +16,8 @@ import shared.gameObjects.background.Background;
 import shared.gameObjects.menu.main.ButtonMultiplayer;
 import shared.gameObjects.menu.main.ButtonSettings;
 import shared.gameObjects.menu.main.ButtonSingleplayer;
+import shared.gameObjects.menu.main.SoundSlider;
+import shared.gameObjects.menu.main.SoundSlider.SOUND_TYPE;
 import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.MapLoader;
@@ -120,6 +122,8 @@ public class LevelCreator extends Application {
     mapDataObject.setBackground(
         new Background("images/backgrounds/background1.png", ObjectID.Background,
             UUID.randomUUID()));
+    gameObjects.add(new SoundSlider(getAbs(5), getAbs(5), getAbs(5), getAbs(1), SOUND_TYPE.MUSIC,
+        ObjectID.Button, UUID.randomUUID()));
     for (int i = 0; i < 24; i++) {
       //top row wall
       gameObjects.add(
