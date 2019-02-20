@@ -33,8 +33,6 @@ public abstract class SliderObject extends GameObject {
     //  + "-fx-background-color: transparent;");
     slider.setLayoutX(getX());
     slider.setLayoutY(getY());
-//    slider.setScaleX(transform.getSize().getX());
-//    slider.setScaleY(transform.getSize().getY());
     slider.setMinSize(transform.getSize().getX(), transform.getSize().getY());
     slider.setMaxSize(transform.getSize().getX(), transform.getSize().getY());
     root.getChildren().add(slider);
