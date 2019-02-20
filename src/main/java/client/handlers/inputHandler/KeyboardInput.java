@@ -61,8 +61,9 @@ public class KeyboardInput implements EventHandler<KeyEvent> {
               clientPlayer.rightKey,
               clientPlayer.jumpKey,
               clientPlayer.click,
-              clientPlayer.getUUID());
+              clientPlayer.getUUID(), Client.inputCount);
       Client.connectionHandler.send(input.toString());
+      Client.inputCount++;
     }
   }
 

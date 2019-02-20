@@ -42,6 +42,7 @@ public class Client extends Application {
   private final float timeStep = 0.0166f;
   private final String gameTitle = "Alone in the Dark";
   private final int port = 4445;
+  public static int inputCount;
 
   private KeyboardInput keyInput;
   private MouseInput mouseInput;
@@ -62,6 +63,7 @@ public class Client extends Application {
   @Override
   public void start(Stage primaryStage) {
     setupRender(primaryStage);
+    inputCount = 0;
     levelHandler = new LevelHandler(settings, root, backgroundRoot, gameRoot);
     keyInput = new KeyboardInput();
     mouseInput = new MouseInput();
