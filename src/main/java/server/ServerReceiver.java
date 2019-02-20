@@ -1,12 +1,14 @@
 package server;
 
 import client.main.Client;
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
+import java.io.InputStreamReader;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.SocketException;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.net.SocketTimeoutException;
+import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import shared.gameObjects.players.Player;
@@ -17,87 +19,83 @@ import shared.packets.PacketReady;
 public class ServerReceiver implements Runnable {
 
   private static final Logger LOGGER = LogManager.getLogger(Client.class.getName());
-  private Thread t;
-  private String threadName;
-  private Player myPlayer;
-  private DatagramSocket socket;
-  private byte[] buffer = new byte[256];
+  private Player player;
+  private Socket socket;
   private Server server;
+  private ServerSocket serverSocket;
+  private List connected;
 
-  public ServerReceiver(Server server) {
+  public ServerReceiver(Server server, ServerSocket serverSocket, List connected) {
     this.server = server;
-    threadName = "Server Receiver";
-    try {
-      socket = new DatagramSocket(4445);
-    } catch (SocketException e) {
-      e.printStackTrace();
-      LOGGER.error("Error - Couldn't create socket in " + threadName);
-    }
-  }
-
-  public void start() {
-    LOGGER.debug("Starting " + threadName);
-    if (t == null) {
-      t = new Thread(this, threadName);
-      t.start();
-    }
+    this.serverSocket = serverSocket;
+    this.connected = connected;
   }
 
   @Override
   public void run() {
-    while (true) {
-      DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+    String message = null;
+    BufferedReader input = null;
+    try {
+      socket = this.serverSocket.accept();
+      input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+      /** Client Join */
+      message = input.readLine();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    int packetID = Integer.parseInt(message.split(",")[0]);
+    if (packetID == 0 && server.playerCount.get() < 4
+        && server.serverState == ServerState.WAITING_FOR_PLAYERS) {
+      PacketJoin joinPacket = new PacketJoin(message);
+      player = new Player(joinPacket.getX(), joinPacket.getY(),
+          joinPacket.getClientID());
+      Server.levelHandler.addPlayer(player, null);
+      server.playerCount.getAndIncrement();
+      connected.add(socket.getRemoteSocketAddress().toString());
+
       try {
-        socket.receive(packet);
-      } catch (IOException e) {
+        socket.setSoTimeout(5000);
+      } catch (SocketException e) {
         e.printStackTrace();
       }
-      InetAddress address = packet.getAddress();
-      int port = packet.getPort();
-      packet = new DatagramPacket(buffer, buffer.length, address, port);
-      String received = new String(packet.getData(), 0, packet.getLength());
-      int packetID = Integer.parseInt(received.split(",")[0]);
 
-      switch (packetID) {
-        case 0:
-          if (server.playerCount.get() < 4
-              && server.serverState == ServerState.WAITING_FOR_PLAYERS) {
-            PacketJoin joinPacket = new PacketJoin(received);
-            Player newPlayer = new Player(joinPacket.getX(), joinPacket.getY(),
-                joinPacket.getClientID());
-            newPlayer.initialise(null);
-            Server.levelHandler.addPlayer(newPlayer);
-            server.clientTable.put(joinPacket.getClientID(), new LinkedBlockingQueue<>());
-            server.playerCount.getAndIncrement();
-            /**
-             PacketResponse responsePacket = new PacketResponse(true, "192.0.0.0");
-             packet = new DatagramPacket(responsePacket.getData(), responsePacket.getData().length,
-             address, port);
-             try {
-             socket.send(packet);
-             } catch (IOException e) {
-             e.printStackTrace();
-             }
-             **/
-            System.out.println("test");
-          }
+      /** Main Loop */
+      while (true) {
+        try {
+          message = input.readLine();
+        } catch (SocketTimeoutException e) {
+          server.playerCount.decrementAndGet();
+          connected.remove(socket.getRemoteSocketAddress().toString());
+          server.levelHandler.getPlayers().remove(player);
+          server.levelHandler.getGameObjects().remove(player);
           break;
-        case 2:
-          PacketInput inputPacket = new PacketInput(received);
-          if (server.clientTable.containsKey(inputPacket.getUuid())) {
-            server.clientTable.get(inputPacket.getUuid()).add(inputPacket);
-          }
-          break;
-        case 5:
-          PacketReady readyPacket = new PacketReady(received);
-          if (server.clientTable.containsKey(readyPacket.getUUID())
-              && server.serverState == ServerState.WAITING_FOR_PLAYERS
-              || server.serverState == ServerState.WAITING_FOR_READYUP) {
-            server.readyCount.getAndIncrement();
-          }
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+        packetID = Integer.parseInt(message.split(",")[0]);
+        System.out.println(message);
+        switch (packetID) {
+          case 2:
+            PacketInput inputPacket = new PacketInput(message);
+            if (inputPacket.getUuid() == player.getUUID()) {
+              player.mouseY = inputPacket.getY();
+              player.mouseX = inputPacket.getX();
+              player.leftKey = inputPacket.isLeftKey();
+              player.rightKey = inputPacket.isRightKey();
+              player.jumpKey = inputPacket.isJumpKey();
+              player.click = inputPacket.isClick();
+            }
+            break;
+          case 5:
+            PacketReady readyPacket = new PacketReady(message);
+            if (readyPacket.getUUID() == player.getUUID()
+                && server.serverState == ServerState.WAITING_FOR_PLAYERS
+                || server.serverState == ServerState.WAITING_FOR_READYUP) {
+              server.readyCount.getAndIncrement();
+            }
 
+        }
       }
-
     }
   }
 }

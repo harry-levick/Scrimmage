@@ -5,14 +5,12 @@ import client.main.Client;
 import java.util.ArrayList;
 import java.util.UUID;
 import javafx.scene.Group;
-import server.ai.Bot;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.weapons.Weapon;
-import shared.packets.PacketInput;
 import shared.physics.Physics;
 import shared.physics.data.Collision;
 import shared.physics.data.MaterialProperty;
@@ -31,10 +29,11 @@ public class Player extends GameObject {
   protected Weapon holding;
   protected Rigidbody rb;
   protected double vx;
+  private BoxCollider bc;
+
   public boolean leftKey, rightKey, jumpKey, click;
   public double mouseX, mouseY;
   public int score;
-  private BoxCollider bc;
 
   public Player(double x, double y, UUID playerUUID) {
     super(x, y, 80, 110, ObjectID.Player, playerUUID);
@@ -104,8 +103,8 @@ public class Player extends GameObject {
 
   public void checkGrounded() {
     ArrayList<Collision> cols = Physics.boxcastAll(
-        getTransform().getPos().add(Vector2.Down().mult(getTransform().getSize().getY())),
-        getTransform().getSize().mult(new Vector2(1, 0.05f)));
+        getTransform().getPos().add(Vector2.Down().mult(getTransform().getSize().getY())).add(Vector2.Right().mult(getTransform().getSize().getX()*0.125f)),
+        getTransform().getSize().mult(new Vector2(0.75f, 0.05f)));
     if (cols.isEmpty()) {
       grounded = false;
     } else {
@@ -152,20 +151,6 @@ public class Player extends GameObject {
     if (this.getHolding() != null) {
       this.getHolding().setX(this.getX() + 60);
       this.getHolding().setY(this.getY() + 70);
-    }
-
-    /** If multiplayer then send input to server */
-    if (multiplayer && !(this instanceof Bot)) {
-      PacketInput input =
-          new PacketInput(
-              mouseX,
-              mouseY,
-              leftKey,
-              rightKey,
-              jumpKey,
-              click,
-              getUUID());
-      connectionHandler.send(input.getData());
     }
   }
 

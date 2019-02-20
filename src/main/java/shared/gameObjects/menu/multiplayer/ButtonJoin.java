@@ -38,7 +38,6 @@ public class ButtonJoin extends ButtonObject {
     super.doOnClick(e);
     System.out.println("test");
     Client.connectionHandler = new ConnectionHandler("230.0.0.0");
-    Client.connectionHandler.setDaemon(true);
     Client.connectionHandler.start();
     button.disarm();
     Client.levelHandler.changeMap(
