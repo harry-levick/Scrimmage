@@ -11,11 +11,12 @@ import shared.gameObjects.GameObject;
 public class PacketGameState extends Packet {
 
   private HashMap<UUID, String> gameObjects;
+  private int lastProcessedInput;
 
 
-  public PacketGameState(ArrayList<GameObject> gameObjects) {
+  public PacketGameState(ArrayList<GameObject> gameObjects, int lastProcessedInput) {
     packetID = PacketID.GAMESTATE.getID();
-    data = "" + packetID;
+    data = "" + packetID + "," + lastProcessedInput;
     for (GameObject object : gameObjects) {
       data += "," + object.getState();
     }
@@ -26,7 +27,8 @@ public class PacketGameState extends Packet {
     List<String> dataFilter = new ArrayList<>(Arrays.asList(data.split(",")));
     dataFilter.removeAll(Collections.singleton("null"));
     String[] unpackedData = dataFilter.toArray(new String[0]);
-    for (int i = 1; i < unpackedData.length; i++) {
+    lastProcessedInput = Integer.parseInt(unpackedData[1]);
+    for (int i = 2; i < unpackedData.length; i++) {
       String[] unpackedData2 = unpackedData[i].split(";");
       gameObjects.put(UUID.fromString(unpackedData2[0]), unpackedData[i]);
     }
@@ -34,5 +36,9 @@ public class PacketGameState extends Packet {
 
   public HashMap<UUID, String> getGameObjects() {
     return gameObjects;
+  }
+
+  public int getLastProcessedInput() {
+    return lastProcessedInput;
   }
 }

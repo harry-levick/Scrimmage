@@ -45,7 +45,9 @@ public class Client extends Application {
   private final float timeStep = 0.0166f;
   private final String gameTitle = "Alone in the Dark";
   private final int port = 4445;
-  public static int inputCount;
+
+  public static int inputSequenceNumber;
+  public static ArrayList<PacketInput> pendingInputs;
 
   private KeyboardInput keyInput;
   private MouseInput mouseInput;
@@ -66,7 +68,8 @@ public class Client extends Application {
   @Override
   public void start(Stage primaryStage) {
     setupRender(primaryStage);
-    inputCount = 0;
+    inputSequenceNumber = 0;
+    pendingInputs = new ArrayList<>();
     sendUpdate = false;
     levelHandler = new LevelHandler(settings, root, backgroundRoot, gameRoot);
     keyInput = new KeyboardInput();
@@ -114,7 +117,7 @@ public class Client extends Application {
         }
 
         /** Apply Input */
-        levelHandler.getClientPlayer().applyInput(multiplayer, connectionHandler);
+        levelHandler.getClientPlayer().applyInput();
 
         if (multiplayer && sendUpdate) {
           sendInput();
@@ -140,7 +143,7 @@ public class Client extends Application {
             }
           }
           levelHandler.getBotPlayerList()
-              .forEach(bot -> bot.applyInput(multiplayer, connectionHandler));
+              .forEach(bot -> bot.applyInput());
         }
 
         /** Render Game Objects */
@@ -299,9 +302,11 @@ public class Client extends Application {
             levelHandler.getClientPlayer().jumpKey,
             levelHandler.getClientPlayer().click,
             levelHandler.getClientPlayer().getUUID(),
-            inputCount);
+            inputSequenceNumber);
     connectionHandler.send(input.getString());
-    inputCount++;
+    input.setInputSequenceNumber(inputSequenceNumber);
+    pendingInputs.add(input);
+    inputSequenceNumber++;
   }
 
   private void processServerPackets() {
@@ -338,10 +343,10 @@ public class Client extends Application {
                     gameObject.setState(data.get(gameObject.getUUID()));
                   }
                 });
+            serverReconciliation(gameState.getLastProcessedInput());
             break;
           default:
-            System.out.println(messageID);
-            System.out.println(message);
+            System.out.println("ERROR" + messageID + " " + message);
 
         }
       } catch (InterruptedException e) {
@@ -349,4 +354,30 @@ public class Client extends Application {
       }
     }
   }
+
+  public void serverReconciliation(int lastProcessedInput) {
+    int j = 0;
+    // Server Reconciliation. Re-apply all the inputs not yet processed by
+    // the server.
+    while (j < pendingInputs.size()) {
+      if (inputSequenceNumber <= lastProcessedInput) {
+        // Already processed. Its effect is already taken into account into the world update
+        // we just got so drop it
+        pendingInputs.remove(j);
+      } else {
+        Player player = levelHandler.getClientPlayer();
+        PacketInput input = pendingInputs.get(j);
+        // Not processed by the server yet. Re-apply it.
+        player.mouseY = input.getY();
+        player.mouseX = input.getX();
+        player.jumpKey = input.isJumpKey();
+        player.leftKey = input.isLeftKey();
+        player.rightKey = input.isRightKey();
+        player.click = false; //Don't want extra bullets
+        player.applyInput();
+        j++;
+      }
+    }
+  }
+
 }

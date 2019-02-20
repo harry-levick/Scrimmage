@@ -1,6 +1,5 @@
 package shared.gameObjects.players;
 
-import client.handlers.connectionHandler.ConnectionHandler;
 import client.main.Client;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -116,7 +115,8 @@ public class Player extends GameObject {
       }
     }
   }
-  public void applyInput(boolean multiplayer, ConnectionHandler connectionHandler) {
+
+  public void applyInput() {
     if (rightKey) {
       rb.moveX(speed);
       animation.switchAnimation("walk");
