@@ -31,8 +31,6 @@ public abstract class Bullet extends GameObject {
   public Bullet(
       double gunX, // gun initial x position
       double gunY, // gun initial y position
-      double sizeX,
-      double sizeY,
       double mouseX, // mouse initial x position
       double mouseY, // mouse initial y position
       double width, // the width of the bullet
@@ -41,7 +39,7 @@ public abstract class Bullet extends GameObject {
       Player holder, // holder of the gun that fired this bullet
       UUID uuid) { // uuid of this bullet
 
-    super(gunX, gunY, sizeX, sizeY, ObjectID.Bullet, uuid);
+    super(gunX, gunY, 20, 20, ObjectID.Bullet, uuid);
     setWidth(width);
     setSpeed(speed);
     this.damage = damage;
