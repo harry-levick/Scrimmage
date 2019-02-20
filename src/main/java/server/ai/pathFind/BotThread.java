@@ -12,15 +12,17 @@ public class BotThread extends Thread {
   AStar pathFinder;
   Player targetPlayer;
   public List<boolean[]> plan;
+  boolean running;
 
   public BotThread(Bot bot, List<boolean[]> plan) {
     this.bot = bot;
     this.plan = plan;
     pathFinder = new AStar(bot, bot.getLevelHandler());
+    running = true;
   }
 
   public void run() {
-    while (true) {
+    while (running) {
       targetPlayer = bot.findTarget();
       synchronized (plan) {
         plan.clear();
@@ -34,12 +36,8 @@ public class BotThread extends Thread {
     }
   }
 
-  /**
-   * returns the first action of the plan
-   * @return
-   */
-  public boolean[] getNextAction() {
-    return plan.remove(0);
+  public void terminate() {
+    running = false;
   }
 
 }

@@ -70,6 +70,11 @@ public class Bot extends Player {
 
   @Override
   public void update() {
+
+    if (!active) {
+      botThread.terminate();
+    }
+
     double prevDist, newDist;
     // Calculate the distance to the target from the previous loop
     prevDist = calcDist();
@@ -111,7 +116,7 @@ public class Bot extends Player {
         break;
       case CHASING_ATTACKING:
         System.out.println("CHASING-ATTACKING");
-        //executeAction();
+        executeAction();
         // TODO calculate and execute the best path to the target whilst attacking.
         mouseX = targetPlayer.getX();
         mouseY = targetPlayer.getY();
