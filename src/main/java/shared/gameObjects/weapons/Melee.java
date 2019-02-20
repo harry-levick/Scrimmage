@@ -80,16 +80,16 @@ public abstract class Melee extends Weapon {
           new Vector2((float) this.range, (float) this.range));
       ArrayList<Player> playersBeingHit = new ArrayList<>();
 
-      System.out.println("=============start==============");
+      //System.out.println("=============start==============");
       for (Collision c : collisions) {
         GameObject g = c.getCollidedObject().getParent();
         if (g.getId() == ObjectID.Player && !g.equals(holder)) {
           System.out.print(g.toString() + " -> ");
-          System.out.println(((Player) g).getHealth());
+          //System.out.println(((Player) g).getHealth());
           playersBeingHit.add((Player) g);
         }
       }
-      System.out.println("================end===========");
+      //System.out.println("================end===========");
       
       
       this.currentCooldown = getDefaultCoolDown();
