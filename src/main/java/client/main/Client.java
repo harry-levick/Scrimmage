@@ -301,6 +301,7 @@ public class Client extends Application {
     if (connectionHandler.received.size() != 0) {
       try {
         String message = (String) connectionHandler.received.take();
+        System.out.println(message);
         int messageID = Integer.parseInt(message.substring(0, 1));
         switch (messageID) {
           //PlayerJoin
@@ -310,7 +311,7 @@ public class Client extends Application {
                 new Player(packetPlayerJoin.getX(), packetPlayerJoin.getY(),
                     packetPlayerJoin.getUUID()), gameRoot);
             break;
-          //End
+          //Ends
           case 6:
             Client.connectionHandler.end();
             Client.connectionHandler = null;
