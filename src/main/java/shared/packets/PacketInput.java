@@ -39,8 +39,8 @@ public class PacketInput extends Packet {
         + click + "," + inputCount;
   }
 
-  public PacketInput(String data) {
-    String[] unpackedData = data.split(",");
+  public PacketInput(String info) {
+    String[] unpackedData = info.split(",");
     this.packetID = Integer.parseInt(unpackedData[0]);
     this.uuid = UUID.fromString(unpackedData[1]);
     this.x = Double.parseDouble(unpackedData[2]);
@@ -50,6 +50,21 @@ public class PacketInput extends Packet {
     this.jumpKey = Boolean.parseBoolean(unpackedData[6]);
     this.click = Boolean.parseBoolean(unpackedData[7]);
     this.inputCount = Integer.parseInt(unpackedData[8]);
+    this.data = packetID
+        + ","
+        + uuid
+        + ","
+        + x
+        + ","
+        + y
+        + ","
+        + leftKey
+        + ","
+        + rightKey
+        + ","
+        + jumpKey
+        + ","
+        + click + "," + inputCount;
   }
 
   public boolean isLeftKey() {
