@@ -22,14 +22,13 @@ public class MouseInput implements EventHandler<MouseEvent> {
     if (type == MouseEvent.MOUSE_MOVED || type == MouseEvent.MOUSE_DRAGGED) {
       clientPlayer.mouseX = event.getX();
       clientPlayer.mouseY = event.getY();
-      sendInput();
     }
     if (type == MouseEvent.MOUSE_PRESSED) {
       clientPlayer.click = true;
-      sendInput();
+      //sendInput();
     } else if (event.getEventType() == MouseEvent.MOUSE_RELEASED) {
       clientPlayer.click = false;
-      sendInput();
+      //sendInput();
     }
   }
 
@@ -43,8 +42,9 @@ public class MouseInput implements EventHandler<MouseEvent> {
               clientPlayer.rightKey,
               clientPlayer.jumpKey,
               clientPlayer.click,
-              clientPlayer.getUUID());
-      Client.connectionHandler.send(input.getData());
+              clientPlayer.getUUID(), Client.inputCount);
+      Client.connectionHandler.send(input.getString());
+      Client.inputCount++;
     }
   }
 }

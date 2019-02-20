@@ -19,7 +19,7 @@ public class PacketTest {
 
   @Test
   public void InputPacketTest() {
-    PacketInput input = new PacketInput(x, y, leftKey, rightKey, jumpKey, click, uuid);
+    PacketInput input = new PacketInput(x, y, leftKey, rightKey, jumpKey, click, uuid, 0);
     PacketInput output = new PacketInput(input.getData().toString());
     assertEquals(output.getX(), x);
     assertEquals(output.getY(), y);

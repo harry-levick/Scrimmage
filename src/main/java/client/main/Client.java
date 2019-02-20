@@ -26,6 +26,7 @@ import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.LevelHandler;
 import shared.handlers.levelHandler.Map;
 import shared.packets.PacketGameState;
+import shared.packets.PacketInput;
 import shared.packets.PacketPlayerJoin;
 import shared.physics.Physics;
 import shared.util.Path;
@@ -42,6 +43,7 @@ public class Client extends Application {
   private final float timeStep = 0.0166f;
   private final String gameTitle = "Alone in the Dark";
   private final int port = 4445;
+  public static int inputCount;
 
   private KeyboardInput keyInput;
   private MouseInput mouseInput;
@@ -62,6 +64,7 @@ public class Client extends Application {
   @Override
   public void start(Stage primaryStage) {
     setupRender(primaryStage);
+    inputCount = 0;
     levelHandler = new LevelHandler(settings, root, backgroundRoot, gameRoot);
     keyInput = new KeyboardInput();
     mouseInput = new MouseInput();
@@ -80,6 +83,7 @@ public class Client extends Application {
       public void handle(long now) {
 
         if (multiplayer) {
+          sendInput();
           processServerPackets();
         }
 
@@ -276,6 +280,21 @@ public class Client extends Application {
 
     // Start Music
 
+  }
+
+  public void sendInput() {
+    PacketInput input =
+        new PacketInput(
+            levelHandler.getClientPlayer().mouseX,
+            levelHandler.getClientPlayer().mouseY,
+            levelHandler.getClientPlayer().leftKey,
+            levelHandler.getClientPlayer().rightKey,
+            levelHandler.getClientPlayer().jumpKey,
+            levelHandler.getClientPlayer().click,
+            levelHandler.getClientPlayer().getUUID(),
+            inputCount);
+    connectionHandler.send(input.getString());
+    inputCount++;
   }
 
   private void processServerPackets() {
