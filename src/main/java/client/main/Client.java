@@ -108,7 +108,7 @@ public class Client extends Application {
         levelHandler.getBotPlayerList().clear();
         levelHandler.changeMap(
             new Map("Main Menu", Path.convert("src/main/resources/menus/main_menu.map"),
-                GameState.MAIN_MENU));
+                GameState.MAIN_MENU), false);
       }
     };
 
@@ -184,7 +184,7 @@ public class Client extends Application {
               alive.forEach(player -> player.increaseScore());
               levelHandler.getPlayers().forEach(player -> player.reset());
               Map nextMap = playlist.poll();
-              levelHandler.changeMap(nextMap);
+              levelHandler.changeMap(nextMap, true);
             }
           }
           /** Move bots */
@@ -378,7 +378,7 @@ public class Client extends Application {
             multiplayer = false;
             Client.levelHandler.changeMap(
                 new Map("main_menu", Path.convert("src/main/resources/menus/main_menu.map"),
-                    GameState.IN_GAME));
+                    GameState.IN_GAME), false);
 
             break;
           case 7:

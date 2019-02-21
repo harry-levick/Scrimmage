@@ -11,6 +11,7 @@ import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.background.Background;
 import shared.gameObjects.players.Player;
 import shared.util.Path;
+import shared.util.maths.Vector2;
 
 public class LevelHandler {
 
@@ -40,29 +41,7 @@ public class LevelHandler {
     clientPlayer.initialise(gameRoot);
     players.add(clientPlayer);
     changeMap(new Map("main_menu.map", Path.convert("src/main/resources/menus/main_menu.map"),
-        GameState.IN_GAME));
-    /*
-    botPlayer = new Bot(500, 500, 80, 110, UUID.randomUUID(), gameObjects);
-    botPlayer.setHolding(
-        new Sword(500, 500, 50, 50, "Sword@LevelHandler", botPlayer, UUID.randomUUID())
-    );
-    botPlayer.getHolding().initialise(gameRoot);
-    botPlayer.initialise(gameRoot);
-    bots.add(botPlayer);
-    gameObjects.add(botPlayer);
-    gameObjects.add(botPlayer.getHolding());
-
-    Bot newbot = new Bot(1000, 500, 80, 110, UUID.randomUUID(), gameObjects);
-    newbot.setHolding(
-        new Sword(500, 500, 50, 50, "Sword@LevelHandlerBot2", newbot, UUID.randomUUID())
-    );
-    newbot.getHolding().initialise(gameRoot);
-    newbot.initialise(gameRoot);
-    bots.add(newbot);
-    gameObjects.add(newbot);
-    gameObjects.add(newbot.getHolding());
-    System.out.println("PRINT");
-    */
+        GameState.IN_GAME), true);
   }
 
   public LevelHandler(Settings settings) {
@@ -72,10 +51,10 @@ public class LevelHandler {
     bots = new ArrayList<>();
   }
 
-  public void changeMap(Map map) {
+  public void changeMap(Map map, Boolean moveToSpawns) {
     this.map = map;
     players.forEach(player -> player.reset());
-    generateLevel(root, backgroundRoot, gameRoot);
+    generateLevel(root, backgroundRoot, gameRoot, moveToSpawns);
   }
 
 
@@ -83,7 +62,8 @@ public class LevelHandler {
    * NOTE: This to change the level use change Map Removes current game objects and creates new ones
    * from Map file
    */
-  public void generateLevel(Group root, Group backgroundGroup, Group gameGroup) {
+  public void generateLevel(Group root, Group backgroundGroup, Group gameGroup,
+      Boolean moveToSpawns) {
 
     gameObjects.removeAll(players);
     gameObjects.removeAll(bots);
@@ -97,8 +77,17 @@ public class LevelHandler {
         gameObject -> {
           if (gameObject.getId() == ObjectID.MapDataObject) {
             this.background = ((MapDataObject) gameObject).getBackground();
+            ArrayList<Vector2> spawnPoints = ((MapDataObject) gameObject).getSpawnPoints();
             if (this.background != null) {
               background.initialise(backgroundGroup);
+            }
+            if (moveToSpawns && spawnPoints != null && spawnPoints.size() >= players.size()) {
+              players.forEach(player -> {
+                Vector2 spawn = spawnPoints.get(0);
+                player.setX(spawn.getX());
+                player.setY(spawn.getY());
+                spawnPoints.remove(0);
+              });
             }
 
           } else {
