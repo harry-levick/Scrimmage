@@ -9,6 +9,8 @@ public class PacketInput extends Packet {
   private UUID uuid;
   private int inputCount;
 
+  private int inputSequenceNumber;
+
   public PacketInput(
       double x, double y, boolean leftKey, boolean rightKey, boolean jumpKey, boolean click,
       UUID uuid, int inputCount) {
@@ -97,5 +99,13 @@ public class PacketInput extends Packet {
 
   public int getInputCount() {
     return inputCount;
+  }
+
+  public int getInputSequenceNumber() {
+    return inputSequenceNumber;
+  }
+
+  public void setInputSequenceNumber(int inputSequenceNumber) {
+    this.inputSequenceNumber = inputSequenceNumber;
   }
 }

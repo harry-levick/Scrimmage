@@ -91,7 +91,7 @@ public class LevelCreator extends Application {
           new ExampleWallObject(getAbs(46), getAbs((i * 2) + 2), getAbs(2), getAbs(2), ObjectID.Bot,
               UUID.randomUUID()));
     }
-    for (int i = 0; i < 13; i++) {
+    for (int i = 0; i < 12; i++) {
       // bottom row floor
       gameObjects.add(
           new ExampleFloorObject(getAbs(i * 4), getAbs(25), getAbs(4), getAbs(2), ObjectID.Bot,
@@ -109,7 +109,7 @@ public class LevelCreator extends Application {
     mapDataObject.setBackground(
         new Background("images/backgrounds/background1.png", ObjectID.Background,
             UUID.randomUUID()));
-    for (int i = 0; i < 13; i++) {
+    for (int i = 0; i < 12; i++) {
       // bottom row floor
       gameObjects.add(
           new ExampleFloorObject(getAbs(i * 4), getAbs(25), getAbs(4), getAbs(2), ObjectID.Bot,
@@ -146,7 +146,7 @@ public class LevelCreator extends Application {
           new ExampleWallObject(getAbs(46), getAbs((i * 2) + 2), getAbs(2), getAbs(2), ObjectID.Bot,
               UUID.randomUUID()));
     }
-    for (int i = 0; i < 13; i++) {
+    for (int i = 0; i < 12; i++) {
       // bottom row floor
       gameObjects.add(
           new ExampleFloorObject(getAbs(i * 4), getAbs(25), getAbs(4), getAbs(2), ObjectID.Bot,

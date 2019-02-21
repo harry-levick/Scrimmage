@@ -108,7 +108,7 @@ public class Player extends GameObject {
     grounded = rb.isGrounded();
   }
 
-  public void applyInput(boolean multiplayer, ConnectionHandler connectionHandler) {
+  public void applyInput() {
     if (rightKey) {
       rb.moveX(speed);
       animation.switchAnimation("walk");
@@ -224,110 +224,104 @@ public class Player extends GameObject {
     holding.setSettings(settings);
   }
 
-  @Override
-  public void setSettings(Settings settings) {
-    this.settings = settings;
-    if (holding != null) {
-      holding.setSettings(settings);
-    }
-  }
 
   public int getScore() {
     return score;
   }
 
   public double[] getHandPos() {
-    if (jumped && facingLeft)
-      return new double[] {this.getHandLeftJumpX(), this.getHandLeftJumpY()};
-    else if (jumped && facingRight)
-      return new double[] {this.getHandRightJumpX(), this.getHandRightJumpY()};
-    else if (facingLeft)
-      return new double[] {this.getHandLeftX(), this.getHandLeftY()};
-    else if (facingRight)
-      return new double[] {this.getHandRightX(), this.getHandRightY()};
-    return new double[] {this.getHandRightX(), this.getHandRightY()};
+    if (jumped && facingLeft) {
+      return new double[]{this.getHandLeftJumpX(), this.getHandLeftJumpY()};
+    } else if (jumped && facingRight) {
+      return new double[]{this.getHandRightJumpX(), this.getHandRightJumpY()};
+    } else if (facingLeft) {
+      return new double[]{this.getHandLeftX(), this.getHandLeftY()};
+    } else if (facingRight) {
+      return new double[]{this.getHandRightX(), this.getHandRightY()};
+    }
+    return new double[]{this.getHandRightX(), this.getHandRightY()};
   }
-
+  
   /**
    * Hand position x of the player when facing left
-   *
+   * 
    * @return x position of the hand
    */
   public double getHandLeftX() {
     return this.getX() + 13;
   }
-
+  
   /**
    * Hand position y of the player when facing left
-   *
+   * 
    * @return y position of the hand
    */
   public double getHandLeftY() {
     return this.getY() + 90;
   }
-
+  
   /**
    * Hand position x of the player when facing right
-   *
+   * 
    * @return x position of the hand
    */
   public double getHandRightX() {
     return this.getX() + 60;
   }
-
+  
   /**
-   * Hand position y of the player when facing right
-   *
+   * Hand position y of the player when facing right 
+   * 
    * @return y position of the hand
    */
   public double getHandRightY() {
     return this.getY() + 90;
   }
-
+  
   /**
    * Hand position x of the player when jumping and facing left
-   *
+   * 
    * @return x position of the hand
    */
   public double getHandLeftJumpX() {
     return this.getX() + 7;
   }
-
+  
   /**
    * Hand position y of the player when jumping and facing left
-   *
+   * 
    * @return y position of the hand
    */
   public double getHandLeftJumpY() {
     return this.getY() + 30;
   }
-
+  
   /**
    * Hand position x of the player when jumping and facing right
-   *
+   * 
    * @return x position of the hand
    */
   public double getHandRightJumpX() {
     return this.getX() + 67;
   }
-
+  
   /**
    * Hand position y of the player when jumping and facing right
-   *
+   * 
    * @return y position of the hand
    */
   public double getHandRightJumpY() {
     return this.getY() + 30;
   }
-
+  
   public boolean getJumped() {
     return this.jumped;
   }
-
+  
   public boolean getFacingLeft() {
     return this.facingLeft;
   }
-
+  
   public boolean getFacingRight() {
     return this.facingRight;
   }
