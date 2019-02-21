@@ -131,11 +131,15 @@ public enum FSA {
       int botHealth = StateInfo.botHealth;
 
       Melee temp;
+      double enemyWeaponRange;
 
-      double enemyWeaponRange =
-          (targetPlayer.getHolding().isGun())
+      if (targetPlayer.getHolding() != null) {
+        enemyWeaponRange = (targetPlayer.getHolding().isGun())
               ? Double.POSITIVE_INFINITY
               : (temp = (Melee) targetPlayer.getHolding()).getRange();
+      } else {
+        enemyWeaponRange = 0.0;
+      }
 
       if ((newDist <= weaponRange)
           && (botHealth >= this.HIGH_HEALTH)
