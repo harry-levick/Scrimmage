@@ -73,6 +73,7 @@ public class Client extends Application {
 
   @Override
   public void start(Stage primaryStage) {
+    playlist = new LinkedList<>();
     //Testing code
     playlist
         .add(new Map("Map1", Path.convert("src/main/resources/maps/map1.map"), GameState.IN_GAME));
@@ -169,7 +170,7 @@ public class Client extends Application {
           sendUpdate = false;
         }
 
-        if (!multiplayer && singleplayerGame) {
+        if (!multiplayer && singleplayerGame && levelHandler.getPlayers().size() > 1) {
           /**Calculate Score*/
             ArrayList<Player> alive = new ArrayList<>();
             for (Player p : levelHandler.getPlayers()) {
