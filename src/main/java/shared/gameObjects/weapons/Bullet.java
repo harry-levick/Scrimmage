@@ -58,9 +58,6 @@ public abstract class Bullet extends GameObject {
         new AngularData(0, 0, 0, 0),
         this);//TODO FIX
     addComponent(rb);
-    // Change the speed of bullet by altering the bulletSpeed variable in any Gun
-
-    //rb.move(new Vector2((float)(mouseX-gunX)*1.5f, (float)(mouseY-gunY)*1.5f));
 
     this.isHit = false;
 
@@ -72,37 +69,25 @@ public abstract class Bullet extends GameObject {
 
   @Override
   public void update() {
-    //System.out.println("@Bullet.update start");
     ArrayList<Collision> collision = Physics.boxcastAll(
         new Vector2((float) getX(), (float) getY()),
         new Vector2((float) this.width, (float) this.width));
     ArrayList<Player> playersBeingHit = new ArrayList<>();
 
-    //System.out.println("=============start==============");
+    // check if a player is hit
     for (Collision c : collision) {
       GameObject g = c.getCollidedObject().getParent();
       if (g.getId() == ObjectID.Player && !g.equals(holder)) {
-        System.out.print(g.toString() + " -> ");
-        //System.out.println(((Player) g).getHealth());
-        playersBeingHit.add((Player) g);
         isHit = true;
+        playersBeingHit.add((Player) g);
       }
     }
-    //System.out.println("================end===========");
-    
-    /*
-    if (((Collider)(getComponent(ComponentType.COLLIDER))).onCollisionEnter()) {
-      isHit = true;
-      // Probably use raycast and check collision type
-    }
-    */
     
     if (isHit) {
       Client.levelHandler.delGameObject(this);
       for (Player p : playersBeingHit) {
         p.deductHp(this.damage);
       }
-      // apply effect (deduct hp, play sound)
     } else if ((0 < getX() && getX() < 1920) && (0 < getY() && getY() < 1080)) {
       rb.move(vector.mult((float) speed));
       super.update();
@@ -110,7 +95,6 @@ public abstract class Bullet extends GameObject {
     else {
       Client.levelHandler.delGameObject(this);
     }
-    //System.out.println("@Bullet.update end");
   }
 
   @Override
