@@ -12,9 +12,12 @@ public class MachineGun extends Gun {
 
   private static String imagePath = "images/weapons/machinegun.png"; // path to Machine Gun image
   private static String audioPath = "audio/sound-effects/laser_gun.wav"; // path to Machine Gun sfx
+  private static float PI = 3.141592654f;
   private static double sizeX = 80, sizeY = 20;
+  
   private double[] holderHandPos;
-  private Rotate rotate;
+  private double angleGun;  // angle of gun (hand and mouse vs x-axis) (radian) 
+  private Rotate rotate;  // rotate property of gun wrt grip
 
   public MachineGun(double x, double y, String name, Player holder,
       UUID uuid) {
@@ -49,12 +52,16 @@ public class MachineGun extends Gun {
   public void fire(double mouseX, double mouseY) {
     if (canFire()) {
       UUID uuid = UUID.randomUUID();
-      double bulletX = holder.getFacingRight()? getMuzzleX() : getMuzzleFlipX();
-      double bulletY = holder.getFacingRight()? getMuzzleY() : getMuzzleFlipY(); 
+      //double bulletX     = getGripX() + 68 * Math.cos(angleGun) - 4 * Math.sin(angleGun);
+      //double bulletY     = getGripY() + 68 * Math.sin(angleGun) - 4 * Math.cos(angleGun);
+      double bulletX     = getMuzzleX() - 68 + 68 * Math.cos(-angleGun);
+      double bulletY     = getMuzzleY() - 68 * Math.sin(-angleGun);
+      double bulletFlipX = getMuzzleFlipX() + 68 - 68 * Math.cos(angleGun);
+      double bulletFlipY = getMuzzleFlipY() - 68 * Math.sin(angleGun);
       Bullet bullet =
           new MachineGunBullet(
-              bulletX,
-              bulletY,
+              (holder.getFacingRight()? bulletX : bulletFlipX),
+              (holder.getFacingRight()? bulletY : bulletFlipY),
               mouseX,
               mouseY,
               this.bulletWidth,
@@ -85,8 +92,8 @@ public class MachineGun extends Gun {
     double mouseY = holder.mouseY;
     Vector2 mouseV = new Vector2((float)mouseX, (float)mouseY);
     Vector2 gripV = new Vector2((float)this.getGripX(), (float)this.getGripY());
-    double angle = mouseV.sub(gripV).angle() * 180 / 3.141592654f;  // degree
-    //System.out.println("angle="+angle);
+    angleGun = mouseV.sub(gripV).angle();  // radian
+    double angle = angleGun * 180 / PI;  // degree
     
     // Change the facing of the player when aiming the other way
     if (holder.getFacingRight() && mouseX < this.getGripX())
@@ -149,7 +156,7 @@ public class MachineGun extends Gun {
   }
   
   public double getMuzzleY() {
-    return getGripY() -4;
+    return getGripY() - 4;
   }
   
   public double getMuzzleFlipX() {
