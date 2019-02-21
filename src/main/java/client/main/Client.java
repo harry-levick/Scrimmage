@@ -75,27 +75,11 @@ public class Client extends Application {
   public void start(Stage primaryStage) {
     playlist = new LinkedList<>();
     //Testing code
-    playlist
-        .add(new Map("Map1", Path.convert("src/main/resources/maps/map1.map"), GameState.IN_GAME));
-    playlist
-        .add(new Map("Map2", Path.convert("src/main/resources/maps/map2.map"), GameState.IN_GAME));
-    playlist
-        .add(new Map("Map3", Path.convert("src/main/resources/maps/map3.map"), GameState.IN_GAME));
-    playlist
-        .add(new Map("Map4", Path.convert("src/main/resources/maps/map4.map"), GameState.IN_GAME));
-    playlist
-        .add(new Map("Map5", Path.convert("src/main/resources/maps/map5.map"), GameState.IN_GAME));
-    playlist
-        .add(new Map("Map6", Path.convert("src/main/resources/maps/map6.map"), GameState.IN_GAME));
-    playlist
-        .add(new Map("Map7", Path.convert("src/main/resources/maps/map7.map"), GameState.IN_GAME));
-    playlist
-        .add(new Map("Map8", Path.convert("src/main/resources/maps/map8.map"), GameState.IN_GAME));
-    playlist
-        .add(new Map("Map9", Path.convert("src/main/resources/maps/map9.map"), GameState.IN_GAME));
-    playlist
-        .add(
-            new Map("Map10", Path.convert("src/main/resources/maps/map10.map"), GameState.IN_GAME));
+    for (int i = 0; i < 10; i++) {
+      playlist
+          .add(new Map("Map" + i, Path.convert("src/main/resources/maps/map" + i + ".map"),
+              GameState.IN_GAME));
+    }
 
     /** Setup Game timer */
     task = new TimerTask() {
