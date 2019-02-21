@@ -83,7 +83,7 @@ public class Animator {
         currentAnimationName = animationName;
       }
     } catch (Exception e) {
-      System.out.println("No animation of name " + animationName + " exists. Exepction:" + e);
+      //System.out.println("No animation of name " + animationName + " exists. Exepction:" + e);
     }
   }
 

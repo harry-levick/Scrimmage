@@ -19,12 +19,15 @@ public class KeyboardInput implements EventHandler<KeyEvent> {
       switch (event.getCode()) {
         case A:
           clientPlayer.leftKey = true;
+          Client.sendUpdate = true;
           break;
         case D:
           clientPlayer.rightKey = true;
+          Client.sendUpdate = true;
           break;
         case W:
           clientPlayer.jumpKey = true;
+          Client.sendUpdate = true;
           break;
         default:
       }
@@ -32,15 +35,19 @@ public class KeyboardInput implements EventHandler<KeyEvent> {
       switch (event.getCode()) {
         case A:
           clientPlayer.leftKey = false;
+          Client.sendUpdate = true;
           break;
         case D:
           clientPlayer.rightKey = false;
+          Client.sendUpdate = true;
           break;
         case W:
           clientPlayer.jumpKey = false;
+          Client.sendUpdate = true;
           break;
         default:
       }
     }
   }
+
 }

@@ -15,9 +15,11 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import shared.gameObjects.players.Player;
+import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.LevelHandler;
-import shared.packets.PacketEnd;
+import shared.handlers.levelHandler.Map;
 import shared.packets.PacketGameState;
+import shared.packets.PacketInput;
 import shared.packets.PacketPlayerJoin;
 import shared.physics.Physics;
 import shared.util.Path;
@@ -29,10 +31,12 @@ public class Client extends Application {
   public static Settings settings;
   public static boolean multiplayer;
   public static ConnectionHandler connectionHandler;
+  public static boolean sendUpdate;
 
   private final float timeStep = 0.0166f;
   private final String gameTitle = "Alone in the Dark";
   private final int port = 4445;
+  public static int inputCount;
 
   private KeyboardInput keyInput;
   private MouseInput mouseInput;
@@ -53,6 +57,8 @@ public class Client extends Application {
   @Override
   public void start(Stage primaryStage) {
     setupRender(primaryStage);
+    inputCount = 0;
+    sendUpdate = false;
     levelHandler = new LevelHandler(settings, root, backgroundRoot, gameRoot);
     keyInput = new KeyboardInput();
     mouseInput = new MouseInput();
@@ -96,28 +102,37 @@ public class Client extends Application {
           levelHandler.getGameObjects().forEach(gameObject -> gameObject.update());
           accumulatedTime -= timeStep;
         }
-        /**Calculate Score*/
-        if (levelHandler.getPlayers().size() > 1) {
-          ArrayList<Player> alive = new ArrayList<>();
-          for (Player p : levelHandler.getPlayers()) {
-            if (p.isActive()) {
-              alive.add(p);
-            }
-            if (alive.size() > 1) {
-              break;
-            }
-          }
-          if (alive.size() == 1) {
-            alive.forEach(player -> player.increaseScore());
-            levelHandler.getPlayers().forEach(player -> player.reset());
-            //Change level
-          }
-        }
+
         /** Apply Input */
         levelHandler.getClientPlayer().applyInput(multiplayer, connectionHandler);
-        // Update bot
-        levelHandler.getBotPlayerList()
-            .forEach(bot -> bot.applyInput(multiplayer, connectionHandler));
+
+        if (multiplayer && sendUpdate) {
+          sendInput();
+          sendUpdate = false;
+        }
+
+        if (!multiplayer) {
+          /**Calculate Score*/
+          if (levelHandler.getPlayers().size() > 1) {
+            ArrayList<Player> alive = new ArrayList<>();
+            for (Player p : levelHandler.getPlayers()) {
+              if (p.isActive()) {
+                alive.add(p);
+              }
+              if (alive.size() > 1) {
+                break;
+              }
+            }
+            if (alive.size() == 1) {
+              alive.forEach(player -> player.increaseScore());
+              levelHandler.getPlayers().forEach(player -> player.reset());
+              //Change level
+            }
+          }
+          levelHandler.getBotPlayerList()
+              .forEach(bot -> bot.applyInput(multiplayer, connectionHandler));
+        }
+
         /** Render Game Objects */
         levelHandler.getGameObjects().forEach(gameObject -> gameObject.render());
         if (levelHandler.getBackground() != null) {
@@ -179,6 +194,21 @@ public class Client extends Application {
     primaryStage.show();
   }
 
+  public void sendInput() {
+    PacketInput input =
+        new PacketInput(
+            levelHandler.getClientPlayer().mouseX,
+            levelHandler.getClientPlayer().mouseY,
+            levelHandler.getClientPlayer().leftKey,
+            levelHandler.getClientPlayer().rightKey,
+            levelHandler.getClientPlayer().jumpKey,
+            levelHandler.getClientPlayer().click,
+            levelHandler.getClientPlayer().getUUID(),
+            inputCount);
+    connectionHandler.send(input.getString());
+    inputCount++;
+  }
+
   private void processServerPackets() {
     if (connectionHandler.received.size() != 0) {
       try {
@@ -190,14 +220,18 @@ public class Client extends Application {
             PacketPlayerJoin packetPlayerJoin = new PacketPlayerJoin(message);
             levelHandler.addPlayer(
                 new Player(packetPlayerJoin.getX(), packetPlayerJoin.getY(),
-                    packetPlayerJoin.getUUID()));
+                    packetPlayerJoin.getUUID()), gameRoot);
             break;
           //End
           case 6:
-            PacketEnd packetEnd = new PacketEnd(message);
-            multiplayer = false;
+            Client.connectionHandler.end();
+            Client.connectionHandler = null;
             //Show score board
-            //Main Menu
+            multiplayer = false;
+            Client.levelHandler.changeMap(
+                new Map("main_menu", Path.convert("src/main/resources/menus/main_menu.map"),
+                    GameState.IN_GAME));
+
             break;
           case 7:
             PacketGameState gameState = new PacketGameState(message);

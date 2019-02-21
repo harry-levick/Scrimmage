@@ -24,8 +24,10 @@ public class MouseInput implements EventHandler<MouseEvent> {
     }
     if (type == MouseEvent.MOUSE_PRESSED) {
       clientPlayer.click = true;
+      Client.sendUpdate = true;
     } else if (event.getEventType() == MouseEvent.MOUSE_RELEASED) {
       clientPlayer.click = false;
+      Client.sendUpdate = true;
     }
   }
 }

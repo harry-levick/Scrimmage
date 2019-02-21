@@ -37,7 +37,7 @@ public class ButtonSingleplayer extends ButtonObject {
 
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
-    System.out.println("test @ButtonSinglePlayer:40");
+    System.out.println("test@ButtonSinglePlayer:40");
     Client.levelHandler.changeMap(new Map("map1", Path.convert("src/main/resources/menus/menu.map"),
         GameState.IN_GAME));
     int botsToAdd = maxPlayers - Client.levelHandler.getPlayers().size();
