@@ -1,5 +1,6 @@
 package shared.handlers.levelHandler;
 
+import client.handlers.audioHandler.AudioHandler;
 import client.main.Settings;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -27,8 +28,11 @@ public class LevelHandler {
   private Group backgroundRoot;
   private Group gameRoot;
   private Background background;
+  private AudioHandler musicPlayer;
+  private Settings settings;
 
   public LevelHandler(Settings settings, Group root, Group backgroundRoot, Group gameRoot) {
+    this.settings = settings;
     gameObjects = new ArrayList<>();
     toRemove = new ArrayList<>();
     players = new ArrayList<>();
@@ -37,6 +41,7 @@ public class LevelHandler {
     this.root = root;
     this.backgroundRoot = backgroundRoot;
     this.gameRoot = gameRoot;
+    musicPlayer = new AudioHandler(settings);
     clientPlayer = new Player(500, 200, UUID.randomUUID());
     clientPlayer.initialise(gameRoot);
     players.add(clientPlayer);
@@ -45,10 +50,12 @@ public class LevelHandler {
   }
 
   public LevelHandler(Settings settings) {
+    this.settings = settings;
     gameObjects = new ArrayList<>();
     toRemove = new ArrayList<>();
     players = new ArrayList<>();
     bots = new ArrayList<>();
+    musicPlayer = new AudioHandler(settings);
   }
 
   public void changeMap(Map map, Boolean moveToSpawns) {
@@ -96,7 +103,10 @@ public class LevelHandler {
         });
     gameObjects.addAll(players);
     //gameObjects.addAll(bots);
+    gameObjects.forEach(gameObject -> gameObject.setSettings(settings));
     gameState = map.getGameState();
+
+    //musicPlayer.playMusicPlaylist();
     System.gc();
   }
 
@@ -177,6 +187,10 @@ public class LevelHandler {
 
   public ArrayList<Bot> getBotPlayerList() {
     return bots;
+  }
+
+  public AudioHandler getMusicAudioHandler() {
+    return this.musicPlayer;
   }
 
   /**

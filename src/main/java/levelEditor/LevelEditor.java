@@ -133,19 +133,9 @@ public class LevelEditor extends Application {
                     uuid);
             mapDataObject.addSpawnPoint(getGridX(event.getX()), getGridY(event.getY()));
           } else {
-            final Stage dialog = new Stage();
-            dialog.initModality(Modality.APPLICATION_MODAL);
-            dialog.initOwner(primaryStage);
-            VBox dialogVbox = new VBox(20);
-            Text text =
-                new Text(
-                    "\n\tWarning: You cannot create more than "
-                        + spawnPointLimit
-                        + " spawn points.");
-            dialogVbox.getChildren().add(text);
-            Scene dialogScene = new Scene(dialogVbox, 450, 60);
-            dialog.setScene(dialogScene);
-            dialog.show();
+            popup(primaryStage, "\n\tWarning: You cannot create more than "
+                + spawnPointLimit
+                + " spawn points.");
           }
           break;
 
@@ -281,7 +271,15 @@ public class LevelEditor extends Application {
         new EventHandler<ActionEvent>() {
           @Override
           public void handle(ActionEvent event) {
-            saveMap(primaryStage);
+            if (mapDataObject.getSpawnPoints().size() == spawnPointLimit) {
+              saveMap(primaryStage);
+            } else {
+              popup(primaryStage,
+                  "\n\t" + spawnPointLimit + " spawn points are required in this map, "
+                      + "please add " + (spawnPointLimit - mapDataObject.getSpawnPoints().size())
+                      + " more.");
+            }
+
           }
         }
     );
@@ -560,6 +558,18 @@ public class LevelEditor extends Application {
     dialog.setScene(dialogScene);
     dialog.show();
 
+  }
+
+  private void popup(Stage primaryStage, String message) {
+    final Stage dialog = new Stage();
+    dialog.initModality(Modality.APPLICATION_MODAL);
+    dialog.initOwner(primaryStage);
+    VBox dialogVbox = new VBox(20);
+    Text text = new Text(message);
+    dialogVbox.getChildren().add(text);
+    Scene dialogScene = new Scene(dialogVbox, 450, 60);
+    dialog.setScene(dialogScene);
+    dialog.show();
   }
 }
 
