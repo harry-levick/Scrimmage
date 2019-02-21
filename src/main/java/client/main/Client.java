@@ -280,11 +280,9 @@ public class Client extends Application {
                 .forEach(gameObject -> {
                   if (!(gameObject instanceof MapDataObject)) {
                     gameObject.setState(data.get(gameObject.getUUID()));
-                    data.remove(gameObject.getUUID());
                   }
                 });
-            data.forEach((k, v) -> createObject(v));
-            //serverReconciliation(gameState.getLastProcessedInput());
+            serverReconciliation(gameState.getLastProcessedInput());
             break;
           default:
             System.out.println("ERROR" + messageID + " " + message);
@@ -293,16 +291,6 @@ public class Client extends Application {
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
-    }
-  }
-
-  public void createObject(String data) {
-    String[] unpackedData = data.split(";");
-    if (unpackedData[1] == "player") {
-      System.out.println("PLAYER CREATED");
-      levelHandler.addPlayer(
-          new Player(Double.parseDouble(unpackedData[2]), Double.parseDouble(unpackedData[3]),
-              UUID.fromString(unpackedData[0])), gameRoot);
     }
   }
 
