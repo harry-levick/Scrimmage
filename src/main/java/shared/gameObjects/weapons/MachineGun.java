@@ -37,8 +37,8 @@ public class MachineGun extends Gun {
   public void fire(double mouseX, double mouseY) {
     if (canFire()) {
       UUID uuid = UUID.randomUUID();
-      double bulletX = holderHandPos[0] + (holder.getFacingRight()? getMuzzleX() : getMuzzleFlipX());
-      double bulletY = holderHandPos[1] + (holder.getFacingRight()? getMuzzleY() : getMuzzleFlipY()); 
+      double bulletX = holder.getFacingRight()? getMuzzleX() : getMuzzleFlipX();
+      double bulletY = holder.getFacingRight()? getMuzzleY() : getMuzzleFlipY(); 
       Bullet bullet =
           new MachineGunBullet(
               //getX() + (holder.getFacingRight()? getMuzzleX() : getMuzzleFlipX()),
@@ -66,10 +66,6 @@ public class MachineGun extends Gun {
   @Override
   public void render() {
     super.render();
-    /*
-    imageView.setTranslateX(this.getX());
-    imageView.setTranslateY(this.getY());
-    */
     
     if (holder.getFacingLeft()) {
       imageView.setScaleX(-1);
@@ -81,9 +77,6 @@ public class MachineGun extends Gun {
       imageView.setTranslateX(this.getGripX());
       imageView.setTranslateY(this.getGripY());
     }
-    
-    
-    System.out.println(String.format("(%fx,%fy) (%fgx,%fgy) (%fhx,%fhy)", this.getX(), this.getY(), this.getGripX(), this.getGripY(), this.holderHandPos[0], this.holderHandPos[1]));
   }
 
   @Override
@@ -117,18 +110,18 @@ public class MachineGun extends Gun {
   }
   
   public double getMuzzleX() {
-    return 54;
+    return getGripX() + 68;
   }
   
   public double getMuzzleY() {
-    return 6;
+    return getGripY() -4;
   }
   
   public double getMuzzleFlipX() {
-    return -80;
+    return getGripFlipX() - 12;
   }
   
   public double getMuzzleFlipY() {
-    return -10;
+    return getGripFlipY() - 8;
   }
 }
