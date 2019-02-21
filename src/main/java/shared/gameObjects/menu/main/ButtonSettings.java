@@ -1,6 +1,5 @@
 package shared.gameObjects.menu.main;
 
-import client.Menu;
 import client.main.Client;
 import java.util.UUID;
 import javafx.scene.input.MouseEvent;
@@ -8,6 +7,7 @@ import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.menu.ButtonObject;
 import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.Map;
+import shared.util.Path;
 
 public class ButtonSettings extends ButtonObject {
 
@@ -32,8 +32,8 @@ public class ButtonSettings extends ButtonObject {
 
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
-    //System.out.println("test");
     Client.levelHandler.changeMap(
-        new Map("Settings", Menu.SETTINGS.getMenuPath(), GameState.MAIN_MENU));
+        new Map("Settings", Path.convert("src/main/resources/menus/settings.map"),
+            GameState.MAIN_MENU));
   }
 }

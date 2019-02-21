@@ -2,6 +2,7 @@ package shared.gameObjects.players;
 
 import client.handlers.connectionHandler.ConnectionHandler;
 import client.main.Client;
+import client.main.Settings;
 import java.util.ArrayList;
 import java.util.UUID;
 import javafx.scene.Group;
@@ -103,7 +104,8 @@ public class Player extends GameObject {
 
   public void checkGrounded() {
     ArrayList<Collision> cols = Physics.boxcastAll(
-        getTransform().getPos().add(Vector2.Down().mult(getTransform().getSize().getY())).add(Vector2.Right().mult(getTransform().getSize().getX()*0.125f)),
+        getTransform().getPos().add(Vector2.Down().mult(getTransform().getSize().getY()))
+            .add(Vector2.Right().mult(getTransform().getSize().getX() * 0.125f)),
         getTransform().getSize().mult(new Vector2(0.75f, 0.05f)));
     if (cols.isEmpty()) {
       grounded = false;
@@ -225,6 +227,15 @@ public class Player extends GameObject {
 
   public void setHolding(Weapon holding) {
     this.holding = holding;
+    holding.setSettings(settings);
+  }
+
+  @Override
+  public void setSettings(Settings settings) {
+    this.settings = settings;
+    if (holding != null) {
+      holding.setSettings(settings);
+    }
   }
 
   public int getScore() {
