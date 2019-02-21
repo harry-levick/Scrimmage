@@ -9,6 +9,7 @@ import shared.util.Path;
 public class MachineGun extends Gun {
 
   private static String imagePath = "images/weapons/machinegun.png"; // path to Machine Gun image
+  private static String audioPath = "audio/sound-effects/laser_gun.wav"; // path to Machine Gun sfx
   private double[] holderHandPos;
 
   public MachineGun(double x, double y, String name, Player holder,
