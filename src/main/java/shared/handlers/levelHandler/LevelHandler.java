@@ -11,6 +11,8 @@ import shared.gameObjects.MapDataObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.background.Background;
 import shared.gameObjects.players.Player;
+import shared.gameObjects.weapons.MachineGun;
+import shared.gameObjects.weapons.TestPosition;
 import shared.util.Path;
 
 public class LevelHandler {
@@ -46,6 +48,11 @@ public class LevelHandler {
     players.add(clientPlayer);
     changeMap(new Map("main_menu.map", Path.convert("src/main/resources/menus/main_menu.map"),
         GameState.IN_GAME));
+    /*
+    clientPlayer.setHolding(new MachineGun(clientPlayer.getHandRightX(), clientPlayer.getHandRightY(),
+        "MachineGun@LevelHandler_clientPlayer", clientPlayer, UUID.randomUUID()));
+    addGameObject(clientPlayer.getHolding());
+    */
     /*
     botPlayer = new Bot(500, 500, 80, 110, UUID.randomUUID(), gameObjects);
     botPlayer.setHolding(
