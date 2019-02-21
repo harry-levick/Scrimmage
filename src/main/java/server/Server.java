@@ -131,7 +131,7 @@ public class Server extends Application {
         }
 
         if (playerCount.get() == 5) {
-          Bot bot = new Bot(500, 500, UUID.randomUUID(), levelHandler.getGameObjects());
+          Bot bot = new Bot(500, 500, UUID.randomUUID(), levelHandler);
           bot.initialise(null);
           levelHandler.getPlayers().add(bot);
           levelHandler.getBotPlayerList().add(bot);
@@ -183,7 +183,7 @@ public class Server extends Application {
             player.jumpKey = temp.isJumpKey();
           }
         }));
-    levelHandler.getPlayers().forEach(player -> player.applyInput(false, null));
+    levelHandler.getPlayers().forEach(player -> player.applyInput());
 
     levelHandler
         .getGameObjects()
