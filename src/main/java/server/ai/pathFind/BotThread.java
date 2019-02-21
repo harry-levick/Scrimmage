@@ -25,12 +25,9 @@ public class BotThread extends Thread {
     while (running) {
       targetPlayer = bot.findTarget();
 
-
       List<boolean[]> tempList = pathFinder.optimise(targetPlayer);
       plan.clear();
       plan.addAll(tempList);
-
-
 
       try {
         Thread.sleep(1000);

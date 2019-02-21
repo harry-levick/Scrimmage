@@ -33,7 +33,7 @@ public class Sword extends Melee {
         30,  // ammo
         60,  // fireRate
         holder,
-        50,  // range
+        70,  // range
         50,  // beginAngle
         20,  // endAngle
         uuid);

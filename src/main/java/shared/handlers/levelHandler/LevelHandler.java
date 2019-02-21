@@ -56,7 +56,7 @@ public class LevelHandler {
     System.out.println("PRINT");
     */
 
-    Bot newbot = new Bot(600, 200, UUID.randomUUID(), this);
+    Bot newbot = new Bot(700, 200, UUID.randomUUID(), this);
     newbot.setHolding(
         new Sword(600, 200,"Sword@LevelHandlerBot2", newbot, UUID.randomUUID())
     );
