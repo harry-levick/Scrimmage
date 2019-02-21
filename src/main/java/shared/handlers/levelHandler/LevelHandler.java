@@ -14,6 +14,7 @@ import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.MachineGun;
 import shared.gameObjects.weapons.TestPosition;
 import shared.util.Path;
+import shared.util.maths.Vector2;
 
 public class LevelHandler {
 
@@ -47,7 +48,7 @@ public class LevelHandler {
     clientPlayer.initialise(gameRoot);
     players.add(clientPlayer);
     changeMap(new Map("main_menu.map", Path.convert("src/main/resources/menus/main_menu.map"),
-        GameState.IN_GAME));
+        GameState.IN_GAME), true);
     /*
     clientPlayer.setHolding(new MachineGun(clientPlayer.getHandRightX(), clientPlayer.getHandRightY(),
         "MachineGun@LevelHandler_clientPlayer", clientPlayer, UUID.randomUUID()));
@@ -86,10 +87,10 @@ public class LevelHandler {
     musicPlayer = new AudioHandler(settings);
   }
 
-  public void changeMap(Map map) {
+  public void changeMap(Map map, Boolean moveToSpawns) {
     this.map = map;
     players.forEach(player -> player.reset());
-    generateLevel(root, backgroundRoot, gameRoot);
+    generateLevel(root, backgroundRoot, gameRoot, moveToSpawns);
   }
 
 
@@ -97,7 +98,8 @@ public class LevelHandler {
    * NOTE: This to change the level use change Map Removes current game objects and creates new ones
    * from Map file
    */
-  public void generateLevel(Group root, Group backgroundGroup, Group gameGroup) {
+  public void generateLevel(Group root, Group backgroundGroup, Group gameGroup,
+      Boolean moveToSpawns) {
 
     gameObjects.removeAll(players);
     gameObjects.removeAll(bots);
@@ -111,8 +113,17 @@ public class LevelHandler {
         gameObject -> {
           if (gameObject.getId() == ObjectID.MapDataObject) {
             this.background = ((MapDataObject) gameObject).getBackground();
+            ArrayList<Vector2> spawnPoints = ((MapDataObject) gameObject).getSpawnPoints();
             if (this.background != null) {
               background.initialise(backgroundGroup);
+            }
+            if (moveToSpawns && spawnPoints != null && spawnPoints.size() >= players.size()) {
+              players.forEach(player -> {
+                Vector2 spawn = spawnPoints.get(0);
+                player.setX(spawn.getX());
+                player.setY(spawn.getY());
+                spawnPoints.remove(0);
+              });
             }
 
           } else {

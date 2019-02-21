@@ -10,7 +10,6 @@ import java.net.ServerSocket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
@@ -49,14 +48,14 @@ public class Server extends Application {
   public static LevelHandler levelHandler;
 
   private Settings settings;
-  private ArrayList<String> connectedList = new ArrayList<>();
+  private ArrayList<InetAddress> connectedList = new ArrayList<>();
   private List connected = Collections.synchronizedList(connectedList);
   public final AtomicInteger playerCount = new AtomicInteger(0);
   public final AtomicInteger readyCount = new AtomicInteger(0);
   private final AtomicBoolean running = new AtomicBoolean(false);
   private final AtomicBoolean gameOver = new AtomicBoolean(false);
   private final AtomicInteger counter = new AtomicInteger(0);
-  private final int serverUpdateRate = 10;
+  private final int serverUpdateRate = 3;
   private final int maxPlayers = 4;
   public ServerState serverState;
   private String threadName;
@@ -100,7 +99,8 @@ public class Server extends Application {
   public void start(Stage primaryStage) throws Exception {
     levelHandler = new LevelHandler(settings);
     levelHandler.changeMap(
-        new Map("Lobby", Path.convert("src/main/resources/menus/lobby.map"), GameState.Lobby));
+        new Map("Lobby", Path.convert("src/main/resources/menus/lobby.map"), GameState.Lobby),
+        false);
     running.set(true);
     LOGGER.debug("Running " + threadName);
     serverState = ServerState.WAITING_FOR_PLAYERS;
@@ -153,7 +153,7 @@ public class Server extends Application {
         updateSimulation();
 
         /** Send update to all clients */
-        if (counter.get() == serverUpdateRate && playerCount.get() > 0) {
+        if (playerCount.get() > 0 && counter.get() >= serverUpdateRate) {
           counter.set(0);
           sendWorldState();
         }
@@ -183,30 +183,29 @@ public class Server extends Application {
             player.jumpKey = temp.isJumpKey();
           }
         }));
-    levelHandler.getPlayers().forEach(player -> player.applyInput(false, null));
+    levelHandler.getPlayers().forEach(player -> player.applyInput());
 
     levelHandler
         .getGameObjects()
         .forEach(gameObject -> gameObject.updateCollision(levelHandler.getGameObjects()));
     /** Update Game Objects */
     levelHandler.getGameObjects().forEach(gameObject -> gameObject.update());
-    //System.out.println("Updated World");
   }
 
   public void sendToClients(byte[] buffer) {
     synchronized (connected) {
-      Iterator address = connected.iterator();
-      while (address.hasNext()) {
+      connected.forEach(address -> {
         try {
           DatagramPacket packet = new DatagramPacket(buffer, buffer.length,
-              InetAddress.getByName((String) address.next()), serverPort);
+              (InetAddress) address, serverPort);
           socket.send(packet);
+          System.out.println(packet.getData().toString());
         } catch (UnknownHostException e) {
           e.printStackTrace();
         } catch (IOException e) {
           e.printStackTrace();
         }
-      }
+      });
     }
   }
 
@@ -217,7 +216,7 @@ public class Server extends Application {
         gameObjectsFiltered.add(gameObject);
       }
     }
-    PacketGameState gameState = new PacketGameState(gameObjectsFiltered);
+    PacketGameState gameState = new PacketGameState(gameObjectsFiltered, 0);
 
     byte[] buffer = gameState.getData();
     sendToClients(buffer);
@@ -233,7 +232,7 @@ public class Server extends Application {
 
   public void nextMap() {
     Map nextMap = playlist.pop();
-    levelHandler.changeMap(nextMap);
+    levelHandler.changeMap(nextMap, true);
     //TODO Change to actual UUID
     PacketMap mapPacket = new PacketMap(nextMap.getName(), UUID.randomUUID());
     sendToClients(mapPacket.getData());

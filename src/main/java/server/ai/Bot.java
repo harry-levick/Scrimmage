@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 import server.ai.pathFind.AStar;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.players.Player;
+import shared.physics.Physics;
+import shared.physics.data.Collision;
 import shared.util.maths.Vector2;
 
 
@@ -52,6 +54,7 @@ public class Bot extends Player {
 
   @Override
   public void update() {
+    click = false;
     double prevDist, newDist;
     // Calculate the distance to the target from the previous loop
     prevDist = calcDist();
@@ -59,7 +62,6 @@ public class Bot extends Player {
     targetPlayer = findTarget(allPlayers);
     // Calculate the distance to the updated target
     newDist = calcDist();
-
     state = state.next(targetPlayer, this, prevDist, newDist);
 
     switch (state) {
@@ -81,12 +83,22 @@ public class Bot extends Player {
         break;
       case ATTACKING:
         //System.out.println("ATTACKING");
-        //executeAction(pathFinder.optimise(targetPlayer));
         // TODO think about how an attacking script would work.
+        if (canAttack()) {
+          mouseY = targetPlayer.getY();
+          mouseX = targetPlayer.getX();
+          click = true;
+        }
+
         break;
       case CHASING_ATTACKING:
         //System.out.println("CHASING-ATTACKING");
-        //executeAction(pathFinder.optimise(targetPlayer));
+        executeAction(pathFinder.optimise(targetPlayer));
+        if (canAttack()) {
+          mouseY = targetPlayer.getY();
+          mouseX = targetPlayer.getX();
+          click = true;
+        }
         // TODO calculate and execute the best path to the target whilst attacking.
         break;
       case FLEEING_ATTACKING:
@@ -97,6 +109,16 @@ public class Bot extends Player {
     }
 
     super.update();
+  }
+
+  private boolean canAttack() {
+    Collision inSight = Physics.raycast(new Vector2((float) this.getX(), (float) this.getY()),
+        new Vector2((float) targetPlayer.getX(), (float) targetPlayer.getY()));
+
+    // If the target player is in sight of the bot, they can shoot.
+    if (inSight == null) {
+      return true;
+    } else return false;
   }
 
   /**

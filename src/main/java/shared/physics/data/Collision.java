@@ -75,6 +75,31 @@ public class Collision {
     return collision;
   }
 
+  public static boolean haveCollided(Collider colA, Collider colB) {
+    if(colA == colB) return false;
+    boolean toRet = false;
+    switch(colA.getColliderType()) {
+      case BOX:
+        switch (colB.getColliderType()) {
+          case BOX:
+            toRet = Collider.boxBoxCollision((BoxCollider) colA, (BoxCollider) colB);
+            break;
+        }
+        break;
+      case CIRCLE:
+        switch (colB.getColliderType()) {
+
+        }
+        break;
+      case EDGE:
+        switch (colB.getColliderType()) {
+
+        }
+        break;
+    }
+    return toRet;
+  }
+
   public static Collision resolveCollision(CircleCollider a, Collider b) {
     switch (b.getColliderType()) {
       case BOX:
