@@ -398,7 +398,8 @@ public class AStar {
   private ArrayList<boolean[]> createPossibleActions(SearchNode currentPos) {
     ArrayList<boolean[]> possibleActions = new ArrayList<>();
 
-    Vector2 botPosition = this.bot.getTransform().getPos();
+    //Vector2 botPosition = this.bot.getTransform().getPos(); <- not taking an updated position in the theory of the search
+    Vector2 botPosition = new Vector2((float) currentPos.botX, (float) currentPos.botY);
     Vector2 botSize = this.bot.getTransform().getSize();
 
     // Box cast to the left
@@ -419,7 +420,7 @@ public class AStar {
     if (viscinityRight == null ||
         viscinityRight.getCollidedObject().getBodyType() != RigidbodyType.STATIC ||
         botPosition.exactMagnitude(viscinityRight.getPointOfCollision()) > 10) {
-      // If no collision, or if the collision is far away
+      // or if the collision is far away
       possibleActions.add(createAction(false, false, true));
     }
 
