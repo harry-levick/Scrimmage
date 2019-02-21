@@ -128,11 +128,13 @@ public class Player extends GameObject {
       this.facingRight = true;
     }
     if (leftKey) {
+      System.out.println("moved from " + getX());
       rb.moveX(speed * -1);
       animation.switchAnimation("walk");
       imageView.setScaleX(-1);
       this.facingRight = false;
       this.facingLeft = true;
+      System.out.println("to " + getX());
     }
 
     if (!rightKey && !leftKey) {
