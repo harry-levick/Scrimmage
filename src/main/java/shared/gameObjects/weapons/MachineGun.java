@@ -70,23 +70,20 @@ public class MachineGun extends Gun {
     imageView.setTranslateX(this.getX());
     imageView.setTranslateY(this.getY());
     */
-    /*
+    
     if (holder.getFacingLeft()) {
       imageView.setScaleX(-1);
-      imageView.setTranslateX(holderHandPos[0] + this.getGripFlipX());
-      imageView.setTranslateY(holderHandPos[1] + this.getGripFlipY());
+      imageView.setTranslateX(this.getGripFlipX());
+      imageView.setTranslateY(this.getGripFlipY());
     }
     else if (holder.getFacingRight()) {
       imageView.setScaleX(1);
-      imageView.setTranslateX(holderHandPos[0] + this.getGripX());
-      imageView.setTranslateY(holderHandPos[1] + this.getGripY());
+      imageView.setTranslateX(this.getGripX());
+      imageView.setTranslateY(this.getGripY());
     }
-    */
+    
     
     System.out.println(String.format("(%fx,%fy) (%fgx,%fgy) (%fhx,%fhy)", this.getX(), this.getY(), this.getGripX(), this.getGripY(), this.holderHandPos[0], this.holderHandPos[1]));
-    imageView.setTranslateX(this.getGripX());
-    imageView.setTranslateY(this.getGripY());
-    
   }
 
   @Override
@@ -108,15 +105,15 @@ public class MachineGun extends Gun {
   }
   
   public double getGripY() {
-    return holderHandPos[1] - 8;
+    return holderHandPos[1] - 10;
   }
   
   public double getGripFlipX() {
-    return -20;
+    return holderHandPos[0] - 55;
   }
   
   public double getGripFlipY() {
-    return -10;
+    return holderHandPos[1] - 10;
   }
   
   public double getMuzzleX() {
