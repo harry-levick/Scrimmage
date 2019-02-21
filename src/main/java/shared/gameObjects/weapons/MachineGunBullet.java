@@ -11,8 +11,6 @@ public class MachineGunBullet extends Bullet {
   public MachineGunBullet(
       double gunX,
       double gunY,
-      double sizeX,
-      double sizeY,
       double mouseX,
       double mouseY,
       double width,
@@ -21,7 +19,7 @@ public class MachineGunBullet extends Bullet {
       Player holder,
       UUID uuid) {
 
-    super(gunX, gunY, sizeX, sizeY, mouseX, mouseY, width, speed, damage, holder, uuid);
+    super(gunX, gunY, mouseX, mouseY, width, speed, damage, holder, uuid);
   }
 
   @Override
