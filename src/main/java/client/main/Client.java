@@ -108,7 +108,7 @@ public class Client extends Application {
         }
 
         /** Apply Input */
-        levelHandler.getClientPlayer().applyInput(multiplayer, connectionHandler);
+        levelHandler.getClientPlayer().applyInput();
 
         if (!multiplayer) {
           /**Calculate Score*/
@@ -129,7 +129,7 @@ public class Client extends Application {
             }
           }
           levelHandler.getBotPlayerList()
-              .forEach(bot -> bot.applyInput(multiplayer, connectionHandler));
+              .forEach(bot -> bot.applyInput());
         }
 
         /** Render Game Objects */

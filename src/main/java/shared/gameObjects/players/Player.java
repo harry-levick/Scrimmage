@@ -116,7 +116,7 @@ public class Player extends GameObject {
       }
     }
   }
-  public void applyInput(boolean multiplayer, ConnectionHandler connectionHandler) {
+  public void applyInput() {
     if (rightKey) {
       rb.moveX(speed);
       animation.switchAnimation("walk");
