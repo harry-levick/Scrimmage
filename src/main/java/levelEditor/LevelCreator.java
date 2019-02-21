@@ -8,6 +8,7 @@ import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.stage.Stage;
 import shared.gameObjects.ExampleFloorObject;
+import shared.gameObjects.ExampleObject;
 import shared.gameObjects.ExampleWallObject;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.MapDataObject;
@@ -69,10 +70,14 @@ public class LevelCreator extends Application {
     gameObjects.add(
         new ButtonSettings(getAbs(20), getAbs(13), getAbs(8), getAbs(2), ObjectID.Button,
             UUID.randomUUID()));
+
     for (int i = 0; i < 24; i++) {
       //top row wall
       gameObjects.add(
           new ExampleWallObject(getAbs(i * 2), getAbs(0), getAbs(2), getAbs(2), ObjectID.Bot,
+              UUID.randomUUID()));
+      gameObjects.add(
+          new ExampleObject(getAbs(i * 2), getAbs(10), getAbs(1), getAbs(1), ObjectID.Bot,
               UUID.randomUUID()));
     }
     for (int i = 0; i < 12; i++) {

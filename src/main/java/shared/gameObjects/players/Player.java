@@ -40,7 +40,7 @@ public class Player extends GameObject {
     score = 0;
     bc = new BoxCollider(this, false);
     addComponent(bc);
-    rb = new Rigidbody(RigidbodyType.DYNAMIC, 100, 10, 0.2f, new MaterialProperty(0.005f, 0, 0),
+    rb = new Rigidbody(RigidbodyType.DYNAMIC, 80, 8, 0.2f, new MaterialProperty(0.005f, 0, 0),
         null, this);
     addComponent(rb);
     this.health = 100;
@@ -102,19 +102,7 @@ public class Player extends GameObject {
   }
 
   public void checkGrounded() {
-    ArrayList<Collision> cols = Physics.boxcastAll(
-        getTransform().getPos().add(Vector2.Down().mult(getTransform().getSize().getY())).add(Vector2.Right().mult(getTransform().getSize().getX()*0.125f)),
-        getTransform().getSize().mult(new Vector2(0.75f, 0.05f)));
-    if (cols.isEmpty()) {
-      grounded = false;
-    } else {
-      for (Collision c : cols) {
-        if (c.getCollidedObject().getBodyType() == RigidbodyType.STATIC) {
-          grounded = true;
-          return;
-        }
-      }
-    }
+    grounded = rb.isGrounded();
   }
   public void applyInput(boolean multiplayer, ConnectionHandler connectionHandler) {
     if (rightKey) {
