@@ -63,6 +63,7 @@ public class AStar {
     double botX;
     double botY;
     Bot nodeBot;
+    Player nodeEnemy;
 
     boolean visited = false;
     // The action used to get to the child node.
@@ -87,6 +88,7 @@ public class AStar {
             2. this.botY = cloneBot.getY()
           */
         // Create a copy of the parents simulated bot
+        this.nodeEnemy = new Player(enemy);
         this.nodeBot = new Bot(parent.nodeBot);
         nodeBot.simulateAction(action);
         nodeBot.simulateApplyInput();
@@ -108,6 +110,7 @@ public class AStar {
         // This is the starting node so distanceElapsed is 0
         distanceElapsed = 0;
         this.nodeBot = bot;
+        this.nodeEnemy = enemy;
         this.botX = bot.getX();
         this.botY = bot.getY();
         // Calculate the heuristic value of the node.
@@ -142,7 +145,7 @@ public class AStar {
      */
     public double calcRemainingH(Player enemy, List<Weapon> allItems) {
       Vector2 botPos = new Vector2((float) botX, (float) botY);
-      Vector2 enemyPos = new Vector2((float) enemy.getX(), (float) enemy.getY());
+      Vector2 enemyPos = new Vector2((float) nodeEnemy.getX(), (float) nodeEnemy.getY());
       double totalH = botPos.exactMagnitude(enemyPos);
 
       if (!allItems.isEmpty()) {

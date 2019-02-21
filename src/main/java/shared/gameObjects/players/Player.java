@@ -50,6 +50,14 @@ public class Player extends GameObject {
     holding = null;
   }
 
+  /**
+   * Cloning constructor
+   * @param that
+   */
+  public Player(Player that) {
+    this(that.getX(), that.getY(), that.getUUID());
+  }
+
   // Initialise the animation
   @Override
   public void initialiseAnimation() {
@@ -108,7 +116,7 @@ public class Player extends GameObject {
     grounded = rb.isGrounded();
   }
 
-  public void applyInput(boolean multiplayer, ConnectionHandler connectionHandler) {
+  public void applyInput() {
     if (rightKey) {
       rb.moveX(speed);
       animation.switchAnimation("walk");
