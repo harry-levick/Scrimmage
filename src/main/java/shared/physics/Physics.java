@@ -22,6 +22,7 @@ public class Physics {
   private static Physics ourInstance = new Physics();
 
   private Physics() {
+    gameObjects = new ArrayList<>();
   }
   // TODO complete raycast methods
 

@@ -1,5 +1,6 @@
 package shared.gameObjects;
 
+import client.main.Settings;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -26,6 +27,8 @@ public abstract class GameObject implements Serializable {
 
   protected UUID objectUUID;
   protected ObjectID id;
+
+  protected Settings settings;
 
   protected transient ImageView imageView;
   protected transient Group root;
@@ -300,6 +303,10 @@ public abstract class GameObject implements Serializable {
     if (!destroyed) {
       active = state;
     }
+  }
+
+  public void setSettings(Settings settings) {
+    this.settings = settings;
   }
 
   public boolean isUpdated() {
