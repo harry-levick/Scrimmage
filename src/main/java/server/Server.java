@@ -55,7 +55,7 @@ public class Server extends Application {
   private final AtomicBoolean running = new AtomicBoolean(false);
   private final AtomicBoolean gameOver = new AtomicBoolean(false);
   private final AtomicInteger counter = new AtomicInteger(0);
-  private final int serverUpdateRate = 10;
+  private final int serverUpdateRate = 3;
   private final int maxPlayers = 4;
   public ServerState serverState;
   private String threadName;
@@ -152,7 +152,7 @@ public class Server extends Application {
         updateSimulation();
 
         /** Send update to all clients */
-        if (playerCount.get() > 0) {
+        if (playerCount.get() > 0 && counter.get() >= serverUpdateRate) {
           counter.set(0);
           sendWorldState();
         }
