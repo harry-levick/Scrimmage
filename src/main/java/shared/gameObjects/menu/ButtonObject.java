@@ -6,6 +6,11 @@ import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.components.BoxCollider;
+import shared.gameObjects.components.Rigidbody;
+import shared.physics.data.AngularData;
+import shared.physics.data.MaterialProperty;
+import shared.physics.types.RigidbodyType;
 
 public abstract class ButtonObject extends GameObject {
 
@@ -23,6 +28,16 @@ public abstract class ButtonObject extends GameObject {
       double x, double y, double sizeX, double sizeY, ObjectID id, UUID objectUUID) {
     super(x, y, sizeX, sizeY, id, objectUUID);
     button = new Button("", imageView);
+    addComponent(
+        new Rigidbody(
+            RigidbodyType.STATIC,
+            0,
+            1,
+            0,
+            new MaterialProperty(0.1f, 1, 1),
+            new AngularData(0, 0, 0, 0),
+            this));
+    addComponent(new BoxCollider(this, false));
   }
 
   @Override

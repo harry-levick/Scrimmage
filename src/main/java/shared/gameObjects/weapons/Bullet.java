@@ -74,23 +74,23 @@ public abstract class Bullet extends GameObject {
 
   @Override
   public void update() {
-    System.out.println("@Bullet.update start");
+    //System.out.println("@Bullet.update start");
     ArrayList<Collision> collision = Physics.boxcastAll(
         new Vector2((float) getX(), (float) getY()),
         new Vector2((float) this.width, (float) this.width));
     ArrayList<Player> playersBeingHit = new ArrayList<>();
 
-    System.out.println("=============start==============");
+    //System.out.println("=============start==============");
     for (Collision c : collision) {
       GameObject g = c.getCollidedObject().getParent();
       if (g.getId() == ObjectID.Player && !g.equals(holder)) {
         System.out.print(g.toString() + " -> ");
-        System.out.println(((Player) g).getHealth());
+        //System.out.println(((Player) g).getHealth());
         playersBeingHit.add((Player) g);
         isHit = true;
       }
     }
-    System.out.println("================end===========");
+    //System.out.println("================end===========");
     
     /*
     if (((Collider)(getComponent(ComponentType.COLLIDER))).onCollisionEnter()) {
@@ -112,7 +112,7 @@ public abstract class Bullet extends GameObject {
     else {
       Client.levelHandler.delGameObject(this);
     }
-    System.out.println("@Bullet.update end");
+    //System.out.println("@Bullet.update end");
   }
 
   @Override
