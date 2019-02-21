@@ -1,9 +1,6 @@
 package shared.gameObjects.players;
 
-import client.handlers.connectionHandler.ConnectionHandler;
 import client.main.Client;
-import client.main.Settings;
-import java.util.ArrayList;
 import java.util.UUID;
 import javafx.scene.Group;
 import shared.gameObjects.GameObject;
@@ -12,11 +9,8 @@ import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.weapons.Weapon;
-import shared.physics.Physics;
-import shared.physics.data.Collision;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.RigidbodyType;
-import shared.util.maths.Vector2;
 
 public class Player extends GameObject {
 
@@ -43,7 +37,7 @@ public class Player extends GameObject {
     score = 0;
     bc = new BoxCollider(this, false);
     addComponent(bc);
-    rb = new Rigidbody(RigidbodyType.DYNAMIC, 100, 10, 0.2f, new MaterialProperty(0.005f, 0, 0),
+    rb = new Rigidbody(RigidbodyType.DYNAMIC, 80, 8, 0.2f, new MaterialProperty(0.005f, 0, 0),
         null, this);
     addComponent(rb);
     this.health = 100;
@@ -91,37 +85,25 @@ public class Player extends GameObject {
 
   @Override
   public String getState() {
-    return objectUUID + ";" + getX() + ";" + getY() + ";" + animation.getName() + ";" + health;
+    return objectUUID + ";" + "player" + ";" + getX() + ";" + getY() + ";" + animation.getName()
+        + ";" + health;
     //add holding
   }
 
   @Override
   public void setState(String data) {
     String[] unpackedData = data.split(";");
-    setX(Double.parseDouble(unpackedData[1]));
-    setY(Double.parseDouble(unpackedData[2]));
-    this.animation.switchAnimation(unpackedData[3]);
-    this.health = Integer.parseInt(unpackedData[4]);
+    setX(Double.parseDouble(unpackedData[2]));
+    setY(Double.parseDouble(unpackedData[3]));
+    this.animation.switchAnimation(unpackedData[4]);
+    this.health = Integer.parseInt(unpackedData[5]);
   }
 
   public void checkGrounded() {
-    ArrayList<Collision> cols = Physics.boxcastAll(
-        getTransform().getPos().add(Vector2.Down().mult(getTransform().getSize().getY()))
-            .add(Vector2.Right().mult(getTransform().getSize().getX() * 0.125f)),
-        getTransform().getSize().mult(new Vector2(0.75f, 0.05f)));
-    if (cols.isEmpty()) {
-      grounded = false;
-    } else {
-      for (Collision c : cols) {
-        if (c.getCollidedObject().getBodyType() == RigidbodyType.STATIC) {
-          grounded = true;
-          return;
-        }
-      }
-    }
+    grounded = rb.isGrounded();
   }
-  
-  public void applyInput(boolean multiplayer, ConnectionHandler connectionHandler) {
+
+  public void applyInput() {
     if (rightKey) {
       rb.moveX(speed);
       animation.switchAnimation("walk");
@@ -162,7 +144,7 @@ public class Player extends GameObject {
       this.getHolding().setY(this.getY() + 70);
     }
   }
-  
+
   /**
    * Check if the current holding weapon is valid or not
    *
@@ -237,28 +219,22 @@ public class Player extends GameObject {
     }
   }
 
-  @Override
-  public void setSettings(Settings settings) {
-    this.settings = settings;
-    if (holding != null) {
-      holding.setSettings(settings);
-    }
-  }
 
   public int getScore() {
     return score;
   }
-  
+
   public double[] getHandPos() {
-    if (jumped && facingLeft)
-      return new double[] {this.getHandLeftJumpX(), this.getHandLeftJumpY()};
-    else if (jumped && facingRight)
-      return new double[] {this.getHandRightJumpX(), this.getHandRightJumpY()};
-    else if (facingLeft)
-      return new double[] {this.getHandLeftX(), this.getHandLeftY()};
-    else if (facingRight)
-      return new double[] {this.getHandRightX(), this.getHandRightY()};
-    return new double[] {this.getHandRightX(), this.getHandRightY()};
+    if (jumped && facingLeft) {
+      return new double[]{this.getHandLeftJumpX(), this.getHandLeftJumpY()};
+    } else if (jumped && facingRight) {
+      return new double[]{this.getHandRightJumpX(), this.getHandRightJumpY()};
+    } else if (facingLeft) {
+      return new double[]{this.getHandLeftX(), this.getHandLeftY()};
+    } else if (facingRight) {
+      return new double[]{this.getHandRightX(), this.getHandRightY()};
+    }
+    return new double[]{this.getHandRightX(), this.getHandRightY()};
   }
   
   /**
@@ -344,7 +320,6 @@ public class Player extends GameObject {
   public void setFacingLeft(boolean b) {
     this.facingLeft = b;
     this.facingRight = !b;
-    animation.switchAnimation("walk");
   }
   
   public boolean getFacingRight() {
@@ -354,6 +329,5 @@ public class Player extends GameObject {
   public void setFacingRight(boolean b) {
     this.facingLeft = !b;
     this.facingRight = b;
-    animation.switchAnimation("walk");
   }
 }

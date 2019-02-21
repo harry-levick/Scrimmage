@@ -6,7 +6,6 @@ import java.io.PrintWriter;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.Socket;
-import java.util.Arrays;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import shared.packets.Packet;
@@ -50,12 +49,13 @@ public class ConnectionHandler extends Thread {
 
     Client.multiplayer = true;
     while (connected) {
-      buffer = new byte[1024];
+      buffer = new byte[5000];
       DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
       try {
         clientSocket.receive(packet);
-        System.out.println(packet.getData().toString());
-        received.add(Arrays.toString(packet.getData()));
+        String msg = new String(packet.getData(), packet.getOffset(), packet.getLength());
+        System.out.println(msg.trim());
+        received.add(msg.trim());
       } catch (IOException e) {
         e.printStackTrace();
       }
