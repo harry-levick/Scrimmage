@@ -41,8 +41,6 @@ public class MachineGun extends Gun {
       double bulletY = holder.getFacingRight()? getMuzzleY() : getMuzzleFlipY(); 
       Bullet bullet =
           new MachineGunBullet(
-              //getX() + (holder.getFacingRight()? getMuzzleX() : getMuzzleFlipX()),
-              //getY() + (holder.getFacingRight()? getMuzzleY() : getMuzzleFlipY()),
               bulletX,
               bulletY,
               mouseX,
