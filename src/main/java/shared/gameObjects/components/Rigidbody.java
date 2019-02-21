@@ -176,7 +176,8 @@ public class Rigidbody extends Component implements Serializable {
           continue;
         }
 
-        float e = Math.max(getMaterial().getRestitution(), c.getCollidedObject().getMaterial().getRestitution());
+        float e = Math.max(getMaterial().getRestitution(),
+            c.getCollidedObject().getMaterial().getRestitution());
 
         float j = -1*(1 + e) * vOnNormal;
         j /= inv_mass;
@@ -189,13 +190,13 @@ public class Rigidbody extends Component implements Serializable {
         deltaPosUpdate.add(correctPosition(c));
         Vector2 velocityCol = velocity.sub(b.getVelocity());
         float vOnNormal = velocityCol.dot(c.getNormalCollision());
-        if(vOnNormal > 0) {
+        if (vOnNormal > 0) {
           continue;
         }
 
         float e = Math.max(getMaterial().getRestitution(), b.getMaterial().getRestitution());
 
-        float j = -1*(1 + e) * vOnNormal;
+        float j = -1 * (1 + e) * vOnNormal;
         j /= (inv_mass + b.inv_mass);
 
         Vector2 impulse = c.getNormalCollision().mult(j);
