@@ -26,14 +26,14 @@ public class ConnectionHandler extends Thread {
   private PrintWriter out;
 
 
-  public ConnectionHandler(String address) {
+  public ConnectionHandler(String test) {
     connected = true;
     port = 4446;
     received = new LinkedBlockingQueue<String>();
     this.address = "192.168.0.13";
     try {
       clientSocket = new DatagramSocket(port);
-      socket = new Socket(address, port);
+      socket = new Socket(this.address, 4445);
       out = new PrintWriter(socket.getOutputStream(), true);
     } catch (IOException e) {
       e.printStackTrace();
@@ -46,7 +46,7 @@ public class ConnectionHandler extends Thread {
               Client.levelHandler.getClientPlayer().getUUID(), Client.settings.getUsername(),
               Client.levelHandler.getClientPlayer().getX(),
               Client.levelHandler.getClientPlayer().getY());
-    send(joinPacket.getData());
+    send(joinPacket.getString());
 
     Client.multiplayer = true;
     while (connected) {
@@ -54,6 +54,7 @@ public class ConnectionHandler extends Thread {
       DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
       try {
         clientSocket.receive(packet);
+        System.out.println(packet.getData().toString());
         received.add(Arrays.toString(packet.getData()));
       } catch (IOException e) {
         e.printStackTrace();
@@ -74,7 +75,9 @@ public class ConnectionHandler extends Thread {
   }
 
 
-  public void send(byte[] data) {
-    out.println(data.toString());
+  public void send(String data) {
+    System.out.println(data);
+    System.out.println(Client.levelHandler.getClientPlayer().getX());
+    out.println(data);
   }
 }

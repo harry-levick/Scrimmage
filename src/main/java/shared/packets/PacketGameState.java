@@ -12,11 +12,10 @@ public class PacketGameState extends Packet {
 
   public PacketGameState(ArrayList<GameObject> gameObjects) {
     packetID = PacketID.GAMESTATE.getID();
-    String dataString = "" + packetID;
+    data = "" + packetID;
     for (GameObject object : gameObjects) {
-      dataString += "," + object.getState();
+      data += "," + object.getState();
     }
-    data = dataString.getBytes();
   }
 
   public PacketGameState(String data) {

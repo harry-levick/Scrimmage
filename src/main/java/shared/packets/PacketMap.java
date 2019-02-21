@@ -11,7 +11,7 @@ public class PacketMap extends Packet {
     packetID = PacketID.MAP.getID();
     this.name = name;
     this.uuid = uuid;
-    data = (packetID + "," + name).getBytes();
+    data = packetID + "," + name;
   }
 
   public PacketMap(String data) {
