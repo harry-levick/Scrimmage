@@ -148,20 +148,20 @@ public class Client extends Application {
         if (!multiplayer && singleplayerGame && levelHandler.getPlayers().size() > 1) {
           /**Calculate Score*/
             ArrayList<Player> alive = new ArrayList<>();
-            for (Player p : levelHandler.getPlayers()) {
-              if (p.isActive()) {
-                alive.add(p);
-              }
-              if (alive.size() > 1) {
-                break;
-              }
+          for (Player p : levelHandler.getPlayers()) {
+            if (p.isActive()) {
+              alive.add(p);
+            }
+            if (alive.size() > 1) {
+              break;
+            }
+          }
             if (alive.size() == 1) {
               alive.forEach(player -> player.increaseScore());
               levelHandler.getPlayers().forEach(player -> player.reset());
               Map nextMap = playlist.poll();
               levelHandler.changeMap(nextMap, true);
             }
-          }
           /** Move bots */
           levelHandler.getBotPlayerList()
               .forEach(bot -> bot.applyInput());
