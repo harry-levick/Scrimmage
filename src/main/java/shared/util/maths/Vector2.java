@@ -146,7 +146,7 @@ public class Vector2 implements Serializable {
    */
   public float angleBetween(Vector2 vector) {
     if (vector.magnitude(Zero()) == 0) {
-      return (float) Math.tan(getY() / getX());
+      return (float) Math.atan(getY() / getX());
     }
     return (float) Math.acos(dot(vector) / (magnitude(Zero()) * vector.magnitude(Zero())));
   }

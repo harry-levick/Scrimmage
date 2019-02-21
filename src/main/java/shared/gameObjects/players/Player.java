@@ -112,13 +112,11 @@ public class Player extends GameObject {
       this.facingRight = true;
     }
     if (leftKey) {
-      System.out.println("moved from " + getX());
       rb.moveX(speed * -1);
       animation.switchAnimation("walk");
       imageView.setScaleX(-1);
       this.facingRight = false;
       this.facingLeft = true;
-      System.out.println("to " + getX());
     }
 
     if (!rightKey && !leftKey) {
@@ -216,7 +214,9 @@ public class Player extends GameObject {
 
   public void setHolding(Weapon holding) {
     this.holding = holding;
-    holding.setSettings(settings);
+    if (holding != null) {
+      holding.setSettings(settings);
+    }
   }
 
 
@@ -317,7 +317,19 @@ public class Player extends GameObject {
     return this.facingLeft;
   }
   
+  public void setFacingLeft(boolean b) {
+    this.facingLeft = b;
+    this.facingRight = !b;
+    animation.switchAnimation("walk");
+  }
+  
   public boolean getFacingRight() {
     return this.facingRight;
+  }
+  
+  public void setFacingRight(boolean b) {
+    this.facingLeft = !b;
+    this.facingRight = b;
+    animation.switchAnimation("walk");
   }
 }
