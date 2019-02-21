@@ -49,7 +49,7 @@ public class ConnectionHandler extends Thread {
 
     Client.multiplayer = true;
     while (connected) {
-      buffer = new byte[5000];
+      buffer = new byte[1024];
       DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
       try {
         clientSocket.receive(packet);
