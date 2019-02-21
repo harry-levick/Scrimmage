@@ -8,6 +8,7 @@ import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.stage.Stage;
 import shared.gameObjects.ExampleFloorObject;
+import shared.gameObjects.ExampleObject;
 import shared.gameObjects.ExampleWallObject;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.MapDataObject;
@@ -18,6 +19,7 @@ import shared.gameObjects.menu.main.ButtonSettings;
 import shared.gameObjects.menu.main.ButtonSingleplayer;
 import shared.gameObjects.menu.main.SoundSlider;
 import shared.gameObjects.menu.main.SoundSlider.SOUND_TYPE;
+import shared.gameObjects.menu.multiplayer.ButtonJoin;
 import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.MapLoader;
@@ -71,6 +73,7 @@ public class LevelCreator extends Application {
     gameObjects.add(
         new ButtonSettings(getAbs(20), getAbs(13), getAbs(8), getAbs(2), ObjectID.Button,
             UUID.randomUUID()));
+
     for (int i = 0; i < 24; i++) {
       //top row wall
       gameObjects.add(
@@ -86,7 +89,78 @@ public class LevelCreator extends Application {
           new ExampleWallObject(getAbs(46), getAbs((i * 2) + 2), getAbs(2), getAbs(2), ObjectID.Bot,
               UUID.randomUUID()));
     }
-    for (int i = 0; i < 13; i++) {
+    for (int i = 0; i < 12; i++) {
+      // bottom row floor
+      gameObjects.add(
+          new ExampleFloorObject(getAbs(i * 4), getAbs(25), getAbs(4), getAbs(2), ObjectID.Bot,
+              UUID.randomUUID()));
+    }
+    MapLoader.saveMap(gameObjects, mapDataObject, filepath + filename + ".map");
+
+    ////////////////////////////////////////
+    // Multiplayer
+    ////////////////////////////////////////
+    filename = "multiplayer";
+    gameObjects = new ArrayList<GameObject>();
+    playerSpawns = new ArrayList<Player>();
+    mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.MAIN_MENU);
+    mapDataObject.setBackground(
+        new Background("images/backgrounds/background1.png", ObjectID.Background,
+            UUID.randomUUID()));
+    gameObjects.add(
+        new ButtonJoin(getAbs(20), getAbs(7), getAbs(8), getAbs(2), ObjectID.Button,
+            UUID.randomUUID()));
+
+    for (int i = 0; i < 24; i++) {
+      //top row wall
+      gameObjects.add(
+          new ExampleWallObject(getAbs(i * 2), getAbs(0), getAbs(2), getAbs(2), ObjectID.Bot,
+              UUID.randomUUID()));
+    }
+    for (int i = 0; i < 12; i++) {
+      //side col walls
+      gameObjects.add(
+          new ExampleWallObject(getAbs(0), getAbs((i * 2) + 2), getAbs(2), getAbs(2), ObjectID.Bot,
+              UUID.randomUUID()));
+      gameObjects.add(
+          new ExampleWallObject(getAbs(46), getAbs((i * 2) + 2), getAbs(2), getAbs(2), ObjectID.Bot,
+              UUID.randomUUID()));
+    }
+    for (int i = 0; i < 12; i++) {
+      // bottom row floor
+      gameObjects.add(
+          new ExampleFloorObject(getAbs(i * 4), getAbs(25), getAbs(4), getAbs(2), ObjectID.Bot,
+              UUID.randomUUID()));
+    }
+    MapLoader.saveMap(gameObjects, mapDataObject, filepath + filename + ".map");
+
+    ////////////////////////////////////////
+    // Multiplayer
+    ////////////////////////////////////////
+    filename = "lobby";
+    gameObjects = new ArrayList<GameObject>();
+    playerSpawns = new ArrayList<Player>();
+    mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.MAIN_MENU);
+    mapDataObject.setBackground(
+        new Background("images/backgrounds/background1.png", ObjectID.Background,
+            UUID.randomUUID()));
+
+    for (int i = 0; i < 24; i++) {
+      //top row wall
+      gameObjects.add(
+          new ExampleWallObject(getAbs(i * 2), getAbs(0), getAbs(2), getAbs(2), ObjectID.Bot,
+              UUID.randomUUID()));
+    }
+    for (int i = 0; i < 12; i++) {
+      //side col walls
+      gameObjects.add(
+          new ExampleWallObject(getAbs(0), getAbs((i * 2) + 2), getAbs(2), getAbs(2), ObjectID.Bot,
+              UUID.randomUUID()));
+      gameObjects.add(
+          new ExampleWallObject(getAbs(46), getAbs((i * 2) + 2), getAbs(2), getAbs(2), ObjectID.Bot,
+              UUID.randomUUID()));
+    }
+    for (int i = 0; i < 12; i++) {
       // bottom row floor
       gameObjects.add(
           new ExampleFloorObject(getAbs(i * 4), getAbs(25), getAbs(4), getAbs(2), ObjectID.Bot,
@@ -104,10 +178,17 @@ public class LevelCreator extends Application {
     mapDataObject.setBackground(
         new Background("images/backgrounds/background1.png", ObjectID.Background,
             UUID.randomUUID()));
-    for (int i = 0; i < 13; i++) {
+    mapDataObject.addSpawnPoint(getAbs(4), getAbs(21));
+    mapDataObject.addSpawnPoint(getAbs(16), getAbs(21));
+    mapDataObject.addSpawnPoint(getAbs(27), getAbs(21));
+    mapDataObject.addSpawnPoint(getAbs(37), getAbs(21));
+    for (int i = 0; i < 12; i++) {
       // bottom row floor
       gameObjects.add(
           new ExampleFloorObject(getAbs(i * 4), getAbs(25), getAbs(4), getAbs(2), ObjectID.Bot,
+              UUID.randomUUID()));
+      gameObjects.add(
+          new ExampleObject(getAbs(i * 2), getAbs(10), getAbs(1), getAbs(1), ObjectID.Bot,
               UUID.randomUUID()));
     }
     MapLoader.saveMap(gameObjects, mapDataObject, filepath + filename + ".map");
@@ -141,7 +222,7 @@ public class LevelCreator extends Application {
           new ExampleWallObject(getAbs(46), getAbs((i * 2) + 2), getAbs(2), getAbs(2), ObjectID.Bot,
               UUID.randomUUID()));
     }
-    for (int i = 0; i < 13; i++) {
+    for (int i = 0; i < 12; i++) {
       // bottom row floor
       gameObjects.add(
           new ExampleFloorObject(getAbs(i * 4), getAbs(25), getAbs(4), getAbs(2), ObjectID.Bot,
