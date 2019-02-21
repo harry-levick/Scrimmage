@@ -181,10 +181,6 @@ public class LevelCreator extends Application {
     mapDataObject.setBackground(
         new Background("images/backgrounds/background1.png", ObjectID.Background,
             UUID.randomUUID()));
-    mapDataObject.addSpawnPoint(getAbs(4), getAbs(21));
-    mapDataObject.addSpawnPoint(getAbs(16), getAbs(21));
-    mapDataObject.addSpawnPoint(getAbs(27), getAbs(21));
-    mapDataObject.addSpawnPoint(getAbs(37), getAbs(21));
     for (int i = 0; i < 12; i++) {
       // bottom row floor
       gameObjects.add(
