@@ -152,6 +152,8 @@ public class Client extends Application {
         levelHandler
             .getGameObjects()
             .forEach(gameObject -> gameObject.updateCollision(levelHandler.getGameObjects()));
+        Physics.processCollisions();
+
         /** Update Game Objects */
         levelHandler.getGameObjects().forEach(gameObject -> gameObject.update());
         accumulatedTime -= timeStep;
