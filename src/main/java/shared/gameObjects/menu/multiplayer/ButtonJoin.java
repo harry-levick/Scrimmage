@@ -36,13 +36,12 @@ public class ButtonJoin extends ButtonObject {
 
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
-    System.out.println("test");
     Client.connectionHandler = new ConnectionHandler("230.0.0.0");
     Client.connectionHandler.start();
     button.disarm();
     Client.levelHandler.changeMap(
-        new Map("Lobby", Path.convert("src/main/resources/menus/lobby.map"), GameState.Lobby));
-    System.out.println("sdf");
+        new Map("Lobby", Path.convert("src/main/resources/menus/lobby.map"), GameState.Lobby),
+        false);
   }
 
 }

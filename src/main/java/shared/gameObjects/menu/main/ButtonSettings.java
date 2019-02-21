@@ -34,6 +34,6 @@ public class ButtonSettings extends ButtonObject {
     super.doOnClick(e);
     //System.out.println("test");
     Client.levelHandler.changeMap(
-        new Map("Settings", Menu.SETTINGS.getMenuPath(), GameState.MAIN_MENU));
+        new Map("Settings", Menu.SETTINGS.getMenuPath(), GameState.MAIN_MENU), false);
   }
 }

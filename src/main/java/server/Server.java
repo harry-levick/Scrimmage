@@ -99,7 +99,8 @@ public class Server extends Application {
   public void start(Stage primaryStage) throws Exception {
     levelHandler = new LevelHandler(settings);
     levelHandler.changeMap(
-        new Map("Lobby", Path.convert("src/main/resources/menus/lobby.map"), GameState.Lobby));
+        new Map("Lobby", Path.convert("src/main/resources/menus/lobby.map"), GameState.Lobby),
+        false);
     running.set(true);
     LOGGER.debug("Running " + threadName);
     serverState = ServerState.WAITING_FOR_PLAYERS;
@@ -231,7 +232,7 @@ public class Server extends Application {
 
   public void nextMap() {
     Map nextMap = playlist.pop();
-    levelHandler.changeMap(nextMap);
+    levelHandler.changeMap(nextMap, true);
     //TODO Change to actual UUID
     PacketMap mapPacket = new PacketMap(nextMap.getName(), UUID.randomUUID());
     sendToClients(mapPacket.getData());
