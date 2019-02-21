@@ -1,6 +1,9 @@
 package shared.gameObjects.players;
 
+import client.handlers.connectionHandler.ConnectionHandler;
 import client.main.Client;
+import client.main.Settings;
+import java.util.ArrayList;
 import java.util.UUID;
 import javafx.scene.Group;
 import shared.gameObjects.GameObject;
@@ -9,8 +12,11 @@ import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.weapons.Weapon;
+import shared.physics.Physics;
+import shared.physics.data.Collision;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.RigidbodyType;
+import shared.util.maths.Vector2;
 
 public class Player extends GameObject {
 
@@ -85,18 +91,17 @@ public class Player extends GameObject {
 
   @Override
   public String getState() {
-    return objectUUID + ";" + "player" + ";" + getX() + ";" + getY() + ";" + animation.getName()
-        + ";" + health;
+    return objectUUID + ";" + getX() + ";" + getY() + ";" + animation.getName() + ";" + health;
     //add holding
   }
 
   @Override
   public void setState(String data) {
     String[] unpackedData = data.split(";");
-    setX(Double.parseDouble(unpackedData[2]));
-    setY(Double.parseDouble(unpackedData[3]));
-    this.animation.switchAnimation(unpackedData[4]);
-    this.health = Integer.parseInt(unpackedData[5]);
+    setX(Double.parseDouble(unpackedData[1]));
+    setY(Double.parseDouble(unpackedData[2]));
+    this.animation.switchAnimation(unpackedData[3]);
+    this.health = Integer.parseInt(unpackedData[4]);
   }
 
   public void checkGrounded() {
