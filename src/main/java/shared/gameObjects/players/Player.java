@@ -325,7 +325,6 @@ public class Player extends GameObject {
   public void setFacingLeft(boolean b) {
     this.facingLeft = b;
     this.facingRight = !b;
-    animation.switchAnimation("walk");
   }
   
   public boolean getFacingRight() {
@@ -335,6 +334,5 @@ public class Player extends GameObject {
   public void setFacingRight(boolean b) {
     this.facingLeft = !b;
     this.facingRight = b;
-    animation.switchAnimation("walk");
   }
 }
