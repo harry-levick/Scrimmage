@@ -1,15 +1,20 @@
 package shared.gameObjects.weapons;
 
 import client.handlers.audioHandler.AudioHandler;
+import javafx.scene.transform.Rotate;
 import java.util.UUID;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
 import shared.util.Path;
+import shared.util.maths.Vector2;
 
 public class MachineGun extends Gun {
 
   private static String imagePath = "images/weapons/machinegun.png"; // path to Machine Gun image
+  private static String audioPath = "audio/sound-effects/laser_gun.wav"; // path to Machine Gun sfx
+  private static double sizeX = 80, sizeY = 20;
   private double[] holderHandPos;
+  private Rotate rotate;
 
   public MachineGun(double x, double y, String name, Player holder,
       UUID uuid) {
@@ -17,8 +22,8 @@ public class MachineGun extends Gun {
     super(
         x,
         y,
-        80,
-        20,
+        sizeX, // sizeX
+        sizeY, // sizeY
         ObjectID.Weapon, // ObjectID
         5, // damage
         10, // weight
@@ -32,6 +37,12 @@ public class MachineGun extends Gun {
         false, // singleHanded
         uuid);
     holderHandPos = holder.getHandPos();
+    
+    rotate = new Rotate();
+    // pivot = position of the grip
+    // If changing the value of this, change the value in all getGrip() methods
+    rotate.setPivotX(20);
+    rotate.setPivotY(10);
   }
 
   @Override
@@ -67,13 +78,33 @@ public class MachineGun extends Gun {
   @Override
   public void render() {
     super.render();
-
+    
+    imageView.getTransforms().remove(rotate);
+    
+    double mouseX = holder.mouseX;
+    double mouseY = holder.mouseY;
+    Vector2 mouseV = new Vector2((float)mouseX, (float)mouseY);
+    Vector2 gripV = new Vector2((float)this.getGripX(), (float)this.getGripY());
+    double angle = mouseV.sub(gripV).angle() * 180 / 3.141592654f;  // degree
+    //System.out.println("angle="+angle);
+    
+    // Change the facing of the player when aiming the other way
+    if (holder.getFacingRight() && mouseX < this.getGripX())
+      holder.setFacingLeft(true);
+    else if (holder.getFacingLeft() && mouseX > this.getGripX())
+      holder.setFacingRight(true);
+    
+    // Rotate and translate the image
     if (holder.getFacingLeft()) {
       imageView.setScaleX(-1);
+      rotate.setAngle(-angle);
+      imageView.getTransforms().add(rotate);
       imageView.setTranslateX(this.getGripFlipX());
       imageView.setTranslateY(this.getGripFlipY());
     } else if (holder.getFacingRight()) {
       imageView.setScaleX(1);
+      rotate.setAngle(angle);
+      imageView.getTransforms().add(rotate);
       imageView.setTranslateX(this.getGripX());
       imageView.setTranslateY(this.getGripY());
     }
@@ -92,7 +123,10 @@ public class MachineGun extends Gun {
   public void initialiseAnimation() {
     this.animation.supplyAnimationWithSize("default", 40, 40, true, Path.convert(this.imagePath));
   }
-
+  
+  // =============================
+  // Get Grip and Muzzle positions
+  // =============================
   public double getGripX() {
     return holderHandPos[0] - 20;
   }
