@@ -122,8 +122,10 @@ public class LevelCreator extends Application {
     mapDataObject.setBackground(
         new Background("images/backgrounds/background1.png", ObjectID.Background,
             UUID.randomUUID()));
-    gameObjects.add(new SoundSlider(getAbs(5), getAbs(5), getAbs(5), getAbs(1), SOUND_TYPE.MUSIC,
-        ObjectID.Button, UUID.randomUUID()));
+    gameObjects.add(new SoundSlider(getAbs(20), getAbs(7), getAbs(8), getAbs(1), SOUND_TYPE.MUSIC,
+        "Music", ObjectID.Button, UUID.randomUUID()));
+    gameObjects.add(new SoundSlider(getAbs(20), getAbs(9), getAbs(8), getAbs(1), SOUND_TYPE.SFX,
+        "Sound Effects", ObjectID.Button, UUID.randomUUID()));
     for (int i = 0; i < 24; i++) {
       //top row wall
       gameObjects.add(

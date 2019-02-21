@@ -176,6 +176,10 @@ public class LevelHandler {
     return bots;
   }
 
+  public AudioHandler getMusicAudioHandler() {
+    return this.musicPlayer;
+  }
+
   /**
    * It removes the image from the imageView, destroy the gameObject and remove it from gameObjects
    * list. Finally clear the list for next frame
