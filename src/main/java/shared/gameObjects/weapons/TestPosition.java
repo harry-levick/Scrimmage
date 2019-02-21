@@ -8,31 +8,18 @@ import shared.util.Path;
 
 public class TestPosition extends GameObject {
 
-  private Player player;
+  private MachineGun gun;
   
-  public TestPosition(double x, double y, UUID uuid, Player player) {
-    super(x, y, 5, 5, ObjectID.Bullet, uuid);
-    this.player = player;
+  public TestPosition(double x, double y, UUID uuid, MachineGun gun) {
+    super(x, y, 10, 10, ObjectID.Bullet, uuid);
+    this.gun = gun;
   }
   
   @Override
   public void update() {
-    if (player.getJumped() && player.getFacingLeft()) {  // when jumping and facing left
-      this.setX(player.getHandLeftJumpX());
-      this.setY(player.getHandLeftJumpY());
-    }
-    else if (player.getJumped() && player.getFacingRight()) { // when jumping and facing right
-      this.setX(player.getHandRightJumpX());
-      this.setY(player.getHandRightJumpY());
-    }
-    else if (player.getFacingLeft()) {  // when facing left
-      this.setX(player.getHandLeftX());
-      this.setY(player.getHandLeftY());
-    }
-    else if (player.getFacingRight()) { // when facing right
-      this.setX(player.getHandRightX());
-      this.setY(player.getHandRightY());
-    }
+    this.setX(gun.getX());
+    this.setY(gun.getY());
+    
     super.update();
   }
   
