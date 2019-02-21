@@ -78,9 +78,6 @@ public class LevelCreator extends Application {
       gameObjects.add(
           new ExampleWallObject(getAbs(i * 2), getAbs(0), getAbs(2), getAbs(2), ObjectID.Bot,
               UUID.randomUUID()));
-      gameObjects.add(
-          new ExampleObject(getAbs(i * 2), getAbs(10), getAbs(1), getAbs(1), ObjectID.Bot,
-              UUID.randomUUID()));
     }
     for (int i = 0; i < 12; i++) {
       //side col walls
@@ -117,6 +114,9 @@ public class LevelCreator extends Application {
       // bottom row floor
       gameObjects.add(
           new ExampleFloorObject(getAbs(i * 4), getAbs(25), getAbs(4), getAbs(2), ObjectID.Bot,
+              UUID.randomUUID()));
+      gameObjects.add(
+          new ExampleObject(getAbs(i * 2), getAbs(10), getAbs(1), getAbs(1), ObjectID.Bot,
               UUID.randomUUID()));
     }
     MapLoader.saveMap(gameObjects, mapDataObject, filepath + filename + ".map");
