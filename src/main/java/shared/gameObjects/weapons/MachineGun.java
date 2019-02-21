@@ -9,6 +9,7 @@ import shared.util.Path;
 public class MachineGun extends Gun {
 
   private static String imagePath = "images/weapons/machinegun.png"; // path to Machine Gun image
+  private double[] holderHandPos;
 
   public MachineGun(double x, double y, String name, Player holder,
       UUID uuid) {
@@ -16,8 +17,8 @@ public class MachineGun extends Gun {
     super(
         x,
         y,
-        116,
-        33,
+        80,
+        20,
         ObjectID.Weapon, // ObjectID
         5, // damage
         10, // weight
@@ -30,18 +31,19 @@ public class MachineGun extends Gun {
         true, // fullAutoFire
         false, // singleHanded
         uuid);
+    holderHandPos = holder.getHandPos();
   }
 
   @Override
   public void fire(double mouseX, double mouseY) {
     if (canFire()) {
       UUID uuid = UUID.randomUUID();
+      double bulletX = holder.getFacingRight()? getMuzzleX() : getMuzzleFlipX();
+      double bulletY = holder.getFacingRight()? getMuzzleY() : getMuzzleFlipY(); 
       Bullet bullet =
           new MachineGunBullet(
-              getX() + 106,
-              getY(),
-              20,
-              20,
+              bulletX,
+              bulletY,
               mouseX,
               mouseY,
               this.bulletWidth,
@@ -59,13 +61,23 @@ public class MachineGun extends Gun {
   @Override
   public void update() {
     super.update();
+    holderHandPos = holder.getHandPos();
   }
 
   @Override
   public void render() {
     super.render();
-    imageView.setTranslateX(this.getX());
-    imageView.setTranslateY(this.getY());
+    
+    if (holder.getFacingLeft()) {
+      imageView.setScaleX(-1);
+      imageView.setTranslateX(this.getGripFlipX());
+      imageView.setTranslateY(this.getGripFlipY());
+    }
+    else if (holder.getFacingRight()) {
+      imageView.setScaleX(1);
+      imageView.setTranslateX(this.getGripX());
+      imageView.setTranslateY(this.getGripY());
+    }
   }
 
   @Override
@@ -79,7 +91,38 @@ public class MachineGun extends Gun {
 
   @Override
   public void initialiseAnimation() {
-    // this.animation.supplyAnimation("default", imagePath);
     this.animation.supplyAnimationWithSize("default", 40, 40, true, Path.convert(this.imagePath));
+  }
+  
+  public double getGripX() {
+    return holderHandPos[0] - 20;
+  }
+  
+  public double getGripY() {
+    return holderHandPos[1] - 10;
+  }
+  
+  public double getGripFlipX() {
+    return holderHandPos[0] - 55;
+  }
+  
+  public double getGripFlipY() {
+    return holderHandPos[1] - 10;
+  }
+  
+  public double getMuzzleX() {
+    return getGripX() + 68;
+  }
+  
+  public double getMuzzleY() {
+    return getGripY() -4;
+  }
+  
+  public double getMuzzleFlipX() {
+    return getGripFlipX() - 12;
+  }
+  
+  public double getMuzzleFlipY() {
+    return getGripFlipY() - 8;
   }
 }
