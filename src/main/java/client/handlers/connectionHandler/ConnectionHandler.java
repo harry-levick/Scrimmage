@@ -29,7 +29,7 @@ public class ConnectionHandler extends Thread {
     connected = true;
     port = 4446;
     received = new LinkedBlockingQueue<String>();
-    this.address = "192.168.1.102";
+    this.address = "192.168.0.13";
     try {
       clientSocket = new DatagramSocket(port);
       socket = new Socket(this.address, 4445);
@@ -49,7 +49,7 @@ public class ConnectionHandler extends Thread {
 
     Client.multiplayer = true;
     while (connected) {
-      buffer = new byte[2048];
+      buffer = new byte[1024];
       DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
       try {
         clientSocket.receive(packet);
