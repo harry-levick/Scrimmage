@@ -1,5 +1,6 @@
 package shared.gameObjects.weapons;
 
+import client.handlers.audioHandler.AudioHandler;
 import java.util.UUID;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
@@ -51,6 +52,8 @@ public class MachineGun extends Gun {
               this.holder,
               uuid);
       this.currentCooldown = getDefaultCoolDown();
+      //new AudioHandler(super.getSettings()).playSFX("CHOOSE_YOUR_CHARACTER");
+      new AudioHandler(settings).playSFX("MACHINEGUN");
       deductAmmo();
     }
   }
