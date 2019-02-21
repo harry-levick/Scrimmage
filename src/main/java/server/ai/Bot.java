@@ -58,6 +58,14 @@ public class Bot extends Player {
 
   }
 
+  /**
+   * Copy constructor
+   * @param that object to be copied
+   */
+  public Bot(Bot that) {
+    this(that.getX(), that.getY(), that.getUUID(), that.getLevelHandler());
+  }
+
   public void startThread() {
     // Start the thread concurrently
     botThread.start();
@@ -184,6 +192,54 @@ public class Bot extends Player {
       this.rightKey = action[Bot.KEY_RIGHT];
     } else this.rightKey = false;
 
+  }
+
+  public void simulateUpdate() {
+    super.update();
+  }
+
+  public void simulateAction(boolean[] action) {
+    this.jumpKey = action[Bot.KEY_JUMP];
+    this.leftKey = action[Bot.KEY_LEFT];
+    this.rightKey = action[Bot.KEY_RIGHT];
+  }
+
+  public void simulateApplyInput() {
+    if (rightKey) {
+      rb.moveX(speed);
+      //animation.switchAnimation("walk");
+      //imageView.setScaleX(1);
+    }
+    if (leftKey) {
+      rb.moveX(speed * -1);
+      //animation.switchAnimation("walk");
+      //imageView.setScaleX(-1);
+    }
+
+    if (!rightKey && !leftKey) {
+      vx = 0;
+      //animation.switchDefault();
+
+    }
+    if (jumpKey && !jumped) {
+      rb.moveY(jumpForce, 0.33333f);
+      jumped = true;
+    }
+    if (jumped) {
+      //animation.switchAnimation("jump");
+    }
+    if (grounded) {
+      jumped = false;
+    }
+    if (click && holding != null) {
+      holding.fire(mouseX, mouseY);
+    } //else punch
+    //setX(getX() + (vx * 0.0166));
+
+    if (this.getHolding() != null) {
+      this.getHolding().setX(this.getX() + 60);
+      this.getHolding().setY(this.getY() + 70);
+    }
   }
 
   /**

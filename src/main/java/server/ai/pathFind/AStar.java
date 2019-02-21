@@ -62,6 +62,7 @@ public class AStar {
     // The bot that the path-finding is concerned with.
     double botX;
     double botY;
+    Bot nodeBot;
 
     boolean visited = false;
     // The action used to get to the child node.
@@ -75,18 +76,38 @@ public class AStar {
       Collections.copy(sceneSnapshot, worldScene);
       this.parentNode = parent;
       if (parentNode != null) {
-        double xChange = calcXChange(action);
-        double yChange = calcYChange(action);
-        this.botY = parent.botY + yChange;
-        this.botX = parent.botX + xChange;
+        /*
+         TODO 1. Create a copy of the parents nodeBot
+         TODO 2. Apply this nodes action to the cloned bot using
+            1. cloneBot.simulateAction(action)
+            2. cloneBot.applyInput()
+            3. cloneBot.update()
+         TODO 3. Retrieve the new x, y coords from the simulated bot
+            1. this.botX = cloneBot.getX()
+            2. this.botY = cloneBot.getY()
+          */
+        // Create a copy of the parents simulated bot
+        this.nodeBot = new Bot(parent.nodeBot);
+        nodeBot.simulateAction(action);
+        nodeBot.simulateApplyInput();
+        nodeBot.simulateUpdate();
+
+        this.botX = nodeBot.getX();
+        this.botY = nodeBot.getY();
+
+        Vector2 thisPos = new Vector2((float) nodeBot.getX(), (float) nodeBot.getY());
+        Vector2 parentPos = new Vector2((float) parent.nodeBot.getX(), (float) parent.nodeBot.getY());
+
+        double distChange = thisPos.exactMagnitude(parentPos);
         // Calculate the heuristic value of the node.
         this.remainingDistance = calcRemainingH(enemy, getItems(sceneSnapshot));
         // Calculate the distance from the starting node to the current node
         distanceElapsed =
-            parent.distanceElapsed + Math.sqrt(Math.pow(xChange, 2) + Math.pow(yChange, 2));
+            parent.distanceElapsed + distChange;
       } else {
         // This is the starting node so distanceElapsed is 0
         distanceElapsed = 0;
+        this.nodeBot = bot;
         this.botX = bot.getX();
         this.botY = bot.getY();
         // Calculate the heuristic value of the node.
