@@ -53,7 +53,7 @@ public class ServerReceiver implements Runnable {
           joinPacket.getClientID());
       Server.levelHandler.addPlayer(player, null);
       server.playerCount.getAndIncrement();
-      connected.add(socket.getInetAddress().getHostAddress());
+      connected.add(socket.getInetAddress());
       server.add(player);
       //socket.setSoTimeout(5000);
 
@@ -63,7 +63,7 @@ public class ServerReceiver implements Runnable {
           message = input.readLine();
         } catch (SocketTimeoutException e) {
           server.playerCount.decrementAndGet();
-          connected.remove(socket.getInetAddress().getHostAddress());
+          connected.remove(socket.getInetAddress());
           server.levelHandler.getPlayers().remove(player);
           server.levelHandler.getGameObjects().remove(player);
           break;

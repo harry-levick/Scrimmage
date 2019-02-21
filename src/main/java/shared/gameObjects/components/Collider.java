@@ -2,6 +2,7 @@ package shared.gameObjects.components;
 
 import java.io.Serializable;
 import shared.gameObjects.GameObject;
+import shared.physics.types.ColliderLayer;
 import shared.physics.types.ColliderType;
 import shared.util.maths.Vector2;
 
@@ -19,6 +20,7 @@ public abstract class Collider extends Component implements Serializable {
       triggerStay,
       trigger;
   ColliderType colliderType;
+  ColliderLayer layer;
 
   Collider(GameObject parent, ColliderType colliderType, boolean trigger) {
     super(parent, ComponentType.COLLIDER);

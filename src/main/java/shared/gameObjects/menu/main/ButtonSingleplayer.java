@@ -37,9 +37,9 @@ public class ButtonSingleplayer extends ButtonObject {
 
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
-    System.out.println("test@ButtonSinglePlayer:40");
+    //System.out.println("test");
     Client.levelHandler.changeMap(new Map("map1", Path.convert("src/main/resources/menus/menu.map"),
-        GameState.IN_GAME));
+        GameState.IN_GAME), true);
     int botsToAdd = maxPlayers - Client.levelHandler.getPlayers().size();
     for (int b = 0; b < botsToAdd; b++) {
       Bot botPlayer = new Bot(500, 500, UUID.randomUUID(), Client.levelHandler.getGameObjects());
@@ -59,6 +59,8 @@ public class ButtonSingleplayer extends ButtonObject {
             UUID.randomUUID()));
     Client.levelHandler.getGameObjects().add(Client.levelHandler.getClientPlayer().getHolding());
     Client.levelHandler.getClientPlayer().getHolding().initialise(Client.gameRoot);
-    System.out.println("test2 @ButtonSinglePlayer:62");
+    Client.singleplayerGame = true;
+    Client.timer.schedule(Client.task, 300000L);
+    //System.out.println("test2");
   }
 }

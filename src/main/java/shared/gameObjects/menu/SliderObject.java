@@ -9,8 +9,8 @@ import shared.gameObjects.Utils.ObjectID;
 
 public abstract class SliderObject extends GameObject {
 
-  protected transient Slider slider;
   private final float yOffset = 30;
+  protected transient Slider slider;
   protected String label;
 
   public SliderObject(double x, double y, double sizeX, double sizeY, String label, ObjectID id,
