@@ -83,6 +83,13 @@ public abstract class ButtonObject extends GameObject {
     button.relocate(getX(), getY());
   }
 
+  public void removeRender() {
+    super.removeRender();
+    button.disarm();
+    root.getChildren().remove(button);
+    button = null;
+  }
+
   public Button getButton() {
     return button;
   }
