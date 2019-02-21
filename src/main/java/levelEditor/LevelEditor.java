@@ -33,6 +33,7 @@ import shared.gameObjects.ExampleObject;
 import shared.gameObjects.ExampleWallObject;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.MapDataObject;
+import shared.gameObjects.UI.Health;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.background.Background;
 import shared.gameObjects.menu.main.ButtonLeveleditor;
@@ -93,6 +94,7 @@ public class LevelEditor extends Application {
     objectMap.put(OBJECT_TYPES.BTN_LE, new GameObjectTuple("Level Editor Button", 6, 2));
     objectMap.put(OBJECT_TYPES.WPN_HG, new GameObjectTuple("Handgun", 2, 2));
     objectMap.put(OBJECT_TYPES.BTN_JOIN, new GameObjectTuple("ButtonJoin", 6, 2));
+    objectMap.put(OBJECT_TYPES.UI_HP, new GameObjectTuple("UI Base", 8, 2));
   }
 
   private void scenePrimaryClick(Stage primaryStage, Group root, Group objects, Group background, MouseEvent event) {
@@ -133,19 +135,9 @@ public class LevelEditor extends Application {
                     uuid);
             mapDataObject.addSpawnPoint(getGridX(event.getX()), getGridY(event.getY()));
           } else {
-            final Stage dialog = new Stage();
-            dialog.initModality(Modality.APPLICATION_MODAL);
-            dialog.initOwner(primaryStage);
-            VBox dialogVbox = new VBox(20);
-            Text text =
-                new Text(
-                    "\n\tWarning: You cannot create more than "
-                        + spawnPointLimit
-                        + " spawn points.");
-            dialogVbox.getChildren().add(text);
-            Scene dialogScene = new Scene(dialogVbox, 450, 60);
-            dialog.setScene(dialogScene);
-            dialog.show();
+            popup(primaryStage, "\n\tWarning: You cannot create more than "
+                + spawnPointLimit
+                + " spawn points.");
           }
           break;
 
@@ -236,6 +228,18 @@ public class LevelEditor extends Application {
                   ObjectID.Bot,
                   uuid
               );
+          break;
+        case UI_HP:
+          temp =
+              new Health(
+                  getGridX(event.getX()),
+                  getGridY(event.getY()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getX()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getY()),
+                  ObjectID.Bot,
+                  uuid
+              );
+          break;
       }
 
       if (temp != null) {
@@ -281,7 +285,15 @@ public class LevelEditor extends Application {
         new EventHandler<ActionEvent>() {
           @Override
           public void handle(ActionEvent event) {
-            saveMap(primaryStage);
+            if (mapDataObject.getSpawnPoints().size() == spawnPointLimit) {
+              saveMap(primaryStage);
+            } else {
+              popup(primaryStage,
+                  "\n\t" + spawnPointLimit + " spawn points are required in this map, "
+                      + "please add " + (spawnPointLimit - mapDataObject.getSpawnPoints().size())
+                      + " more.");
+            }
+
           }
         }
     );
@@ -393,7 +405,7 @@ public class LevelEditor extends Application {
   }
 
   protected enum OBJECT_TYPES {
-    FLOOR, WALL, PLAYER, BOX, BTN_SP, BTN_MP, BTN_ST, BTN_LE, WPN_HG, BACKGROUND, BACKGROUND1, BTN_JOIN
+    FLOOR, WALL, PLAYER, BOX, BTN_SP, BTN_MP, BTN_ST, BTN_LE, WPN_HG, BACKGROUND, BACKGROUND1, BTN_JOIN, UI_HP
   }
 
   private void initialiseNewMap() {
@@ -560,6 +572,18 @@ public class LevelEditor extends Application {
     dialog.setScene(dialogScene);
     dialog.show();
 
+  }
+
+  private void popup(Stage primaryStage, String message) {
+    final Stage dialog = new Stage();
+    dialog.initModality(Modality.APPLICATION_MODAL);
+    dialog.initOwner(primaryStage);
+    VBox dialogVbox = new VBox(20);
+    Text text = new Text(message);
+    dialogVbox.getChildren().add(text);
+    Scene dialogScene = new Scene(dialogVbox, 450, 60);
+    dialog.setScene(dialogScene);
+    dialog.show();
   }
 }
 

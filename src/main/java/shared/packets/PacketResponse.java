@@ -9,7 +9,7 @@ public class PacketResponse extends Packet {
     packetID = PacketID.RESPONSE.getID();
     this.accepted = accepted;
     this.multiAddress = multiAddress;
-    data = (packetID + "," + Boolean.toString(accepted) + "," + multiAddress).getBytes();
+    data = packetID + "," + Boolean.toString(accepted) + "," + multiAddress;
   }
 
   public PacketResponse(String data) {

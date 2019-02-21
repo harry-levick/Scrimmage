@@ -6,6 +6,7 @@ import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Collider;
 import shared.gameObjects.components.ComponentType;
 import shared.physics.data.Collision;
+import shared.physics.data.DynamicCollision;
 import shared.util.maths.Vector2;
 
 /**
@@ -15,8 +16,9 @@ public class Physics {
 
   public static final float GRAVITY = 100f;
   public static final float TIMESTEP = 1f / 60;
-  public static boolean showColliders = false;
+  public static boolean showColliders = true;
   public static ArrayList<GameObject> gameObjects;
+  private static ArrayList<DynamicCollision> collisions = new ArrayList<>();
   private static Physics ourInstance = new Physics();
 
   private Physics() {
@@ -99,5 +101,22 @@ public class Physics {
 
   public static ArrayList<Collision> circlecastAll(Vector2 sourcePos, float radius) {
     return null;
+  }
+
+  public static boolean addCollision(DynamicCollision dcol) {
+    for (DynamicCollision c : collisions) {
+      if (c.getBodyA() == dcol.getBodyB() && c.getBodyB() == dcol.getBodyA()) {
+        return false;
+      }
+    }
+    collisions.add(dcol);
+    return true;
+  }
+
+  public static void processCollisions() {
+    for (DynamicCollision c : collisions) {
+        c.process();
+    }
+    collisions.clear();
   }
 }

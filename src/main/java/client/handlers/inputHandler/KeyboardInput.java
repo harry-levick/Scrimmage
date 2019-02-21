@@ -4,7 +4,6 @@ import client.main.Client;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
 import shared.gameObjects.players.Player;
-import shared.packets.PacketInput;
 
 public class KeyboardInput implements EventHandler<KeyEvent> {
 
@@ -20,15 +19,15 @@ public class KeyboardInput implements EventHandler<KeyEvent> {
       switch (event.getCode()) {
         case A:
           clientPlayer.leftKey = true;
-          sendInput();
+          Client.sendUpdate = true;
           break;
         case D:
           clientPlayer.rightKey = true;
-          sendInput();
+          Client.sendUpdate = true;
           break;
         case W:
           clientPlayer.jumpKey = true;
-          sendInput();
+          Client.sendUpdate = true;
           break;
         default:
       }
@@ -36,33 +35,18 @@ public class KeyboardInput implements EventHandler<KeyEvent> {
       switch (event.getCode()) {
         case A:
           clientPlayer.leftKey = false;
-          sendInput();
+          Client.sendUpdate = true;
           break;
         case D:
           clientPlayer.rightKey = false;
-          sendInput();
+          Client.sendUpdate = true;
           break;
         case W:
           clientPlayer.jumpKey = false;
-          sendInput();
+          Client.sendUpdate = true;
           break;
         default:
       }
-    }
-  }
-
-  public void sendInput() {
-    if (Client.multiplayer) {
-      PacketInput input =
-          new PacketInput(
-              clientPlayer.mouseX,
-              clientPlayer.mouseY,
-              clientPlayer.leftKey,
-              clientPlayer.rightKey,
-              clientPlayer.jumpKey,
-              clientPlayer.click,
-              clientPlayer.getUUID());
-      Client.connectionHandler.send(input.getData());
     }
   }
 

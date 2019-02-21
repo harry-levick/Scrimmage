@@ -1,5 +1,6 @@
 package shared.gameObjects;
 
+import client.main.Settings;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -18,6 +19,7 @@ import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.Rigidbody;
 import shared.physics.Physics;
 import shared.physics.data.Collision;
+import shared.physics.data.DynamicCollision;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
 
@@ -25,6 +27,8 @@ public abstract class GameObject implements Serializable {
 
   protected UUID objectUUID;
   protected ObjectID id;
+
+  protected Settings settings;
 
   protected transient ImageView imageView;
   protected transient Group root;
@@ -90,25 +94,27 @@ public abstract class GameObject implements Serializable {
   public void updateCollision(ArrayList<GameObject> gameObjects) {
     Collider col = (Collider) getComponent(ComponentType.COLLIDER);
     Rigidbody rb = (Rigidbody) getComponent(ComponentType.RIGIDBODY);
+    if(col == null) {
+      return;
+    }
     if (rb != null) {
       if (rb.getBodyType() == RigidbodyType.STATIC) {
         return;
       }
-    }
-    ArrayList<Collision> collisions = new ArrayList<>();
-    if (col != null) {
-      for (GameObject o : Physics.gameObjects) {
-       Collider o_col = (Collider) o.getComponent(ComponentType.COLLIDER);
-       if(o_col != null) {
-         Collision o_collision = Collision.resolveCollision((BoxCollider) col, o_col);
-         if(o_collision != null) {
-           collisions.add(o_collision);
-         }
-       }
-      }
-      for (Collision c : collisions) {
-        if (!c.getCollidedObject().equals(rb)) {
-          rb.getCollisions().add(c);
+      else {
+        for (GameObject o : Physics.gameObjects) {
+          Collider o_col = (Collider) o.getComponent(ComponentType.COLLIDER);
+          Rigidbody o_rb = (Rigidbody) o.getComponent(ComponentType.RIGIDBODY);
+          if(o_col != null && o_rb != null) {
+            if(Collision.haveCollided(col, o_col)) {
+              Physics.addCollision(new DynamicCollision(rb, o_rb));
+            }
+          }
+          else if(o_col != null) {
+            if(Collision.haveCollided(col, o_col)) {
+
+            }
+          }
         }
       }
     }
@@ -297,6 +303,10 @@ public abstract class GameObject implements Serializable {
     if (!destroyed) {
       active = state;
     }
+  }
+
+  public void setSettings(Settings settings) {
+    this.settings = settings;
   }
 
   public boolean isUpdated() {
