@@ -182,7 +182,7 @@ public class Server extends Application {
             player.jumpKey = temp.isJumpKey();
           }
         }));
-    levelHandler.getPlayers().forEach(player -> player.applyInput(false, null));
+    levelHandler.getPlayers().forEach(player -> player.applyInput());
 
     levelHandler
         .getGameObjects()
@@ -215,7 +215,7 @@ public class Server extends Application {
         gameObjectsFiltered.add(gameObject);
       }
     }
-    PacketGameState gameState = new PacketGameState(gameObjectsFiltered);
+    PacketGameState gameState = new PacketGameState(gameObjectsFiltered, 0);
 
     byte[] buffer = gameState.getData();
     sendToClients(buffer);
