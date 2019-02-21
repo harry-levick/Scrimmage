@@ -52,7 +52,7 @@ public abstract class Bullet extends GameObject {
     addComponent(new BoxCollider(this, false));
     rb = new Rigidbody(
         RigidbodyType.DYNAMIC,
-        100f,
+        1f,  // mass
         0,
         0.1f,
         new MaterialProperty(0.1f, 1, 1),
