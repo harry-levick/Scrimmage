@@ -6,6 +6,9 @@ import client.handlers.inputHandler.KeyboardInput;
 import client.handlers.inputHandler.MouseInput;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -38,16 +41,19 @@ public class Client extends Application {
   public static LevelHandler levelHandler;
   public static Settings settings;
   public static boolean multiplayer;
+  public static boolean singleplayerGame;
   public static ConnectionHandler connectionHandler;
   public static AudioHandler audio;
   public static boolean sendUpdate;
 
   private final float timeStep = 0.0166f;
   private final String gameTitle = "Alone in the Dark";
-  private final int port = 4445;
+  public static Timer timer = new Timer("Timer", true);
 
   public static int inputSequenceNumber;
   public static ArrayList<PacketInput> pendingInputs;
+  public static TimerTask task;
+  private LinkedList<Map> playlist;
 
   private KeyboardInput keyInput;
   private MouseInput mouseInput;
@@ -67,9 +73,48 @@ public class Client extends Application {
 
   @Override
   public void start(Stage primaryStage) {
+    //Testing code
+    playlist
+        .add(new Map("Map1", Path.convert("src/main/resources/maps/map1.map"), GameState.IN_GAME));
+    playlist
+        .add(new Map("Map2", Path.convert("src/main/resources/maps/map2.map"), GameState.IN_GAME));
+    playlist
+        .add(new Map("Map3", Path.convert("src/main/resources/maps/map3.map"), GameState.IN_GAME));
+    playlist
+        .add(new Map("Map4", Path.convert("src/main/resources/maps/map4.map"), GameState.IN_GAME));
+    playlist
+        .add(new Map("Map5", Path.convert("src/main/resources/maps/map5.map"), GameState.IN_GAME));
+    playlist
+        .add(new Map("Map6", Path.convert("src/main/resources/maps/map6.map"), GameState.IN_GAME));
+    playlist
+        .add(new Map("Map7", Path.convert("src/main/resources/maps/map7.map"), GameState.IN_GAME));
+    playlist
+        .add(new Map("Map8", Path.convert("src/main/resources/maps/map8.map"), GameState.IN_GAME));
+    playlist
+        .add(new Map("Map9", Path.convert("src/main/resources/maps/map9.map"), GameState.IN_GAME));
+    playlist
+        .add(
+            new Map("Map10", Path.convert("src/main/resources/maps/map10.map"), GameState.IN_GAME));
+
+    /** Setup Game timer */
+    task = new TimerTask() {
+      @Override
+      public void run() {
+        singleplayerGame = false;
+        levelHandler.getPlayers().removeAll(levelHandler.getBotPlayerList());
+        levelHandler.getBotPlayerList().forEach(gameObject -> gameObject.removeRender());
+        levelHandler.getBotPlayerList().forEach(gameObject -> gameObject = null);
+        levelHandler.getBotPlayerList().clear();
+        levelHandler.changeMap(
+            new Map("Main Menu", Path.convert("src/main/resources/menus/main_menu.map"),
+                GameState.MAIN_MENU));
+      }
+    };
+
     setupRender(primaryStage);
     inputSequenceNumber = 0;
     pendingInputs = new ArrayList<>();
+    singleplayerGame = false;
     sendUpdate = false;
     levelHandler = new LevelHandler(settings, root, backgroundRoot, gameRoot);
     keyInput = new KeyboardInput();
@@ -124,9 +169,8 @@ public class Client extends Application {
           sendUpdate = false;
         }
 
-        if (!multiplayer) {
+        if (!multiplayer && singleplayerGame) {
           /**Calculate Score*/
-          if (levelHandler.getPlayers().size() > 1) {
             ArrayList<Player> alive = new ArrayList<>();
             for (Player p : levelHandler.getPlayers()) {
               if (p.isActive()) {
@@ -135,15 +179,17 @@ public class Client extends Application {
               if (alive.size() > 1) {
                 break;
               }
-            }
             if (alive.size() == 1) {
               alive.forEach(player -> player.increaseScore());
               levelHandler.getPlayers().forEach(player -> player.reset());
-              //Change level
+              Map nextMap = playlist.poll();
+              levelHandler.changeMap(nextMap);
             }
           }
+          /** Move bots */
           levelHandler.getBotPlayerList()
               .forEach(bot -> bot.applyInput());
+
         }
 
         /** Render Game Objects */
