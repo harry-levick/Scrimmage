@@ -59,6 +59,8 @@ public class ButtonSingleplayer extends ButtonObject {
             UUID.randomUUID()));
     Client.levelHandler.getGameObjects().add(Client.levelHandler.getClientPlayer().getHolding());
     Client.levelHandler.getClientPlayer().getHolding().initialise(Client.gameRoot);
+    Client.singleplayerGame = true;
+    Client.timer.schedule(Client.task, 300000L);
     //System.out.println("test2");
   }
 }
