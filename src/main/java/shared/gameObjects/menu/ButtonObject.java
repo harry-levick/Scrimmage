@@ -41,8 +41,7 @@ public abstract class ButtonObject extends GameObject {
   }
 
   @Override
-  public void interpolatePosition(float alpha) {
-  }
+  public void interpolatePosition(float alpha) {}
 
   public void doOnClick(MouseEvent e) {
     animation.switchAnimation("clicked");
@@ -81,6 +80,13 @@ public abstract class ButtonObject extends GameObject {
   public void render() {
     super.render();
     button.relocate(getX(), getY());
+  }
+
+  public void removeRender() {
+    super.removeRender();
+    button.disarm();
+    root.getChildren().remove(button);
+    button = null;
   }
 
   public Button getButton() {

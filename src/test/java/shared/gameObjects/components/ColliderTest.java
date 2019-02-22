@@ -66,18 +66,14 @@ public class ColliderTest {
   }
 
   @Test
-  public void directionUpCollision() {
-  }
+  public void directionUpCollision() {}
 
   @Test
-  public void directionDownCollision() {
-  }
+  public void directionDownCollision() {}
 
   @Test
-  public void directionRightCollision() {
-  }
+  public void directionRightCollision() {}
 
   @Test
-  public void directionLeftCollision() {
-  }
+  public void directionLeftCollision() {}
 }
