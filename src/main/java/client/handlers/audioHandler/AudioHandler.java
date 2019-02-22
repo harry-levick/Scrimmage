@@ -16,6 +16,7 @@ public class AudioHandler {
   private Settings settings;
 
   private int trackPos = 0;
+  private boolean playingPlaylist = false;
 
   private MusicAssets musicAssets = new MusicAssets();
   private EffectsAssets effectsAssets = new EffectsAssets();
@@ -42,6 +43,7 @@ public class AudioHandler {
   }
 
   public void playMusicPlaylist(PLAYLIST playlistSet) {
+    playingPlaylist = true;
     ArrayList<String> playlist = musicAssets.getPlaylist(playlistSet);
     playMusic(playlist.get(trackPos));
     musicPlayer.setOnEndOfMedia(new Runnable() {
@@ -62,6 +64,9 @@ public class AudioHandler {
    */
   public void stopMusic() {
     if (musicPlayer != null) {
+      if (playingPlaylist) {
+        trackPos++;
+      }
       musicPlayer.stop();
     }
   }
