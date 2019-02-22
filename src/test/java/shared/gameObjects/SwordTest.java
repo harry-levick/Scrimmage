@@ -17,8 +17,7 @@ public class SwordTest {
 
   @BeforeClass
   public static void initSword() {
-    sword =
-        new Sword(10, 10, "test", null, UUID.randomUUID());
+    sword = new Sword(10, 10, "test", null, UUID.randomUUID());
   }
 
   @Test

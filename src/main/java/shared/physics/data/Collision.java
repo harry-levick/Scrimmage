@@ -6,36 +6,22 @@ import shared.gameObjects.components.Collider;
 import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.EdgeCollider;
 import shared.gameObjects.components.Rigidbody;
-import shared.physics.types.CollisionDirection;
+import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
 
+//TODO: Refactor and clean up; this is used only by Raycasts now
 public class Collision {
 
   private Rigidbody collidedObject;
-  private Vector2 normalCollision, penDepth;
-  private float penetrationDepth;
-  private CollisionDirection direction;
+  private Vector2 normalCollision;
+  private float penDepth;
 
   /**
    *
    */
-  public Collision(Rigidbody collidedObject, CollisionDirection direction, Vector2 depth) {
-    switch (direction) {
-      case DOWN:
-        this.normalCollision = Vector2.Up();
-        break;
-      case LEFT:
-        this.normalCollision = Vector2.Left();
-        break;
-      case RIGHT:
-        this.normalCollision = Vector2.Left();
-        break;
-      case UP:
-        this.normalCollision = Vector2.Up();
-        break;
-    }
+  public Collision(Rigidbody collidedObject, Vector2 normal, float depth) {
     this.collidedObject = collidedObject;
-    this.direction = direction;
+    this.normalCollision = normal;
     this.penDepth = depth;
   }
 
@@ -53,21 +39,18 @@ public class Collision {
             if (b.isTrigger()) {
               break;
             }
-            Vector2 penDepth = getPenDepth(a, (BoxCollider) b);
-            collision =
-                new Collision(collidedBody, getDirection(a, (BoxCollider) b), penDepth);
+            float penDepth = getPenDepth(a, (BoxCollider) b);
+            collision = new Collision(collidedBody, getDirection(a, (BoxCollider) b), penDepth);
           }
         }
 
         break;
       case EDGE:
-        if (Collider.boxEdgeCollision(a, (EdgeCollider) b)) {
-        }
+        if (Collider.boxEdgeCollision(a, (EdgeCollider) b)) {}
 
         break;
       case CIRCLE:
-        if (Collider.boxCircleCollision(a, (CircleCollider) b)) {
-        }
+        if (Collider.boxCircleCollision(a, (CircleCollider) b)) {}
 
         break;
     }
@@ -75,18 +58,41 @@ public class Collision {
     return collision;
   }
 
+  public static boolean haveCollided(Collider colA, Collider colB) {
+    if (colA == colB) {
+      return false;
+    }
+    boolean toRet = false;
+    switch (colA.getColliderType()) {
+      case BOX:
+        switch (colB.getColliderType()) {
+          case BOX:
+            toRet = Collider.boxBoxCollision((BoxCollider) colA, (BoxCollider) colB);
+            break;
+        }
+        break;
+      case CIRCLE:
+        switch (colB.getColliderType()) {
+        }
+        break;
+      case EDGE:
+        switch (colB.getColliderType()) {
+        }
+        break;
+    }
+    return toRet;
+  }
+
   public static Collision resolveCollision(CircleCollider a, Collider b) {
     switch (b.getColliderType()) {
       case BOX:
-        if (Collider.boxCircleCollision((BoxCollider) b, a)) {
-        }
+        if (Collider.boxCircleCollision((BoxCollider) b, a)) {}
 
         break;
       case EDGE:
         break;
       case CIRCLE:
-        if (Collider.circleCircleCollision(a, (CircleCollider) b)) {
-        }
+        if (Collider.circleCircleCollision(a, (CircleCollider) b)) {}
 
         break;
     }
@@ -94,51 +100,43 @@ public class Collision {
     return null;
   }
 
-  public static Vector2 getPenDepth(BoxCollider boxA, BoxCollider boxB) {
-    Vector2 toRet;
+  public static float getPenDepth(BoxCollider boxA, BoxCollider boxB) {
+    Vector2 n = boxB.getCentre().sub(boxA.getCentre());
+    float x_overlap =
+        boxA.getSize().getX() * 0.5f + boxB.getSize().getX() * 0.5f - Math.abs(n.getX());
+    float y_overlap =
+        boxA.getSize().getY() * 0.5f + boxB.getSize().getY() * 0.5f - Math.abs(n.getY());
 
-    float A = boxA.getCorners()[0].magnitude(boxB.getCentre());
-    float B = boxA.getCorners()[1].magnitude(boxB.getCentre());
-    float C = boxA.getCorners()[2].magnitude(boxB.getCentre());
-    float D = boxA.getCorners()[3].magnitude(boxB.getCentre());
-    if (A <= B && A <= C && A <= D) {
-      toRet = boxA.getCorners()[0].sub(boxB.getCorners()[2]);
-    }
-    else if (B <= C && B <= D) {
-      toRet = boxA.getCorners()[1].sub(boxB.getCorners()[3]);
-    }
-    else if (C <= D) {
-      toRet = boxA.getCorners()[2].sub(boxB.getCorners()[0]);
+    Vector2 penetrationDistance = new Vector2(x_overlap, y_overlap);
+    if (penetrationDistance.getX() < penetrationDistance.getY()) {
+      return x_overlap;
     }
     else {
-      toRet = boxA.getCorners()[3].sub(boxB.getCorners()[1]);
+      return y_overlap;
     }
-
-    return toRet;
   }
 
-  public static CollisionDirection getDirection(BoxCollider boxA, BoxCollider boxB) {
-    Vector2 toRet;
-    float A = boxA.getCorners()[0].magnitude(boxB.getCentre());
-    float B = boxA.getCorners()[1].magnitude(boxB.getCentre());
-    float C = boxA.getCorners()[2].magnitude(boxB.getCentre());
-    float D = boxA.getCorners()[3].magnitude(boxB.getCentre());
-    if (A <= B && A <= C && A <= D) {
-      toRet = boxA.getCorners()[0].sub(boxB.getCorners()[2]);
-      return Math.abs(toRet.getX()) < Math.abs(toRet.getY()) ? CollisionDirection.LEFT
-          : CollisionDirection.UP;
-    } else if (B <= C && B <= D) {
-      toRet = boxA.getCorners()[1].sub(boxB.getCorners()[3]);
-      return Math.abs(toRet.getX()) < Math.abs(toRet.getY()) ? CollisionDirection.LEFT
-          : CollisionDirection.DOWN;
-    } else if (C <= D) {
-      toRet = boxA.getCorners()[2].sub(boxB.getCorners()[0]);
-      return Math.abs(toRet.getX()) < Math.abs(toRet.getY()) ? CollisionDirection.RIGHT
-          : CollisionDirection.DOWN;
+  public static Vector2 getDirection(BoxCollider boxA, BoxCollider boxB) {
+    Vector2 n = boxB.getCentre().sub(boxA.getCentre());
+    Rigidbody bodyB = (Rigidbody) boxB.getParent().getComponent(ComponentType.RIGIDBODY);
+    float x_overlap =
+        boxA.getSize().getX() * 0.5f + boxB.getSize().getX() * 0.5f - Math.abs(n.getX());
+    float y_overlap =
+        boxA.getSize().getY() * 0.5f + boxB.getSize().getY() * 0.5f - Math.abs(n.getY());
+
+    Vector2 penetrationDistance = new Vector2(x_overlap, y_overlap);
+    if (penetrationDistance.getX() < penetrationDistance.getY()) {
+      if (n.getX() < 0) {
+        return bodyB.getBodyType() == RigidbodyType.STATIC ? Vector2.Right() : Vector2.Left();
+      } else {
+        return bodyB.getBodyType() == RigidbodyType.STATIC ? Vector2.Left() : Vector2.Zero();
+      }
     } else {
-      toRet = boxA.getCorners()[3].sub(boxB.getCorners()[1]);
-      return Math.abs(toRet.getX()) < Math.abs(toRet.getY()) ? CollisionDirection.RIGHT
-          : CollisionDirection.UP;
+      if (n.getY() < 0) {
+        return bodyB.getBodyType() == RigidbodyType.STATIC ? Vector2.Down() : Vector2.Up();
+      } else {
+        return bodyB.getBodyType() == RigidbodyType.STATIC ? Vector2.Up() : Vector2.Down();
+      }
     }
   }
 
@@ -146,9 +144,6 @@ public class Collision {
     return collidedObject;
   }
 
-  public CollisionDirection getDirection() {
-    return direction;
-  }
 
   public Vector2 getNormalCollision() {
     return normalCollision;
@@ -159,24 +154,7 @@ public class Collision {
   }
 
   public float getPenetrationDepth() {
-    float toRet = 0;
-    switch(direction) {
-      case UP:
-      case DOWN:
-        toRet = penDepth.getY();
-        break;
-      case LEFT:
-      case RIGHT:
-        toRet = penDepth.getX();
-        break;
-    }
-    return toRet;
-  }
-  public Vector2 getDepth() {
     return penDepth;
   }
-  @Override
-  public String toString() {
-    return "COLLISION DIR = " + direction.toString();
-  }
+
 }

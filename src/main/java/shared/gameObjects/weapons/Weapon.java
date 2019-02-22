@@ -83,16 +83,17 @@ public abstract class Weapon extends GameObject {
       this.currentCooldown -= 1;
     }
   }
-  
+
   public void deductAmmo() {
-    if (this.ammo > 0)
+    if (this.ammo > 0) {
       this.ammo -= 1;
+    }
   }
 
   public boolean canFire() {
     return this.currentCooldown <= 0;
   }
-  
+
   public void destroyWeapon() {
     Client.levelHandler.delGameObject(this);
   }
@@ -103,7 +104,7 @@ public abstract class Weapon extends GameObject {
   public int getCoolDown() {
     return this.currentCooldown;
   }
-  
+
   public int getDamage() {
     return this.damage;
   }

@@ -1,7 +1,6 @@
 package shared.gameObjects.players;
 
 import client.main.Client;
-import java.util.ArrayList;
 import java.util.UUID;
 import javafx.scene.Group;
 import shared.gameObjects.GameObject;
@@ -10,17 +9,17 @@ import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.weapons.Weapon;
-import shared.physics.Physics;
-import shared.physics.data.Collision;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.RigidbodyType;
-import shared.util.maths.Vector2;
 
 public class Player extends GameObject {
 
-  protected final float speed = 10;
+  protected final float speed = 9;
   protected final float jumpForce = -200;
   protected final float JUMP_LIMIT = 2.0f;
+  public boolean leftKey, rightKey, jumpKey, click;
+  public double mouseX, mouseY;
+  public int score;
   protected float jumpTime;
   protected boolean jumped;
   protected boolean grounded;
@@ -32,17 +31,15 @@ public class Player extends GameObject {
   protected double vx;
   private BoxCollider bc;
 
-  public boolean leftKey, rightKey, jumpKey, click;
-  public double mouseX, mouseY;
-  public int score;
-
   public Player(double x, double y, UUID playerUUID) {
     super(x, y, 80, 110, ObjectID.Player, playerUUID);
     score = 0;
     bc = new BoxCollider(this, false);
     addComponent(bc);
-    rb = new Rigidbody(RigidbodyType.DYNAMIC, 100, 10, 0.2f, new MaterialProperty(0.005f, 0, 0),
-        null, this);
+    rb =
+        new Rigidbody(
+            RigidbodyType.DYNAMIC, 80, 8, 0.2f, new MaterialProperty(0.005f, 0.1f, 0.05f), null,
+            this);
     addComponent(rb);
     this.health = 100;
     holding = null;
@@ -52,9 +49,8 @@ public class Player extends GameObject {
   @Override
   public void initialiseAnimation() {
     this.animation.supplyAnimation("default", "images/player/player_idle.png");
-    this.animation.supplyAnimation("walk",
-        "images/player/player_walk1.png",
-        "images/player/player_walk2.png");
+    this.animation.supplyAnimation(
+        "walk", "images/player/player_walk1.png", "images/player/player_walk2.png");
     this.animation.supplyAnimation("jump", "images/player/player_jump.png");
   }
 
@@ -66,16 +62,14 @@ public class Player extends GameObject {
     this.click = false;
   }
 
-
   @Override
   public void update() {
-    checkGrounded(); //Checks if the player is grounded
+    checkGrounded(); // Checks if the player is grounded
     // Check if the current holding is valid
     // Change the weapon to Punch if it is not
     badWeapon();
     super.update();
   }
-
 
   @Override
   public void render() {
@@ -90,7 +84,7 @@ public class Player extends GameObject {
   @Override
   public String getState() {
     return objectUUID + ";" + getX() + ";" + getY() + ";" + animation.getName() + ";" + health;
-    //add holding
+    // add holding
   }
 
   @Override
@@ -103,20 +97,7 @@ public class Player extends GameObject {
   }
 
   public void checkGrounded() {
-    ArrayList<Collision> cols = Physics.boxcastAll(
-        getTransform().getPos().add(Vector2.Down().mult(getTransform().getSize().getY()))
-            .add(Vector2.Right().mult(getTransform().getSize().getX() * 0.125f)),
-        getTransform().getSize().mult(new Vector2(0.75f, 0.05f)));
-    if (cols.isEmpty()) {
-      grounded = false;
-    } else {
-      for (Collision c : cols) {
-        if (c.getCollidedObject().getBodyType() == RigidbodyType.STATIC) {
-          grounded = true;
-          return;
-        }
-      }
-    }
+    grounded = rb.isGrounded();
   }
 
   public void applyInput() {
@@ -128,19 +109,16 @@ public class Player extends GameObject {
       this.facingRight = true;
     }
     if (leftKey) {
-      System.out.println("moved from " + getX());
       rb.moveX(speed * -1);
       animation.switchAnimation("walk");
       imageView.setScaleX(-1);
       this.facingRight = false;
       this.facingLeft = true;
-      System.out.println("to " + getX());
     }
 
     if (!rightKey && !leftKey) {
       vx = 0;
       animation.switchDefault();
-
     }
     if (jumpKey && !jumped) {
       rb.moveY(jumpForce, 0.33333f);
@@ -154,8 +132,8 @@ public class Player extends GameObject {
     }
     if (click && holding != null) {
       holding.fire(mouseX, mouseY);
-    } //else punch
-    //setX(getX() + (vx * 0.0166));
+    } // else punch
+    // setX(getX() + (vx * 0.0166));
 
     if (this.getHolding() != null) {
       this.getHolding().setX(this.getX() + 60);
@@ -177,8 +155,8 @@ public class Player extends GameObject {
       this.holding.destroyWeapon();
       this.setHolding(null);
 
-      Weapon sword = new Sword(this.getX(), this.getY(), "newSword@Player", this,
-          UUID.randomUUID());
+      Weapon sword =
+          new Sword(this.getX(), this.getY(), "newSword@Player", this, UUID.randomUUID());
       sword.initialise(root);
       Client.levelHandler.addGameObject(sword);
       this.setHolding(sword);
@@ -190,7 +168,7 @@ public class Player extends GameObject {
   public void deductHp(int damage) {
     this.health -= damage;
     if (this.health <= 0) {
-      //For testing
+      // For testing
       this.imageView.setTranslateY(getY() + 70);
       this.setActive(false);
       this.removeComponent(bc);
@@ -206,8 +184,6 @@ public class Player extends GameObject {
       this.setActive(true);
       this.addComponent(bc);
     }
-
-
   }
 
   public void increaseScore() {
@@ -218,12 +194,12 @@ public class Player extends GameObject {
     score += amount;
   }
 
-  public void setHealth(int hp) {
-    this.health = hp;
-  }
-
   public int getHealth() {
     return health;
+  }
+
+  public void setHealth(int hp) {
+    this.health = hp;
   }
 
   public Weapon getHolding() {
@@ -232,9 +208,10 @@ public class Player extends GameObject {
 
   public void setHolding(Weapon holding) {
     this.holding = holding;
-    holding.setSettings(settings);
+    if (holding != null) {
+      holding.setSettings(settings);
+    }
   }
-
 
   public int getScore() {
     return score;
@@ -333,7 +310,17 @@ public class Player extends GameObject {
     return this.facingLeft;
   }
 
+  public void setFacingLeft(boolean b) {
+    this.facingLeft = b;
+    this.facingRight = !b;
+  }
+
   public boolean getFacingRight() {
     return this.facingRight;
+  }
+
+  public void setFacingRight(boolean b) {
+    this.facingLeft = !b;
+    this.facingRight = b;
   }
 }
