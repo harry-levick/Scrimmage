@@ -39,7 +39,7 @@ public class MetalBlockSmallObject extends GameObject {
 
   // Initialise the animation
   public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", "images/platforms/stone/elementMetal011.png");
+    this.animation.supplyAnimation("default", "images/platforms/metal/elementMetal011.png");
   }
 
   @Override

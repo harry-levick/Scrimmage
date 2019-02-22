@@ -40,7 +40,7 @@ public class StoneWallObject extends GameObject {
 
   // Initialise the animation
   public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", "images/platforms/stone/elementStone013.png");
+    this.animation.supplyAnimation("default", "images/platforms/stone/elementStone020.png");
   }
 
   @Override

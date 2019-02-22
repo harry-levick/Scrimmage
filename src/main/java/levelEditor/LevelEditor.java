@@ -28,9 +28,15 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import levelEditor.LevelEditor.OBJECT_TYPES;
+import shared.gameObjects.Blocks.Metal.MetalBlockLargeObject;
+import shared.gameObjects.Blocks.Metal.MetalBlockSmallObject;
+import shared.gameObjects.Blocks.Metal.MetalFloorObject;
 import shared.gameObjects.Blocks.Stone.StoneBlockObject;
 import shared.gameObjects.Blocks.Stone.StoneFloorObject;
 import shared.gameObjects.Blocks.Stone.StoneWallObject;
+import shared.gameObjects.Blocks.Wood.WoodBlockLargeObject;
+import shared.gameObjects.Blocks.Wood.WoodBlockSmallObject;
+import shared.gameObjects.Blocks.Wood.WoodFloorObject;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.MapDataObject;
 import shared.gameObjects.UI.Health;
@@ -63,7 +69,7 @@ public class LevelEditor extends Application {
   private int gridSizeY = stageSizeY / gridSizePX;
 
   private LinkedHashMap<OBJECT_TYPES, GameObjectTuple> objectMap = new LinkedHashMap<>();
-  private OBJECT_TYPES objectTypeSelected = OBJECT_TYPES.FLOOR; // default
+  private OBJECT_TYPES objectTypeSelected = OBJECT_TYPES.PLAYER; // default
 
   private String filename = "";
   private String filepath =
@@ -83,9 +89,6 @@ public class LevelEditor extends Application {
    * instance of the new GameObject. Must break; the case. 4. debug
    */
   public LevelEditor() {
-    objectMap.put(OBJECT_TYPES.FLOOR, new GameObjectTuple("Floor", 5, 2));
-    objectMap.put(OBJECT_TYPES.WALL, new GameObjectTuple("Wall", 2, 2));
-    objectMap.put(OBJECT_TYPES.BOX, new GameObjectTuple("Box", 1, 1));
     objectMap.put(OBJECT_TYPES.PLAYER, new GameObjectTuple("Player Spawn", 2, 3));
     objectMap.put(OBJECT_TYPES.BACKGROUND, new GameObjectTuple("Background", 0, 0));
     objectMap.put(OBJECT_TYPES.BACKGROUND1, new GameObjectTuple("Background 2", 0, 0));
@@ -96,6 +99,15 @@ public class LevelEditor extends Application {
     objectMap.put(OBJECT_TYPES.WPN_HG, new GameObjectTuple("Handgun", 2, 2));
     objectMap.put(OBJECT_TYPES.BTN_JOIN, new GameObjectTuple("ButtonJoin", 6, 2));
     objectMap.put(OBJECT_TYPES.UI_HP, new GameObjectTuple("UI Base", 8, 2));
+    objectMap.put(OBJECT_TYPES.BLOCK_METAL_LARGE, new GameObjectTuple("Metal Block Large", 2, 2));
+    objectMap.put(OBJECT_TYPES.BLOCK_METAL_SMALL, new GameObjectTuple("Metal Block Small", 1, 1));
+    objectMap.put(OBJECT_TYPES.FLOOR_METAL, new GameObjectTuple("Metal Floor", 5, 2));
+    objectMap.put(OBJECT_TYPES.BLOCK_STONE, new GameObjectTuple("Stone Block", 1, 1));
+    objectMap.put(OBJECT_TYPES.FLOOR_STONE, new GameObjectTuple("Stone Floor", 5, 2));
+    objectMap.put(OBJECT_TYPES.WALL_STONE, new GameObjectTuple("Stone Wall", 1, 5));
+    objectMap.put(OBJECT_TYPES.BLOCK_WOOD_LARGE, new GameObjectTuple("Wood Block Large", 2, 2));
+    objectMap.put(OBJECT_TYPES.BLOCK_WOOD_SMALL, new GameObjectTuple("Wood Block Small", 1, 1));
+    objectMap.put(OBJECT_TYPES.FLOOR_WOOD, new GameObjectTuple("Wood Floor", 5, 2));
   }
 
   private void scenePrimaryClick(
@@ -108,29 +120,6 @@ public class LevelEditor extends Application {
       GameObject temp = null;
       UUID uuid = UUID.randomUUID();
       switch (objectTypeSelected) {
-        case FLOOR:
-        default:
-          temp =
-              new StoneFloorObject(
-                  getGridX(event.getX()),
-                  getGridY(event.getY()),
-                  getScaledSize(objectMap.get(objectTypeSelected).getX()),
-                  getScaledSize(objectMap.get(objectTypeSelected).getY()),
-                  ObjectID.Bot,
-                  uuid);
-          break;
-
-        case WALL:
-          temp =
-              new StoneWallObject(
-                  getGridX(event.getX()),
-                  getGridY(event.getY()),
-                  getScaledSize(objectMap.get(objectTypeSelected).getX()),
-                  getScaledSize(objectMap.get(objectTypeSelected).getY()),
-                  ObjectID.Bot,
-                  uuid);
-          break;
-
         case PLAYER:
           if (mapDataObject.getSpawnPoints().size() < spawnPointLimit) {
             temp = new Player(getGridX(event.getX()), getGridY(event.getY()), uuid);
@@ -219,7 +208,51 @@ public class LevelEditor extends Application {
                   uuid);
           break;
 
-        case BOX:
+        case UI_HP:
+          temp =
+              new Health(
+                  getGridX(event.getX()),
+                  getGridY(event.getY()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getX()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getY()),
+                  ObjectID.Bot,
+                  uuid);
+          break;
+
+        case BLOCK_METAL_LARGE:
+          temp =
+              new MetalBlockLargeObject(
+                  getGridX(event.getX()),
+                  getGridY(event.getY()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getX()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getY()),
+                  ObjectID.Bot,
+                  uuid);
+          break;
+
+        case BLOCK_METAL_SMALL:
+          temp =
+              new MetalBlockSmallObject(
+                  getGridX(event.getX()),
+                  getGridY(event.getY()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getX()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getY()),
+                  ObjectID.Bot,
+                  uuid);
+          break;
+
+        case FLOOR_METAL:
+          temp =
+              new MetalFloorObject(
+                  getGridX(event.getX()),
+                  getGridY(event.getY()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getX()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getY()),
+                  ObjectID.Bot,
+                  uuid);
+          break;
+
+        case BLOCK_STONE:
           temp =
               new StoneBlockObject(
                   getGridX(event.getX()),
@@ -229,9 +262,54 @@ public class LevelEditor extends Application {
                   ObjectID.Bot,
                   uuid);
           break;
-        case UI_HP:
+
+        case FLOOR_STONE:
           temp =
-              new Health(
+              new StoneFloorObject(
+                  getGridX(event.getX()),
+                  getGridY(event.getY()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getX()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getY()),
+                  ObjectID.Bot,
+                  uuid);
+          break;
+
+        case WALL_STONE:
+          temp =
+              new StoneWallObject(
+                  getGridX(event.getX()),
+                  getGridY(event.getY()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getX()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getY()),
+                  ObjectID.Bot,
+                  uuid);
+          break;
+
+        case BLOCK_WOOD_LARGE:
+          temp =
+              new WoodBlockLargeObject(
+                  getGridX(event.getX()),
+                  getGridY(event.getY()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getX()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getY()),
+                  ObjectID.Bot,
+                  uuid);
+          break;
+
+        case BLOCK_WOOD_SMALL:
+          temp =
+              new WoodBlockSmallObject(
+                  getGridX(event.getX()),
+                  getGridY(event.getY()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getX()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getY()),
+                  ObjectID.Bot,
+                  uuid);
+          break;
+
+        case FLOOR_WOOD:
+          temp =
+              new WoodFloorObject(
                   getGridX(event.getX()),
                   getGridY(event.getY()),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
@@ -587,10 +665,7 @@ public class LevelEditor extends Application {
   }
 
   protected enum OBJECT_TYPES {
-    FLOOR,
-    WALL,
     PLAYER,
-    BOX,
     BTN_SP,
     BTN_MP,
     BTN_ST,
@@ -599,7 +674,16 @@ public class LevelEditor extends Application {
     BACKGROUND,
     BACKGROUND1,
     BTN_JOIN,
-    UI_HP
+    UI_HP,
+    BLOCK_METAL_LARGE,
+    BLOCK_METAL_SMALL,
+    FLOOR_METAL,
+    BLOCK_STONE,
+    FLOOR_STONE,
+    WALL_STONE,
+    BLOCK_WOOD_LARGE,
+    BLOCK_WOOD_SMALL,
+    FLOOR_WOOD
   }
 }
 
