@@ -53,20 +53,20 @@ public class DynamicCollision {
     penetrationDistance = new Vector2(x_overlap, y_overlap);
     if(penetrationDistance.getX() < penetrationDistance.getY()) {
       if(n.getX() < 0) {
-        collisionNormal =  bodyB.getBodyType() == RigidbodyType.STATIC ? Vector2.Right() : Vector2.Left();
+        collisionNormal =  Vector2.Left();
       }
       else {
-        collisionNormal =  bodyB.getBodyType() == RigidbodyType.STATIC ? Vector2.Left() : Vector2.Zero();
+        collisionNormal =  bodyB.getBodyType() == RigidbodyType.STATIC ? Vector2.Right() : Vector2.Zero();
       }
       pentrationDepth = x_overlap;
     }
     else {
       if (n.getY() < 0) {
-        collisionNormal =  bodyB.getBodyType() == RigidbodyType.STATIC ? Vector2.Down() : Vector2.Up();
+        collisionNormal =  Vector2.Up();
         bodyB.setGrounded(true);
       }
       else {
-        collisionNormal =  bodyB.getBodyType() == RigidbodyType.STATIC ? Vector2.Up() : Vector2.Down();
+        collisionNormal =  Vector2.Down();
         bodyA.setGrounded(true);
       }
       pentrationDepth = y_overlap;
@@ -74,44 +74,40 @@ public class DynamicCollision {
   }
 
   public void process() {
-    if (bodyB.getBodyType() == RigidbodyType.STATIC) {
-      float vOnNormal = bodyA.getVelocity().dot(collisionNormal);
-      if (vOnNormal > 0) {
-        return;
-      }
-
-      float e =
-          Math.max(bodyA.getMaterial().getRestitution(), bodyB.getMaterial().getRestitution());
-
-      float j = -1 * (1 + e) * vOnNormal;
-      j /= bodyA.getInv_mass() + bodyB.getInv_mass();
-
-      Vector2 impulse = collisionNormal.mult(j);
-      bodyA.setVelocity(bodyA.getVelocity().add(impulse.mult(bodyA.getInv_mass())));
-
-      Vector2 positionCorrection = positionCorrection();
-      bodyA.correctPosition(positionCorrection.mult(bodyA.getInv_mass()));
-    } else {
-      Vector2 velocityCol = bodyB.getVelocity().sub(bodyA.getVelocity());
-      float vOnNormal = velocityCol.dot(collisionNormal);
-      if (vOnNormal > 0) {
-        return;
-      }
-
-      float e =
-          Math.min(bodyA.getMaterial().getRestitution(), bodyB.getMaterial().getRestitution());
-
-      float j = -1 * (1 + e) * vOnNormal;
-      j /= bodyA.getInv_mass() + bodyB.getInv_mass();
-
-      Vector2 impulse = collisionNormal.mult(j);
-      bodyA.setVelocity(bodyA.getVelocity().sub(impulse.mult(bodyA.getInv_mass())));
-      bodyB.setVelocity(bodyB.getVelocity().add(impulse.mult(bodyB.getInv_mass())));
-
-      Vector2 positionCorrection = positionCorrection();
-      bodyA.correctPosition(positionCorrection.mult(-1 * bodyA.getInv_mass()));
-      bodyB.correctPosition(positionCorrection.mult(bodyB.getInv_mass()));
+    Vector2 velocityCol = bodyB.getVelocity().sub(bodyA.getVelocity());
+    float vOnNormal = velocityCol.dot(collisionNormal);
+    if (vOnNormal > 0) {
+      return;
     }
+    float e =
+        Math.max(bodyA.getMaterial().getRestitution(), bodyB.getMaterial().getRestitution());
+
+    float j = -1 * (1 + e) * vOnNormal;
+    j /= bodyA.getInv_mass() + bodyB.getInv_mass();
+
+    Vector2 impulse = collisionNormal.mult(j);
+    bodyA.setVelocity(bodyA.getVelocity().sub(impulse.mult(bodyA.getInv_mass())));
+    bodyB.setVelocity(bodyB.getVelocity().add(impulse.mult(bodyB.getInv_mass())));
+
+    Vector2 positionCorrection = positionCorrection();
+    bodyA.correctPosition(positionCorrection.mult(-1 * bodyA.getInv_mass()));
+    bodyB.correctPosition(positionCorrection.mult(bodyB.getInv_mass()));
+
+    //Friction
+    /* TODO: Fix dimensional slap from Friction
+    velocityCol = bodyB.getVelocity().sub(bodyA.getVelocity());
+    Vector2 tangent = velocityCol.sub(collisionNormal.mult(velocityCol.dot(collisionNormal))).normalize();
+
+    float jt = velocityCol.dot(tangent)*-1;
+    jt /= bodyA.getInv_mass() + bodyB.getInv_mass();
+
+    float staticFriction = (new Vector2(bodyA.getMaterial().getStaticFriction(), bodyB.getMaterial().getStaticFriction())).magnitude();
+
+    Vector2 frictionImpulse = Math.abs(jt) < j*staticFriction ? tangent.mult(jt) : tangent.mult(-1*j*(new Vector2(bodyA.getMaterial().getKineticFriction(), bodyB.getMaterial().getKineticFriction())).magnitude());
+
+    bodyA.setVelocity(bodyA.getVelocity().sub(frictionImpulse.mult(bodyA.getInv_mass())));
+    bodyB.setVelocity(bodyB.getVelocity().add(frictionImpulse.mult(bodyB.getInv_mass())));
+    */
   }
 
   private Vector2 positionCorrection() {
