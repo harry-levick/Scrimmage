@@ -115,7 +115,7 @@ public class Physics {
 
   public static void processCollisions() {
     for (DynamicCollision c : collisions) {
-        c.process();
+      // c.process();
     }
     collisions.clear();
   }

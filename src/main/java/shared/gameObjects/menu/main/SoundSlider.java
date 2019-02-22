@@ -12,9 +12,15 @@ public class SoundSlider extends SliderObject {
 
   SOUND_TYPE soundType = SOUND_TYPE.MUSIC;
 
-  public SoundSlider(double x, double y, double sizeX, double sizeY, SOUND_TYPE soundType,
+  public SoundSlider(
+      double x,
+      double y,
+      double sizeX,
+      double sizeY,
+      SOUND_TYPE soundType,
       String label,
-      ObjectID id, UUID objectUUID) {
+      ObjectID id,
+      UUID objectUUID) {
     super(x, y, sizeX, sizeY, label, id, objectUUID);
     this.soundType = soundType;
   }
@@ -22,12 +28,15 @@ public class SoundSlider extends SliderObject {
   @Override
   public void initialise(Group root) {
     super.initialise(root);
-    slider.valueProperty().addListener(new ChangeListener<Number>() {
-      public void changed(ObservableValue<? extends Number> ov,
-          Number old_val, Number new_val) {
-        onValueChange();
-      }
-    });
+    slider
+        .valueProperty()
+        .addListener(
+            new ChangeListener<Number>() {
+              public void changed(
+                  ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
+                onValueChange();
+              }
+            });
   }
 
   @Override
@@ -48,7 +57,6 @@ public class SoundSlider extends SliderObject {
     switch (this.soundType) {
       case MUSIC:
         Client.settings.setMusicVolume(slider.getValue() / 100f);
-        System.out.println("SET VOL MUISC " + Client.settings.getMusicVolume());
         Client.levelHandler.getMusicAudioHandler().updateMusicVolume();
         break;
       case SFX:
@@ -57,5 +65,8 @@ public class SoundSlider extends SliderObject {
     }
   }
 
-  public enum SOUND_TYPE {MUSIC, SFX}
+  public enum SOUND_TYPE {
+    MUSIC,
+    SFX
+  }
 }
