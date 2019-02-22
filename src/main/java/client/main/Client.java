@@ -20,6 +20,7 @@ import org.apache.logging.log4j.Logger;
 import shared.gameObjects.MapDataObject;
 import shared.gameObjects.UI.UI;
 import shared.gameObjects.players.Player;
+import shared.gameObjects.weapons.MachineGun;
 import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.LevelHandler;
 import shared.handlers.levelHandler.Map;
@@ -38,21 +39,18 @@ public class Client extends Application {
   public static boolean singleplayerGame;
   public static ConnectionHandler connectionHandler;
   public static boolean sendUpdate;
-
-  private final float timeStep = 0.0166f;
-  private final String gameTitle = "Alone in the Dark";
   public static Timer timer = new Timer("Timer", true);
-
   public static int inputSequenceNumber;
   public static ArrayList<PacketInput> pendingInputs;
   public static TimerTask task;
+  public static Group gameRoot;
+  private final float timeStep = 0.0166f;
+  private final String gameTitle = "Alone in the Dark";
   private LinkedList<Map> playlist;
-
   private KeyboardInput keyInput;
   private MouseInput mouseInput;
   private Group root;
   private Group backgroundRoot;
-  public static Group gameRoot;
   private Scene scene;
   private float maximumStep;
   private long previousTime;
@@ -69,27 +67,33 @@ public class Client extends Application {
   @Override
   public void start(Stage primaryStage) {
     playlist = new LinkedList<>();
-    //Testing code
-    for (int i = 0; i < 10; i++) {
-      playlist
-          .add(new Map("Map" + i, Path.convert("src/main/resources/maps/map" + i + ".map"),
+    // Testing code
+    for (int i = 1; i < 11; i++) {
+      playlist.add(
+          new Map(
+              "Map" + i,
+              Path.convert("src/main/resources/maps/map" + i + ".map"),
               GameState.IN_GAME));
     }
 
     /** Setup Game timer */
-    task = new TimerTask() {
-      @Override
-      public void run() {
-        singleplayerGame = false;
-        levelHandler.getPlayers().removeAll(levelHandler.getBotPlayerList());
-        levelHandler.getBotPlayerList().forEach(gameObject -> gameObject.removeRender());
-        levelHandler.getBotPlayerList().forEach(gameObject -> gameObject = null);
-        levelHandler.getBotPlayerList().clear();
-        levelHandler.changeMap(
-            new Map("Main Menu", Path.convert("src/main/resources/menus/main_menu.map"),
-                GameState.MAIN_MENU), false);
-      }
-    };
+    task =
+        new TimerTask() {
+          @Override
+          public void run() {
+            singleplayerGame = false;
+            levelHandler.getPlayers().removeAll(levelHandler.getBotPlayerList());
+            levelHandler.getBotPlayerList().forEach(gameObject -> gameObject.removeRender());
+            levelHandler.getBotPlayerList().forEach(gameObject -> gameObject = null);
+            levelHandler.getBotPlayerList().clear();
+            levelHandler.changeMap(
+                new Map(
+                    "Main Menu",
+                    Path.convert("src/main/resources/menus/main_menu.map"),
+                    GameState.MAIN_MENU),
+                false);
+          }
+        };
 
     setupRender(primaryStage);
     inputSequenceNumber = 0;
@@ -152,26 +156,25 @@ public class Client extends Application {
         }
 
         if (!multiplayer && singleplayerGame && levelHandler.getPlayers().size() > 1) {
-          /**Calculate Score*/
-            ArrayList<Player> alive = new ArrayList<>();
-            for (Player p : levelHandler.getPlayers()) {
-              if (p.isActive()) {
-                alive.add(p);
-              }
-              if (alive.size() > 1) {
-                break;
-              }
-            if (alive.size() == 1) {
-              alive.forEach(player -> player.increaseScore());
-              levelHandler.getPlayers().forEach(player -> player.reset());
-              Map nextMap = playlist.poll();
-              levelHandler.changeMap(nextMap, true);
+          /** Calculate Score */
+          ArrayList<Player> alive = new ArrayList<>();
+          for (Player p : levelHandler.getPlayers()) {
+            if (p.isActive()) {
+              alive.add(p);
+            }
+            if (alive.size() > 1) {
+              break;
             }
           }
+          if (alive.size() == 1) {
+            alive.forEach(player -> player.increaseScore());
+            levelHandler.getPlayers().forEach(player -> player.reset());
+            Map nextMap = playlist.poll();
+            levelHandler.changeMap(nextMap, true);
+            giveWeapon();
+          }
           /** Move bots */
-          levelHandler.getBotPlayerList()
-              .forEach(bot -> bot.applyInput());
-
+          levelHandler.getBotPlayerList().forEach(bot -> bot.applyInput());
         }
 
         /** Render Game Objects */
@@ -190,6 +193,8 @@ public class Client extends Application {
         levelHandler
             .getGameObjects()
             .forEach(gameObject -> gameObject.updateCollision(levelHandler.getGameObjects()));
+        Physics.processCollisions();
+
         /** Update Game Objects */
         levelHandler.getGameObjects().forEach(gameObject -> gameObject.update());
         accumulatedTime -= timeStep;
@@ -207,8 +212,11 @@ public class Client extends Application {
     if (elapsedSinceFPS >= 0.5f) {
       int fps = Math.round(framesElapsedSinceFPS / elapsedSinceFPS);
       primaryStage.setTitle(
-          gameTitle + "   --    FPS: " + fps + "    Score: " + Client.levelHandler.getClientPlayer()
-              .getScore());
+          gameTitle
+              + "   --    FPS: "
+              + fps
+              + "    Score: "
+              + Client.levelHandler.getClientPlayer().getScore());
       elapsedSinceFPS = 0;
       framesElapsedSinceFPS = 0;
     }
@@ -265,38 +273,43 @@ public class Client extends Application {
         System.out.println(message);
         int messageID = Integer.parseInt(message.substring(0, 1));
         switch (messageID) {
-          //PlayerJoin
+          // PlayerJoin
           case 4:
             PacketPlayerJoin packetPlayerJoin = new PacketPlayerJoin(message);
             levelHandler.addPlayer(
-                new Player(packetPlayerJoin.getX(), packetPlayerJoin.getY(),
-                    packetPlayerJoin.getUUID()), gameRoot);
+                new Player(
+                    packetPlayerJoin.getX(), packetPlayerJoin.getY(), packetPlayerJoin.getUUID()),
+                gameRoot);
             break;
-          //Ends
+          // Ends
           case 6:
             Client.connectionHandler.end();
             Client.connectionHandler = null;
-            //Show score board
+            // Show score board
             multiplayer = false;
             Client.levelHandler.changeMap(
-                new Map("main_menu", Path.convert("src/main/resources/menus/main_menu.map"),
-                    GameState.IN_GAME), false);
+                new Map(
+                    "main_menu",
+                    Path.convert("src/main/resources/menus/main_menu.map"),
+                    GameState.IN_GAME),
+                false);
 
             break;
           case 7:
             PacketGameState gameState = new PacketGameState(message);
             HashMap<UUID, String> data = gameState.getGameObjects();
-            levelHandler.getGameObjects()
-                .forEach(gameObject -> {
-                  if (!(gameObject instanceof MapDataObject)) {
-                    gameObject.setState(data.get(gameObject.getUUID()));
-                  }
-                });
+            levelHandler
+                .getGameObjects()
+                .forEach(
+                    gameObject -> {
+                      if (!(gameObject instanceof MapDataObject)) {
+                        gameObject.setState(data.get(gameObject.getUUID()));
+                      }
+                    });
             serverReconciliation(gameState.getLastProcessedInput());
             break;
           default:
             System.out.println("ERROR" + messageID + " " + message);
-
         }
       } catch (InterruptedException e) {
         e.printStackTrace();
@@ -322,11 +335,24 @@ public class Client extends Application {
         player.jumpKey = input.isJumpKey();
         player.leftKey = input.isLeftKey();
         player.rightKey = input.isRightKey();
-        player.click = false; //Don't want extra bullets
+        player.click = false; // Don't want extra bullets
         player.applyInput();
         j++;
       }
     }
   }
 
+  public void giveWeapon() {
+    levelHandler
+        .getClientPlayer()
+        .setHolding(
+            new MachineGun(
+                500,
+                500,
+                "MachineGun@LevelHandler",
+                Client.levelHandler.getClientPlayer(),
+                UUID.randomUUID()));
+    levelHandler.getGameObjects().add(Client.levelHandler.getClientPlayer().getHolding());
+    levelHandler.getClientPlayer().getHolding().initialise(Client.gameRoot);
+  }
 }
