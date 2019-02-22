@@ -1,6 +1,7 @@
 package shared.handlers.levelHandler;
 
 import client.handlers.audioHandler.AudioHandler;
+import client.handlers.audioHandler.MusicAssets.PLAYLIST;
 import client.main.Settings;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -24,6 +25,7 @@ public class LevelHandler {
   private ArrayList<Map> maps;
   private GameState gameState;
   private Map map;
+  private Map previousMap;
   private Group root;
   private Group backgroundRoot;
   private Group gameRoot;
@@ -45,12 +47,9 @@ public class LevelHandler {
     clientPlayer = new Player(500, 200, UUID.randomUUID());
     clientPlayer.initialise(gameRoot);
     players.add(clientPlayer);
-    changeMap(
-        new Map(
-            "main_menu.map",
-            Path.convert("src/main/resources/menus/main_menu.map"),
-            GameState.IN_GAME),
-        true);
+    changeMap(new Map("main_menu.map", Path.convert("src/main/resources/menus/main_menu.map"),
+        GameState.MAIN_MENU), true);
+    previousMap = null;
     /*
     clientPlayer.setHolding(new MachineGun(clientPlayer.getHandRightX(), clientPlayer.getHandRightY(),
         "MachineGun@LevelHandler_clientPlayer", clientPlayer, UUID.randomUUID()));
@@ -90,9 +89,20 @@ public class LevelHandler {
   }
 
   public void changeMap(Map map, Boolean moveToSpawns) {
+    previousMap = this.map;
     this.map = map;
     players.forEach(player -> player.reset());
     generateLevel(root, backgroundRoot, gameRoot, moveToSpawns);
+  }
+
+  public void previousMap(Boolean moveToSpawns) {
+    if (previousMap != null) {
+      Map temp = this.map;
+      this.map = previousMap;
+      previousMap = temp;
+      players.forEach(player -> player.reset());
+      generateLevel(root, backgroundRoot, gameRoot, moveToSpawns);
+    }
   }
 
   /**
@@ -137,7 +147,20 @@ public class LevelHandler {
     gameObjects.forEach(gameObject -> gameObject.setSettings(settings));
     gameState = map.getGameState();
 
-    // musicPlayer.playMusicPlaylist();
+    musicPlayer.stopMusic();
+    switch (gameState) {
+      case IN_GAME:
+        musicPlayer.playMusicPlaylist(PLAYLIST.INGAME);
+        break;
+      case MAIN_MENU:
+      case Lobby:
+      case Start_Connection:
+      case Multiplayer:
+      default:
+        musicPlayer.playMusicPlaylist(PLAYLIST.MENU);
+        break;
+
+    }
     System.gc();
   }
 

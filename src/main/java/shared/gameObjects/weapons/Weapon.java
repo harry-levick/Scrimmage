@@ -6,7 +6,9 @@ import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
 
-/** @author hlf764 The abstract class for all weapons in the game. */
+/**
+ * @author hlf764 The abstract class for all weapons in the game.
+ */
 public abstract class Weapon extends GameObject {
 
   /**
@@ -83,7 +85,9 @@ public abstract class Weapon extends GameObject {
   }
 
   public void deductAmmo() {
-    if (this.ammo > 0) this.ammo -= 1;
+    if (this.ammo > 0) {
+      this.ammo -= 1;
+    }
   }
 
   public boolean canFire() {

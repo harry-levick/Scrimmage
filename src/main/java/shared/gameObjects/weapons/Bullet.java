@@ -6,7 +6,6 @@ import java.util.UUID;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.components.BoxCollider;
-import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Player;
 import shared.physics.Physics;
@@ -16,7 +15,9 @@ import shared.physics.data.MaterialProperty;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
 
-/** @author hlf764 */
+/**
+ * @author hlf764
+ */
 public abstract class Bullet extends GameObject {
 
   public boolean isHit; // true if there is an object at that position
@@ -88,7 +89,7 @@ public abstract class Bullet extends GameObject {
       Client.levelHandler.delGameObject(this);
       for (Player p : playersBeingHit) {
         p.deductHp(this.damage);
-       // ((Rigidbody) p.getComponent(ComponentType.RIGIDBODY)).moveX(-100, 0.4f);
+        // ((Rigidbody) p.getComponent(ComponentType.RIGIDBODY)).moveX(-100, 0.4f);
       }
     } else if ((0 < getX() && getX() < 1920) && (0 < getY() && getY() < 1080)) {
       rb.move(vector.mult((float) speed));
@@ -125,7 +126,8 @@ public abstract class Bullet extends GameObject {
     if (newWidth > 0) {
       this.width = newWidth;
     }
-    getTransform().scale(new Vector2((float) newWidth/(float)width, (float) newWidth/(float)width));
+    getTransform()
+        .scale(new Vector2((float) newWidth / (float) width, (float) newWidth / (float) width));
   }
 
   public double getSpeed() {

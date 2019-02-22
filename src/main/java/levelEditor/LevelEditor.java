@@ -28,9 +28,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import levelEditor.LevelEditor.OBJECT_TYPES;
-import shared.gameObjects.ExampleFloorObject;
-import shared.gameObjects.ExampleObject;
-import shared.gameObjects.ExampleWallObject;
+import shared.gameObjects.Blocks.Stone.StoneBlockObject;
+import shared.gameObjects.Blocks.Stone.StoneFloorObject;
+import shared.gameObjects.Blocks.Stone.StoneWallObject;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.MapDataObject;
 import shared.gameObjects.UI.Health;
@@ -111,7 +111,7 @@ public class LevelEditor extends Application {
         case FLOOR:
         default:
           temp =
-              new ExampleFloorObject(
+              new StoneFloorObject(
                   getGridX(event.getX()),
                   getGridY(event.getY()),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
@@ -122,7 +122,7 @@ public class LevelEditor extends Application {
 
         case WALL:
           temp =
-              new ExampleWallObject(
+              new StoneWallObject(
                   getGridX(event.getX()),
                   getGridY(event.getY()),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
@@ -221,7 +221,7 @@ public class LevelEditor extends Application {
 
         case BOX:
           temp =
-              new ExampleObject(
+              new StoneBlockObject(
                   getGridX(event.getX()),
                   getGridY(event.getY()),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),

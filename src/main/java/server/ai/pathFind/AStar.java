@@ -1,6 +1,8 @@
 package server.ai.pathFind;
 
-/** @author Harry Levick (hxl799) */
+/**
+ * @author Harry Levick (hxl799)
+ */
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
