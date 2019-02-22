@@ -199,7 +199,7 @@ public class LevelCreator extends Application {
     filename = "settings";
     gameObjects = new ArrayList<GameObject>();
     playerSpawns = new ArrayList<Player>();
-    mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.IN_GAME);
+    mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.MAIN_MENU);
     mapDataObject.setBackground(
         new Background("images/backgrounds/background1.png", ObjectID.Background,
             UUID.randomUUID()));

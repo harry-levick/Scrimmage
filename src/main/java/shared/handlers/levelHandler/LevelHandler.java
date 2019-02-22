@@ -1,6 +1,7 @@
 package shared.handlers.levelHandler;
 
 import client.handlers.audioHandler.AudioHandler;
+import client.handlers.audioHandler.MusicAssets.PLAYLIST;
 import client.main.Settings;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -11,8 +12,6 @@ import shared.gameObjects.MapDataObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.background.Background;
 import shared.gameObjects.players.Player;
-import shared.gameObjects.weapons.MachineGun;
-import shared.gameObjects.weapons.TestPosition;
 import shared.util.Path;
 import shared.util.maths.Vector2;
 
@@ -48,7 +47,7 @@ public class LevelHandler {
     clientPlayer.initialise(gameRoot);
     players.add(clientPlayer);
     changeMap(new Map("main_menu.map", Path.convert("src/main/resources/menus/main_menu.map"),
-        GameState.IN_GAME), true);
+        GameState.MAIN_MENU), true);
     /*
     clientPlayer.setHolding(new MachineGun(clientPlayer.getHandRightX(), clientPlayer.getHandRightY(),
         "MachineGun@LevelHandler_clientPlayer", clientPlayer, UUID.randomUUID()));
@@ -135,7 +134,20 @@ public class LevelHandler {
     gameObjects.forEach(gameObject -> gameObject.setSettings(settings));
     gameState = map.getGameState();
 
-    //musicPlayer.playMusicPlaylist();
+    musicPlayer.stopMusic();
+    switch (gameState) {
+      case IN_GAME:
+        musicPlayer.playMusicPlaylist(PLAYLIST.INGAME);
+        break;
+      case MAIN_MENU:
+      case Lobby:
+      case Start_Connection:
+      case Multiplayer:
+      default:
+        musicPlayer.playMusicPlaylist(PLAYLIST.MENU);
+        break;
+
+    }
     System.gc();
   }
 
