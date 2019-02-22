@@ -140,7 +140,13 @@ public abstract class GameObject implements Serializable {
    * @return State of object
    */
   public String getState() {
-    String test = objectUUID + ";" + getX() + ";" + getY() + ";" + animation.getName();
+    /*
+    String s = "X:0:Y:0";
+    if(getComponent(ComponentType.RIGIDBODY) != null) {
+      s = ((Rigidbody) getComponent(ComponentType.RIGIDBODY)).getVelocity().toString();
+    }
+    */
+    String test = objectUUID + ";" + getX() + ";" + getY() + ";" + animation.getName(); // + ";" + s;
     return test;
   }
 
@@ -149,6 +155,11 @@ public abstract class GameObject implements Serializable {
     setX(Double.parseDouble(unpackedData[1]));
     setY(Double.parseDouble(unpackedData[2]));
     this.animation.switchAnimation(unpackedData[3]);
+    /*
+    if(getComponent(ComponentType.RIGIDBODY) != null) {
+      ((Rigidbody) getComponent(ComponentType.RIGIDBODY)).setVelocity(new Vector2(unpackedData[4]));
+    }
+    */
   }
 
   // Ignore for now, added due to unSerializable objects

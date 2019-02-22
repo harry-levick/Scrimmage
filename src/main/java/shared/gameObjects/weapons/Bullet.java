@@ -38,7 +38,7 @@ public abstract class Bullet extends GameObject {
       Player holder, // holder of the gun that fired this bullet
       UUID uuid) { // uuid of this bullet
 
-    super(gunX, gunY, 20, 20, ObjectID.Bullet, uuid);
+    super(gunX, gunY, width, width, ObjectID.Bullet, uuid);
     setWidth(width);
     setSpeed(speed);
     this.damage = damage;
@@ -51,7 +51,7 @@ public abstract class Bullet extends GameObject {
     rb =
         new Rigidbody(
             RigidbodyType.DYNAMIC,
-            1f, // mass
+            0.75f, // mass
             0,
             0.1f,
             new MaterialProperty(0.1f, 1, 1),
@@ -68,10 +68,11 @@ public abstract class Bullet extends GameObject {
 
   @Override
   public void update() {
+    super.update();
     ArrayList<Collision> collision =
         Physics.boxcastAll(
-            new Vector2((float) getX(), (float) getY()),
-            new Vector2((float) this.width, (float) this.width));
+            getTransform().getPos(),
+            getTransform().getSize());
     ArrayList<Player> playersBeingHit = new ArrayList<>();
 
     // check if a player is hit
@@ -80,8 +81,6 @@ public abstract class Bullet extends GameObject {
       if (g.getId() == ObjectID.Player && !g.equals(holder)) {
         isHit = true;
         playersBeingHit.add((Player) g);
-        ((Rigidbody) holder.getComponent(ComponentType.RIGIDBODY))
-            .move(new Vector2(-300, -300), 0.6f);
       }
     }
 
@@ -89,10 +88,10 @@ public abstract class Bullet extends GameObject {
       Client.levelHandler.delGameObject(this);
       for (Player p : playersBeingHit) {
         p.deductHp(this.damage);
+       // ((Rigidbody) p.getComponent(ComponentType.RIGIDBODY)).moveX(-100, 0.4f);
       }
     } else if ((0 < getX() && getX() < 1920) && (0 < getY() && getY() < 1080)) {
       rb.move(vector.mult((float) speed));
-      super.update();
     } else {
       Client.levelHandler.delGameObject(this);
     }
@@ -126,6 +125,7 @@ public abstract class Bullet extends GameObject {
     if (newWidth > 0) {
       this.width = newWidth;
     }
+    getTransform().scale(new Vector2((float) newWidth/(float)width, (float) newWidth/(float)width));
   }
 
   public double getSpeed() {
