@@ -36,7 +36,9 @@ public class Transform implements Serializable {
     gameObject = parent;
   }
 
-  /** Moves the attached gameObject to the desired position. */
+  /**
+   * Moves the attached gameObject to the desired position.
+   */
   public void translate(Vector2 translateFactor) {
     topPos = topPos.add(translateFactor);
     botPos = botPos.add(translateFactor);

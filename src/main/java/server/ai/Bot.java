@@ -11,7 +11,9 @@ import shared.physics.Physics;
 import shared.physics.data.Collision;
 import shared.util.maths.Vector2;
 
-/** @author Harry Levick (hxl799) */
+/**
+ * @author Harry Levick (hxl799)
+ */
 public class Bot extends Player {
 
   public static final int KEY_JUMP = 0;
@@ -26,7 +28,9 @@ public class Bot extends Player {
   AStar pathFinder;
   List<Player> allPlayers;
 
-  /** @param allObjs Contains a list of all game objects in the world, including players. */
+  /**
+   * @param allObjs Contains a list of all game objects in the world, including players.
+   */
   public Bot(double x, double y, UUID playerUUID, List<GameObject> allObjs) {
     super(x, y, playerUUID);
     allPlayers = new ArrayList<>();
@@ -63,7 +67,7 @@ public class Bot extends Player {
       case IDLE:
         // System.out.println("IDLE");
         // TODO what to do in the idle state?
-        executeAction(new boolean[] {false, false, false, false, false});
+        executeAction(new boolean[]{false, false, false, false, false});
         break;
       case CHASING:
         // System.out.println("CHASING");
@@ -73,7 +77,7 @@ public class Bot extends Player {
         break;
       case FLEEING:
         // System.out.println("FLEEING");
-        executeAction(new boolean[] {false, false, false, false, false});
+        executeAction(new boolean[]{false, false, false, false, false});
         // TODO calculate and execute the best path away from the target.
         break;
       case ATTACKING:
@@ -98,7 +102,7 @@ public class Bot extends Player {
         break;
       case FLEEING_ATTACKING:
         // System.out.println("CHASING-ATTACKING");
-        executeAction(new boolean[] {false, false, false, false, false});
+        executeAction(new boolean[]{false, false, false, false, false});
         // TODO calculate and execute the best path away from the target whilst attacking.
         break;
     }

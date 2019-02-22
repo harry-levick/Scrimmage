@@ -261,7 +261,7 @@ public class Client extends Application {
         System.out.println(message);
         int messageID = Integer.parseInt(message.substring(0, 1));
         switch (messageID) {
-            // PlayerJoin
+          // PlayerJoin
           case 4:
             PacketPlayerJoin packetPlayerJoin = new PacketPlayerJoin(message);
             levelHandler.addPlayer(
@@ -269,7 +269,7 @@ public class Client extends Application {
                     packetPlayerJoin.getX(), packetPlayerJoin.getY(), packetPlayerJoin.getUUID()),
                 gameRoot);
             break;
-            // Ends
+          // Ends
           case 6:
             Client.connectionHandler.end();
             Client.connectionHandler = null;

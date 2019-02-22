@@ -77,5 +77,6 @@ public class StoneFloorObject extends GameObject {
   }
 
   @Override
-  public void interpolatePosition(float alpha) {}
+  public void interpolatePosition(float alpha) {
+  }
 }

@@ -6,9 +6,9 @@ import shared.gameObjects.components.Collider;
 import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.EdgeCollider;
 import shared.gameObjects.components.Rigidbody;
-import shared.physics.types.CollisionDirection;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
+
 //TODO: Refactor and clean up; this is used only by Raycasts now
 public class Collision {
 
@@ -16,7 +16,9 @@ public class Collision {
   private Vector2 normalCollision;
   private float penDepth;
 
-  /** */
+  /**
+   *
+   */
   public Collision(Rigidbody collidedObject, Vector2 normal, float depth) {
     this.collidedObject = collidedObject;
     this.normalCollision = normal;
@@ -57,7 +59,9 @@ public class Collision {
   }
 
   public static boolean haveCollided(Collider colA, Collider colB) {
-    if (colA == colB) return false;
+    if (colA == colB) {
+      return false;
+    }
     boolean toRet = false;
     switch (colA.getColliderType()) {
       case BOX:
@@ -98,11 +102,13 @@ public class Collision {
 
   public static float getPenDepth(BoxCollider boxA, BoxCollider boxB) {
     Vector2 n = boxB.getCentre().sub(boxA.getCentre());
-    float x_overlap =  boxA.getSize().getX()*0.5f + boxB.getSize().getX()*0.5f - Math.abs(n.getX());
-    float y_overlap =  boxA.getSize().getY()*0.5f + boxB.getSize().getY()*0.5f - Math.abs(n.getY());
+    float x_overlap =
+        boxA.getSize().getX() * 0.5f + boxB.getSize().getX() * 0.5f - Math.abs(n.getX());
+    float y_overlap =
+        boxA.getSize().getY() * 0.5f + boxB.getSize().getY() * 0.5f - Math.abs(n.getY());
 
     Vector2 penetrationDistance = new Vector2(x_overlap, y_overlap);
-    if(penetrationDistance.getX() < penetrationDistance.getY()) {
+    if (penetrationDistance.getX() < penetrationDistance.getY()) {
       return x_overlap;
     }
     else {
@@ -113,23 +119,22 @@ public class Collision {
   public static Vector2 getDirection(BoxCollider boxA, BoxCollider boxB) {
     Vector2 n = boxB.getCentre().sub(boxA.getCentre());
     Rigidbody bodyB = (Rigidbody) boxB.getParent().getComponent(ComponentType.RIGIDBODY);
-    float x_overlap =  boxA.getSize().getX()*0.5f + boxB.getSize().getX()*0.5f - Math.abs(n.getX());
-    float y_overlap =  boxA.getSize().getY()*0.5f + boxB.getSize().getY()*0.5f - Math.abs(n.getY());
+    float x_overlap =
+        boxA.getSize().getX() * 0.5f + boxB.getSize().getX() * 0.5f - Math.abs(n.getX());
+    float y_overlap =
+        boxA.getSize().getY() * 0.5f + boxB.getSize().getY() * 0.5f - Math.abs(n.getY());
 
     Vector2 penetrationDistance = new Vector2(x_overlap, y_overlap);
-    if(penetrationDistance.getX() < penetrationDistance.getY()) {
-      if(n.getX() < 0) {
-       return bodyB.getBodyType() == RigidbodyType.STATIC ? Vector2.Right() : Vector2.Left();
-      }
-      else {
+    if (penetrationDistance.getX() < penetrationDistance.getY()) {
+      if (n.getX() < 0) {
+        return bodyB.getBodyType() == RigidbodyType.STATIC ? Vector2.Right() : Vector2.Left();
+      } else {
         return bodyB.getBodyType() == RigidbodyType.STATIC ? Vector2.Left() : Vector2.Zero();
       }
-    }
-    else {
+    } else {
       if (n.getY() < 0) {
         return bodyB.getBodyType() == RigidbodyType.STATIC ? Vector2.Down() : Vector2.Up();
-      }
-      else {
+      } else {
         return bodyB.getBodyType() == RigidbodyType.STATIC ? Vector2.Up() : Vector2.Down();
       }
     }

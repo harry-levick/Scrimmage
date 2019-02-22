@@ -5,7 +5,9 @@ import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
 import shared.util.Path;
 
-/** @author hlf764 The Handgun class. */
+/**
+ * @author hlf764 The Handgun class.
+ */
 public class Handgun extends Gun {
 
   /**
