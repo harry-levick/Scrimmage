@@ -57,8 +57,8 @@ public class Client extends Application {
   private float accumulatedTime;
   private float elapsedSinceFPS = 0f;
   private int framesElapsedSinceFPS = 0;
-  
   private UI userInterface;
+  private boolean gameOver;
 
   public static void main(String args[]) {
     launch(args);
@@ -66,6 +66,7 @@ public class Client extends Application {
 
   @Override
   public void start(Stage primaryStage) {
+    gameOver = false;
     playlist = new LinkedList<>();
     // Testing code
     for (int i = 1; i < 11; i++) {
@@ -81,17 +82,7 @@ public class Client extends Application {
         new TimerTask() {
           @Override
           public void run() {
-            singleplayerGame = false;
-            levelHandler.getPlayers().removeAll(levelHandler.getBotPlayerList());
-            levelHandler.getBotPlayerList().forEach(gameObject -> gameObject.removeRender());
-            levelHandler.getBotPlayerList().forEach(gameObject -> gameObject = null);
-            levelHandler.getBotPlayerList().clear();
-            levelHandler.changeMap(
-                new Map(
-                    "Main Menu",
-                    Path.convert("src/main/resources/menus/main_menu.map"),
-                    GameState.MAIN_MENU),
-                false);
+            gameOver = true;
           }
         };
 
@@ -121,6 +112,10 @@ public class Client extends Application {
 
         if (multiplayer) {
           processServerPackets();
+        }
+
+        if (gameOver) {
+          endGame();
         }
 
         if (previousTime == 0) {
@@ -229,6 +224,20 @@ public class Client extends Application {
     settings = new Settings();
     multiplayer = false;
     // Start off screen
+  }
+
+  public void endGame() {
+    singleplayerGame = false;
+    levelHandler.getPlayers().removeAll(levelHandler.getBotPlayerList());
+    levelHandler.getBotPlayerList().forEach(gameObject -> gameObject.removeRender());
+    levelHandler.getBotPlayerList().forEach(gameObject -> gameObject = null);
+    levelHandler.getBotPlayerList().clear();
+    levelHandler.changeMap(
+        new Map(
+            "Main Menu",
+            Path.convert("src/main/resources/menus/main_menu.map"),
+            GameState.MAIN_MENU),
+        false);
   }
 
   private void setupRender(Stage primaryStage) {
