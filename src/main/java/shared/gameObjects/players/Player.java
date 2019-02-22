@@ -38,7 +38,7 @@ public class Player extends GameObject {
     addComponent(bc);
     rb =
         new Rigidbody(
-            RigidbodyType.DYNAMIC, 80, 8, 0.2f, new MaterialProperty(0.005f, 0, 0), null, this);
+            RigidbodyType.DYNAMIC, 80, 8, 0.2f, new MaterialProperty(0.005f, 0.1f, 0.05f), null, this);
     addComponent(rb);
     this.health = 100;
     holding = null;
