@@ -15,7 +15,6 @@ public class ConnectionHandler extends Thread {
 
   public BlockingQueue received;
 
-
   private byte[] buffer;
   private String address;
   private int port;
@@ -23,7 +22,6 @@ public class ConnectionHandler extends Thread {
   private DatagramSocket clientSocket;
   private Socket socket;
   private PrintWriter out;
-
 
   public ConnectionHandler(String test) {
     connected = true;
@@ -40,16 +38,17 @@ public class ConnectionHandler extends Thread {
   }
 
   public void run() {
-      Packet joinPacket =
-          new PacketJoin(
-              Client.levelHandler.getClientPlayer().getUUID(), Client.settings.getUsername(),
-              Client.levelHandler.getClientPlayer().getX(),
-              Client.levelHandler.getClientPlayer().getY());
+    Packet joinPacket =
+        new PacketJoin(
+            Client.levelHandler.getClientPlayer().getUUID(),
+            Client.settings.getUsername(),
+            Client.levelHandler.getClientPlayer().getX(),
+            Client.levelHandler.getClientPlayer().getY());
     send(joinPacket.getString());
 
     Client.multiplayer = true;
     while (connected) {
-      buffer = new byte[5000];
+      buffer = new byte[1024];
       DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
       try {
         clientSocket.receive(packet);
@@ -59,9 +58,8 @@ public class ConnectionHandler extends Thread {
       } catch (IOException e) {
         e.printStackTrace();
       }
-      }
     }
-
+  }
 
   public void end() {
     connected = false;
@@ -73,7 +71,6 @@ public class ConnectionHandler extends Thread {
       e.printStackTrace();
     }
   }
-
 
   public void send(String data) {
     System.out.println(data);

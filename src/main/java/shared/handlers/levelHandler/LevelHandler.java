@@ -1,6 +1,7 @@
 package shared.handlers.levelHandler;
 
 import client.handlers.audioHandler.AudioHandler;
+import client.handlers.audioHandler.MusicAssets.PLAYLIST;
 import client.main.Settings;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -13,7 +14,6 @@ import shared.gameObjects.background.Background;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.MachineGun;
 import shared.gameObjects.weapons.Sword;
-import shared.gameObjects.weapons.TestPosition;
 import shared.util.Path;
 import shared.util.maths.Vector2;
 
@@ -27,6 +27,7 @@ public class LevelHandler {
   private ArrayList<Map> maps;
   private GameState gameState;
   private Map map;
+  private Map previousMap;
   private Group root;
   private Group backgroundRoot;
   private Group gameRoot;
@@ -49,8 +50,8 @@ public class LevelHandler {
     clientPlayer.initialise(gameRoot);
     players.add(clientPlayer);
     changeMap(new Map("main_menu.map", Path.convert("src/main/resources/menus/main_menu.map"),
-        GameState.IN_GAME), true);
-    
+        GameState.MAIN_MENU), true);
+    previousMap = null;
     /*
     clientPlayer.setHolding(
         new MachineGun(clientPlayer.getHandRightX(), clientPlayer.getHandRightY(), "MachineGun@LevelHandler_clientPlayer", clientPlayer, UUID.randomUUID())
@@ -92,18 +93,28 @@ public class LevelHandler {
   }
 
   public void changeMap(Map map, Boolean moveToSpawns) {
+    previousMap = this.map;
     this.map = map;
     players.forEach(player -> player.reset());
     generateLevel(root, backgroundRoot, gameRoot, moveToSpawns);
   }
 
+  public void previousMap(Boolean moveToSpawns) {
+    if (previousMap != null) {
+      Map temp = this.map;
+      this.map = previousMap;
+      previousMap = temp;
+      players.forEach(player -> player.reset());
+      generateLevel(root, backgroundRoot, gameRoot, moveToSpawns);
+    }
+  }
 
   /**
    * NOTE: This to change the level use change Map Removes current game objects and creates new ones
    * from Map file
    */
-  public void generateLevel(Group root, Group backgroundGroup, Group gameGroup,
-      Boolean moveToSpawns) {
+  public void generateLevel(
+      Group root, Group backgroundGroup, Group gameGroup, Boolean moveToSpawns) {
 
     gameObjects.removeAll(players);
     gameObjects.removeAll(bots);
@@ -122,12 +133,13 @@ public class LevelHandler {
               background.initialise(backgroundGroup);
             }
             if (moveToSpawns && spawnPoints != null && spawnPoints.size() >= players.size()) {
-              players.forEach(player -> {
-                Vector2 spawn = spawnPoints.get(0);
-                player.setX(spawn.getX());
-                player.setY(spawn.getY());
-                spawnPoints.remove(0);
-              });
+              players.forEach(
+                  player -> {
+                    Vector2 spawn = spawnPoints.get(0);
+                    player.setX(spawn.getX());
+                    player.setY(spawn.getY());
+                    spawnPoints.remove(0);
+                  });
             }
 
           } else {
@@ -135,11 +147,24 @@ public class LevelHandler {
           }
         });
     gameObjects.addAll(players);
-    //gameObjects.addAll(bots);
+    // gameObjects.addAll(bots);
     gameObjects.forEach(gameObject -> gameObject.setSettings(settings));
     gameState = map.getGameState();
 
-    //musicPlayer.playMusicPlaylist();
+    musicPlayer.stopMusic();
+    switch (gameState) {
+      case IN_GAME:
+        musicPlayer.playMusicPlaylist(PLAYLIST.INGAME);
+        break;
+      case MAIN_MENU:
+      case Lobby:
+      case Start_Connection:
+      case Multiplayer:
+      default:
+        musicPlayer.playMusicPlaylist(PLAYLIST.MENU);
+        break;
+
+    }
     System.gc();
   }
 
@@ -149,7 +174,7 @@ public class LevelHandler {
    * @return All Game Objects
    */
   public ArrayList<GameObject> getGameObjects() {
-    clearToRemove();    // Remove every gameObjects we no longer need
+    clearToRemove(); // Remove every gameObjects we no longer need
     return gameObjects;
   }
 
@@ -173,7 +198,7 @@ public class LevelHandler {
    * @param g GameObject to be removed
    */
   public void delGameObject(GameObject g) {
-    toRemove.add(g);  // Will be removed on next frame
+    toRemove.add(g); // Will be removed on next frame
   }
 
   /**
@@ -184,7 +209,6 @@ public class LevelHandler {
   public ArrayList<Map> getMaps() {
     return maps;
   }
-
 
   /**
    * Current State of Game, eg Main_Menu or In_Game

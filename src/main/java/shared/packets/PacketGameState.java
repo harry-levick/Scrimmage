@@ -13,7 +13,6 @@ public class PacketGameState extends Packet {
   private HashMap<UUID, String> gameObjects;
   private int lastProcessedInput;
 
-
   public PacketGameState(ArrayList<GameObject> gameObjects, int lastProcessedInput) {
     packetID = PacketID.GAMESTATE.getID();
     data = "" + packetID + "," + lastProcessedInput;

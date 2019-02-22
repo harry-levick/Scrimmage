@@ -33,7 +33,10 @@ public class ButtonMultiplayer extends ButtonObject {
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
     Client.levelHandler.changeMap(
-        new Map("Multiplayer", Path.convert("src/main/resources/menus/multiplayer.map"),
-            GameState.Multiplayer), false);
+        new Map(
+            "Multiplayer",
+            Path.convert("src/main/resources/menus/multiplayer.map"),
+            GameState.Multiplayer),
+        false);
   }
 }
