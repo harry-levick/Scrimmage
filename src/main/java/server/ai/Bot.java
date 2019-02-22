@@ -164,11 +164,12 @@ public class Bot extends Player {
    * @param action: an action to exacute.
    */
   private void executeAction(boolean[] action) {
-    //this.jumpKey = action[Bot.KEY_JUMP];
-    //this.leftKey = action[Bot.KEY_LEFT];
-    //this.rightKey = action[Bot.KEY_RIGHT];
-    //this.click = action[Bot.KEY_CLICK];
+    this.jumpKey = action[Bot.KEY_JUMP];
+    this.leftKey = action[Bot.KEY_LEFT];
+    this.rightKey = action[Bot.KEY_RIGHT];
+    this.click = action[Bot.KEY_CLICK];
     
+    /*
     Random r = new Random();
     // 60% chance of jumping when asked to.
     boolean jump = r.nextDouble() <= 0.60;
@@ -191,5 +192,6 @@ public class Bot extends Player {
     if (action[Bot.KEY_JUMP]) {
       this.jumpKey = jump;
     }
+    */
   }
 }
