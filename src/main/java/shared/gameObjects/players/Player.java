@@ -38,7 +38,8 @@ public class Player extends GameObject {
     addComponent(bc);
     rb =
         new Rigidbody(
-            RigidbodyType.DYNAMIC, 80, 8, 0.2f, new MaterialProperty(0.005f, 0.1f, 0.05f), null, this);
+            RigidbodyType.DYNAMIC, 80, 8, 0.2f, new MaterialProperty(0.005f, 0.1f, 0.05f), null,
+            this);
     addComponent(rb);
     this.health = 100;
     holding = null;
@@ -218,15 +219,15 @@ public class Player extends GameObject {
 
   public double[] getHandPos() {
     if (jumped && facingLeft) {
-      return new double[] {this.getHandLeftJumpX(), this.getHandLeftJumpY()};
+      return new double[]{this.getHandLeftJumpX(), this.getHandLeftJumpY()};
     } else if (jumped && facingRight) {
-      return new double[] {this.getHandRightJumpX(), this.getHandRightJumpY()};
+      return new double[]{this.getHandRightJumpX(), this.getHandRightJumpY()};
     } else if (facingLeft) {
-      return new double[] {this.getHandLeftX(), this.getHandLeftY()};
+      return new double[]{this.getHandLeftX(), this.getHandLeftY()};
     } else if (facingRight) {
-      return new double[] {this.getHandRightX(), this.getHandRightY()};
+      return new double[]{this.getHandRightX(), this.getHandRightY()};
     }
-    return new double[] {this.getHandRightX(), this.getHandRightY()};
+    return new double[]{this.getHandRightX(), this.getHandRightY()};
   }
 
   /**

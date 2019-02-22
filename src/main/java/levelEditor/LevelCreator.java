@@ -7,13 +7,13 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.stage.Stage;
-import shared.gameObjects.ExampleFloorObject;
-import shared.gameObjects.ExampleObject;
-import shared.gameObjects.ExampleWallObject;
+import shared.gameObjects.Blocks.Stone.StoneFloorObject;
+import shared.gameObjects.Blocks.Stone.StoneWallObject;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.MapDataObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.background.Background;
+import shared.gameObjects.menu.main.ButtonBack;
 import shared.gameObjects.menu.main.ButtonMultiplayer;
 import shared.gameObjects.menu.main.ButtonSettings;
 import shared.gameObjects.menu.main.ButtonSingleplayer;
@@ -54,6 +54,16 @@ public class LevelCreator extends Application {
             + "menus"
             + File.separator;
 
+    String filepathMaps =
+        "src"
+            + File.separator
+            + "main"
+            + File.separator
+            + "resources"
+            + File.separator
+            + "maps"
+            + File.separator;
+
     ////////////////////////////////////////
     // MAIN MENU
     ////////////////////////////////////////
@@ -77,16 +87,13 @@ public class LevelCreator extends Application {
     for (int i = 0; i < 24; i++) {
       // top row wall
       gameObjects.add(
-          new ExampleWallObject(
+          new StoneWallObject(
               getAbs(i * 2), getAbs(0), getAbs(2), getAbs(2), ObjectID.Bot, UUID.randomUUID()));
-      gameObjects.add(
-          new ExampleObject(
-              getAbs(i * 2), getAbs(10), getAbs(1), getAbs(1), ObjectID.Bot, UUID.randomUUID()));
     }
     for (int i = 0; i < 12; i++) {
       // side col walls
       gameObjects.add(
-          new ExampleWallObject(
+          new StoneWallObject(
               getAbs(0),
               getAbs((i * 2) + 2),
               getAbs(2),
@@ -94,7 +101,7 @@ public class LevelCreator extends Application {
               ObjectID.Bot,
               UUID.randomUUID()));
       gameObjects.add(
-          new ExampleWallObject(
+          new StoneWallObject(
               getAbs(46),
               getAbs((i * 2) + 2),
               getAbs(2),
@@ -105,7 +112,7 @@ public class LevelCreator extends Application {
     for (int i = 0; i < 12; i++) {
       // bottom row floor
       gameObjects.add(
-          new ExampleFloorObject(
+          new StoneFloorObject(
               getAbs(i * 4), getAbs(25), getAbs(4), getAbs(2), ObjectID.Bot, UUID.randomUUID()));
     }
     MapLoader.saveMap(gameObjects, mapDataObject, filepath + filename + ".map");
@@ -123,10 +130,22 @@ public class LevelCreator extends Application {
     for (int i = 0; i < 12; i++) {
       // bottom row floor
       gameObjects.add(
-          new ExampleFloorObject(
+          new StoneFloorObject(
               getAbs(i * 4), getAbs(25), getAbs(4), getAbs(2), ObjectID.Bot, UUID.randomUUID()));
     }
     MapLoader.saveMap(gameObjects, mapDataObject, filepath + filename + ".map");
+    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "map1" + ".map");
+    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "map2" + ".map");
+    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "map3" + ".map");
+    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "map4" + ".map");
+    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "map5" + ".map");
+    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "map6" + ".map");
+    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "map7" + ".map");
+    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "map8" + ".map");
+    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "map9" + ".map");
+    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "map10" + ".map");
+
+
 
     ////////////////////////////////////////
     // SETTINGS
@@ -134,40 +153,26 @@ public class LevelCreator extends Application {
     filename = "settings";
     gameObjects = new ArrayList<GameObject>();
     playerSpawns = new ArrayList<Player>();
-    mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.IN_GAME);
+    mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.MAIN_MENU);
     mapDataObject.setBackground(
-        new Background(
-            "images/backgrounds/background1.png", ObjectID.Background, UUID.randomUUID()));
-    gameObjects.add(
-        new SoundSlider(
-            getAbs(20),
-            getAbs(7),
-            getAbs(8),
-            getAbs(1),
-            SOUND_TYPE.MUSIC,
-            "Music",
-            ObjectID.Button,
+        new Background("images/backgrounds/background1.png", ObjectID.Background,
             UUID.randomUUID()));
-    gameObjects.add(
-        new SoundSlider(
-            getAbs(20),
-            getAbs(9),
-            getAbs(8),
-            getAbs(1),
-            SOUND_TYPE.SFX,
-            "Sound Effects",
-            ObjectID.Button,
-            UUID.randomUUID()));
+    gameObjects.add(new SoundSlider(getAbs(20), getAbs(7), getAbs(8), getAbs(1), SOUND_TYPE.MUSIC,
+        "Music", ObjectID.Button, UUID.randomUUID()));
+    gameObjects.add(new SoundSlider(getAbs(20), getAbs(9), getAbs(8), getAbs(1), SOUND_TYPE.SFX,
+        "Sound Effects", ObjectID.Button, UUID.randomUUID()));
+    gameObjects.add(new ButtonBack(getAbs(20), getAbs(12), getAbs(8), getAbs(2), ObjectID.Button,
+        UUID.randomUUID()));
     for (int i = 0; i < 24; i++) {
       // top row wall
       gameObjects.add(
-          new ExampleWallObject(
+          new StoneWallObject(
               getAbs(i * 2), getAbs(0), getAbs(2), getAbs(2), ObjectID.Bot, UUID.randomUUID()));
     }
     for (int i = 0; i < 12; i++) {
       // side col walls
       gameObjects.add(
-          new ExampleWallObject(
+          new StoneWallObject(
               getAbs(0),
               getAbs((i * 2) + 2),
               getAbs(2),
@@ -175,7 +180,7 @@ public class LevelCreator extends Application {
               ObjectID.Bot,
               UUID.randomUUID()));
       gameObjects.add(
-          new ExampleWallObject(
+          new StoneWallObject(
               getAbs(46),
               getAbs((i * 2) + 2),
               getAbs(2),
@@ -186,7 +191,7 @@ public class LevelCreator extends Application {
     for (int i = 0; i < 12; i++) {
       // bottom row floor
       gameObjects.add(
-          new ExampleFloorObject(
+          new StoneFloorObject(
               getAbs(i * 4), getAbs(25), getAbs(4), getAbs(2), ObjectID.Bot, UUID.randomUUID()));
     }
     MapLoader.saveMap(gameObjects, mapDataObject, filepath + filename + ".map");

@@ -109,14 +109,17 @@ public abstract class GameObject implements Serializable {
               Physics.addCollision(new DynamicCollision(rb, o_rb));
             }
           } else if (o_col != null) {
-            if (Collision.haveCollided(col, o_col)) {}
+            if (Collision.haveCollided(col, o_col)) {
+            }
           }
         }
       }
     }
   }
 
-  /** Remove the image from the imageView by setting the image to null */
+  /**
+   * Remove the image from the imageView by setting the image to null
+   */
   public void removeRender() {
     if (imageView != null) {
       imageView.setImage(null);
@@ -146,7 +149,8 @@ public abstract class GameObject implements Serializable {
       s = ((Rigidbody) getComponent(ComponentType.RIGIDBODY)).getVelocity().toString();
     }
     */
-    String test = objectUUID + ";" + getX() + ";" + getY() + ";" + animation.getName(); // + ";" + s;
+    String test =
+        objectUUID + ";" + getX() + ";" + getY() + ";" + animation.getName(); // + ";" + s;
     return test;
   }
 

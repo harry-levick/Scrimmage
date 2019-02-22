@@ -3,7 +3,9 @@ package server.ai;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.Melee;
 
-/** @author Harry Levick (hxl799) */
+/**
+ * @author Harry Levick (hxl799)
+ */
 public enum FSA {
   ATTACKING() {
     public FSA next(Player targetPlayer, Player bot, double prevDist, double newDist) {

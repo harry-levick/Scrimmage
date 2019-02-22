@@ -2,7 +2,9 @@ package shared.util.maths;
 
 import java.io.Serializable;
 
-/** @author fxa579 Base class for Vector mathematics in 2-Dimensions */
+/**
+ * @author fxa579 Base class for Vector mathematics in 2-Dimensions
+ */
 public class Vector2 implements Serializable {
 
   private float x;

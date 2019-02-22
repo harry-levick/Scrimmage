@@ -2,7 +2,9 @@ package client.main;
 
 import java.io.File;
 
-/** @author Brett Saunders */
+/**
+ * @author Brett Saunders
+ */
 public class Settings {
 
   private String username = "TestAccount";

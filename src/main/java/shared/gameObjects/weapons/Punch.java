@@ -4,7 +4,9 @@ import java.util.UUID;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
 
-/** Default holding weapon of a player */
+/**
+ * Default holding weapon of a player
+ */
 public class Punch extends Melee {
 
   /**
