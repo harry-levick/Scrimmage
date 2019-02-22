@@ -4,25 +4,11 @@ import java.util.UUID;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 
-public class Background extends GameObject {
+public abstract class Background extends GameObject {
 
-  private String imagePath;
+  public Background(UUID objectUUID) {
+    super(0, 0, 1920, 1080, ObjectID.Background, objectUUID);
 
-  public Background(String imgPath, ObjectID id, UUID objectUUID) {
-    super(0, 0, 1920, 1080, id, objectUUID);
-    imagePath = imgPath;
-    initialiseAnimation();
-  }
-
-  @Override
-  public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", imagePath);
-  }
-
-  @Override
-  public String getState() {
-    // TODO Auto-generated method stub
-    return null;
   }
 
   public void render() {
