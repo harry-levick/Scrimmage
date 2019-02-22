@@ -19,6 +19,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import shared.gameObjects.MapDataObject;
 import shared.gameObjects.players.Player;
+import shared.gameObjects.weapons.MachineGun;
 import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.LevelHandler;
 import shared.handlers.levelHandler.Map;
@@ -64,7 +65,7 @@ public class Client extends Application {
   public void start(Stage primaryStage) {
     playlist = new LinkedList<>();
     // Testing code
-    for (int i = 0; i < 10; i++) {
+    for (int i = 1; i < 11; i++) {
       playlist.add(
           new Map(
               "Map" + i,
@@ -164,6 +165,7 @@ public class Client extends Application {
             levelHandler.getPlayers().forEach(player -> player.reset());
             Map nextMap = playlist.poll();
             levelHandler.changeMap(nextMap, true);
+            giveWeapon();
           }
           /** Move bots */
           levelHandler.getBotPlayerList().forEach(bot -> bot.applyInput());
@@ -326,5 +328,19 @@ public class Client extends Application {
         j++;
       }
     }
+  }
+
+  public void giveWeapon() {
+    levelHandler
+        .getClientPlayer()
+        .setHolding(
+            new MachineGun(
+                500,
+                500,
+                "MachineGun@LevelHandler",
+                Client.levelHandler.getClientPlayer(),
+                UUID.randomUUID()));
+    levelHandler.getGameObjects().add(Client.levelHandler.getClientPlayer().getHolding());
+    levelHandler.getClientPlayer().getHolding().initialise(Client.gameRoot);
   }
 }
