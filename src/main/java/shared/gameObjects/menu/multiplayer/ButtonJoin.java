@@ -22,8 +22,7 @@ public class ButtonJoin extends ButtonObject {
    * @param y Y coordinate of object in game world
    * @param id Unique Identifier of every game object
    */
-  public ButtonJoin(
-      double x, double y, double sizeX, double sizeY, ObjectID id, UUID objectUUID) {
+  public ButtonJoin(double x, double y, double sizeX, double sizeY, ObjectID id, UUID objectUUID) {
     super(x, y, sizeX, sizeY, id, objectUUID);
     this.address = "localhost";
   }
@@ -43,5 +42,4 @@ public class ButtonJoin extends ButtonObject {
         new Map("Lobby", Path.convert("src/main/resources/menus/lobby.map"), GameState.Lobby),
         false);
   }
-
 }

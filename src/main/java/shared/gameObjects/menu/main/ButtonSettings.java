@@ -32,9 +32,10 @@ public class ButtonSettings extends ButtonObject {
 
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
-    //System.out.println("test");
+    // System.out.println("test");
     Client.levelHandler.changeMap(
-        new Map("Settings", Path.convert("src/main/resources/menus/settings.map"),
-            GameState.MAIN_MENU), false);
+        new Map(
+            "Settings", Path.convert("src/main/resources/menus/settings.map"), GameState.MAIN_MENU),
+        false);
   }
 }
