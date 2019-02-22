@@ -30,7 +30,7 @@ public class StoneBlockObject extends GameObject {
         new Rigidbody(
             RigidbodyType.DYNAMIC,
             200,
-            2,
+            1.85f,
             0,
             new MaterialProperty(1f, 0.2f, 0.1f),
             new AngularData(0, 0, 0, 0),

@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import shared.gameObjects.MapDataObject;
+import shared.gameObjects.UI.UI;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.MachineGun;
 import shared.handlers.levelHandler.GameState;
@@ -56,6 +57,8 @@ public class Client extends Application {
   private float accumulatedTime;
   private float elapsedSinceFPS = 0f;
   private int framesElapsedSinceFPS = 0;
+  
+  private UI userInterface;
 
   public static void main(String args[]) {
     launch(args);
@@ -107,6 +110,9 @@ public class Client extends Application {
     scene.setOnMouseMoved(mouseInput);
     scene.setOnMouseReleased(mouseInput);
     scene.setOnMouseDragged(mouseInput);
+    
+    //Setup UI
+    userInterface = new UI(root,levelHandler.getClientPlayer()); 
 
     // Main Game Loop
     new AnimationTimer() {
@@ -176,6 +182,12 @@ public class Client extends Application {
         if (levelHandler.getBackground() != null) {
           levelHandler.getBackground().render();
         }
+        
+        /** Draw the UI */
+        if(levelHandler.getGameState() == GameState.IN_GAME || levelHandler.getGameState() == GameState.Multiplayer) {
+            userInterface.render();
+        }
+                
         /** Check Collisions */
         Physics.gameObjects = levelHandler.getGameObjects();
         levelHandler
