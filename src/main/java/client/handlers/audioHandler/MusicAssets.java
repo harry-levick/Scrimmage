@@ -2,6 +2,7 @@ package client.handlers.audioHandler;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 public class MusicAssets {
@@ -23,9 +24,11 @@ public class MusicAssets {
     menuPlaylist.add("GETTING_IT_DONE");
     menuPlaylist.add("LOCAL_FORECAST");
     menuPlaylist.add("MAN_DOWN");
+    Collections.shuffle(menuPlaylist);
 
     ingamePlaylist.add("OBLITERATION");
     ingamePlaylist.add("SATIATE");
+    Collections.shuffle(ingamePlaylist);
   }
 
   private String filePath =
