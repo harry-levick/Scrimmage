@@ -164,9 +164,32 @@ public class Bot extends Player {
    * @param action: an action to exacute.
    */
   private void executeAction(boolean[] action) {
-    this.jumpKey = action[Bot.KEY_JUMP];
-    this.leftKey = action[Bot.KEY_LEFT];
-    this.rightKey = action[Bot.KEY_RIGHT];
-    this.click = action[Bot.KEY_CLICK];
+    //this.jumpKey = action[Bot.KEY_JUMP];
+    //this.leftKey = action[Bot.KEY_LEFT];
+    //this.rightKey = action[Bot.KEY_RIGHT];
+    //this.click = action[Bot.KEY_CLICK];
+    
+    Random r = new Random();
+    // 60% chance of jumping when asked to.
+    boolean jump = r.nextDouble() <= 0.60;
+    // 60% chance of moving left when asked to.
+    boolean left = r.nextDouble() <= 0.60;
+    // 60% chance of moving right when asked to
+    boolean right = r.nextDouble() <= 0.60;
+
+    if (action[Bot.KEY_LEFT]) {
+      this.leftKey = left;
+      this.rightKey = false;
+    } else if (action[Bot.KEY_RIGHT]) {
+      this.rightKey = right;
+      this.leftKey = false;
+    } else {
+      this.leftKey = false;
+      this.rightKey = false;
+    }
+
+    if (action[Bot.KEY_JUMP]) {
+      this.jumpKey = jump;
+    }
   }
 }
