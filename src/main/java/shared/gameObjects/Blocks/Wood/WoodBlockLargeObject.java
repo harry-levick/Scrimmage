@@ -29,9 +29,9 @@ public class WoodBlockLargeObject extends GameObject {
         new Rigidbody(
             RigidbodyType.DYNAMIC,
             200,
-            2,
+            3,
             0,
-            new MaterialProperty(0.1f, 1, 1),
+            new MaterialProperty(0.55f, 1, 1),
             new AngularData(0, 0, 0, 0),
             this));
     addComponent(new BoxCollider(this, false));

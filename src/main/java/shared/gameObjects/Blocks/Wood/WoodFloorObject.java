@@ -31,7 +31,7 @@ public class WoodFloorObject extends GameObject {
             0,
             1,
             0,
-            new MaterialProperty(0.1f, 1, 1),
+            new MaterialProperty(0.8f, 1, 1),
             new AngularData(0, 0, 0, 0),
             this));
     addComponent(new BoxCollider(this, false));
