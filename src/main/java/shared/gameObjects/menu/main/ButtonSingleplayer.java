@@ -14,7 +14,7 @@ import shared.util.Path;
 
 public class ButtonSingleplayer extends ButtonObject {
 
-  private final int maxPlayers = 2;
+  private final int maxPlayers = 1;
 
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
