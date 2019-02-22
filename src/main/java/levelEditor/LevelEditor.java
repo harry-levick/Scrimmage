@@ -39,7 +39,6 @@ import shared.gameObjects.Blocks.Wood.WoodBlockSmallObject;
 import shared.gameObjects.Blocks.Wood.WoodFloorObject;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.MapDataObject;
-import shared.gameObjects.UI.Health;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.background.Background;
 import shared.gameObjects.menu.main.ButtonLeveleditor;
@@ -205,17 +204,6 @@ public class LevelEditor extends Application {
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
                   "Handgun",
                   null, // holder
-                  uuid);
-          break;
-
-        case UI_HP:
-          temp =
-              new Health(
-                  getGridX(event.getX()),
-                  getGridY(event.getY()),
-                  getScaledSize(objectMap.get(objectTypeSelected).getX()),
-                  getScaledSize(objectMap.get(objectTypeSelected).getY()),
-                  ObjectID.Bot,
                   uuid);
           break;
 
