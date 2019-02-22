@@ -11,6 +11,7 @@ public abstract class SliderObject extends GameObject {
 
   private final float yOffset = 30;
   protected transient Slider slider;
+  protected transient Text text;
   protected String label;
 
   public SliderObject(double x, double y, double sizeX, double sizeY, String label, ObjectID id,
@@ -47,7 +48,7 @@ public abstract class SliderObject extends GameObject {
     slider.setMinorTickCount(5);
     slider.setBlockIncrement(10);
     root.getChildren().add(slider);
-    Text text = new Text(label);
+    text = new Text(label);
     text.setLayoutX(getX());
     text.setLayoutY(getY());
     root.getChildren().add(text);
@@ -71,6 +72,13 @@ public abstract class SliderObject extends GameObject {
   public void render() {
     super.render();
     slider.relocate(getX(), getY());
+  }
+
+  public void removeRender() {
+    super.removeRender();
+    root.getChildren().remove(slider);
+    root.getChildren().remove(text);
+    slider = null;
   }
 
   public Slider getSlider() {
