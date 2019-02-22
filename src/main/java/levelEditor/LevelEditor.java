@@ -78,7 +78,7 @@ public class LevelEditor extends Application {
           + File.separator
           + "resources"
           + File.separator
-          + "menus"
+          + "maps"
           + File.separator;
 
   /**
