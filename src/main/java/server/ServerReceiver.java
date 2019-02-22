@@ -80,7 +80,7 @@ public class ServerReceiver implements Runnable {
           case 5:
             PacketReady readyPacket = new PacketReady(message);
             if (readyPacket.getUUID() == player.getUUID()
-                    && server.serverState == ServerState.WAITING_FOR_PLAYERS
+                && server.serverState == ServerState.WAITING_FOR_PLAYERS
                 || server.serverState == ServerState.WAITING_FOR_READYUP) {
               server.readyCount.getAndIncrement();
             }

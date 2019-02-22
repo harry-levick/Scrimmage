@@ -89,7 +89,9 @@ public class Rigidbody extends Component implements Serializable {
 
   // Update Methods
 
-  /** Called every physics frame, manages the velocity, forces, position, etc. */
+  /**
+   * Called every physics frame, manages the velocity, forces, position, etc.
+   */
   public void update() {
     if (bodyType == RigidbodyType.DYNAMIC) {
       applyCollisions();

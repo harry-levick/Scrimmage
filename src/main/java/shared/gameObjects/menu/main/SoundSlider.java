@@ -57,7 +57,6 @@ public class SoundSlider extends SliderObject {
     switch (this.soundType) {
       case MUSIC:
         Client.settings.setMusicVolume(slider.getValue() / 100f);
-        System.out.println("SET VOL MUISC " + Client.settings.getMusicVolume());
         Client.levelHandler.getMusicAudioHandler().updateMusicVolume();
         break;
       case SFX:

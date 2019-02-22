@@ -9,7 +9,9 @@ import shared.physics.data.Collision;
 import shared.physics.data.DynamicCollision;
 import shared.util.maths.Vector2;
 
-/** @author fxa579 The singleton class respomsible for raycasting and physics constants/equations */
+/**
+ * @author fxa579 The singleton class respomsible for raycasting and physics constants/equations
+ */
 public class Physics {
 
   public static final float GRAVITY = 100f;
@@ -113,7 +115,7 @@ public class Physics {
 
   public static void processCollisions() {
     for (DynamicCollision c : collisions) {
-     // c.process();
+      // c.process();
     }
     collisions.clear();
   }

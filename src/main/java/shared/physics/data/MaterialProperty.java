@@ -2,7 +2,9 @@ package shared.physics.data;
 
 import java.io.Serializable;
 
-/** @author fxa579 Contains data affect */
+/**
+ * @author fxa579 Contains data affect
+ */
 public class MaterialProperty implements Serializable {
 
   private float restitution;

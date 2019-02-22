@@ -95,8 +95,11 @@ public class MachineGun extends Gun {
     double angle = angleGun * 180 / PI; // degree
 
     // Change the facing of the player when aiming the other way
-    if (holder.getFacingRight() && mouseX < this.getGripX()) holder.setFacingLeft(true);
-    else if (holder.getFacingLeft() && mouseX > this.getGripX()) holder.setFacingRight(true);
+    if (holder.getFacingRight() && mouseX < this.getGripX()) {
+      holder.setFacingLeft(true);
+    } else if (holder.getFacingLeft() && mouseX > this.getGripX()) {
+      holder.setFacingRight(true);
+    }
 
     // Rotate and translate the image
     if (holder.getFacingLeft()) {
@@ -115,7 +118,8 @@ public class MachineGun extends Gun {
   }
 
   @Override
-  public void interpolatePosition(float alpha) {}
+  public void interpolatePosition(float alpha) {
+  }
 
   @Override
   public String getState() {

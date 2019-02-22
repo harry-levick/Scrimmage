@@ -47,26 +47,26 @@ public class DynamicCollision {
 
   private void resolveCollision(BoxCollider boxA, BoxCollider boxB) {
     Vector2 n = boxB.getCentre().sub(boxA.getCentre());
-    float x_overlap =  boxA.getSize().getX()*0.5f + boxB.getSize().getX()*0.5f - Math.abs(n.getX());
-    float y_overlap =  boxA.getSize().getY()*0.5f + boxB.getSize().getY()*0.5f - Math.abs(n.getY());
+    float x_overlap =
+        boxA.getSize().getX() * 0.5f + boxB.getSize().getX() * 0.5f - Math.abs(n.getX());
+    float y_overlap =
+        boxA.getSize().getY() * 0.5f + boxB.getSize().getY() * 0.5f - Math.abs(n.getY());
 
     penetrationDistance = new Vector2(x_overlap, y_overlap);
-    if(penetrationDistance.getX() < penetrationDistance.getY()) {
-      if(n.getX() < 0) {
-        collisionNormal =  Vector2.Left();
-      }
-      else {
-        collisionNormal =  bodyB.getBodyType() == RigidbodyType.STATIC ? Vector2.Right() : Vector2.Zero();
+    if (penetrationDistance.getX() < penetrationDistance.getY()) {
+      if (n.getX() < 0) {
+        collisionNormal = Vector2.Left();
+      } else {
+        collisionNormal =
+            bodyB.getBodyType() == RigidbodyType.STATIC ? Vector2.Right() : Vector2.Zero();
       }
       pentrationDepth = x_overlap;
-    }
-    else {
+    } else {
       if (n.getY() < 0) {
-        collisionNormal =  Vector2.Up();
+        collisionNormal = Vector2.Up();
         bodyB.setGrounded(true);
-      }
-      else {
-        collisionNormal =  Vector2.Down();
+      } else {
+        collisionNormal = Vector2.Down();
         bodyA.setGrounded(true);
       }
       pentrationDepth = y_overlap;
