@@ -2,9 +2,7 @@ package shared.util.maths;
 
 import java.io.Serializable;
 
-/**
- * @author fxa579 Base class for Vector mathematics in 2-Dimensions
- */
+/** @author fxa579 Base class for Vector mathematics in 2-Dimensions */
 public class Vector2 implements Serializable {
 
   private float x;
@@ -13,6 +11,12 @@ public class Vector2 implements Serializable {
   public Vector2(float x, float y) {
     this.x = x;
     this.y = y;
+  }
+
+  public Vector2(String vector) {
+    Vector2 vector2 = fromString(vector);
+    this.x = vector2.getX();
+    this.y = vector2.getY();
   }
 
   public static Vector2 Zero() {
@@ -141,12 +145,10 @@ public class Vector2 implements Serializable {
         magnitude(vector);
   }
 
-  /**
-   * Angle between two vectors, approximated
-   */
+  /** Angle between two vectors, approximated */
   public float angleBetween(Vector2 vector) {
     if (vector.magnitude(Zero()) == 0) {
-      return (float) Math.tan(getY() / getX());
+      return (float) Math.atan(getY() / getX());
     }
     return (float) Math.acos(dot(vector) / (magnitude(Zero()) * vector.magnitude(Zero())));
   }
@@ -156,9 +158,7 @@ public class Vector2 implements Serializable {
     return angleBetween(Zero());
   }
 
-  /**
-   * Computes the cross product between two vectors.
-   */
+  /** Computes the cross product between two vectors. */
   public Vector2 cross(Vector2 vector) {
     float x, y;
     x = getX() * vector.getY();
@@ -180,7 +180,12 @@ public class Vector2 implements Serializable {
 
   @Override
   public String toString() {
-    return "X: " + getX() + " Y: " + getY();
+    return "X:" + getX() + ":Y:" + getY();
+  }
+
+  private Vector2 fromString(String vector) {
+    String[] split = vector.split(":");
+    return new Vector2(Float.parseFloat(split[1]), Float.parseFloat(split[3]));
   }
 
   public boolean equals(Vector2 vector) {

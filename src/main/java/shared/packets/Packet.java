@@ -5,8 +5,7 @@ public abstract class Packet {
   protected int packetID;
   protected String data;
 
-  public Packet() {
-  }
+  public Packet() {}
 
   public byte[] getData() {
     return data.getBytes();

@@ -94,35 +94,29 @@ public abstract class GameObject implements Serializable {
   public void updateCollision(ArrayList<GameObject> gameObjects) {
     Collider col = (Collider) getComponent(ComponentType.COLLIDER);
     Rigidbody rb = (Rigidbody) getComponent(ComponentType.RIGIDBODY);
-    if(col == null) {
+    if (col == null) {
       return;
     }
     if (rb != null) {
       if (rb.getBodyType() == RigidbodyType.STATIC) {
         return;
-      }
-      else {
+      } else {
         for (GameObject o : Physics.gameObjects) {
           Collider o_col = (Collider) o.getComponent(ComponentType.COLLIDER);
           Rigidbody o_rb = (Rigidbody) o.getComponent(ComponentType.RIGIDBODY);
-          if(o_col != null && o_rb != null) {
-            if(Collision.haveCollided(col, o_col)) {
+          if (o_col != null && o_rb != null) {
+            if (Collision.haveCollided(col, o_col)) {
               Physics.addCollision(new DynamicCollision(rb, o_rb));
             }
-          }
-          else if(o_col != null) {
-            if(Collision.haveCollided(col, o_col)) {
-
-            }
+          } else if (o_col != null) {
+            if (Collision.haveCollided(col, o_col)) {}
           }
         }
       }
     }
   }
 
-  /**
-   * Remove the image from the imageView by setting the image to null
-   */
+  /** Remove the image from the imageView by setting the image to null */
   public void removeRender() {
     if (imageView != null) {
       imageView.setImage(null);
@@ -146,7 +140,13 @@ public abstract class GameObject implements Serializable {
    * @return State of object
    */
   public String getState() {
-    String test = objectUUID + ";" + getX() + ";" + getY() + ";" + animation.getName();
+    /*
+    String s = "X:0:Y:0";
+    if(getComponent(ComponentType.RIGIDBODY) != null) {
+      s = ((Rigidbody) getComponent(ComponentType.RIGIDBODY)).getVelocity().toString();
+    }
+    */
+    String test = objectUUID + ";" + getX() + ";" + getY() + ";" + animation.getName(); // + ";" + s;
     return test;
   }
 
@@ -155,14 +155,19 @@ public abstract class GameObject implements Serializable {
     setX(Double.parseDouble(unpackedData[1]));
     setY(Double.parseDouble(unpackedData[2]));
     this.animation.switchAnimation(unpackedData[3]);
+    /*
+    if(getComponent(ComponentType.RIGIDBODY) != null) {
+      ((Rigidbody) getComponent(ComponentType.RIGIDBODY)).setVelocity(new Vector2(unpackedData[4]));
+    }
+    */
   }
 
   // Ignore for now, added due to unSerializable objects
   public void initialise(Group root) {
-      animation = new Animator();
-      initialiseAnimation();
-      imageView = new ImageView();
-      imageView.setRotate(rotation);
+    animation = new Animator();
+    initialiseAnimation();
+    imageView = new ImageView();
+    imageView.setRotate(rotation);
     if (root != null) {
       this.root = root;
       root.getChildren().add(this.imageView);
@@ -240,9 +245,7 @@ public abstract class GameObject implements Serializable {
     destroyed = active = false;
   }
 
-  /**
-   * Basic Getters and Setters
-   */
+  /** Basic Getters and Setters */
   public double getX() {
     return this.transform.getPos().getX();
   }

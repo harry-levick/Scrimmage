@@ -48,9 +48,6 @@ public class MusicAssets {
     playlist.add("8");
     playlist.add("9");
     playlist.add("10");
-
-
-
   }
 
   protected String getTrackPath(String trackIndex) {

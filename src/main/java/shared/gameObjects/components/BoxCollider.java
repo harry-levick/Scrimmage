@@ -7,9 +7,7 @@ import shared.gameObjects.GameObject;
 import shared.physics.types.ColliderType;
 import shared.util.maths.Vector2;
 
-/**
- * Constructs an AABB or Squareshaped Collider
- */
+/** Constructs an AABB or Squareshaped Collider */
 public class BoxCollider extends Collider implements Serializable {
 
   private Vector2 size;
