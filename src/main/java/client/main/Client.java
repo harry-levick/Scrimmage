@@ -3,6 +3,8 @@ package client.main;
 import client.handlers.connectionHandler.ConnectionHandler;
 import client.handlers.inputHandler.KeyboardInput;
 import client.handlers.inputHandler.MouseInput;
+import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
+import de.codecentric.centerdevice.javafxsvg.dimension.PrimitiveDimensionProvider;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -11,6 +13,7 @@ import java.util.TimerTask;
 import java.util.UUID;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -67,6 +70,7 @@ public class Client extends Application {
   @Override
   public void start(Stage primaryStage) {
     gameOver = false;
+    SvgImageLoaderFactory.install(new PrimitiveDimensionProvider());
     playlist = new LinkedList<>();
     // Testing code
     for (int i = 1; i < 11; i++) {
@@ -252,6 +256,7 @@ public class Client extends Application {
     primaryStage.getIcons().add(new Image(Path.convert("images/logo.png")));
 
     scene = new Scene(root, 1920, 1080);
+    scene.setCursor(Cursor.CROSSHAIR);
 
     primaryStage.setScene(scene);
     primaryStage.setFullScreen(false);

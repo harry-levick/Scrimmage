@@ -2,6 +2,7 @@ package server;
 
 import client.main.Client;
 import client.main.Settings;
+import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -74,6 +75,7 @@ public class Server extends Application {
   }
 
   public void init() {
+    SvgImageLoaderFactory.install();
     server = this;
     executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     threadName = "Server";
