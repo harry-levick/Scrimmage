@@ -37,15 +37,14 @@ public class ButtonSingleplayer extends ButtonObject {
 
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
-    //System.out.println("test");
-    Client.levelHandler.changeMap(new Map("map1", Path.convert("src/main/resources/menus/menu.map"),
-        GameState.IN_GAME), true);
+    // System.out.println("test");
+    Client.levelHandler.changeMap(
+        new Map("map1", Path.convert("src/main/resources/menus/menu.map"), GameState.IN_GAME),
+        true);
     int botsToAdd = maxPlayers - Client.levelHandler.getPlayers().size();
     for (int b = 0; b < botsToAdd; b++) {
       Bot botPlayer = new Bot(500, 500, UUID.randomUUID(), Client.levelHandler.getGameObjects());
-      botPlayer.setHolding(
-          new Sword(500, 500, "Sword@LevelHandler", botPlayer, UUID.randomUUID())
-      );
+      botPlayer.setHolding(new Sword(500, 500, "Sword@LevelHandler", botPlayer, UUID.randomUUID()));
       botPlayer.getHolding().initialise(Client.gameRoot);
       botPlayer.initialise(Client.gameRoot);
       Client.levelHandler.getPlayers().add(botPlayer);
@@ -54,13 +53,19 @@ public class ButtonSingleplayer extends ButtonObject {
       Client.levelHandler.getGameObjects().add(botPlayer.getHolding());
     }
 
-    Client.levelHandler.getClientPlayer().setHolding(
-        new MachineGun(500, 500, "MachineGun@LevelHandler", Client.levelHandler.getClientPlayer(),
-            UUID.randomUUID()));
+    Client.levelHandler
+        .getClientPlayer()
+        .setHolding(
+            new MachineGun(
+                500,
+                500,
+                "MachineGun@LevelHandler",
+                Client.levelHandler.getClientPlayer(),
+                UUID.randomUUID()));
     Client.levelHandler.getGameObjects().add(Client.levelHandler.getClientPlayer().getHolding());
     Client.levelHandler.getClientPlayer().getHolding().initialise(Client.gameRoot);
     Client.singleplayerGame = true;
     Client.timer.schedule(Client.task, 300000L);
-    //System.out.println("test2");
+    // System.out.println("test2");
   }
 }

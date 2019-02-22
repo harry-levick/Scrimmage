@@ -1,8 +1,8 @@
 package shared.gameObjects.weapons;
 
 import client.handlers.audioHandler.AudioHandler;
-import javafx.scene.transform.Rotate;
 import java.util.UUID;
+import javafx.scene.transform.Rotate;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
 import shared.util.Path;
@@ -14,13 +14,12 @@ public class MachineGun extends Gun {
   private static String audioPath = "audio/sound-effects/laser_gun.wav"; // path to Machine Gun sfx
   private static float PI = 3.141592654f;
   private static double sizeX = 80, sizeY = 20;
-  
-  private double[] holderHandPos;
-  private double angleGun;  // angle of gun (hand and mouse vs x-axis) (radian) 
-  private Rotate rotate;  // rotate property of gun wrt grip
 
-  public MachineGun(double x, double y, String name, Player holder,
-      UUID uuid) {
+  private double[] holderHandPos;
+  private double angleGun; // angle of gun (hand and mouse vs x-axis) (radian)
+  private Rotate rotate; // rotate property of gun wrt grip
+
+  public MachineGun(double x, double y, String name, Player holder, UUID uuid) {
 
     super(
         x,
@@ -40,7 +39,7 @@ public class MachineGun extends Gun {
         false, // singleHanded
         uuid);
     holderHandPos = holder.getHandPos();
-    
+
     rotate = new Rotate();
     // pivot = position of the grip
     // If changing the value of this, change the value in all getGrip() methods
@@ -52,16 +51,16 @@ public class MachineGun extends Gun {
   public void fire(double mouseX, double mouseY) {
     if (canFire()) {
       UUID uuid = UUID.randomUUID();
-      //double bulletX     = getGripX() + 68 * Math.cos(angleGun) - 4 * Math.sin(angleGun);
-      //double bulletY     = getGripY() + 68 * Math.sin(angleGun) - 4 * Math.cos(angleGun);
-      double bulletX     = getMuzzleX() - 68 + 68 * Math.cos(-angleGun);
-      double bulletY     = getMuzzleY() - 68 * Math.sin(-angleGun);
+      // double bulletX     = getGripX() + 68 * Math.cos(angleGun) - 4 * Math.sin(angleGun);
+      // double bulletY     = getGripY() + 68 * Math.sin(angleGun) - 4 * Math.cos(angleGun);
+      double bulletX = getMuzzleX() - 68 + 68 * Math.cos(-angleGun);
+      double bulletY = getMuzzleY() - 68 * Math.sin(-angleGun);
       double bulletFlipX = getMuzzleFlipX() + 68 - 68 * Math.cos(angleGun);
       double bulletFlipY = getMuzzleFlipY() - 68 * Math.sin(angleGun);
       Bullet bullet =
           new MachineGunBullet(
-              (holder.getFacingRight()? bulletX : bulletFlipX),
-              (holder.getFacingRight()? bulletY : bulletFlipY),
+              (holder.getFacingRight() ? bulletX : bulletFlipX),
+              (holder.getFacingRight() ? bulletY : bulletFlipY),
               mouseX,
               mouseY,
               this.bulletWidth,
@@ -70,7 +69,7 @@ public class MachineGun extends Gun {
               this.holder,
               uuid);
       this.currentCooldown = getDefaultCoolDown();
-      //new AudioHandler(super.getSettings()).playSFX("CHOOSE_YOUR_CHARACTER");
+      // new AudioHandler(super.getSettings()).playSFX("CHOOSE_YOUR_CHARACTER");
       new AudioHandler(settings).playSFX("MACHINEGUN");
       deductAmmo();
     }
@@ -85,22 +84,20 @@ public class MachineGun extends Gun {
   @Override
   public void render() {
     super.render();
-    
+
     imageView.getTransforms().remove(rotate);
-    
+
     double mouseX = holder.mouseX;
     double mouseY = holder.mouseY;
-    Vector2 mouseV = new Vector2((float)mouseX, (float)mouseY);
-    Vector2 gripV = new Vector2((float)this.getGripX(), (float)this.getGripY());
-    angleGun = mouseV.sub(gripV).angle();  // radian
-    double angle = angleGun * 180 / PI;  // degree
-    
+    Vector2 mouseV = new Vector2((float) mouseX, (float) mouseY);
+    Vector2 gripV = new Vector2((float) this.getGripX(), (float) this.getGripY());
+    angleGun = mouseV.sub(gripV).angle(); // radian
+    double angle = angleGun * 180 / PI; // degree
+
     // Change the facing of the player when aiming the other way
-    if (holder.getFacingRight() && mouseX < this.getGripX())
-      holder.setFacingLeft(true);
-    else if (holder.getFacingLeft() && mouseX > this.getGripX())
-      holder.setFacingRight(true);
-    
+    if (holder.getFacingRight() && mouseX < this.getGripX()) holder.setFacingLeft(true);
+    else if (holder.getFacingLeft() && mouseX > this.getGripX()) holder.setFacingRight(true);
+
     // Rotate and translate the image
     if (holder.getFacingLeft()) {
       imageView.setScaleX(-1);
@@ -118,8 +115,7 @@ public class MachineGun extends Gun {
   }
 
   @Override
-  public void interpolatePosition(float alpha) {
-  }
+  public void interpolatePosition(float alpha) {}
 
   @Override
   public String getState() {
@@ -130,7 +126,7 @@ public class MachineGun extends Gun {
   public void initialiseAnimation() {
     this.animation.supplyAnimationWithSize("default", 40, 40, true, Path.convert(this.imagePath));
   }
-  
+
   // =============================
   // Get Grip and Muzzle positions
   // =============================

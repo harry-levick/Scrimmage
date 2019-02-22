@@ -16,9 +16,7 @@ public class Collision {
   private float penetrationDepth;
   private CollisionDirection direction;
 
-  /**
-   *
-   */
+  /** */
   public Collision(Rigidbody collidedObject, CollisionDirection direction, Vector2 depth) {
     switch (direction) {
       case DOWN:
@@ -54,20 +52,17 @@ public class Collision {
               break;
             }
             Vector2 penDepth = getPenDepth(a, (BoxCollider) b);
-            collision =
-                new Collision(collidedBody, getDirection(a, (BoxCollider) b), penDepth);
+            collision = new Collision(collidedBody, getDirection(a, (BoxCollider) b), penDepth);
           }
         }
 
         break;
       case EDGE:
-        if (Collider.boxEdgeCollision(a, (EdgeCollider) b)) {
-        }
+        if (Collider.boxEdgeCollision(a, (EdgeCollider) b)) {}
 
         break;
       case CIRCLE:
-        if (Collider.boxCircleCollision(a, (CircleCollider) b)) {
-        }
+        if (Collider.boxCircleCollision(a, (CircleCollider) b)) {}
 
         break;
     }
@@ -76,9 +71,9 @@ public class Collision {
   }
 
   public static boolean haveCollided(Collider colA, Collider colB) {
-    if(colA == colB) return false;
+    if (colA == colB) return false;
     boolean toRet = false;
-    switch(colA.getColliderType()) {
+    switch (colA.getColliderType()) {
       case BOX:
         switch (colB.getColliderType()) {
           case BOX:
@@ -88,12 +83,10 @@ public class Collision {
         break;
       case CIRCLE:
         switch (colB.getColliderType()) {
-
         }
         break;
       case EDGE:
         switch (colB.getColliderType()) {
-
         }
         break;
     }
@@ -103,15 +96,13 @@ public class Collision {
   public static Collision resolveCollision(CircleCollider a, Collider b) {
     switch (b.getColliderType()) {
       case BOX:
-        if (Collider.boxCircleCollision((BoxCollider) b, a)) {
-        }
+        if (Collider.boxCircleCollision((BoxCollider) b, a)) {}
 
         break;
       case EDGE:
         break;
       case CIRCLE:
-        if (Collider.circleCircleCollision(a, (CircleCollider) b)) {
-        }
+        if (Collider.circleCircleCollision(a, (CircleCollider) b)) {}
 
         break;
     }
@@ -128,14 +119,11 @@ public class Collision {
     float D = boxA.getCorners()[3].magnitude(boxB.getCentre());
     if (A <= B && A <= C && A <= D) {
       toRet = boxA.getCorners()[0].sub(boxB.getCorners()[2]);
-    }
-    else if (B <= C && B <= D) {
+    } else if (B <= C && B <= D) {
       toRet = boxA.getCorners()[1].sub(boxB.getCorners()[3]);
-    }
-    else if (C <= D) {
+    } else if (C <= D) {
       toRet = boxA.getCorners()[2].sub(boxB.getCorners()[0]);
-    }
-    else {
+    } else {
       toRet = boxA.getCorners()[3].sub(boxB.getCorners()[1]);
     }
 
@@ -150,19 +138,23 @@ public class Collision {
     float D = boxA.getCorners()[3].magnitude(boxB.getCentre());
     if (A <= B && A <= C && A <= D) {
       toRet = boxA.getCorners()[0].sub(boxB.getCorners()[2]);
-      return Math.abs(toRet.getX()) < Math.abs(toRet.getY()) ? CollisionDirection.LEFT
+      return Math.abs(toRet.getX()) < Math.abs(toRet.getY())
+          ? CollisionDirection.LEFT
           : CollisionDirection.UP;
     } else if (B <= C && B <= D) {
       toRet = boxA.getCorners()[1].sub(boxB.getCorners()[3]);
-      return Math.abs(toRet.getX()) < Math.abs(toRet.getY()) ? CollisionDirection.LEFT
+      return Math.abs(toRet.getX()) < Math.abs(toRet.getY())
+          ? CollisionDirection.LEFT
           : CollisionDirection.DOWN;
     } else if (C <= D) {
       toRet = boxA.getCorners()[2].sub(boxB.getCorners()[0]);
-      return Math.abs(toRet.getX()) < Math.abs(toRet.getY()) ? CollisionDirection.RIGHT
+      return Math.abs(toRet.getX()) < Math.abs(toRet.getY())
+          ? CollisionDirection.RIGHT
           : CollisionDirection.DOWN;
     } else {
       toRet = boxA.getCorners()[3].sub(boxB.getCorners()[1]);
-      return Math.abs(toRet.getX()) < Math.abs(toRet.getY()) ? CollisionDirection.RIGHT
+      return Math.abs(toRet.getX()) < Math.abs(toRet.getY())
+          ? CollisionDirection.RIGHT
           : CollisionDirection.UP;
     }
   }
@@ -185,7 +177,7 @@ public class Collision {
 
   public float getPenetrationDepth() {
     float toRet = 0;
-    switch(direction) {
+    switch (direction) {
       case UP:
       case DOWN:
         toRet = penDepth.getY();
@@ -197,9 +189,11 @@ public class Collision {
     }
     return toRet;
   }
+
   public Vector2 getDepth() {
     return penDepth;
   }
+
   @Override
   public String toString() {
     return "COLLISION DIR = " + direction.toString();

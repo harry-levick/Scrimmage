@@ -24,13 +24,11 @@ public class ServerReceiver implements Runnable {
   private ServerSocket serverSocket;
   private List connected;
 
-
   public ServerReceiver(Server server, ServerSocket serverSocket, List connected) {
     this.server = server;
     this.serverSocket = serverSocket;
     this.connected = connected;
   }
-
 
   @Override
   public void run() {
@@ -46,16 +44,16 @@ public class ServerReceiver implements Runnable {
     }
     System.out.println(message);
     int packetID = Integer.parseInt(message.split(",")[0]);
-    if (packetID == 0 && server.playerCount.get() < 4
+    if (packetID == 0
+        && server.playerCount.get() < 4
         && server.serverState == ServerState.WAITING_FOR_PLAYERS) {
       PacketJoin joinPacket = new PacketJoin(message);
-      player = new Player(joinPacket.getX(), joinPacket.getY(),
-          joinPacket.getClientID());
+      player = new Player(joinPacket.getX(), joinPacket.getY(), joinPacket.getClientID());
       Server.levelHandler.addPlayer(player, null);
       server.playerCount.getAndIncrement();
       connected.add(socket.getInetAddress());
       server.add(player);
-      //socket.setSoTimeout(5000);
+      // socket.setSoTimeout(5000);
 
       /** Main Loop */
       while (true) {
@@ -74,19 +72,18 @@ public class ServerReceiver implements Runnable {
         switch (packetID) {
           case 2:
             PacketInput inputPacket = new PacketInput(message);
-            //if (inputPacket.getUuid() == player.getUUID()) {
-            //Change to add to list
+            // if (inputPacket.getUuid() == player.getUUID()) {
+            // Change to add to list
             server.getQueue(player).add(inputPacket);
-            //}
+            // }
             break;
           case 5:
             PacketReady readyPacket = new PacketReady(message);
             if (readyPacket.getUUID() == player.getUUID()
-                && server.serverState == ServerState.WAITING_FOR_PLAYERS
+                    && server.serverState == ServerState.WAITING_FOR_PLAYERS
                 || server.serverState == ServerState.WAITING_FOR_READYUP) {
               server.readyCount.getAndIncrement();
             }
-
         }
       }
     }

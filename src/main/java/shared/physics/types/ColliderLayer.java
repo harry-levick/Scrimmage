@@ -1,6 +1,7 @@
 package shared.physics.types;
 
 public enum ColliderLayer {
-  PLAYER, OBJECT, WALL,
-
+  PLAYER,
+  OBJECT,
+  WALL,
 }
