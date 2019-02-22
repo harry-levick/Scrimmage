@@ -40,7 +40,7 @@ public class MetalFloorObject extends GameObject {
 
   // Initialise the animation
   public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", "images/platforms/stone/elementMetal013.png");
+    this.animation.supplyAnimation("default", "images/platforms/metal/elementMetal013.png");
   }
 
   @Override

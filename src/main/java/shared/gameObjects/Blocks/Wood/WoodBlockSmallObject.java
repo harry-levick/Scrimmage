@@ -39,7 +39,7 @@ public class WoodBlockSmallObject extends GameObject {
 
   // Initialise the animation
   public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", "images/platforms/stone/elementWood010.png");
+    this.animation.supplyAnimation("default", "images/platforms/wood/elementWood010.png");
   }
 
   @Override
