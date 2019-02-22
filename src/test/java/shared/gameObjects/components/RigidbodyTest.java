@@ -54,7 +54,7 @@ public class RigidbodyTest {
     for (int i = 0; i < 60; i++) {
       rbA.update();
     }
-    assertEquals(6.9, a.getY(), 0.5);
+    assertEquals(52, a.getY(), 0.1);
   }
 
   @Test
@@ -74,7 +74,7 @@ public class RigidbodyTest {
     for (int i = 0; i < 60; i++) {
       rbA.update();
     }
-    assertTrue(a.getY() < 6.6 && a.getY() > 5.9);
+    assertTrue(a.getY() < 51 && a.getY() > 45);
   }
 
   @Test
@@ -112,7 +112,7 @@ public class RigidbodyTest {
     for (int i = 0; i < 60; i++) {
       rbA.update();
     }
-    assertEquals(11.7, a.getY(), 1);
+    assertEquals(57, a.getY(), 0.1);
   }
 
   @Test
