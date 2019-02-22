@@ -1,5 +1,7 @@
 package levelEditor;
 
+import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
+import de.codecentric.centerdevice.javafxsvg.dimension.PrimitiveDimensionProvider;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,7 +42,14 @@ import shared.gameObjects.Blocks.Wood.WoodFloorObject;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.MapDataObject;
 import shared.gameObjects.Utils.ObjectID;
-import shared.gameObjects.background.Background;
+import shared.gameObjects.background.Background1;
+import shared.gameObjects.background.Background2;
+import shared.gameObjects.background.Background3;
+import shared.gameObjects.background.Background4;
+import shared.gameObjects.background.Background5;
+import shared.gameObjects.background.Background6;
+import shared.gameObjects.background.Background7;
+import shared.gameObjects.background.Background8;
 import shared.gameObjects.menu.main.ButtonLeveleditor;
 import shared.gameObjects.menu.main.ButtonMultiplayer;
 import shared.gameObjects.menu.main.ButtonSettings;
@@ -88,9 +97,16 @@ public class LevelEditor extends Application {
    * instance of the new GameObject. Must break; the case. 4. debug
    */
   public LevelEditor() {
+    SvgImageLoaderFactory.install(new PrimitiveDimensionProvider());
     objectMap.put(OBJECT_TYPES.PLAYER, new GameObjectTuple("Player Spawn", 2, 3));
-    objectMap.put(OBJECT_TYPES.BACKGROUND, new GameObjectTuple("Background", 0, 0));
-    objectMap.put(OBJECT_TYPES.BACKGROUND1, new GameObjectTuple("Background 2", 0, 0));
+    objectMap.put(OBJECT_TYPES.BACKGROUND1, new GameObjectTuple("Background 1", 0, 0));
+    objectMap.put(OBJECT_TYPES.BACKGROUND2, new GameObjectTuple("Background 2", 0, 0));
+    objectMap.put(OBJECT_TYPES.BACKGROUND3, new GameObjectTuple("Background 3", 0, 0));
+    objectMap.put(OBJECT_TYPES.BACKGROUND4, new GameObjectTuple("Background 4", 0, 0));
+    objectMap.put(OBJECT_TYPES.BACKGROUND5, new GameObjectTuple("Background 5", 0, 0));
+    objectMap.put(OBJECT_TYPES.BACKGROUND6, new GameObjectTuple("Background 6", 0, 0));
+    objectMap.put(OBJECT_TYPES.BACKGROUND7, new GameObjectTuple("Background 7", 0, 0));
+    objectMap.put(OBJECT_TYPES.BACKGROUND8, new GameObjectTuple("Background 8", 0, 0));
     objectMap.put(OBJECT_TYPES.BTN_SP, new GameObjectTuple("Singeplayer Button", 6, 2));
     objectMap.put(OBJECT_TYPES.BTN_MP, new GameObjectTuple("Multiplayer Button", 6, 2));
     objectMap.put(OBJECT_TYPES.BTN_ST, new GameObjectTuple("Settings Button", 6, 2));
@@ -130,14 +146,37 @@ public class LevelEditor extends Application {
           }
           break;
 
-        case BACKGROUND:
-          temp = new Background("images/backgrounds/background1.png", ObjectID.Background, uuid);
-          mapDataObject.setBackground((Background) temp);
-          break;
-
         case BACKGROUND1:
-          temp = new Background("images/backgrounds/base.png", ObjectID.Background, uuid);
-          mapDataObject.setBackground((Background) temp);
+          temp = new Background1(uuid);
+          mapDataObject.setBackground((Background1) temp);
+          break;
+        case BACKGROUND2:
+          temp = new Background2(uuid);
+          mapDataObject.setBackground((Background2) temp);
+          break;
+        case BACKGROUND3:
+          temp = new Background3(uuid);
+          mapDataObject.setBackground((Background3) temp);
+          break;
+        case BACKGROUND4:
+          temp = new Background4(uuid);
+          mapDataObject.setBackground((Background4) temp);
+          break;
+        case BACKGROUND5:
+          temp = new Background5(uuid);
+          mapDataObject.setBackground((Background5) temp);
+          break;
+        case BACKGROUND6:
+          temp = new Background6(uuid);
+          mapDataObject.setBackground((Background6) temp);
+          break;
+        case BACKGROUND7:
+          temp = new Background7(uuid);
+          mapDataObject.setBackground((Background7) temp);
+          break;
+        case BACKGROUND8:
+          temp = new Background8(uuid);
+          mapDataObject.setBackground((Background8) temp);
           break;
 
         case BTN_SP:
@@ -659,8 +698,14 @@ public class LevelEditor extends Application {
     BTN_ST,
     BTN_LE,
     WPN_HG,
-    BACKGROUND,
     BACKGROUND1,
+    BACKGROUND2,
+    BACKGROUND3,
+    BACKGROUND4,
+    BACKGROUND5,
+    BACKGROUND6,
+    BACKGROUND7,
+    BACKGROUND8,
     BTN_JOIN,
     UI_HP,
     BLOCK_METAL_LARGE,
