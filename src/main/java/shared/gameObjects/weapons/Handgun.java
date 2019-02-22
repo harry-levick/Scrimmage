@@ -18,8 +18,8 @@ public class Handgun extends Gun {
    * @param name Name of the gun
    * @param uuid UUID of the gun
    */
-  public Handgun(double x, double y, double sizeX, double sizeY, String name, Player holder,
-      UUID uuid) {
+  public Handgun(
+      double x, double y, double sizeX, double sizeY, String name, Player holder, UUID uuid) {
     super(
         x,
         y,
@@ -45,8 +45,15 @@ public class Handgun extends Gun {
       UUID uuid = UUID.randomUUID();
       Bullet bullet =
           new HandgunBullet(
-              getX(), getY(), mouseX, mouseY, this.bulletWidth, this.bulletSpeed,
-              this.damage, this.holder, uuid);
+              getX(),
+              getY(),
+              mouseX,
+              mouseY,
+              this.bulletWidth,
+              this.bulletSpeed,
+              this.damage,
+              this.holder,
+              uuid);
       this.currentCooldown = getDefaultCoolDown();
       deductAmmo();
     }
@@ -65,8 +72,7 @@ public class Handgun extends Gun {
   }
 
   @Override
-  public void interpolatePosition(float alpha) {
-  }
+  public void interpolatePosition(float alpha) {}
 
   @Override
   public String getState() {

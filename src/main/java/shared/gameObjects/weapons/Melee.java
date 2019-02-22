@@ -50,14 +50,15 @@ public abstract class Melee extends Weapon {
     this.currentAngleIndex = 0;
 
     addComponent(new CircleCollider(this, (float) range, false));
-    rb = new Rigidbody(
-        RigidbodyType.STATIC,
-        50f,
-        0,
-        0.1f,
-        new MaterialProperty(0, 1, 1),
-        new AngularData(0, 0, 0, 0),
-        this);//TODO FIX
+    rb =
+        new Rigidbody(
+            RigidbodyType.STATIC,
+            50f,
+            0,
+            0.1f,
+            new MaterialProperty(0, 1, 1),
+            new AngularData(0, 0, 0, 0),
+            this); // TODO FIX
     addComponent(rb);
   }
 
@@ -75,29 +76,29 @@ public abstract class Melee extends Weapon {
       // TODO: add circle cast
       // maybe use box cast?
       // ArrayList<Collision> collisions = Physics.circlecastAll(sourcePos, distance);
-      ArrayList<Collision> collisions = Physics.boxcastAll(
-          new Vector2((float) (this.getX() + this.range), (float) (this.getY() - this.range)),
-          new Vector2((float) this.range, (float) this.range));
+      ArrayList<Collision> collisions =
+          Physics.boxcastAll(
+              new Vector2((float) (this.getX() + this.range), (float) (this.getY() - this.range)),
+              new Vector2((float) this.range, (float) this.range));
       ArrayList<Player> playersBeingHit = new ArrayList<>();
 
-      //System.out.println("=============start==============");
+      // System.out.println("=============start==============");
       for (Collision c : collisions) {
         GameObject g = c.getCollidedObject().getParent();
         if (g.getId() == ObjectID.Player && !g.equals(holder)) {
           System.out.print(g.toString() + " -> ");
-          //System.out.println(((Player) g).getHealth());
+          // System.out.println(((Player) g).getHealth());
           playersBeingHit.add((Player) g);
         }
       }
-      //System.out.println("================end===========");
-      
-      
+      // System.out.println("================end===========");
+
       this.currentCooldown = getDefaultCoolDown();
 
       for (Player p : playersBeingHit) {
         p.deductHp(this.damage);
       }
-      
+
       deductAmmo();
     }
   }
@@ -122,7 +123,7 @@ public abstract class Melee extends Weapon {
     }
     return 0;
   }
-  
+
   public double getRange() {
     return this.range;
   }

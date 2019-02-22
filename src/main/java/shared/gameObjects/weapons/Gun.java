@@ -98,9 +98,7 @@ abstract class Gun extends Weapon {
   // Setters and Getters
   // --------END--------
 
-  /**
-   * For testing
-   */
+  /** For testing */
   @Override
   public String toString() {
     String s = "";

@@ -2,9 +2,7 @@ package shared.gameObjects.UI;
 
 import java.util.UUID;
 import javafx.scene.Group;
-import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
-import javax.swing.JProgressBar;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 

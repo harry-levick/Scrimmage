@@ -64,7 +64,7 @@ public class Rigidbody extends Component implements Serializable {
     super(parent, ComponentType.RIGIDBODY);
     this.gravityScale = gravityScale;
     this.mass = mass;
-    this.inv_mass = 1/mass;
+    this.inv_mass = 1 / mass;
     this.airDrag = airDrag;
     this.material = material;
     this.angularData = angularData;
@@ -104,9 +104,7 @@ public class Rigidbody extends Component implements Serializable {
   }
   // Force Methods
 
-  /**
-   *
-   */
+  /** */
   public void addForce(Vector2 force) {
     forces.add(force);
   }
@@ -168,8 +166,7 @@ public class Rigidbody extends Component implements Serializable {
   // Update Methods
 
   /** An update method; all collision updates happen here */
-  private void applyCollisions() {
-  }
+  private void applyCollisions() {}
 
   public void correctPosition(Vector2 distance) {
     getParent().getTransform().translate(distance);
@@ -230,6 +227,15 @@ public class Rigidbody extends Component implements Serializable {
   }
 
   private void checkForLegalMovement() {
+    /* TODO: Very Jittery
+    float percent = -0.8f;
+    ArrayList<Collision> collisions = Physics.boxcastAll(getParent().getTransform().getPos().add(deltaPos), getParent().getTransform().getSize());
+    for (Collision c : collisions) {
+        if(!(c.getCollidedObject() == this) && c.getCollidedObject().getBodyType() == RigidbodyType.STATIC) {
+          deltaPos = deltaPos.add(c.getNormalCollision().mult(c.getPenetrationDepth()*percent));
+        }
+    }
+    */
     return;
   }
   // Getters and Setters
@@ -240,7 +246,7 @@ public class Rigidbody extends Component implements Serializable {
   public void setVelocity(Vector2 velocity) {
     this.velocity = velocity;
     acceleration = Vector2.Zero();
-    //System.out.println(this.velocity);
+    // System.out.println(this.velocity);
   }
 
   public RigidbodyType getBodyType() {
@@ -255,12 +261,12 @@ public class Rigidbody extends Component implements Serializable {
     return mass;
   }
 
-  public float getInv_mass() {
-    return inv_mass;
-  }
-
   public void setMass(float mass) {
     this.mass = mass;
+  }
+
+  public float getInv_mass() {
+    return inv_mass;
   }
 
   public float getGravityScale() {
@@ -274,6 +280,11 @@ public class Rigidbody extends Component implements Serializable {
   public boolean isGrounded() {
     return grounded;
   }
+
+  public void setGrounded(boolean grounded) {
+    this.grounded = grounded;
+  }
+
   public MaterialProperty getMaterial() {
     return material;
   }
@@ -300,10 +311,6 @@ public class Rigidbody extends Component implements Serializable {
 
   public ArrayList<Collision> getCollisions() {
     return collisions;
-  }
-
-  public void setGrounded(boolean grounded) {
-    this.grounded = grounded;
   }
 }
 

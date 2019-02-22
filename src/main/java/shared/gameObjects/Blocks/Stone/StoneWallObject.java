@@ -1,7 +1,8 @@
-package shared.gameObjects;
+package shared.gameObjects.Blocks.Stone;
 
 import java.util.UUID;
 import javafx.scene.image.Image;
+import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
@@ -9,7 +10,7 @@ import shared.physics.data.AngularData;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.RigidbodyType;
 
-public class ExampleWallObject extends GameObject {
+public class StoneWallObject extends GameObject {
 
   private int health;
 
@@ -21,7 +22,7 @@ public class ExampleWallObject extends GameObject {
    * @param y Y coordinate of object in game world
    * @param id Unique Identifier of every game object
    */
-  public ExampleWallObject(
+  public StoneWallObject(
       double x, double y, double sizeX, double sizeY, ObjectID id, UUID exampleUUID) {
     super(x, y, sizeX, sizeY, id, exampleUUID);
     health = 100;

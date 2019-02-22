@@ -105,13 +105,12 @@ public class LevelHandler {
     }
   }
 
-
   /**
    * NOTE: This to change the level use change Map Removes current game objects and creates new ones
    * from Map file
    */
-  public void generateLevel(Group root, Group backgroundGroup, Group gameGroup,
-      Boolean moveToSpawns) {
+  public void generateLevel(
+      Group root, Group backgroundGroup, Group gameGroup, Boolean moveToSpawns) {
 
     gameObjects.removeAll(players);
     gameObjects.removeAll(bots);
@@ -130,12 +129,13 @@ public class LevelHandler {
               background.initialise(backgroundGroup);
             }
             if (moveToSpawns && spawnPoints != null && spawnPoints.size() >= players.size()) {
-              players.forEach(player -> {
-                Vector2 spawn = spawnPoints.get(0);
-                player.setX(spawn.getX());
-                player.setY(spawn.getY());
-                spawnPoints.remove(0);
-              });
+              players.forEach(
+                  player -> {
+                    Vector2 spawn = spawnPoints.get(0);
+                    player.setX(spawn.getX());
+                    player.setY(spawn.getY());
+                    spawnPoints.remove(0);
+                  });
             }
 
           } else {
@@ -143,7 +143,7 @@ public class LevelHandler {
           }
         });
     gameObjects.addAll(players);
-    //gameObjects.addAll(bots);
+    // gameObjects.addAll(bots);
     gameObjects.forEach(gameObject -> gameObject.setSettings(settings));
     gameState = map.getGameState();
 
@@ -170,7 +170,7 @@ public class LevelHandler {
    * @return All Game Objects
    */
   public ArrayList<GameObject> getGameObjects() {
-    clearToRemove();    // Remove every gameObjects we no longer need
+    clearToRemove(); // Remove every gameObjects we no longer need
     return gameObjects;
   }
 
@@ -194,7 +194,7 @@ public class LevelHandler {
    * @param g GameObject to be removed
    */
   public void delGameObject(GameObject g) {
-    toRemove.add(g);  // Will be removed on next frame
+    toRemove.add(g); // Will be removed on next frame
   }
 
   /**
@@ -205,7 +205,6 @@ public class LevelHandler {
   public ArrayList<Map> getMaps() {
     return maps;
   }
-
 
   /**
    * Current State of Game, eg Main_Menu or In_Game
