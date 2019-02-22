@@ -46,7 +46,7 @@ public class LevelHandler {
     clientPlayer.initialise(gameRoot);
     players.add(clientPlayer);
     changeMap(new Map("main_menu.map", Path.convert("src/main/resources/menus/main_menu.map"),
-        GameState.IN_GAME), true);
+        GameState.MAIN_MENU), true);
   }
 
   public LevelHandler(Settings settings) {
