@@ -43,22 +43,20 @@ public class AudioHandler {
   public void playMusicPlaylist() {
     ArrayList<String> playlist = musicAssets.getPlaylist();
     playMusic(playlist.get(trackPos));
-    musicPlayer.setOnEndOfMedia(new Runnable() {
-      @Override
-      public void run() {
-        trackPos++;
-        if (trackPos == playlist.size()) {
-          trackPos = 0;
-        }
-        playMusicPlaylist();
-      }
-    });
-
+    musicPlayer.setOnEndOfMedia(
+        new Runnable() {
+          @Override
+          public void run() {
+            trackPos++;
+            if (trackPos == playlist.size()) {
+              trackPos = 0;
+            }
+            playMusicPlaylist();
+          }
+        });
   }
 
-  /**
-   * Stop any game music from playing
-   */
+  /** Stop any game music from playing */
   public void stopMusic() {
     if (musicPlayer != null) {
       musicPlayer.stop();

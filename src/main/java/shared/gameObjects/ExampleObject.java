@@ -28,7 +28,7 @@ public class ExampleObject extends GameObject {
     addComponent(
         new Rigidbody(
             RigidbodyType.DYNAMIC,
-            50,
+            200,
             2,
             0,
             new MaterialProperty(0.1f, 1, 1),
@@ -76,8 +76,7 @@ public class ExampleObject extends GameObject {
   }
 
   @Override
-  public void interpolatePosition(float alpha) {
-  }
+  public void interpolatePosition(float alpha) {}
 
   @Override
   public String getState() {

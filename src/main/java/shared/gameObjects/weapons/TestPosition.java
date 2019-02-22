@@ -31,8 +31,7 @@ public class TestPosition extends GameObject {
 
   @Override
   public void initialiseAnimation() {
-    this.animation.supplyAnimationWithSize("default", 20, 20, true,
-        Path.convert("images/weapons/bullet.png"));
+    this.animation.supplyAnimationWithSize(
+        "default", 20, 20, true, Path.convert("images/weapons/bullet.png"));
   }
-
 }

@@ -13,16 +13,15 @@ public abstract class SliderObject extends GameObject {
   protected transient Slider slider;
   protected String label;
 
-  public SliderObject(double x, double y, double sizeX, double sizeY, String label, ObjectID id,
-      UUID objectUUID) {
+  public SliderObject(
+      double x, double y, double sizeX, double sizeY, String label, ObjectID id, UUID objectUUID) {
     super(x, y, sizeX, sizeY, id, objectUUID);
     slider = new Slider();
     this.label = label;
   }
 
   @Override
-  public void interpolatePosition(float alpha) {
-  }
+  public void interpolatePosition(float alpha) {}
 
   @Override
   public void initialise(Group root) {
@@ -30,7 +29,7 @@ public abstract class SliderObject extends GameObject {
     super.initialise(root);
     //   slider.setStyle( todo fix this
     //  ".slider {-fx-border-color: red;-fx-background-color: transparent;}" +
-    //".thumb {-fx-background-image: url(\"images/buttons/slider_thumb.png\");}} " +
+    // ".thumb {-fx-background-image: url(\"images/buttons/slider_thumb.png\");}} " +
     // ".track {-fx-background-color: red;}");
     // + "-fx-background-color: transparent;}");
     //   + ".slider .track {-fx-background-image: url(\"images/buttons/slider_bar.png\");}"

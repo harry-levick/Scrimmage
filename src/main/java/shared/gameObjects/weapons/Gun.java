@@ -4,9 +4,7 @@ import java.util.UUID;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
 
-/**
- * @author hlf764 The abstract class for all guns type weapon.
- */
+/** @author hlf764 The abstract class for all guns type weapon. */
 abstract class Gun extends Weapon {
 
   protected double bulletSpeed; // pixel per second
@@ -98,9 +96,7 @@ abstract class Gun extends Weapon {
   // Setters and Getters
   // --------END--------
 
-  /**
-   * For testing
-   */
+  /** For testing */
   @Override
   public String toString() {
     String s = "";

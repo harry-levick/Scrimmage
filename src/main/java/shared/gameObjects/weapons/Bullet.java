@@ -16,18 +16,16 @@ import shared.physics.data.MaterialProperty;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
 
-/**
- * @author hlf764
- */
+/** @author hlf764 */
 public abstract class Bullet extends GameObject {
 
-  public boolean isHit;     // true if there is an object at that position
+  public boolean isHit; // true if there is an object at that position
   protected Rigidbody rb;
-  private double width;     // width of bullet
-  private double speed;     // speed of bullet
-  private Vector2 vector;   // Vector of the force of bullet fire
-  private int damage;       // Damage of this bullet
-  private Player holder;    // Holder of the gun that fired this bullet
+  private double width; // width of bullet
+  private double speed; // speed of bullet
+  private Vector2 vector; // Vector of the force of bullet fire
+  private int damage; // Damage of this bullet
+  private Player holder; // Holder of the gun that fired this bullet
 
   public Bullet(
       double gunX, // gun initial x position
@@ -36,7 +34,7 @@ public abstract class Bullet extends GameObject {
       double mouseY, // mouse initial y position
       double width, // the width of the bullet
       double speed, // the speed of the bullet
-      int damage,  // damage of this bullet
+      int damage, // damage of this bullet
       Player holder, // holder of the gun that fired this bullet
       UUID uuid) { // uuid of this bullet
 
@@ -50,14 +48,15 @@ public abstract class Bullet extends GameObject {
     vector = new Vector2((float) (mouseX - gunX), (float) (mouseY - gunY));
     vector = vector.div((float) Math.sqrt(vector.dot(vector)));
     addComponent(new BoxCollider(this, false));
-    rb = new Rigidbody(
-        RigidbodyType.DYNAMIC,
-        1f,  // mass
-        0,
-        0.1f,
-        new MaterialProperty(0.1f, 1, 1),
-        new AngularData(0, 0, 0, 0),
-        this);//TODO FIX
+    rb =
+        new Rigidbody(
+            RigidbodyType.DYNAMIC,
+            1f, // mass
+            0,
+            0.1f,
+            new MaterialProperty(0.1f, 1, 1),
+            new AngularData(0, 0, 0, 0),
+            this); // TODO FIX
     addComponent(rb);
 
     this.isHit = false;
@@ -67,12 +66,12 @@ public abstract class Bullet extends GameObject {
     render();
   }
 
-
   @Override
   public void update() {
-    ArrayList<Collision> collision = Physics.boxcastAll(
-        new Vector2((float) getX(), (float) getY()),
-        new Vector2((float) this.width, (float) this.width));
+    ArrayList<Collision> collision =
+        Physics.boxcastAll(
+            new Vector2((float) getX(), (float) getY()),
+            new Vector2((float) this.width, (float) this.width));
     ArrayList<Player> playersBeingHit = new ArrayList<>();
 
     // check if a player is hit
@@ -81,10 +80,11 @@ public abstract class Bullet extends GameObject {
       if (g.getId() == ObjectID.Player && !g.equals(holder)) {
         isHit = true;
         playersBeingHit.add((Player) g);
-        ((Rigidbody) holder.getComponent(ComponentType.RIGIDBODY)).move(new Vector2(-300,-300), 0.6f);
+        ((Rigidbody) holder.getComponent(ComponentType.RIGIDBODY))
+            .move(new Vector2(-300, -300), 0.6f);
       }
     }
-    
+
     if (isHit) {
       Client.levelHandler.delGameObject(this);
       for (Player p : playersBeingHit) {
@@ -93,8 +93,7 @@ public abstract class Bullet extends GameObject {
     } else if ((0 < getX() && getX() < 1920) && (0 < getY() && getY() < 1080)) {
       rb.move(vector.mult((float) speed));
       super.update();
-    }
-    else {
+    } else {
       Client.levelHandler.delGameObject(this);
     }
   }
