@@ -86,18 +86,35 @@ public class LevelCreator extends Application {
         new Background1(UUID.randomUUID()));
     gameObjects.add(
         new ButtonSingleplayer(
-            getAbs(20), getAbs(7), getAbs(8), getAbs(2), ObjectID.Button, UUID.randomUUID()));
+            getAbs(20), getAbs(6), getAbs(8), getAbs(2), ObjectID.Button, UUID.randomUUID()));
     gameObjects.add(
         new ButtonMultiplayer(
-            getAbs(20), getAbs(10), getAbs(8), getAbs(2), ObjectID.Button, UUID.randomUUID()));
+            getAbs(20), getAbs(11), getAbs(8), getAbs(2), ObjectID.Button, UUID.randomUUID()));
     gameObjects.add(
         new ButtonSettings(
-            getAbs(20), getAbs(13), getAbs(8), getAbs(2), ObjectID.Button, UUID.randomUUID()));
+            getAbs(20), getAbs(17), getAbs(8), getAbs(2), ObjectID.Button, UUID.randomUUID()));
+
+    //Middle platforms
+    gameObjects.add(
+        new StoneFloorObject(
+            getAbs(7), getAbs(10), getAbs(6), getAbs(2), ObjectID.Bot, UUID.randomUUID()));
+    gameObjects.add(
+        new StoneFloorObject(
+            getAbs(3), getAbs(20), getAbs(6), getAbs(2), ObjectID.Bot, UUID.randomUUID()));
+    gameObjects.add(
+        new StoneFloorObject(
+            getAbs(31), getAbs(18), getAbs(6), getAbs(2), ObjectID.Bot, UUID.randomUUID()));
+    gameObjects.add(
+        new StoneFloorObject(
+            getAbs(35), getAbs(5), getAbs(6), getAbs(2), ObjectID.Bot, UUID.randomUUID()));
+    gameObjects.add(
+        new StoneFloorObject(
+            getAbs(37), getAbs(13), getAbs(6), getAbs(2), ObjectID.Bot, UUID.randomUUID()));
 
     for (int i = 0; i < 24; i++) {
       // top row wall
       gameObjects.add(
-          new StoneWallObject(
+          new StoneFloorObject(
               getAbs(i * 2), getAbs(0), getAbs(2), getAbs(2), ObjectID.Bot, UUID.randomUUID()));
     }
     for (int i = 0; i < 12; i++) {
