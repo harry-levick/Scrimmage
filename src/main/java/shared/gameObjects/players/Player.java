@@ -7,6 +7,7 @@ import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
+import shared.gameObjects.players.Limbs.Arm;
 import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.weapons.Weapon;
 import shared.physics.data.MaterialProperty;
@@ -48,10 +49,11 @@ public class Player extends GameObject {
   // Initialise the animation
   @Override
   public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", "images/player/player_idle.png");
+    this.animation.supplyAnimation("default", "images/player/Standard_Male/player_idle.png");
     this.animation.supplyAnimation(
-        "walk", "images/player/player_walk1.png", "images/player/player_walk2.png");
-    this.animation.supplyAnimation("jump", "images/player/player_jump.png");
+        "walk", "images/player/Standard_Male/player_walk1.png",
+        "images/player/Standard_Male/player_walk2.png");
+    this.animation.supplyAnimation("jump", "images/player/Standard_Male/player_jump.png");
   }
 
   public void initialise(Group root) {
@@ -60,6 +62,12 @@ public class Player extends GameObject {
     this.rightKey = false;
     this.jumpKey = false;
     this.click = false;
+    children.add(new Arm(getX(), getY(), ObjectID.Bot, UUID.randomUUID(), this, false));
+    children.add(new Arm(getX(), getY(), ObjectID.Bot, UUID.randomUUID(), this, true));
+    children.forEach(child -> {
+      child.initialiseAnimation();
+      child.initialise(root);
+    });
   }
 
   @Override
@@ -68,6 +76,10 @@ public class Player extends GameObject {
     // Check if the current holding is valid
     // Change the weapon to Punch if it is not
     badWeapon();
+    children.forEach(child -> {
+      child.update();
+      child.render();
+    });
     super.update();
   }
 
