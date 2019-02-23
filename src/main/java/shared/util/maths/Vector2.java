@@ -15,6 +15,11 @@ public class Vector2 implements Serializable {
     this.y = y;
   }
 
+  public Vector2(double x, double y) {
+    this.x = (float) x;
+    this.y = (float) y;
+  }
+
   public Vector2(String vector) {
     Vector2 vector2 = fromString(vector);
     this.x = vector2.getX();
@@ -178,6 +183,11 @@ public class Vector2 implements Serializable {
 
   public Vector2 normalize() {
     return this.div(magnitude(Vector2.Zero()));
+  }
+
+  public Vector2 applyRotation(float rotation) {
+    float angle = (float) Math.toRadians(rotation);
+    return new Vector2(x*Math.cos(angle) - y*Math.sin(angle), x*Math.sin(angle) + y*Math.cos(angle));
   }
 
   @Override

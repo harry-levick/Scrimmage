@@ -18,7 +18,7 @@ public class Settings {
 
   /** Default Constructor Music volume set to 100 and sound effects to 75 */
   public Settings() {
-    musicVolume = 0.5f;
+    musicVolume = 0;
     soundEffectVolume = 0.75f;
   }
 
