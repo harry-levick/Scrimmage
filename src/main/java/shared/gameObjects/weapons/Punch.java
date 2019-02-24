@@ -36,13 +36,6 @@ public class Punch extends Melee {
 
   @Override
   public void initialiseAnimation() {
-    // TODO Auto-generated method stub
 
-  }
-
-  @Override
-  public String getState() {
-    // TODO Auto-generated method stub
-    return null;
   }
 }

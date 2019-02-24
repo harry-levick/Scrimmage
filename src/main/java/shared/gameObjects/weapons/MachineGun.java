@@ -101,15 +101,6 @@ public class MachineGun extends Gun {
   }
 
   @Override
-  public void interpolatePosition(float alpha) {
-  }
-
-  @Override
-  public String getState() {
-    return null;
-  }
-
-  @Override
   public void initialiseAnimation() {
     this.animation.supplyAnimationWithSize("default", 40, 40, true, Path.convert(this.imagePath));
   }
