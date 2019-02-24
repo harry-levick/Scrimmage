@@ -2,7 +2,6 @@ package shared.gameObjects.players;
 
 import client.main.Client;
 import java.util.UUID;
-import javafx.scene.Group;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.components.BoxCollider;
@@ -25,7 +24,6 @@ public class Player extends GameObject {
   public boolean leftKey, rightKey, jumpKey, click;
   //Testing
   public boolean deattach;
-  private int limbNo;
 
   public double mouseX, mouseY;
   public int score;
@@ -42,35 +40,18 @@ public class Player extends GameObject {
 
   public Player(double x, double y, UUID playerUUID) {
     super(x, y, 80, 110, ObjectID.Player, playerUUID);
-    score = 0;
-    limbNo = 0;
-    bc = new BoxCollider(this, false);
-    addComponent(bc);
-    rb =
-        new Rigidbody(
-            RigidbodyType.DYNAMIC, 80, 8, 0.2f, new MaterialProperty(0.005f, 0.1f, 0.05f), null,
-            this);
-    addComponent(rb);
-    this.health = 100;
-    holding = null;
-  }
-
-  // Initialise the animation
-  @Override
-  public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", "images/player/player_idle.png");
-    this.animation.supplyAnimation(
-        "walk", "images/player/player_idle.png",
-        "images/player/player_idle.png");
-    this.animation.supplyAnimation("jump", "images/player/player_idle.png");
-  }
-
-  public void initialise(Group root) {
-    super.initialise(root);
+    this.score = 0;
     this.leftKey = false;
     this.rightKey = false;
     this.jumpKey = false;
     this.click = false;
+    this.health = 100;
+    this.holding = null;
+    this.bc = new BoxCollider(this, false);
+    this.rb = new Rigidbody(RigidbodyType.DYNAMIC, 80, 8, 0.2f,
+        new MaterialProperty(0.005f, 0.1f, 0.05f), null, this);
+    addComponent(bc);
+    addComponent(rb);
     addChild(new Leg(true, this));
     addChild(new Leg(false, this));
     addChild(new Body(this));
@@ -79,39 +60,25 @@ public class Player extends GameObject {
     addChild(new Head(this));
     addChild(new Hand(false, this));
     addChild(new Hand(true, this));
-    children.forEach(child -> {
-      child.initialiseAnimation();
-      child.initialise(root);
-    });
+  }
+
+  // Initialise the animation
+  @Override
+  public void initialiseAnimation() {
+    this.animation.supplyAnimation("default", "images/player/player_idle.png");
   }
 
   @Override
   public void update() {
     checkGrounded(); // Checks if the player is grounded
-    // Check if the current holding is valid
-    // Change the weapon to Punch if it is not
     badWeapon();
     if (deattach) {
-      Limb test = (Limb) children.get(limbNo);
-      limbNo++;
+      Limb test = (Limb) children.get(0);
       test.detachLimb();
     }
-    children.forEach(child -> {
-      child.update();
-      child.render();
-    });
     super.update();
   }
 
-  @Override
-  public void render() {
-    if (!isActive()) {
-      return;
-    }
-    super.render();
-    imageView.setTranslateX(getX());
-    imageView.setTranslateY(getY());
-  }
 
   @Override
   public String getState() {
@@ -135,29 +102,29 @@ public class Player extends GameObject {
   public void applyInput() {
     if (rightKey) {
       rb.moveX(speed);
-      animation.switchAnimation("walk");
-      imageView.setScaleX(1);
+      //animation.switchAnimation("walk");
+      //imageView.setScaleX(1);
       this.facingLeft = false;
       this.facingRight = true;
     }
     if (leftKey) {
       rb.moveX(speed * -1);
-      animation.switchAnimation("walk");
-      imageView.setScaleX(-1);
+      //animation.switchAnimation("walk");
+      //imageView.setScaleX(-1);
       this.facingRight = false;
       this.facingLeft = true;
     }
 
     if (!rightKey && !leftKey) {
       vx = 0;
-      animation.switchDefault();
+      //animation.switchDefault();
     }
     if (jumpKey && !jumped) {
       rb.moveY(jumpForce, 0.33333f);
       jumped = true;
     }
     if (jumped) {
-      animation.switchAnimation("jump");
+      //animation.switchAnimation("jump");
     }
     if (grounded) {
       jumped = false;

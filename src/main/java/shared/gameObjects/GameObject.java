@@ -79,13 +79,15 @@ public abstract class GameObject implements Serializable {
     if (col != null) {
       col.update();
     }
+    children.forEach(child -> child.update());
   }
 
   // Client Side only
   public void render() {
-    imageView.setFitHeight(transform.getSize().getY());
-    imageView.setFitWidth(transform.getSize().getX());
     imageView.setImage(animation.getImage());
+    imageView.setTranslateX(getX());
+    imageView.setTranslateY(getY());
+    children.forEach(child -> child.render());
   }
 
   // Collision engine
@@ -177,6 +179,12 @@ public abstract class GameObject implements Serializable {
     if (getComponent(ComponentType.COLLIDER) != null && Physics.showColliders) {
       ((BoxCollider) getComponent(ComponentType.COLLIDER)).initialise(root);
     }
+    imageView.setFitHeight(transform.getSize().getY());
+    imageView.setFitWidth(transform.getSize().getX());
+    children.forEach(child -> {
+      child.initialiseAnimation();
+      child.initialise(root);
+    });
   }
 
   public void addChild(GameObject child) {

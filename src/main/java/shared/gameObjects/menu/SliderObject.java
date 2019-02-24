@@ -21,9 +21,6 @@ public abstract class SliderObject extends GameObject {
     this.label = label;
   }
 
-  @Override
-  public void interpolatePosition(float alpha) {
-  }
 
   @Override
   public void initialise(Group root) {
@@ -56,22 +53,6 @@ public abstract class SliderObject extends GameObject {
 
   public void initialiseAnimation() {
     this.animation.supplyAnimation("default", "images/buttons/slider_thumb.png");
-  }
-
-  @Override
-  public String getState() {
-    return null;
-  }
-
-  @Override
-  public void update() {
-    super.update();
-  }
-
-  @Override
-  public void render() {
-    super.render();
-    slider.relocate(getX(), getY());
   }
 
   public void removeRender() {

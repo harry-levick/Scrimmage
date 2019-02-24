@@ -70,13 +70,6 @@ public abstract class Limb extends GameObject {
     imageView.getTransforms().remove(rotate);
   }
 
-  @Override
-  public void render() {
-    super.render();
-    imageView.setTranslateX(getX());
-    imageView.setTranslateY(getY());
-  }
-
   public boolean isLimbAttached() {
     return limbAttached;
   }
