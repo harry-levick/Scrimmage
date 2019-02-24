@@ -8,6 +8,10 @@ import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Limbs.Arm;
+import shared.gameObjects.players.Limbs.Body;
+import shared.gameObjects.players.Limbs.Hand;
+import shared.gameObjects.players.Limbs.Head;
+import shared.gameObjects.players.Limbs.Leg;
 import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.weapons.Weapon;
 import shared.physics.data.MaterialProperty;
@@ -19,6 +23,10 @@ public class Player extends GameObject {
   protected final float jumpForce = -200;
   protected final float JUMP_LIMIT = 2.0f;
   public boolean leftKey, rightKey, jumpKey, click;
+  //Testing
+  public boolean deattach;
+  private int limbNo;
+
   public double mouseX, mouseY;
   public int score;
   protected float jumpTime;
@@ -35,6 +43,7 @@ public class Player extends GameObject {
   public Player(double x, double y, UUID playerUUID) {
     super(x, y, 80, 110, ObjectID.Player, playerUUID);
     score = 0;
+    limbNo = 0;
     bc = new BoxCollider(this, false);
     addComponent(bc);
     rb =
@@ -49,11 +58,11 @@ public class Player extends GameObject {
   // Initialise the animation
   @Override
   public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", "images/player/Standard_Male/player_idle.png");
+    this.animation.supplyAnimation("default", "images/player/player_idle.png");
     this.animation.supplyAnimation(
-        "walk", "images/player/Standard_Male/player_walk1.png",
-        "images/player/Standard_Male/player_walk2.png");
-    this.animation.supplyAnimation("jump", "images/player/Standard_Male/player_jump.png");
+        "walk", "images/player/player_idle.png",
+        "images/player/player_idle.png");
+    this.animation.supplyAnimation("jump", "images/player/player_idle.png");
   }
 
   public void initialise(Group root) {
@@ -62,8 +71,14 @@ public class Player extends GameObject {
     this.rightKey = false;
     this.jumpKey = false;
     this.click = false;
-    children.add(new Arm(getX(), getY(), ObjectID.Bot, UUID.randomUUID(), this, false));
-    children.add(new Arm(getX(), getY(), ObjectID.Bot, UUID.randomUUID(), this, true));
+    addChild(new Leg(true, this));
+    addChild(new Leg(false, this));
+    addChild(new Body(this));
+    addChild(new Arm(true, this));
+    addChild(new Arm(false, this));
+    addChild(new Head(this));
+    addChild(new Hand(false, this));
+    addChild(new Hand(true, this));
     children.forEach(child -> {
       child.initialiseAnimation();
       child.initialise(root);
@@ -76,6 +91,11 @@ public class Player extends GameObject {
     // Check if the current holding is valid
     // Change the weapon to Punch if it is not
     badWeapon();
+    if (deattach) {
+      Limb test = (Limb) children.get(limbNo);
+      limbNo++;
+      test.detachLimb();
+    }
     children.forEach(child -> {
       child.update();
       child.render();

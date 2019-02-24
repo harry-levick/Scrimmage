@@ -3,9 +3,7 @@ package shared.gameObjects;
 import client.main.Settings;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
@@ -36,7 +34,7 @@ public abstract class GameObject implements Serializable {
   protected double rotation;
 
   protected GameObject parent;
-  protected Set<GameObject> children;
+  protected ArrayList<GameObject> children;
   protected ArrayList<Component> components;
   protected Transform transform;
 
@@ -61,7 +59,7 @@ public abstract class GameObject implements Serializable {
         new Transform(
             this, new Vector2((float) x, (float) y), new Vector2((float) sizeX, (float) sizeY));
     components = new ArrayList<>();
-    children = new HashSet<>();
+    children = new ArrayList<>();
     parent = null;
     animation = new Animator();
     initialiseAnimation();
@@ -282,7 +280,7 @@ public abstract class GameObject implements Serializable {
     this.parent = parent;
   }
 
-  public Set<GameObject> getChildren() {
+  public ArrayList<GameObject> getChildren() {
     return children;
   }
 
