@@ -18,7 +18,7 @@ public class BotThread extends Thread {
   public BotThread(Bot bot, List<boolean[]> plan) {
     this.bot = bot;
     this.plan = plan;
-    pathFinder = new AStar(bot, bot.getLevelHandler().getGameObjects());
+    pathFinder = new AStar(bot, bot.getLevelHandler());
     running = true;
   }
 

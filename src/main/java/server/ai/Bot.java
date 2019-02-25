@@ -52,6 +52,7 @@ public class Bot extends Player {
     this.allPlayers = levelHandler.getPlayers();
     this.targetPlayer = findTarget();
     this.plan = Collections.synchronizedList(new ArrayList<>());
+
     this.botThread = new BotThread(this, plan);
   }
 

@@ -103,7 +103,7 @@ public class AStar {
 
       this.action = action;
     }
-    
+
     /**
      * Calculate the heuristic value for the node.
      * @param enemy the target / goal
