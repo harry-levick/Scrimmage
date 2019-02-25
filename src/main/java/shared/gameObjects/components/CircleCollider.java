@@ -1,6 +1,9 @@
 package shared.gameObjects.components;
 
 import java.io.Serializable;
+import javafx.scene.Group;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polygon;
 import shared.gameObjects.GameObject;
 import shared.physics.types.ColliderType;
 import shared.util.maths.Vector2;
@@ -12,6 +15,7 @@ public class CircleCollider extends Collider implements Serializable {
 
   private float radius;
   private Vector2 centre;
+  private transient Circle circle;
 
   public CircleCollider(GameObject parent, float radius, boolean isTrigger) {
     super(parent, ColliderType.CIRCLE, isTrigger);
@@ -20,8 +24,23 @@ public class CircleCollider extends Collider implements Serializable {
   }
 
   @Override
+  public void initialise(Group root) {
+    circle = new Circle();
+    circle.setCenterX(centre.getX());
+    circle.setCenterY(centre.getY());
+    circle.setRadius(radius);
+    circle.setOpacity(0.5f);
+    root.getChildren().add(circle);
+  }
+
+  @Override
   public void update() {
-    centre = getParent().getTransform().getPos().add(radius);
+    centre = getParent().getTransform().getPos().add(getParent().getTransform().getSize().mult(0.5f));
+    if(circle != null) {
+      circle.setCenterX(centre.getX());
+      circle.setCenterY(centre.getY());
+      circle.setRadius(radius);
+    }
   }
 
   // Getters

@@ -6,10 +6,13 @@ import javafx.scene.Group;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.components.BoxCollider;
+import shared.gameObjects.components.CircleCollider;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.weapons.Weapon;
+import shared.physics.data.Collision;
 import shared.physics.data.MaterialProperty;
+import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
 
 public class Player extends GameObject {
@@ -30,12 +33,15 @@ public class Player extends GameObject {
   protected Rigidbody rb;
   protected double vx;
   private BoxCollider bc;
+  private CircleCollider cc;
 
   public Player(double x, double y, UUID playerUUID) {
     super(x, y, 80, 110, ObjectID.Player, playerUUID);
     score = 0;
-    bc = new BoxCollider(this, false);
+    bc = new BoxCollider(this, ColliderLayer.PLAYER, false);
     addComponent(bc);
+   // cc = new CircleCollider(this, 45, false);
+  //  addComponent(cc);
     rb =
         new Rigidbody(
             RigidbodyType.DYNAMIC, 80, 8, 0.2f, new MaterialProperty(0.005f, 0.1f, 0.05f), null,
@@ -69,6 +75,7 @@ public class Player extends GameObject {
     // Change the weapon to Punch if it is not
     badWeapon();
     super.update();
+    //System.out.println(getTransform().getPos());
   }
 
   @Override
@@ -322,5 +329,20 @@ public class Player extends GameObject {
   public void setFacingRight(boolean b) {
     this.facingLeft = !b;
     this.facingRight = b;
+  }
+
+  @Override
+  public void OnCollisionEnter(Collision col) {
+  //  System.out.println("Entered Collision!");
+  }
+
+  @Override
+  public void OnCollisionExit(Collision col) {
+   // System.out.println("Exited Collision!");
+  }
+
+  @Override
+  public void OnCollisionStay(Collision col) {
+  //  System.out.println("Stayed in Collision!");
   }
 }

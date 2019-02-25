@@ -21,6 +21,15 @@ public class Physics {
   private static ArrayList<DynamicCollision> collisions = new ArrayList<>();
   private static Physics ourInstance = new Physics();
 
+  /*
+   * Order: DEFAULT, PLAYER, OBJECT, WALL
+   */
+  public static boolean[] DEFAULT = {true, true, true, true};
+  public static boolean[] PLAYER = {true, false, true, true};
+  public static boolean[] OBJECT = {true, true, true, true};
+  public static boolean[] WALL = {true, true, true, true};
+  public static boolean[][] COLLISION_LAYERS = {DEFAULT, PLAYER, OBJECT, WALL};
+
   private Physics() {
     gameObjects = new ArrayList<>();
   }
