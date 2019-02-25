@@ -103,25 +103,7 @@ public class AStar {
 
       this.action = action;
     }
-
-    private double calcXChange(boolean[] action) {
-      if (action[Bot.KEY_LEFT]) {
-        return -10; // TODO change
-      } else if (action[Bot.KEY_RIGHT]) {
-        return 10; // TODO change
-      } else {
-        return 0.0;
-      }
-    }
-
-    private double calcYChange(boolean[] action) {
-      if (action[Bot.KEY_JUMP]) {
-        return -10; // TODO change
-      } else {
-        return 0.0;
-      }
-    }
-
+    
     /**
      * Calculate the heuristic value for the node.
      * @param enemy the target / goal
