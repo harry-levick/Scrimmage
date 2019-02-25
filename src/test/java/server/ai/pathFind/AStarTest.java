@@ -6,11 +6,13 @@ import org.junit.Test;
 import server.ai.Bot;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.players.Player;
+import shared.handlers.levelHandler.LevelHandler;
 
 public class AStarTest {
 
   @Test
   public void testStraightLineRight() {
+
 
   }
 
