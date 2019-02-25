@@ -3,6 +3,8 @@ package client.main;
 import client.handlers.connectionHandler.ConnectionHandler;
 import client.handlers.inputHandler.KeyboardInput;
 import client.handlers.inputHandler.MouseInput;
+import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
+import de.codecentric.centerdevice.javafxsvg.dimension.PrimitiveDimensionProvider;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -11,6 +13,7 @@ import java.util.TimerTask;
 import java.util.UUID;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -57,8 +60,8 @@ public class Client extends Application {
   private float accumulatedTime;
   private float elapsedSinceFPS = 0f;
   private int framesElapsedSinceFPS = 0;
-  
   private UI userInterface;
+  private boolean gameOver;
 
   public static void main(String args[]) {
     launch(args);
@@ -66,6 +69,8 @@ public class Client extends Application {
 
   @Override
   public void start(Stage primaryStage) {
+    gameOver = false;
+    SvgImageLoaderFactory.install(new PrimitiveDimensionProvider());
     playlist = new LinkedList<>();
     // Testing code
     for (int i = 1; i < 11; i++) {
@@ -81,17 +86,7 @@ public class Client extends Application {
         new TimerTask() {
           @Override
           public void run() {
-            singleplayerGame = false;
-            levelHandler.getPlayers().removeAll(levelHandler.getBotPlayerList());
-            levelHandler.getBotPlayerList().forEach(gameObject -> gameObject.removeRender());
-            levelHandler.getBotPlayerList().forEach(gameObject -> gameObject = null);
-            levelHandler.getBotPlayerList().clear();
-            levelHandler.changeMap(
-                new Map(
-                    "Main Menu",
-                    Path.convert("src/main/resources/menus/main_menu.map"),
-                    GameState.MAIN_MENU),
-                false);
+            gameOver = true;
           }
         };
 
@@ -121,6 +116,10 @@ public class Client extends Application {
 
         if (multiplayer) {
           processServerPackets();
+        }
+
+        if (gameOver) {
+          endGame();
         }
 
         if (previousTime == 0) {
@@ -231,6 +230,20 @@ public class Client extends Application {
     // Start off screen
   }
 
+  public void endGame() {
+    singleplayerGame = false;
+    levelHandler.getPlayers().removeAll(levelHandler.getBotPlayerList());
+    levelHandler.getBotPlayerList().forEach(gameObject -> gameObject.removeRender());
+    levelHandler.getBotPlayerList().forEach(gameObject -> gameObject = null);
+    levelHandler.getBotPlayerList().clear();
+    levelHandler.changeMap(
+        new Map(
+            "Main Menu",
+            Path.convert("src/main/resources/menus/main_menu.map"),
+            GameState.MAIN_MENU),
+        false);
+  }
+
   private void setupRender(Stage primaryStage) {
     root = new Group();
     backgroundRoot = new Group();
@@ -243,6 +256,7 @@ public class Client extends Application {
     primaryStage.getIcons().add(new Image(Path.convert("images/logo.png")));
 
     scene = new Scene(root, 1920, 1080);
+    scene.setCursor(Cursor.CROSSHAIR);
 
     primaryStage.setScene(scene);
     primaryStage.setFullScreen(false);
