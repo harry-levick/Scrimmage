@@ -44,9 +44,6 @@ public class LevelHandler {
     this.backgroundRoot = backgroundRoot;
     this.gameRoot = gameRoot;
     musicPlayer = new AudioHandler(settings);
-    clientPlayer = new Player(500, 200, UUID.randomUUID());
-    clientPlayer.initialise(gameRoot);
-    players.add(clientPlayer);
     changeMap(new Map("main_menu.map", Path.convert("src/main/resources/menus/main_menu.map"),
         GameState.MAIN_MENU), true);
     previousMap = null;
@@ -205,6 +202,13 @@ public class LevelHandler {
     newPlayer.initialise(root);
     players.add(newPlayer);
     gameObjects.add(newPlayer);
+  }
+
+  public void addClientPlayer(Group root) {
+    clientPlayer = new Player(500, 200, UUID.randomUUID());
+    clientPlayer.initialise(root);
+    players.add(clientPlayer);
+    gameObjects.add(clientPlayer);
   }
 
   public Player getClientPlayer() {

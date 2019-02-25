@@ -14,7 +14,6 @@ public class Arm extends Limb {
    */
   public Arm(Boolean isLeft, Player parent) {
     super(13, 62, 53, 62, 17, 33, ObjectID.Player, isLeft, parent);
-    addChild(new Hand(isLeft, this));
   }
 
   @Override

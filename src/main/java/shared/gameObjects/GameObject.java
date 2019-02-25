@@ -79,7 +79,6 @@ public abstract class GameObject implements Serializable {
     if (col != null) {
       col.update();
     }
-    children.forEach(child -> child.update());
   }
 
   // Client Side only
@@ -87,7 +86,6 @@ public abstract class GameObject implements Serializable {
     imageView.setImage(animation.getImage());
     imageView.setTranslateX(getX());
     imageView.setTranslateY(getY());
-    children.forEach(child -> child.render());
   }
 
   // Collision engine
@@ -115,7 +113,6 @@ public abstract class GameObject implements Serializable {
         }
       }
     }
-    //children.forEach(child -> {if ((Limb) child.updateCollision(gameObjects)});
   }
 
   /**
@@ -126,7 +123,6 @@ public abstract class GameObject implements Serializable {
       imageView.setImage(null);
       root.getChildren().remove(imageView);
     }
-    children.forEach(child -> child.removeRender());
   }
 
   // Interpolate Position Client only
@@ -191,6 +187,7 @@ public abstract class GameObject implements Serializable {
 
   public void addChild(GameObject child) {
     children.add(child);
+    Settings.levelHandler.addGameObject(child);
   }
 
   public void removeChild(GameObject child) {

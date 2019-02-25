@@ -2,12 +2,14 @@ package shared.gameObjects.players;
 
 import client.main.Client;
 import java.util.UUID;
+import javafx.scene.Group;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Limbs.Arm;
 import shared.gameObjects.players.Limbs.Body;
+import shared.gameObjects.players.Limbs.Hand;
 import shared.gameObjects.players.Limbs.Head;
 import shared.gameObjects.players.Limbs.Leg;
 import shared.gameObjects.weapons.Sword;
@@ -23,6 +25,7 @@ public class Player extends GameObject {
   public boolean leftKey, rightKey, jumpKey, click;
   //Testing
   public boolean deattach;
+  protected Behaviour behaviour;
 
   public double mouseX, mouseY;
   public int score;
@@ -46,17 +49,12 @@ public class Player extends GameObject {
     this.click = false;
     this.health = 100;
     this.holding = null;
+    this.behaviour = Behaviour.IDLE;
     this.bc = new BoxCollider(this, false);
     this.rb = new Rigidbody(RigidbodyType.DYNAMIC, 80, 8, 0.2f,
         new MaterialProperty(0.005f, 0.1f, 0.05f), null, this);
     addComponent(bc);
     addComponent(rb);
-    addChild(new Leg(true, this));
-    addChild(new Leg(false, this));
-    addChild(new Body(this));
-    addChild(new Head(this));
-    addChild(new Arm(false, this));
-    addChild(new Arm(true, this));
   }
 
   // Initialise the animation
@@ -66,14 +64,29 @@ public class Player extends GameObject {
   }
 
   @Override
+  public void initialise(Group root) {
+    super.initialise(root);
+    addChild(new Leg(true, this));
+    addChild(new Leg(false, this));
+    addChild(new Body(this));
+    addChild(new Head(this));
+    Arm rightArm = new Arm(false, this);
+    Arm leftArm = (new Arm(true, this));
+    addChild(rightArm);
+    addChild(leftArm);
+    rightArm.addChild(new Hand(false, rightArm));
+    leftArm.addChild(new Hand(true, leftArm));
+  }
+
+  @Override
   public void update() {
     checkGrounded(); // Checks if the player is grounded
     badWeapon();
     if (deattach) {
-      Limb test = (Limb) children.get(0);
-      test.detachLimb();
-      test = (Limb) children.get(3);
-      test.detachLimb();
+      for (int i = 0; i < 8; i++) {
+        Limb test = (Limb) children.get(i);
+        test.detachLimb();
+      }
     }
     super.update();
   }
@@ -101,29 +114,27 @@ public class Player extends GameObject {
   public void applyInput() {
     if (rightKey) {
       rb.moveX(speed);
-      //animation.switchAnimation("walk");
-      //imageView.setScaleX(1);
+      behaviour = Behaviour.WALK_RIGHT;
       this.facingLeft = false;
       this.facingRight = true;
     }
     if (leftKey) {
       rb.moveX(speed * -1);
-      //animation.switchAnimation("walk");
-      //imageView.setScaleX(-1);
+      behaviour = Behaviour.WALK_LEFT;
       this.facingRight = false;
       this.facingLeft = true;
     }
 
     if (!rightKey && !leftKey) {
       vx = 0;
-      //animation.switchDefault();
+      behaviour = Behaviour.IDLE;
     }
     if (jumpKey && !jumped) {
       rb.moveY(jumpForce, 0.33333f);
       jumped = true;
     }
     if (jumped) {
-      //animation.switchAnimation("jump");
+      behaviour = Behaviour.JUMP;
     }
     if (grounded) {
       jumped = false;
@@ -321,4 +332,13 @@ public class Player extends GameObject {
     this.facingLeft = !b;
     this.facingRight = b;
   }
+
+  public Behaviour getBehaviour() {
+    return behaviour;
+  }
+
+  public void setBehaviour(Behaviour behaviour) {
+    this.behaviour = behaviour;
+  }
 }
+
