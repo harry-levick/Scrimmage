@@ -8,7 +8,6 @@ import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Limbs.Arm;
 import shared.gameObjects.players.Limbs.Body;
-import shared.gameObjects.players.Limbs.Hand;
 import shared.gameObjects.players.Limbs.Head;
 import shared.gameObjects.players.Limbs.Leg;
 import shared.gameObjects.weapons.Sword;
@@ -55,11 +54,9 @@ public class Player extends GameObject {
     addChild(new Leg(true, this));
     addChild(new Leg(false, this));
     addChild(new Body(this));
-    addChild(new Arm(true, this));
-    addChild(new Arm(false, this));
     addChild(new Head(this));
-    addChild(new Hand(false, this));
-    addChild(new Hand(true, this));
+    addChild(new Arm(false, this));
+    addChild(new Arm(true, this));
   }
 
   // Initialise the animation
@@ -74,6 +71,8 @@ public class Player extends GameObject {
     badWeapon();
     if (deattach) {
       Limb test = (Limb) children.get(0);
+      test.detachLimb();
+      test = (Limb) children.get(3);
       test.detachLimb();
     }
     super.update();

@@ -5,8 +5,6 @@ import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Limb;
 import shared.gameObjects.players.Player;
-import shared.physics.data.MaterialProperty;
-import shared.physics.types.RigidbodyType;
 
 public class Head extends Limb {
 
@@ -19,13 +17,6 @@ public class Head extends Limb {
    */
   public Head(Player parent) {
     super(0, 0, 17, 13, 48, 58, ObjectID.Player, false, parent);
-    bc = new BoxCollider(this, false);
-    addComponent(bc);
-    rb =
-        new Rigidbody(
-            RigidbodyType.DYNAMIC, 80, 8, 0.2f, new MaterialProperty(0.005f, 0.1f, 0.05f), null,
-            this);
-    addComponent(rb);
   }
 
   @Override

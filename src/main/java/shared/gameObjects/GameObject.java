@@ -115,6 +115,7 @@ public abstract class GameObject implements Serializable {
         }
       }
     }
+    //children.forEach(child -> {if ((Limb) child.updateCollision(gameObjects)});
   }
 
   /**
@@ -125,6 +126,7 @@ public abstract class GameObject implements Serializable {
       imageView.setImage(null);
       root.getChildren().remove(imageView);
     }
+    children.forEach(child -> child.removeRender());
   }
 
   // Interpolate Position Client only

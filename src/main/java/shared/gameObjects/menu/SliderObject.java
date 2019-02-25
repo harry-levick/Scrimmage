@@ -55,6 +55,17 @@ public abstract class SliderObject extends GameObject {
     this.animation.supplyAnimation("default", "images/buttons/slider_thumb.png");
   }
 
+  @Override
+  public void render() {
+
+  }
+
+  @Override
+  public void update() {
+
+  }
+
+  @Override
   public void removeRender() {
     super.removeRender();
     root.getChildren().remove(slider);
