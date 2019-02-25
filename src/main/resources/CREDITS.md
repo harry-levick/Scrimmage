@@ -22,6 +22,8 @@ Likkan Chung
 
 *UI Pack*
 
+*Platformer Characters 1*
+
 **Kenney Game Assets (kenney.nl)**
 
 **Licensed under Creative Commons: Public Domain**
