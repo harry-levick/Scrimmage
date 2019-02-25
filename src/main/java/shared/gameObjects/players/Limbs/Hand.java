@@ -13,7 +13,7 @@ public class Hand extends Limb {
    */
   public Hand(Boolean isLeft, GameObject parent) {
     //17 15
-    super(-3, 20, 3, 20, 17, 15, ObjectID.Player, isLeft, parent);
+    super(-3, 20, 3, 20, 17, 15, ObjectID.Player, isLeft, parent, 0, 0);
   }
 
 

@@ -13,7 +13,7 @@ public class Arm extends Limb {
    *
    */
   public Arm(Boolean isLeft, Player parent) {
-    super(13, 62, 53, 62, 17, 33, ObjectID.Player, isLeft, parent);
+    super(13, 62, 53, 62, 17, 33, ObjectID.Player, isLeft, parent, 0, 0);
   }
 
   @Override
