@@ -5,19 +5,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import server.ai.pathFind.AStar;
-import server.ai.pathFind.BotThread;
-import shared.gameObjects.GameObject;
 import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.LevelHandler;
 import shared.physics.Physics;
 import shared.physics.data.Collision;
 import shared.util.maths.Vector2;
-
-/** TODO : When the bot is created, create the bot on a new thread, and run the update method on
- *         a constant while loop.
- */
 
 /**
  * @author Harry Levick (hxl799)
@@ -55,7 +47,6 @@ public class Bot extends Player {
     this.targetPlayer = findTarget();
     this.plan = Collections.synchronizedList(new ArrayList<>());
     this.botThread = new BotThread(this, plan);
-
   }
 
   /**

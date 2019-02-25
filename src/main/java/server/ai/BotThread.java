@@ -1,8 +1,9 @@
-package server.ai.pathFind;
+package server.ai;
 
 import java.util.ArrayList;
 import java.util.List;
 import server.ai.Bot;
+import server.ai.pathFind.AStar;
 import shared.gameObjects.players.Player;
 import shared.util.maths.Vector2;
 
