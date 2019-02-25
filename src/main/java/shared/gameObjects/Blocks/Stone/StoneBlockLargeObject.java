@@ -42,10 +42,6 @@ public class StoneBlockLargeObject extends GameObject {
     this.animation.supplyAnimation("default", "images/platforms/stone/elementStone018.png");
   }
 
-  @Override
-  public void update() {
-    super.update();
-  }
 
   public int getHealth() {
     return health;
@@ -55,15 +51,7 @@ public class StoneBlockLargeObject extends GameObject {
     this.health = health;
   }
 
-  @Override
-  public void render() {
-    super.render();
-    imageView.relocate(getX(), getY());
-  }
 
-  @Override
-  public void interpolatePosition(float alpha) {
-  }
 
   @Override
   public String getState() {

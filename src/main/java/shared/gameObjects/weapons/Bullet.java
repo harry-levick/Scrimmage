@@ -98,17 +98,6 @@ public abstract class Bullet extends GameObject {
     }
   }
 
-  @Override
-  public void render() {
-    super.render();
-    imageView.relocate(getX(), getY());
-  }
-
-  @Override
-  public void interpolatePosition(float alpha) {
-    // TODO Auto-generated method stub
-
-  }
 
   @Override
   public String getState() {
