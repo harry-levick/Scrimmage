@@ -5,6 +5,7 @@ import javafx.scene.Group;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import shared.gameObjects.GameObject;
+import shared.physics.types.ColliderLayer;
 import shared.physics.types.ColliderType;
 import shared.util.maths.Vector2;
 
@@ -23,6 +24,14 @@ public class BoxCollider extends Collider implements Serializable {
 
   public BoxCollider(GameObject parent, boolean isTrigger) {
     super(parent, ColliderType.BOX, isTrigger);
+    rotation = getParent().getTransform().getRot();
+    corners = new Vector2[4];
+    polygonCoordinates = new Double[8];
+    update();
+  }
+
+  public BoxCollider(GameObject parent, ColliderLayer layer, boolean isTrigger) {
+    super(parent, ColliderType.BOX, layer, isTrigger);
     rotation = getParent().getTransform().getRot();
     corners = new Vector2[4];
     polygonCoordinates = new Double[8];
@@ -52,6 +61,7 @@ public class BoxCollider extends Collider implements Serializable {
     polygonCoordinates[7] = (double) corners[3].getY();
   }
 
+  @Override
   public void initialise(Group root) {
     polygon = new Polygon();
     polygon.getPoints().addAll(polygonCoordinates);

@@ -230,9 +230,7 @@ public class Rigidbody extends Component implements Serializable {
     float percent = 0.8f;
     ArrayList<Collision> collisions = Physics.boxcastAll(getParent().getTransform().getPos().add(deltaPos), getParent().getTransform().getSize());
     for (Collision c : collisions) {
-        if(!(c.getCollidedObject() == this) && c.getCollidedObject().getBodyType() == RigidbodyType.STATIC) {
-          //deltaPos = c.getNormalCollision().mult(deltaPos);
-        }
+
     }
     return;
   }

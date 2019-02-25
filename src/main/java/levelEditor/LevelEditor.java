@@ -46,6 +46,7 @@ import shared.gameObjects.menu.main.ButtonMultiplayer;
 import shared.gameObjects.menu.main.ButtonSettings;
 import shared.gameObjects.menu.main.ButtonSingleplayer;
 import shared.gameObjects.menu.multiplayer.ButtonJoin;
+import shared.gameObjects.objects.Spikes;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.Handgun;
 import shared.handlers.levelHandler.GameState;
@@ -107,6 +108,7 @@ public class LevelEditor extends Application {
     objectMap.put(OBJECT_TYPES.BLOCK_WOOD_LARGE, new GameObjectTuple("Wood Block Large", 2, 2));
     objectMap.put(OBJECT_TYPES.BLOCK_WOOD_SMALL, new GameObjectTuple("Wood Block Small", 1, 1));
     objectMap.put(OBJECT_TYPES.FLOOR_WOOD, new GameObjectTuple("Wood Floor", 5, 2));
+    objectMap.put(OBJECT_TYPES.SPIKES, new GameObjectTuple("Spikes", 3, 1));
   }
 
   private void scenePrimaryClick(
@@ -299,6 +301,15 @@ public class LevelEditor extends Application {
           temp =
               new WoodFloorObject(
                   getGridX(event.getX()),
+                  getGridY(event.getY()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getX()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getY()),
+                  ObjectID.Bot,
+                  uuid);
+          break;
+        case SPIKES:
+          temp =
+              new Spikes(getGridX(event.getX()),
                   getGridY(event.getY()),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
@@ -671,7 +682,8 @@ public class LevelEditor extends Application {
     WALL_STONE,
     BLOCK_WOOD_LARGE,
     BLOCK_WOOD_SMALL,
-    FLOOR_WOOD
+    FLOOR_WOOD,
+    SPIKES,
   }
 }
 
