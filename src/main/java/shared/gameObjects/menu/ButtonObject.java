@@ -1,5 +1,6 @@
 package shared.gameObjects.menu;
 
+import client.handlers.audioHandler.AudioHandler;
 import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
@@ -43,6 +44,7 @@ public abstract class ButtonObject extends GameObject {
 
   public void doOnClick(MouseEvent e) {
     animation.switchAnimation("clicked");
+    new AudioHandler(settings).playSFX("CLICK");
   }
 
   public void doOnUnClick(MouseEvent e) {
@@ -58,6 +60,21 @@ public abstract class ButtonObject extends GameObject {
     button.setOnMousePressed(event -> doOnClick(event));
     button.setOnMouseReleased(event -> doOnUnClick(event));
   }
+
+  @Override
+  public void interpolatePosition(float alpha) {
+
+  }
+
+  @Override
+  public void render() {
+    imageView.setImage(animation.getImage());
+    button.setTranslateX(getX());
+    button.setTranslateY(getY());
+    imageView.setTranslateX(0);
+    imageView.setTranslateY(0);
+  }
+
 
   public void initialiseAnimation(String unclickedPath, String clickedPath) {
     this.animation.supplyAnimation("default", unclickedPath);
