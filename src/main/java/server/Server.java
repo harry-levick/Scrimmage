@@ -80,6 +80,7 @@ public class Server extends Application {
     executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     threadName = "Server";
     settings = new Settings();
+    settings.setLevelHandler(levelHandler);
     playlist = new LinkedList();
     inputQueue = new ConcurrentHashMap<Player, BlockingQueue<PacketInput>>();
     try {

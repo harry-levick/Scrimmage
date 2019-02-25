@@ -1,11 +1,14 @@
 package client.main;
 
 import java.io.File;
+import shared.handlers.levelHandler.LevelHandler;
 
 /**
  * @author Brett Saunders
  */
 public class Settings {
+
+  public static LevelHandler levelHandler;
 
   private String username = "TestAccount";
   private int port = 4446;
@@ -82,5 +85,13 @@ public class Settings {
 
   public void setPort(int port) {
     this.port = port;
+  }
+
+  public LevelHandler getLevelHandler() {
+    return levelHandler;
+  }
+
+  public void setLevelHandler(LevelHandler levelHandler) {
+    Settings.levelHandler = levelHandler;
   }
 }

@@ -1,5 +1,7 @@
 package shared.gameObjects.players;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.transform.Rotate;
@@ -17,6 +19,13 @@ public abstract class Limb extends GameObject {
   protected boolean limbAttached;
   protected boolean lastAttachedCheck;
 
+  protected final double pivotX;
+  protected final double pivotY;
+  protected Behaviour behaviour;
+  protected Behaviour lastBehaviour;
+  protected int action;
+  protected HashMap<Behaviour, ArrayList<Integer>> actions;
+
   protected double xLeft;
   protected double yLeft;
   protected double xRight;
@@ -25,6 +34,7 @@ public abstract class Limb extends GameObject {
   protected Rigidbody rb;
   protected BoxCollider bc;
 
+
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
    * ensure actions are calculated the same
@@ -32,7 +42,7 @@ public abstract class Limb extends GameObject {
    * @param id Unique Identifier of every game object
    */
   public Limb(double xLeft, double yLeft, double xRight, double yRight, double sizeX, double sizeY,
-      ObjectID id, Boolean isLeft, GameObject parent) {
+      ObjectID id, Boolean isLeft, GameObject parent, double pivotX, double pivotY) {
     super(0, 0, sizeX, sizeY, id, UUID.randomUUID());
     this.limbAttached = true;
     this.lastAttachedCheck = true;
@@ -43,6 +53,12 @@ public abstract class Limb extends GameObject {
     this.yRight = yRight;
     this.parent = parent;
     this.rotate = new Rotate();
+    this.behaviour = Behaviour.IDLE;
+    this.actions = new HashMap<>();
+    this.lastBehaviour = Behaviour.IDLE;
+    this.action = 0;
+    this.pivotX = pivotX;
+    this.pivotY = pivotY;
 
     //Physics
     bc = new BoxCollider(this, false);
@@ -51,6 +67,8 @@ public abstract class Limb extends GameObject {
         new Rigidbody(
             RigidbodyType.DYNAMIC, 80, 8, 0.2f, new MaterialProperty(0.005f, 0.1f, 0.05f), null,
             this);
+    rotate.setPivotX(pivotX);
+    rotate.setPivotY(pivotY);
   }
 
   public abstract void initialiseAnimation();
@@ -87,8 +105,17 @@ public abstract class Limb extends GameObject {
       }
       this.updateCollision(null);
     }
+    updateAction();
     imageView.getTransforms().remove(rotate);
     lastAttachedCheck = limbAttached;
+
+  }
+
+  public void updateAction() {
+    if (behaviour != lastBehaviour) {
+      action = 0;
+      lastBehaviour = behaviour;
+    }
   }
 
   public boolean isLimbAttached() {

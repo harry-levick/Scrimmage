@@ -96,8 +96,11 @@ public class Client extends Application {
     singleplayerGame = false;
     sendUpdate = false;
     levelHandler = new LevelHandler(settings, root, backgroundRoot, gameRoot);
+    settings.setLevelHandler(levelHandler);
+    levelHandler.addClientPlayer(gameRoot);
     keyInput = new KeyboardInput();
     mouseInput = new MouseInput();
+
     // Setup Input
     scene.setOnKeyPressed(keyInput);
     scene.setOnKeyReleased(keyInput);
