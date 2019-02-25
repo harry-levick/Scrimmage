@@ -11,7 +11,7 @@ public class Body extends Limb {
    * ensure actions are calculated the same
    */
   public Body(Player parent) {
-    super(0, 0, 22, 64, 39, 31, ObjectID.Player, false, parent);
+    super(0, 0, 22, 64, 39, 31, ObjectID.Player, false, parent, 0, 0);
   }
 
   @Override

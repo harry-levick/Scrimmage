@@ -16,7 +16,7 @@ public class Head extends Limb {
    * ensure actions are calculated the same
    */
   public Head(Player parent) {
-    super(0, 0, 17, 13, 48, 58, ObjectID.Player, false, parent);
+    super(0, 0, 17, 13, 48, 58, ObjectID.Player, false, parent, 0, 0);
   }
 
   @Override
