@@ -11,6 +11,12 @@ import shared.physics.Physics;
 import shared.physics.data.Collision;
 import shared.util.maths.Vector2;
 
+/*
+  TODO Week 7:
+    - Make path finder use level handler
+    - Path finder finds path to a stationary enemy
+ */
+
 /**
  * @author Harry Levick (hxl799)
  */

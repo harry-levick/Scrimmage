@@ -3,11 +3,9 @@ package server.ai.pathFind;
 /**
  * @author Harry Levick (hxl799)
  */
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 import server.ai.Bot;
 import shared.gameObjects.GameObject;
@@ -19,7 +17,6 @@ import shared.physics.Physics;
 import shared.physics.data.Collision;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
-
 /**
  * The main file for the A* planner. - search(): This function is the core search algorithm,
  * searching for an optimal path. - optimise(): Function controlling the search and extracting plans
@@ -60,8 +57,6 @@ public class AStar {
     // The list of game objects in this scene
     List<GameObject> sceneSnapshot;
     // The bot that the path-finding is concerned with.
-    double botX;
-    double botY;
     Bot nodeBot;
     Player nodeEnemy;
 
@@ -77,28 +72,19 @@ public class AStar {
       Collections.copy(sceneSnapshot, worldScene);
       this.parentNode = parent;
       if (parentNode != null) {
-        /*
-         TODO 1. Create a copy of the parents nodeBot
-         TODO 2. Apply this nodes action to the cloned bot using
-            1. cloneBot.simulateAction(action)
-            2. cloneBot.applyInput()
-            3. cloneBot.update()
-         TODO 3. Retrieve the new x, y coords from the simulated bot
-            1. this.botX = cloneBot.getX()
-            2. this.botY = cloneBot.getY()
-          */
+        // Take the parents enemy, hence the enemy stays stationary throughout the path finding.
+        this.nodeEnemy = parent.nodeEnemy;
         // Create a copy of the parents simulated bot
-        this.nodeEnemy = new Player(enemy);
         this.nodeBot = new Bot(parent.nodeBot);
+
+        // Simulate the bot with the action, using the game physics
         nodeBot.simulateAction(action);
         nodeBot.simulateApplyInput();
         nodeBot.simulateUpdate();
 
-        this.botX = nodeBot.getX();
-        this.botY = nodeBot.getY();
-
         Vector2 thisPos = new Vector2((float) nodeBot.getX(), (float) nodeBot.getY());
-        Vector2 parentPos = new Vector2((float) parent.nodeBot.getX(), (float) parent.nodeBot.getY());
+        Vector2 parentPos = new Vector2((float) parent.nodeBot.getX(),
+            (float) parent.nodeBot.getY());
 
         double distChange = thisPos.exactMagnitude(parentPos);
         // Calculate the heuristic value of the node.
@@ -110,9 +96,7 @@ public class AStar {
         // This is the starting node so distanceElapsed is 0
         distanceElapsed = 0;
         this.nodeBot = bot;
-        this.nodeEnemy = enemy;
-        this.botX = bot.getX();
-        this.botY = bot.getY();
+        this.nodeEnemy = new Player(enemy);
         // Calculate the heuristic value of the node.
         this.remainingDistance = calcRemainingH(enemy, getItems(sceneSnapshot));
       }
@@ -144,7 +128,7 @@ public class AStar {
      * @return the distance
      */
     public double calcRemainingH(Player enemy, List<Weapon> allItems) {
-      Vector2 botPos = new Vector2((float) botX, (float) botY);
+      Vector2 botPos = new Vector2((float) nodeBot.getX(), (float) nodeBot.getY());
       Vector2 enemyPos = new Vector2((float) nodeEnemy.getX(), (float) nodeEnemy.getY());
       double totalH = botPos.exactMagnitude(enemyPos);
 
@@ -234,9 +218,8 @@ public class AStar {
    *
    * @param bot the bot that this path-finding is concerned with.
    */
-  public AStar(Bot bot, List<GameObject> worldScene) {
-    //this.levelHandler = levelHandler;
-    this.worldScene = worldScene;
+  public AStar(Bot bot, LevelHandler levelHandler) {
+    this.levelHandler = levelHandler;
     this.bot = bot;
     currentPlan = new ArrayList<>();
   }
@@ -275,7 +258,8 @@ public class AStar {
     boolean currentGood = false;
 
     // Search until we're at the enemy coordinates
-    while ((openList.size() != 0) && !atEnemy((float) current.botX, (float) current.botY)) {
+    while ((openList.size() != 0) && !atEnemy((float) current.nodeBot.getX(),
+        (float) current.nodeBot.getY())) {
       // Pick the best node from the open-list
       current = pickBestPos(openList);
       currentGood = false;
@@ -354,15 +338,15 @@ public class AStar {
   private boolean isInClosed(SearchNode node) {
     // Is the x and y coords of the given node too close the the coords of a node in the visited
     // list?
-    double nodeX = node.botX;
-    double nodeY = node.botY;
+    double nodeX = node.nodeBot.getX();
+    double nodeY = node.nodeBot.getY();
     double xDiff = 3.0;
     double yDiff = 3.0;
 
     for (SearchNode n : closedList) {
 
-      if ((Math.abs(n.botX) - nodeX < xDiff) &&
-          (Math.abs(n.botY) - nodeY < yDiff)) {
+      if ((Math.abs(n.nodeBot.getX()) - nodeX < xDiff) &&
+          (Math.abs(n.nodeBot.getY()) - nodeY < yDiff)) {
         return true;
       }
     }
@@ -408,6 +392,8 @@ public class AStar {
    * Initialise the planner
    */
   private void initSearch() {
+    // Take the game objects from the level handler on each search
+    this.worldScene = this.levelHandler.getGameObjects();
     SearchNode startPosition = new SearchNode(null, null);
     startPosition.sceneSnapshot = backupState();
 
@@ -422,8 +408,10 @@ public class AStar {
   private ArrayList<boolean[]> createPossibleActions(SearchNode currentPos) {
     ArrayList<boolean[]> possibleActions = new ArrayList<>();
 
-    //Vector2 botPosition = this.bot.getTransform().getPos(); <- not taking an updated position in the theory of the search
-    Vector2 botPosition = new Vector2((float) currentPos.botX, (float) currentPos.botY);
+    // Vector2 botPosition = this.bot.getTransform().getPos(); <- not taking an updated position
+    // in the theory of the search
+    Vector2 botPosition = new Vector2((float) currentPos.nodeBot.getX(),
+        (float) currentPos.nodeBot.getY());
     Vector2 botSize = this.bot.getTransform().getSize();
 
     // Box cast to the left
