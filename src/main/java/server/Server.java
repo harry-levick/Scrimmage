@@ -133,7 +133,7 @@ public class Server extends Application {
         }
 
         if (playerCount.get() == 5) {
-          Bot bot = new Bot(500, 500, UUID.randomUUID(), levelHandler.getGameObjects());
+          Bot bot = new Bot(500, 500, UUID.randomUUID(), levelHandler);
           bot.initialise(null);
           levelHandler.getPlayers().add(bot);
           levelHandler.getBotPlayerList().add(bot);

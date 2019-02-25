@@ -45,6 +45,15 @@ public class Player extends GameObject {
     holding = null;
   }
 
+  /**
+   * Cloning constructor
+   * @param that
+   */
+  public Player(Player that) {
+    this(that.getX(), that.getY(), that.getUUID());
+  }
+
+
   // Initialise the animation
   @Override
   public void initialiseAnimation() {
