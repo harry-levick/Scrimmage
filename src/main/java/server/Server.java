@@ -2,6 +2,7 @@ package server;
 
 import client.main.Client;
 import client.main.Settings;
+import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -10,7 +11,6 @@ import java.net.ServerSocket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
@@ -47,18 +47,17 @@ public class Server extends Application {
   private static final Logger LOGGER = LogManager.getLogger(Client.class.getName());
 
   public static LevelHandler levelHandler;
-
-  private Settings settings;
-  private ArrayList<String> connectedList = new ArrayList<>();
-  private List connected = Collections.synchronizedList(connectedList);
   public final AtomicInteger playerCount = new AtomicInteger(0);
   public final AtomicInteger readyCount = new AtomicInteger(0);
   private final AtomicBoolean running = new AtomicBoolean(false);
   private final AtomicBoolean gameOver = new AtomicBoolean(false);
   private final AtomicInteger counter = new AtomicInteger(0);
-  private final int serverUpdateRate = 10;
+  private final int serverUpdateRate = 3;
   private final int maxPlayers = 4;
   public ServerState serverState;
+  private Settings settings;
+  private ArrayList<InetAddress> connectedList = new ArrayList<>();
+  private List connected = Collections.synchronizedList(connectedList);
   private String threadName;
   private LinkedList<Map> playlist;
   private ConcurrentMap<Player, BlockingQueue<PacketInput>> inputQueue;
@@ -76,6 +75,7 @@ public class Server extends Application {
   }
 
   public void init() {
+    SvgImageLoaderFactory.install();
     server = this;
     executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     threadName = "Server";
@@ -89,18 +89,19 @@ public class Server extends Application {
       e.printStackTrace();
     }
 
-    //Testing code
-    playlist
-        .add(new Map("Map1", Path.convert("src/main/resources/maps/map1.map"), GameState.IN_GAME));
-    playlist
-        .add(new Map("Map2", Path.convert("src/main/resources/maps/map2.map"), GameState.IN_GAME));
+    // Testing code
+    playlist.add(
+        new Map("Map1", Path.convert("src/main/resources/maps/map1.map"), GameState.IN_GAME));
+    playlist.add(
+        new Map("Map2", Path.convert("src/main/resources/maps/map2.map"), GameState.IN_GAME));
   }
 
   @Override
   public void start(Stage primaryStage) throws Exception {
     levelHandler = new LevelHandler(settings);
     levelHandler.changeMap(
-        new Map("Lobby", Path.convert("src/main/resources/menus/lobby.map"), GameState.Lobby));
+        new Map("Lobby", Path.convert("src/main/resources/menus/lobby.map"), GameState.Lobby),
+        false);
     running.set(true);
     LOGGER.debug("Running " + threadName);
     serverState = ServerState.WAITING_FOR_PLAYERS;
@@ -108,12 +109,13 @@ public class Server extends Application {
     executor.execute(new ServerReceiver(this, serverSocket, connected));
 
     /** Setup Game timer */
-    TimerTask task = new TimerTask() {
-      @Override
-      public void run() {
-        gameOver.set(true);
-      }
-    };
+    TimerTask task =
+        new TimerTask() {
+          @Override
+          public void run() {
+            gameOver.set(true);
+          }
+        };
     Timer timer = new Timer("Timer", true);
     timer.schedule(task, 300000L);
 
@@ -153,7 +155,7 @@ public class Server extends Application {
         updateSimulation();
 
         /** Send update to all clients */
-        if (counter.get() == serverUpdateRate && playerCount.get() > 0) {
+        if (playerCount.get() > 0 && counter.get() >= serverUpdateRate) {
           counter.set(0);
           sendWorldState();
         }
@@ -164,7 +166,6 @@ public class Server extends Application {
   public void stop() {
     running.set(false);
   }
-
 
   public void updateSimulation() {
     /** Check Collisions */
@@ -190,23 +191,23 @@ public class Server extends Application {
         .forEach(gameObject -> gameObject.updateCollision(levelHandler.getGameObjects()));
     /** Update Game Objects */
     levelHandler.getGameObjects().forEach(gameObject -> gameObject.update());
-    //System.out.println("Updated World");
   }
 
   public void sendToClients(byte[] buffer) {
     synchronized (connected) {
-      Iterator address = connected.iterator();
-      while (address.hasNext()) {
-        try {
-          DatagramPacket packet = new DatagramPacket(buffer, buffer.length,
-              InetAddress.getByName((String) address.next()), serverPort);
-          socket.send(packet);
-        } catch (UnknownHostException e) {
-          e.printStackTrace();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
+      connected.forEach(
+          address -> {
+            try {
+              DatagramPacket packet =
+                  new DatagramPacket(buffer, buffer.length, (InetAddress) address, serverPort);
+              socket.send(packet);
+              System.out.println(packet.getData().toString());
+            } catch (UnknownHostException e) {
+              e.printStackTrace();
+            } catch (IOException e) {
+              e.printStackTrace();
+            }
+          });
     }
   }
 
@@ -217,7 +218,7 @@ public class Server extends Application {
         gameObjectsFiltered.add(gameObject);
       }
     }
-    PacketGameState gameState = new PacketGameState(gameObjectsFiltered);
+    PacketGameState gameState = new PacketGameState(gameObjectsFiltered, 0);
 
     byte[] buffer = gameState.getData();
     sendToClients(buffer);
@@ -225,7 +226,7 @@ public class Server extends Application {
 
   public void startMatch() {
     if (serverState == ServerState.WAITING_FOR_READYUP) {
-      //Add bots
+      // Add bots
     }
     serverState = ServerState.IN_GAME;
     nextMap();
@@ -233,8 +234,8 @@ public class Server extends Application {
 
   public void nextMap() {
     Map nextMap = playlist.pop();
-    levelHandler.changeMap(nextMap);
-    //TODO Change to actual UUID
+    levelHandler.changeMap(nextMap, true);
+    // TODO Change to actual UUID
     PacketMap mapPacket = new PacketMap(nextMap.getName(), UUID.randomUUID());
     sendToClients(mapPacket.getData());
   }
@@ -262,5 +263,4 @@ public class Server extends Application {
       }
     }
   }
-
 }

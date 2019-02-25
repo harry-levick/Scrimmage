@@ -7,7 +7,7 @@ import shared.util.Path;
 
 public class Sword extends Melee {
 
-  //private static String imagePath = "images/weapons/sword.jpg";
+  // private static String imagePath = "images/weapons/sword.jpg";
   private static String imagePath = "images/weapons/sword1.png";
   private int currentAngleIndex;
 
@@ -19,31 +19,30 @@ public class Sword extends Melee {
    * @param name Name of the sword
    * @param uuid The UUID of the sword
    */
-  public Sword(double x, double y, String name, Player holder,
-      UUID uuid) {
+  public Sword(double x, double y, String name, Player holder, UUID uuid) {
     super(
         x,
         y,
         50,
         50,
         ObjectID.Weapon,
-        20,  // damage
-        10,  // weight
+        20, // damage
+        10, // weight
         name,
-        30,  // ammo
-        60,  // fireRate
+        30, // ammo
+        60, // fireRate
         holder,
-        70,  // range
-        50,  // beginAngle
-        20,  // endAngle
+        50, // range
+        50, // beginAngle
+        20, // endAngle
         uuid);
   }
-  
+
   @Override
   public void fire(double mouseX, double mouseY) {
     super.fire(mouseX, mouseY);
   }
-  
+
   @Override
   public void update() {
     super.update();
@@ -75,7 +74,7 @@ public class Sword extends Melee {
 
   @Override
   public void initialiseAnimation() {
-    this.animation.supplyAnimationWithSize("default", this.range, this.range, true,
-        Path.convert(this.imagePath));
+    this.animation.supplyAnimationWithSize(
+        "default", this.range, this.range, true, Path.convert(this.imagePath));
   }
 }

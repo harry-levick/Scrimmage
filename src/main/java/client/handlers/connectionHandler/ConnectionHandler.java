@@ -6,7 +6,6 @@ import java.io.PrintWriter;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.Socket;
-import java.util.Arrays;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import shared.packets.Packet;
@@ -16,7 +15,6 @@ public class ConnectionHandler extends Thread {
 
   public BlockingQueue received;
 
-
   private byte[] buffer;
   private String address;
   private int port;
@@ -24,7 +22,6 @@ public class ConnectionHandler extends Thread {
   private DatagramSocket clientSocket;
   private Socket socket;
   private PrintWriter out;
-
 
   public ConnectionHandler(String test) {
     connected = true;
@@ -41,11 +38,12 @@ public class ConnectionHandler extends Thread {
   }
 
   public void run() {
-      Packet joinPacket =
-          new PacketJoin(
-              Client.levelHandler.getClientPlayer().getUUID(), Client.settings.getUsername(),
-              Client.levelHandler.getClientPlayer().getX(),
-              Client.levelHandler.getClientPlayer().getY());
+    Packet joinPacket =
+        new PacketJoin(
+            Client.levelHandler.getClientPlayer().getUUID(),
+            Client.settings.getUsername(),
+            Client.levelHandler.getClientPlayer().getX(),
+            Client.levelHandler.getClientPlayer().getY());
     send(joinPacket.getString());
 
     Client.multiplayer = true;
@@ -54,14 +52,14 @@ public class ConnectionHandler extends Thread {
       DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
       try {
         clientSocket.receive(packet);
-        System.out.println(packet.getData().toString());
-        received.add(Arrays.toString(packet.getData()));
+        String msg = new String(packet.getData(), packet.getOffset(), packet.getLength());
+        System.out.println(msg.trim());
+        received.add(msg.trim());
       } catch (IOException e) {
         e.printStackTrace();
       }
-      }
     }
-
+  }
 
   public void end() {
     connected = false;
@@ -73,7 +71,6 @@ public class ConnectionHandler extends Thread {
       e.printStackTrace();
     }
   }
-
 
   public void send(String data) {
     System.out.println(data);

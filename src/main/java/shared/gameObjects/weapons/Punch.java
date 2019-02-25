@@ -22,10 +22,10 @@ public class Punch extends Melee {
    */
   public Punch(
       double x,
-      double y, 
-      double sizeX, 
-      double sizeY, 
-      ObjectID id, 
+      double y,
+      double sizeX,
+      double sizeY,
+      ObjectID id,
       int damage,
       String name,
       Player holder,

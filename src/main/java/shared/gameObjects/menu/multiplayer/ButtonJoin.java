@@ -22,8 +22,7 @@ public class ButtonJoin extends ButtonObject {
    * @param y Y coordinate of object in game world
    * @param id Unique Identifier of every game object
    */
-  public ButtonJoin(
-      double x, double y, double sizeX, double sizeY, ObjectID id, UUID objectUUID) {
+  public ButtonJoin(double x, double y, double sizeX, double sizeY, ObjectID id, UUID objectUUID) {
     super(x, y, sizeX, sizeY, id, objectUUID);
     this.address = "localhost";
   }
@@ -36,11 +35,11 @@ public class ButtonJoin extends ButtonObject {
 
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
-    System.out.println("test");
     Client.connectionHandler = new ConnectionHandler("230.0.0.0");
     Client.connectionHandler.start();
     button.disarm();
     Client.levelHandler.changeMap(
-        new Map("Lobby", Path.convert("src/main/resources/menus/lobby.map"), GameState.Lobby));
+        new Map("Lobby", Path.convert("src/main/resources/menus/lobby.map"), GameState.Lobby),
+        false);
   }
 }

@@ -3,18 +3,27 @@ package client.main;
 import client.handlers.connectionHandler.ConnectionHandler;
 import client.handlers.inputHandler.KeyboardInput;
 import client.handlers.inputHandler.MouseInput;
+import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
+import de.codecentric.centerdevice.javafxsvg.dimension.PrimitiveDimensionProvider;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import shared.gameObjects.MapDataObject;
+import shared.gameObjects.UI.UI;
 import shared.gameObjects.players.Player;
+import shared.gameObjects.weapons.MachineGun;
 import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.LevelHandler;
 import shared.handlers.levelHandler.Map;
@@ -30,25 +39,29 @@ public class Client extends Application {
   public static LevelHandler levelHandler;
   public static Settings settings;
   public static boolean multiplayer;
+  public static boolean singleplayerGame;
   public static ConnectionHandler connectionHandler;
   public static boolean sendUpdate;
-
+  public static Timer timer = new Timer("Timer", true);
+  public static int inputSequenceNumber;
+  public static ArrayList<PacketInput> pendingInputs;
+  public static TimerTask task;
+  public static Group gameRoot;
   private final float timeStep = 0.0166f;
   private final String gameTitle = "Alone in the Dark";
-  private final int port = 4445;
-  public static int inputCount;
-
+  private LinkedList<Map> playlist;
   private KeyboardInput keyInput;
   private MouseInput mouseInput;
   private Group root;
   private Group backgroundRoot;
-  public static Group gameRoot;
   private Scene scene;
   private float maximumStep;
   private long previousTime;
   private float accumulatedTime;
   private float elapsedSinceFPS = 0f;
   private int framesElapsedSinceFPS = 0;
+  private UI userInterface;
+  private boolean gameOver;
 
   public static void main(String args[]) {
     launch(args);
@@ -56,8 +69,31 @@ public class Client extends Application {
 
   @Override
   public void start(Stage primaryStage) {
+    gameOver = false;
+    SvgImageLoaderFactory.install(new PrimitiveDimensionProvider());
+    playlist = new LinkedList<>();
+    // Testing code
+    for (int i = 1; i < 11; i++) {
+      playlist.add(
+          new Map(
+              "Map" + i,
+              Path.convert("src/main/resources/maps/map" + i + ".map"),
+              GameState.IN_GAME));
+    }
+
+    /** Setup Game timer */
+    task =
+        new TimerTask() {
+          @Override
+          public void run() {
+            gameOver = true;
+          }
+        };
+
     setupRender(primaryStage);
-    inputCount = 0;
+    inputSequenceNumber = 0;
+    pendingInputs = new ArrayList<>();
+    singleplayerGame = false;
     sendUpdate = false;
     levelHandler = new LevelHandler(settings, root, backgroundRoot, gameRoot);
     keyInput = new KeyboardInput();
@@ -69,6 +105,9 @@ public class Client extends Application {
     scene.setOnMouseMoved(mouseInput);
     scene.setOnMouseReleased(mouseInput);
     scene.setOnMouseDragged(mouseInput);
+    
+    //Setup UI
+    userInterface = new UI(root,levelHandler.getClientPlayer()); 
 
     // Main Game Loop
     new AnimationTimer() {
@@ -77,6 +116,10 @@ public class Client extends Application {
 
         if (multiplayer) {
           processServerPackets();
+        }
+
+        if (gameOver) {
+          endGame();
         }
 
         if (previousTime == 0) {
@@ -111,26 +154,26 @@ public class Client extends Application {
           sendUpdate = false;
         }
 
-        if (!multiplayer) {
-          /**Calculate Score*/
-          if (levelHandler.getPlayers().size() > 1) {
-            ArrayList<Player> alive = new ArrayList<>();
-            for (Player p : levelHandler.getPlayers()) {
-              if (p.isActive()) {
-                alive.add(p);
-              }
-              if (alive.size() > 1) {
-                break;
-              }
+        if (!multiplayer && singleplayerGame && levelHandler.getPlayers().size() > 1) {
+          /** Calculate Score */
+          ArrayList<Player> alive = new ArrayList<>();
+          for (Player p : levelHandler.getPlayers()) {
+            if (p.isActive()) {
+              alive.add(p);
             }
-            if (alive.size() == 1) {
-              alive.forEach(player -> player.increaseScore());
-              levelHandler.getPlayers().forEach(player -> player.reset());
-              //Change level
+            if (alive.size() > 1) {
+              break;
             }
           }
-          levelHandler.getBotPlayerList()
-              .forEach(bot -> bot.applyInput());
+          if (alive.size() == 1) {
+            alive.forEach(player -> player.increaseScore());
+            levelHandler.getPlayers().forEach(player -> player.reset());
+            Map nextMap = playlist.poll();
+            levelHandler.changeMap(nextMap, true);
+            giveWeapon();
+          }
+          /** Move bots */
+          levelHandler.getBotPlayerList().forEach(bot -> bot.applyInput());
         }
 
         /** Render Game Objects */
@@ -138,6 +181,12 @@ public class Client extends Application {
         if (levelHandler.getBackground() != null) {
           levelHandler.getBackground().render();
         }
+        
+        /** Draw the UI */
+        if(levelHandler.getGameState() == GameState.IN_GAME || levelHandler.getGameState() == GameState.Multiplayer) {
+            userInterface.render();
+        }
+                
         /** Check Collisions */
         Physics.gameObjects = levelHandler.getGameObjects();
         levelHandler
@@ -162,8 +211,11 @@ public class Client extends Application {
     if (elapsedSinceFPS >= 0.5f) {
       int fps = Math.round(framesElapsedSinceFPS / elapsedSinceFPS);
       primaryStage.setTitle(
-          gameTitle + "   --    FPS: " + fps + "    Score: " + Client.levelHandler.getClientPlayer()
-              .getScore());
+          gameTitle
+              + "   --    FPS: "
+              + fps
+              + "    Score: "
+              + Client.levelHandler.getClientPlayer().getScore());
       elapsedSinceFPS = 0;
       framesElapsedSinceFPS = 0;
     }
@@ -178,6 +230,20 @@ public class Client extends Application {
     // Start off screen
   }
 
+  public void endGame() {
+    singleplayerGame = false;
+    levelHandler.getPlayers().removeAll(levelHandler.getBotPlayerList());
+    levelHandler.getBotPlayerList().forEach(gameObject -> gameObject.removeRender());
+    levelHandler.getBotPlayerList().forEach(gameObject -> gameObject = null);
+    levelHandler.getBotPlayerList().clear();
+    levelHandler.changeMap(
+        new Map(
+            "Main Menu",
+            Path.convert("src/main/resources/menus/main_menu.map"),
+            GameState.MAIN_MENU),
+        false);
+  }
+
   private void setupRender(Stage primaryStage) {
     root = new Group();
     backgroundRoot = new Group();
@@ -190,6 +256,7 @@ public class Client extends Application {
     primaryStage.getIcons().add(new Image(Path.convert("images/logo.png")));
 
     scene = new Scene(root, 1920, 1080);
+    scene.setCursor(Cursor.CROSSHAIR);
 
     primaryStage.setScene(scene);
     primaryStage.setFullScreen(false);
@@ -206,49 +273,100 @@ public class Client extends Application {
             levelHandler.getClientPlayer().jumpKey,
             levelHandler.getClientPlayer().click,
             levelHandler.getClientPlayer().getUUID(),
-            inputCount);
+            inputSequenceNumber);
     connectionHandler.send(input.getString());
-    inputCount++;
+    input.setInputSequenceNumber(inputSequenceNumber);
+    pendingInputs.add(input);
+    inputSequenceNumber++;
   }
 
   private void processServerPackets() {
     if (connectionHandler.received.size() != 0) {
       try {
         String message = (String) connectionHandler.received.take();
+        System.out.println(message);
         int messageID = Integer.parseInt(message.substring(0, 1));
         switch (messageID) {
-          //PlayerJoin
+          // PlayerJoin
           case 4:
             PacketPlayerJoin packetPlayerJoin = new PacketPlayerJoin(message);
             levelHandler.addPlayer(
-                new Player(packetPlayerJoin.getX(), packetPlayerJoin.getY(),
-                    packetPlayerJoin.getUUID()), gameRoot);
+                new Player(
+                    packetPlayerJoin.getX(), packetPlayerJoin.getY(), packetPlayerJoin.getUUID()),
+                gameRoot);
             break;
-          //End
+          // Ends
           case 6:
             Client.connectionHandler.end();
             Client.connectionHandler = null;
-            //Show score board
+            // Show score board
             multiplayer = false;
             Client.levelHandler.changeMap(
-                new Map("main_menu", Path.convert("src/main/resources/menus/main_menu.map"),
-                    GameState.IN_GAME));
+                new Map(
+                    "main_menu",
+                    Path.convert("src/main/resources/menus/main_menu.map"),
+                    GameState.IN_GAME),
+                false);
 
             break;
           case 7:
             PacketGameState gameState = new PacketGameState(message);
             HashMap<UUID, String> data = gameState.getGameObjects();
-            levelHandler.getGameObjects()
-                .forEach(gameObject -> gameObject.setState(data.get(gameObject.getUUID())));
+            levelHandler
+                .getGameObjects()
+                .forEach(
+                    gameObject -> {
+                      if (!(gameObject instanceof MapDataObject)) {
+                        gameObject.setState(data.get(gameObject.getUUID()));
+                      }
+                    });
+            serverReconciliation(gameState.getLastProcessedInput());
             break;
           default:
-            System.out.println(messageID);
-            System.out.println(message);
-
+            System.out.println("ERROR" + messageID + " " + message);
         }
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
     }
+  }
+
+  public void serverReconciliation(int lastProcessedInput) {
+    int j = 0;
+    // Server Reconciliation. Re-apply all the inputs not yet processed by
+    // the server.
+    while (j < pendingInputs.size()) {
+      if (inputSequenceNumber <= lastProcessedInput) {
+        // Already processed. Its effect is already taken into account into the world update
+        // we just got so drop it
+        pendingInputs.remove(j);
+      } else {
+        Player player = levelHandler.getClientPlayer();
+        PacketInput input = pendingInputs.get(j);
+        // Not processed by the server yet. Re-apply it.
+        player.mouseY = input.getY();
+        player.mouseX = input.getX();
+        player.jumpKey = input.isJumpKey();
+        player.leftKey = input.isLeftKey();
+        player.rightKey = input.isRightKey();
+        player.click = false; // Don't want extra bullets
+        player.applyInput();
+        j++;
+      }
+    }
+  }
+
+  public void giveWeapon() {
+    levelHandler
+        .getClientPlayer()
+        .setHolding(
+            new MachineGun(
+                500,
+                500,
+                "MachineGun@LevelHandler",
+                Client.levelHandler.getClientPlayer(),
+                UUID.randomUUID()));
+    levelHandler.getGameObjects().add(Client.levelHandler.getClientPlayer().getHolding());
+    levelHandler.getClientPlayer().getHolding().initialise(Client.gameRoot);
   }
 }

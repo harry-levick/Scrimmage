@@ -1,5 +1,6 @@
 package client.handlers.audioHandler;
 
+import client.handlers.audioHandler.MusicAssets.PLAYLIST;
 import client.main.Settings;
 import java.io.File;
 import java.util.ArrayList;
@@ -15,6 +16,8 @@ public class AudioHandler {
   private Settings settings;
 
   private int trackPos = 0;
+  private ArrayList<String> playlist = new ArrayList<>();
+  private boolean playingPlaylist = false;
 
   private MusicAssets musicAssets = new MusicAssets();
   private EffectsAssets effectsAssets = new EffectsAssets();
@@ -40,17 +43,15 @@ public class AudioHandler {
     }
   }
 
-  public void playMusicPlaylist() {
-    ArrayList<String> playlist = musicAssets.getPlaylist();
+  public void playMusicPlaylist(PLAYLIST playlistSet) {
+    playingPlaylist = true;
+    playlist = musicAssets.getPlaylist(playlistSet);
     playMusic(playlist.get(trackPos));
     musicPlayer.setOnEndOfMedia(new Runnable() {
       @Override
       public void run() {
-        trackPos++;
-        if (trackPos == playlist.size()) {
-          trackPos = 0;
-        }
-        playMusicPlaylist();
+        incrementTrack();
+        playMusicPlaylist(playlistSet);
       }
     });
 
@@ -61,6 +62,9 @@ public class AudioHandler {
    */
   public void stopMusic() {
     if (musicPlayer != null) {
+      if (playingPlaylist) {
+        incrementTrack();
+      }
       musicPlayer.stop();
     }
   }
@@ -79,6 +83,13 @@ public class AudioHandler {
       effectPlayer.play();
     } else {
       // todo log error
+    }
+  }
+
+  private void incrementTrack() {
+    trackPos++;
+    if (trackPos == playlist.size()) {
+      trackPos = 0;
     }
   }
 

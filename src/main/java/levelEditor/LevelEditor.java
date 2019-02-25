@@ -1,5 +1,7 @@
 package levelEditor;
 
+import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
+import de.codecentric.centerdevice.javafxsvg.dimension.PrimitiveDimensionProvider;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,14 +30,26 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import levelEditor.LevelEditor.OBJECT_TYPES;
-import shared.gameObjects.ExampleFloorObject;
-import shared.gameObjects.ExampleObject;
-import shared.gameObjects.ExampleWallObject;
+import shared.gameObjects.Blocks.Metal.MetalBlockLargeObject;
+import shared.gameObjects.Blocks.Metal.MetalBlockSmallObject;
+import shared.gameObjects.Blocks.Metal.MetalFloorObject;
+import shared.gameObjects.Blocks.Stone.StoneBlockObject;
+import shared.gameObjects.Blocks.Stone.StoneFloorObject;
+import shared.gameObjects.Blocks.Stone.StoneWallObject;
+import shared.gameObjects.Blocks.Wood.WoodBlockLargeObject;
+import shared.gameObjects.Blocks.Wood.WoodBlockSmallObject;
+import shared.gameObjects.Blocks.Wood.WoodFloorObject;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.MapDataObject;
-import shared.gameObjects.UI.Health;
 import shared.gameObjects.Utils.ObjectID;
-import shared.gameObjects.background.Background;
+import shared.gameObjects.background.Background1;
+import shared.gameObjects.background.Background2;
+import shared.gameObjects.background.Background3;
+import shared.gameObjects.background.Background4;
+import shared.gameObjects.background.Background5;
+import shared.gameObjects.background.Background6;
+import shared.gameObjects.background.Background7;
+import shared.gameObjects.background.Background8;
 import shared.gameObjects.menu.main.ButtonLeveleditor;
 import shared.gameObjects.menu.main.ButtonMultiplayer;
 import shared.gameObjects.menu.main.ButtonSettings;
@@ -54,26 +68,27 @@ public class LevelEditor extends Application {
   private MapDataObject mapDataObject;
   private boolean snapToGrid = true;
 
-  private int spawnPointLimit = 4; //todo autofetch
+  private int spawnPointLimit = 4; // todo autofetch
 
-  private int stageSizeX = 1920; //todo autofetch
+  private int stageSizeX = 1920; // todo autofetch
   private int stageSizeY = 1080;
   private int gridSizePX = 40;
-  private int gridSizeX = stageSizeX / gridSizePX; //40 px blocks
+  private int gridSizeX = stageSizeX / gridSizePX; // 40 px blocks
   private int gridSizeY = stageSizeY / gridSizePX;
 
   private LinkedHashMap<OBJECT_TYPES, GameObjectTuple> objectMap = new LinkedHashMap<>();
-  private OBJECT_TYPES objectTypeSelected = OBJECT_TYPES.FLOOR; // default
+  private OBJECT_TYPES objectTypeSelected = OBJECT_TYPES.PLAYER; // default
 
   private String filename = "";
-  private String filepath = "src"
-      + File.separator
-      + "main"
-      + File.separator
-      + "resources"
-      + File.separator
-      + "menus"
-      + File.separator;
+  private String filepath =
+      "src"
+          + File.separator
+          + "main"
+          + File.separator
+          + "resources"
+          + File.separator
+          + "maps"
+          + File.separator;
 
   /**
    * ADDING NEW OBJECTS TO THE MAP CREATOR: 1. add a new object name in the enum OBJECT_TYPES 2. in
@@ -82,12 +97,16 @@ public class LevelEditor extends Application {
    * instance of the new GameObject. Must break; the case. 4. debug
    */
   public LevelEditor() {
-    objectMap.put(OBJECT_TYPES.FLOOR, new GameObjectTuple("Floor", 5, 2));
-    objectMap.put(OBJECT_TYPES.WALL, new GameObjectTuple("Wall", 2, 2));
-    objectMap.put(OBJECT_TYPES.BOX, new GameObjectTuple("Box", 1, 1));
+    SvgImageLoaderFactory.install(new PrimitiveDimensionProvider());
     objectMap.put(OBJECT_TYPES.PLAYER, new GameObjectTuple("Player Spawn", 2, 3));
-    objectMap.put(OBJECT_TYPES.BACKGROUND, new GameObjectTuple("Background", 0, 0));
-    objectMap.put(OBJECT_TYPES.BACKGROUND1, new GameObjectTuple("Background 2", 0, 0));
+    objectMap.put(OBJECT_TYPES.BACKGROUND1, new GameObjectTuple("Background 1", 0, 0));
+    objectMap.put(OBJECT_TYPES.BACKGROUND2, new GameObjectTuple("Background 2", 0, 0));
+    objectMap.put(OBJECT_TYPES.BACKGROUND3, new GameObjectTuple("Background 3", 0, 0));
+    objectMap.put(OBJECT_TYPES.BACKGROUND4, new GameObjectTuple("Background 4", 0, 0));
+    objectMap.put(OBJECT_TYPES.BACKGROUND5, new GameObjectTuple("Background 5", 0, 0));
+    objectMap.put(OBJECT_TYPES.BACKGROUND6, new GameObjectTuple("Background 6", 0, 0));
+    objectMap.put(OBJECT_TYPES.BACKGROUND7, new GameObjectTuple("Background 7", 0, 0));
+    objectMap.put(OBJECT_TYPES.BACKGROUND8, new GameObjectTuple("Background 8", 0, 0));
     objectMap.put(OBJECT_TYPES.BTN_SP, new GameObjectTuple("Singeplayer Button", 6, 2));
     objectMap.put(OBJECT_TYPES.BTN_MP, new GameObjectTuple("Multiplayer Button", 6, 2));
     objectMap.put(OBJECT_TYPES.BTN_ST, new GameObjectTuple("Settings Button", 6, 2));
@@ -95,60 +114,69 @@ public class LevelEditor extends Application {
     objectMap.put(OBJECT_TYPES.WPN_HG, new GameObjectTuple("Handgun", 2, 2));
     objectMap.put(OBJECT_TYPES.BTN_JOIN, new GameObjectTuple("ButtonJoin", 6, 2));
     objectMap.put(OBJECT_TYPES.UI_HP, new GameObjectTuple("UI Base", 8, 2));
+    objectMap.put(OBJECT_TYPES.BLOCK_METAL_LARGE, new GameObjectTuple("Metal Block Large", 2, 2));
+    objectMap.put(OBJECT_TYPES.BLOCK_METAL_SMALL, new GameObjectTuple("Metal Block Small", 1, 1));
+    objectMap.put(OBJECT_TYPES.FLOOR_METAL, new GameObjectTuple("Metal Floor", 5, 2));
+    objectMap.put(OBJECT_TYPES.BLOCK_STONE, new GameObjectTuple("Stone Block", 1, 1));
+    objectMap.put(OBJECT_TYPES.FLOOR_STONE, new GameObjectTuple("Stone Floor", 5, 2));
+    objectMap.put(OBJECT_TYPES.WALL_STONE, new GameObjectTuple("Stone Wall", 1, 5));
+    objectMap.put(OBJECT_TYPES.BLOCK_WOOD_LARGE, new GameObjectTuple("Wood Block Large", 2, 2));
+    objectMap.put(OBJECT_TYPES.BLOCK_WOOD_SMALL, new GameObjectTuple("Wood Block Small", 1, 1));
+    objectMap.put(OBJECT_TYPES.FLOOR_WOOD, new GameObjectTuple("Wood Floor", 5, 2));
   }
 
-  private void scenePrimaryClick(Stage primaryStage, Group root, Group objects, Group background, MouseEvent event) {
-    if (!isInObject(event.getX(), event.getY(), objectMap.get(objectTypeSelected).getX(),
+  private void scenePrimaryClick(
+      Stage primaryStage, Group root, Group objects, Group background, MouseEvent event) {
+    if (!isInObject(
+        event.getX(),
+        event.getY(),
+        objectMap.get(objectTypeSelected).getX(),
         objectMap.get(objectTypeSelected).getY())) {
       GameObject temp = null;
       UUID uuid = UUID.randomUUID();
       switch (objectTypeSelected) {
-        case FLOOR:
-        default:
-          temp =
-              new ExampleFloorObject(
-                  getGridX(event.getX()),
-                  getGridY(event.getY()),
-                  getScaledSize(objectMap.get(objectTypeSelected).getX()),
-                  getScaledSize(objectMap.get(objectTypeSelected).getY()),
-                  ObjectID.Bot,
-                  uuid);
-          break;
-
-        case WALL:
-          temp =
-              new ExampleWallObject(
-                  getGridX(event.getX()),
-                  getGridY(event.getY()),
-                  getScaledSize(objectMap.get(objectTypeSelected).getX()),
-                  getScaledSize(objectMap.get(objectTypeSelected).getY()),
-                  ObjectID.Bot,
-                  uuid);
-          break;
-
         case PLAYER:
           if (mapDataObject.getSpawnPoints().size() < spawnPointLimit) {
-            temp =
-                new Player(
-                    getGridX(event.getX()),
-                    getGridY(event.getY()),
-                    uuid);
+            temp = new Player(getGridX(event.getX()), getGridY(event.getY()), uuid);
             mapDataObject.addSpawnPoint(getGridX(event.getX()), getGridY(event.getY()));
           } else {
-            popup(primaryStage, "\n\tWarning: You cannot create more than "
-                + spawnPointLimit
-                + " spawn points.");
+            popup(
+                primaryStage,
+                "\n\tWarning: You cannot create more than " + spawnPointLimit + " spawn points.");
           }
           break;
 
-        case BACKGROUND:
-          temp = new Background("images/backgrounds/background1.png", ObjectID.Background, uuid);
-          mapDataObject.setBackground((Background) temp);
-          break;
-
         case BACKGROUND1:
-          temp = new Background("images/backgrounds/base.png", ObjectID.Background, uuid);
-          mapDataObject.setBackground((Background) temp);
+          temp = new Background1(uuid);
+          mapDataObject.setBackground((Background1) temp);
+          break;
+        case BACKGROUND2:
+          temp = new Background2(uuid);
+          mapDataObject.setBackground((Background2) temp);
+          break;
+        case BACKGROUND3:
+          temp = new Background3(uuid);
+          mapDataObject.setBackground((Background3) temp);
+          break;
+        case BACKGROUND4:
+          temp = new Background4(uuid);
+          mapDataObject.setBackground((Background4) temp);
+          break;
+        case BACKGROUND5:
+          temp = new Background5(uuid);
+          mapDataObject.setBackground((Background5) temp);
+          break;
+        case BACKGROUND6:
+          temp = new Background6(uuid);
+          mapDataObject.setBackground((Background6) temp);
+          break;
+        case BACKGROUND7:
+          temp = new Background7(uuid);
+          mapDataObject.setBackground((Background7) temp);
+          break;
+        case BACKGROUND8:
+          temp = new Background8(uuid);
+          mapDataObject.setBackground((Background8) temp);
           break;
 
         case BTN_SP:
@@ -218,27 +246,103 @@ public class LevelEditor extends Application {
                   uuid);
           break;
 
-        case BOX:
+        case BLOCK_METAL_LARGE:
           temp =
-              new ExampleObject(
+              new MetalBlockLargeObject(
                   getGridX(event.getX()),
                   getGridY(event.getY()),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
                   ObjectID.Bot,
-                  uuid
-              );
+                  uuid);
           break;
-        case UI_HP:
+
+        case BLOCK_METAL_SMALL:
           temp =
-              new Health(
+              new MetalBlockSmallObject(
                   getGridX(event.getX()),
                   getGridY(event.getY()),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
                   ObjectID.Bot,
-                  uuid
-              );
+                  uuid);
+          break;
+
+        case FLOOR_METAL:
+          temp =
+              new MetalFloorObject(
+                  getGridX(event.getX()),
+                  getGridY(event.getY()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getX()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getY()),
+                  ObjectID.Bot,
+                  uuid);
+          break;
+
+        case BLOCK_STONE:
+          temp =
+              new StoneBlockObject(
+                  getGridX(event.getX()),
+                  getGridY(event.getY()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getX()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getY()),
+                  ObjectID.Bot,
+                  uuid);
+          break;
+
+        case FLOOR_STONE:
+          temp =
+              new StoneFloorObject(
+                  getGridX(event.getX()),
+                  getGridY(event.getY()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getX()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getY()),
+                  ObjectID.Bot,
+                  uuid);
+          break;
+
+        case WALL_STONE:
+          temp =
+              new StoneWallObject(
+                  getGridX(event.getX()),
+                  getGridY(event.getY()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getX()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getY()),
+                  ObjectID.Bot,
+                  uuid);
+          break;
+
+        case BLOCK_WOOD_LARGE:
+          temp =
+              new WoodBlockLargeObject(
+                  getGridX(event.getX()),
+                  getGridY(event.getY()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getX()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getY()),
+                  ObjectID.Bot,
+                  uuid);
+          break;
+
+        case BLOCK_WOOD_SMALL:
+          temp =
+              new WoodBlockSmallObject(
+                  getGridX(event.getX()),
+                  getGridY(event.getY()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getX()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getY()),
+                  ObjectID.Bot,
+                  uuid);
+          break;
+
+        case FLOOR_WOOD:
+          temp =
+              new WoodFloorObject(
+                  getGridX(event.getX()),
+                  getGridY(event.getY()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getX()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getY()),
+                  ObjectID.Bot,
+                  uuid);
           break;
       }
 
@@ -264,19 +368,24 @@ public class LevelEditor extends Application {
     cb.setLayoutX(10);
     cb.setLayoutY(10);
     cb.setTooltip(new Tooltip("Select item to place on the map"));
-    cb.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-      @Override
-      public void changed(ObservableValue<? extends Number> observableValue, Number number,
-          Number number2) {
-        GameObjectTupleConverter con = new GameObjectTupleConverter(objectMap);
-        for (Entry<OBJECT_TYPES, GameObjectTuple> e : objectMap.entrySet()) {
-          if (con.toString((GameObjectTuple) cb.getItems().get((Integer) number2))
-              .equals(con.toString(e.getValue()))) {
-            objectTypeSelected = e.getKey();
-          }
-        }
-      }
-    });
+    cb.getSelectionModel()
+        .selectedIndexProperty()
+        .addListener(
+            new ChangeListener<Number>() {
+              @Override
+              public void changed(
+                  ObservableValue<? extends Number> observableValue,
+                  Number number,
+                  Number number2) {
+                GameObjectTupleConverter con = new GameObjectTupleConverter(objectMap);
+                for (Entry<OBJECT_TYPES, GameObjectTuple> e : objectMap.entrySet()) {
+                  if (con.toString((GameObjectTuple) cb.getItems().get((Integer) number2))
+                      .equals(con.toString(e.getValue()))) {
+                    objectTypeSelected = e.getKey();
+                  }
+                }
+              }
+            });
     cb.setValue(cb.getItems().get(0));
 
     Button btnSave = new Button();
@@ -288,15 +397,17 @@ public class LevelEditor extends Application {
             if (mapDataObject.getSpawnPoints().size() == spawnPointLimit) {
               saveMap(primaryStage);
             } else {
-              popup(primaryStage,
-                  "\n\t" + spawnPointLimit + " spawn points are required in this map, "
-                      + "please add " + (spawnPointLimit - mapDataObject.getSpawnPoints().size())
+              popup(
+                  primaryStage,
+                  "\n\t"
+                      + spawnPointLimit
+                      + " spawn points are required in this map, "
+                      + "please add "
+                      + (spawnPointLimit - mapDataObject.getSpawnPoints().size())
                       + " more.");
             }
-
           }
-        }
-    );
+        });
     btnSave.setLayoutX(200);
     btnSave.setLayoutY(10);
 
@@ -342,7 +453,7 @@ public class LevelEditor extends Application {
 
     // Example of loading map
     // gameObjects = MapLoader.loadMap("menus.map");
-    //gameObjects.forEach(gameObject -> gameObject.initialise(root));
+    // gameObjects.forEach(gameObject -> gameObject.initialise(root));
 
     addButtons(primaryStage, ui);
 
@@ -404,10 +515,6 @@ public class LevelEditor extends Application {
     return gridlines;
   }
 
-  protected enum OBJECT_TYPES {
-    FLOOR, WALL, PLAYER, BOX, BTN_SP, BTN_MP, BTN_ST, BTN_LE, WPN_HG, BACKGROUND, BACKGROUND1, BTN_JOIN, UI_HP
-  }
-
   private void initialiseNewMap() {
     gameObjects = new ArrayList<>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.IN_GAME);
@@ -439,9 +546,9 @@ public class LevelEditor extends Application {
       double lrMX = getGridX(x) + getScaledSize(newObjX);
       double lrMY = getGridY(y) + getScaledSize(newObjY);
       if (((x >= ulX) && (y >= ulY) && (x <= lrX) && (y <= lrY)) // ul inside
-          || ((lrMX > ulX) && (lrMY > ulY) && (lrMX <= lrX) && (lrMY <= lrY)) //lr inside
-          || ((lrMX > ulX) && (y > ulY) && (lrMX <= lrX) && (y <= lrY)) //ur inside
-          || ((x > ulX) && (lrMY > ulY) && (x <= lrX) && lrMY <= lrY)) { //ll inside
+          || ((lrMX > ulX) && (lrMY > ulY) && (lrMX <= lrX) && (lrMY <= lrY)) // lr inside
+          || ((lrMX > ulX) && (y > ulY) && (lrMX <= lrX) && (y <= lrY)) // ur inside
+          || ((x > ulX) && (lrMY > ulY) && (x <= lrX) && lrMY <= lrY)) { // ll inside
         conflict = true;
       }
     }
@@ -453,9 +560,9 @@ public class LevelEditor extends Application {
       double lrMX = getGridX(x) + getScaledSize(newObjX);
       double lrMY = getGridY(y) + getScaledSize(newObjY);
       if (((x >= ulX) && (y >= ulY) && (x <= lrX) && (y <= lrY)) // ul inside
-          || ((lrMX > ulX) && (lrMY > ulY) && (lrMX <= lrX) && (lrMY <= lrY)) //lr inside
-          || ((lrMX > ulX) && (y > ulY) && (lrMX <= lrX) && (y <= lrY)) //ur inside
-          || ((x > ulX) && (lrMY > ulY) && (x <= lrX) && lrMY <= lrY)) { //ll inside
+          || ((lrMX > ulX) && (lrMY > ulY) && (lrMX <= lrX) && (lrMY <= lrY)) // lr inside
+          || ((lrMX > ulX) && (y > ulY) && (lrMX <= lrX) && (y <= lrY)) // ur inside
+          || ((x > ulX) && (lrMY > ulY) && (x <= lrX) && lrMY <= lrY)) { // ll inside
         conflict = true;
       }
     }
@@ -475,8 +582,8 @@ public class LevelEditor extends Application {
       if ((x >= ulX) && (y >= ulY) && (x <= lrX) && (y <= lrY)) {
         root.getChildren().remove(event.getTarget());
         object.destroy();
-        gameObjects.remove(object);  //todo find alternative non breaking way of removing
-        //test
+        gameObjects.remove(object); // todo find alternative non breaking way of removing
+        // test
       }
     }
 
@@ -496,7 +603,7 @@ public class LevelEditor extends Application {
         }
         mapDataObject.setSpawnPoints(newList);
         object.destroy();
-        playerSpawns.remove(object); //todo find alternative non breaking way of removing
+        playerSpawns.remove(object); // todo find alternative non breaking way of removing
       }
     }
   }
@@ -562,8 +669,7 @@ public class LevelEditor extends Application {
             System.out.println("CANCEL");
             dialog.close();
           }
-        }
-    );
+        });
     cancel.setLayoutX(80);
     cancel.setLayoutY(110);
     root.getChildren().add(cancel);
@@ -571,7 +677,6 @@ public class LevelEditor extends Application {
     Scene dialogScene = new Scene(root, 450, 150);
     dialog.setScene(dialogScene);
     dialog.show();
-
   }
 
   private void popup(Stage primaryStage, String message) {
@@ -584,6 +689,34 @@ public class LevelEditor extends Application {
     Scene dialogScene = new Scene(dialogVbox, 450, 60);
     dialog.setScene(dialogScene);
     dialog.show();
+  }
+
+  protected enum OBJECT_TYPES {
+    PLAYER,
+    BTN_SP,
+    BTN_MP,
+    BTN_ST,
+    BTN_LE,
+    WPN_HG,
+    BACKGROUND1,
+    BACKGROUND2,
+    BACKGROUND3,
+    BACKGROUND4,
+    BACKGROUND5,
+    BACKGROUND6,
+    BACKGROUND7,
+    BACKGROUND8,
+    BTN_JOIN,
+    UI_HP,
+    BLOCK_METAL_LARGE,
+    BLOCK_METAL_SMALL,
+    FLOOR_METAL,
+    BLOCK_STONE,
+    FLOOR_STONE,
+    WALL_STONE,
+    BLOCK_WOOD_LARGE,
+    BLOCK_WOOD_SMALL,
+    FLOOR_WOOD
   }
 }
 

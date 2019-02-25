@@ -31,6 +31,7 @@ public class ButtonHost extends ButtonObject {
 
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
-    Client.levelHandler.changeMap(new Map("Host", Menu.HOST.getMenuPath(), GameState.MAIN_MENU));
+    Client.levelHandler.changeMap(
+        new Map("Host", Menu.HOST.getMenuPath(), GameState.MAIN_MENU), false);
   }
 }
