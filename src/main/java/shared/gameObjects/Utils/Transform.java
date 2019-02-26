@@ -51,7 +51,9 @@ public class Transform implements Serializable {
     botPos = botPos.add(translateFactor);
   }
 
-  /** [Does not do anything currently] */
+  /**
+   * [Does not do anything currently]
+   */
   public void rotate(float rotation) {
     rot += rotation;
     if (rot > 180) {

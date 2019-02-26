@@ -10,6 +10,7 @@ import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
 
 public class DynamicCollision {
+
   private Rigidbody bodyA;
   private Rigidbody bodyB;
   private Vector2 collisionNormal;

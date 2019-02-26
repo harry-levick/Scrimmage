@@ -27,10 +27,9 @@ public class Player extends GameObject {
   public boolean leftKey, rightKey, jumpKey, click;
   //Testing
   public boolean deattach;
-  protected Behaviour behaviour;
-
   public double mouseX, mouseY;
   public int score;
+  protected Behaviour behaviour;
   protected float jumpTime;
   protected boolean jumped;
   protected boolean grounded;
@@ -155,7 +154,6 @@ public class Player extends GameObject {
   /**
    * Check if the current holding weapon is valid or not
    *
-   * @return True if the weapon is a bad weapon (out of ammo)
    * @return False if the weapon is a good weapon, or there is no weapon
    */
   public boolean badWeapon() {

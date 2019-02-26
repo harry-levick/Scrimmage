@@ -109,9 +109,9 @@ public class Client extends Application {
     scene.setOnMouseMoved(mouseInput);
     scene.setOnMouseReleased(mouseInput);
     scene.setOnMouseDragged(mouseInput);
-    
+
     //Setup UI
-    userInterface = new UI(root,levelHandler.getClientPlayer()); 
+    userInterface = new UI(root, levelHandler.getClientPlayer());
 
     // Main Game Loop
     new AnimationTimer() {
@@ -185,12 +185,13 @@ public class Client extends Application {
         if (levelHandler.getBackground() != null) {
           levelHandler.getBackground().render();
         }
-        
+
         /** Draw the UI */
-        if(levelHandler.getGameState() == GameState.IN_GAME || levelHandler.getGameState() == GameState.Multiplayer) {
-            userInterface.render();
+        if (levelHandler.getGameState() == GameState.IN_GAME
+            || levelHandler.getGameState() == GameState.Multiplayer) {
+          userInterface.render();
         }
-                
+
         /** Check Collisions */
         Physics.gameObjects = levelHandler.getGameObjects();
         levelHandler
