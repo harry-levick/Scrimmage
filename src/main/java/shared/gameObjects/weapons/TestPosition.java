@@ -23,13 +23,6 @@ public class TestPosition extends GameObject {
   }
 
   @Override
-  public void render() {
-    super.render();
-    imageView.setTranslateX(this.getX());
-    imageView.setTranslateY(this.getY());
-  }
-
-  @Override
   public void initialiseAnimation() {
     this.animation.supplyAnimationWithSize(
         "default", 20, 20, true, Path.convert("images/weapons/bullet.png"));

@@ -10,6 +10,17 @@ public class MusicAssets {
   private final HashMap<String, String> tracks = new HashMap<String, String>();
   private final ArrayList<String> menuPlaylist = new ArrayList<>();
   private final ArrayList<String> ingamePlaylist = new ArrayList<>();
+  private String filePath =
+      "src"
+          + File.separator
+          + "main"
+          + File.separator
+          + "resources"
+          + File.separator
+          + "audio"
+          + File.separator
+          + "music";
+
   public MusicAssets() {
     tracks.put("FUNK_GAME_LOOP", "funk-game-loop-by-kevin-macleod.mp3");
     tracks.put("EDM_DETECTION_MODE", "edm-detection-mode-by-kevin-macleod.mp3");
@@ -30,17 +41,6 @@ public class MusicAssets {
     ingamePlaylist.add("SATIATE");
     Collections.shuffle(ingamePlaylist);
   }
-
-  private String filePath =
-      "src"
-          + File.separator
-          + "main"
-          + File.separator
-          + "resources"
-          + File.separator
-          + "audio"
-          + File.separator
-          + "music";
 
   protected ArrayList<String> getPlaylist(PLAYLIST playlist) {
     switch (playlist) {

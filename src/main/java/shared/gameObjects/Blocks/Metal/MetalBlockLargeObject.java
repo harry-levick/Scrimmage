@@ -42,10 +42,6 @@ public class MetalBlockLargeObject extends GameObject {
     this.animation.supplyAnimation("default", "images/platforms/metal/elementMetal018.png");
   }
 
-  @Override
-  public void update() {
-    super.update();
-  }
 
   public int getHealth() {
     return health;
@@ -53,16 +49,6 @@ public class MetalBlockLargeObject extends GameObject {
 
   public void setHealth(int health) {
     this.health = health;
-  }
-
-  @Override
-  public void render() {
-    super.render();
-    imageView.relocate(getX(), getY());
-  }
-
-  @Override
-  public void interpolatePosition(float alpha) {
   }
 
   @Override

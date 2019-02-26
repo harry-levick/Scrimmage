@@ -3,7 +3,6 @@ package shared.gameObjects.components;
 import java.io.Serializable;
 import javafx.scene.Group;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Polygon;
 import shared.gameObjects.GameObject;
 import shared.physics.types.ColliderType;
 import shared.util.maths.Vector2;
@@ -35,8 +34,9 @@ public class CircleCollider extends Collider implements Serializable {
 
   @Override
   public void update() {
-    centre = getParent().getTransform().getPos().add(getParent().getTransform().getSize().mult(0.5f));
-    if(circle != null) {
+    centre = getParent().getTransform().getPos()
+        .add(getParent().getTransform().getSize().mult(0.5f));
+    if (circle != null) {
       circle.setCenterX(centre.getX());
       circle.setCenterY(centre.getY());
       circle.setRadius(radius);

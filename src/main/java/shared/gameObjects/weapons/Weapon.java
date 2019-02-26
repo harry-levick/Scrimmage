@@ -95,7 +95,7 @@ public abstract class Weapon extends GameObject {
   }
 
   public void destroyWeapon() {
-    Client.levelHandler.delGameObject(this);
+    Client.levelHandler.removeGameObject(this);
   }
 
   // -------START-------

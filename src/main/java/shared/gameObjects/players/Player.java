@@ -6,8 +6,12 @@ import javafx.scene.Group;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.components.BoxCollider;
-import shared.gameObjects.components.CircleCollider;
 import shared.gameObjects.components.Rigidbody;
+import shared.gameObjects.players.Limbs.Arm;
+import shared.gameObjects.players.Limbs.Body;
+import shared.gameObjects.players.Limbs.Hand;
+import shared.gameObjects.players.Limbs.Head;
+import shared.gameObjects.players.Limbs.Leg;
 import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.weapons.Weapon;
 import shared.physics.data.Collision;
@@ -21,8 +25,11 @@ public class Player extends GameObject {
   protected final float jumpForce = -200;
   protected final float JUMP_LIMIT = 2.0f;
   public boolean leftKey, rightKey, jumpKey, click;
+  //Testing
+  public boolean deattach;
   public double mouseX, mouseY;
   public int score;
+  protected Behaviour behaviour;
   protected float jumpTime;
   protected boolean jumped;
   protected boolean grounded;
@@ -33,60 +40,58 @@ public class Player extends GameObject {
   protected Rigidbody rb;
   protected double vx;
   private BoxCollider bc;
-  private CircleCollider cc;
 
   public Player(double x, double y, UUID playerUUID) {
     super(x, y, 80, 110, ObjectID.Player, playerUUID);
-    score = 0;
-    bc = new BoxCollider(this, ColliderLayer.PLAYER, false);
-    addComponent(bc);
-   // cc = new CircleCollider(this, 45, false);
-  //  addComponent(cc);
-    rb =
-        new Rigidbody(
-            RigidbodyType.DYNAMIC, 80, 8, 0.2f, new MaterialProperty(0.005f, 0.1f, 0.05f), null,
-            this);
-    addComponent(rb);
+    this.score = 0;
+    this.leftKey = false;
+    this.rightKey = false;
+    this.jumpKey = false;
+    this.click = false;
     this.health = 100;
-    holding = null;
+    this.holding = null;
+    this.behaviour = Behaviour.IDLE;
+    this.bc = new BoxCollider(this, ColliderLayer.PLAYER, false);
+    this.rb = new Rigidbody(RigidbodyType.DYNAMIC, 80, 8, 0.2f,
+        new MaterialProperty(0.005f, 0.1f, 0.05f), null, this);
+    addComponent(bc);
+    addComponent(rb);
   }
 
   // Initialise the animation
   @Override
   public void initialiseAnimation() {
     this.animation.supplyAnimation("default", "images/player/player_idle.png");
-    this.animation.supplyAnimation(
-        "walk", "images/player/player_walk1.png", "images/player/player_walk2.png");
-    this.animation.supplyAnimation("jump", "images/player/player_jump.png");
   }
 
+  @Override
   public void initialise(Group root) {
     super.initialise(root);
-    this.leftKey = false;
-    this.rightKey = false;
-    this.jumpKey = false;
-    this.click = false;
+    addChild(new Leg(true, this));
+    addChild(new Leg(false, this));
+    addChild(new Body(this));
+    addChild(new Head(this));
+    Arm rightArm = new Arm(false, this);
+    Arm leftArm = (new Arm(true, this));
+    addChild(rightArm);
+    addChild(leftArm);
+    rightArm.addChild(new Hand(false, rightArm));
+    leftArm.addChild(new Hand(true, leftArm));
   }
 
   @Override
   public void update() {
     checkGrounded(); // Checks if the player is grounded
-    // Check if the current holding is valid
-    // Change the weapon to Punch if it is not
     badWeapon();
+    if (deattach) {
+      for (int i = 0; i < 8; i++) {
+        Limb test = (Limb) children.get(i);
+        test.detachLimb();
+      }
+    }
     super.update();
-    //System.out.println(getTransform().getPos());
   }
 
-  @Override
-  public void render() {
-    if (!isActive()) {
-      return;
-    }
-    super.render();
-    imageView.setTranslateX(getX());
-    imageView.setTranslateY(getY());
-  }
 
   @Override
   public String getState() {
@@ -110,29 +115,27 @@ public class Player extends GameObject {
   public void applyInput() {
     if (rightKey) {
       rb.moveX(speed);
-      animation.switchAnimation("walk");
-      imageView.setScaleX(1);
+      behaviour = Behaviour.WALK_RIGHT;
       this.facingLeft = false;
       this.facingRight = true;
     }
     if (leftKey) {
       rb.moveX(speed * -1);
-      animation.switchAnimation("walk");
-      imageView.setScaleX(-1);
+      behaviour = Behaviour.WALK_LEFT;
       this.facingRight = false;
       this.facingLeft = true;
     }
 
     if (!rightKey && !leftKey) {
       vx = 0;
-      animation.switchDefault();
+      behaviour = Behaviour.IDLE;
     }
     if (jumpKey && !jumped) {
       rb.moveY(jumpForce, 0.33333f);
       jumped = true;
     }
     if (jumped) {
-      animation.switchAnimation("jump");
+      behaviour = Behaviour.JUMP;
     }
     if (grounded) {
       jumped = false;
@@ -151,7 +154,6 @@ public class Player extends GameObject {
   /**
    * Check if the current holding weapon is valid or not
    *
-   * @return True if the weapon is a bad weapon (out of ammo)
    * @return False if the weapon is a good weapon, or there is no weapon
    */
   public boolean badWeapon() {
@@ -191,6 +193,10 @@ public class Player extends GameObject {
       this.setActive(true);
       this.addComponent(bc);
     }
+    children.forEach(child -> {
+      Limb limb = (Limb) child;
+      limb.reset();
+    });
   }
 
   public void increaseScore() {
@@ -331,18 +337,26 @@ public class Player extends GameObject {
     this.facingRight = b;
   }
 
+  public Behaviour getBehaviour() {
+    return behaviour;
+  }
+
+  public void setBehaviour(Behaviour behaviour) {
+    this.behaviour = behaviour;
+  }
+
   @Override
   public void OnCollisionEnter(Collision col) {
-  //  System.out.println("Entered Collision!");
+    //  System.out.println("Entered Collision!");
   }
 
   @Override
   public void OnCollisionExit(Collision col) {
-   // System.out.println("Exited Collision!");
+    // System.out.println("Exited Collision!");
   }
 
   @Override
   public void OnCollisionStay(Collision col) {
-  //  System.out.println("Stayed in Collision!");
+    //  System.out.println("Stayed in Collision!");
   }
 }

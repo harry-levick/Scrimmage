@@ -1,7 +1,6 @@
 package shared.gameObjects.Blocks.Stone;
 
 import java.util.UUID;
-import javafx.scene.image.Image;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.components.BoxCollider;
@@ -43,10 +42,6 @@ public class StoneWallObject extends GameObject {
     this.animation.supplyAnimation("default", "images/platforms/stone/elementStone020.png");
   }
 
-  @Override
-  public void update() {
-    super.update();
-  }
 
   public int getHealth() {
     return health;
@@ -62,21 +57,4 @@ public class StoneWallObject extends GameObject {
     }
   }
 
-  @Override
-  public void render() {
-    super.render();
-    imageView.relocate(getX(), getY());
-    // Example not best way as every frame rechecking and recreating image
-    if (health > 60) {
-
-    } else if (health < 60 && health > 40) {
-      imageView.setImage(new Image("images/platforms/stone/elementStone016.png"));
-    } else if (health < 40) {
-      imageView.setImage(new Image("images/platforms/stone/elementStone048.png"));
-    }
-  }
-
-  @Override
-  public void interpolatePosition(float alpha) {
-  }
 }
