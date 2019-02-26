@@ -54,14 +54,13 @@ public abstract class GameObject implements Serializable {
     this.updated = false;
     this.id = id;
     this.objectUUID = objectUUID;
-    active = true;
-    this.transform =
-        new Transform(
-            this, new Vector2((float) x, (float) y), new Vector2((float) sizeX, (float) sizeY));
-    components = new ArrayList<>();
-    children = new ArrayList<>();
-    parent = null;
-    animation = new Animator();
+    this.active = true;
+    this.transform = new Transform(this, new Vector2((float) x, (float) y),
+        new Vector2((float) sizeX, (float) sizeY));
+    this.components = new ArrayList<>();
+    this.children = new ArrayList<>();
+    this.parent = null;
+    this.animation = new Animator();
     initialiseAnimation();
   }
 

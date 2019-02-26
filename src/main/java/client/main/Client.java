@@ -172,7 +172,6 @@ public class Client extends Application {
           }
           if (alive.size() == 1) {
             alive.forEach(player -> player.increaseScore());
-            levelHandler.getPlayers().forEach(player -> player.reset());
             Map nextMap = playlist.poll();
             levelHandler.changeMap(nextMap, true);
             giveWeapon();
