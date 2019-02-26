@@ -33,7 +33,7 @@ public class MachineGun extends Gun {
         50, // ammo
         50, // bulletSpeed
         70, // fireRate
-        50, // bulletWidth
+        12, // bulletWidth
         holder,
         true, // fullAutoFire
         false, // singleHanded
