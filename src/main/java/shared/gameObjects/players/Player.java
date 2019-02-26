@@ -14,7 +14,9 @@ import shared.gameObjects.players.Limbs.Head;
 import shared.gameObjects.players.Limbs.Leg;
 import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.weapons.Weapon;
+import shared.physics.data.Collision;
 import shared.physics.data.MaterialProperty;
+import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
 
 public class Player extends GameObject {
@@ -50,7 +52,7 @@ public class Player extends GameObject {
     this.health = 100;
     this.holding = null;
     this.behaviour = Behaviour.IDLE;
-    this.bc = new BoxCollider(this, false);
+    this.bc = new BoxCollider(this, ColliderLayer.PLAYER, false);
     this.rb = new Rigidbody(RigidbodyType.DYNAMIC, 80, 8, 0.2f,
         new MaterialProperty(0.005f, 0.1f, 0.05f), null, this);
     addComponent(bc);
@@ -167,7 +169,6 @@ public class Player extends GameObject {
       Weapon sword =
           new Sword(this.getX(), this.getY(), "newSword@Player", this, UUID.randomUUID());
       sword.initialise(root);
-      //TODO FIX
       Client.levelHandler.addGameObject(sword);
       this.setHolding(sword);
       return true;
@@ -345,5 +346,19 @@ public class Player extends GameObject {
   public void setBehaviour(Behaviour behaviour) {
     this.behaviour = behaviour;
   }
-}
 
+  @Override
+  public void OnCollisionEnter(Collision col) {
+    //  System.out.println("Entered Collision!");
+  }
+
+  @Override
+  public void OnCollisionExit(Collision col) {
+    // System.out.println("Exited Collision!");
+  }
+
+  @Override
+  public void OnCollisionStay(Collision col) {
+    //  System.out.println("Stayed in Collision!");
+  }
+}

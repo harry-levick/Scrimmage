@@ -1,7 +1,9 @@
 package shared.gameObjects.components;
 
 import java.io.Serializable;
+import javafx.scene.Group;
 import shared.gameObjects.GameObject;
+import shared.physics.Physics;
 import shared.physics.types.ColliderLayer;
 import shared.physics.types.ColliderType;
 import shared.util.maths.Vector2;
@@ -26,6 +28,14 @@ public abstract class Collider extends Component implements Serializable {
     super(parent, ComponentType.COLLIDER);
     this.colliderType = colliderType;
     this.trigger = trigger;
+    this.layer = ColliderLayer.DEFAULT;
+  }
+
+  Collider(GameObject parent, ColliderType colliderType, ColliderLayer layer, boolean trigger) {
+    super(parent, ComponentType.COLLIDER);
+    this.colliderType = colliderType;
+    this.trigger = trigger;
+    this.layer = layer;
   }
 
   // Static Collision Methods
@@ -76,8 +86,15 @@ public abstract class Collider extends Component implements Serializable {
     return false;
   }
 
+  public static boolean canCollideWithLayer(ColliderLayer a, ColliderLayer b) {
+    return Physics.COLLISION_LAYERS[a.toInt()][b.toInt()] && Physics.COLLISION_LAYERS[b.toInt()][a
+        .toInt()];
+  }
   public ColliderType getColliderType() {
     return colliderType;
+  }
+
+  public void initialise(Group root) {
   }
 
   public void collision() {
@@ -115,6 +132,10 @@ public abstract class Collider extends Component implements Serializable {
   }
 
   // Getters
+
+  public ColliderLayer getLayer() {
+    return layer;
+  }
 
   public boolean onCollisionEnter() {
     return collisionEnter;
