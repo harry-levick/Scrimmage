@@ -71,7 +71,6 @@ public class LevelHandler {
       Map temp = this.map;
       this.map = previousMap;
       previousMap = temp;
-      players.forEach(player -> player.reset());
       generateLevel(root, backgroundRoot, gameRoot, moveToSpawns);
     }
   }
@@ -154,7 +153,7 @@ public class LevelHandler {
   /**
    * Add a new bullet to game object list
    *
-   * @param g GameObject to be added
+   * @param gameObject GameObject to be added
    */
   public void addGameObject(GameObject gameObject) {
     gameObject.initialise(this.gameRoot);
