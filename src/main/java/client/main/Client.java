@@ -121,6 +121,7 @@ public class Client extends Application {
         if (multiplayer) {
           processServerPackets();
         }
+        levelHandler.createObjects();
 
         if (gameOver) {
           endGame();
