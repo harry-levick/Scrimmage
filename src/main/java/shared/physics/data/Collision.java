@@ -48,11 +48,13 @@ public class Collision {
 
         break;
       case EDGE:
-        if (Collider.boxEdgeCollision(a, (EdgeCollider) b)) {}
+        if (Collider.boxEdgeCollision(a, (EdgeCollider) b)) {
+        }
 
         break;
       case CIRCLE:
-        if (Collider.boxCircleCollision(a, (CircleCollider) b)) {}
+        if (Collider.boxCircleCollision(a, (CircleCollider) b)) {
+        }
 
         break;
     }
@@ -98,13 +100,15 @@ public class Collision {
   public static Collision resolveCollision(CircleCollider a, Collider b) {
     switch (b.getColliderType()) {
       case BOX:
-        if (Collider.boxCircleCollision((BoxCollider) b, a)) {}
+        if (Collider.boxCircleCollision((BoxCollider) b, a)) {
+        }
 
         break;
       case EDGE:
         break;
       case CIRCLE:
-        if (Collider.circleCircleCollision(a, (CircleCollider) b)) {}
+        if (Collider.circleCircleCollision(a, (CircleCollider) b)) {
+        }
 
         break;
     }
@@ -122,8 +126,7 @@ public class Collision {
     Vector2 penetrationDistance = new Vector2(x_overlap, y_overlap);
     if (penetrationDistance.getX() < penetrationDistance.getY()) {
       return x_overlap;
-    }
-    else {
+    } else {
       return y_overlap;
     }
   }

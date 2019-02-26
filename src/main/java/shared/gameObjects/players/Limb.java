@@ -15,13 +15,12 @@ import shared.physics.types.RigidbodyType;
 
 public abstract class Limb extends GameObject {
 
+  protected final double pivotX;
+  protected final double pivotY;
   protected boolean isLeft;
   protected Rotate rotate;
   protected boolean limbAttached;
   protected boolean lastAttachedCheck;
-
-  protected final double pivotX;
-  protected final double pivotY;
   protected Behaviour behaviour;
   protected Behaviour lastBehaviour;
   protected int action;

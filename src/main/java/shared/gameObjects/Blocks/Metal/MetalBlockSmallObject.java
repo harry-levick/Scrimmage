@@ -52,7 +52,6 @@ public class MetalBlockSmallObject extends GameObject {
   }
 
 
-
   @Override
   public String getState() {
     return null;

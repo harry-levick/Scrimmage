@@ -10,7 +10,7 @@ import shared.util.maths.Vector2;
 
 /**
  * @author fxa579 Primary components responsible for collider info, such as collision state, size,
- *     shape
+ * shape
  */
 public abstract class Collider extends Component implements Serializable {
 
@@ -90,6 +90,7 @@ public abstract class Collider extends Component implements Serializable {
     return Physics.COLLISION_LAYERS[a.toInt()][b.toInt()] && Physics.COLLISION_LAYERS[b.toInt()][a
         .toInt()];
   }
+
   public ColliderType getColliderType() {
     return colliderType;
   }

@@ -37,5 +37,6 @@ public abstract class Component implements Serializable {
     return componentType;
   }
 
-  public void update() {}
+  public void update() {
+  }
 }

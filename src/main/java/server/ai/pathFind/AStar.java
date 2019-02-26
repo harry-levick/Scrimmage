@@ -3,6 +3,7 @@ package server.ai.pathFind;
 /**
  * @author Harry Levick (hxl799)
  */
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -81,7 +82,9 @@ public class AStar {
     return action;
   }
 
-  /** The main search function */
+  /**
+   * The main search function
+   */
   private void search() {
     // Set the current node to the best position, in case the bot is already at the enemy.
     SearchNode current = bestPosition;
@@ -149,7 +152,9 @@ public class AStar {
     }
   }
 
-  /** Returns if a node is already in the closed list */
+  /**
+   * Returns if a node is already in the closed list
+   */
   private boolean isInClosed(SearchNode node) {
     // Is the x and y coords of the given node too close the the coords of a node in the visited
     // list?
@@ -202,7 +207,9 @@ public class AStar {
     return sceneCopy;
   }
 
-  /** Initialise the planner */
+  /**
+   * Initialise the planner
+   */
   private void initSearch() {
     SearchNode startPosition = new SearchNode(null, null);
     startPosition.sceneSnapshot = backupState();

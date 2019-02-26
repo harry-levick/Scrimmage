@@ -119,7 +119,9 @@ public class Bot extends Player {
     // If the target player is in sight of the bot, they can shoot.
     if (inSight == null) {
       return true;
-    } else return false;
+    } else {
+      return false;
+    }
   }
 
   /**

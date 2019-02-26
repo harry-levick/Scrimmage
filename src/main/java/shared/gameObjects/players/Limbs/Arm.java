@@ -10,7 +10,6 @@ public class Arm extends Limb {
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
    * ensure actions are calculated the same
-   *
    */
   public Arm(Boolean isLeft, Player parent) {
     super(13, 62, 53, 62, 17, 33, ObjectID.Player, isLeft, parent, 0, 0);
