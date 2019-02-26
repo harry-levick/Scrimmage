@@ -61,7 +61,6 @@ public class LevelHandler {
   public void changeMap(Map map, Boolean moveToSpawns) {
     previousMap = this.map;
     this.map = map;
-    players.forEach(player -> player.reset());
     generateLevel(root, backgroundRoot, gameRoot, moveToSpawns);
   }
 
@@ -113,9 +112,11 @@ public class LevelHandler {
           }
         });
     gameObjects.addAll(players);
-    // gameObjects.addAll(bots);
-    gameObjects.forEach(gameObject -> gameObject.setSettings(settings));
+    gameObjects.forEach(gameObject -> {
+      gameObject.setSettings(settings);
+    });
     gameState = map.getGameState();
+    players.forEach(player -> player.reset());
 
     musicPlayer.stopMusic();
     switch (gameState) {

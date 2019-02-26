@@ -20,6 +20,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import shared.gameObjects.GameObject;
 import shared.gameObjects.MapDataObject;
 import shared.gameObjects.UI.UI;
 import shared.gameObjects.players.Player;
@@ -198,7 +199,10 @@ public class Client extends Application {
         Physics.processCollisions();
 
         /** Update Game Objects */
-        levelHandler.getGameObjects().forEach(gameObject -> gameObject.update());
+        for (GameObject gameObject : levelHandler.getGameObjects()) {
+          gameObject.update();
+        }
+        //levelHandler.getGameObjects().forEach(gameObject -> gameObject.update());
         accumulatedTime -= timeStep;
         float alpha = accumulatedTime / timeStep;
         levelHandler.getGameObjects().forEach(gameObject -> gameObject.interpolatePosition(alpha));

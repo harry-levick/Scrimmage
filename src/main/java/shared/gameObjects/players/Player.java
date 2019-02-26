@@ -1,6 +1,5 @@
 package shared.gameObjects.players;
 
-import client.main.Client;
 import java.util.UUID;
 import javafx.scene.Group;
 import shared.gameObjects.GameObject;
@@ -167,7 +166,8 @@ public class Player extends GameObject {
       Weapon sword =
           new Sword(this.getX(), this.getY(), "newSword@Player", this, UUID.randomUUID());
       sword.initialise(root);
-      Client.levelHandler.addGameObject(sword);
+      //TODO FIX
+      //Client.levelHandler.addGameObject(sword);
       this.setHolding(sword);
       return true;
     }
@@ -193,6 +193,10 @@ public class Player extends GameObject {
       this.setActive(true);
       this.addComponent(bc);
     }
+    children.forEach(child -> {
+      Limb limb = (Limb) child;
+      limb.reset();
+    });
   }
 
   public void increaseScore() {

@@ -1,5 +1,6 @@
 package shared.gameObjects.players;
 
+import client.main.Settings;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
@@ -61,8 +62,8 @@ public abstract class Limb extends GameObject {
     this.pivotY = pivotY;
 
     //Physics
-    bc = new BoxCollider(this, false);
-    addComponent(bc);
+    //bc = new BoxCollider(this, false);
+    //addComponent(bc);
     rb =
         new Rigidbody(
             RigidbodyType.DYNAMIC, 80, 8, 0.2f, new MaterialProperty(0.005f, 0.1f, 0.05f), null,
@@ -103,12 +104,19 @@ public abstract class Limb extends GameObject {
       if (lastAttachedCheck) {
         addComponent(rb);
       }
-      this.updateCollision(null);
     }
     updateAction();
     imageView.getTransforms().remove(rotate);
     lastAttachedCheck = limbAttached;
 
+  }
+
+  public void reset() {
+    Settings.levelHandler.addGameObject(this);
+    children.forEach(child -> {
+      Limb limb = (Limb) child;
+      limb.reset();
+    });
   }
 
   public void updateAction() {
