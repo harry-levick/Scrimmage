@@ -78,7 +78,7 @@ public abstract class Bullet extends GameObject {
 
     // check if a player is hit
     for (Collision c : collision) {
-      GameObject g = c.getCollidedObject().getParent();
+      GameObject g = c.getCollidedObject();
       if (g.getId() == ObjectID.Player && !g.equals(holder)) {
         isHit = true;
         playersBeingHit.add((Player) g);

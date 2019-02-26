@@ -1,6 +1,7 @@
 package shared.physics.data;
 
 import shared.gameObjects.components.BoxCollider;
+import shared.gameObjects.components.CircleCollider;
 import shared.gameObjects.components.Collider;
 import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.Rigidbody;
@@ -32,10 +33,17 @@ public class DynamicCollision {
           case BOX:
             resolveCollision((BoxCollider) colA, (BoxCollider) colB);
             break;
+          case CIRCLE:
+            resolveCollision((BoxCollider) colA, (CircleCollider) colB);
         }
         break;
       case CIRCLE:
         switch (colB.getColliderType()) {
+          case BOX:
+            resolveCollision((CircleCollider) colA, (BoxCollider) colB);
+            break;
+          case CIRCLE:
+            resolveCollision((CircleCollider) colA, (CircleCollider) colB);
         }
         break;
       case EDGE:
@@ -70,6 +78,66 @@ public class DynamicCollision {
         bodyA.setGrounded(true);
       }
       pentrationDepth = y_overlap;
+    }
+  }
+
+  private void resolveCollision(BoxCollider boxA, CircleCollider circB) {
+    Vector2 n = circB.getCentre().sub(boxA.getCentre());
+    Vector2 extents = boxA.getSize().mult(0.5f);
+    Vector2 closestPoint = n.clamp(extents.mult(-1), extents);
+    boolean inside = false;
+
+    if (n.equals(closestPoint)) {
+      inside = true;
+      if (Math.abs(n.getX()) > Math.abs(n.getY())) {
+        closestPoint = new Vector2(closestPoint.getX() > 0 ? extents.getX() : extents.getX() * -1,
+            closestPoint.getY());
+      } else {
+        closestPoint = new Vector2(closestPoint.getX(),
+            closestPoint.getY() > 0 ? extents.getY() : extents.getY() * -1);
+      }
+    }
+
+    Vector2 normal = n.sub(closestPoint);
+    float d = normal.magnitude();
+    if (inside) {
+      collisionNormal = n.mult(-1);
+      pentrationDepth = circB.getRadius() - d;
+    } else {
+      collisionNormal = n;
+      pentrationDepth = circB.getRadius() - d;
+    }
+  }
+
+  private void resolveCollision(CircleCollider circA, CircleCollider circB) {
+
+  }
+
+  private void resolveCollision(CircleCollider circB, BoxCollider boxA) {
+    Vector2 n = circB.getCentre().sub(boxA.getCentre());
+    Vector2 extents = boxA.getSize().mult(0.5f);
+    Vector2 closestPoint = n.clamp(extents.mult(-1), extents);
+    boolean inside = false;
+
+    if (n.equals(closestPoint)) {
+      inside = true;
+      if (Math.abs(n.getX()) > Math.abs(n.getY())) {
+        closestPoint = new Vector2(closestPoint.getX() > 0 ? extents.getX() : extents.getX() * -1,
+            closestPoint.getY());
+      } else {
+        closestPoint = new Vector2(closestPoint.getX(),
+            closestPoint.getY() < 0 ? extents.getY() : extents.getY() * -1);
+      }
+    }
+
+    Vector2 normal = n.sub(closestPoint);
+    float d = normal.magnitude();
+    if (inside) {
+      collisionNormal = n.mult(-1);
+      pentrationDepth = circB.getRadius() - d;
+    } else {
+      collisionNormal = n;
+      pentrationDepth = circB.getRadius() - d;
     }
   }
 

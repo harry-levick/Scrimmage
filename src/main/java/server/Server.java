@@ -92,7 +92,7 @@ public class Server extends Application {
 
     // Testing code
     playlist.add(
-        new Map("Map1", Path.convert("src/main/resources/maps/map1.map"), GameState.IN_GAME));
+        new Map("Map1", Path.convert("src/main/resources/maps/menu.map"), GameState.IN_GAME));
     playlist.add(
         new Map("Map2", Path.convert("src/main/resources/maps/map2.map"), GameState.IN_GAME));
   }

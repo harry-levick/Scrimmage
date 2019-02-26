@@ -227,15 +227,11 @@ public class Rigidbody extends Component implements Serializable {
   }
 
   private void checkForLegalMovement() {
-    /* TODO: Very Jittery
-    float percent = -0.8f;
+    float percent = 0.8f;
     ArrayList<Collision> collisions = Physics.boxcastAll(getParent().getTransform().getPos().add(deltaPos), getParent().getTransform().getSize());
     for (Collision c : collisions) {
-        if(!(c.getCollidedObject() == this) && c.getCollidedObject().getBodyType() == RigidbodyType.STATIC) {
-          deltaPos = deltaPos.add(c.getNormalCollision().mult(c.getPenetrationDepth()*percent));
-        }
+
     }
-    */
     return;
   }
   // Getters and Setters
