@@ -32,10 +32,12 @@ public class LevelHandler {
   private Background background;
   private AudioHandler musicPlayer;
   private Settings settings;
+  private ArrayList<GameObject> toCreate;
 
   public LevelHandler(Settings settings, Group root, Group backgroundRoot, Group gameRoot) {
     this.settings = settings;
     gameObjects = new ArrayList<>();
+    toCreate = new ArrayList<>();
     toRemove = new ArrayList<>();
     players = new ArrayList<>();
     bots = new ArrayList<>();
@@ -154,9 +156,19 @@ public class LevelHandler {
    *
    * @param g GameObject to be added
    */
-  public void addGameObject(GameObject g) {
-    this.gameObjects.add(g);
-    g.initialise(this.gameRoot);
+  public void addGameObject(GameObject gameObject) {
+    gameObject.initialise(this.gameRoot);
+    this.toCreate.add(gameObject);
+  }
+
+  public void addGameObject(ArrayList<GameObject> gameObjects) {
+    gameObjects.forEach(gameObject -> gameObject.initialise(this.gameRoot));
+    this.toCreate.addAll(gameObjects);
+  }
+
+  public void createObjects() {
+    gameObjects.addAll(toCreate);
+    toCreate.clear();
   }
 
   /**
@@ -164,7 +176,7 @@ public class LevelHandler {
    *
    * @param g GameObject to be removed
    */
-  public void delGameObject(GameObject g) {
+  public void removeGameObject(GameObject g) {
     toRemove.add(g); // Will be removed on next frame
   }
 
