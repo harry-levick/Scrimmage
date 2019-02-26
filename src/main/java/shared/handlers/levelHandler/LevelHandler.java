@@ -32,10 +32,12 @@ public class LevelHandler {
   private Background background;
   private AudioHandler musicPlayer;
   private Settings settings;
+  private ArrayList<GameObject> toCreate;
 
   public LevelHandler(Settings settings, Group root, Group backgroundRoot, Group gameRoot) {
     this.settings = settings;
     gameObjects = new ArrayList<>();
+    toCreate = new ArrayList<>();
     toRemove = new ArrayList<>();
     players = new ArrayList<>();
     bots = new ArrayList<>();
@@ -44,9 +46,6 @@ public class LevelHandler {
     this.backgroundRoot = backgroundRoot;
     this.gameRoot = gameRoot;
     musicPlayer = new AudioHandler(settings);
-    clientPlayer = new Player(500, 200, UUID.randomUUID());
-    clientPlayer.initialise(gameRoot);
-    players.add(clientPlayer);
     changeMap(new Map("main_menu.map", Path.convert("src/main/resources/menus/main_menu.map"),
         GameState.MAIN_MENU), true);
     previousMap = null;
@@ -64,7 +63,6 @@ public class LevelHandler {
   public void changeMap(Map map, Boolean moveToSpawns) {
     previousMap = this.map;
     this.map = map;
-    players.forEach(player -> player.reset());
     generateLevel(root, backgroundRoot, gameRoot, moveToSpawns);
   }
 
@@ -73,7 +71,6 @@ public class LevelHandler {
       Map temp = this.map;
       this.map = previousMap;
       previousMap = temp;
-      players.forEach(player -> player.reset());
       generateLevel(root, backgroundRoot, gameRoot, moveToSpawns);
     }
   }
@@ -116,9 +113,11 @@ public class LevelHandler {
           }
         });
     gameObjects.addAll(players);
-    // gameObjects.addAll(bots);
-    gameObjects.forEach(gameObject -> gameObject.setSettings(settings));
+    gameObjects.forEach(gameObject -> {
+      gameObject.setSettings(settings);
+    });
     gameState = map.getGameState();
+    players.forEach(player -> player.reset());
 
     musicPlayer.stopMusic();
     switch (gameState) {
@@ -154,11 +153,21 @@ public class LevelHandler {
   /**
    * Add a new bullet to game object list
    *
-   * @param g GameObject to be added
+   * @param gameObject GameObject to be added
    */
-  public void addGameObject(GameObject g) {
-    this.gameObjects.add(g);
-    g.initialise(this.gameRoot);
+  public void addGameObject(GameObject gameObject) {
+    gameObject.initialise(this.gameRoot);
+    this.toCreate.add(gameObject);
+  }
+
+  public void addGameObject(ArrayList<GameObject> gameObjects) {
+    gameObjects.forEach(gameObject -> gameObject.initialise(this.gameRoot));
+    this.toCreate.addAll(gameObjects);
+  }
+
+  public void createObjects() {
+    gameObjects.addAll(toCreate);
+    toCreate.clear();
   }
 
   /**
@@ -166,7 +175,7 @@ public class LevelHandler {
    *
    * @param g GameObject to be removed
    */
-  public void delGameObject(GameObject g) {
+  public void removeGameObject(GameObject g) {
     toRemove.add(g); // Will be removed on next frame
   }
 
@@ -205,6 +214,13 @@ public class LevelHandler {
     newPlayer.initialise(root);
     players.add(newPlayer);
     gameObjects.add(newPlayer);
+  }
+
+  public void addClientPlayer(Group root) {
+    clientPlayer = new Player(500, 200, UUID.randomUUID());
+    clientPlayer.initialise(root);
+    players.add(clientPlayer);
+    gameObjects.add(clientPlayer);
   }
 
   public Player getClientPlayer() {

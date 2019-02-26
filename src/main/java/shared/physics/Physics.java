@@ -18,9 +18,6 @@ public class Physics {
   public static final float TIMESTEP = 1f / 60;
   public static boolean showColliders = false;
   public static ArrayList<GameObject> gameObjects;
-  private static ArrayList<DynamicCollision> collisions = new ArrayList<>();
-  private static Physics ourInstance = new Physics();
-
   /*
    * Order: DEFAULT, PLAYER, OBJECT, WALL
    */
@@ -29,6 +26,8 @@ public class Physics {
   public static boolean[] OBJECT = {true, true, true, true};
   public static boolean[] WALL = {true, true, true, true};
   public static boolean[][] COLLISION_LAYERS = {DEFAULT, PLAYER, OBJECT, WALL};
+  private static ArrayList<DynamicCollision> collisions = new ArrayList<>();
+  private static Physics ourInstance = new Physics();
 
   private Physics() {
     gameObjects = new ArrayList<>();

@@ -43,17 +43,10 @@ public class Sword extends Melee {
     super.fire(mouseX, mouseY);
   }
 
-  @Override
-  public void update() {
-    super.update();
-  }
 
   @Override
   public void render() {
     super.render();
-    imageView.setTranslateX(this.getX());
-    imageView.setTranslateY(this.getY());
-
     // set rotation of the sword
     if (this.attacking) {
       this.imageView.setRotate(45 + (-1 * getAngle(currentAngleIndex)));
@@ -67,10 +60,6 @@ public class Sword extends Melee {
     }
   }
 
-  @Override
-  public String getState() {
-    return null;
-  }
 
   @Override
   public void initialiseAnimation() {

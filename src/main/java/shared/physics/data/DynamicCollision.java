@@ -10,6 +10,7 @@ import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
 
 public class DynamicCollision {
+
   private Rigidbody bodyA;
   private Rigidbody bodyB;
   private Vector2 collisionNormal;
@@ -87,21 +88,23 @@ public class DynamicCollision {
     Vector2 closestPoint = n.clamp(extents.mult(-1), extents);
     boolean inside = false;
 
-    if(n.equals(closestPoint)) {
-     inside = true;
-      if(Math.abs(n.getX()) > Math.abs(n.getY())) closestPoint = new Vector2( closestPoint.getX() > 0 ? extents.getX() : extents.getX()*-1, closestPoint.getY());
-        else closestPoint = new Vector2(closestPoint.getX(), closestPoint.getY() > 0 ? extents.getY() : extents.getY()*-1);
+    if (n.equals(closestPoint)) {
+      inside = true;
+      if (Math.abs(n.getX()) > Math.abs(n.getY())) {
+        closestPoint = new Vector2(closestPoint.getX() > 0 ? extents.getX() : extents.getX() * -1,
+            closestPoint.getY());
+      } else {
+        closestPoint = new Vector2(closestPoint.getX(),
+            closestPoint.getY() > 0 ? extents.getY() : extents.getY() * -1);
+      }
     }
 
     Vector2 normal = n.sub(closestPoint);
     float d = normal.magnitude();
-    if(inside)
-    {
+    if (inside) {
       collisionNormal = n.mult(-1);
       pentrationDepth = circB.getRadius() - d;
-    }
-    else
-    {
+    } else {
       collisionNormal = n;
       pentrationDepth = circB.getRadius() - d;
     }
@@ -117,21 +120,23 @@ public class DynamicCollision {
     Vector2 closestPoint = n.clamp(extents.mult(-1), extents);
     boolean inside = false;
 
-    if(n.equals(closestPoint)) {
+    if (n.equals(closestPoint)) {
       inside = true;
-      if(Math.abs(n.getX()) > Math.abs(n.getY())) closestPoint = new Vector2( closestPoint.getX() > 0 ? extents.getX() : extents.getX()*-1, closestPoint.getY());
-      else closestPoint = new Vector2(closestPoint.getX(), closestPoint.getY() < 0 ? extents.getY() : extents.getY()*-1);
+      if (Math.abs(n.getX()) > Math.abs(n.getY())) {
+        closestPoint = new Vector2(closestPoint.getX() > 0 ? extents.getX() : extents.getX() * -1,
+            closestPoint.getY());
+      } else {
+        closestPoint = new Vector2(closestPoint.getX(),
+            closestPoint.getY() < 0 ? extents.getY() : extents.getY() * -1);
+      }
     }
 
     Vector2 normal = n.sub(closestPoint);
     float d = normal.magnitude();
-    if(inside)
-    {
+    if (inside) {
       collisionNormal = n.mult(-1);
       pentrationDepth = circB.getRadius() - d;
-    }
-    else
-    {
+    } else {
       collisionNormal = n;
       pentrationDepth = circB.getRadius() - d;
     }

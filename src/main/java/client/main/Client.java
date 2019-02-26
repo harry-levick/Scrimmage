@@ -20,6 +20,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import shared.gameObjects.GameObject;
 import shared.gameObjects.MapDataObject;
 import shared.gameObjects.UI.UI;
 import shared.gameObjects.players.Player;
@@ -96,8 +97,11 @@ public class Client extends Application {
     singleplayerGame = false;
     sendUpdate = false;
     levelHandler = new LevelHandler(settings, root, backgroundRoot, gameRoot);
+    settings.setLevelHandler(levelHandler);
+    levelHandler.addClientPlayer(gameRoot);
     keyInput = new KeyboardInput();
     mouseInput = new MouseInput();
+
     // Setup Input
     scene.setOnKeyPressed(keyInput);
     scene.setOnKeyReleased(keyInput);
@@ -105,9 +109,9 @@ public class Client extends Application {
     scene.setOnMouseMoved(mouseInput);
     scene.setOnMouseReleased(mouseInput);
     scene.setOnMouseDragged(mouseInput);
-    
+
     //Setup UI
-    userInterface = new UI(root,levelHandler.getClientPlayer()); 
+    userInterface = new UI(root, levelHandler.getClientPlayer());
 
     // Main Game Loop
     new AnimationTimer() {
@@ -117,6 +121,7 @@ public class Client extends Application {
         if (multiplayer) {
           processServerPackets();
         }
+        levelHandler.createObjects();
 
         if (gameOver) {
           endGame();
@@ -167,7 +172,6 @@ public class Client extends Application {
           }
           if (alive.size() == 1) {
             alive.forEach(player -> player.increaseScore());
-            levelHandler.getPlayers().forEach(player -> player.reset());
             Map nextMap = playlist.poll();
             levelHandler.changeMap(nextMap, true);
             giveWeapon();
@@ -181,12 +185,13 @@ public class Client extends Application {
         if (levelHandler.getBackground() != null) {
           levelHandler.getBackground().render();
         }
-        
+
         /** Draw the UI */
-        if(levelHandler.getGameState() == GameState.IN_GAME || levelHandler.getGameState() == GameState.Multiplayer) {
-            userInterface.render();
+        if (levelHandler.getGameState() == GameState.IN_GAME
+            || levelHandler.getGameState() == GameState.Multiplayer) {
+          userInterface.render();
         }
-                
+
         /** Check Collisions */
         Physics.gameObjects = levelHandler.getGameObjects();
         levelHandler
@@ -195,7 +200,10 @@ public class Client extends Application {
         Physics.processCollisions();
 
         /** Update Game Objects */
-        levelHandler.getGameObjects().forEach(gameObject -> gameObject.update());
+        for (GameObject gameObject : levelHandler.getGameObjects()) {
+          gameObject.update();
+        }
+        //levelHandler.getGameObjects().forEach(gameObject -> gameObject.update());
         accumulatedTime -= timeStep;
         float alpha = accumulatedTime / timeStep;
         levelHandler.getGameObjects().forEach(gameObject -> gameObject.interpolatePosition(alpha));
