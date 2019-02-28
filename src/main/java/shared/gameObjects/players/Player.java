@@ -145,9 +145,16 @@ public class Player extends GameObject {
     } // else punch
     // setX(getX() + (vx * 0.0166));
 
+    
     if (this.getHolding() != null) {
-      this.getHolding().setX(this.getX() + 60);
-      this.getHolding().setY(this.getY() + 70);
+      if (this.getHolding().isMelee()) {
+        this.getHolding().setX(((Sword)this.getHolding()).getGripX());
+        this.getHolding().setY(((Sword)this.getHolding()).getGripY());        
+      }
+      else if (this.getHolding().isGun()) {
+        this.getHolding().setX(this.getX() + 60);
+        this.getHolding().setY(this.getY() + 70);
+      }
     }
   }
 
