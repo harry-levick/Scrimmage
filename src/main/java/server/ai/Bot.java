@@ -12,12 +12,6 @@ import shared.physics.Physics;
 import shared.physics.data.Collision;
 import shared.util.maths.Vector2;
 
-/*
-  TODO Week 7:
-    - Make path finder use level handler
-    - Path finder finds path to a stationary enemy
- */
-
 /**
  * @author Harry Levick (hxl799)
  */
@@ -26,7 +20,6 @@ public class Bot extends Player {
   public static final int KEY_JUMP = 0;
   public static final int KEY_LEFT = 1;
   public static final int KEY_RIGHT = 2;
-  public static final int KEY_CLICK = 3;
   public float jumpTime;
   boolean mayJump = true;
 
@@ -62,10 +55,10 @@ public class Bot extends Player {
    */
   public Bot(Bot that) {
     this(that.getX(), that.getY(), that.getUUID(), that.getLevelHandler());
+    this.holding = that.getHolding();
   }
 
   public void startThread() {
-    // Start the thread concurrently
     botThread.start();
   }
 
@@ -75,7 +68,7 @@ public class Bot extends Player {
 
   @Override
   public void update() {
-
+    System.out.println("botx = " + this.getX() + ", boty = " + this.getY());
     /*
 
     if (!active) {
@@ -133,7 +126,7 @@ public class Bot extends Player {
 
         break;
       case FLEEING_ATTACKING:
-        System.out.println("CHASING-ATTACKING");
+        System.out.println("FLEEING-ATTACKING");
         executeAction();
         // TODO calculate and execute the best path away from the target whilst attacking.
         mouseX = targetPlayer.getX();
@@ -141,7 +134,7 @@ public class Bot extends Player {
 
         break;
     }
-
+    System.out.println("JUMP = " + this.jumpKey + ", LEFT = " + this.leftKey + ", RIGHT = " + this.rightKey);
     super.update();
   }
 
@@ -160,13 +153,18 @@ public class Bot extends Player {
   }
 
   private void executeAction() {
-    boolean[] action = new boolean[] {false, false, false, false};
+    boolean[] action = new boolean[] {false, false, false};
 
-    //System.out.println("PLAN SIZE: " + plan.size());
+    System.out.println("PLAN SIZE: " + plan.size());
     if (plan.size() > 0) {
       action = plan.remove(0);
     }
 
+    this.jumpKey = action[Bot.KEY_JUMP];
+    this.leftKey = action[Bot.KEY_LEFT];
+    this.rightKey = action[Bot.KEY_RIGHT];
+
+    /*
     Random r = new Random();
     // 60% chance of jumping when asked to.
     boolean jump = r.nextDouble() <= 0.60;
@@ -186,6 +184,8 @@ public class Bot extends Player {
       this.rightKey = action[Bot.KEY_RIGHT];
     } else this.rightKey = false;
 
+     */
+
   }
 
   public void simulateUpdate() {
@@ -201,34 +201,23 @@ public class Bot extends Player {
   public void simulateApplyInput() {
     if (rightKey) {
       rb.moveX(speed);
-      //animation.switchAnimation("walk");
-      //imageView.setScaleX(1);
     }
     if (leftKey) {
       rb.moveX(speed * -1);
-      //animation.switchAnimation("walk");
-      //imageView.setScaleX(-1);
     }
-
     if (!rightKey && !leftKey) {
       vx = 0;
-      //animation.switchDefault();
-
     }
     if (jumpKey && !jumped) {
       rb.moveY(jumpForce, 0.33333f);
       jumped = true;
-    }
-    if (jumped) {
-      //animation.switchAnimation("jump");
     }
     if (grounded) {
       jumped = false;
     }
     if (click && holding != null) {
       holding.fire(mouseX, mouseY);
-    } //else punch
-    //setX(getX() + (vx * 0.0166));
+    }
 
     if (this.getHolding() != null) {
       this.getHolding().setX(this.getX() + 60);
@@ -242,14 +231,6 @@ public class Bot extends Player {
    */
   public Player findTarget() {
     allPlayers = levelHandler.getPlayers();
-    /*
-
-    // Collect all players (other than bots) from the world
-    allPlayers = allPlayers.stream()
-        .filter(p -> p instanceof Player)
-        .map(Player.class::cast)
-        .collect(Collectors.toList());
-     */
     // Remove bots from player list
     allPlayers.removeAll(levelHandler.getBotPlayerList());
 
@@ -267,8 +248,8 @@ public class Bot extends Player {
         target = p;
       }
     }
-    System.out.println("targetx = " + target.getX() + ", targety = " + target.getY());
-    System.out.println("botx = " + this.getX() + ", boty = " + this.getY());
+    //System.out.println("targetx = " + target.getX() + ", targety = " + target.getY());
+    //System.out.println("botx = " + this.getX() + ", boty = " + this.getY());
     // Returns null if no active player is found.
     return target;
   }

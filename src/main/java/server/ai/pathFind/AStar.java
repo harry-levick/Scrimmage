@@ -10,7 +10,11 @@ import java.util.stream.Collectors;
 import server.ai.Bot;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.players.Player;
+import shared.gameObjects.weapons.Handgun;
+import shared.gameObjects.weapons.MachineGun;
 import shared.gameObjects.weapons.Melee;
+import shared.gameObjects.weapons.Punch;
+import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.weapons.Weapon;
 import shared.handlers.levelHandler.LevelHandler;
 import shared.physics.Physics;
@@ -74,6 +78,7 @@ public class AStar {
       if (parentNode != null) {
         // Create a copy of the parents simulated bot
         this.nodeBot = new Bot(parent.nodeBot);
+        //this.nodeBot = parent.nodeBot;
 
         // Simulate the bot with the action, using the game physics
         nodeBot.simulateAction(action);
@@ -92,7 +97,23 @@ public class AStar {
       } else {
         // This is the starting node so distanceElapsed is 0
         distanceElapsed = 0;
-        this.nodeBot = bot;
+        this.nodeBot = new Bot(bot);
+
+        // Create a copy of the bots weapon
+        Weapon botWeapon = nodeBot.getHolding();
+        Weapon cloneWeapon = null;
+
+        if (botWeapon instanceof Handgun) {
+          cloneWeapon = new Handgun((Handgun) botWeapon);
+        } else if (botWeapon instanceof MachineGun) {
+          cloneWeapon = new MachineGun((MachineGun) botWeapon);
+        } else if (botWeapon instanceof Punch) {
+          cloneWeapon = new Punch((Punch) botWeapon);
+        } else if (botWeapon instanceof Sword) {
+          cloneWeapon = new Sword((Sword) botWeapon);
+        }
+        this.nodeBot.setHolding(cloneWeapon);
+        
         // Calculate the heuristic value of the node.
         this.remainingDistance = calcRemainingH(getItems(sceneSnapshot));
       }
