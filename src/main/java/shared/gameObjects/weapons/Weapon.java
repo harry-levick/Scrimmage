@@ -27,6 +27,9 @@ public abstract class Weapon extends GameObject {
   protected int fireRate; // max = MAX_COOLDOWN - 1
   protected Player holder; // holder of the weapon
 
+  double sizeX;
+  double sizeY;
+
   protected int currentCooldown;
 
   /**
@@ -60,6 +63,8 @@ public abstract class Weapon extends GameObject {
       Player holder,
       UUID uuid) {
     super(x, y, sizeX, sizeY, id, uuid);
+    this.sizeX = sizeX;
+    this.sizeY = sizeY;
     this.isGun = isGun;
     this.isMelee = isMelee;
     setDamage(damage);
@@ -70,6 +75,22 @@ public abstract class Weapon extends GameObject {
     this.holder = holder;
 
     this.currentCooldown = 0;
+  }
+
+  public boolean getIsMelee() {
+    return isMelee;
+  }
+
+  public boolean getIsGun() {
+    return isGun;
+  }
+
+  public double getSizeY() {
+    return sizeY;
+  }
+
+  public double getSizeX() {
+    return sizeX;
   }
 
   public abstract void fire(double mouseX, double mouseY);

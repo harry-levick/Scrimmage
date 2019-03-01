@@ -38,6 +38,10 @@ public class Sword extends Melee {
         uuid);
   }
 
+  public Sword(Sword that) {
+    this(that.getX(), that.getY(), that.name, that.holder, that.objectUUID);
+  }
+
   @Override
   public void fire(double mouseX, double mouseY) {
     super.fire(mouseX, mouseY);

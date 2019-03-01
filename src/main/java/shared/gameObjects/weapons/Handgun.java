@@ -39,6 +39,10 @@ public class Handgun extends Gun {
         uuid);
   }
 
+  public Handgun(Handgun that) {
+    this(that.getX(), that.getY(), that.sizeX, that.sizeY, that.name, that.holder, that.objectUUID);
+  }
+
   @Override
   public void fire(double mouseX, double mouseY) {
     if (canFire()) {

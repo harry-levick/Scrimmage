@@ -3,6 +3,7 @@ package shared.gameObjects.weapons;
 import client.handlers.audioHandler.AudioHandler;
 import java.util.UUID;
 import javafx.scene.transform.Rotate;
+import javax.crypto.Mac;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.players.Player;
 import shared.util.Path;
@@ -45,6 +46,10 @@ public class MachineGun extends Gun {
     // If changing the value of this, change the value in all getGrip() methods
     rotate.setPivotX(20);
     rotate.setPivotY(10);
+  }
+
+  public MachineGun(MachineGun that) {
+    this(that.getX(), that.getY(), that.name, that.holder, that.objectUUID);
   }
 
   @Override
