@@ -43,8 +43,8 @@ public class ButtonSingleplayer extends ButtonObject {
         true);
     int botsToAdd = maxPlayers - Client.levelHandler.getPlayers().size();
     for (int b = 0; b < botsToAdd; b++) {
-      Bot botPlayer = new Bot(500, 500, UUID.randomUUID(), Client.levelHandler);
-      botPlayer.setHolding(new Sword(500, 500, "Sword@LevelHandler", botPlayer, UUID.randomUUID()));
+      Bot botPlayer = new Bot(250, 800, UUID.randomUUID(), Client.levelHandler);
+      botPlayer.setHolding(new Sword(250, 800, "Sword@LevelHandler", botPlayer, UUID.randomUUID()));
       botPlayer.getHolding().initialise(Client.gameRoot);
       botPlayer.initialise(Client.gameRoot);
       Client.levelHandler.getPlayers().add(botPlayer);
