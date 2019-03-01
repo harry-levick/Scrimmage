@@ -113,7 +113,7 @@ public class AStar {
           cloneWeapon = new Sword((Sword) botWeapon);
         }
         this.nodeBot.setHolding(cloneWeapon);
-        
+
         // Calculate the heuristic value of the node.
         this.remainingDistance = calcRemainingH(getItems(sceneSnapshot));
       }
@@ -228,7 +228,6 @@ public class AStar {
    * @return The action to take.
    */
   public List<boolean[]> optimise(Player enemy) {
-    //this.enemy = enemy;
     // Initialise the variables needed by the search.
     initSearch(enemy);
     // Run the search.

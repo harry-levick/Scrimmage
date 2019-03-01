@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import server.ai.pathFind.PathFindState;
 import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.LevelHandler;
 import shared.physics.Physics;
@@ -69,12 +70,10 @@ public class Bot extends Player {
   @Override
   public void update() {
     System.out.println("botx = " + this.getX() + ", boty = " + this.getY());
-    /*
 
     if (!active) {
       botThread.terminate();
     }
-     */
 
     double prevDist, newDist;
     // Calculate the distance to the target from the previous loop
@@ -88,19 +87,16 @@ public class Bot extends Player {
     switch (state) {
       case IDLE:
         System.out.println("IDLE");
-        executeAction();
-
         break;
       case CHASING:
         System.out.println("CHASING");
         // Find the next best move to take, and execute this move.
-        executeAction();
+        executeAction(PathFindState.PERSUE);
 
         break;
       case FLEEING:
         System.out.println("FLEEING");
-        executeAction();
-
+        executeAction(PathFindState.FLEE);
         // TODO calculate and execute the best path away from the target.
 
         break;
@@ -118,16 +114,14 @@ public class Bot extends Player {
         break;
       case CHASING_ATTACKING:
         System.out.println("CHASING-ATTACKING");
-        executeAction();
-
-        // TODO calculate and execute the best path to the target whilst attacking.
+        executeAction(PathFindState.PERSUE);
         mouseX = targetPlayer.getX();
         mouseY = targetPlayer.getY();
 
         break;
       case FLEEING_ATTACKING:
         System.out.println("FLEEING-ATTACKING");
-        executeAction();
+        executeAction(PathFindState.FLEE);
         // TODO calculate and execute the best path away from the target whilst attacking.
         mouseX = targetPlayer.getX();
         mouseY = targetPlayer.getY();
@@ -152,7 +146,7 @@ public class Bot extends Player {
     return botPos.exactMagnitude(targetPos);
   }
 
-  private void executeAction() {
+  private void executeAction(PathFindState state) {
     boolean[] action = new boolean[] {false, false, false};
 
     System.out.println("PLAN SIZE: " + plan.size());
@@ -160,32 +154,63 @@ public class Bot extends Player {
       action = plan.remove(0);
     }
 
-    this.jumpKey = action[Bot.KEY_JUMP];
-    this.leftKey = action[Bot.KEY_LEFT];
-    this.rightKey = action[Bot.KEY_RIGHT];
-
-    /*
-    Random r = new Random();
-    // 60% chance of jumping when asked to.
-    boolean jump = r.nextDouble() <= 0.60;
-    if (jump) {
+    if (state == PathFindState.PERSUE) {
       this.jumpKey = action[Bot.KEY_JUMP];
-    } else this.jumpKey = false;
-
-    // 60% chance of moving left when asked to.
-    boolean left = r.nextDouble() <= 0.60;
-    if (left) {
       this.leftKey = action[Bot.KEY_LEFT];
-    } else this.leftKey = false;
-
-    // 60% chance of moving right when asked to
-    boolean right = r.nextDouble() <= 0.60;
-    if (right) {
       this.rightKey = action[Bot.KEY_RIGHT];
-    } else this.rightKey = false;
+      /*
+      Random r = new Random();
+      // 60% chance of jumping when asked to.
+      boolean jump = r.nextDouble() <= 0.60;
+      if (jump) {
+        this.jumpKey = action[Bot.KEY_JUMP];
+      } else this.jumpKey = false;
 
-     */
+      // 60% chance of moving left when asked to.
+      boolean left = r.nextDouble() <= 0.60;
+      if (left) {
+        this.leftKey = action[Bot.KEY_LEFT];
+      } else this.leftKey = false;
 
+      // 60% chance of moving right when asked to
+      boolean right = r.nextDouble() <= 0.60;
+      if (right) {
+        this.rightKey = action[Bot.KEY_RIGHT];
+      } else this.rightKey = false;
+
+       */
+
+    } else if (state == PathFindState.FLEE) {
+      action = invertAction(action);
+      this.jumpKey = action[Bot.KEY_JUMP];
+      this.leftKey = action[Bot.KEY_LEFT];
+      this.rightKey = action[Bot.KEY_RIGHT];
+    }
+
+
+  }
+
+  /**
+   * Invert a persuing action so that it can be used as a un-intelligente fleeing action
+   * @param action
+   * @return
+   */
+  private boolean[] invertAction(boolean[] action) {
+    Random r = new Random();
+    boolean move = r.nextDouble() <= 0.50;
+
+    if (action[Bot.KEY_LEFT]) {
+      action[Bot.KEY_LEFT] = false;
+      action[Bot.KEY_RIGHT] = true;
+      if (move) action[Bot.KEY_JUMP] = true;
+
+    } else if (action[Bot.KEY_RIGHT]) {
+      action[Bot.KEY_RIGHT] = false;
+      action[Bot.KEY_LEFT] = true;
+      if (move) action[Bot.KEY_JUMP] = true;
+    }
+
+    return action;
   }
 
   public void simulateUpdate() {
