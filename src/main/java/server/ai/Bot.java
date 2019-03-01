@@ -48,6 +48,7 @@ public class Bot extends Player {
     this.plan = Collections.synchronizedList(new ArrayList<>());
 
     this.botThread = new BotThread(this, plan);
+    System.out.println("BOT UUID = " + playerUUID);
   }
 
   /**
@@ -55,8 +56,9 @@ public class Bot extends Player {
    * @param that object to be copied
    */
   public Bot(Bot that) {
-    this(that.getX(), that.getY(), that.getUUID(), that.getLevelHandler());
-    this.holding = that.getHolding();
+    super(that.getX(), that.getY(), UUID.randomUUID());
+    this.levelHandler = that.levelHandler;
+
   }
 
   public void startThread() {

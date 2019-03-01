@@ -100,7 +100,7 @@ public class AStar {
         this.nodeBot = new Bot(bot);
 
         // Create a copy of the bots weapon
-        Weapon botWeapon = nodeBot.getHolding();
+        Weapon botWeapon = bot.getHolding();
         Weapon cloneWeapon = null;
 
         if (botWeapon instanceof Handgun) {
@@ -244,7 +244,7 @@ public class AStar {
   private void search() {
     int searchCount = 0;
     // The maximum number of nodes searched before the search is stopped.
-    int seachCutoff  = 60;
+    int seachCutoff  = 30;
     // Set the current node to the best position, in case the bot is already at the enemy.
     SearchNode current = bestPosition;
     // Is the current node good (= we're not getting hurt)
