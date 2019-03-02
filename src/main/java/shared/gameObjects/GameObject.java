@@ -41,7 +41,8 @@ public abstract class GameObject implements Serializable {
 
   protected boolean active;
   protected boolean destroyed;
-  protected boolean updated;
+  protected boolean networkStateUpdate;
+  protected Vector2 lastPos;
 
   protected ArrayList<GameObject> collidedObjects;
   protected ArrayList<GameObject> collidedThisFrame;
@@ -56,13 +57,15 @@ public abstract class GameObject implements Serializable {
    * @param id Unique Identifier of every game object
    */
   public GameObject(double x, double y, double sizeX, double sizeY, ObjectID id, UUID objectUUID) {
-    this.updated = false;
+    this.networkStateUpdate = false;
     this.id = id;
     this.objectUUID = objectUUID;
     this.active = true;
     this.transform = new Transform(this, new Vector2((float) x, (float) y),
         new Vector2((float) sizeX, (float) sizeY));
     this.components = new ArrayList<>();
+    //So update sent by server on first frame
+    this.lastPos = new Vector2((float) x + 1, (float) y + 1);
     this.children = new ArrayList<>();
     this.animation = new Animator();
     this.collidedObjects = new ArrayList<>();
@@ -76,6 +79,7 @@ public abstract class GameObject implements Serializable {
 
   // Server and Client side
   public void update() {
+    networkStateUpdate = false;
     animation.update();
     Collider col = (Collider) getComponent(ComponentType.COLLIDER);
     Rigidbody rb = (Rigidbody) getComponent(ComponentType.RIGIDBODY);
@@ -85,6 +89,11 @@ public abstract class GameObject implements Serializable {
     if (col != null) {
       col.update();
     }
+    //If objects location has changed then send update if server
+    if (!(lastPos.equals(getTransform().getPos()))) {
+      networkStateUpdate = true;
+    }
+    this.lastPos.setVec((float) getX(), (float) getY());
   }
 
   // Client Side only
@@ -211,6 +220,7 @@ public abstract class GameObject implements Serializable {
 
   // Ignore for now, added due to unSerializable objects
   public void initialise(Group root) {
+    this.networkStateUpdate = false;
     animation = new Animator();
     initialiseAnimation();
     imageView = new ImageView();
@@ -381,6 +391,14 @@ public abstract class GameObject implements Serializable {
     return parent;
   }
 
+  public boolean isNetworkStateUpdate() {
+    return networkStateUpdate;
+  }
+
+  public void setNetworkStateUpdate(boolean networkStateUpdate) {
+    this.networkStateUpdate = networkStateUpdate;
+  }
+
   public void setParent(GameObject parent) {
     this.parent = parent;
   }
@@ -417,14 +435,6 @@ public abstract class GameObject implements Serializable {
 
   public void setSettings(Settings settings) {
     this.settings = settings;
-  }
-
-  public boolean isUpdated() {
-    return updated;
-  }
-
-  public void setUpdated(boolean updated) {
-    this.updated = updated;
   }
 
   public boolean isDestroyed() {
