@@ -20,7 +20,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import shared.gameObjects.MapDataObject;
+import shared.gameObjects.GameObject;
 import shared.gameObjects.UI.UI;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.MachineGun;
@@ -193,7 +193,6 @@ public class Client extends Application {
         }
 
         /** Check Collisions */
-        //TODO Change physics to LinkedHashMaps
         Physics.gameObjects = levelHandler.getGameObjects();
 
         levelHandler
@@ -320,14 +319,12 @@ public class Client extends Application {
           case 7:
             PacketGameState gameState = new PacketGameState(message);
             HashMap<UUID, String> data = gameState.getGameObjects();
-            levelHandler
-                .getGameObjects()
-                .forEach(
-                    (key, gameObject) -> {
-                      if (!(gameObject instanceof MapDataObject)) {
-                        gameObject.setState(data.get(gameObject.getUUID()));
-                      }
-                    });
+            data.forEach((key, value) -> {
+              GameObject gameObject = levelHandler.getGameObjects().get(key);
+              if (gameObject.getUUID() != levelHandler.getClientPlayer().getUUID()) {
+                gameObject.setState(value);
+              }
+            });
             serverReconciliation(gameState.getLastProcessedInput());
             break;
           default:

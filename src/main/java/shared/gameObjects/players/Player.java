@@ -102,10 +102,9 @@ public class Player extends GameObject {
   }
 
 
-  /**
-   @Override public String getState() {
-   return objectUUID + ";" + getX() + ";" + getY() + ";" + animation.getName() + ";" + health;
-   // add holding
+  @Override
+  public String getState() {
+    return objectUUID + ";" + getX() + ";" + getY() + ";" + animation.getName() + ";" + health;
    }
 
    @Override public void setState(String data) {
@@ -115,7 +114,6 @@ public class Player extends GameObject {
    this.animation.switchAnimation(unpackedData[3]);
    this.health = Integer.parseInt(unpackedData[4]);
    }
-   **/
 
   public void checkGrounded() {
     grounded = rb.isGrounded();

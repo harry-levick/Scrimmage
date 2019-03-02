@@ -30,6 +30,7 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import shared.gameObjects.GameObject;
+import shared.gameObjects.MapDataObject;
 import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.LevelHandler;
@@ -37,6 +38,7 @@ import shared.handlers.levelHandler.Map;
 import shared.packets.PacketGameState;
 import shared.packets.PacketInput;
 import shared.packets.PacketMap;
+import shared.physics.Physics;
 import shared.util.Path;
 
 public class Server extends Application {
@@ -79,7 +81,7 @@ public class Server extends Application {
     settings = new Settings();
     settings.setLevelHandler(levelHandler);
     playlist = new LinkedList();
-    inputQueue = new ConcurrentHashMap<Player, BlockingQueue<PacketInput>>();
+    inputQueue = new ConcurrentHashMap<>();
     try {
       this.serverSocket = new ServerSocket(4445);
       this.socket = new DatagramSocket();
@@ -174,10 +176,10 @@ public class Server extends Application {
       connected.forEach(
           address -> {
             try {
-              DatagramPacket packet =
-                  new DatagramPacket(buffer, buffer.length, (InetAddress) address, serverPort);
+              DatagramPacket packet = new DatagramPacket(buffer, buffer.length,
+                  (InetAddress) address, serverPort);
               socket.send(packet);
-              System.out.println(packet.getData().toString());
+              System.out.println("SEND: " + new String(buffer));
             } catch (UnknownHostException e) {
               e.printStackTrace();
             } catch (IOException e) {
@@ -188,14 +190,14 @@ public class Server extends Application {
   }
 
   public void updateSimulation() {
+    levelHandler.createObjects();
     /** Check Collisions */
-    //Physics.gameObjects = levelHandler.getGameObjects();
+    Physics.gameObjects = levelHandler.getGameObjects();
     inputQueue.forEach(
         ((player, packetInputs) -> {
           PacketInput temp = packetInputs.poll();
           if (temp != null) {
             System.out.println(temp.getString());
-            System.out.println("Before " + player.getX());
             player.click = temp.isClick();
             player.rightKey = temp.isRightKey();
             player.leftKey = temp.isLeftKey();
@@ -204,13 +206,11 @@ public class Server extends Application {
             player.jumpKey = temp.isJumpKey();
           }
         }));
-    //levelHandler.getPlayers().forEach(player -> player.applyInput());
+    levelHandler.getPlayers().forEach((key, player) -> player.applyInput());
 
-    //levelHandler
-    //    .getGameObjects()
-    //    .forEach(gameObject -> gameObject.updateCollision(levelHandler.getGameObjects()));
+    levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.updateCollision());
     /** Update Game Objects */
-    //levelHandler.getGameObjects().forEach(gameObject -> gameObject.update());
+    levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.update());
   }
 
   public void startMatch() {
@@ -239,17 +239,18 @@ public class Server extends Application {
 
   public void sendWorldState() {
     ArrayList<GameObject> gameObjectsFiltered = new ArrayList<>();
-    /**
-     for (GameObject gameObject : levelHandler.getGameObjects()) {
-     if (!(gameObject instanceof MapDataObject)) {
-     gameObjectsFiltered.add(gameObject);
+    for (UUID key : levelHandler.getGameObjects().keySet()) {
+      GameObject gameObject = levelHandler.getGameObjects().get(key);
+      if (!(gameObject instanceof MapDataObject)) {
+        gameObjectsFiltered.add(gameObject);
+      }
      }
-     }
-     **/
     PacketGameState gameState = new PacketGameState(gameObjectsFiltered, 0);
 
-    byte[] buffer = gameState.getData();
-    sendToClients(buffer);
+    if (gameState.isUpdate()) {
+      byte[] buffer = gameState.getData();
+      sendToClients(buffer);
+    }
   }
 
   public void checkConditions() {
@@ -257,16 +258,15 @@ public class Server extends Application {
 
     } else {
       int dead = 0;
-      /**
-       for (Player player : levelHandler.getPlayers()) {
-       if (player.getHealth() <= 0) {
-       dead++;
-       }
-       }
-       if (playerCount.get() > 0 && dead == playerCount.get() || dead == (playerCount.get() - 1)) {
-       nextMap();
-       }
-       **/
+      for (UUID key : levelHandler.getPlayers().keySet()) {
+        Player player = levelHandler.getPlayers().get(key);
+        if (player.getHealth() <= 0) {
+          dead++;
+        }
+      }
+      if (playerCount.get() > 0 && dead == playerCount.get() || dead == (playerCount.get() - 1)) {
+        nextMap();
+      }
     }
 
   }
