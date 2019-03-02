@@ -26,6 +26,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.scene.Cursor;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,6 +41,7 @@ import shared.handlers.levelHandler.LevelHandler;
 import shared.handlers.levelHandler.Map;
 import shared.packets.PacketGameState;
 import shared.packets.PacketInput;
+import shared.packets.PacketJoin;
 import shared.packets.PacketMap;
 import shared.physics.Physics;
 import shared.util.Path;
@@ -51,7 +56,7 @@ public class Server extends Application {
   private final AtomicBoolean running = new AtomicBoolean(false);
   private final AtomicBoolean gameOver = new AtomicBoolean(false);
   private final AtomicInteger counter = new AtomicInteger(0);
-  private final int serverUpdateRate = 3;
+  public static Group gameRoot;
   private final int maxPlayers = 4;
   public ServerState serverState;
   public static Settings settings;
@@ -68,6 +73,12 @@ public class Server extends Application {
   private Server server;
 
   private DatagramSocket socket;
+  private final int serverUpdateRate = 10;
+  private final String gameTitle = "SERVER";
+  //Rendering
+  private Group root;
+  private Group backgroundRoot;
+  private Scene scene;
 
   public static void main(String args[]) {
     launch(args);
@@ -104,71 +115,8 @@ public class Server extends Application {
     running.set(false);
   }
 
-  @Override
-  public void start(Stage primaryStage) throws Exception {
-    levelHandler = new LevelHandler(settings);
-    levelHandler.changeMap(
-        new Map("Lobby", Path.convert("src/main/resources/menus/lobby.map"), GameState.Lobby),
-        false);
-    running.set(true);
-    LOGGER.debug("Running " + threadName);
-    serverState = ServerState.WAITING_FOR_PLAYERS;
-    /** Receiver from clients */
-    executor.execute(new ServerReceiver(this, serverSocket, connected));
-
-    /** Setup Game timer */
-    TimerTask task =
-        new TimerTask() {
-          @Override
-          public void run() {
-            gameOver.set(true);
-          }
-        };
-    Timer timer = new Timer("Timer", true);
-    timer.schedule(task, 300000L);
-
-    new AnimationTimer() {
-
-      @Override
-      public void handle(long now) {
-        if (!running.get()) {
-          this.stop();
-        }
-
-        if (playerLastCount < playerCount.get()) {
-          playerLastCount++;
-          executor.execute(new ServerReceiver(server, serverSocket, connected));
-        }
-
-        if (playerCount.get() == 5) {
-          //Bot bot = new Bot(500, 500, UUID.randomUUID(), levelHandler.getGameObjects(), levelHandler);
-          //bot.initialise(null);
-          //levelHandler.getPlayers().add(bot);
-          //levelHandler.getBotPlayerList().add(bot);
-          //levelHandler.getGameObjects().add(bot);
-        }
-        counter.getAndIncrement();
-        if (playerCount.get() == maxPlayers) {
-          serverState = ServerState.WAITING_FOR_READYUP;
-        }
-        if (playerCount.get() > 1 && readyCount.get() == playerCount.get()) {
-          startMatch();
-        }
-
-        if (serverState == ServerState.IN_GAME) {
-          checkConditions();
-        }
-
-        /** Process Update */
-        updateSimulation();
-
-        /** Send update to all clients */
-        if (playerCount.get() > 0 && counter.get() >= serverUpdateRate) {
-          counter.set(0);
-          sendWorldState();
-        }
-      }
-    }.start();
+  public static Group getGameRoot() {
+    return gameRoot;
   }
 
   public void sendToClients(byte[] buffer) {
@@ -269,5 +217,108 @@ public class Server extends Application {
       }
     }
 
+  }
+
+  @Override
+  public void start(Stage primaryStage) throws Exception {
+    setupRender(primaryStage);
+    levelHandler = new LevelHandler(settings, root, backgroundRoot, gameRoot, true);
+    settings.setLevelHandler(levelHandler);
+    running.set(true);
+    LOGGER.debug("Running " + threadName);
+    serverState = ServerState.WAITING_FOR_PLAYERS;
+    /** Receiver from clients */
+    executor.execute(new ServerReceiver(this, serverSocket, connected));
+
+    /** Setup Game timer */
+    TimerTask task =
+        new TimerTask() {
+          @Override
+          public void run() {
+            gameOver.set(true);
+          }
+        };
+    Timer timer = new Timer("Timer", true);
+    timer.schedule(task, 300000L);
+
+    new AnimationTimer() {
+
+      @Override
+      public void handle(long now) {
+        if (!running.get()) {
+          this.stop();
+        }
+
+        if (playerLastCount < playerCount.get()) {
+          playerLastCount++;
+          executor.execute(new ServerReceiver(server, serverSocket, connected));
+        }
+
+        if (playerCount.get() == 5) {
+          //Bot bot = new Bot(500, 500, UUID.randomUUID(), levelHandler.getGameObjects(), levelHandler);
+          //bot.initialise(null);
+          //levelHandler.getPlayers().add(bot);
+          //levelHandler.getBotPlayerList().add(bot);
+          //levelHandler.getGameObjects().add(bot);
+        }
+        counter.getAndIncrement();
+        if (playerCount.get() == maxPlayers) {
+          serverState = ServerState.WAITING_FOR_READYUP;
+        }
+        if (playerCount.get() > 1 && readyCount.get() == playerCount.get()) {
+          startMatch();
+        }
+
+        if (serverState == ServerState.IN_GAME) {
+          checkConditions();
+        }
+
+        /** Process Update */
+        updateSimulation();
+
+        /** Render Game Objects */
+        levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.render());
+        if (levelHandler.getBackground() != null) {
+          levelHandler.getBackground().render();
+        }
+
+        /** Send update to all clients */
+        if (playerCount.get() > 0 && counter.get() >= serverUpdateRate) {
+          counter.set(0);
+          sendWorldState();
+        }
+      }
+    }.start();
+  }
+
+  //Rendering
+
+  public Player addPlayer(PacketJoin joinPacket, InetAddress address) {
+    Player player = new Player(joinPacket.getX(), joinPacket.getY(), joinPacket.getClientID(),
+        levelHandler);
+    levelHandler.addPlayer(player, gameRoot);
+    playerCount.getAndIncrement();
+    connected.add(address);
+    server.add(player);
+    return player;
+  }
+
+  private void setupRender(Stage primaryStage) {
+    root = new Group();
+    backgroundRoot = new Group();
+    gameRoot = new Group();
+
+    root.getChildren().add(backgroundRoot);
+    root.getChildren().add(gameRoot);
+
+    primaryStage.setTitle(gameTitle);
+    primaryStage.getIcons().add(new Image(Path.convert("images/logo.png")));
+
+    scene = new Scene(root, 1920, 1080);
+    scene.setCursor(Cursor.CROSSHAIR);
+
+    primaryStage.setScene(scene);
+    primaryStage.setFullScreen(false);
+    primaryStage.show();
   }
 }

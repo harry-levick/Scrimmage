@@ -52,7 +52,11 @@ public class LevelHandler {
     previousMap = null;
   }
 
-  public LevelHandler(Settings settings) {
+  public LevelHandler(Settings settings, Group root, Group backgroundRoot, Group gameRoot,
+      boolean server) {
+    this.root = root;
+    this.backgroundRoot = backgroundRoot;
+    this.gameRoot = gameRoot;
     this.settings = settings;
     gameObjects = new LinkedHashMap<>();
     toRemove = new ArrayList<>();
@@ -60,6 +64,8 @@ public class LevelHandler {
     bots = new LinkedHashMap<>();
     toCreate = new ArrayList<>();
     musicPlayer = new AudioHandler(settings);
+    changeMap(new Map("Lobby", Path.convert("src/main/resources/menus/lobby.map"), GameState.Lobby),
+        false);
   }
 
   public void changeMap(Map map, Boolean moveToSpawns) {
