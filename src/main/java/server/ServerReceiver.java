@@ -48,7 +48,8 @@ public class ServerReceiver implements Runnable {
         && server.playerCount.get() < 4
         && server.serverState == ServerState.WAITING_FOR_PLAYERS) {
       PacketJoin joinPacket = new PacketJoin(message);
-      player = new Player(joinPacket.getX(), joinPacket.getY(), joinPacket.getClientID());
+      player = new Player(joinPacket.getX(), joinPacket.getY(), joinPacket.getClientID(),
+          server.getLevelHandler());
       Server.levelHandler.addPlayer(player, null);
       server.playerCount.getAndIncrement();
       connected.add(socket.getInetAddress());

@@ -2,7 +2,7 @@ package shared.handlers.levelHandler;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.UUID;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +13,7 @@ import shared.gameObjects.Utils.ObjectID;
 
 public class MapLoaderTest {
 
-  ArrayList<GameObject> gameObjects = new ArrayList<>();
+  LinkedHashMap<UUID, GameObject> gameObjects = new LinkedHashMap<>();
   private TestObject g1 = new TestObject(6, 7, ObjectID.Bot, UUID.randomUUID());
   private TestObject g2 = new TestObject(934, 12312, ObjectID.Bot, UUID.randomUUID());
   private TestObject g3 = new TestObject(567560, 12, ObjectID.Player, UUID.randomUUID());
@@ -23,9 +23,9 @@ public class MapLoaderTest {
 
   @Before
   public void setUp() {
-    gameObjects.add(g1);
-    gameObjects.add(g2);
-    gameObjects.add(g3);
+    gameObjects.put(g1.getUUID(), g1);
+    gameObjects.put(g2.getUUID(), g2);
+    gameObjects.put(g3.getUUID(), g3);
   }
 
   @Test
@@ -42,7 +42,7 @@ public class MapLoaderTest {
   @Test
   public void equalAfterLoadAndSave() {
     map.saveMap(gameObjects, mapdata, path);
-    ArrayList<GameObject> gameObjectsTest = map.loadMap(path);
+    LinkedHashMap<UUID, GameObject> gameObjectsTest = map.loadMap(path);
     int i = 0;
     while (gameObjectsTest.size() > i) {
       assertEquals(gameObjectsTest.get(i).getX(), gameObjects.get(i).getX(), 0.0001);
