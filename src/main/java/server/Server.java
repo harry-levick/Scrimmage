@@ -51,30 +51,28 @@ public class Server extends Application {
   private static final Logger LOGGER = LogManager.getLogger(Client.class.getName());
 
   public static LevelHandler levelHandler;
+  public static Group gameRoot;
+  public static Settings settings;
   public final AtomicInteger playerCount = new AtomicInteger(0);
   public final AtomicInteger readyCount = new AtomicInteger(0);
   private final AtomicBoolean running = new AtomicBoolean(false);
   private final AtomicBoolean gameOver = new AtomicBoolean(false);
   private final AtomicInteger counter = new AtomicInteger(0);
-  public static Group gameRoot;
   private final int maxPlayers = 4;
+  private final int serverUpdateRate = 30;
+  private final String gameTitle = "SERVER";
   public ServerState serverState;
-  public static Settings settings;
   private ArrayList<InetAddress> connectedList = new ArrayList<>();
   private List connected = Collections.synchronizedList(connectedList);
   private String threadName;
   private LinkedList<Map> playlist;
   private ConcurrentMap<Player, BlockingQueue<PacketInput>> inputQueue;
-
   private int playerLastCount = 0;
   private ServerSocket serverSocket = null;
   private int serverPort = 4446;
   private ExecutorService executor;
   private Server server;
-
   private DatagramSocket socket;
-  private final int serverUpdateRate = 10;
-  private final String gameTitle = "SERVER";
   //Rendering
   private Group root;
   private Group backgroundRoot;
@@ -82,6 +80,14 @@ public class Server extends Application {
 
   public static void main(String args[]) {
     launch(args);
+  }
+
+  public static LevelHandler getLevelHandler() {
+    return levelHandler;
+  }
+
+  public static Group getGameRoot() {
+    return gameRoot;
   }
 
   public void init() {
@@ -107,16 +113,8 @@ public class Server extends Application {
         new Map("Map2", Path.convert("src/main/resources/maps/map2.map"), GameState.IN_GAME));
   }
 
-  public static LevelHandler getLevelHandler() {
-    return levelHandler;
-  }
-
   public void stop() {
     running.set(false);
-  }
-
-  public static Group getGameRoot() {
-    return gameRoot;
   }
 
   public void sendToClients(byte[] buffer) {
@@ -145,13 +143,14 @@ public class Server extends Application {
         ((player, packetInputs) -> {
           PacketInput temp = packetInputs.poll();
           if (temp != null) {
-            System.out.println(temp.getString());
+            System.out.println("Input-:" + temp.getString());
             player.click = temp.isClick();
             player.rightKey = temp.isRightKey();
             player.leftKey = temp.isLeftKey();
             player.mouseX = temp.getX();
             player.mouseY = temp.getY();
             player.jumpKey = temp.isJumpKey();
+            player.setLastInputCount(temp.getInputSequenceNumber());
           }
         }));
     levelHandler.getPlayers().forEach((key, player) -> player.applyInput());
@@ -192,7 +191,7 @@ public class Server extends Application {
       if (!(gameObject instanceof MapDataObject)) {
         gameObjectsFiltered.add(gameObject);
       }
-     }
+    }
     PacketGameState gameState = new PacketGameState(gameObjectsFiltered, 0);
 
     if (gameState.isUpdate()) {

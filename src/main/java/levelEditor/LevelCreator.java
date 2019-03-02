@@ -308,7 +308,7 @@ public class LevelCreator extends Application {
     uuid = UUID.randomUUID();
     gameObjects
         .put(uuid, new SoundSlider(getAbs(20), getAbs(7), getAbs(8), getAbs(1), SOUND_TYPE.MUSIC,
-        "Music", ObjectID.Button, UUID.randomUUID()));
+            "Music", ObjectID.Button, UUID.randomUUID()));
     uuid = UUID.randomUUID();
     gameObjects
         .put(uuid, new SoundSlider(getAbs(20), getAbs(9), getAbs(8), getAbs(1), SOUND_TYPE.SFX,
@@ -316,7 +316,7 @@ public class LevelCreator extends Application {
     uuid = UUID.randomUUID();
     gameObjects
         .put(uuid, new ButtonBack(getAbs(20), getAbs(12), getAbs(8), getAbs(2), ObjectID.Button,
-        UUID.randomUUID()));
+            UUID.randomUUID()));
     uuid = UUID.randomUUID();
     for (int i = 0; i < 24; i++) {
       // top row wall

@@ -321,11 +321,9 @@ public class Client extends Application {
             HashMap<UUID, String> data = gameState.getGameObjects();
             data.forEach((key, value) -> {
               GameObject gameObject = levelHandler.getGameObjects().get(key);
-              if (gameObject.getUUID() != levelHandler.getClientPlayer().getUUID()) {
-                gameObject.setState(value);
-              }
+              gameObject.setState(value);
             });
-            serverReconciliation(gameState.getLastProcessedInput());
+            serverReconciliation(Client.levelHandler.getClientPlayer().getLastInputCount());
             break;
           default:
             System.out.println("ERROR" + messageID + " " + message);
@@ -341,7 +339,7 @@ public class Client extends Application {
     // Server Reconciliation. Re-apply all the inputs not yet processed by
     // the server.
     while (j < pendingInputs.size()) {
-      if (inputSequenceNumber <= lastProcessedInput) {
+      if (inputSequenceNumber - 1 <= lastProcessedInput) {
         // Already processed. Its effect is already taken into account into the world update
         // we just got so drop it
         pendingInputs.remove(j);

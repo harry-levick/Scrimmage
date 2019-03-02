@@ -12,7 +12,7 @@ public class UI {
 
   public UI(Group root, Player clientPlayer) {
 
-    //Load the Kenney font 
+    //Load the Kenney font
     //uiFont = Font.loadFont("fonts/kenney1.ttf", 25);
 
     health = new Health(root, clientPlayer);
