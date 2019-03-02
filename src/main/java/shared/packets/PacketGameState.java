@@ -25,6 +25,7 @@ public class PacketGameState extends Packet {
     gameObjects = new HashMap<>();
     List<String> dataFilter = new ArrayList<>(Arrays.asList(data.split(",")));
     dataFilter.removeAll(Collections.singleton("null"));
+    dataFilter.removeAll(Collections.singleton(""));
     String[] unpackedData = dataFilter.toArray(new String[0]);
     lastProcessedInput = Integer.parseInt(unpackedData[1]);
     for (int i = 2; i < unpackedData.length; i++) {

@@ -254,7 +254,7 @@ public class Rigidbody extends Component implements Serializable {
   public void setVelocity(Vector2 velocity) {
     this.velocity = velocity;
     acceleration = Vector2.Zero();
-    // System.out.println(this.velocity);
+
   }
 
   public RigidbodyType getBodyType() {
