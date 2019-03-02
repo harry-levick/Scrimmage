@@ -1,6 +1,8 @@
 package shared.physics;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Collider;
@@ -17,7 +19,7 @@ public class Physics {
   public static final float GRAVITY = 100f;
   public static final float TIMESTEP = 1f / 60;
   public static boolean showColliders = false;
-  public static ArrayList<GameObject> gameObjects;
+  public static HashMap<UUID, GameObject> gameObjects;
   /*
    * Order: DEFAULT, PLAYER, OBJECT, WALL
    */
@@ -30,7 +32,7 @@ public class Physics {
   private static Physics ourInstance = new Physics();
 
   private Physics() {
-    gameObjects = new ArrayList<>();
+    gameObjects = new HashMap<>();
   }
   // TODO complete raycast methods
 
@@ -66,7 +68,7 @@ public class Physics {
   public static Collision boxcast(Vector2 sourcePos, Vector2 size) {
     BoxCollider castCollider = new BoxCollider(sourcePos, size);
     Collision collision;
-    for (GameObject object : gameObjects) {
+    for (GameObject object : gameObjects.values()) {
       if (object.getComponent(ComponentType.COLLIDER) != null) {
         collision =
             Collision.resolveCollision(
@@ -90,7 +92,7 @@ public class Physics {
     BoxCollider castCollider = new BoxCollider(sourcePos, size);
     Collision collision;
     ArrayList<Collision> collisions = new ArrayList<>();
-    for (GameObject object : gameObjects) {
+    for (GameObject object : gameObjects.values()) {
       if (object.getComponent(ComponentType.COLLIDER) != null) {
         collision =
             Collision.resolveCollision(

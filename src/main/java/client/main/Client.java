@@ -196,9 +196,7 @@ public class Client extends Application {
 
         /** Check Collisions */
         //TODO Change physics to Hashmaps
-        Collection<GameObject> values = levelHandler.getGameObjects().values();
-        ArrayList<GameObject> physicsGameObjects = new ArrayList<>(values);
-        Physics.gameObjects = physicsGameObjects;
+        Physics.gameObjects = levelHandler.getGameObjects();
 
         levelHandler
             .getGameObjects()

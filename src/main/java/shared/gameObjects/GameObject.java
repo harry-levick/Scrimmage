@@ -107,7 +107,7 @@ public abstract class GameObject implements Serializable {
         callCollisionMethods(col, false);
         return;
       } else {
-        for (GameObject o : Physics.gameObjects) {
+        for (GameObject o : Physics.gameObjects.values()) {
           Collider o_col = (Collider) o.getComponent(ComponentType.COLLIDER);
           Rigidbody o_rb = (Rigidbody) o.getComponent(ComponentType.RIGIDBODY);
           if (o_col != null && o_rb != null) {
@@ -125,7 +125,7 @@ public abstract class GameObject implements Serializable {
 
   private void callCollisionMethods(Collider col, boolean isTrigger) {
     if (!isTrigger) {
-      for (GameObject o : Physics.gameObjects) {
+      for (GameObject o : Physics.gameObjects.values()) {
         Collider o_col = (Collider) o.getComponent(ComponentType.COLLIDER);
         if (o_col != null) {
           if (Collision.haveCollided(col, o_col)) {
@@ -147,7 +147,7 @@ public abstract class GameObject implements Serializable {
       }
 
     } else {
-      for (GameObject o : Physics.gameObjects) {
+      for (GameObject o : Physics.gameObjects.values()) {
         Collider o_col = (Collider) o.getComponent(ComponentType.COLLIDER);
         if (o_col != null) {
           if (Collision.haveCollided(col, o_col)) {
