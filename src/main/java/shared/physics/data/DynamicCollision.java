@@ -182,7 +182,7 @@ public class DynamicCollision {
   private Vector2 positionCorrection() {
     float percent = 0.8f;
     float slop = 0.03f;
-    // System.out.println(c);
+
     Vector2 correction =
         collisionNormal.mult(
             Math.max(pentrationDepth - slop, 0.0f)

@@ -361,7 +361,7 @@ public class Player extends GameObject {
 
   @Override
   public void OnCollisionExit(Collision col) {
-    // System.out.println("Exited Collision!");
+
   }
 
   @Override

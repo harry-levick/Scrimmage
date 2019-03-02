@@ -40,13 +40,13 @@ public class ButtonSingleplayer extends ButtonObject {
 
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
-    // System.out.println("test");
+
     Client.levelHandler.changeMap(
         new Map("map1", Path.convert("src/main/resources/maps/map1.map"), GameState.IN_GAME),
         true);
     int botsToAdd = maxPlayers - Client.levelHandler.getPlayers().size();
     for (int b = 0; b < botsToAdd; b++) {
-      //TODO Change physics to Hashmaps
+      //TODO Change physics to LinkedHashMaps
       Collection<GameObject> values = Client.levelHandler.getGameObjects().values();
       ArrayList<GameObject> physicsGameObjects = new ArrayList<>(values);
       Bot botPlayer = new Bot(500, 500, UUID.randomUUID(), physicsGameObjects, Client.levelHandler);
@@ -75,6 +75,6 @@ public class ButtonSingleplayer extends ButtonObject {
     Client.levelHandler.getClientPlayer().getHolding().initialise(Client.gameRoot);
     Client.singleplayerGame = true;
     //Client.timer.schedule(Client.task, 30000L);
-    // System.out.println("test2");
+
   }
 }

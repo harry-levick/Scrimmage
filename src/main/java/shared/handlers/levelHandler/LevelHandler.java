@@ -4,7 +4,7 @@ import client.handlers.audioHandler.AudioHandler;
 import client.handlers.audioHandler.MusicAssets.PLAYLIST;
 import client.main.Settings;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.UUID;
 import javafx.scene.Group;
 import server.ai.Bot;
@@ -18,10 +18,10 @@ import shared.util.maths.Vector2;
 
 public class LevelHandler {
 
-  private HashMap<UUID, GameObject> gameObjects;
+  private LinkedHashMap<UUID, GameObject> gameObjects;
   private ArrayList<GameObject> toRemove;
-  private HashMap<UUID, Player> players;
-  private HashMap<UUID, Bot> bots;
+  private LinkedHashMap<UUID, Player> players;
+  private LinkedHashMap<UUID, Bot> bots;
   private Player clientPlayer;
   private ArrayList<Map> maps;
   private GameState gameState;
@@ -37,11 +37,11 @@ public class LevelHandler {
 
   public LevelHandler(Settings settings, Group root, Group backgroundRoot, Group gameRoot) {
     this.settings = settings;
-    gameObjects = new HashMap<>();
+    gameObjects = new LinkedHashMap<>();
     toCreate = new ArrayList<>();
     toRemove = new ArrayList<>();
-    players = new HashMap<>();
-    bots = new HashMap<>();
+    players = new LinkedHashMap<>();
+    bots = new LinkedHashMap<>();
     maps = MapLoader.getMaps(settings.getMapsPath());
     this.root = root;
     this.backgroundRoot = backgroundRoot;
@@ -54,10 +54,10 @@ public class LevelHandler {
 
   public LevelHandler(Settings settings) {
     this.settings = settings;
-    gameObjects = new HashMap<>();
+    gameObjects = new LinkedHashMap<>();
     toRemove = new ArrayList<>();
-    players = new HashMap<>();
-    bots = new HashMap<>();
+    players = new LinkedHashMap<>();
+    bots = new LinkedHashMap<>();
     toCreate = new ArrayList<>();
     musicPlayer = new AudioHandler(settings);
   }
@@ -143,7 +143,7 @@ public class LevelHandler {
    *
    * @return All Game Objects
    */
-  public HashMap<UUID, GameObject> getGameObjects() {
+  public LinkedHashMap<UUID, GameObject> getGameObjects() {
     clearToRemove(); // Remove every gameObjects we no longer need
     return gameObjects;
   }
@@ -159,7 +159,6 @@ public class LevelHandler {
    */
   public void addGameObject(GameObject gameObject) {
     gameObject.initialise(this.gameRoot);
-    System.out.println("test");
     this.toCreate.add(gameObject);
   }
 
@@ -209,7 +208,7 @@ public class LevelHandler {
     return map;
   }
 
-  public HashMap<UUID, Player> getPlayers() {
+  public LinkedHashMap<UUID, Player> getPlayers() {
     return players;
   }
 
@@ -230,7 +229,7 @@ public class LevelHandler {
     return clientPlayer;
   }
 
-  public HashMap<UUID, Bot> getBotPlayerList() {
+  public LinkedHashMap<UUID, Bot> getBotPlayerList() {
     return bots;
   }
 

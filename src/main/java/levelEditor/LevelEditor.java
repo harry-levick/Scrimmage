@@ -5,7 +5,6 @@ import de.codecentric.centerdevice.javafxsvg.dimension.PrimitiveDimensionProvide
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.UUID;
@@ -65,7 +64,7 @@ import shared.util.maths.Vector2;
 
 public class LevelEditor extends Application {
 
-  private HashMap<UUID, GameObject> gameObjects;
+  private LinkedHashMap<UUID, GameObject> gameObjects;
   private ArrayList<Player> playerSpawns = new ArrayList<>();
   private MapDataObject mapDataObject;
   private boolean snapToGrid = true;
@@ -528,7 +527,7 @@ public class LevelEditor extends Application {
   }
 
   private void initialiseNewMap() {
-    gameObjects = new HashMap<>();
+    gameObjects = new LinkedHashMap<>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.IN_GAME);
   }
 
@@ -583,7 +582,7 @@ public class LevelEditor extends Application {
   }
 
   private void sceneSecondaryClick(Stage primaryStage, Group root, MouseEvent event) {
-    HashMap<UUID, GameObject> removeList = gameObjects;
+    LinkedHashMap<UUID, GameObject> removeList = gameObjects;
     ArrayList<Player> removeSpawn = playerSpawns;
     double x = event.getX();
     double y = event.getY();

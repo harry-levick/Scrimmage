@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Objects;
 import java.util.UUID;
 import shared.gameObjects.GameObject;
@@ -18,7 +18,7 @@ import shared.gameObjects.MapDataObject;
 public class MapLoader {
 
   public static void saveMap(
-      HashMap<UUID, GameObject> gameObjects, MapDataObject mapDataObject, String path) {
+      LinkedHashMap<UUID, GameObject> gameObjects, MapDataObject mapDataObject, String path) {
     try {
       FileOutputStream fos = new FileOutputStream(path);
       ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -31,17 +31,17 @@ public class MapLoader {
     }
   }
 
-  public static HashMap<UUID, GameObject> loadMap(String path) {
+  public static LinkedHashMap<UUID, GameObject> loadMap(String path) {
     try {
       FileInputStream fis = new FileInputStream(path);
       ObjectInputStream ois = new ObjectInputStream(fis);
-      return (HashMap<UUID, GameObject>) ois.readObject();
+      return (LinkedHashMap<UUID, GameObject>) ois.readObject();
     } catch (FileNotFoundException e) {
-      return new HashMap<>();
+      return new LinkedHashMap<>();
     } catch (IOException e) {
-      return new HashMap<>();
+      return new LinkedHashMap<>();
     } catch (ClassNotFoundException e) {
-      return new HashMap<>();
+      return new LinkedHashMap<>();
     }
   }
 
@@ -62,7 +62,7 @@ public class MapLoader {
     return maps;
   }
 
-  public static HashMap<String, Map> getMenuMaps(String path) {
+  public static LinkedHashMap<String, Map> getMenuMaps(String path) {
     File dir = new File(path);
     File files[] =
         dir.listFiles(
@@ -72,7 +72,7 @@ public class MapLoader {
                 return name.endsWith(".map");
               }
             });
-    HashMap<String, Map> maps = new HashMap<>();
+    LinkedHashMap<String, Map> maps = new LinkedHashMap<>();
     for (File file : Objects.requireNonNull(files)) {
       Map tempMap = new Map(file.getName(), file.getPath(), GameState.MAIN_MENU);
       maps.put(file.getName(), tempMap);
