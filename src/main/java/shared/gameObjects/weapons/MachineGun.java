@@ -33,7 +33,7 @@ public class MachineGun extends Gun {
         50, // ammo
         50, // bulletSpeed
         70, // fireRate
-        50, // bulletWidth
+        12, // bulletWidth
         holder,
         true, // fullAutoFire
         false, // singleHanded
@@ -94,10 +94,10 @@ public class MachineGun extends Gun {
     angleGun = mouseV.sub(gripV).angle(); // radian
     double angle = angleGun * 180 / PI; // degree
 
-      rotate.setAngle(angle);
-      imageView.getTransforms().add(rotate);
-      imageView.setTranslateX(this.getGripX());
-      imageView.setTranslateY(this.getGripY());
+    rotate.setAngle(angle);
+    imageView.getTransforms().add(rotate);
+    imageView.setTranslateX(this.getGripX());
+    imageView.setTranslateY(this.getGripY());
   }
 
   @Override

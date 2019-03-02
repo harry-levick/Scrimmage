@@ -1,7 +1,6 @@
 package shared.gameObjects.objects;
 
 import java.util.UUID;
-import javafx.scene.image.Image;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.components.BoxCollider;
@@ -13,13 +12,12 @@ import shared.physics.data.Collision;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
-import shared.util.maths.Vector2;
 
 public class Spikes extends GameObject {
 
-  public Spikes( double x, double y, double sizeX, double sizeY, ObjectID id, UUID exampleUUID) {
+  public Spikes(double x, double y, double sizeX, double sizeY, ObjectID id, UUID exampleUUID) {
     super(x, y, sizeX, sizeY, id, exampleUUID);
-    addComponent(new BoxCollider(this, ColliderLayer.OBJECT,false));
+    addComponent(new BoxCollider(this, ColliderLayer.OBJECT, false));
     addComponent(
         new Rigidbody(
             RigidbodyType.STATIC,
@@ -37,7 +35,7 @@ public class Spikes extends GameObject {
 
   @Override
   public void OnCollisionEnter(Collision col) {
-    if(col.getCollidedObject() instanceof Player) {
+    if (col.getCollidedObject() instanceof Player) {
       Player player = (Player) col.getCollidedObject();
       player.deductHp(10);
       ((Rigidbody) player.getComponent(ComponentType.RIGIDBODY)).moveY(-90, 0.08f);

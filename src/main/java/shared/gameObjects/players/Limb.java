@@ -1,5 +1,6 @@
 package shared.gameObjects.players;
 
+import client.main.Settings;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
@@ -9,18 +10,18 @@ import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
+import shared.handlers.levelHandler.LevelHandler;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.RigidbodyType;
 
 public abstract class Limb extends GameObject {
 
+  protected final double pivotX;
+  protected final double pivotY;
   protected boolean isLeft;
   protected Rotate rotate;
   protected boolean limbAttached;
   protected boolean lastAttachedCheck;
-
-  protected final double pivotX;
-  protected final double pivotY;
   protected Behaviour behaviour;
   protected Behaviour lastBehaviour;
   protected int action;
@@ -34,6 +35,8 @@ public abstract class Limb extends GameObject {
   protected Rigidbody rb;
   protected BoxCollider bc;
 
+  protected LevelHandler levelHandler;
+
 
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
@@ -42,7 +45,8 @@ public abstract class Limb extends GameObject {
    * @param id Unique Identifier of every game object
    */
   public Limb(double xLeft, double yLeft, double xRight, double yRight, double sizeX, double sizeY,
-      ObjectID id, Boolean isLeft, GameObject parent, double pivotX, double pivotY) {
+      ObjectID id, Boolean isLeft, GameObject parent, double pivotX, double pivotY,
+      LevelHandler levelHandler) {
     super(0, 0, sizeX, sizeY, id, UUID.randomUUID());
     this.limbAttached = true;
     this.lastAttachedCheck = true;
@@ -59,10 +63,11 @@ public abstract class Limb extends GameObject {
     this.action = 0;
     this.pivotX = pivotX;
     this.pivotY = pivotY;
+    this.levelHandler = levelHandler;
 
     //Physics
-    bc = new BoxCollider(this, false);
-    addComponent(bc);
+    //bc = new BoxCollider(this, false);
+    //addComponent(bc);
     rb =
         new Rigidbody(
             RigidbodyType.DYNAMIC, 80, 8, 0.2f, new MaterialProperty(0.005f, 0.1f, 0.05f), null,
@@ -103,12 +108,19 @@ public abstract class Limb extends GameObject {
       if (lastAttachedCheck) {
         addComponent(rb);
       }
-      this.updateCollision(null);
     }
     updateAction();
     imageView.getTransforms().remove(rotate);
     lastAttachedCheck = limbAttached;
 
+  }
+
+  public void reset() {
+    Settings.levelHandler.addGameObject(this);
+    children.forEach(child -> {
+      Limb limb = (Limb) child;
+      limb.reset();
+    });
   }
 
   public void updateAction() {

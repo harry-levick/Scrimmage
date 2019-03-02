@@ -3,7 +3,6 @@ package shared.gameObjects.components;
 import java.io.Serializable;
 import javafx.scene.Group;
 import javafx.scene.shape.Polygon;
-import javafx.scene.shape.Rectangle;
 import shared.gameObjects.GameObject;
 import shared.physics.types.ColliderLayer;
 import shared.physics.types.ColliderType;

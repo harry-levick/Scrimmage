@@ -52,7 +52,6 @@ public class StoneBlockSmallObject extends GameObject {
   }
 
 
-
   @Override
   public String getState() {
     return null;

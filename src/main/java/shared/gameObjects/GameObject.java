@@ -1,5 +1,7 @@
 package shared.gameObjects;
 
+import static client.main.Settings.levelHandler;
+
 import client.main.Settings;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -10,7 +12,6 @@ import javafx.scene.image.ImageView;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.Utils.Transform;
 import shared.gameObjects.animator.Animator;
-import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Collider;
 import shared.gameObjects.components.Component;
 import shared.gameObjects.components.ComponentType;
@@ -58,17 +59,15 @@ public abstract class GameObject implements Serializable {
     this.updated = false;
     this.id = id;
     this.objectUUID = objectUUID;
-    active = true;
-    this.transform =
-        new Transform(
-            this, new Vector2((float) x, (float) y), new Vector2((float) sizeX, (float) sizeY));
-    components = new ArrayList<>();
-    children = new ArrayList<>();
-    parent = null;
-    animation = new Animator();
-    collidedObjects =  new ArrayList<>();
-    collidedThisFrame = new ArrayList<>();
-    collidedToRemove = new ArrayList<>();
+    this.active = true;
+    this.transform = new Transform(this, new Vector2((float) x, (float) y),
+        new Vector2((float) sizeX, (float) sizeY));
+    this.components = new ArrayList<>();
+    this.children = new ArrayList<>();
+    this.animation = new Animator();
+    this.collidedObjects = new ArrayList<>();
+    this.collidedThisFrame = new ArrayList<>();
+    this.collidedToRemove = new ArrayList<>();
     initialiseAnimation();
   }
 
@@ -97,7 +96,7 @@ public abstract class GameObject implements Serializable {
   }
 
   // Collision engine
-  public void updateCollision(ArrayList<GameObject> gameObjects) {
+  public void updateCollision() {
     Collider col = (Collider) getComponent(ComponentType.COLLIDER);
     Rigidbody rb = (Rigidbody) getComponent(ComponentType.RIGIDBODY);
     if (col == null) {
@@ -108,7 +107,7 @@ public abstract class GameObject implements Serializable {
         callCollisionMethods(col, false);
         return;
       } else {
-        for (GameObject o : Physics.gameObjects) {
+        for (GameObject o : Physics.gameObjects.values()) {
           Collider o_col = (Collider) o.getComponent(ComponentType.COLLIDER);
           Rigidbody o_rb = (Rigidbody) o.getComponent(ComponentType.RIGIDBODY);
           if (o_col != null && o_rb != null) {
@@ -125,14 +124,14 @@ public abstract class GameObject implements Serializable {
   }
 
   private void callCollisionMethods(Collider col, boolean isTrigger) {
-    if(!isTrigger) {
-      for (GameObject o : Physics.gameObjects) {
+    if (!isTrigger) {
+      for (GameObject o : Physics.gameObjects.values()) {
         Collider o_col = (Collider) o.getComponent(ComponentType.COLLIDER);
-        if(o_col != null) {
-          if(Collision.haveCollided(col, o_col)) {
+        if (o_col != null) {
+          if (Collision.haveCollided(col, o_col)) {
             Collision collision = new Collision(o, Vector2.Zero(), 0);
             collidedThisFrame.add(o);
-            if(!collidedObjects.contains(o)) {
+            if (!collidedObjects.contains(o)) {
               OnCollisionEnter(collision);
               collidedObjects.add(o);
             }
@@ -148,7 +147,7 @@ public abstract class GameObject implements Serializable {
       }
 
     } else {
-      for (GameObject o : Physics.gameObjects) {
+      for (GameObject o : Physics.gameObjects.values()) {
         Collider o_col = (Collider) o.getComponent(ComponentType.COLLIDER);
         if (o_col != null) {
           if (Collision.haveCollided(col, o_col)) {
@@ -172,7 +171,7 @@ public abstract class GameObject implements Serializable {
     }
 
     for (GameObject o : collidedToRemove) {
-        collidedObjects.remove(o);
+      collidedObjects.remove(o);
     }
     collidedToRemove.clear();
     collidedThisFrame.clear();
@@ -204,27 +203,10 @@ public abstract class GameObject implements Serializable {
    * @return State of object
    */
   public String getState() {
-    /*
-    String s = "X:0:Y:0";
-    if(getComponent(ComponentType.RIGIDBODY) != null) {
-      s = ((Rigidbody) getComponent(ComponentType.RIGIDBODY)).getVelocity().toString();
-    }
-    */
-    String test =
-        objectUUID + ";" + getX() + ";" + getY() + ";" + animation.getName(); // + ";" + s;
-    return test;
+    return "";
   }
 
   public void setState(String data) {
-    String[] unpackedData = data.split(";");
-    setX(Double.parseDouble(unpackedData[1]));
-    setY(Double.parseDouble(unpackedData[2]));
-    this.animation.switchAnimation(unpackedData[3]);
-    /*
-    if(getComponent(ComponentType.RIGIDBODY) != null) {
-      ((Rigidbody) getComponent(ComponentType.RIGIDBODY)).setVelocity(new Vector2(unpackedData[4]));
-    }
-    */
   }
 
   // Ignore for now, added due to unSerializable objects
@@ -250,7 +232,7 @@ public abstract class GameObject implements Serializable {
 
   public void addChild(GameObject child) {
     children.add(child);
-    Settings.levelHandler.addGameObject(child);
+    levelHandler.addGameObject(child);
   }
 
   public void removeChild(GameObject child) {
@@ -315,40 +297,62 @@ public abstract class GameObject implements Serializable {
 
   /**
    * Called on the first frame a specific collider is colliding with the object.
+   *
    * @param col Collision data of the collision.
    */
-  public void OnCollisionEnter(Collision col) {}
+  public void OnCollisionEnter(Collision col) {
+  }
+
   /**
    * Called on the every frame a specific collider is colliding with the object.
+   *
    * @param col Collision data of the collision.
    */
-  public void OnCollisionStay(Collision col) {}
+  public void OnCollisionStay(Collision col) {
+  }
+
   /**
    * Called on the first frame a specific collider stops colliding with the object.
+   *
    * @param col Collision data of the collision.
    */
-  public void OnCollisionExit(Collision col) {}
+  public void OnCollisionExit(Collision col) {
+  }
+
   /**
-   * Called on the first frame a specific collider is colliding with the object; only works if isTrigger is true.
+   * Called on the first frame a specific collider is colliding with the object; only works if
+   * isTrigger is true.
+   *
    * @param col Collision data of the collision.
    */
-  public void OnTriggerEnter(Collision col) {}
+  public void OnTriggerEnter(Collision col) {
+  }
+
   /**
-   * Called on the every frame a specific collider is colliding with the object; only works if isTrigger is true.
+   * Called on the every frame a specific collider is colliding with the object; only works if
+   * isTrigger is true.
+   *
    * @param col Collision data of the collision.
    */
-  public void OnTriggerStay(Collision col) {}
+  public void OnTriggerStay(Collision col) {
+  }
+
   /**
-   * Called on the first frame a specific collider stops colliding with the object; only works if isTrigger is true.
+   * Called on the first frame a specific collider stops colliding with the object; only works if
+   * isTrigger is true.
+   *
    * @param col Collision data of the collision.
    */
-  public void OnTriggerExit(Collision col) {}
+  public void OnTriggerExit(Collision col) {
+  }
 
   public void destroy() {
     destroyed = active = false;
   }
 
-  /** Basic Getters and Setters */
+  /**
+   * Basic Getters and Setters
+   */
   public double getX() {
     return this.transform.getPos().getX();
   }
