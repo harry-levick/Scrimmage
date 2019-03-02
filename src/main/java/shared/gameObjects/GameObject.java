@@ -391,16 +391,16 @@ public abstract class GameObject implements Serializable {
     return parent;
   }
 
+  public void setParent(GameObject parent) {
+    this.parent = parent;
+  }
+
   public boolean isNetworkStateUpdate() {
     return networkStateUpdate;
   }
 
   public void setNetworkStateUpdate(boolean networkStateUpdate) {
     this.networkStateUpdate = networkStateUpdate;
-  }
-
-  public void setParent(GameObject parent) {
-    this.parent = parent;
   }
 
   public ArrayList<GameObject> getChildren() {
