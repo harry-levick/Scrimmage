@@ -8,6 +8,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.List;
+import javafx.application.Platform;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import shared.gameObjects.players.Player;
@@ -48,12 +49,12 @@ public class ServerReceiver implements Runnable {
         && server.playerCount.get() < 4
         && server.serverState == ServerState.WAITING_FOR_PLAYERS) {
       PacketJoin joinPacket = new PacketJoin(message);
-      player = new Player(joinPacket.getX(), joinPacket.getY(), joinPacket.getClientID(),
-          server.getLevelHandler());
-      Server.levelHandler.addPlayer(player, null);
-      server.playerCount.getAndIncrement();
-      connected.add(socket.getInetAddress());
-      server.add(player);
+      Platform.runLater(
+          () -> {
+            player = server.addPlayer(joinPacket, socket.getInetAddress());
+          }
+      );
+
       // socket.setSoTimeout(5000);
 
       /** Main Loop */
