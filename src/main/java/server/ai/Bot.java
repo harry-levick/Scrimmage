@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import server.ai.pathFind.AStar;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.players.Player;
+import shared.handlers.levelHandler.LevelHandler;
 import shared.physics.Physics;
 import shared.physics.data.Collision;
 import shared.util.maths.Vector2;
@@ -31,8 +32,9 @@ public class Bot extends Player {
   /**
    * @param allObjs Contains a list of all game objects in the world, including players.
    */
-  public Bot(double x, double y, UUID playerUUID, List<GameObject> allObjs) {
-    super(x, y, playerUUID);
+  public Bot(double x, double y, UUID playerUUID, List<GameObject> allObjs,
+      LevelHandler levelHandler) {
+    super(x, y, playerUUID, levelHandler);
     allPlayers = new ArrayList<>();
     this.state = FSA.INITIAL_STATE;
 

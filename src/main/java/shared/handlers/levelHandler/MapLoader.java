@@ -11,17 +11,18 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.UUID;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.MapDataObject;
 
 public class MapLoader {
 
   public static void saveMap(
-      ArrayList<GameObject> gameObjects, MapDataObject mapDataObject, String path) {
+      HashMap<UUID, GameObject> gameObjects, MapDataObject mapDataObject, String path) {
     try {
       FileOutputStream fos = new FileOutputStream(path);
       ObjectOutputStream oos = new ObjectOutputStream(fos);
-      gameObjects.add(mapDataObject);
+      gameObjects.put(mapDataObject.getUUID(), mapDataObject);
       oos.writeObject(gameObjects);
     } catch (FileNotFoundException e) {
       e.printStackTrace();
@@ -30,17 +31,17 @@ public class MapLoader {
     }
   }
 
-  public static ArrayList<GameObject> loadMap(String path) {
+  public static HashMap<UUID, GameObject> loadMap(String path) {
     try {
       FileInputStream fis = new FileInputStream(path);
       ObjectInputStream ois = new ObjectInputStream(fis);
-      return (ArrayList<GameObject>) ois.readObject();
+      return (HashMap<UUID, GameObject>) ois.readObject();
     } catch (FileNotFoundException e) {
-      return new ArrayList<>();
+      return new HashMap<>();
     } catch (IOException e) {
-      return new ArrayList<>();
+      return new HashMap<>();
     } catch (ClassNotFoundException e) {
-      return new ArrayList<>();
+      return new HashMap<>();
     }
   }
 

@@ -1,9 +1,12 @@
 package shared.gameObjects.menu.main;
 
 import client.main.Client;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.UUID;
 import javafx.scene.input.MouseEvent;
 import server.ai.Bot;
+import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.menu.ButtonObject;
 import shared.gameObjects.weapons.MachineGun;
@@ -43,14 +46,18 @@ public class ButtonSingleplayer extends ButtonObject {
         true);
     int botsToAdd = maxPlayers - Client.levelHandler.getPlayers().size();
     for (int b = 0; b < botsToAdd; b++) {
-      Bot botPlayer = new Bot(500, 500, UUID.randomUUID(), Client.levelHandler.getGameObjects());
+      //TODO Change physics to Hashmaps
+      Collection<GameObject> values = Client.levelHandler.getGameObjects().values();
+      ArrayList<GameObject> physicsGameObjects = new ArrayList<>(values);
+      Bot botPlayer = new Bot(500, 500, UUID.randomUUID(), physicsGameObjects, Client.levelHandler);
       botPlayer.setHolding(new Sword(500, 500, "Sword@LevelHandler", botPlayer, UUID.randomUUID()));
       botPlayer.getHolding().initialise(Client.gameRoot);
       botPlayer.initialise(Client.gameRoot);
-      Client.levelHandler.getPlayers().add(botPlayer);
-      Client.levelHandler.getBotPlayerList().add(botPlayer);
-      Client.levelHandler.getGameObjects().add(botPlayer);
-      Client.levelHandler.getGameObjects().add(botPlayer.getHolding());
+      Client.levelHandler.getPlayers().put(botPlayer.getUUID(), botPlayer);
+      Client.levelHandler.getBotPlayerList().put(botPlayer.getUUID(), botPlayer);
+      Client.levelHandler.getGameObjects().put(botPlayer.getUUID(), botPlayer);
+      Client.levelHandler.getGameObjects()
+          .put(botPlayer.getHolding().getUUID(), botPlayer.getHolding());
     }
 
     Client.levelHandler
@@ -62,7 +69,9 @@ public class ButtonSingleplayer extends ButtonObject {
                 "MachineGun@LevelHandler",
                 Client.levelHandler.getClientPlayer(),
                 UUID.randomUUID()));
-    Client.levelHandler.getGameObjects().add(Client.levelHandler.getClientPlayer().getHolding());
+    Client.levelHandler.getGameObjects()
+        .put(Client.levelHandler.getClientPlayer().getHolding().getUUID(),
+            Client.levelHandler.getClientPlayer().getHolding());
     Client.levelHandler.getClientPlayer().getHolding().initialise(Client.gameRoot);
     Client.singleplayerGame = true;
     //Client.timer.schedule(Client.task, 30000L);
