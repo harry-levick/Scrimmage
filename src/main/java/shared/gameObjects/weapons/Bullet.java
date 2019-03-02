@@ -86,7 +86,7 @@ public abstract class Bullet extends GameObject {
     }
 
     if (isHit) {
-      Client.levelHandler.delGameObject(this);
+      Client.levelHandler.removeGameObject(this);
       for (Player p : playersBeingHit) {
         p.deductHp(this.damage);
         // ((Rigidbody) p.getComponent(ComponentType.RIGIDBODY)).moveX(-100, 0.4f);
@@ -94,7 +94,7 @@ public abstract class Bullet extends GameObject {
     } else if ((0 < getX() && getX() < 1920) && (0 < getY() && getY() < 1080)) {
       rb.move(vector.mult((float) speed));
     } else {
-      Client.levelHandler.delGameObject(this);
+      Client.levelHandler.removeGameObject(this);
     }
   }
 

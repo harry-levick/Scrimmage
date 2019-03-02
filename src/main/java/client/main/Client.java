@@ -108,9 +108,9 @@ public class Client extends Application {
     scene.setOnMouseMoved(mouseInput);
     scene.setOnMouseReleased(mouseInput);
     scene.setOnMouseDragged(mouseInput);
-    
+
     //Setup UI
-    userInterface = new UI(root,levelHandler.getClientPlayer()); 
+    userInterface = new UI(root, levelHandler.getClientPlayer());
 
     // Main Game Loop
     new AnimationTimer() {
@@ -120,6 +120,7 @@ public class Client extends Application {
         if (multiplayer) {
           processServerPackets();
         }
+        levelHandler.createObjects();
 
         if (gameOver) {
           endGame();
@@ -140,12 +141,12 @@ public class Client extends Application {
           float alphaRemaining = secondElapsed / timeSinceInterpolation;
           levelHandler
               .getGameObjects()
-              .forEach(gameObject -> gameObject.interpolatePosition(alphaRemaining));
+              .forEach((key, gameObject) -> gameObject.interpolatePosition(alphaRemaining));
           return;
         }
 
         while (accumulatedTime >= 2 * timeStep) {
-          levelHandler.getGameObjects().forEach(gameObject -> gameObject.update());
+          levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.update());
           accumulatedTime -= timeStep;
         }
 
@@ -160,7 +161,8 @@ public class Client extends Application {
         if (!multiplayer && singleplayerGame && levelHandler.getPlayers().size() > 1) {
           /** Calculate Score */
           ArrayList<Player> alive = new ArrayList<>();
-          for (Player p : levelHandler.getPlayers()) {
+          for (UUID key : levelHandler.getPlayers().keySet()) {
+            Player p = levelHandler.getPlayers().get(key);
             if (p.isActive()) {
               alive.add(p);
             }
@@ -170,38 +172,42 @@ public class Client extends Application {
           }
           if (alive.size() == 1) {
             alive.forEach(player -> player.increaseScore());
-            levelHandler.getPlayers().forEach(player -> player.reset());
             Map nextMap = playlist.poll();
             levelHandler.changeMap(nextMap, true);
             giveWeapon();
           }
           /** Move bots */
-          levelHandler.getBotPlayerList().forEach(bot -> bot.applyInput());
+          levelHandler.getBotPlayerList().forEach((key, bot) -> bot.applyInput());
         }
 
         /** Render Game Objects */
-        levelHandler.getGameObjects().forEach(gameObject -> gameObject.render());
+        levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.render());
         if (levelHandler.getBackground() != null) {
           levelHandler.getBackground().render();
         }
-        
+
         /** Draw the UI */
-        if(levelHandler.getGameState() == GameState.IN_GAME || levelHandler.getGameState() == GameState.Multiplayer) {
-            userInterface.render();
+        if (levelHandler.getGameState() == GameState.IN_GAME
+            || levelHandler.getGameState() == GameState.Multiplayer) {
+          userInterface.render();
         }
-                
+
         /** Check Collisions */
+        //TODO Change physics to LinkedHashMaps
         Physics.gameObjects = levelHandler.getGameObjects();
+
         levelHandler
             .getGameObjects()
-            .forEach(gameObject -> gameObject.updateCollision(levelHandler.getGameObjects()));
+            .forEach((key, gameObject) -> gameObject.updateCollision());
         Physics.processCollisions();
 
         /** Update Game Objects */
-        levelHandler.getGameObjects().forEach(gameObject -> gameObject.update());
+        levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.update());
+
         accumulatedTime -= timeStep;
         float alpha = accumulatedTime / timeStep;
-        levelHandler.getGameObjects().forEach(gameObject -> gameObject.interpolatePosition(alpha));
+        levelHandler.getGameObjects()
+            .forEach((key, gameObject) -> gameObject.interpolatePosition(alpha));
 
         calculateFPS(secondElapsed, primaryStage);
       }
@@ -235,9 +241,9 @@ public class Client extends Application {
 
   public void endGame() {
     singleplayerGame = false;
-    levelHandler.getPlayers().removeAll(levelHandler.getBotPlayerList());
-    levelHandler.getBotPlayerList().forEach(gameObject -> gameObject.removeRender());
-    levelHandler.getBotPlayerList().forEach(gameObject -> gameObject = null);
+    levelHandler.getPlayers().entrySet().removeAll(levelHandler.getBotPlayerList().entrySet());
+    levelHandler.getBotPlayerList().forEach((key, gameObject) -> gameObject.removeRender());
+    levelHandler.getBotPlayerList().forEach((key, gameObject) -> gameObject = null);
     levelHandler.getBotPlayerList().clear();
     levelHandler.changeMap(
         new Map(
@@ -294,9 +300,8 @@ public class Client extends Application {
           case 4:
             PacketPlayerJoin packetPlayerJoin = new PacketPlayerJoin(message);
             levelHandler.addPlayer(
-                new Player(
-                    packetPlayerJoin.getX(), packetPlayerJoin.getY(), packetPlayerJoin.getUUID()),
-                gameRoot);
+                new Player(packetPlayerJoin.getX(), packetPlayerJoin.getY(),
+                    packetPlayerJoin.getUUID(), levelHandler), gameRoot);
             break;
           // Ends
           case 6:
@@ -318,7 +323,7 @@ public class Client extends Application {
             levelHandler
                 .getGameObjects()
                 .forEach(
-                    gameObject -> {
+                    (key, gameObject) -> {
                       if (!(gameObject instanceof MapDataObject)) {
                         gameObject.setState(data.get(gameObject.getUUID()));
                       }
@@ -369,7 +374,8 @@ public class Client extends Application {
                 "MachineGun@LevelHandler",
                 Client.levelHandler.getClientPlayer(),
                 UUID.randomUUID()));
-    levelHandler.getGameObjects().add(Client.levelHandler.getClientPlayer().getHolding());
+    levelHandler.getGameObjects().put(Client.levelHandler.getClientPlayer().getHolding().getUUID(),
+        Client.levelHandler.getClientPlayer().getHolding());
     levelHandler.getClientPlayer().getHolding().initialise(Client.gameRoot);
   }
 }

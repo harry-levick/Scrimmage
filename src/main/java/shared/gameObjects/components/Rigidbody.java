@@ -12,7 +12,7 @@ import shared.util.maths.Vector2;
 
 /**
  * @author fxa579 The primary components responsible for all Physics updates; includes data and
- *     methods to process forces and gravity
+ * methods to process forces and gravity
  */
 public class Rigidbody extends Component implements Serializable {
 
@@ -104,7 +104,9 @@ public class Rigidbody extends Component implements Serializable {
   }
   // Force Methods
 
-  /** */
+  /**
+   *
+   */
   public void addForce(Vector2 force) {
     forces.add(force);
   }
@@ -165,14 +167,19 @@ public class Rigidbody extends Component implements Serializable {
 
   // Update Methods
 
-  /** An update method; all collision updates happen here */
-  private void applyCollisions() {}
+  /**
+   * An update method; all collision updates happen here
+   */
+  private void applyCollisions() {
+  }
 
   public void correctPosition(Vector2 distance) {
     getParent().getTransform().translate(distance);
   }
 
-  /** An update method; all force updates happen here. */
+  /**
+   * An update method; all force updates happen here.
+   */
   private void applyForces() {
 
     currentForce = Vector2.Zero();
@@ -206,7 +213,9 @@ public class Rigidbody extends Component implements Serializable {
     }
   }
 
-  /** An update method; all velocity and acceleration updates happen here */
+  /**
+   * An update method; all velocity and acceleration updates happen here
+   */
   private void updateVelocity() {
     lastAcceleration = acceleration;
 
@@ -228,12 +237,15 @@ public class Rigidbody extends Component implements Serializable {
 
   private void checkForLegalMovement() {
     float percent = 0.8f;
-    ArrayList<Collision> collisions = Physics.boxcastAll(getParent().getTransform().getPos().add(deltaPos), getParent().getTransform().getSize());
+    ArrayList<Collision> collisions = Physics
+        .boxcastAll(getParent().getTransform().getPos().add(deltaPos),
+            getParent().getTransform().getSize());
     for (Collision c : collisions) {
 
     }
     return;
   }
+
   // Getters and Setters
   public Vector2 getVelocity() {
     return velocity;
@@ -242,7 +254,7 @@ public class Rigidbody extends Component implements Serializable {
   public void setVelocity(Vector2 velocity) {
     this.velocity = velocity;
     acceleration = Vector2.Zero();
-    // System.out.println(this.velocity);
+
   }
 
   public RigidbodyType getBodyType() {
@@ -310,7 +322,9 @@ public class Rigidbody extends Component implements Serializable {
   }
 }
 
-/** Helper class to apply force over time without needed to thread/coroutine */
+/**
+ * Helper class to apply force over time without needed to thread/coroutine
+ */
 class ForceTime implements Serializable {
 
   private Vector2 force;

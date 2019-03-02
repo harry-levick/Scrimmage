@@ -9,7 +9,7 @@ import shared.util.Path;
  */
 public class HandgunBullet extends Bullet {
 
-  private static String imagePath = "images/weapons/fireBullet.png";
+  private static String imagePath = "images/weapons/roundedBullet.png";
 
   public HandgunBullet(
       double gunX,

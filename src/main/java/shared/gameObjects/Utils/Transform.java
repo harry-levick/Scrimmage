@@ -2,7 +2,6 @@ package shared.gameObjects.Utils;
 
 import java.io.Serializable;
 import shared.gameObjects.GameObject;
-import shared.util.maths.Rotation;
 import shared.util.maths.Vector2;
 
 public class Transform implements Serializable {
@@ -52,7 +51,9 @@ public class Transform implements Serializable {
     botPos = botPos.add(translateFactor);
   }
 
-  /** [Does not do anything currently] */
+  /**
+   * [Does not do anything currently]
+   */
   public void rotate(float rotation) {
     rot += rotation;
     if (rot > 180) {
@@ -63,10 +64,12 @@ public class Transform implements Serializable {
     }
     float angle = (float) Math.toRadians(rot);
     float posX = topPos.getX(), posY = topPos.getY();
-    this.rotatedPos = new Vector2(posX*Math.cos(angle) - posY*Math.sin(angle), posX*Math.sin(angle) + posY*Math.cos(angle));
+    this.rotatedPos = new Vector2(posX * Math.cos(angle) - posY * Math.sin(angle),
+        posX * Math.sin(angle) + posY * Math.cos(angle));
     posX = size.getX();
     posY = size.getY();
-    this.rotatedSize = new Vector2(posX*Math.cos(angle) - posY*Math.sin(angle), posX*Math.sin(angle) + posY*Math.cos(angle));
+    this.rotatedSize = new Vector2(posX * Math.cos(angle) - posY * Math.sin(angle),
+        posX * Math.sin(angle) + posY * Math.cos(angle));
   }
 
   /**
