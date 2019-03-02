@@ -26,21 +26,20 @@ public class AStarTest {
     while (action[Bot.KEY_LEFT] || action[Bot.KEY_RIGHT] || action[Bot.KEY_JUMP]) {
 
       if (action[Bot.KEY_JUMP]) {
-        // System.out.println("JUMP");
+
       }
       if (action[Bot.KEY_RIGHT]) {
-        // System.out.println("RIGHT");
+
       }
       if (action[Bot.KEY_LEFT]) {
-        // System.out.println("LEFT");
+
       }
       if (!action[Bot.KEY_JUMP] && !action[Bot.KEY_RIGHT] && !action[Bot.KEY_LEFT]) {
-        // System.out.println("DO NOTHING");
+
       }
 
       action = AStarTest.optimise(testPlayer);
 
-      // System.out.println("------------------");
 
     }
   }

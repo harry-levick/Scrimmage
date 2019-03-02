@@ -6,7 +6,6 @@ import client.handlers.inputHandler.MouseInput;
 import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import de.codecentric.centerdevice.javafxsvg.dimension.PrimitiveDimensionProvider;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Timer;
@@ -21,7 +20,6 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import shared.gameObjects.GameObject;
 import shared.gameObjects.MapDataObject;
 import shared.gameObjects.UI.UI;
 import shared.gameObjects.players.Player;
@@ -195,7 +193,7 @@ public class Client extends Application {
         }
 
         /** Check Collisions */
-        //TODO Change physics to Hashmaps
+        //TODO Change physics to LinkedHashMaps
         Physics.gameObjects = levelHandler.getGameObjects();
 
         levelHandler

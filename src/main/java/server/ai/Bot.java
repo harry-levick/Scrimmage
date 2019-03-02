@@ -67,23 +67,23 @@ public class Bot extends Player {
 
     switch (state) {
       case IDLE:
-        // System.out.println("IDLE");
+
         // TODO what to do in the idle state?
         executeAction(new boolean[]{false, false, false, false, false});
         break;
       case CHASING:
-        // System.out.println("CHASING");
+
         // Find the next best move to take, and execute this move.
         executeAction(pathFinder.optimise(targetPlayer));
         // TODO calculate and execute the best path to the target.
         break;
       case FLEEING:
-        // System.out.println("FLEEING");
+
         executeAction(new boolean[]{false, false, false, false, false});
         // TODO calculate and execute the best path away from the target.
         break;
       case ATTACKING:
-        // System.out.println("ATTACKING");
+
         // TODO think about how an attacking script would work.
         if (canAttack()) {
           mouseY = targetPlayer.getY();
@@ -93,7 +93,7 @@ public class Bot extends Player {
 
         break;
       case CHASING_ATTACKING:
-        // System.out.println("CHASING-ATTACKING");
+
         executeAction(pathFinder.optimise(targetPlayer));
         if (canAttack()) {
           mouseY = targetPlayer.getY();
@@ -103,7 +103,7 @@ public class Bot extends Player {
         // TODO calculate and execute the best path to the target whilst attacking.
         break;
       case FLEEING_ATTACKING:
-        // System.out.println("CHASING-ATTACKING");
+
         executeAction(new boolean[]{false, false, false, false, false});
         // TODO calculate and execute the best path away from the target whilst attacking.
         break;

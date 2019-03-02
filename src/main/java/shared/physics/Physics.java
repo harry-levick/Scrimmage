@@ -1,7 +1,7 @@
 package shared.physics;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.UUID;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.components.BoxCollider;
@@ -19,7 +19,7 @@ public class Physics {
   public static final float GRAVITY = 100f;
   public static final float TIMESTEP = 1f / 60;
   public static boolean showColliders = false;
-  public static HashMap<UUID, GameObject> gameObjects;
+  public static LinkedHashMap<UUID, GameObject> gameObjects;
   /*
    * Order: DEFAULT, PLAYER, OBJECT, WALL
    */
@@ -32,7 +32,7 @@ public class Physics {
   private static Physics ourInstance = new Physics();
 
   private Physics() {
-    gameObjects = new HashMap<>();
+    gameObjects = new LinkedHashMap<>();
   }
   // TODO complete raycast methods
 

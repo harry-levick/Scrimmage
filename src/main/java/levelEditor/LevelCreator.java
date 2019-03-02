@@ -4,7 +4,7 @@ import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import de.codecentric.centerdevice.javafxsvg.dimension.PrimitiveDimensionProvider;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.UUID;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -42,7 +42,7 @@ public class LevelCreator extends Application {
   private static int gridSizeX = stageSizeX / gridSizePX; // 40 px blocks
   private static int gridSizeY = stageSizeY / gridSizePX; // 48 x 27
 
-  private static HashMap<UUID, GameObject> gameObjects;
+  private static LinkedHashMap<UUID, GameObject> gameObjects;
   private static ArrayList<Player> playerSpawns;
   private static MapDataObject mapDataObject;
   private UUID uuid = UUID.randomUUID();
@@ -81,7 +81,7 @@ public class LevelCreator extends Application {
     // MAIN MENU
     ////////////////////////////////////////
     filename = "main_menu";
-    gameObjects = new HashMap<>();
+    gameObjects = new LinkedHashMap<>();
     playerSpawns = new ArrayList<Player>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.MAIN_MENU);
     mapDataObject.setBackground(
@@ -163,7 +163,7 @@ public class LevelCreator extends Application {
     // SINGLEPLAYER MAP
     ////////////////////////////////////////
     filename = "menu";
-    gameObjects = new HashMap<>();
+    gameObjects = new LinkedHashMap<>();
     playerSpawns = new ArrayList<>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.IN_GAME);
     mapDataObject.setBackground(
@@ -200,7 +200,7 @@ public class LevelCreator extends Application {
     // MULTIPLAYER
     ////////////////////////////////////////
     filename = "multiplayer";
-    gameObjects = new HashMap<>();
+    gameObjects = new LinkedHashMap<>();
     playerSpawns = new ArrayList<Player>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.MAIN_MENU);
     mapDataObject.setBackground(
@@ -251,7 +251,7 @@ public class LevelCreator extends Application {
     // MULTIPLAYER LOBBY
     ////////////////////////////////////////
     filename = "lobby";
-    gameObjects = new HashMap<>();
+    gameObjects = new LinkedHashMap<>();
     playerSpawns = new ArrayList<Player>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.MAIN_MENU);
     uuid = UUID.randomUUID();
@@ -299,7 +299,7 @@ public class LevelCreator extends Application {
     // SETTINGS
     ////////////////////////////////////////
     filename = "settings";
-    gameObjects = new HashMap<>();
+    gameObjects = new LinkedHashMap<>();
     playerSpawns = new ArrayList<Player>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.MAIN_MENU);
     uuid = UUID.randomUUID();
