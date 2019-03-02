@@ -22,6 +22,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.UI.UI;
+import shared.gameObjects.players.Limbs.Arm;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.MachineGun;
 import shared.handlers.levelHandler.GameState;
@@ -62,6 +63,10 @@ public class Client extends Application {
   private int framesElapsedSinceFPS = 0;
   private UI userInterface;
   private boolean gameOver;
+
+  //Networking
+  private final boolean prediction = false;
+  private final boolean reconciliation = true;
 
   public static void main(String args[]) {
     launch(args);
@@ -200,8 +205,22 @@ public class Client extends Application {
             .forEach((key, gameObject) -> gameObject.updateCollision());
         Physics.processCollisions();
 
-        /** Update Game Objects */
-        levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.update());
+        if (!multiplayer) {
+          /** Update Game Objects */
+          levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.update());
+        }
+
+        if (multiplayer) {
+          if (prediction) {
+            levelHandler.getClientPlayer().update();
+          }
+          levelHandler.getClientPlayer().getChildren().forEach(child -> {
+            child.update();
+            if (child instanceof Arm) {
+              child.getChildren().forEach(childChild -> childChild.update());
+            }
+          });
+        }
 
         accumulatedTime -= timeStep;
         float alpha = accumulatedTime / timeStep;
@@ -323,7 +342,9 @@ public class Client extends Application {
               GameObject gameObject = levelHandler.getGameObjects().get(key);
               gameObject.setState(value);
             });
-            serverReconciliation(Client.levelHandler.getClientPlayer().getLastInputCount());
+            if (reconciliation) {
+              serverReconciliation(Client.levelHandler.getClientPlayer().getLastInputCount());
+            }
             break;
           default:
             System.out.println("ERROR" + messageID + " " + message);

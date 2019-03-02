@@ -10,6 +10,8 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.stage.Stage;
+import shared.gameObjects.Blocks.Metal.MetalBlockLargeObject;
+import shared.gameObjects.Blocks.Stone.StoneBlockObject;
 import shared.gameObjects.Blocks.Stone.StoneFloorObject;
 import shared.gameObjects.Blocks.Stone.StoneWallObject;
 import shared.gameObjects.GameObject;
@@ -293,6 +295,14 @@ public class LevelCreator extends Application {
               getAbs(i * 4), getAbs(25), getAbs(4), getAbs(2), ObjectID.Bot, UUID.randomUUID()));
       uuid = UUID.randomUUID();
     }
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new StoneBlockObject(getAbs(5), getAbs(5), getAbs(1), getAbs(1), ObjectID.Bot, uuid));
+
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new MetalBlockLargeObject(getAbs(10), getAbs(5), getAbs(2), getAbs(2), ObjectID.Bot, uuid));
+
     MapLoader.saveMap(gameObjects, mapDataObject, filepath + filename + ".map");
 
     ////////////////////////////////////////

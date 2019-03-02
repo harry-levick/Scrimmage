@@ -59,7 +59,7 @@ public class Server extends Application {
   private final AtomicBoolean gameOver = new AtomicBoolean(false);
   private final AtomicInteger counter = new AtomicInteger(0);
   private final int maxPlayers = 4;
-  private final int serverUpdateRate = 30;
+  private final int serverUpdateRate = 3;
   private final String gameTitle = "SERVER";
   public ServerState serverState;
   private ArrayList<InetAddress> connectedList = new ArrayList<>();
