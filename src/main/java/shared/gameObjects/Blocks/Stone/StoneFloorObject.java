@@ -40,4 +40,5 @@ public class StoneFloorObject extends GameObject {
     this.animation.supplyAnimation("default", "images/platforms/stone/elementStone013.png");
   }
 
+
 }
