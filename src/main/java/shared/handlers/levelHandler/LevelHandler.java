@@ -4,6 +4,7 @@ import client.handlers.audioHandler.AudioHandler;
 import client.handlers.audioHandler.MusicAssets.PLAYLIST;
 import client.main.Settings;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 import javafx.scene.Group;
 import server.ai.Bot;
@@ -17,10 +18,10 @@ import shared.util.maths.Vector2;
 
 public class LevelHandler {
 
-  private ArrayList<GameObject> gameObjects;
+  private HashMap<UUID, GameObject> gameObjects;
   private ArrayList<GameObject> toRemove;
-  private ArrayList<Player> players;
-  private ArrayList<Bot> bots;
+  private HashMap<UUID, Player> players;
+  private HashMap<UUID, Bot> bots;
   private Player clientPlayer;
   private ArrayList<Map> maps;
   private GameState gameState;
@@ -36,11 +37,11 @@ public class LevelHandler {
 
   public LevelHandler(Settings settings, Group root, Group backgroundRoot, Group gameRoot) {
     this.settings = settings;
-    gameObjects = new ArrayList<>();
+    gameObjects = new HashMap<>();
     toCreate = new ArrayList<>();
     toRemove = new ArrayList<>();
-    players = new ArrayList<>();
-    bots = new ArrayList<>();
+    players = new HashMap<>();
+    bots = new HashMap<>();
     maps = MapLoader.getMaps(settings.getMapsPath());
     this.root = root;
     this.backgroundRoot = backgroundRoot;
@@ -53,10 +54,11 @@ public class LevelHandler {
 
   public LevelHandler(Settings settings) {
     this.settings = settings;
-    gameObjects = new ArrayList<>();
+    gameObjects = new HashMap<>();
     toRemove = new ArrayList<>();
-    players = new ArrayList<>();
-    bots = new ArrayList<>();
+    players = new HashMap<>();
+    bots = new HashMap<>();
+    toCreate = new ArrayList<>();
     musicPlayer = new AudioHandler(settings);
   }
 
@@ -82,16 +84,16 @@ public class LevelHandler {
   public void generateLevel(
       Group root, Group backgroundGroup, Group gameGroup, Boolean moveToSpawns) {
 
-    gameObjects.removeAll(players);
-    gameObjects.removeAll(bots);
-    gameObjects.forEach(gameObject -> gameObject.removeRender());
-    gameObjects.forEach(gameObject -> gameObject = null);
+    gameObjects.keySet().removeAll(players.keySet());
+    gameObjects.keySet().removeAll(bots.keySet());
+    gameObjects.forEach((key, gameObject) -> gameObject.removeRender());
+    gameObjects.forEach((key, gameObject) -> gameObject = null);
     gameObjects.clear();
 
     // Create new game objects for map
     gameObjects = MapLoader.loadMap(map.getPath());
     gameObjects.forEach(
-        gameObject -> {
+        (key, gameObject) -> {
           if (gameObject.getId() == ObjectID.MapDataObject) {
             this.background = ((MapDataObject) gameObject).getBackground();
             ArrayList<Vector2> spawnPoints = ((MapDataObject) gameObject).getSpawnPoints();
@@ -100,7 +102,7 @@ public class LevelHandler {
             }
             if (moveToSpawns && spawnPoints != null && spawnPoints.size() >= players.size()) {
               players.forEach(
-                  player -> {
+                  (key2, player) -> {
                     Vector2 spawn = spawnPoints.get(0);
                     player.setX(spawn.getX());
                     player.setY(spawn.getY());
@@ -112,12 +114,12 @@ public class LevelHandler {
             gameObject.initialise(gameGroup);
           }
         });
-    gameObjects.addAll(players);
-    gameObjects.forEach(gameObject -> {
+    gameObjects.putAll(players);
+    gameObjects.forEach((key, gameObject) -> {
       gameObject.setSettings(settings);
     });
     gameState = map.getGameState();
-    players.forEach(player -> player.reset());
+    players.forEach((key, player) -> player.reset());
 
     musicPlayer.stopMusic();
     switch (gameState) {
@@ -141,7 +143,7 @@ public class LevelHandler {
    *
    * @return All Game Objects
    */
-  public ArrayList<GameObject> getGameObjects() {
+  public HashMap<UUID, GameObject> getGameObjects() {
     clearToRemove(); // Remove every gameObjects we no longer need
     return gameObjects;
   }
@@ -157,6 +159,7 @@ public class LevelHandler {
    */
   public void addGameObject(GameObject gameObject) {
     gameObject.initialise(this.gameRoot);
+    System.out.println("test");
     this.toCreate.add(gameObject);
   }
 
@@ -166,7 +169,7 @@ public class LevelHandler {
   }
 
   public void createObjects() {
-    gameObjects.addAll(toCreate);
+    toCreate.forEach(gameObject -> gameObjects.put(gameObject.getUUID(), gameObject));
     toCreate.clear();
   }
 
@@ -206,28 +209,28 @@ public class LevelHandler {
     return map;
   }
 
-  public ArrayList<Player> getPlayers() {
+  public HashMap<UUID, Player> getPlayers() {
     return players;
   }
 
   public void addPlayer(Player newPlayer, Group root) {
     newPlayer.initialise(root);
-    players.add(newPlayer);
-    gameObjects.add(newPlayer);
+    players.put(newPlayer.getUUID(), newPlayer);
+    gameObjects.put(newPlayer.getUUID(), newPlayer);
   }
 
   public void addClientPlayer(Group root) {
-    clientPlayer = new Player(500, 200, UUID.randomUUID());
+    clientPlayer = new Player(500, 200, UUID.randomUUID(), this);
     clientPlayer.initialise(root);
-    players.add(clientPlayer);
-    gameObjects.add(clientPlayer);
+    players.put(clientPlayer.getUUID(), clientPlayer);
+    gameObjects.put(clientPlayer.getUUID(), clientPlayer);
   }
 
   public Player getClientPlayer() {
     return clientPlayer;
   }
 
-  public ArrayList<Bot> getBotPlayerList() {
+  public HashMap<UUID, Bot> getBotPlayerList() {
     return bots;
   }
 
@@ -240,7 +243,7 @@ public class LevelHandler {
    * list. Finally clear the list for next frame
    */
   private void clearToRemove() {
-    gameObjects.removeAll(toRemove);
+    gameObjects.entrySet().removeAll(toRemove);
     toRemove.forEach(gameObject -> gameObject.removeRender());
     toRemove.forEach(gameObject -> gameObject.destroy());
     toRemove.clear();

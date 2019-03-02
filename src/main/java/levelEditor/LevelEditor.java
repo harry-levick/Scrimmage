@@ -5,6 +5,7 @@ import de.codecentric.centerdevice.javafxsvg.dimension.PrimitiveDimensionProvide
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.UUID;
@@ -64,7 +65,7 @@ import shared.util.maths.Vector2;
 
 public class LevelEditor extends Application {
 
-  private ArrayList<GameObject> gameObjects;
+  private HashMap<UUID, GameObject> gameObjects;
   private ArrayList<Player> playerSpawns = new ArrayList<>();
   private MapDataObject mapDataObject;
   private boolean snapToGrid = true;
@@ -139,7 +140,7 @@ public class LevelEditor extends Application {
       switch (objectTypeSelected) {
         case PLAYER:
           if (mapDataObject.getSpawnPoints().size() < spawnPointLimit) {
-            temp = new Player(getGridX(event.getX()), getGridY(event.getY()), uuid);
+            temp = new Player(getGridX(event.getX()), getGridY(event.getY()), uuid, null);
             mapDataObject.addSpawnPoint(getGridX(event.getX()), getGridY(event.getY()));
           } else {
             popup(
@@ -366,7 +367,7 @@ public class LevelEditor extends Application {
         if (objectTypeSelected == OBJECT_TYPES.PLAYER && temp.getId() != ObjectID.Background) {
           playerSpawns.add((Player) temp);
         } else if (temp.getId() != ObjectID.Background) {
-          gameObjects.add(temp);
+          gameObjects.put(temp.getUUID(), temp);
         }
       }
     }
@@ -493,7 +494,7 @@ public class LevelEditor extends Application {
     new AnimationTimer() {
       @Override
       public void handle(long now) {
-        gameObjects.forEach(gameObject -> gameObject.render());
+        gameObjects.forEach((key, gameObject) -> gameObject.render());
         playerSpawns.forEach(player -> player.render());
         if (mapDataObject.getBackground() != null) {
           mapDataObject.getBackground().render();
@@ -527,7 +528,7 @@ public class LevelEditor extends Application {
   }
 
   private void initialiseNewMap() {
-    gameObjects = new ArrayList<>();
+    gameObjects = new HashMap<>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.IN_GAME);
   }
 
@@ -549,7 +550,8 @@ public class LevelEditor extends Application {
 
   private boolean isInObject(double x, double y, int newObjX, int newObjY) {
     boolean conflict = false;
-    for (GameObject object : gameObjects) {
+    for (UUID key : gameObjects.keySet()) {
+      GameObject object = gameObjects.get(key);
       double ulX = object.getX();
       double ulY = object.getY();
       double lrX = ulX + object.getTransform().getSize().getX();
@@ -581,11 +583,11 @@ public class LevelEditor extends Application {
   }
 
   private void sceneSecondaryClick(Stage primaryStage, Group root, MouseEvent event) {
-    ArrayList<GameObject> removeList = gameObjects;
+    HashMap<UUID, GameObject> removeList = gameObjects;
     ArrayList<Player> removeSpawn = playerSpawns;
     double x = event.getX();
     double y = event.getY();
-    for (GameObject object : removeList) {
+    gameObjects.forEach((key2, object) -> {
       double ulX = object.getX();
       double ulY = object.getY();
       double lrX = ulX + object.getTransform().getSize().getX();
@@ -596,7 +598,7 @@ public class LevelEditor extends Application {
         gameObjects.remove(object); // todo find alternative non breaking way of removing
         // test
       }
-    }
+    });
 
     for (Player object : playerSpawns) {
       double ulX = object.getX();

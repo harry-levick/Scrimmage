@@ -1,5 +1,7 @@
 package shared.gameObjects;
 
+import static client.main.Settings.levelHandler;
+
 import client.main.Settings;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -62,7 +64,6 @@ public abstract class GameObject implements Serializable {
         new Vector2((float) sizeX, (float) sizeY));
     this.components = new ArrayList<>();
     this.children = new ArrayList<>();
-    this.parent = null;
     this.animation = new Animator();
     this.collidedObjects = new ArrayList<>();
     this.collidedThisFrame = new ArrayList<>();
@@ -95,7 +96,7 @@ public abstract class GameObject implements Serializable {
   }
 
   // Collision engine
-  public void updateCollision(ArrayList<GameObject> gameObjects) {
+  public void updateCollision() {
     Collider col = (Collider) getComponent(ComponentType.COLLIDER);
     Rigidbody rb = (Rigidbody) getComponent(ComponentType.RIGIDBODY);
     if (col == null) {
@@ -202,27 +203,10 @@ public abstract class GameObject implements Serializable {
    * @return State of object
    */
   public String getState() {
-    /*
-    String s = "X:0:Y:0";
-    if(getComponent(ComponentType.RIGIDBODY) != null) {
-      s = ((Rigidbody) getComponent(ComponentType.RIGIDBODY)).getVelocity().toString();
-    }
-    */
-    String test =
-        objectUUID + ";" + getX() + ";" + getY() + ";" + animation.getName(); // + ";" + s;
-    return test;
+    return "";
   }
 
   public void setState(String data) {
-    String[] unpackedData = data.split(";");
-    setX(Double.parseDouble(unpackedData[1]));
-    setY(Double.parseDouble(unpackedData[2]));
-    this.animation.switchAnimation(unpackedData[3]);
-    /*
-    if(getComponent(ComponentType.RIGIDBODY) != null) {
-      ((Rigidbody) getComponent(ComponentType.RIGIDBODY)).setVelocity(new Vector2(unpackedData[4]));
-    }
-    */
   }
 
   // Ignore for now, added due to unSerializable objects
@@ -248,7 +232,7 @@ public abstract class GameObject implements Serializable {
 
   public void addChild(GameObject child) {
     children.add(child);
-    Settings.levelHandler.addGameObject(child);
+    levelHandler.addGameObject(child);
   }
 
   public void removeChild(GameObject child) {
