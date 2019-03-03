@@ -12,7 +12,7 @@ public class Leg extends Limb {
    * ensure actions are calculated the same
    */
   public Leg(Boolean isLeft, Player parent, LevelHandler levelHandler) {
-    super(19, 87, 43, 87, 21, 23, ObjectType.Player, isLeft, parent, 0, 0, levelHandler);
+    super(19, 87, 43, 87, 21, 23, ObjectType.Limb, isLeft, parent, 0, 0, levelHandler);
   }
 
   @Override

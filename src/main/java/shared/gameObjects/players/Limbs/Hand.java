@@ -14,7 +14,7 @@ public class Hand extends Limb {
    */
   public Hand(Boolean isLeft, GameObject parent, LevelHandler levelHandler) {
     //17 15
-    super(-3, 20, 3, 20, 17, 15, ObjectType.Player, isLeft, parent, 0, 0, levelHandler);
+    super(-3, 20, 3, 20, 17, 15, ObjectType.Limb, isLeft, parent, 0, 0, levelHandler);
   }
 
 
