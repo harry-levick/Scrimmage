@@ -10,7 +10,7 @@ import javafx.scene.Group;
 import server.ai.Bot;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.MapDataObject;
-import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.background.Background;
 import shared.gameObjects.players.Player;
 import shared.util.Path;
@@ -100,7 +100,7 @@ public class LevelHandler {
     gameObjects = MapLoader.loadMap(map.getPath());
     gameObjects.forEach(
         (key, gameObject) -> {
-          if (gameObject.getId() == ObjectID.MapDataObject) {
+          if (gameObject.getId() == ObjectType.MapDataObject) {
             this.background = ((MapDataObject) gameObject).getBackground();
             ArrayList<Vector2> spawnPoints = ((MapDataObject) gameObject).getSpawnPoints();
             if (this.background != null) {

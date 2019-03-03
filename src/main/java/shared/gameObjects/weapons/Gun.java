@@ -1,7 +1,7 @@
 package shared.gameObjects.weapons;
 
 import java.util.UUID;
-import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.players.Player;
 
 /**
@@ -36,7 +36,7 @@ abstract class Gun extends Weapon {
       double y,
       double sizeX,
       double sizeY,
-      ObjectID id,
+      ObjectType id,
       int damage,
       double weight,
       String name,

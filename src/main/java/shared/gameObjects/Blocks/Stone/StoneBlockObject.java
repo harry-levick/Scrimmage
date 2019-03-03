@@ -2,7 +2,7 @@ package shared.gameObjects.Blocks.Stone;
 
 import java.util.UUID;
 import shared.gameObjects.GameObject;
-import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
 import shared.physics.data.AngularData;
@@ -21,7 +21,7 @@ public class StoneBlockObject extends GameObject {
    * @param id Unique Identifier of every game object
    */
   public StoneBlockObject(
-      double x, double y, double sizeX, double sizeY, ObjectID id, UUID exampleUUID) {
+      double x, double y, double sizeX, double sizeY, ObjectType id, UUID exampleUUID) {
     super(x, y, sizeX, sizeY, id, exampleUUID);
     addComponent(
         new Rigidbody(
