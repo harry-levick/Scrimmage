@@ -212,10 +212,25 @@ public abstract class GameObject implements Serializable {
    * @return State of object
    */
   public String getState() {
-    return "";
+    return objectUUID + ";" + getX() + ";" + getY();
   }
 
-  public void setState(String data) {
+  public void setState(String data, Boolean snap) {
+    String[] unpackedData = data.split(";");
+    Vector2 statePos = new Vector2(Float.parseFloat(unpackedData[1]),
+        Float.parseFloat(unpackedData[2]));
+    if (snap) {
+      transform.setPos(statePos);
+    } else {
+      Vector2 difference = statePos.sub(transform.getPos());
+      float distance = statePos.magnitude(transform.getPos());
+
+      if (distance > 30.0f) {
+        transform.setPos(statePos);
+      } else if (distance > 5.0f) {
+        transform.setPos(difference.mult(0.1f));
+      }
+    }
   }
 
   // Ignore for now, added due to unSerializable objects

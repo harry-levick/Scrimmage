@@ -39,16 +39,4 @@ public class StoneBlockLargeObject extends GameObject {
     this.animation.supplyAnimation("default", "images/platforms/stone/elementStone018.png");
   }
 
-  @Override
-  public String getState() {
-    return objectUUID + ";" + getX() + ";" + getY();
-  }
-
-  @Override
-  public void setState(String data) {
-    String[] unpackedData = data.split(";");
-    setX(Double.parseDouble(unpackedData[1]));
-    setY(Double.parseDouble(unpackedData[2]));
-  }
-
 }
