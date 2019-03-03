@@ -67,10 +67,10 @@ public class Client extends Application {
   private boolean gameOver;
 
   //Networking
-  private final boolean prediction = false;
-  private final boolean reconciliation = false;
-  private final boolean setStateSnap = true;
-  private final boolean entity_interpolation = false;
+  private final boolean prediction = false; //Broken
+  private final boolean reconciliation = true;
+  private final boolean setStateSnap = true; //Broken
+  private final boolean entity_interpolation = true;
 
   public static void main(String args[]) {
     launch(args);
@@ -386,14 +386,15 @@ public class Client extends Application {
   }
 
   public void interpolateEntities() {
-    Timestamp now = new Timestamp(System.currentTimeMillis());
+    Timestamp now = new Timestamp(System.currentTimeMillis() - (1000 / 60));
     //Need to calculate render timestamp
 
     levelHandler.getGameObjects().forEach((key, gameObject) -> {
-      if (gameObject.getUUID() != Client.levelHandler.getClientPlayer().getUUID()) {
+      //Find the two authoritative positions surrounding the rendering timestamp
+      ArrayList<TimePosition> buffer = gameObject.getPositionBuffer();
 
-        //Find the two authoritative positions surrounding the rendering timestamp
-        ArrayList<TimePosition> buffer = gameObject.getPositionBuffer();
+      if (gameObject.getUUID() != Client.levelHandler.getClientPlayer().getUUID() && buffer != null
+          && buffer.size() > 0) {
 
         //Drop older positions
         while (buffer.size() >= 2 && buffer.get(1).getTimestamp().before(now)) {
@@ -407,11 +408,12 @@ public class Client extends Application {
           Vector2 pos1 = buffer.get(1).getPosition();
           Long t0 = buffer.get(0).getTimestamp().getTime();
           Long t1 = buffer.get(1).getTimestamp().getTime();
+          Long tnow = now.getTime();
 
           gameObject
-              .setX(pos0.getX() + (pos1.getX() - pos0.getX()) * (now.getTime() - t0) / (t1 - t0));
+              .setX(pos0.getX() + (pos1.getX() - pos0.getX()) * (tnow - t0) / (t1 - t0));
           gameObject
-              .setX(pos0.getY() + (pos1.getY() - pos0.getY()) * (now.getTime() - t0) / (t1 - t0));
+              .setY(pos0.getY() + (pos1.getY() - pos0.getY()) * (tnow - t0) / (t1 - t0));
         }
       }
     });
