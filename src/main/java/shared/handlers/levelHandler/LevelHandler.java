@@ -16,6 +16,7 @@ import shared.gameObjects.background.Background;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.MachineGun;
 import shared.gameObjects.weapons.Sword;
+import shared.gameObjects.weapons.Weapon;
 import shared.util.Path;
 import shared.util.maths.Vector2;
 
@@ -54,13 +55,7 @@ public class LevelHandler {
         GameState.MAIN_MENU), true);
     previousMap = null;
 
-    /*
-    clientPlayer.setHolding(
-        new MachineGun(clientPlayer.getHandRightX(), clientPlayer.getHandRightY(), "MachineGun@LevelHandler_clientPlayer", clientPlayer, UUID.randomUUID())
-        //new Sword(clientPlayer.getHandRightX(), clientPlayer.getHandRightY(), "Sword@LevelHandler_clientPlayer", clientPlayer, UUID.randomUUID())
-    );
-    addGameObject(clientPlayer.getHolding());
-    */
+    
     /*
     botPlayer = new Bot(500, 500, 80, 110, UUID.randomUUID(), gameObjects);
     botPlayer.setHolding(
@@ -256,6 +251,15 @@ public class LevelHandler {
     clientPlayer.initialise(root);
     players.put(clientPlayer.getUUID(), clientPlayer);
     gameObjects.put(clientPlayer.getUUID(), clientPlayer);
+    
+    /*
+    // Add weapon to player
+    UUID gunUUID = UUID.randomUUID();
+    Weapon gun = new MachineGun(clientPlayer.getX(), clientPlayer.getY(), "MachineGun@LevelHandler.addClientPlayer", clientPlayer, gunUUID);
+    clientPlayer.setHolding(gun);
+    gun.initialise(root);
+    gameObjects.put(gunUUID, gun);
+    */
   }
 
   public Player getClientPlayer() {
