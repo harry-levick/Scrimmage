@@ -295,10 +295,14 @@ public class LevelCreator extends Application {
               getAbs(i * 4), getAbs(25), getAbs(4), getAbs(2), ObjectType.Bot, UUID.randomUUID()));
       uuid = UUID.randomUUID();
     }
-    uuid = UUID.randomUUID();
-    gameObjects.put(uuid,
-        new StoneBlockObject(getAbs(5), getAbs(5), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
 
+    for (int x = 2; x < 45; x++) {
+      for (int y = 4; y < 5; y++) {
+        uuid = UUID.randomUUID();
+        gameObjects.put(uuid,
+            new StoneBlockObject(getAbs(x), getAbs(y), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+      }
+    }
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
         new MetalBlockLargeObject(getAbs(10), getAbs(5), getAbs(2), getAbs(2), ObjectType.Bot,

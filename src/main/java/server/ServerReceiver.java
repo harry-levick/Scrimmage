@@ -43,7 +43,7 @@ public class ServerReceiver implements Runnable {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    System.out.println(message);
+    System.out.println("Receivered" + message);
     int packetID = Integer.parseInt(message.split(",")[0]);
     if (packetID == 0
         && server.playerCount.get() < 4

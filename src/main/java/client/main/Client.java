@@ -5,6 +5,7 @@ import client.handlers.inputHandler.KeyboardInput;
 import client.handlers.inputHandler.MouseInput;
 import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import de.codecentric.centerdevice.javafxsvg.dimension.PrimitiveDimensionProvider;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -22,6 +23,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.UI.UI;
+import shared.gameObjects.Utils.TimePosition;
 import shared.gameObjects.players.Limbs.Arm;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.MachineGun;
@@ -30,9 +32,9 @@ import shared.handlers.levelHandler.LevelHandler;
 import shared.handlers.levelHandler.Map;
 import shared.packets.PacketGameState;
 import shared.packets.PacketInput;
-import shared.packets.PacketPlayerJoin;
 import shared.physics.Physics;
 import shared.util.Path;
+import shared.util.maths.Vector2;
 
 public class Client extends Application {
 
@@ -67,7 +69,8 @@ public class Client extends Application {
   //Networking
   private final boolean prediction = false;
   private final boolean reconciliation = true;
-  private final boolean setStateSnap = false;
+  private final boolean setStateSnap = true;
+  private final boolean entity_interpolation = false;
 
   public static void main(String args[]) {
     launch(args);
@@ -186,18 +189,6 @@ public class Client extends Application {
           levelHandler.getBotPlayerList().forEach((key, bot) -> bot.applyInput());
         }
 
-        /** Render Game Objects */
-        levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.render());
-        if (levelHandler.getBackground() != null) {
-          levelHandler.getBackground().render();
-        }
-
-        /** Draw the UI */
-        if (levelHandler.getGameState() == GameState.IN_GAME
-            || levelHandler.getGameState() == GameState.Multiplayer) {
-          userInterface.render();
-        }
-
         /** Check Collisions */
         Physics.gameObjects = levelHandler.getGameObjects();
 
@@ -227,6 +218,23 @@ public class Client extends Application {
         float alpha = accumulatedTime / timeStep;
         levelHandler.getGameObjects()
             .forEach((key, gameObject) -> gameObject.interpolatePosition(alpha));
+
+        //Interpolate Networked Entities
+        if (multiplayer && entity_interpolation) {
+          interpolateEntities();
+        }
+
+        /** Render Game Objects */
+        levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.render());
+        if (levelHandler.getBackground() != null) {
+          levelHandler.getBackground().render();
+        }
+
+        /** Draw the UI */
+        if (levelHandler.getGameState() == GameState.IN_GAME
+            || levelHandler.getGameState() == GameState.Multiplayer) {
+          userInterface.render();
+        }
 
         calculateFPS(secondElapsed, primaryStage);
       }
@@ -312,16 +320,8 @@ public class Client extends Application {
     if (connectionHandler.received.size() != 0) {
       try {
         String message = (String) connectionHandler.received.take();
-        System.out.println(message);
         int messageID = Integer.parseInt(message.substring(0, 1));
         switch (messageID) {
-          // PlayerJoin
-          case 4:
-            PacketPlayerJoin packetPlayerJoin = new PacketPlayerJoin(message);
-            levelHandler.addPlayer(
-                new Player(packetPlayerJoin.getX(), packetPlayerJoin.getY(),
-                    packetPlayerJoin.getUUID(), levelHandler), gameRoot);
-            break;
           // Ends
           case 6:
             Client.connectionHandler.end();
@@ -344,7 +344,16 @@ public class Client extends Application {
               if (gameObject == null) {
                 createGameObject(value);
               } else {
-                gameObject.setState(value, setStateSnap);
+                if (!entity_interpolation || gameObject.getUUID() == Client.levelHandler
+                    .getClientPlayer().getUUID()) {
+                  gameObject.setState(value, setStateSnap);
+                } else {
+                  Timestamp now = new Timestamp(System.currentTimeMillis());
+                  String[] unpackedData = value.split(";");
+                  Vector2 statePos = new Vector2(Double.parseDouble(unpackedData[2]),
+                      Double.parseDouble(unpackedData[3]));
+                  gameObject.getPositionBuffer().add(new TimePosition(now, statePos));
+                }
               }
             });
             if (reconciliation) {
@@ -372,6 +381,38 @@ public class Client extends Application {
       default:
 
     }
+  }
+
+  public void interpolateEntities() {
+    Timestamp now = new Timestamp(System.currentTimeMillis());
+    //Need to calculate render timestamp
+
+    levelHandler.getGameObjects().forEach((key, gameObject) -> {
+      if (gameObject.getUUID() != Client.levelHandler.getClientPlayer().getUUID()) {
+
+        //Find the two authoritative positions surrounding the rendering timestamp
+        ArrayList<TimePosition> buffer = gameObject.getPositionBuffer();
+
+        //Drop older positions
+        while (buffer.size() >= 2 && buffer.get(1).getTimestamp().before(now)) {
+          buffer.remove(0);
+        }
+
+        //Interpolate between the two surrounding  authoritative  positions to smooth motion
+        if (buffer.size() >= 2 && buffer.get(0).getTimestamp().before(now) && now
+            .before(buffer.get(1).getTimestamp())) {
+          Vector2 pos0 = buffer.get(0).getPosition();
+          Vector2 pos1 = buffer.get(1).getPosition();
+          Long t0 = buffer.get(0).getTimestamp().getTime();
+          Long t1 = buffer.get(1).getTimestamp().getTime();
+
+          gameObject
+              .setX(pos0.getX() + (pos1.getX() - pos0.getX()) * (now.getTime() - t0) / (t1 - t0));
+          gameObject
+              .setX(pos0.getY() + (pos1.getY() - pos0.getY()) * (now.getTime() - t0) / (t1 - t0));
+        }
+      }
+    });
   }
 
   public void serverReconciliation(int lastProcessedInput) {

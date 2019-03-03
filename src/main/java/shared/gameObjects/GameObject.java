@@ -10,6 +10,7 @@ import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
 import shared.gameObjects.Utils.ObjectType;
+import shared.gameObjects.Utils.TimePosition;
 import shared.gameObjects.Utils.Transform;
 import shared.gameObjects.animator.Animator;
 import shared.gameObjects.components.Collider;
@@ -41,8 +42,11 @@ public abstract class GameObject implements Serializable {
 
   protected boolean active;
   protected boolean destroyed;
+
+  //Networking
   protected boolean networkStateUpdate;
   protected Vector2 lastPos;
+  protected ArrayList<TimePosition> positionBuffer;
 
   protected ArrayList<GameObject> collidedObjects;
   protected ArrayList<GameObject> collidedThisFrame;
@@ -213,29 +217,31 @@ public abstract class GameObject implements Serializable {
    * @return State of object
    */
   public String getState() {
-    return objectUUID + ";" + id + ";" + getX() + ";" + getY();
+    return objectUUID + ";" + id + ";" + (float) getX() + ";" + (float) getY();
   }
 
   public void setState(String data, Boolean snap) {
     String[] unpackedData = data.split(";");
-    Vector2 statePos = new Vector2(Float.parseFloat(unpackedData[2]),
-        Float.parseFloat(unpackedData[3]));
+    Vector2 statePos = new Vector2(Double.parseDouble(unpackedData[2]),
+        Double.parseDouble(unpackedData[3]));
     if (snap) {
-      transform.setPos(statePos);
+      setX(Double.parseDouble(unpackedData[2]));
+      setY(Double.parseDouble(unpackedData[3]));
     } else {
       Vector2 difference = statePos.sub(transform.getPos());
-      float distance = statePos.magnitude(transform.getPos());
+      double distance = statePos.magnitude(transform.getPos());
 
-      if (distance > 30.0f) {
+      if (distance > 50) {
         transform.setPos(statePos);
-      } else if (distance > 5.0f) {
-        transform.setPos(difference.mult(0.1f));
+      } else if (distance > 1) {
+        transform.setPos((difference.mult(0.5f)).add(getTransform().getPos()));
       }
     }
   }
 
   // Ignore for now, added due to unSerializable objects
   public void initialise(Group root) {
+    this.positionBuffer = new ArrayList<>();
     this.networkStateUpdate = false;
     animation = new Animator();
     initialiseAnimation();
@@ -463,6 +469,10 @@ public abstract class GameObject implements Serializable {
 
   public void rotateImage(double rotation) {
     imageView.setRotate(imageView.getRotate() + rotation);
+  }
+
+  public ArrayList<TimePosition> getPositionBuffer() {
+    return positionBuffer;
   }
 
   @Override
