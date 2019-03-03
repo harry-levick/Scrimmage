@@ -12,6 +12,7 @@ import shared.physics.Physics;
 import shared.physics.data.AngularData;
 import shared.physics.data.Collision;
 import shared.physics.data.MaterialProperty;
+import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
 
@@ -48,7 +49,7 @@ public abstract class Bullet extends GameObject {
     // Unit vector of the bullet force
     vector = new Vector2((float) (mouseX - gunX), (float) (mouseY - gunY));
     vector = vector.div((float) Math.sqrt(vector.dot(vector)));
-    addComponent(new BoxCollider(this, false));
+    addComponent(new BoxCollider(this, ColliderLayer.PARTICLE, false));
     rb =
         new Rigidbody(
             RigidbodyType.DYNAMIC,
@@ -79,6 +80,7 @@ public abstract class Bullet extends GameObject {
     // check if a player is hit
     for (Collision c : collision) {
       GameObject g = c.getCollidedObject();
+      System.out.println(g.getTransform().getSize());
       if (g.getId() == ObjectID.Player && !g.equals(holder)) {
         isHit = true;
         playersBeingHit.add((Player) g);

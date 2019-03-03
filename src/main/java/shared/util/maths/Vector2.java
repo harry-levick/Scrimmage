@@ -26,9 +26,7 @@ public class Vector2 implements Serializable {
     this.y = vector2.getY();
   }
 
-  public static Vector2 Zero() {
-    return new Vector2(0, 0);
-  }
+  public static Vector2 Zero() { return new Vector2(0, 0); }
 
   public static Vector2 Unit() {
     return new Vector2(1, 1);
@@ -54,6 +52,11 @@ public class Vector2 implements Serializable {
     return new Vector2(0, -1);
   }
 
+  /**
+   * Multiply both elements in the vector with a scalar
+   * @param scalar
+   * @return The new product vector
+   */
   public Vector2 mult(float scalar) {
     float x, y;
     x = (getX() * scalar);
@@ -61,6 +64,11 @@ public class Vector2 implements Serializable {
     return new Vector2(x, y);
   }
 
+  /**
+   * Multiply the corresponding elements in the vectors
+   * @param vector
+   * @return The new product vector
+   */
   public Vector2 mult(Vector2 vector) {
     float x, y;
     x = (getX() * vector.getX());
@@ -68,6 +76,11 @@ public class Vector2 implements Serializable {
     return new Vector2(x, y);
   }
 
+  /**
+   * Add both elements in the vector with a scalar
+   * @param scalar
+   * @return The new summed vector
+   */
   public Vector2 add(float scalar) {
     float x, y;
     x = (getX() + scalar);
@@ -75,6 +88,11 @@ public class Vector2 implements Serializable {
     return new Vector2(x, y);
   }
 
+  /**
+   * Add the corresponding elements in the vectors
+   * @param vector
+   * @return The new summed vector
+   */
   public Vector2 add(Vector2 vector) {
     float x, y;
     x = (getX() + vector.getX());
@@ -82,6 +100,11 @@ public class Vector2 implements Serializable {
     return new Vector2(x, y);
   }
 
+  /**
+   * Subtract both elements in the vector with a scalar
+   * @param scalar
+   * @return The new subtracted vector
+   */
   public Vector2 sub(float scalar) {
     float x, y;
     x = (getX() - scalar);
@@ -89,6 +112,11 @@ public class Vector2 implements Serializable {
     return new Vector2(x, y);
   }
 
+  /**
+   * Subtract the corresponding elements in the vectors
+   * @param vector
+   * @return The new subtracted vector
+   */
   public Vector2 sub(Vector2 vector) {
     float x, y;
     x = (getX() - vector.getX());
@@ -96,6 +124,11 @@ public class Vector2 implements Serializable {
     return new Vector2(x, y);
   }
 
+  /**
+   * Divide both elements in the vector with a scalar
+   * @param scalar
+   * @return The new quotient vector
+   */
   public Vector2 div(float scalar) {
     float x, y;
     x = (getX() / scalar);
@@ -103,6 +136,11 @@ public class Vector2 implements Serializable {
     return new Vector2(x, y);
   }
 
+  /**
+   * Divide the corresponding elements in the vectors
+   * @param vector
+   * @return The new quotient vector
+   */
   public Vector2 div(Vector2 vector) {
     float x, y;
     x = getX() / vector.getX();
@@ -148,22 +186,25 @@ public class Vector2 implements Serializable {
    */
   public float exactMagnitude(Vector2 vector) {
     return (float)
-        // Math.sqrt(Math.pow(vector.getX() - getX(), 2) + Math.pow(vector.getY() - getY(), 2));
-        magnitude(vector);
+         Math.sqrt(Math.pow(vector.getX() - getX(), 2) + Math.pow(vector.getY() - getY(), 2));
   }
 
   /**
    * Angle between two vectors, approximated
+   *
+   * @return The angle from -90 to +90 between the vectors
    */
   public float angleBetween(Vector2 vector) {
-    if (vector.magnitude(Zero()) == 0) {
+    if (vector.magnitude() == 0) {
       return (float) Math.atan(getY() / getX());
     }
-    return (float) Math.acos(dot(vector) / (magnitude(Zero()) * vector.magnitude(Zero())));
+    return (float) Math.acos(dot(vector) / (magnitude() * vector.magnitude()));
   }
 
   /**
    * Angle of the vector with respect to world space
+   *
+   * @return The angle between 0 and 180 between the vector and the world space
    */
   public float angle() {
     return angleBetween(Zero());
@@ -171,6 +212,8 @@ public class Vector2 implements Serializable {
 
   /**
    * Computes the cross product between two vectors.
+   *
+   * @return a.x*b.y - a.y*b.x
    */
   public Vector2 cross(Vector2 vector) {
     float x, y;
@@ -178,9 +221,22 @@ public class Vector2 implements Serializable {
     y = -1 * getY() * vector.getX();
     return new Vector2(x, y);
   }
+  /**
+   * Computes the cross product between a scalar and a vector
+   *
+   * @return a.x*s - a.y*s
+   */
+  public Vector2 cross(float s) {
+    float x, y;
+    x = getX() * s;
+    y = -1 * getY() * s;
+    return new Vector2(x, y);
+  }
 
   /**
    * Clamps the vector between the two values
+   *
+   * @return Vector clamped between 2 bounds
    */
   public Vector2 clamp(Vector2 min, Vector2 max) {
     float x, y;
@@ -189,10 +245,20 @@ public class Vector2 implements Serializable {
     return new Vector2(x, y);
   }
 
+  /**
+   * Noramlizes the vector
+   *
+   * @return Normalized vector
+   */
   public Vector2 normalize() {
-    return this.div(magnitude(Vector2.Zero()));
+    return this.div(magnitude());
   }
 
+  /**
+   * Rotates the vector by the corresponding amount
+   * @param rotation The amount IN DEGREES to rotate the vector
+   * @return New points of rotated vector
+   */
   public Vector2 applyRotation(float rotation) {
     float angle = (float) Math.toRadians(rotation);
     return new Vector2(x * Math.cos(angle) - y * Math.sin(angle),
