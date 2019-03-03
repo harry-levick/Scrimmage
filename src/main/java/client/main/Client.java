@@ -68,7 +68,7 @@ public class Client extends Application {
 
   //Networking
   private final boolean prediction = false;
-  private final boolean reconciliation = true;
+  private final boolean reconciliation = false;
   private final boolean setStateSnap = true;
   private final boolean entity_interpolation = false;
 
@@ -206,12 +206,14 @@ public class Client extends Application {
           if (prediction) {
             levelHandler.getClientPlayer().update();
           }
-          levelHandler.getClientPlayer().getChildren().forEach(child -> {
-            child.update();
-            if (child instanceof Arm) {
-              child.getChildren().forEach(childChild -> childChild.update());
-            }
-          });
+          levelHandler.getPlayers().forEach((key, player) ->
+              player.getChildren().forEach(child -> {
+                child.update();
+                if (child instanceof Arm) {
+                  child.getChildren().forEach(childChild -> childChild.update());
+                }
+              })
+          );
         }
 
         accumulatedTime -= timeStep;
