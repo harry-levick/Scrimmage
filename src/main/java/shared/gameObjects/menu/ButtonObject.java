@@ -1,6 +1,7 @@
 package shared.gameObjects.menu;
 
 import client.handlers.audioHandler.AudioHandler;
+import client.main.Client;
 import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
@@ -44,7 +45,7 @@ public abstract class ButtonObject extends GameObject {
 
   public void doOnClick(MouseEvent e) {
     animation.switchAnimation("clicked");
-    new AudioHandler(settings).playSFX("CLICK");
+    new AudioHandler(settings, Client.musicActive).playSFX("CLICK");
   }
 
   public void doOnUnClick(MouseEvent e) {

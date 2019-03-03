@@ -1,6 +1,7 @@
 package shared.gameObjects.weapons;
 
 import client.handlers.audioHandler.AudioHandler;
+import client.main.Client;
 import java.util.UUID;
 import javafx.scene.transform.Rotate;
 import shared.gameObjects.Utils.ObjectID;
@@ -70,7 +71,7 @@ public class MachineGun extends Gun {
               uuid);
       this.currentCooldown = getDefaultCoolDown();
       // new AudioHandler(super.getSettings()).playSFX("CHOOSE_YOUR_CHARACTER");
-      new AudioHandler(settings).playSFX("MACHINEGUN");
+      new AudioHandler(settings, Client.musicActive).playSFX("MACHINEGUN");
       deductAmmo();
     }
   }

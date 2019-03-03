@@ -2,6 +2,7 @@ package shared.handlers.levelHandler;
 
 import client.handlers.audioHandler.AudioHandler;
 import client.handlers.audioHandler.MusicAssets.PLAYLIST;
+import client.main.Client;
 import client.main.Settings;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -48,7 +49,7 @@ public class LevelHandler {
     this.root = root;
     this.backgroundRoot = backgroundRoot;
     this.gameRoot = gameRoot;
-    musicPlayer = new AudioHandler(settings);
+    musicPlayer = new AudioHandler(settings, Client.musicActive);
     changeMap(new Map("main_menu.map", Path.convert("src/main/resources/menus/main_menu.map"),
         GameState.MAIN_MENU), true);
     previousMap = null;
@@ -91,7 +92,7 @@ public class LevelHandler {
     players = new LinkedHashMap<>();
     bots = new LinkedHashMap<>();
     toCreate = new ArrayList<>();
-    musicPlayer = new AudioHandler(settings);
+    musicPlayer = new AudioHandler(settings, Client.musicActive);
   }
 
   public void changeMap(Map map, Boolean moveToSpawns) {
