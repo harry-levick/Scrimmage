@@ -10,6 +10,7 @@ import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
+import shared.handlers.levelHandler.LevelHandler;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.RigidbodyType;
 
@@ -34,6 +35,8 @@ public abstract class Limb extends GameObject {
   protected Rigidbody rb;
   protected BoxCollider bc;
 
+  protected LevelHandler levelHandler;
+
 
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
@@ -42,7 +45,8 @@ public abstract class Limb extends GameObject {
    * @param id Unique Identifier of every game object
    */
   public Limb(double xLeft, double yLeft, double xRight, double yRight, double sizeX, double sizeY,
-      ObjectID id, Boolean isLeft, GameObject parent, double pivotX, double pivotY) {
+      ObjectID id, Boolean isLeft, GameObject parent, double pivotX, double pivotY,
+      LevelHandler levelHandler) {
     super(0, 0, sizeX, sizeY, id, UUID.randomUUID());
     this.limbAttached = true;
     this.lastAttachedCheck = true;
@@ -59,6 +63,7 @@ public abstract class Limb extends GameObject {
     this.action = 0;
     this.pivotX = pivotX;
     this.pivotY = pivotY;
+    this.levelHandler = levelHandler;
 
     //Physics
     //bc = new BoxCollider(this, false);

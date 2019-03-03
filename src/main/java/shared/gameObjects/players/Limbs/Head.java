@@ -5,6 +5,7 @@ import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Limb;
 import shared.gameObjects.players.Player;
+import shared.handlers.levelHandler.LevelHandler;
 
 public class Head extends Limb {
 
@@ -15,8 +16,8 @@ public class Head extends Limb {
    * Base class used to create an object in game. This is used on both the client and server side to
    * ensure actions are calculated the same
    */
-  public Head(Player parent) {
-    super(0, 0, 17, 13, 48, 58, ObjectID.Player, false, parent, 0, 0);
+  public Head(Player parent, LevelHandler levelHandler) {
+    super(0, 0, 17, 13, 48, 58, ObjectID.Player, false, parent, 0, 0, levelHandler);
   }
 
   @Override
