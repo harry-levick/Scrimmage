@@ -29,9 +29,7 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import server.ai.Bot;
 import shared.gameObjects.GameObject;
-import shared.gameObjects.MapDataObject;
 import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.LevelHandler;
@@ -39,7 +37,6 @@ import shared.handlers.levelHandler.Map;
 import shared.packets.PacketGameState;
 import shared.packets.PacketInput;
 import shared.packets.PacketMap;
-import shared.physics.Physics;
 import shared.util.Path;
 
 public class Server extends Application {
@@ -55,7 +52,7 @@ public class Server extends Application {
   private final int serverUpdateRate = 3;
   private final int maxPlayers = 4;
   public ServerState serverState;
-  private Settings settings;
+  public static Settings settings;
   private ArrayList<InetAddress> connectedList = new ArrayList<>();
   private List connected = Collections.synchronizedList(connectedList);
   private String threadName;
@@ -97,6 +94,14 @@ public class Server extends Application {
         new Map("Map2", Path.convert("src/main/resources/maps/map2.map"), GameState.IN_GAME));
   }
 
+  public static LevelHandler getLevelHandler() {
+    return levelHandler;
+  }
+
+  public void stop() {
+    running.set(false);
+  }
+
   @Override
   public void start(Stage primaryStage) throws Exception {
     levelHandler = new LevelHandler(settings);
@@ -134,11 +139,11 @@ public class Server extends Application {
         }
 
         if (playerCount.get() == 5) {
-          Bot bot = new Bot(500, 500, UUID.randomUUID(), levelHandler.getGameObjects());
-          bot.initialise(null);
-          levelHandler.getPlayers().add(bot);
-          levelHandler.getBotPlayerList().add(bot);
-          levelHandler.getGameObjects().add(bot);
+          //Bot bot = new Bot(500, 500, UUID.randomUUID(), levelHandler.getGameObjects(), levelHandler);
+          //bot.initialise(null);
+          //levelHandler.getPlayers().add(bot);
+          //levelHandler.getBotPlayerList().add(bot);
+          //levelHandler.getGameObjects().add(bot);
         }
         counter.getAndIncrement();
         if (playerCount.get() == maxPlayers) {
@@ -164,36 +169,6 @@ public class Server extends Application {
     }.start();
   }
 
-  public void stop() {
-    running.set(false);
-  }
-
-  public void updateSimulation() {
-    /** Check Collisions */
-    Physics.gameObjects = levelHandler.getGameObjects();
-    inputQueue.forEach(
-        ((player, packetInputs) -> {
-          PacketInput temp = packetInputs.poll();
-          if (temp != null) {
-            System.out.println(temp.getString());
-            System.out.println("Before " + player.getX());
-            player.click = temp.isClick();
-            player.rightKey = temp.isRightKey();
-            player.leftKey = temp.isLeftKey();
-            player.mouseX = temp.getX();
-            player.mouseY = temp.getY();
-            player.jumpKey = temp.isJumpKey();
-          }
-        }));
-    levelHandler.getPlayers().forEach(player -> player.applyInput());
-
-    levelHandler
-        .getGameObjects()
-        .forEach(gameObject -> gameObject.updateCollision(levelHandler.getGameObjects()));
-    /** Update Game Objects */
-    levelHandler.getGameObjects().forEach(gameObject -> gameObject.update());
-  }
-
   public void sendToClients(byte[] buffer) {
     synchronized (connected) {
       connected.forEach(
@@ -212,17 +187,30 @@ public class Server extends Application {
     }
   }
 
-  public void sendWorldState() {
-    ArrayList<GameObject> gameObjectsFiltered = new ArrayList<>();
-    for (GameObject gameObject : levelHandler.getGameObjects()) {
-      if (!(gameObject instanceof MapDataObject)) {
-        gameObjectsFiltered.add(gameObject);
-      }
-    }
-    PacketGameState gameState = new PacketGameState(gameObjectsFiltered, 0);
+  public void updateSimulation() {
+    /** Check Collisions */
+    //Physics.gameObjects = levelHandler.getGameObjects();
+    inputQueue.forEach(
+        ((player, packetInputs) -> {
+          PacketInput temp = packetInputs.poll();
+          if (temp != null) {
+            System.out.println(temp.getString());
+            System.out.println("Before " + player.getX());
+            player.click = temp.isClick();
+            player.rightKey = temp.isRightKey();
+            player.leftKey = temp.isLeftKey();
+            player.mouseX = temp.getX();
+            player.mouseY = temp.getY();
+            player.jumpKey = temp.isJumpKey();
+          }
+        }));
+    //levelHandler.getPlayers().forEach(player -> player.applyInput());
 
-    byte[] buffer = gameState.getData();
-    sendToClients(buffer);
+    //levelHandler
+    //    .getGameObjects()
+    //    .forEach(gameObject -> gameObject.updateCollision(levelHandler.getGameObjects()));
+    /** Update Game Objects */
+    //levelHandler.getGameObjects().forEach(gameObject -> gameObject.update());
   }
 
   public void startMatch() {
@@ -249,19 +237,37 @@ public class Server extends Application {
     return inputQueue.get(player);
   }
 
+  public void sendWorldState() {
+    ArrayList<GameObject> gameObjectsFiltered = new ArrayList<>();
+    /**
+     for (GameObject gameObject : levelHandler.getGameObjects()) {
+     if (!(gameObject instanceof MapDataObject)) {
+     gameObjectsFiltered.add(gameObject);
+     }
+     }
+     **/
+    PacketGameState gameState = new PacketGameState(gameObjectsFiltered, 0);
+
+    byte[] buffer = gameState.getData();
+    sendToClients(buffer);
+  }
+
   public void checkConditions() {
     if (gameOver.get()) {
 
     } else {
       int dead = 0;
-      for (Player player : levelHandler.getPlayers()) {
-        if (player.getHealth() <= 0) {
-          dead++;
-        }
-      }
-      if (playerCount.get() > 0 && dead == playerCount.get() || dead == (playerCount.get() - 1)) {
-        nextMap();
-      }
+      /**
+       for (Player player : levelHandler.getPlayers()) {
+       if (player.getHealth() <= 0) {
+       dead++;
+       }
+       }
+       if (playerCount.get() > 0 && dead == playerCount.get() || dead == (playerCount.get() - 1)) {
+       nextMap();
+       }
+       **/
     }
+
   }
 }

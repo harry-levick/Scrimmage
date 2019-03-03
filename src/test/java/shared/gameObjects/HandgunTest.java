@@ -20,7 +20,7 @@ public class HandgunTest {
 
   @Test
   public void test1() {
-    // System.out.println(handgun.toString());
+
     assertTrue(true);
   }
 
