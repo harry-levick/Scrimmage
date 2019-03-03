@@ -11,7 +11,6 @@ import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.stage.Stage;
 import shared.gameObjects.Blocks.Metal.MetalBlockLargeObject;
-import shared.gameObjects.Blocks.Stone.StoneBlockObject;
 import shared.gameObjects.Blocks.Stone.StoneFloorObject;
 import shared.gameObjects.Blocks.Stone.StoneWallObject;
 import shared.gameObjects.GameObject;
@@ -294,14 +293,6 @@ public class LevelCreator extends Application {
           new StoneFloorObject(
               getAbs(i * 4), getAbs(25), getAbs(4), getAbs(2), ObjectType.Bot, UUID.randomUUID()));
       uuid = UUID.randomUUID();
-    }
-
-    for (int x = 2; x < 45; x++) {
-      for (int y = 4; y < 5; y++) {
-        uuid = UUID.randomUUID();
-        gameObjects.put(uuid,
-            new StoneBlockObject(getAbs(x), getAbs(y), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
-      }
     }
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
