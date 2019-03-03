@@ -67,6 +67,7 @@ public class Client extends Application {
   //Networking
   private final boolean prediction = false;
   private final boolean reconciliation = true;
+  private final boolean setStateSnap = false;
 
   public static void main(String args[]) {
     launch(args);
@@ -340,7 +341,7 @@ public class Client extends Application {
             HashMap<UUID, String> data = gameState.getGameObjects();
             data.forEach((key, value) -> {
               GameObject gameObject = levelHandler.getGameObjects().get(key);
-              gameObject.setState(value);
+              gameObject.setState(value, setStateSnap);
             });
             if (reconciliation) {
               serverReconciliation(Client.levelHandler.getClientPlayer().getLastInputCount());

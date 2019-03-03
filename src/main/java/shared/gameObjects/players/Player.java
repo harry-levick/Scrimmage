@@ -113,10 +113,9 @@ public class Player extends GameObject {
   }
 
   @Override
-  public void setState(String data) {
+  public void setState(String data, Boolean snap) {
+    super.setState(data, snap);
     String[] unpackedData = data.split(";");
-    setX(Double.parseDouble(unpackedData[1]));
-    setY(Double.parseDouble(unpackedData[2]));
     //this.animation.switchAnimation(unpackedData[3]);
     this.health = Integer.parseInt(unpackedData[4]);
     this.lastInputCount = Integer.parseInt(unpackedData[5]);
