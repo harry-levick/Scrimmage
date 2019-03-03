@@ -341,7 +341,11 @@ public class Client extends Application {
             HashMap<UUID, String> data = gameState.getGameObjects();
             data.forEach((key, value) -> {
               GameObject gameObject = levelHandler.getGameObjects().get(key);
-              gameObject.setState(value, setStateSnap);
+              if (gameObject == null) {
+                createGameObject(value);
+              } else {
+                gameObject.setState(value, setStateSnap);
+              }
             });
             if (reconciliation) {
               serverReconciliation(Client.levelHandler.getClientPlayer().getLastInputCount());
@@ -353,6 +357,20 @@ public class Client extends Application {
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
+    }
+  }
+
+  public void createGameObject(String data) {
+    String[] unpackedData = data.split(";");
+    switch (unpackedData[1]) {
+      case "Player":
+        Player player = new Player(Float.parseFloat(unpackedData[2]),
+            Float.parseFloat(unpackedData[3]), UUID.fromString(unpackedData[0]),
+            Client.levelHandler);
+        Client.levelHandler.addPlayer(player, gameRoot);
+        break;
+      default:
+
     }
   }
 

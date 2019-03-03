@@ -1,6 +1,6 @@
 package shared.gameObjects.Utils;
 
-public enum ObjectID {
+public enum ObjectType {
   Player,
   Bot,
   MapDataObject,

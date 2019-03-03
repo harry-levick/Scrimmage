@@ -9,14 +9,14 @@ import org.junit.Test;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.MapDataObject;
 import shared.gameObjects.TestObject;
-import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.ObjectType;
 
 public class MapLoaderTest {
 
   LinkedHashMap<UUID, GameObject> gameObjects = new LinkedHashMap<>();
-  private TestObject g1 = new TestObject(6, 7, ObjectID.Bot, UUID.randomUUID());
-  private TestObject g2 = new TestObject(934, 12312, ObjectID.Bot, UUID.randomUUID());
-  private TestObject g3 = new TestObject(567560, 12, ObjectID.Player, UUID.randomUUID());
+  private TestObject g1 = new TestObject(6, 7, ObjectType.Bot, UUID.randomUUID());
+  private TestObject g2 = new TestObject(934, 12312, ObjectType.Bot, UUID.randomUUID());
+  private TestObject g3 = new TestObject(567560, 12, ObjectType.Player, UUID.randomUUID());
   private MapDataObject mapdata = new MapDataObject(UUID.randomUUID(), GameState.IN_GAME);
   private MapLoader map = new MapLoader();
   private String path = "B:/map.ser";

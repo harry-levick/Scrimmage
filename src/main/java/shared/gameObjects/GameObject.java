@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
-import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.Utils.Transform;
 import shared.gameObjects.animator.Animator;
 import shared.gameObjects.components.Collider;
@@ -25,7 +25,7 @@ import shared.util.maths.Vector2;
 public abstract class GameObject implements Serializable {
 
   protected UUID objectUUID;
-  protected ObjectID id;
+  protected ObjectType id;
 
   protected Settings settings;
 
@@ -56,7 +56,8 @@ public abstract class GameObject implements Serializable {
    * @param y Y coordinate of object in game world
    * @param id Unique Identifier of every game object
    */
-  public GameObject(double x, double y, double sizeX, double sizeY, ObjectID id, UUID objectUUID) {
+  public GameObject(double x, double y, double sizeX, double sizeY, ObjectType id,
+      UUID objectUUID) {
     this.networkStateUpdate = false;
     this.id = id;
     this.objectUUID = objectUUID;
@@ -212,13 +213,13 @@ public abstract class GameObject implements Serializable {
    * @return State of object
    */
   public String getState() {
-    return objectUUID + ";" + getX() + ";" + getY();
+    return objectUUID + ";" + id + ";" + getX() + ";" + getY();
   }
 
   public void setState(String data, Boolean snap) {
     String[] unpackedData = data.split(";");
-    Vector2 statePos = new Vector2(Float.parseFloat(unpackedData[1]),
-        Float.parseFloat(unpackedData[2]));
+    Vector2 statePos = new Vector2(Float.parseFloat(unpackedData[2]),
+        Float.parseFloat(unpackedData[3]));
     if (snap) {
       transform.setPos(statePos);
     } else {
@@ -394,7 +395,7 @@ public abstract class GameObject implements Serializable {
     this.transform.getPos().setY((float) y);
   }
 
-  public ObjectID getId() {
+  public ObjectType getId() {
     return id;
   }
 

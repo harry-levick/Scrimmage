@@ -4,7 +4,7 @@ import client.main.Client;
 import java.util.UUID;
 import javafx.scene.Group;
 import shared.gameObjects.GameObject;
-import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Limbs.Arm;
@@ -47,7 +47,7 @@ public class Player extends GameObject {
   private int lastInputCount;
 
   public Player(double x, double y, UUID playerUUID, LevelHandler levelHandler) {
-    super(x, y, 80, 110, ObjectID.Player, playerUUID);
+    super(x, y, 80, 110, ObjectType.Player, playerUUID);
     this.lastInputCount = 0;
     this.score = 0;
     this.leftKey = false;
@@ -108,7 +108,8 @@ public class Player extends GameObject {
 
   @Override
   public String getState() {
-    return objectUUID + ";" + getX() + ";" + getY() + ";" + animation.getName() + ";" + health + ";"
+    return objectUUID + ";" + id + ";" + getX() + ";" + getY() + ";" + animation.getName() + ";"
+        + health + ";"
         + lastInputCount;
   }
 
@@ -116,9 +117,9 @@ public class Player extends GameObject {
   public void setState(String data, Boolean snap) {
     super.setState(data, snap);
     String[] unpackedData = data.split(";");
-    //this.animation.switchAnimation(unpackedData[3]);
-    this.health = Integer.parseInt(unpackedData[4]);
-    this.lastInputCount = Integer.parseInt(unpackedData[5]);
+    //this.animation.switchAnimation(unpackedData[4]);
+    this.health = Integer.parseInt(unpackedData[5]);
+    this.lastInputCount = Integer.parseInt(unpackedData[6]);
   }
 
   public void checkGrounded() {
