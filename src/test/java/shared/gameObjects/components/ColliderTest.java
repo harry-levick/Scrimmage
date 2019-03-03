@@ -19,65 +19,61 @@ public class ColliderTest {
     a = new TestObject(2, 2, 2, 2, ObjectID.Player, UUID.randomUUID());
     b = new TestObject(3, 1, 2, 2, ObjectID.Player, UUID.randomUUID());
     c = new TestObject(10, 10, 2, 2, ObjectID.Player, UUID.randomUUID());
-    d = new TestObject(11, 11, ObjectID.Player, UUID.randomUUID());
-    e = new TestObject(20, 20, ObjectID.Player, UUID.randomUUID());
-    f = new TestObject(21, 21, ObjectID.Player, UUID.randomUUID());
+    d = new TestObject(11, 11, 1, 1, ObjectID.Player, UUID.randomUUID());
+    e = new TestObject(20, 20, 1, 1, ObjectID.Player, UUID.randomUUID());
+    f = new TestObject(21, 21, 1, 1, ObjectID.Player, UUID.randomUUID());
 
     boxA = new BoxCollider(a, false);
     boxB = new BoxCollider(b, false);
     boxC = new BoxCollider(c, false);
-    circleD = new CircleCollider(d, 1, false);
+    circleD = new CircleCollider(d, 1f, false);
     circleE = new CircleCollider(e, 2, false);
     circleF = new CircleCollider(f, 2, false);
   }
 
   @Test
   public void boxBoxCollide() {
-    assertTrue(Collider.boxBoxCollision(boxA, boxB));
+    assertTrue(Collider.haveCollided(boxA, boxB));
   }
 
   @Test
   public void BoxBoxNoCollide() {
-    assertTrue(!Collider.boxBoxCollision(boxA, boxC));
-    assertTrue(!Collider.boxBoxCollision(boxB, boxC));
+    assertTrue(!Collider.haveCollided(boxA, boxC));
+    assertTrue(!Collider.haveCollided(boxB, boxC));
   }
 
   @Test
   public void circleBoxCollide() {
-    assertTrue(Collider.boxCircleCollision(boxC, circleD));
+    assertTrue(Collider.haveCollided(boxC, circleD));
   }
 
   @Test
   public void circleBoxNoCollide() {
-    assertTrue(!Collider.boxCircleCollision(boxA, circleD));
-    assertTrue(!Collider.boxCircleCollision(boxB, circleE));
-    assertTrue(!Collider.boxCircleCollision(boxC, circleF));
+    assertTrue(!Collider.haveCollided(boxA, circleD));
+    assertTrue(!Collider.haveCollided(boxB, circleE));
+    assertTrue(!Collider.haveCollided(boxC, circleF));
   }
 
   @Test
   public void CircleCircleCollide() {
-    assertTrue(Collider.circleCircleCollision(circleE, circleF));
+    assertTrue(Collider.haveCollided(circleE, circleF));
   }
 
   @Test
   public void circleCircleNoCollide() {
-    assertTrue(!Collider.circleCircleCollision(circleE, circleD));
-    assertTrue(!Collider.circleCircleCollision(circleD, circleF));
+    assertTrue(!Collider.haveCollided(circleE, circleD));
+    assertTrue(!Collider.haveCollided(circleD, circleF));
   }
 
   @Test
-  public void directionUpCollision() {
-  }
+  public void raycast() {}
 
   @Test
-  public void directionDownCollision() {
-  }
+  public void boxcast() {}
 
   @Test
-  public void directionRightCollision() {
-  }
+  public void circlecast() {}
 
   @Test
-  public void directionLeftCollision() {
-  }
+  public void arccast() {}
 }
