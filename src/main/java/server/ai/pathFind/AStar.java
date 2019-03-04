@@ -466,7 +466,8 @@ public class AStar {
     // If no collision, or if collision is far away
     if (viscinityUp == null ||
         ((Rigidbody) viscinityUp.getCollidedObject().getComponent(ComponentType.RIGIDBODY))
-            .getBodyType() != RigidbodyType.STATIC) {
+            .getBodyType() != RigidbodyType.STATIC &&
+            (bot.mayJump())) {
 
       Collision viscinityUpLeft = Physics.boxcast(
           botPosition.add(Vector2.Up().mult(botSize)).add(Vector2.Left().mult(botSize)), botSize);
