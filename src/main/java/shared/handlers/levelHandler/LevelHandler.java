@@ -15,7 +15,6 @@ import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.background.Background;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.MachineGun;
-import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.weapons.Weapon;
 import shared.util.Path;
 import shared.util.maths.Vector2;
@@ -54,30 +53,6 @@ public class LevelHandler {
     changeMap(new Map("main_menu.map", Path.convert("src/main/resources/menus/main_menu.map"),
         GameState.MAIN_MENU), true);
     previousMap = null;
-
-    
-    /*
-    botPlayer = new Bot(500, 500, 80, 110, UUID.randomUUID(), gameObjects);
-    botPlayer.setHolding(
-        new Sword(500, 500, 50, 50, "Sword@LevelHandler", botPlayer, UUID.randomUUID())
-    );
-    botPlayer.getHolding().initialise(gameRoot);
-    botPlayer.initialise(gameRoot);
-    bots.add(botPlayer);
-    gameObjects.add(botPlayer);
-    gameObjects.add(botPlayer.getHolding());
-
-    Bot newbot = new Bot(1000, 500, 80, 110, UUID.randomUUID(), gameObjects);
-    newbot.setHolding(
-        new Sword(500, 500, 50, 50, "Sword@LevelHandlerBot2", newbot, UUID.randomUUID())
-    );
-    newbot.getHolding().initialise(gameRoot);
-    newbot.initialise(gameRoot);
-    bots.add(newbot);
-    gameObjects.add(newbot);
-    gameObjects.add(newbot.getHolding());
-    System.out.println("PRINT");
-    */
   }
 
   public LevelHandler(Settings settings, Group root, Group backgroundRoot, Group gameRoot,
@@ -99,7 +74,7 @@ public class LevelHandler {
   public void changeMap(Map map, Boolean moveToSpawns) {
     previousMap = this.map;
     this.map = map;
-    generateLevel(root, backgroundRoot, gameRoot, moveToSpawns);
+    generateLevel(backgroundRoot, gameRoot, moveToSpawns);
   }
 
   public void previousMap(Boolean moveToSpawns) {
@@ -107,7 +82,7 @@ public class LevelHandler {
       Map temp = this.map;
       this.map = previousMap;
       previousMap = temp;
-      generateLevel(root, backgroundRoot, gameRoot, moveToSpawns);
+      generateLevel(backgroundRoot, gameRoot, moveToSpawns);
     }
   }
 
@@ -115,8 +90,7 @@ public class LevelHandler {
    * NOTE: This to change the level use change Map Removes current game objects and creates new ones
    * from Map file
    */
-  public void generateLevel(
-      Group root, Group backgroundGroup, Group gameGroup, Boolean moveToSpawns) {
+  public void generateLevel(Group backgroundGroup, Group gameGroup, Boolean moveToSpawns) {
 
     gameObjects.keySet().removeAll(players.keySet());
     gameObjects.keySet().removeAll(bots.keySet());
@@ -262,15 +236,7 @@ public class LevelHandler {
     Weapon spawnGun = new MachineGun(200, 200, "MachineGun.spawnGun@LevelHandler.addClientPlayer", null, UUID.randomUUID());
     spawnGun.initialise(root);
     gameObjects.put(spawnGun.getUUID(), spawnGun);
-    
-    /*
-    // Add weapon to player
-    UUID gunUUID = UUID.randomUUID();
-    Weapon gun = new MachineGun(clientPlayer.getX(), clientPlayer.getY(), "MachineGun@LevelHandler.addClientPlayer", clientPlayer, gunUUID);
-    clientPlayer.setHolding(gun);
-    gun.initialise(root);
-    gameObjects.put(gunUUID, gun);
-    */
+
   }
 
   public Player getClientPlayer() {
