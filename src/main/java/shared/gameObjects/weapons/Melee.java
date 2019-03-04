@@ -11,6 +11,7 @@ import shared.physics.Physics;
 import shared.physics.data.AngularData;
 import shared.physics.data.Collision;
 import shared.physics.data.MaterialProperty;
+import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
 
@@ -49,7 +50,7 @@ public abstract class Melee extends Weapon {
     this.attacking = false;
     this.currentAngleIndex = 0;
 
-    addComponent(new CircleCollider(this, (float) range, false));
+    addComponent(new CircleCollider(this, ColliderLayer.PLAYER, (float) range, false));
     rb =
         new Rigidbody(
             RigidbodyType.STATIC,
