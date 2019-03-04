@@ -22,6 +22,7 @@ import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.text.Font;
@@ -75,6 +76,8 @@ public class Client extends Application {
   private float elapsedSinceFPS = 0f;
   private int framesElapsedSinceFPS = 0;
   private UI userInterface;
+  private static boolean credits = false;
+  private int creditStartDelay = 100;
   private boolean gameOver;
 
   //Networking
@@ -85,6 +88,116 @@ public class Client extends Application {
 
   public static void main(String args[]) {
     launch(args);
+  }
+
+  public static void showCredits() {
+    credits = true;
+    ArrayList<String> lines = new ArrayList<String>();
+    try {
+      BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/CREDITS.md"));
+      String line;
+      while ((line = reader.readLine()) != null) {
+        lines.add(line);
+      }
+      reader.close();
+    } catch (FileNotFoundException e) {
+      // todo file not found
+    } catch (IOException e) {
+      // todo io exception
+    }
+    int yOffset = 0;
+    int x = 1920 / 2; //todo auto fetch
+    int y = 50;
+    ArrayList<Text> textList = new ArrayList<>();
+    for (String line : lines) {
+      if (!line.equals("")) {
+        int extraBufferSpace = 0;
+        double size = 20;
+        FontWeight weight = FontWeight.NORMAL;
+        FontPosture posture = FontPosture.REGULAR;
+        // # title
+        Pattern title1 = Pattern.compile("^# (.*)");
+        Matcher m = title1.matcher(line);
+        if (m.find()) {
+          line = m.group(1);
+          size = 40;
+          weight = FontWeight.EXTRA_BOLD;
+          extraBufferSpace = 40;
+        }
+        // ## title
+        Pattern title2 = Pattern.compile("^## (.*)");
+        m = title2.matcher(line);
+        if (m.find()) {
+          line = m.group(1);
+          size = 30;
+          weight = FontWeight.EXTRA_BOLD;
+          extraBufferSpace = 20;
+        }
+        // *..* italics
+        Pattern italic = Pattern.compile("(?<!\\*)\\*([^*]+)\\*(?!\\*)");
+        m = italic.matcher(line);
+        if (m.find()) {
+          line = m.group(1);
+          posture = FontPosture.ITALIC;
+        }
+        /// **..** bold
+        Pattern bold = Pattern.compile("(?<!\\*)\\*\\*([^*]+)\\*\\*(?!\\*)");
+        m = bold.matcher(line);
+        if (m.find()) {
+          line = m.group(1);
+          weight = FontWeight.BOLD;
+        }
+
+        Text text = new Text();
+        text.setText(line);
+        text.setFont(Font.font("Sans Serif", weight, posture, size));
+        text.setLayoutX(x - (text.getLayoutBounds().getWidth() / 2));
+        text.setLayoutY(y + extraBufferSpace + yOffset);
+        y += 40 + extraBufferSpace;
+        creditsRoot.getChildren().add(text);
+
+      }
+    }
+
+  }
+
+  public void calculateFPS(float secondElapsed, Stage primaryStage) {
+    elapsedSinceFPS += secondElapsed;
+    framesElapsedSinceFPS++;
+    if (elapsedSinceFPS >= 0.5f) {
+      int fps = Math.round(framesElapsedSinceFPS / elapsedSinceFPS);
+      primaryStage.setTitle(
+          gameTitle
+              + "   --    FPS: "
+              + fps
+              + "    Score: "
+              + Client.levelHandler.getClientPlayer().getScore());
+      elapsedSinceFPS = 0;
+      framesElapsedSinceFPS = 0;
+    }
+  }
+
+  public void init() {
+    maximumStep = 0.0166f;
+    previousTime = 0;
+    accumulatedTime = 0;
+    settings = new Settings();
+    multiplayer = false;
+    // Start off screen
+  }
+
+  public void endGame() {
+    singleplayerGame = false;
+    levelHandler.getPlayers().entrySet().removeAll(levelHandler.getBotPlayerList().entrySet());
+    levelHandler.getBotPlayerList().forEach((key, gameObject) -> gameObject.removeRender());
+    levelHandler.getBotPlayerList().forEach((key, gameObject) -> gameObject = null);
+    levelHandler.getBotPlayerList().clear();
+    levelHandler.changeMap(
+        new Map(
+            "Main Menu",
+            Path.convert("src/main/resources/menus/main_menu.map"),
+            GameState.MAIN_MENU),
+        false);
   }
 
   @Override
@@ -250,116 +363,26 @@ public class Client extends Application {
         }
 
         calculateFPS(secondElapsed, primaryStage);
+
+        // animate credits scrolling
+        if (credits) {
+          creditStartDelay--;
+          if (creditStartDelay < 0 && creditStartDelay % 2 == 0) {
+            int maxY = (int) creditsRoot.getChildren().get(0).getLayoutY();
+            for (Node node : creditsRoot.getChildren()) {
+              node.setLayoutY(node.getLayoutY() - 1);
+              maxY = Math.max(maxY, (int) node.getLayoutY());
+            }
+            if (maxY < 0) {
+              credits = false;
+              creditStartDelay = 100; //todo magic number
+              creditsRoot.getChildren().clear(); // deletes all children, removing all credit texts
+
+            }
+          }
+        }
       }
     }.start();
-  }
-
-  public void calculateFPS(float secondElapsed, Stage primaryStage) {
-    elapsedSinceFPS += secondElapsed;
-    framesElapsedSinceFPS++;
-    if (elapsedSinceFPS >= 0.5f) {
-      int fps = Math.round(framesElapsedSinceFPS / elapsedSinceFPS);
-      primaryStage.setTitle(
-          gameTitle
-              + "   --    FPS: "
-              + fps
-              + "    Score: "
-              + Client.levelHandler.getClientPlayer().getScore());
-      elapsedSinceFPS = 0;
-      framesElapsedSinceFPS = 0;
-    }
-  }
-
-  public void init() {
-    maximumStep = 0.0166f;
-    previousTime = 0;
-    accumulatedTime = 0;
-    settings = new Settings();
-    multiplayer = false;
-    // Start off screen
-  }
-
-  public void endGame() {
-    singleplayerGame = false;
-    levelHandler.getPlayers().entrySet().removeAll(levelHandler.getBotPlayerList().entrySet());
-    levelHandler.getBotPlayerList().forEach((key, gameObject) -> gameObject.removeRender());
-    levelHandler.getBotPlayerList().forEach((key, gameObject) -> gameObject = null);
-    levelHandler.getBotPlayerList().clear();
-    levelHandler.changeMap(
-        new Map(
-            "Main Menu",
-            Path.convert("src/main/resources/menus/main_menu.map"),
-            GameState.MAIN_MENU),
-        false);
-  }
-
-  public static void showCredits() {
-    ArrayList<String> lines = new ArrayList<String>();
-    try {
-      BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/CREDITS.md"));
-      String line;
-      while ((line = reader.readLine()) != null) {
-        lines.add(line);
-      }
-      reader.close();
-    } catch (FileNotFoundException e) {
-      // todo file not found
-    } catch (IOException e) {
-      // todo io exception
-    }
-    int yOffset = 0;
-    int x = 600;
-    int y = 50;
-    ArrayList<Text> textList = new ArrayList<>();
-    for (String line : lines) {
-      if (!line.equals("")) {
-        int extraBufferSpace = 0;
-        double size = 20;
-        FontWeight weight = FontWeight.NORMAL;
-        FontPosture posture = FontPosture.REGULAR;
-        // # title
-        Pattern title1 = Pattern.compile("^# (.*)");
-        Matcher m = title1.matcher(line);
-        if (m.find()) {
-          line = m.group(1);
-          size = 40;
-          weight = FontWeight.EXTRA_BOLD;
-          extraBufferSpace = 40;
-        }
-        // ## title
-        Pattern title2 = Pattern.compile("^## (.*)");
-        m = title2.matcher(line);
-        if (m.find()) {
-          line = m.group(1);
-          size = 30;
-          weight = FontWeight.EXTRA_BOLD;
-          extraBufferSpace = 20;
-        }
-        // *..* italics
-        Pattern italic = Pattern.compile("(?<!\\*)\\*([^*]+)\\*(?!\\*)");
-        m = italic.matcher(line);
-        if (m.find()) {
-          line = m.group(1);
-          posture = FontPosture.ITALIC;
-        }
-        /// **..** bold
-        Pattern bold = Pattern.compile("(?<!\\*)\\*\\*([^*]+)\\*\\*(?!\\*)");
-        m = bold.matcher(line);
-        if (m.find()) {
-          line = m.group(1);
-          weight = FontWeight.BOLD;
-        }
-
-        Text text = new Text();
-        text.setText(line);
-        text.setFont(Font.font("Sans Serif", weight, posture, size));
-        text.setLayoutX(x);
-        text.setLayoutY(y + extraBufferSpace + yOffset);
-        y += 40 + extraBufferSpace;
-        creditsRoot.getChildren().add(text);
-      }
-    }
-
   }
 
   public void sendInput() {
