@@ -3,7 +3,7 @@ package shared.gameObjects.weapons;
 import client.handlers.audioHandler.AudioHandler;
 import java.util.UUID;
 import javafx.scene.transform.Rotate;
-import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.players.Player;
 import shared.util.Path;
 import shared.util.maths.Vector2;
@@ -26,7 +26,7 @@ public class MachineGun extends Gun {
         y,
         sizeX, // sizeX
         sizeY, // sizeY
-        ObjectID.Weapon, // ObjectID
+        ObjectType.Weapon, // ObjectType
         5, // damage
         10, // weight
         name,

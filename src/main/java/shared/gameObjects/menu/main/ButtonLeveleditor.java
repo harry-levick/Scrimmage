@@ -1,7 +1,7 @@
 package shared.gameObjects.menu.main;
 
 import java.util.UUID;
-import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.menu.ButtonObject;
 
 public class ButtonLeveleditor extends ButtonObject {
@@ -15,7 +15,7 @@ public class ButtonLeveleditor extends ButtonObject {
    * @param id Unique Identifier of every game object
    */
   public ButtonLeveleditor(
-      double x, double y, double sizeX, double sizeY, ObjectID id, UUID objectUUID) {
+      double x, double y, double sizeX, double sizeY, ObjectType id, UUID objectUUID) {
     super(x, y, sizeX, sizeY, id, objectUUID);
   }
 
