@@ -78,7 +78,7 @@ public class AStar {
       if (parentNode != null) {
         // Create a copy of the parents simulated bot
         this.nodeBot = new Bot(parent.nodeBot);
-        //this.nodeBot = parent.nodeBot;
+        this.nodeBot.setHolding(parent.nodeBot.getHolding());
 
         // Simulate the bot with the action, using the game physics
         nodeBot.simulateAction(action);
@@ -95,10 +95,12 @@ public class AStar {
         // Calculate the distance from the starting node to the current node
         distanceElapsed = parent.distanceElapsed + distChange;
       } else {
-        // This is the starting node so distanceElapsed is 0
+        // Starting node so distanceElapsed is 0
         distanceElapsed = 0;
         this.nodeBot = new Bot(bot);
+        this.nodeBot.setHolding(bot.getHolding());
 
+        /*
         // Create a copy of the bots weapon
         Weapon botWeapon = bot.getHolding();
         Weapon cloneWeapon = null;
@@ -113,6 +115,8 @@ public class AStar {
           cloneWeapon = new Sword((Sword) botWeapon);
         }
         this.nodeBot.setHolding(cloneWeapon);
+
+         */
 
         // Calculate the heuristic value of the node.
         this.remainingDistance = calcRemainingH(getItems(sceneSnapshot));
