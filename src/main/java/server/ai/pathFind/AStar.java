@@ -3,12 +3,15 @@ package server.ai.pathFind;
 /**
  * @author Harry Levick (hxl799)
  */
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import server.ai.Bot;
 import shared.gameObjects.GameObject;
+import shared.gameObjects.components.ComponentType;
+import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.Melee;
 import shared.gameObjects.weapons.Weapon;
@@ -79,7 +82,9 @@ public class AStar {
     return action;
   }
 
-  /** The main search function */
+  /**
+   * The main search function
+   */
   private void search() {
     // Set the current node to the best position, in case the bot is already at the enemy.
     SearchNode current = bestPosition;
@@ -147,7 +152,9 @@ public class AStar {
     }
   }
 
-  /** Returns if a node is already in the closed list */
+  /**
+   * Returns if a node is already in the closed list
+   */
   private boolean isInClosed(SearchNode node) {
     // Is the x and y coords of the given node too close the the coords of a node in the visited
     // list?
@@ -200,7 +207,9 @@ public class AStar {
     return sceneCopy;
   }
 
-  /** Initialise the planner */
+  /**
+   * Initialise the planner
+   */
   private void initSearch() {
     SearchNode startPosition = new SearchNode(null, null);
     startPosition.sceneSnapshot = backupState();
@@ -224,7 +233,8 @@ public class AStar {
     Collision viscinityLeft =
         Physics.boxcast(botPosition.add(Vector2.Left().mult(botSize)), botSize);
     if (viscinityLeft == null
-        || viscinityLeft.getCollidedObject().getBodyType() != RigidbodyType.STATIC
+        || ((Rigidbody) viscinityLeft.getCollidedObject().getComponent(ComponentType.RIGIDBODY))
+        .getBodyType() != RigidbodyType.STATIC
         || botPosition.exactMagnitude(viscinityLeft.getPointOfCollision()) > 10) {
       // If no collision, or if the collision is far away
       possibleActions.add(createAction(false, true, false, false));
@@ -235,7 +245,8 @@ public class AStar {
         Physics.boxcast(botPosition.add(Vector2.Right().mult(botSize)), botSize);
 
     if (viscinityRight == null
-        || viscinityRight.getCollidedObject().getBodyType() != RigidbodyType.STATIC
+        || ((Rigidbody) viscinityRight.getCollidedObject().getComponent(ComponentType.RIGIDBODY))
+        .getBodyType() != RigidbodyType.STATIC
         || botPosition.exactMagnitude(viscinityRight.getPointOfCollision()) > 10) {
       // If no collision, or if the collision is far away
       possibleActions.add(createAction(false, false, true, false));
@@ -245,7 +256,9 @@ public class AStar {
     Collision viscinityUp = Physics.boxcast(botPosition.add(Vector2.Up().mult(botSize)), botSize);
     // TODO: add a way of detecting if we can jump + (left or right)
     // If no collision, or if collision is far away
-    if (viscinityUp == null || viscinityUp.getCollidedObject().getBodyType() != RigidbodyType.STATIC
+    if (viscinityUp == null ||
+        ((Rigidbody) viscinityUp.getCollidedObject().getComponent(ComponentType.RIGIDBODY))
+            .getBodyType() != RigidbodyType.STATIC
     /** || botPosition.exactMagnitude(viscinityUp.getPointOfCollision()) > 10 */
     ) {
       // Just jump

@@ -3,7 +3,7 @@ package shared.gameObjects.weapons;
 import client.main.Client;
 import java.util.UUID;
 import shared.gameObjects.GameObject;
-import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.players.Player;
 
 /**
@@ -34,7 +34,7 @@ public abstract class Weapon extends GameObject {
    *
    * @param x X position of this weapon
    * @param y Y position of this weapon
-   * @param id ObjectID of this weapon
+   * @param id ObjectType of this weapon
    * @param damage Damage of this weapon
    * @param weight Weight of this weapon
    * @param name Name of this weapon
@@ -49,7 +49,7 @@ public abstract class Weapon extends GameObject {
       double y,
       double sizeX,
       double sizeY,
-      ObjectID id,
+      ObjectType id,
       int damage,
       double weight,
       String name,
@@ -95,7 +95,7 @@ public abstract class Weapon extends GameObject {
   }
 
   public void destroyWeapon() {
-    Client.levelHandler.delGameObject(this);
+    Client.levelHandler.removeGameObject(this);
   }
 
   // -------START-------

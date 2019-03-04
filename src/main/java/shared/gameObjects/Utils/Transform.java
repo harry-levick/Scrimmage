@@ -2,21 +2,24 @@ package shared.gameObjects.Utils;
 
 import java.io.Serializable;
 import shared.gameObjects.GameObject;
-import shared.util.maths.Rotation;
 import shared.util.maths.Vector2;
 
 public class Transform implements Serializable {
 
   private Vector2 topPos;
   private Vector2 botPos;
+  private Vector2 rotatedPos;
+  private Vector2 rotatedSize;
   private Vector2 size;
-  private Rotation rot;
+  private float rot;
   private GameObject gameObject;
 
   public Transform(GameObject parent) {
     this.topPos = this.size = Vector2.Zero();
     this.botPos = this.topPos.add(this.size);
-    this.rot = new Rotation(0);
+    rotatedPos = topPos;
+    rotatedSize = size;
+    this.rot = 0;
     gameObject = parent;
   }
 
@@ -24,7 +27,9 @@ public class Transform implements Serializable {
     this.topPos = topPos;
     this.size = Vector2.Unit();
     this.botPos = this.topPos.add(this.size);
-    this.rot = new Rotation(0);
+    rotatedPos = topPos;
+    rotatedSize = size;
+    this.rot = 0;
     gameObject = parent;
   }
 
@@ -32,7 +37,9 @@ public class Transform implements Serializable {
     this.topPos = topPos;
     this.size = size;
     this.botPos = this.topPos.add(this.size);
-    this.rot = new Rotation(0);
+    rotatedPos = topPos;
+    rotatedSize = size;
+    this.rot = 0;
     gameObject = parent;
   }
 
@@ -44,9 +51,25 @@ public class Transform implements Serializable {
     botPos = botPos.add(translateFactor);
   }
 
-  /** [Does not do anything currently] */
-  public void rotate(Vector2 rotation) {
-    // TODO Add Rotation Methods
+  /**
+   * [Does not do anything currently]
+   */
+  public void rotate(float rotation) {
+    rot += rotation;
+    if (rot > 180) {
+      rot -= 180;
+    }
+    if (rot < -180) {
+      rot += 180;
+    }
+    float angle = (float) Math.toRadians(rot);
+    float posX = topPos.getX(), posY = topPos.getY();
+    this.rotatedPos = new Vector2(posX * Math.cos(angle) - posY * Math.sin(angle),
+        posX * Math.sin(angle) + posY * Math.cos(angle));
+    posX = size.getX();
+    posY = size.getY();
+    this.rotatedSize = new Vector2(posX * Math.cos(angle) - posY * Math.sin(angle),
+        posX * Math.sin(angle) + posY * Math.cos(angle));
   }
 
   /**
@@ -69,12 +92,13 @@ public class Transform implements Serializable {
     return getPos().magnitude(transform.getPos());
   }
 
-  public Rotation getRot() {
+  public float getRot() {
     return rot;
   }
 
-  public void setRot(Rotation rot) {
+  public void setRot(float rot) {
     this.rot = rot;
+    rotate(0);
   }
 
   public Vector2 getPos() {

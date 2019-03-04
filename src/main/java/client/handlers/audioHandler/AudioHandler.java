@@ -18,6 +18,7 @@ public class AudioHandler {
   private int trackPos = 0;
   private ArrayList<String> playlist = new ArrayList<>();
   private boolean playingPlaylist = false;
+  private PLAYLIST currentPlaylist;
 
   private MusicAssets musicAssets = new MusicAssets();
   private EffectsAssets effectsAssets = new EffectsAssets();
@@ -44,6 +45,11 @@ public class AudioHandler {
   }
 
   public void playMusicPlaylist(PLAYLIST playlistSet) {
+    if ((currentPlaylist != null) && (playlistSet != currentPlaylist)) {
+      //playlist change
+      trackPos = 0;
+    }
+    currentPlaylist = playlistSet;
     playingPlaylist = true;
     playlist = musicAssets.getPlaylist(playlistSet);
     playMusic(playlist.get(trackPos));

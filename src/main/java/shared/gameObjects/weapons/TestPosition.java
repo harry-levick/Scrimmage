@@ -2,7 +2,7 @@ package shared.gameObjects.weapons;
 
 import java.util.UUID;
 import shared.gameObjects.GameObject;
-import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.ObjectType;
 import shared.util.Path;
 
 public class TestPosition extends GameObject {
@@ -10,7 +10,7 @@ public class TestPosition extends GameObject {
   private MachineGun gun;
 
   public TestPosition(double x, double y, UUID uuid, MachineGun gun) {
-    super(x, y, 10, 10, ObjectID.Bullet, uuid);
+    super(x, y, 10, 10, ObjectType.Bullet, uuid);
     this.gun = gun;
   }
 
@@ -20,13 +20,6 @@ public class TestPosition extends GameObject {
     this.setY(gun.getY());
 
     super.update();
-  }
-
-  @Override
-  public void render() {
-    super.render();
-    imageView.setTranslateX(this.getX());
-    imageView.setTranslateY(this.getY());
   }
 
   @Override
