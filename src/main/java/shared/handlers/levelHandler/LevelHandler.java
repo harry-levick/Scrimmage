@@ -258,6 +258,11 @@ public class LevelHandler {
     players.put(clientPlayer.getUUID(), clientPlayer);
     gameObjects.put(clientPlayer.getUUID(), clientPlayer);
     
+    // Add a spawn gun
+    Weapon spawnGun = new MachineGun(200, 200, "MachineGun.spawnGun@LevelHandler.addClientPlayer", null, UUID.randomUUID());
+    spawnGun.initialise(root);
+    gameObjects.put(spawnGun.getUUID(), spawnGun);
+    
     /*
     // Add weapon to player
     UUID gunUUID = UUID.randomUUID();
