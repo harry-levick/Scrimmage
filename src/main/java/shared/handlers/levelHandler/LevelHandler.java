@@ -11,7 +11,7 @@ import javafx.scene.Group;
 import server.ai.Bot;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.MapDataObject;
-import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.background.Background;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.MachineGun;
@@ -80,7 +80,11 @@ public class LevelHandler {
     */
   }
 
-  public LevelHandler(Settings settings) {
+  public LevelHandler(Settings settings, Group root, Group backgroundRoot, Group gameRoot,
+      boolean server) {
+    this.root = root;
+    this.backgroundRoot = backgroundRoot;
+    this.gameRoot = gameRoot;
     this.settings = settings;
     gameObjects = new LinkedHashMap<>();
     toRemove = new ArrayList<>();
@@ -88,6 +92,8 @@ public class LevelHandler {
     bots = new LinkedHashMap<>();
     toCreate = new ArrayList<>();
     musicPlayer = new AudioHandler(settings, Client.musicActive);
+    changeMap(new Map("Lobby", Path.convert("src/main/resources/menus/lobby.map"), GameState.Lobby),
+        false);
   }
 
   public void changeMap(Map map, Boolean moveToSpawns) {
@@ -122,7 +128,7 @@ public class LevelHandler {
     gameObjects = MapLoader.loadMap(map.getPath());
     gameObjects.forEach(
         (key, gameObject) -> {
-          if (gameObject.getId() == ObjectID.MapDataObject) {
+          if (gameObject.getId() == ObjectType.MapDataObject) {
             this.background = ((MapDataObject) gameObject).getBackground();
             ArrayList<Vector2> spawnPoints = ((MapDataObject) gameObject).getSpawnPoints();
             if (this.background != null) {

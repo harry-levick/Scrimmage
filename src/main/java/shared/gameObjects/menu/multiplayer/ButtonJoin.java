@@ -4,7 +4,7 @@ import client.handlers.connectionHandler.ConnectionHandler;
 import client.main.Client;
 import java.util.UUID;
 import javafx.scene.input.MouseEvent;
-import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.menu.ButtonObject;
 import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.Map;
@@ -22,7 +22,8 @@ public class ButtonJoin extends ButtonObject {
    * @param y Y coordinate of object in game world
    * @param id Unique Identifier of every game object
    */
-  public ButtonJoin(double x, double y, double sizeX, double sizeY, ObjectID id, UUID objectUUID) {
+  public ButtonJoin(double x, double y, double sizeX, double sizeY, ObjectType id,
+      UUID objectUUID) {
     super(x, y, sizeX, sizeY, id, objectUUID);
     this.address = "localhost";
   }

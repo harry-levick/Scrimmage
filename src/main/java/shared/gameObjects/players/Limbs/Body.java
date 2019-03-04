@@ -1,6 +1,6 @@
 package shared.gameObjects.players.Limbs;
 
-import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.players.Limb;
 import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.LevelHandler;
@@ -12,7 +12,7 @@ public class Body extends Limb {
    * ensure actions are calculated the same
    */
   public Body(Player parent, LevelHandler levelHandler) {
-    super(0, 0, 22, 64, 39, 31, ObjectID.Player, false, parent, 0, 0, levelHandler);
+    super(0, 0, 22, 64, 39, 31, ObjectType.Limb, false, parent, 0, 0, levelHandler);
   }
 
   @Override

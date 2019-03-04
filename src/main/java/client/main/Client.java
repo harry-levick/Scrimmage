@@ -5,6 +5,7 @@ import client.handlers.inputHandler.KeyboardInput;
 import client.handlers.inputHandler.MouseInput;
 import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import de.codecentric.centerdevice.javafxsvg.dimension.PrimitiveDimensionProvider;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -20,8 +21,10 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import shared.gameObjects.MapDataObject;
+import shared.gameObjects.GameObject;
 import shared.gameObjects.UI.UI;
+import shared.gameObjects.Utils.TimePosition;
+import shared.gameObjects.players.Limbs.Arm;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.MachineGun;
 import shared.handlers.levelHandler.GameState;
@@ -29,9 +32,9 @@ import shared.handlers.levelHandler.LevelHandler;
 import shared.handlers.levelHandler.Map;
 import shared.packets.PacketGameState;
 import shared.packets.PacketInput;
-import shared.packets.PacketPlayerJoin;
 import shared.physics.Physics;
 import shared.util.Path;
+import shared.util.maths.Vector2;
 
 public class Client extends Application {
 
@@ -64,6 +67,12 @@ public class Client extends Application {
   private int framesElapsedSinceFPS = 0;
   private UI userInterface;
   private boolean gameOver;
+
+  //Networking
+  private final boolean prediction = false; //Broken
+  private final boolean reconciliation = true;
+  private final boolean setStateSnap = true; //Broken
+  private final boolean entity_interpolation = true;
 
   public static void main(String args[]) {
     launch(args);
@@ -182,6 +191,43 @@ public class Client extends Application {
           levelHandler.getBotPlayerList().forEach((key, bot) -> bot.applyInput());
         }
 
+        /** Check Collisions */
+        Physics.gameObjects = levelHandler.getGameObjects();
+
+        levelHandler
+            .getGameObjects()
+            .forEach((key, gameObject) -> gameObject.updateCollision());
+        Physics.processCollisions();
+
+        if (!multiplayer) {
+          /** Update Game Objects */
+          levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.update());
+        }
+
+        if (multiplayer) {
+          if (prediction) {
+            levelHandler.getClientPlayer().update();
+          }
+          levelHandler.getPlayers().forEach((key, player) ->
+              player.getChildren().forEach(child -> {
+                child.update();
+                if (child instanceof Arm) {
+                  child.getChildren().forEach(childChild -> childChild.update());
+                }
+              })
+          );
+        }
+
+        accumulatedTime -= timeStep;
+        float alpha = accumulatedTime / timeStep;
+        levelHandler.getGameObjects()
+            .forEach((key, gameObject) -> gameObject.interpolatePosition(alpha));
+
+        //Interpolate Networked Entities
+        if (multiplayer && entity_interpolation) {
+          interpolateEntities();
+        }
+
         /** Render Game Objects */
         levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.render());
         if (levelHandler.getBackground() != null) {
@@ -193,23 +239,6 @@ public class Client extends Application {
             || levelHandler.getGameState() == GameState.Multiplayer) {
           userInterface.render();
         }
-
-        /** Check Collisions */
-        //TODO Change physics to LinkedHashMaps
-        Physics.gameObjects = levelHandler.getGameObjects();
-
-        levelHandler
-            .getGameObjects()
-            .forEach((key, gameObject) -> gameObject.updateCollision());
-        Physics.processCollisions();
-
-        /** Update Game Objects */
-        levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.update());
-
-        accumulatedTime -= timeStep;
-        float alpha = accumulatedTime / timeStep;
-        levelHandler.getGameObjects()
-            .forEach((key, gameObject) -> gameObject.interpolatePosition(alpha));
 
         calculateFPS(secondElapsed, primaryStage);
       }
@@ -295,16 +324,8 @@ public class Client extends Application {
     if (connectionHandler.received.size() != 0) {
       try {
         String message = (String) connectionHandler.received.take();
-        System.out.println(message);
         int messageID = Integer.parseInt(message.substring(0, 1));
         switch (messageID) {
-          // PlayerJoin
-          case 4:
-            PacketPlayerJoin packetPlayerJoin = new PacketPlayerJoin(message);
-            levelHandler.addPlayer(
-                new Player(packetPlayerJoin.getX(), packetPlayerJoin.getY(),
-                    packetPlayerJoin.getUUID(), levelHandler), gameRoot);
-            break;
           // Ends
           case 6:
             Client.connectionHandler.end();
@@ -322,15 +343,26 @@ public class Client extends Application {
           case 7:
             PacketGameState gameState = new PacketGameState(message);
             HashMap<UUID, String> data = gameState.getGameObjects();
-            levelHandler
-                .getGameObjects()
-                .forEach(
-                    (key, gameObject) -> {
-                      if (!(gameObject instanceof MapDataObject)) {
-                        gameObject.setState(data.get(gameObject.getUUID()));
-                      }
-                    });
-            serverReconciliation(gameState.getLastProcessedInput());
+            data.forEach((key, value) -> {
+              GameObject gameObject = levelHandler.getGameObjects().get(key);
+              if (gameObject == null) {
+                createGameObject(value);
+              } else {
+                if (!entity_interpolation || gameObject.getUUID() == Client.levelHandler
+                    .getClientPlayer().getUUID()) {
+                  gameObject.setState(value, setStateSnap);
+                } else {
+                  Timestamp now = new Timestamp(System.currentTimeMillis());
+                  String[] unpackedData = value.split(";");
+                  Vector2 statePos = new Vector2(Double.parseDouble(unpackedData[2]),
+                      Double.parseDouble(unpackedData[3]));
+                  gameObject.getPositionBuffer().add(new TimePosition(now, statePos));
+                }
+              }
+            });
+            if (reconciliation) {
+              serverReconciliation(Client.levelHandler.getClientPlayer().getLastInputCount());
+            }
             break;
           default:
             System.out.println("ERROR" + messageID + " " + message);
@@ -341,12 +373,60 @@ public class Client extends Application {
     }
   }
 
+  public void createGameObject(String data) {
+    String[] unpackedData = data.split(";");
+    switch (unpackedData[1]) {
+      case "Player":
+        Player player = new Player(Float.parseFloat(unpackedData[2]),
+            Float.parseFloat(unpackedData[3]), UUID.fromString(unpackedData[0]),
+            Client.levelHandler);
+        Client.levelHandler.addPlayer(player, gameRoot);
+        break;
+      default:
+
+    }
+  }
+
+  public void interpolateEntities() {
+    Timestamp now = new Timestamp(System.currentTimeMillis() - (1000 / 60));
+    //Need to calculate render timestamp
+
+    levelHandler.getGameObjects().forEach((key, gameObject) -> {
+      //Find the two authoritative positions surrounding the rendering timestamp
+      ArrayList<TimePosition> buffer = gameObject.getPositionBuffer();
+
+      if (gameObject.getUUID() != Client.levelHandler.getClientPlayer().getUUID() && buffer != null
+          && buffer.size() > 0) {
+
+        //Drop older positions
+        while (buffer.size() >= 2 && buffer.get(1).getTimestamp().before(now)) {
+          buffer.remove(0);
+        }
+
+        //Interpolate between the two surrounding  authoritative  positions to smooth motion
+        if (buffer.size() >= 2 && buffer.get(0).getTimestamp().before(now) && now
+            .before(buffer.get(1).getTimestamp())) {
+          Vector2 pos0 = buffer.get(0).getPosition();
+          Vector2 pos1 = buffer.get(1).getPosition();
+          Long t0 = buffer.get(0).getTimestamp().getTime();
+          Long t1 = buffer.get(1).getTimestamp().getTime();
+          Long tnow = now.getTime();
+
+          gameObject
+              .setX(pos0.getX() + (pos1.getX() - pos0.getX()) * (tnow - t0) / (t1 - t0));
+          gameObject
+              .setY(pos0.getY() + (pos1.getY() - pos0.getY()) * (tnow - t0) / (t1 - t0));
+        }
+      }
+    });
+  }
+
   public void serverReconciliation(int lastProcessedInput) {
     int j = 0;
     // Server Reconciliation. Re-apply all the inputs not yet processed by
     // the server.
     while (j < pendingInputs.size()) {
-      if (inputSequenceNumber <= lastProcessedInput) {
+      if (inputSequenceNumber - 1 <= lastProcessedInput) {
         // Already processed. Its effect is already taken into account into the world update
         // we just got so drop it
         pendingInputs.remove(j);

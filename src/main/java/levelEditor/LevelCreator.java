@@ -10,11 +10,12 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.stage.Stage;
+import shared.gameObjects.Blocks.Metal.MetalBlockLargeObject;
 import shared.gameObjects.Blocks.Stone.StoneFloorObject;
 import shared.gameObjects.Blocks.Stone.StoneWallObject;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.MapDataObject;
-import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.background.Background1;
 import shared.gameObjects.background.Background2;
 import shared.gameObjects.background.Background3;
@@ -89,44 +90,44 @@ public class LevelCreator extends Application {
     uuid = UUID.randomUUID();
     gameObjects.put(uuid
         , new ButtonSingleplayer(
-            getAbs(20), getAbs(6), getAbs(8), getAbs(2), ObjectID.Button, uuid));
+            getAbs(20), getAbs(6), getAbs(8), getAbs(2), ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
         new ButtonMultiplayer(
-            getAbs(20), getAbs(11), getAbs(8), getAbs(2), ObjectID.Button, UUID.randomUUID()));
+            getAbs(20), getAbs(11), getAbs(8), getAbs(2), ObjectType.Button, UUID.randomUUID()));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
         new ButtonSettings(
-            getAbs(20), getAbs(17), getAbs(8), getAbs(2), ObjectID.Button, UUID.randomUUID()));
+            getAbs(20), getAbs(17), getAbs(8), getAbs(2), ObjectType.Button, UUID.randomUUID()));
     uuid = UUID.randomUUID();
 
     //Middle platforms
     gameObjects.put(uuid,
         new StoneFloorObject(
-            getAbs(7), getAbs(10), getAbs(6), getAbs(2), ObjectID.Bot, UUID.randomUUID()));
+            getAbs(7), getAbs(10), getAbs(6), getAbs(2), ObjectType.Bot, UUID.randomUUID()));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
         new StoneFloorObject(
-            getAbs(3), getAbs(20), getAbs(6), getAbs(2), ObjectID.Bot, UUID.randomUUID()));
+            getAbs(3), getAbs(20), getAbs(6), getAbs(2), ObjectType.Bot, UUID.randomUUID()));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
         new StoneFloorObject(
-            getAbs(31), getAbs(18), getAbs(6), getAbs(2), ObjectID.Bot, UUID.randomUUID()));
+            getAbs(31), getAbs(18), getAbs(6), getAbs(2), ObjectType.Bot, UUID.randomUUID()));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
         new StoneFloorObject(
-            getAbs(35), getAbs(5), getAbs(6), getAbs(2), ObjectID.Bot, UUID.randomUUID()));
+            getAbs(35), getAbs(5), getAbs(6), getAbs(2), ObjectType.Bot, UUID.randomUUID()));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
         new StoneFloorObject(
-            getAbs(37), getAbs(13), getAbs(6), getAbs(2), ObjectID.Bot, UUID.randomUUID()));
+            getAbs(37), getAbs(13), getAbs(6), getAbs(2), ObjectType.Bot, UUID.randomUUID()));
     uuid = UUID.randomUUID();
 
     for (int i = 0; i < 24; i++) {
       // top row wall
       gameObjects.put(uuid,
           new StoneFloorObject(
-              getAbs(i * 2), getAbs(0), getAbs(2), getAbs(2), ObjectID.Bot, UUID.randomUUID()));
+              getAbs(i * 2), getAbs(0), getAbs(2), getAbs(2), ObjectType.Bot, UUID.randomUUID()));
       uuid = UUID.randomUUID();
     }
     for (int i = 0; i < 12; i++) {
@@ -137,7 +138,7 @@ public class LevelCreator extends Application {
               getAbs((i * 2) + 2),
               getAbs(2),
               getAbs(2),
-              ObjectID.Bot,
+              ObjectType.Bot,
               UUID.randomUUID()));
       uuid = UUID.randomUUID();
       gameObjects.put(uuid,
@@ -146,7 +147,7 @@ public class LevelCreator extends Application {
               getAbs((i * 2) + 2),
               getAbs(2),
               getAbs(2),
-              ObjectID.Bot,
+              ObjectType.Bot,
               UUID.randomUUID()));
       uuid = UUID.randomUUID();
     }
@@ -154,7 +155,7 @@ public class LevelCreator extends Application {
       // bottom row floor
       gameObjects.put(uuid,
           new StoneFloorObject(
-              getAbs(i * 4), getAbs(25), getAbs(4), getAbs(2), ObjectID.Bot, UUID.randomUUID()));
+              getAbs(i * 4), getAbs(25), getAbs(4), getAbs(2), ObjectType.Bot, UUID.randomUUID()));
       uuid = UUID.randomUUID();
     }
     MapLoader.saveMap(gameObjects, mapDataObject, filepath + filename + ".map");
@@ -173,7 +174,7 @@ public class LevelCreator extends Application {
       // bottom row floor
       gameObjects.put(uuid,
           new StoneFloorObject(
-              getAbs(i * 4), getAbs(25), getAbs(4), getAbs(2), ObjectID.Bot, UUID.randomUUID()));
+              getAbs(i * 4), getAbs(25), getAbs(4), getAbs(2), ObjectType.Bot, UUID.randomUUID()));
       uuid = UUID.randomUUID();
     }
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "map1" + ".map");
@@ -208,13 +209,13 @@ public class LevelCreator extends Application {
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
         new ButtonJoin(
-            getAbs(20), getAbs(7), getAbs(8), getAbs(2), ObjectID.Button, UUID.randomUUID()));
+            getAbs(20), getAbs(7), getAbs(8), getAbs(2), ObjectType.Button, UUID.randomUUID()));
     uuid = UUID.randomUUID();
     for (int i = 0; i < 24; i++) {
       // top row wall
       gameObjects.put(uuid,
           new StoneWallObject(
-              getAbs(i * 2), getAbs(0), getAbs(2), getAbs(2), ObjectID.Bot, UUID.randomUUID()));
+              getAbs(i * 2), getAbs(0), getAbs(2), getAbs(2), ObjectType.Bot, UUID.randomUUID()));
       uuid = UUID.randomUUID();
     }
     for (int i = 0; i < 12; i++) {
@@ -225,7 +226,7 @@ public class LevelCreator extends Application {
               getAbs((i * 2) + 2),
               getAbs(2),
               getAbs(2),
-              ObjectID.Bot,
+              ObjectType.Bot,
               UUID.randomUUID()));
       uuid = UUID.randomUUID();
       gameObjects.put(uuid,
@@ -234,7 +235,7 @@ public class LevelCreator extends Application {
               getAbs((i * 2) + 2),
               getAbs(2),
               getAbs(2),
-              ObjectID.Bot,
+              ObjectType.Bot,
               UUID.randomUUID()));
       uuid = UUID.randomUUID();
     }
@@ -242,7 +243,7 @@ public class LevelCreator extends Application {
       // bottom row floor
       gameObjects.put(uuid,
           new StoneFloorObject(
-              getAbs(i * 4), getAbs(25), getAbs(4), getAbs(2), ObjectID.Bot, UUID.randomUUID()));
+              getAbs(i * 4), getAbs(25), getAbs(4), getAbs(2), ObjectType.Bot, UUID.randomUUID()));
       uuid = UUID.randomUUID();
     }
     MapLoader.saveMap(gameObjects, mapDataObject, filepath + filename + ".map");
@@ -262,7 +263,7 @@ public class LevelCreator extends Application {
       // top row wall
       gameObjects.put(uuid,
           new StoneWallObject(
-              getAbs(i * 2), getAbs(0), getAbs(2), getAbs(2), ObjectID.Bot, UUID.randomUUID()));
+              getAbs(i * 2), getAbs(0), getAbs(2), getAbs(2), ObjectType.Bot, UUID.randomUUID()));
       uuid = UUID.randomUUID();
     }
     for (int i = 0; i < 12; i++) {
@@ -273,7 +274,7 @@ public class LevelCreator extends Application {
               getAbs((i * 2) + 2),
               getAbs(2),
               getAbs(2),
-              ObjectID.Bot,
+              ObjectType.Bot,
               UUID.randomUUID()));
       uuid = UUID.randomUUID();
       gameObjects.put(uuid,
@@ -282,7 +283,7 @@ public class LevelCreator extends Application {
               getAbs((i * 2) + 2),
               getAbs(2),
               getAbs(2),
-              ObjectID.Bot,
+              ObjectType.Bot,
               UUID.randomUUID()));
       uuid = UUID.randomUUID();
     }
@@ -290,9 +291,14 @@ public class LevelCreator extends Application {
       // bottom row floor
       gameObjects.put(uuid,
           new StoneFloorObject(
-              getAbs(i * 4), getAbs(25), getAbs(4), getAbs(2), ObjectID.Bot, UUID.randomUUID()));
+              getAbs(i * 4), getAbs(25), getAbs(4), getAbs(2), ObjectType.Bot, UUID.randomUUID()));
       uuid = UUID.randomUUID();
     }
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new MetalBlockLargeObject(getAbs(10), getAbs(5), getAbs(2), getAbs(2), ObjectType.Bot,
+            uuid));
+
     MapLoader.saveMap(gameObjects, mapDataObject, filepath + filename + ".map");
 
     ////////////////////////////////////////
@@ -308,21 +314,21 @@ public class LevelCreator extends Application {
     uuid = UUID.randomUUID();
     gameObjects
         .put(uuid, new SoundSlider(getAbs(20), getAbs(7), getAbs(8), getAbs(1), SOUND_TYPE.MUSIC,
-        "Music", ObjectID.Button, UUID.randomUUID()));
+            "Music", ObjectType.Button, UUID.randomUUID()));
     uuid = UUID.randomUUID();
     gameObjects
         .put(uuid, new SoundSlider(getAbs(20), getAbs(9), getAbs(8), getAbs(1), SOUND_TYPE.SFX,
-            "Sound Effects", ObjectID.Button, UUID.randomUUID()));
+            "Sound Effects", ObjectType.Button, UUID.randomUUID()));
     uuid = UUID.randomUUID();
     gameObjects
-        .put(uuid, new ButtonBack(getAbs(20), getAbs(12), getAbs(8), getAbs(2), ObjectID.Button,
-        UUID.randomUUID()));
+        .put(uuid, new ButtonBack(getAbs(20), getAbs(12), getAbs(8), getAbs(2), ObjectType.Button,
+            UUID.randomUUID()));
     uuid = UUID.randomUUID();
     for (int i = 0; i < 24; i++) {
       // top row wall
       gameObjects.put(uuid,
           new StoneWallObject(
-              getAbs(i * 2), getAbs(0), getAbs(2), getAbs(2), ObjectID.Bot, UUID.randomUUID()));
+              getAbs(i * 2), getAbs(0), getAbs(2), getAbs(2), ObjectType.Bot, UUID.randomUUID()));
       uuid = UUID.randomUUID();
     }
     for (int i = 0; i < 12; i++) {
@@ -333,7 +339,7 @@ public class LevelCreator extends Application {
               getAbs((i * 2) + 2),
               getAbs(2),
               getAbs(2),
-              ObjectID.Bot,
+              ObjectType.Bot,
               UUID.randomUUID()));
       uuid = UUID.randomUUID();
       gameObjects.put(uuid,
@@ -342,7 +348,7 @@ public class LevelCreator extends Application {
               getAbs((i * 2) + 2),
               getAbs(2),
               getAbs(2),
-              ObjectID.Bot,
+              ObjectType.Bot,
               UUID.randomUUID()));
       uuid = UUID.randomUUID();
     }
@@ -350,7 +356,7 @@ public class LevelCreator extends Application {
       // bottom row floor
       gameObjects.put(uuid,
           new StoneFloorObject(
-              getAbs(i * 4), getAbs(25), getAbs(4), getAbs(2), ObjectID.Bot, UUID.randomUUID()));
+              getAbs(i * 4), getAbs(25), getAbs(4), getAbs(2), ObjectType.Bot, UUID.randomUUID()));
       uuid = UUID.randomUUID();
     }
     MapLoader.saveMap(gameObjects, mapDataObject, filepath + filename + ".map");

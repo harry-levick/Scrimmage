@@ -4,7 +4,7 @@ import client.main.Client;
 import java.util.UUID;
 import javafx.scene.Group;
 import shared.gameObjects.GameObject;
-import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Limbs.Arm;
@@ -26,11 +26,11 @@ public class Player extends GameObject {
   protected final float jumpForce = -200;
   protected final float JUMP_LIMIT = 2.0f;
   public boolean leftKey, rightKey, jumpKey, click;
-  protected LevelHandler levelHandler;
   //Testing
   public boolean deattach;
   public double mouseX, mouseY;
   public int score;
+  protected LevelHandler levelHandler;
   protected Behaviour behaviour;
   protected float jumpTime;
   protected boolean jumped;
@@ -43,8 +43,12 @@ public class Player extends GameObject {
   protected double vx;
   private BoxCollider bc;
 
+  //Networking
+  private int lastInputCount;
+
   public Player(double x, double y, UUID playerUUID, LevelHandler levelHandler) {
-    super(x, y, 80, 110, ObjectID.Player, playerUUID);
+    super(x, y, 80, 110, ObjectType.Player, playerUUID);
+    this.lastInputCount = 0;
     this.score = 0;
     this.leftKey = false;
     this.rightKey = false;
@@ -102,20 +106,21 @@ public class Player extends GameObject {
   }
 
 
-  /**
-   @Override public String getState() {
-   return objectUUID + ";" + getX() + ";" + getY() + ";" + animation.getName() + ";" + health;
-   // add holding
-   }
+  @Override
+  public String getState() {
+    return objectUUID + ";" + id + ";" + getX() + ";" + getY() + ";" + animation.getName() + ";"
+        + health + ";"
+        + lastInputCount;
+  }
 
-   @Override public void setState(String data) {
-   String[] unpackedData = data.split(";");
-   setX(Double.parseDouble(unpackedData[1]));
-   setY(Double.parseDouble(unpackedData[2]));
-   this.animation.switchAnimation(unpackedData[3]);
-   this.health = Integer.parseInt(unpackedData[4]);
-   }
-   **/
+  @Override
+  public void setState(String data, Boolean snap) {
+    super.setState(data, snap);
+    String[] unpackedData = data.split(";");
+    //this.animation.switchAnimation(unpackedData[4]);
+    this.health = Integer.parseInt(unpackedData[5]);
+    this.lastInputCount = Integer.parseInt(unpackedData[6]);
+  }
 
   public void checkGrounded() {
     grounded = rb.isGrounded();
@@ -374,5 +379,13 @@ public class Player extends GameObject {
   @Override
   public void OnCollisionStay(Collision col) {
     //  System.out.println("Stayed in Collision!");
+  }
+
+  public int getLastInputCount() {
+    return lastInputCount;
+  }
+
+  public void setLastInputCount(int lastInputCount) {
+    this.lastInputCount = lastInputCount;
   }
 }
