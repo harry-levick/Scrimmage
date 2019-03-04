@@ -7,7 +7,7 @@ import java.util.UUID;
 import javafx.scene.input.MouseEvent;
 import server.ai.Bot;
 import shared.gameObjects.GameObject;
-import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.menu.ButtonObject;
 import shared.gameObjects.weapons.MachineGun;
 import shared.gameObjects.weapons.Sword;
@@ -28,7 +28,7 @@ public class ButtonSingleplayer extends ButtonObject {
    * @param id Unique Identifier of every game object
    */
   public ButtonSingleplayer(
-      double x, double y, double sizeX, double sizeY, ObjectID id, UUID objectUUID) {
+      double x, double y, double sizeX, double sizeY, ObjectType id, UUID objectUUID) {
     super(x, y, sizeX, sizeY, id, objectUUID);
   }
 

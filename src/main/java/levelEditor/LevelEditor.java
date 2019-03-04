@@ -39,7 +39,7 @@ import shared.gameObjects.Blocks.Wood.WoodBlockSmallObject;
 import shared.gameObjects.Blocks.Wood.WoodFloorObject;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.MapDataObject;
-import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.background.Background1;
 import shared.gameObjects.background.Background2;
 import shared.gameObjects.background.Background3;
@@ -185,7 +185,7 @@ public class LevelEditor extends Application {
                   getGridY(event.getY()),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
-                  ObjectID.Bot,
+                  ObjectType.Bot,
                   uuid);
           break;
 
@@ -196,7 +196,7 @@ public class LevelEditor extends Application {
                   getGridY(event.getY()),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
-                  ObjectID.Bot,
+                  ObjectType.Bot,
                   uuid);
           break;
 
@@ -207,7 +207,7 @@ public class LevelEditor extends Application {
                   getGridY(event.getY()),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
-                  ObjectID.Bot,
+                  ObjectType.Bot,
                   uuid);
           break;
 
@@ -218,7 +218,7 @@ public class LevelEditor extends Application {
                   getGridY(event.getY()),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
-                  ObjectID.Bot,
+                  ObjectType.Bot,
                   uuid);
           break;
 
@@ -229,7 +229,7 @@ public class LevelEditor extends Application {
                   getGridY(event.getY()),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
-                  ObjectID.Bot,
+                  ObjectType.Bot,
                   uuid);
           break;
 
@@ -252,7 +252,7 @@ public class LevelEditor extends Application {
                   getGridY(event.getY()),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
-                  ObjectID.Bot,
+                  ObjectType.Bot,
                   uuid);
           break;
 
@@ -263,7 +263,7 @@ public class LevelEditor extends Application {
                   getGridY(event.getY()),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
-                  ObjectID.Bot,
+                  ObjectType.Bot,
                   uuid);
           break;
 
@@ -274,7 +274,7 @@ public class LevelEditor extends Application {
                   getGridY(event.getY()),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
-                  ObjectID.Bot,
+                  ObjectType.Bot,
                   uuid);
           break;
 
@@ -285,7 +285,7 @@ public class LevelEditor extends Application {
                   getGridY(event.getY()),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
-                  ObjectID.Bot,
+                  ObjectType.Bot,
                   uuid);
           break;
 
@@ -296,7 +296,7 @@ public class LevelEditor extends Application {
                   getGridY(event.getY()),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
-                  ObjectID.Bot,
+                  ObjectType.Bot,
                   uuid);
           break;
 
@@ -307,7 +307,7 @@ public class LevelEditor extends Application {
                   getGridY(event.getY()),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
-                  ObjectID.Bot,
+                  ObjectType.Bot,
                   uuid);
           break;
 
@@ -318,7 +318,7 @@ public class LevelEditor extends Application {
                   getGridY(event.getY()),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
-                  ObjectID.Bot,
+                  ObjectType.Bot,
                   uuid);
           break;
 
@@ -329,7 +329,7 @@ public class LevelEditor extends Application {
                   getGridY(event.getY()),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
-                  ObjectID.Bot,
+                  ObjectType.Bot,
                   uuid);
           break;
 
@@ -340,7 +340,7 @@ public class LevelEditor extends Application {
                   getGridY(event.getY()),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
-                  ObjectID.Bot,
+                  ObjectType.Bot,
                   uuid);
           break;
         case SPIKES:
@@ -349,20 +349,20 @@ public class LevelEditor extends Application {
                   getGridY(event.getY()),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
-                  ObjectID.Bot,
+                  ObjectType.Bot,
                   uuid);
           break;
       }
 
       if (temp != null) {
-        if (temp.getId() == ObjectID.Background) {
+        if (temp.getId() == ObjectType.Background) {
           temp.initialise(background);
         } else {
           temp.initialise(objects);
         }
-        if (objectTypeSelected == OBJECT_TYPES.PLAYER && temp.getId() != ObjectID.Background) {
+        if (objectTypeSelected == OBJECT_TYPES.PLAYER && temp.getId() != ObjectType.Background) {
           playerSpawns.add((Player) temp);
-        } else if (temp.getId() != ObjectID.Background) {
+        } else if (temp.getId() != ObjectType.Background) {
           gameObjects.put(temp.getUUID(), temp);
         }
       }

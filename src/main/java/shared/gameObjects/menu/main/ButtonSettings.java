@@ -3,7 +3,7 @@ package shared.gameObjects.menu.main;
 import client.main.Client;
 import java.util.UUID;
 import javafx.scene.input.MouseEvent;
-import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.menu.ButtonObject;
 import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.Map;
@@ -20,7 +20,7 @@ public class ButtonSettings extends ButtonObject {
    * @param id Unique Identifier of every game object
    */
   public ButtonSettings(
-      double x, double y, double sizeX, double sizeY, ObjectID id, UUID objectUUID) {
+      double x, double y, double sizeX, double sizeY, ObjectType id, UUID objectUUID) {
     super(x, y, sizeX, sizeY, id, objectUUID);
   }
 
