@@ -6,6 +6,7 @@ import javafx.scene.Group;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
+import shared.gameObjects.components.CircleCollider;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Limbs.Arm;
 import shared.gameObjects.players.Limbs.Body;
@@ -23,7 +24,7 @@ import shared.physics.types.RigidbodyType;
 public class Player extends GameObject {
 
   protected final float speed = 9;
-  protected final float jumpForce = -200;
+  protected final float jumpForce = -300;
   protected final float JUMP_LIMIT = 2.0f;
   public boolean leftKey, rightKey, jumpKey, click;
   //Testing
@@ -42,6 +43,7 @@ public class Player extends GameObject {
   protected Rigidbody rb;
   protected double vx;
   private BoxCollider bc;
+  private CircleCollider cc;
 
   //Networking
   private int lastInputCount;
@@ -59,8 +61,10 @@ public class Player extends GameObject {
     this.levelHandler = levelHandler;
     this.behaviour = Behaviour.IDLE;
     this.bc = new BoxCollider(this, ColliderLayer.PLAYER, false);
-    this.rb = new Rigidbody(RigidbodyType.DYNAMIC, 80, 8, 0.2f,
+  //  this.cc = new CircleCollider(this, ColliderLayer.PLAYER, transform.getSize().magnitude()*0.5f, false);
+    this.rb = new Rigidbody(RigidbodyType.DYNAMIC, 90, 12, 0.2f,
         new MaterialProperty(0.005f, 0.1f, 0.05f), null, this);
+  //  addComponent(cc);
     addComponent(bc);
     addComponent(rb);
   }
@@ -95,6 +99,7 @@ public class Player extends GameObject {
   @Override
   public void update() {
     checkGrounded(); // Checks if the player is grounded
+   // System.out.println(rb.getVelocity());
     badWeapon();
     if (deattach) {
       for (int i = 0; i < 8; i++) {
@@ -144,7 +149,7 @@ public class Player extends GameObject {
       vx = 0;
       behaviour = Behaviour.IDLE;
     }
-    if (jumpKey && !jumped) {
+    if (jumpKey && !jumped && grounded) {
       rb.moveY(jumpForce, 0.33333f);
       jumped = true;
     }
