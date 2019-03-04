@@ -12,6 +12,7 @@ import shared.gameObjects.players.Limbs.Body;
 import shared.gameObjects.players.Limbs.Hand;
 import shared.gameObjects.players.Limbs.Head;
 import shared.gameObjects.players.Limbs.Leg;
+import shared.gameObjects.weapons.MachineGun;
 import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.weapons.Weapon;
 import shared.handlers.levelHandler.LevelHandler;
@@ -42,6 +43,15 @@ public class Player extends GameObject {
   protected Rigidbody rb;
   protected double vx;
   private BoxCollider bc;
+  // Limbs
+  private Limb head;
+  private Limb body;
+  private Limb legLeft;
+  private Limb legRight;
+  private Limb armLeft;
+  private Limb armRight;
+  private Limb handLeft;
+  private Limb handRight;
 
   //Networking
   private int lastInputCount;
@@ -80,16 +90,23 @@ public class Player extends GameObject {
   @Override
   public void initialise(Group root) {
     super.initialise(root);
-    addChild(new Leg(true, this, levelHandler));
-    addChild(new Leg(false, this, levelHandler));
-    addChild(new Body(this, levelHandler));
-    addChild(new Head(this, levelHandler));
-    Arm rightArm = new Arm(false, this, levelHandler);
-    Arm leftArm = (new Arm(true, this, levelHandler));
-    addChild(rightArm);
-    addChild(leftArm);
-    rightArm.addChild(new Hand(false, rightArm, levelHandler));
-    leftArm.addChild(new Hand(true, leftArm, levelHandler));
+    legLeft = new Leg(true, this, levelHandler);
+    legRight = new Leg(false, this, levelHandler);
+    body = new Body(this, levelHandler);
+    head = new Head(this, levelHandler);
+    armLeft = new Arm(true, this, levelHandler);
+    armRight = new Arm(false, this, levelHandler);
+    handLeft = new Hand(true, armLeft, levelHandler);
+    handRight = new Hand(false, armRight, levelHandler);
+    
+    addChild(head);
+    addChild(body);
+    addChild(legLeft);
+    addChild(legRight);
+    addChild(armLeft);
+    addChild(armRight);
+    armRight.addChild(handRight);
+    armLeft.addChild(handLeft);
   }
 
   @Override
@@ -166,8 +183,8 @@ public class Player extends GameObject {
         this.getHolding().setY(((Sword)this.getHolding()).getGripY());        
       }
       else if (this.getHolding().isGun()) {
-        this.getHolding().setX(this.getX() + 60);
-        this.getHolding().setY(this.getY() + 70);
+        this.getHolding().setX(((MachineGun)this.getHolding()).getGripX());
+        this.getHolding().setY(((MachineGun)this.getHolding()).getGripY());
       }
     }
   }
@@ -184,7 +201,6 @@ public class Player extends GameObject {
     if (this.holding.getAmmo() == 0) {
       this.holding.destroyWeapon();
       this.setHolding(null);
-
       Weapon sword =
           new Sword(this.getX(), this.getY(), "newSword@Player", this, UUID.randomUUID());
       sword.initialise(root);
@@ -252,16 +268,24 @@ public class Player extends GameObject {
   }
 
   public double[] getHandPos() {
+    // TODO: remove this section and getHand(Left/Right)(X/Y) methods below
+    /*
     if (jumped && facingLeft) {
       return new double[]{this.getHandLeftJumpX(), this.getHandLeftJumpY()};
     } else if (jumped && facingRight) {
       return new double[]{this.getHandRightJumpX(), this.getHandRightJumpY()};
     } else if (facingLeft) {
-      return new double[]{this.getHandLeftX(), this.getHandLeftY()};
+      return new double[]{this.handLeft.getX(), this.handLeft.getY()};
     } else if (facingRight) {
-      return new double[]{this.getHandRightX(), this.getHandRightY()};
+      return new double[]{this.handRight.getX(), this.handRight.getY()};
     }
     return new double[]{this.getHandRightX(), this.getHandRightY()};
+    */
+    if (facingLeft) {
+      return new double[]{this.handLeft.getX(), this.handLeft.getY()};
+    } else {
+      return new double[]{this.handRight.getX(), this.handRight.getY()};
+    }
   }
 
   /**
