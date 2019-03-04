@@ -5,6 +5,10 @@ import client.handlers.inputHandler.KeyboardInput;
 import client.handlers.inputHandler.MouseInput;
 import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import de.codecentric.centerdevice.javafxsvg.dimension.PrimitiveDimensionProvider;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,12 +16,18 @@ import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -57,6 +67,7 @@ public class Client extends Application {
   private MouseInput mouseInput;
   private Group root;
   private Group backgroundRoot;
+  private static Group creditsRoot;
   private Scene scene;
   private float maximumStep;
   private long previousTime;
@@ -282,23 +293,73 @@ public class Client extends Application {
         false);
   }
 
-  private void setupRender(Stage primaryStage) {
-    root = new Group();
-    backgroundRoot = new Group();
-    gameRoot = new Group();
+  public static void showCredits() {
+    ArrayList<String> lines = new ArrayList<String>();
+    try {
+      BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/CREDITS.md"));
+      String line;
+      while ((line = reader.readLine()) != null) {
+        lines.add(line);
+      }
+      reader.close();
+    } catch (FileNotFoundException e) {
+      // todo file not found
+    } catch (IOException e) {
+      // todo io exception
+    }
+    int yOffset = 0;
+    int x = 600;
+    int y = 50;
+    ArrayList<Text> textList = new ArrayList<>();
+    for (String line : lines) {
+      if (!line.equals("")) {
+        int extraBufferSpace = 0;
+        double size = 20;
+        FontWeight weight = FontWeight.NORMAL;
+        FontPosture posture = FontPosture.REGULAR;
+        // # title
+        Pattern title1 = Pattern.compile("^# (.*)");
+        Matcher m = title1.matcher(line);
+        if (m.find()) {
+          line = m.group(1);
+          size = 40;
+          weight = FontWeight.EXTRA_BOLD;
+          extraBufferSpace = 40;
+        }
+        // ## title
+        Pattern title2 = Pattern.compile("^## (.*)");
+        m = title2.matcher(line);
+        if (m.find()) {
+          line = m.group(1);
+          size = 30;
+          weight = FontWeight.EXTRA_BOLD;
+          extraBufferSpace = 20;
+        }
+        // *..* italics
+        Pattern italic = Pattern.compile("(?<!\\*)\\*([^*]+)\\*(?!\\*)");
+        m = italic.matcher(line);
+        if (m.find()) {
+          line = m.group(1);
+          posture = FontPosture.ITALIC;
+        }
+        /// **..** bold
+        Pattern bold = Pattern.compile("(?<!\\*)\\*\\*([^*]+)\\*\\*(?!\\*)");
+        m = bold.matcher(line);
+        if (m.find()) {
+          line = m.group(1);
+          weight = FontWeight.BOLD;
+        }
 
-    root.getChildren().add(backgroundRoot);
-    root.getChildren().add(gameRoot);
+        Text text = new Text();
+        text.setText(line);
+        text.setFont(Font.font("Sans Serif", weight, posture, size));
+        text.setLayoutX(x);
+        text.setLayoutY(y + extraBufferSpace + yOffset);
+        y += 40 + extraBufferSpace;
+        creditsRoot.getChildren().add(text);
+      }
+    }
 
-    primaryStage.setTitle(gameTitle);
-    primaryStage.getIcons().add(new Image(Path.convert("images/logo.png")));
-
-    scene = new Scene(root, 1920, 1080);
-    scene.setCursor(Cursor.CROSSHAIR);
-
-    primaryStage.setScene(scene);
-    primaryStage.setFullScreen(false);
-    primaryStage.show();
   }
 
   public void sendInput() {
@@ -457,5 +518,26 @@ public class Client extends Application {
     levelHandler.getGameObjects().put(Client.levelHandler.getClientPlayer().getHolding().getUUID(),
         Client.levelHandler.getClientPlayer().getHolding());
     levelHandler.getClientPlayer().getHolding().initialise(Client.gameRoot);
+  }
+
+  private void setupRender(Stage primaryStage) {
+    root = new Group();
+    backgroundRoot = new Group();
+    gameRoot = new Group();
+    creditsRoot = new Group();
+
+    root.getChildren().add(backgroundRoot);
+    root.getChildren().add(gameRoot);
+    root.getChildren().add(creditsRoot);
+
+    primaryStage.setTitle(gameTitle);
+    primaryStage.getIcons().add(new Image(Path.convert("images/logo.png")));
+
+    scene = new Scene(root, 1920, 1080);
+    scene.setCursor(Cursor.CROSSHAIR);
+
+    primaryStage.setScene(scene);
+    primaryStage.setFullScreen(false);
+    primaryStage.show();
   }
 }
