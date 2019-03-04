@@ -71,12 +71,22 @@ public class Physics {
    * @return All colliders hit in the path, empty if nothing was hit.
    */
   public static ArrayList<Collision> raycastAll(Vector2 sourcePos, Vector2 lengthAndDirection) {
-    EdgeCollider collider = new EdgeCollider(false);
+    EdgeCollider castCollider = new EdgeCollider(false);
     Collision collision = null;
     ArrayList<Collision> collisions = new ArrayList<>();
     float incrementVal = lengthAndDirection.magnitude() / RAYCAST_INC;
     for (int i = 0; i <= RAYCAST_INC; i++) {
-      collider.addNode(sourcePos.add(incrementVal * i));
+      castCollider.addNode(sourcePos.add(incrementVal * i));
+    }
+    for (GameObject object : gameObjects.values()) {
+      if (object.getComponent(ComponentType.COLLIDER) != null) {
+        collision =
+            new Collision(
+                object, castCollider, (Collider) object.getComponent(ComponentType.COLLIDER));
+        if (collision.isCollided()) {
+          collisions.add(collision);
+        }
+      }
     }
     return collisions;
   }
@@ -243,9 +253,6 @@ public class Physics {
   }
 
   public static void processCollisions() {
-    for (DynamicCollision c : collisions) {
-      // c.process();
-    }
     collisions.clear();
   }
 }
