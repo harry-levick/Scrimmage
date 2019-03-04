@@ -104,11 +104,11 @@ public class Player extends GameObject {
     armRight = new Arm(false, this, levelHandler);
     handLeft = new Hand(true, armLeft, levelHandler);
     handRight = new Hand(false, armRight, levelHandler);
-    
-    addChild(head);
-    addChild(body);
+
     addChild(legLeft);
     addChild(legRight);
+    addChild(body);
+    addChild(head);
     addChild(armLeft);
     addChild(armRight);
     armRight.addChild(handRight);
