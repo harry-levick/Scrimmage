@@ -38,6 +38,8 @@ import shared.util.maths.Vector2;
 
 public class Client extends Application {
 
+  public static boolean musicActive = false;
+
   private static final Logger LOGGER = LogManager.getLogger(Client.class.getName());
   public static LevelHandler levelHandler;
   public static Settings settings;
