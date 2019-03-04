@@ -2,7 +2,9 @@ package server.ai;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -26,7 +28,7 @@ public class Bot extends Player {
 
   FSA state;
   public Player targetPlayer;
-  List<Player> allPlayers;
+  LinkedHashMap<UUID, Player> allPlayers;
   // Get the LevelHandler through the constructor
   LevelHandler levelHandler;
   BotThread botThread;
@@ -41,7 +43,7 @@ public class Bot extends Player {
    */
   public Bot(double x, double y, UUID playerUUID,
       LevelHandler levelHandler) {
-    super(x, y, playerUUID);
+    super(x, y, playerUUID, levelHandler);
     this.state = FSA.INITIAL_STATE;
     this.levelHandler = levelHandler;
     this.targetPlayer = findTarget();
@@ -56,7 +58,7 @@ public class Bot extends Player {
    * @param that object to be copied
    */
   public Bot(Bot that) {
-    super(that.getX(), that.getY(), UUID.randomUUID());
+    super(that.getX(), that.getY(), UUID.randomUUID(), that.levelHandler);
     this.levelHandler = that.levelHandler;
 
   }
@@ -258,25 +260,27 @@ public class Bot extends Player {
    */
   public Player findTarget() {
     allPlayers = levelHandler.getPlayers();
-    // Remove bots from player list
-    allPlayers.removeAll(levelHandler.getBotPlayerList());
 
     Player target = null;
     double targetDistance = Double.POSITIVE_INFINITY;
     Vector2 botPos = new Vector2((float) this.getX(), (float) this.getY());
 
 
-    for (Player p : allPlayers) {
-      Vector2 playerPos = new Vector2((float) p.getX(), (float) p.getY());
+    for (Map.Entry<UUID, Player> entry : allPlayers.entrySet()) {
+      Player player = entry.getValue();
+
+      if (player.equals(this))
+        continue;
+
+      Vector2 playerPos = new Vector2((float) player.getX(), (float) player.getY());
       double distance = botPos.exactMagnitude(playerPos);
       // Update the target if another player is closer
-      if (distance < targetDistance && p.isActive()) {
+      if (distance < targetDistance && player.isActive()) {
         targetDistance = distance;
-        target = p;
+        target = player;
       }
     }
-    //System.out.println("targetx = " + target.getX() + ", targety = " + target.getY());
-    //System.out.println("botx = " + this.getX() + ", boty = " + this.getY());
+
     // Returns null if no active player is found.
     return target;
   }
