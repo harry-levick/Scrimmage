@@ -17,7 +17,7 @@ import shared.util.Path;
 
 public class ButtonSingleplayer extends ButtonObject {
 
-  private final int maxPlayers = 1;
+  private final int maxPlayers = 2;
 
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
@@ -49,7 +49,7 @@ public class ButtonSingleplayer extends ButtonObject {
       //TODO Change physics to LinkedHashMaps
       Collection<GameObject> values = Client.levelHandler.getGameObjects().values();
       ArrayList<GameObject> physicsGameObjects = new ArrayList<>(values);
-      Bot botPlayer = new Bot(500, 500, UUID.randomUUID(), physicsGameObjects, Client.levelHandler);
+      Bot botPlayer = new Bot(500, 500, UUID.randomUUID(), Client.levelHandler);
       botPlayer.setHolding(new Sword(500, 500, "Sword@LevelHandler", botPlayer, UUID.randomUUID()));
       botPlayer.getHolding().initialise(Client.gameRoot);
       botPlayer.initialise(Client.gameRoot);
@@ -58,6 +58,8 @@ public class ButtonSingleplayer extends ButtonObject {
       Client.levelHandler.getGameObjects().put(botPlayer.getUUID(), botPlayer);
       Client.levelHandler.getGameObjects()
           .put(botPlayer.getHolding().getUUID(), botPlayer.getHolding());
+
+      botPlayer.startThread();
     }
 
     Client.levelHandler

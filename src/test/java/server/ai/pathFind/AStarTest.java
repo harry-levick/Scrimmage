@@ -11,36 +11,6 @@ public class AStarTest {
 
   @Test
   public void testStraightLineRight() {
-    ArrayList<GameObject> allObjs = new ArrayList<GameObject>();
 
-    Player testPlayer = new Player(50, 20, UUID.randomUUID(), null);
-    Bot testBot = new Bot(20, 20, UUID.randomUUID(), allObjs, null);
-
-    allObjs.add(testBot);
-    allObjs.add(testPlayer);
-
-    AStar AStarTest = new AStar(allObjs, testBot);
-
-    boolean[] action = AStarTest.optimise(testPlayer);
-
-    while (action[Bot.KEY_LEFT] || action[Bot.KEY_RIGHT] || action[Bot.KEY_JUMP]) {
-
-      if (action[Bot.KEY_JUMP]) {
-
-      }
-      if (action[Bot.KEY_RIGHT]) {
-
-      }
-      if (action[Bot.KEY_LEFT]) {
-
-      }
-      if (!action[Bot.KEY_JUMP] && !action[Bot.KEY_RIGHT] && !action[Bot.KEY_LEFT]) {
-
-      }
-
-      action = AStarTest.optimise(testPlayer);
-
-
-    }
   }
 }
