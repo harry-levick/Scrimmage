@@ -125,7 +125,7 @@ public abstract class GameObject implements Serializable {
           Collider o_col = (Collider) o.getComponent(ComponentType.COLLIDER);
           Rigidbody o_rb = (Rigidbody) o.getComponent(ComponentType.RIGIDBODY);
           if (o_col != null && o_rb != null) {
-            if (Collision.haveCollided(col, o_col)) {
+            if (Collider.haveCollided(col, o_col)) {
               Physics.addCollision(new DynamicCollision(rb, o_rb));
             }
           }
@@ -142,8 +142,8 @@ public abstract class GameObject implements Serializable {
       for (GameObject o : Physics.gameObjects.values()) {
         Collider o_col = (Collider) o.getComponent(ComponentType.COLLIDER);
         if (o_col != null) {
-          if (Collision.haveCollided(col, o_col)) {
-            Collision collision = new Collision(o, Vector2.Zero(), 0);
+          if (Collider.haveCollided(col, o_col)) {
+            Collision collision = new Collision(o, col, o_col);
             collidedThisFrame.add(o);
             if (!collidedObjects.contains(o)) {
               OnCollisionEnter(collision);
@@ -156,7 +156,7 @@ public abstract class GameObject implements Serializable {
       for (GameObject o : collidedObjects) {
         if (!collidedThisFrame.contains(o)) {
           collidedToRemove.add(o);
-          OnCollisionExit(new Collision(o, Vector2.Zero(), 0));
+          OnCollisionExit(new Collision(o, col, (Collider) o.getComponent(ComponentType.COLLIDER)));
         }
       }
 
@@ -164,8 +164,8 @@ public abstract class GameObject implements Serializable {
       for (GameObject o : Physics.gameObjects.values()) {
         Collider o_col = (Collider) o.getComponent(ComponentType.COLLIDER);
         if (o_col != null) {
-          if (Collision.haveCollided(col, o_col)) {
-            Collision collision = new Collision(o, Vector2.Zero(), 0);
+          if (Collider.haveCollided(col, o_col)) {
+            Collision collision = new Collision(o, col, o_col);
             collidedThisFrame.add(o);
             if (!collidedObjects.contains(o)) {
               OnTriggerEnter(collision);
@@ -179,7 +179,7 @@ public abstract class GameObject implements Serializable {
       for (GameObject o : collidedObjects) {
         if (!collidedThisFrame.contains(o)) {
           collidedToRemove.add(o);
-          OnTriggerExit(new Collision(o, Vector2.Zero(), 0));
+          OnCollisionExit(new Collision(o, col, (Collider) o.getComponent(ComponentType.COLLIDER)));
         }
       }
     }
