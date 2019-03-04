@@ -315,17 +315,24 @@ public class AStar {
     double dist = botPos.exactMagnitude(enemyPos);
     Melee tempMelee;
 
-    Collision inSight = Physics.raycast(botPos, enemyPos);
+    ArrayList<Collision> rayCast = Physics.raycastAll(botPos,
+        enemyPos.add(botPos.mult(-1)));
+
+    // If the cast is null or returns a Static RigidBody
+    boolean inSight = rayCast.stream().filter(o -> ((Rigidbody) o.getCollidedObject()
+            .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC)
+            .findFirst()
+            .isPresent();
 
     if (bot.getHolding().isGun()) {
 
-      if (inSight == null)
+      if (inSight)
         return true;
       else return false;
 
     } else { // melee weapon
       tempMelee = (Melee) bot.getHolding();
-      if (dist <= tempMelee.getRange() && inSight == null) {
+      if (dist <= tempMelee.getRange() && inSight) {
         return true;
       } else {
         return false;
