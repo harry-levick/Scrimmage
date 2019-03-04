@@ -1,10 +1,18 @@
 package shared.gameObjects.weapons;
 
 import client.handlers.audioHandler.AudioHandler;
+import client.main.Client;
 import java.util.UUID;
 import javafx.scene.transform.Rotate;
+import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
+import shared.gameObjects.components.BoxCollider;
+import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Player;
+import shared.physics.data.AngularData;
+import shared.physics.data.Collision;
+import shared.physics.data.MaterialProperty;
+import shared.physics.types.RigidbodyType;
 import shared.util.Path;
 import shared.util.maths.Vector2;
 
@@ -18,6 +26,10 @@ public class MachineGun extends Gun {
   private double[] holderHandPos;
   private double angleGun; // angle of gun (hand and mouse vs x-axis) (radian)
   private Rotate rotate; // rotate property of gun wrt grip
+  
+  // variables for when the holder is null
+  private BoxCollider bc;
+  private Rigidbody rb;
 
   public MachineGun(double x, double y, String name, Player holder, UUID uuid) {
 
@@ -38,7 +50,24 @@ public class MachineGun extends Gun {
         true, // fullAutoFire
         false, // singleHanded
         uuid);
-    holderHandPos = holder.getHandPos();
+    
+    // TODO: extract to Gun or Weapon
+    if (holder != null)
+      holderHandPos = getHolderHandPos();
+    else {
+      // add collider and rigidbody
+      bc = new BoxCollider(this, true);
+      rb = new Rigidbody(
+              RigidbodyType.DYNAMIC,
+              1f, // mass
+              1f, // gravity scale
+              0.1f,
+              new MaterialProperty(0.1f, 1, 1),
+              new AngularData(0, 0, 0, 0),
+              this); // TODO FIX
+      addComponent(bc);
+      addComponent(rb);
+    }
 
     rotate = new Rotate();
     // pivot = position of the grip
@@ -70,7 +99,7 @@ public class MachineGun extends Gun {
               uuid);
       this.currentCooldown = getDefaultCoolDown();
       // new AudioHandler(super.getSettings()).playSFX("CHOOSE_YOUR_CHARACTER");
-      new AudioHandler(settings).playSFX("MACHINEGUN");
+      new AudioHandler(settings, Client.musicActive).playSFX("MACHINEGUN");
       deductAmmo();
     }
   }
@@ -78,31 +107,59 @@ public class MachineGun extends Gun {
   @Override
   public void update() {
     super.update();
-    holderHandPos = holder.getHandPos();
+    holderHandPos = getHolderHandPos();
   }
 
   @Override
   public void render() {
     super.render();
 
-    imageView.getTransforms().remove(rotate);
-
-    double mouseX = holder.mouseX;
-    double mouseY = holder.mouseY;
-    Vector2 mouseV = new Vector2((float) mouseX, (float) mouseY);
-    Vector2 gripV = new Vector2((float) holder.getX(), (float) holder.getY());
-    angleGun = mouseV.sub(gripV).angle(); // radian
-    double angle = angleGun * 180 / PI; // degree
-
-    rotate.setAngle(angle);
-    imageView.getTransforms().add(rotate);
-    imageView.setTranslateX(this.getGripX());
-    imageView.setTranslateY(this.getGripY());
+    if (holder != null) {
+      imageView.getTransforms().remove(rotate);
+  
+      double mouseX = holder.mouseX;
+      double mouseY = holder.mouseY;
+      Vector2 mouseV = new Vector2((float) mouseX, (float) mouseY);
+      Vector2 gripV = new Vector2((float) holder.getX(), (float) holder.getY());
+      angleGun = mouseV.sub(gripV).angle(); // radian
+      double angle = angleGun * 180 / PI; // degree
+  
+      rotate.setAngle(angle);
+      imageView.getTransforms().add(rotate);
+      imageView.setTranslateX(this.getGripX());
+      imageView.setTranslateY(this.getGripY());
+    }
   }
 
   @Override
   public void initialiseAnimation() {
     this.animation.supplyAnimationWithSize("default", 40, 40, true, Path.convert(this.imagePath));
+  }
+  
+  @Override
+  public void OnCollisionEnter(Collision col) {
+    GameObject g = col.getCollidedObject();
+    if (g.getId() == ObjectType.Player) {
+      Player p = (Player) g;
+      setHolder(p);
+      this.removeComponent(bc);
+      this.removeComponent(rb);
+    }
+  }
+  
+  // Set holder of this gun
+  public void setHolder(Player p) {
+    if (p != null) {
+      this.holder = p;
+      p.setHolding(this);
+    }
+  }
+  
+  // Get holder hand position
+  private double[] getHolderHandPos() {
+      if (holder != null)
+        return holder.getHandPos();
+      return null;
   }
 
   // =============================
