@@ -3,7 +3,7 @@ package shared.gameObjects.weapons;
 import java.util.ArrayList;
 import java.util.UUID;
 import shared.gameObjects.GameObject;
-import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.CircleCollider;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Player;
@@ -29,7 +29,7 @@ public abstract class Melee extends Weapon {
       double y,
       double sizeX,
       double sizeY,
-      ObjectID id,
+      ObjectType id,
       int damage,
       double weight,
       String name,
@@ -84,7 +84,7 @@ public abstract class Melee extends Weapon {
 
       for (Collision c : collisions) {
         GameObject g = c.getCollidedObject().getParent();
-        if (g.getId() == ObjectID.Player && !g.equals(holder)) {
+        if (g.getId() == ObjectType.Player && !g.equals(holder)) {
           System.out.print(g.toString() + " -> ");
 
           playersBeingHit.add((Player) g);

@@ -12,12 +12,16 @@ public class PacketGameState extends Packet {
 
   private HashMap<UUID, String> gameObjects;
   private int lastProcessedInput;
+  private boolean update = false;
 
   public PacketGameState(ArrayList<GameObject> gameObjects, int lastProcessedInput) {
     packetID = PacketID.GAMESTATE.getID();
     data = "" + packetID + "," + lastProcessedInput;
     for (GameObject object : gameObjects) {
-      data += "," + object.getState();
+      if (object.getState() != "" && object.isNetworkStateUpdate()) {
+        update = true;
+        data += "," + object.getState();
+      }
     }
   }
 
@@ -40,5 +44,9 @@ public class PacketGameState extends Packet {
 
   public int getLastProcessedInput() {
     return lastProcessedInput;
+  }
+
+  public boolean isUpdate() {
+    return update;
   }
 }

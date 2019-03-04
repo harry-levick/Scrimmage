@@ -9,7 +9,8 @@ import java.util.List;
 import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
-import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.ObjectType;
+import shared.gameObjects.Utils.TimePosition;
 import shared.gameObjects.Utils.Transform;
 import shared.gameObjects.animator.Animator;
 import shared.gameObjects.components.Collider;
@@ -25,7 +26,7 @@ import shared.util.maths.Vector2;
 public abstract class GameObject implements Serializable {
 
   protected UUID objectUUID;
-  protected ObjectID id;
+  protected ObjectType id;
 
   protected Settings settings;
 
@@ -41,7 +42,11 @@ public abstract class GameObject implements Serializable {
 
   protected boolean active;
   protected boolean destroyed;
-  protected boolean updated;
+
+  //Networking
+  protected boolean networkStateUpdate;
+  protected Vector2 lastPos;
+  protected ArrayList<TimePosition> positionBuffer;
 
   protected ArrayList<GameObject> collidedObjects;
   protected ArrayList<GameObject> collidedThisFrame;
@@ -55,14 +60,17 @@ public abstract class GameObject implements Serializable {
    * @param y Y coordinate of object in game world
    * @param id Unique Identifier of every game object
    */
-  public GameObject(double x, double y, double sizeX, double sizeY, ObjectID id, UUID objectUUID) {
-    this.updated = false;
+  public GameObject(double x, double y, double sizeX, double sizeY, ObjectType id,
+      UUID objectUUID) {
+    this.networkStateUpdate = false;
     this.id = id;
     this.objectUUID = objectUUID;
     this.active = true;
     this.transform = new Transform(this, new Vector2((float) x, (float) y),
         new Vector2((float) sizeX, (float) sizeY));
     this.components = new ArrayList<>();
+    //So update sent by server on first frame
+    this.lastPos = new Vector2((float) x + 1, (float) y + 1);
     this.children = new ArrayList<>();
     this.animation = new Animator();
     this.collidedObjects = new ArrayList<>();
@@ -76,6 +84,7 @@ public abstract class GameObject implements Serializable {
 
   // Server and Client side
   public void update() {
+    networkStateUpdate = false;
     animation.update();
     Collider col = (Collider) getComponent(ComponentType.COLLIDER);
     Rigidbody rb = (Rigidbody) getComponent(ComponentType.RIGIDBODY);
@@ -85,6 +94,11 @@ public abstract class GameObject implements Serializable {
     if (col != null) {
       col.update();
     }
+    //If objects location has changed then send update if server
+    if (!(lastPos.equals(getTransform().getPos()))) {
+      networkStateUpdate = true;
+    }
+    this.lastPos.setVec((float) getX(), (float) getY());
   }
 
   // Client Side only
@@ -203,14 +217,32 @@ public abstract class GameObject implements Serializable {
    * @return State of object
    */
   public String getState() {
-    return "";
+    return objectUUID + ";" + id + ";" + (float) getX() + ";" + (float) getY();
   }
 
-  public void setState(String data) {
+  public void setState(String data, Boolean snap) {
+    String[] unpackedData = data.split(";");
+    Vector2 statePos = new Vector2(Double.parseDouble(unpackedData[2]),
+        Double.parseDouble(unpackedData[3]));
+    if (snap) {
+      setX(Double.parseDouble(unpackedData[2]));
+      setY(Double.parseDouble(unpackedData[3]));
+    } else {
+      Vector2 difference = statePos.sub(transform.getPos());
+      double distance = statePos.magnitude(transform.getPos());
+
+      if (distance > 50) {
+        transform.setPos(statePos);
+      } else if (distance > 1) {
+        transform.setPos((difference.mult(0.5f)).add(getTransform().getPos()));
+      }
+    }
   }
 
   // Ignore for now, added due to unSerializable objects
   public void initialise(Group root) {
+    this.positionBuffer = new ArrayList<>();
+    this.networkStateUpdate = false;
     animation = new Animator();
     initialiseAnimation();
     imageView = new ImageView();
@@ -369,7 +401,7 @@ public abstract class GameObject implements Serializable {
     this.transform.getPos().setY((float) y);
   }
 
-  public ObjectID getId() {
+  public ObjectType getId() {
     return id;
   }
 
@@ -383,6 +415,14 @@ public abstract class GameObject implements Serializable {
 
   public void setParent(GameObject parent) {
     this.parent = parent;
+  }
+
+  public boolean isNetworkStateUpdate() {
+    return networkStateUpdate;
+  }
+
+  public void setNetworkStateUpdate(boolean networkStateUpdate) {
+    this.networkStateUpdate = networkStateUpdate;
   }
 
   public ArrayList<GameObject> getChildren() {
@@ -419,14 +459,6 @@ public abstract class GameObject implements Serializable {
     this.settings = settings;
   }
 
-  public boolean isUpdated() {
-    return updated;
-  }
-
-  public void setUpdated(boolean updated) {
-    this.updated = updated;
-  }
-
   public boolean isDestroyed() {
     return destroyed;
   }
@@ -437,6 +469,10 @@ public abstract class GameObject implements Serializable {
 
   public void rotateImage(double rotation) {
     imageView.setRotate(imageView.getRotate() + rotation);
+  }
+
+  public ArrayList<TimePosition> getPositionBuffer() {
+    return positionBuffer;
   }
 
   @Override

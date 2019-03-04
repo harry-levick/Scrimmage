@@ -7,7 +7,7 @@ import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.transform.Rotate;
 import shared.gameObjects.GameObject;
-import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
 import shared.handlers.levelHandler.LevelHandler;
@@ -45,7 +45,7 @@ public abstract class Limb extends GameObject {
    * @param id Unique Identifier of every game object
    */
   public Limb(double xLeft, double yLeft, double xRight, double yRight, double sizeX, double sizeY,
-      ObjectID id, Boolean isLeft, GameObject parent, double pivotX, double pivotY,
+      ObjectType id, Boolean isLeft, GameObject parent, double pivotX, double pivotY,
       LevelHandler levelHandler) {
     super(0, 0, sizeX, sizeY, id, UUID.randomUUID());
     this.limbAttached = true;
