@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import server.ai.Bot;
 import shared.gameObjects.GameObject;
+import shared.gameObjects.components.ComponentType;
+import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.Handgun;
 import shared.gameObjects.weapons.MachineGun;
@@ -438,7 +440,7 @@ public class AStar {
     Collision viscinityLeft = Physics
         .boxcast(botPosition.add(Vector2.Left().mult(botSize)), botSize);
     if (viscinityLeft == null ||
-        viscinityLeft.getCollidedObject().getBodyType() != RigidbodyType.STATIC ||
+        ((Rigidbody) viscinityLeft.getCollidedObject().getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC ||
         botPosition.exactMagnitude(viscinityLeft.getPointOfCollision()) > 10) {
       // If no collision, or if the collision is far away
       possibleActions.add(createAction(false, true, false));
@@ -449,7 +451,7 @@ public class AStar {
         .boxcast(botPosition.add(Vector2.Right().mult(botSize)), botSize);
 
     if (viscinityRight == null ||
-        viscinityRight.getCollidedObject().getBodyType() != RigidbodyType.STATIC ||
+        ((Rigidbody) viscinityRight.getCollidedObject().getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC ||
         botPosition.exactMagnitude(viscinityRight.getPointOfCollision()) > 10) {
       // or if the collision is far away
       possibleActions.add(createAction(false, false, true));
@@ -460,7 +462,7 @@ public class AStar {
     // TODO: add a way of detecting if we can jump + (left or right)
     // If no collision, or if collision is far away
     if (viscinityUp == null ||
-        viscinityUp.getCollidedObject().getBodyType() != RigidbodyType.STATIC) {
+        ((Rigidbody) viscinityUp.getCollidedObject().getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC) {
 
       Collision viscinityUpLeft = Physics.boxcast(
           botPosition.add(Vector2.Up().mult(botSize)).add(Vector2.Left().mult(botSize)), botSize);
@@ -472,13 +474,13 @@ public class AStar {
       possibleActions.add(createAction(true, false, false));
 
       if (viscinityUpRight == null ||
-          viscinityUpRight.getCollidedObject().getBodyType() != RigidbodyType.STATIC) {
+          ((Rigidbody) viscinityUpRight.getCollidedObject().getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC) {
         // Jump to the right
         possibleActions.add(createAction(true, false, true));
       }
 
       if (viscinityUpLeft == null ||
-          viscinityUpLeft.getCollidedObject().getBodyType() != RigidbodyType.STATIC) {
+          ((Rigidbody) viscinityUpLeft.getCollidedObject().getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC) {
         // Jump to the left
         possibleActions.add(createAction(true, true, false));
       }
