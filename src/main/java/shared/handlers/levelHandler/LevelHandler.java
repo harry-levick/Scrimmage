@@ -71,7 +71,7 @@ public class LevelHandler {
   public void changeMap(Map map, Boolean moveToSpawns) {
     previousMap = this.map;
     this.map = map;
-    generateLevel(root, backgroundRoot, gameRoot, moveToSpawns);
+    generateLevel(backgroundRoot, gameRoot, moveToSpawns);
   }
 
   public void previousMap(Boolean moveToSpawns) {
@@ -79,7 +79,7 @@ public class LevelHandler {
       Map temp = this.map;
       this.map = previousMap;
       previousMap = temp;
-      generateLevel(root, backgroundRoot, gameRoot, moveToSpawns);
+      generateLevel(backgroundRoot, gameRoot, moveToSpawns);
     }
   }
 
@@ -87,8 +87,7 @@ public class LevelHandler {
    * NOTE: This to change the level use change Map Removes current game objects and creates new ones
    * from Map file
    */
-  public void generateLevel(
-      Group root, Group backgroundGroup, Group gameGroup, Boolean moveToSpawns) {
+  public void generateLevel(Group backgroundGroup, Group gameGroup, Boolean moveToSpawns) {
 
     gameObjects.keySet().removeAll(players.keySet());
     gameObjects.keySet().removeAll(bots.keySet());
