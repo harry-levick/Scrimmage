@@ -24,7 +24,6 @@ public class Bot extends Player {
   public static final int KEY_LEFT = 1;
   public static final int KEY_RIGHT = 2;
   public float jumpTime;
-  boolean mayJump = true;
 
   FSA state;
   public Player targetPlayer;
@@ -68,7 +67,7 @@ public class Bot extends Player {
   }
 
   public boolean mayJump() {
-    return mayJump;
+    return !grounded;
   }
 
   @Override
@@ -78,6 +77,7 @@ public class Bot extends Player {
     if (!active) {
       botThread.terminate();
     }
+    click = false;
 
     double prevDist, newDist;
     // Calculate the distance to the target from the previous loop
@@ -113,6 +113,7 @@ public class Bot extends Player {
         if (inSight == null) {
           mouseX = targetPlayer.getX();
           mouseY = targetPlayer.getY();
+          click = true;
         }
 
         break;
