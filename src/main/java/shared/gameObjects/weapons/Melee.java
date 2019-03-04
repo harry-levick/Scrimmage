@@ -84,10 +84,8 @@ public abstract class Melee extends Weapon {
       ArrayList<Player> playersBeingHit = new ArrayList<>();
 
       for (Collision c : collisions) {
-        GameObject g = c.getCollidedObject();
-        if (g.getId() == ObjectType.Player && !g.equals(holder)) {
-          System.out.print(g.toString() + " -> ");
-
+        GameObject g = c.getCollidedObject().getParent();
+        if (g != null && g.getId() == ObjectType.Player && !g.equals(holder)) {
           playersBeingHit.add((Player) g);
         }
       }

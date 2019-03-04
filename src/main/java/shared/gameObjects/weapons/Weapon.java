@@ -4,7 +4,13 @@ import client.main.Client;
 import java.util.UUID;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
+import shared.gameObjects.components.BoxCollider;
+import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Player;
+import shared.physics.data.AngularData;
+import shared.physics.data.Collision;
+import shared.physics.data.MaterialProperty;
+import shared.physics.types.RigidbodyType;
 
 /**
  * @author hlf764 The abstract class for all weapons in the game.
@@ -28,6 +34,10 @@ public abstract class Weapon extends GameObject {
   protected Player holder; // holder of the weapon
 
   protected int currentCooldown;
+
+  // variables for when the holder is null
+  private BoxCollider bc;
+  private Rigidbody rb;
 
   /**
    * Constructor of the weapon class
@@ -69,10 +79,32 @@ public abstract class Weapon extends GameObject {
     setFireRate(fireRate);
     this.holder = holder;
 
+    if (holder == null) {
+      // add collider and rigidbody
+      bc = new BoxCollider(this, true);
+      rb = new Rigidbody(
+              RigidbodyType.DYNAMIC,
+              1f, // mass
+              1f, // gravity scale
+              0.1f,
+              new MaterialProperty(0.1f, 1, 1),
+              new AngularData(0, 0, 0, 0),
+              this); // TODO FIX
+      addComponent(bc);
+      addComponent(rb);
+    }
+
     this.currentCooldown = 0;
   }
 
   public abstract void fire(double mouseX, double mouseY);
+
+  // Get holder hand position
+  public double[] getHolderHandPos() {
+    if (holder != null)
+      return holder.getHandPos();
+    return null;
+  }
 
   public int getDefaultCoolDown() {
     return MAX_COOLDOWN - this.fireRate;
@@ -96,6 +128,25 @@ public abstract class Weapon extends GameObject {
 
   public void destroyWeapon() {
     Client.levelHandler.removeGameObject(this);
+  }
+  
+  @Override
+  public void OnCollisionEnter(Collision col) {
+    GameObject g = col.getCollidedObject();
+    if (g != null && g.getId() == ObjectType.Player && ((Player)g).getHolding() == null) {
+      Player p = (Player) g;
+      setHolder(p);
+      this.removeComponent(bc);
+      this.removeComponent(rb);
+    }
+  }
+  
+  //Set holder of this gun
+  public void setHolder(Player p) {
+    if (p != null) {
+      this.holder = p;
+      p.setHolding(this);
+    }
   }
 
   // -------START-------
