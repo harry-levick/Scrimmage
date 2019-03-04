@@ -3,8 +3,7 @@ package shared.gameObjects.weapons;
 import client.handlers.audioHandler.AudioHandler;
 import java.util.UUID;
 import javafx.scene.transform.Rotate;
-import javax.crypto.Mac;
-import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.players.Player;
 import shared.util.Path;
 import shared.util.maths.Vector2;
@@ -27,14 +26,14 @@ public class MachineGun extends Gun {
         y,
         sizeX, // sizeX
         sizeY, // sizeY
-        ObjectID.Weapon, // ObjectID
+        ObjectType.Weapon, // ObjectType
         5, // damage
         10, // weight
         name,
         50, // ammo
         50, // bulletSpeed
         70, // fireRate
-        50, // bulletWidth
+        12, // bulletWidth
         holder,
         true, // fullAutoFire
         false, // singleHanded
@@ -46,10 +45,6 @@ public class MachineGun extends Gun {
     // If changing the value of this, change the value in all getGrip() methods
     rotate.setPivotX(20);
     rotate.setPivotY(10);
-  }
-
-  public MachineGun(MachineGun that) {
-    this(that.getX(), that.getY(), that.name, that.holder, that.objectUUID);
   }
 
   @Override
@@ -95,40 +90,14 @@ public class MachineGun extends Gun {
     double mouseX = holder.mouseX;
     double mouseY = holder.mouseY;
     Vector2 mouseV = new Vector2((float) mouseX, (float) mouseY);
-    Vector2 gripV = new Vector2((float) this.getGripX(), (float) this.getGripY());
+    Vector2 gripV = new Vector2((float) holder.getX(), (float) holder.getY());
     angleGun = mouseV.sub(gripV).angle(); // radian
     double angle = angleGun * 180 / PI; // degree
 
-    // Change the facing of the player when aiming the other way
-    if (holder.getFacingRight() && mouseX < this.getGripX()) {
-      holder.setFacingLeft(true);
-    } else if (holder.getFacingLeft() && mouseX > this.getGripX()) {
-      holder.setFacingRight(true);
-    }
-
-    // Rotate and translate the image
-    if (holder.getFacingLeft()) {
-      imageView.setScaleX(-1);
-      rotate.setAngle(-angle);
-      imageView.getTransforms().add(rotate);
-      imageView.setTranslateX(this.getGripFlipX());
-      imageView.setTranslateY(this.getGripFlipY());
-    } else if (holder.getFacingRight()) {
-      imageView.setScaleX(1);
-      rotate.setAngle(angle);
-      imageView.getTransforms().add(rotate);
-      imageView.setTranslateX(this.getGripX());
-      imageView.setTranslateY(this.getGripY());
-    }
-  }
-
-  @Override
-  public void interpolatePosition(float alpha) {
-  }
-
-  @Override
-  public String getState() {
-    return null;
+    rotate.setAngle(angle);
+    imageView.getTransforms().add(rotate);
+    imageView.setTranslateX(this.getGripX());
+    imageView.setTranslateY(this.getGripY());
   }
 
   @Override

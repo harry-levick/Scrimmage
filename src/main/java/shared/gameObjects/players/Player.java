@@ -4,12 +4,20 @@ import client.main.Client;
 import java.util.UUID;
 import javafx.scene.Group;
 import shared.gameObjects.GameObject;
-import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
+import shared.gameObjects.players.Limbs.Arm;
+import shared.gameObjects.players.Limbs.Body;
+import shared.gameObjects.players.Limbs.Hand;
+import shared.gameObjects.players.Limbs.Head;
+import shared.gameObjects.players.Limbs.Leg;
 import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.weapons.Weapon;
+import shared.handlers.levelHandler.LevelHandler;
+import shared.physics.data.Collision;
 import shared.physics.data.MaterialProperty;
+import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
 
 public class Player extends GameObject {
@@ -18,8 +26,12 @@ public class Player extends GameObject {
   protected final float jumpForce = -200;
   protected final float JUMP_LIMIT = 2.0f;
   public boolean leftKey, rightKey, jumpKey, click;
+  //Testing
+  public boolean deattach;
   public double mouseX, mouseY;
   public int score;
+  protected LevelHandler levelHandler;
+  protected Behaviour behaviour;
   protected float jumpTime;
   protected boolean jumped;
   protected boolean grounded;
@@ -31,18 +43,26 @@ public class Player extends GameObject {
   protected double vx;
   private BoxCollider bc;
 
-  public Player(double x, double y, UUID playerUUID) {
-    super(x, y, 80, 110, ObjectID.Player, playerUUID);
-    score = 0;
-    bc = new BoxCollider(this, false);
-    addComponent(bc);
-    rb =
-        new Rigidbody(
-            RigidbodyType.DYNAMIC, 80, 8, 0.2f, new MaterialProperty(0.005f, 0.1f, 0.05f), null,
-            this);
-    addComponent(rb);
+  //Networking
+  private int lastInputCount;
+
+  public Player(double x, double y, UUID playerUUID, LevelHandler levelHandler) {
+    super(x, y, 80, 110, ObjectType.Player, playerUUID);
+    this.lastInputCount = 0;
+    this.score = 0;
+    this.leftKey = false;
+    this.rightKey = false;
+    this.jumpKey = false;
+    this.click = false;
     this.health = 100;
-    holding = null;
+    this.holding = null;
+    this.levelHandler = levelHandler;
+    this.behaviour = Behaviour.IDLE;
+    this.bc = new BoxCollider(this, ColliderLayer.PLAYER, false);
+    this.rb = new Rigidbody(RigidbodyType.DYNAMIC, 80, 8, 0.2f,
+        new MaterialProperty(0.005f, 0.1f, 0.05f), null, this);
+    addComponent(bc);
+    addComponent(rb);
   }
 
   /**
@@ -58,51 +78,57 @@ public class Player extends GameObject {
   @Override
   public void initialiseAnimation() {
     this.animation.supplyAnimation("default", "images/player/player_idle.png");
-    this.animation.supplyAnimation(
-        "walk", "images/player/player_walk1.png", "images/player/player_walk2.png");
-    this.animation.supplyAnimation("jump", "images/player/player_jump.png");
   }
 
+  @Override
+  public void addChild(GameObject child) {
+    children.add(child);
+    levelHandler.addGameObject(child);
+  }
+
+  @Override
   public void initialise(Group root) {
     super.initialise(root);
-    this.leftKey = false;
-    this.rightKey = false;
-    this.jumpKey = false;
-    this.click = false;
+    addChild(new Leg(true, this, levelHandler));
+    addChild(new Leg(false, this, levelHandler));
+    addChild(new Body(this, levelHandler));
+    addChild(new Head(this, levelHandler));
+    Arm rightArm = new Arm(false, this, levelHandler);
+    Arm leftArm = (new Arm(true, this, levelHandler));
+    addChild(rightArm);
+    addChild(leftArm);
+    rightArm.addChild(new Hand(false, rightArm, levelHandler));
+    leftArm.addChild(new Hand(true, leftArm, levelHandler));
   }
 
   @Override
   public void update() {
     checkGrounded(); // Checks if the player is grounded
-    // Check if the current holding is valid
-    // Change the weapon to Punch if it is not
     badWeapon();
+    if (deattach) {
+      for (int i = 0; i < 8; i++) {
+        Limb test = (Limb) children.get(i);
+        test.detachLimb();
+      }
+    }
     super.update();
   }
 
-  @Override
-  public void render() {
-    if (!isActive()) {
-      return;
-    }
-    super.render();
-    imageView.setTranslateX(getX());
-    imageView.setTranslateY(getY());
-  }
 
   @Override
   public String getState() {
-    return objectUUID + ";" + getX() + ";" + getY() + ";" + animation.getName() + ";" + health;
-    // add holding
+    return objectUUID + ";" + id + ";" + getX() + ";" + getY() + ";" + animation.getName() + ";"
+        + health + ";"
+        + lastInputCount;
   }
 
   @Override
-  public void setState(String data) {
+  public void setState(String data, Boolean snap) {
+    super.setState(data, snap);
     String[] unpackedData = data.split(";");
-    setX(Double.parseDouble(unpackedData[1]));
-    setY(Double.parseDouble(unpackedData[2]));
-    this.animation.switchAnimation(unpackedData[3]);
-    this.health = Integer.parseInt(unpackedData[4]);
+    //this.animation.switchAnimation(unpackedData[4]);
+    this.health = Integer.parseInt(unpackedData[5]);
+    this.lastInputCount = Integer.parseInt(unpackedData[6]);
   }
 
   public void checkGrounded() {
@@ -112,29 +138,27 @@ public class Player extends GameObject {
   public void applyInput() {
     if (rightKey) {
       rb.moveX(speed);
-      animation.switchAnimation("walk");
-      imageView.setScaleX(1);
+      behaviour = Behaviour.WALK_RIGHT;
       this.facingLeft = false;
       this.facingRight = true;
     }
     if (leftKey) {
       rb.moveX(speed * -1);
-      animation.switchAnimation("walk");
-      imageView.setScaleX(-1);
+      behaviour = Behaviour.WALK_LEFT;
       this.facingRight = false;
       this.facingLeft = true;
     }
 
     if (!rightKey && !leftKey) {
       vx = 0;
-      animation.switchDefault();
+      behaviour = Behaviour.IDLE;
     }
     if (jumpKey && !jumped) {
       rb.moveY(jumpForce, 0.33333f);
       jumped = true;
     }
     if (jumped) {
-      animation.switchAnimation("jump");
+      behaviour = Behaviour.JUMP;
     }
     if (grounded) {
       jumped = false;
@@ -153,7 +177,6 @@ public class Player extends GameObject {
   /**
    * Check if the current holding weapon is valid or not
    *
-   * @return True if the weapon is a bad weapon (out of ammo)
    * @return False if the weapon is a good weapon, or there is no weapon
    */
   public boolean badWeapon() {
@@ -193,6 +216,10 @@ public class Player extends GameObject {
       this.setActive(true);
       this.addComponent(bc);
     }
+    children.forEach(child -> {
+      Limb limb = (Limb) child;
+      limb.reset();
+    });
   }
 
   public void increaseScore() {
@@ -331,5 +358,36 @@ public class Player extends GameObject {
   public void setFacingRight(boolean b) {
     this.facingLeft = !b;
     this.facingRight = b;
+  }
+
+  public Behaviour getBehaviour() {
+    return behaviour;
+  }
+
+  public void setBehaviour(Behaviour behaviour) {
+    this.behaviour = behaviour;
+  }
+
+  @Override
+  public void OnCollisionEnter(Collision col) {
+    //  System.out.println("Entered Collision!");
+  }
+
+  @Override
+  public void OnCollisionExit(Collision col) {
+
+  }
+
+  @Override
+  public void OnCollisionStay(Collision col) {
+    //  System.out.println("Stayed in Collision!");
+  }
+
+  public int getLastInputCount() {
+    return lastInputCount;
+  }
+
+  public void setLastInputCount(int lastInputCount) {
+    this.lastInputCount = lastInputCount;
   }
 }

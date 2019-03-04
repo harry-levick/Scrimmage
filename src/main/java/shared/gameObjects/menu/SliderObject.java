@@ -5,7 +5,7 @@ import javafx.scene.Group;
 import javafx.scene.control.Slider;
 import javafx.scene.text.Text;
 import shared.gameObjects.GameObject;
-import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.ObjectType;
 
 public abstract class SliderObject extends GameObject {
 
@@ -15,15 +15,13 @@ public abstract class SliderObject extends GameObject {
   protected String label;
 
   public SliderObject(
-      double x, double y, double sizeX, double sizeY, String label, ObjectID id, UUID objectUUID) {
+      double x, double y, double sizeX, double sizeY, String label, ObjectType id,
+      UUID objectUUID) {
     super(x, y, sizeX, sizeY, id, objectUUID);
     slider = new Slider();
     this.label = label;
   }
 
-  @Override
-  public void interpolatePosition(float alpha) {
-  }
 
   @Override
   public void initialise(Group root) {
@@ -59,21 +57,16 @@ public abstract class SliderObject extends GameObject {
   }
 
   @Override
-  public String getState() {
-    return null;
+  public void render() {
+
   }
 
   @Override
   public void update() {
-    super.update();
+
   }
 
   @Override
-  public void render() {
-    super.render();
-    slider.relocate(getX(), getY());
-  }
-
   public void removeRender() {
     super.removeRender();
     root.getChildren().remove(slider);

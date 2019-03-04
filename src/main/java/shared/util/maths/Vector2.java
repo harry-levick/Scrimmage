@@ -15,6 +15,11 @@ public class Vector2 implements Serializable {
     this.y = y;
   }
 
+  public Vector2(double x, double y) {
+    this.x = (float) x;
+    this.y = (float) y;
+  }
+
   public Vector2(String vector) {
     Vector2 vector2 = fromString(vector);
     this.x = vector2.getX();
@@ -147,7 +152,9 @@ public class Vector2 implements Serializable {
         //magnitude(vector);
   }
 
-  /** Angle between two vectors, approximated */
+  /**
+   * Angle between two vectors, approximated
+   */
   public float angleBetween(Vector2 vector) {
     if (vector.magnitude(Zero()) == 0) {
       return (float) Math.atan(getY() / getX());
@@ -155,12 +162,16 @@ public class Vector2 implements Serializable {
     return (float) Math.acos(dot(vector) / (magnitude(Zero()) * vector.magnitude(Zero())));
   }
 
-  /** Angle of the vector with respect to world space */
+  /**
+   * Angle of the vector with respect to world space
+   */
   public float angle() {
     return angleBetween(Zero());
   }
 
-  /** Computes the cross product between two vectors. */
+  /**
+   * Computes the cross product between two vectors.
+   */
   public Vector2 cross(Vector2 vector) {
     float x, y;
     x = getX() * vector.getY();
@@ -168,7 +179,9 @@ public class Vector2 implements Serializable {
     return new Vector2(x, y);
   }
 
-  /** Clamps the vector between the two values */
+  /**
+   * Clamps the vector between the two values
+   */
   public Vector2 clamp(Vector2 min, Vector2 max) {
     float x, y;
     x = Math.max(min.getX(), Math.min(max.getX(), getX()));
@@ -178,6 +191,12 @@ public class Vector2 implements Serializable {
 
   public Vector2 normalize() {
     return this.div(magnitude(Vector2.Zero()));
+  }
+
+  public Vector2 applyRotation(float rotation) {
+    float angle = (float) Math.toRadians(rotation);
+    return new Vector2(x * Math.cos(angle) - y * Math.sin(angle),
+        x * Math.sin(angle) + y * Math.cos(angle));
   }
 
   @Override

@@ -1,7 +1,7 @@
 package shared.gameObjects.weapons;
 
 import java.util.UUID;
-import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.players.Player;
 
 /**
@@ -14,7 +14,7 @@ public class Punch extends Melee {
    *
    * @param x x position of player's hand
    * @param y y position of player's hand
-   * @param id ObjectID
+   * @param id ObjectType
    * @param damage Damage of a punch
    * @param name Name
    * @param range Range of punch, measured forward
@@ -25,7 +25,7 @@ public class Punch extends Melee {
       double y,
       double sizeX,
       double sizeY,
-      ObjectID id,
+      ObjectType id,
       int damage,
       String name,
       Player holder,
@@ -42,13 +42,6 @@ public class Punch extends Melee {
 
   @Override
   public void initialiseAnimation() {
-    // TODO Auto-generated method stub
 
-  }
-
-  @Override
-  public String getState() {
-    // TODO Auto-generated method stub
-    return null;
   }
 }

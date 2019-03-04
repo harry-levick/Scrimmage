@@ -1,5 +1,6 @@
 package shared.physics.data;
 
+import shared.gameObjects.GameObject;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.CircleCollider;
 import shared.gameObjects.components.Collider;
@@ -12,14 +13,14 @@ import shared.util.maths.Vector2;
 //TODO: Refactor and clean up; this is used only by Raycasts now
 public class Collision {
 
-  private Rigidbody collidedObject;
+  private GameObject collidedObject;
   private Vector2 normalCollision;
   private float penDepth;
 
   /**
    *
    */
-  public Collision(Rigidbody collidedObject, Vector2 normal, float depth) {
+  public Collision(GameObject collidedObject, Vector2 normal, float depth) {
     this.collidedObject = collidedObject;
     this.normalCollision = normal;
     this.penDepth = depth;
@@ -40,17 +41,20 @@ public class Collision {
               break;
             }
             float penDepth = getPenDepth(a, (BoxCollider) b);
-            collision = new Collision(collidedBody, getDirection(a, (BoxCollider) b), penDepth);
+            collision = new Collision(collidedBody.getParent(), getDirection(a, (BoxCollider) b),
+                penDepth);
           }
         }
 
         break;
       case EDGE:
-        if (Collider.boxEdgeCollision(a, (EdgeCollider) b)) {}
+        if (Collider.boxEdgeCollision(a, (EdgeCollider) b)) {
+        }
 
         break;
       case CIRCLE:
-        if (Collider.boxCircleCollision(a, (CircleCollider) b)) {}
+        if (Collider.boxCircleCollision(a, (CircleCollider) b)) {
+        }
 
         break;
     }
@@ -59,7 +63,8 @@ public class Collision {
   }
 
   public static boolean haveCollided(Collider colA, Collider colB) {
-    if (colA == colB) {
+    if (colA == colB || !(Collider.canCollideWithLayer(colA.getLayer(), colB.getLayer())) || colB
+        .isTrigger()) {
       return false;
     }
     boolean toRet = false;
@@ -69,10 +74,19 @@ public class Collision {
           case BOX:
             toRet = Collider.boxBoxCollision((BoxCollider) colA, (BoxCollider) colB);
             break;
+          case CIRCLE:
+            toRet = Collider.boxCircleCollision((BoxCollider) colA, (CircleCollider) colB);
+            break;
         }
         break;
       case CIRCLE:
         switch (colB.getColliderType()) {
+          case CIRCLE:
+            toRet = Collider.circleCircleCollision((CircleCollider) colA, (CircleCollider) colB);
+            break;
+          case BOX:
+            toRet = Collider.boxCircleCollision((BoxCollider) colB, (CircleCollider) colA);
+            break;
         }
         break;
       case EDGE:
@@ -86,13 +100,15 @@ public class Collision {
   public static Collision resolveCollision(CircleCollider a, Collider b) {
     switch (b.getColliderType()) {
       case BOX:
-        if (Collider.boxCircleCollision((BoxCollider) b, a)) {}
+        if (Collider.boxCircleCollision((BoxCollider) b, a)) {
+        }
 
         break;
       case EDGE:
         break;
       case CIRCLE:
-        if (Collider.circleCircleCollision(a, (CircleCollider) b)) {}
+        if (Collider.circleCircleCollision(a, (CircleCollider) b)) {
+        }
 
         break;
     }
@@ -110,8 +126,7 @@ public class Collision {
     Vector2 penetrationDistance = new Vector2(x_overlap, y_overlap);
     if (penetrationDistance.getX() < penetrationDistance.getY()) {
       return x_overlap;
-    }
-    else {
+    } else {
       return y_overlap;
     }
   }
@@ -140,7 +155,7 @@ public class Collision {
     }
   }
 
-  public Rigidbody getCollidedObject() {
+  public GameObject getCollidedObject() {
     return collidedObject;
   }
 
