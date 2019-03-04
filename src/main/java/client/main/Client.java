@@ -183,7 +183,8 @@ public class Client extends Application {
         }
         
         /** Draw the UI */
-        if(levelHandler.getGameState() == GameState.IN_GAME || levelHandler.getGameState() == GameState.Multiplayer) {
+        if(levelHandler.getGameState() == GameState.IN_GAME ||
+            levelHandler.getGameState() == GameState.Multiplayer) {
             userInterface.render();
         }
                 
