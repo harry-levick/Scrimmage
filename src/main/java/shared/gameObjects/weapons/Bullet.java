@@ -1,6 +1,7 @@
 package shared.gameObjects.weapons;
 
 import client.main.Client;
+import javafx.scene.transform.Rotate;
 import java.util.ArrayList;
 import java.util.UUID;
 import shared.gameObjects.GameObject;
@@ -21,6 +22,8 @@ import shared.util.maths.Vector2;
  * @author hlf764
  */
 public abstract class Bullet extends GameObject {
+  
+  private double PI = 3.141592654;
 
   public boolean isHit; // true if there is an object at that position
   protected Rigidbody rb;
@@ -29,6 +32,7 @@ public abstract class Bullet extends GameObject {
   private Vector2 vector; // Vector of the force of bullet fire
   private int damage; // Damage of this bullet
   private Player holder; // Holder of the gun that fired this bullet
+  private Rotate rotate;
 
   public Bullet(
       double gunX, // gun initial x position
@@ -46,6 +50,7 @@ public abstract class Bullet extends GameObject {
     setSpeed(speed);
     this.damage = damage;
     this.holder = holder;
+    this.isHit = false;
 
     // Unit vector of the bullet force
     vector = new Vector2((float) (mouseX - gunX), (float) (mouseY - gunY));
@@ -62,9 +67,18 @@ public abstract class Bullet extends GameObject {
             this); // TODO FIX
     addComponent(rb);
 
-    this.isHit = false;
+    // Rotate property of the image
+    rotate = new Rotate();
+    Vector2 mouseV = new Vector2((float) mouseX, (float) mouseY);
+    Vector2 gunV = new Vector2((float) gunX, (float) gunY);
+    Double bulletAngle = (double) mouseV.sub(gunV).angle(); // radian
+    double angleDegree = bulletAngle * 180 / PI; // degree
+    if (mouseX < gunX)
+      angleDegree = angleDegree + 180;
+    rotate.setAngle(angleDegree);
 
     Client.levelHandler.addGameObject(this);
+    imageView.getTransforms().add(rotate);
 
     render();
   }
@@ -100,6 +114,11 @@ public abstract class Bullet extends GameObject {
     } else {
       Client.levelHandler.removeGameObject(this);
     }
+  }
+  
+  @Override
+  public void render() {
+    super.render();
   }
 
 
