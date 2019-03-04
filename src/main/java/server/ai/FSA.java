@@ -1,7 +1,13 @@
 package server.ai;
 
+import java.util.ArrayList;
+import shared.gameObjects.components.ComponentType;
+import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.Melee;
+import shared.physics.Physics;
+import shared.physics.data.Collision;
+import shared.physics.types.RigidbodyType;
 
 /**
  * @author Harry Levick (hxl799)
@@ -15,12 +21,23 @@ public enum FSA {
       int ammoLeft = StateInfo.ammoLeft;
       int botHealth = StateInfo.botHealth;
 
-      if ((newDist > weaponRange)
+      ArrayList<Collision> rayCast = Physics.raycastAll(bot.getTransform().getPos(),
+          targetPlayer.getTransform().getPos().add(bot.getTransform().getPos().mult(-1)));
+
+      // If the cast is null or returns a Static RigidBody
+      boolean inSight = (rayCast == null) ||
+          rayCast.stream().filter(o -> ((Rigidbody) o.getCollidedObject()
+              .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC)
+              .findFirst()
+              .isPresent();
+
+      if (((newDist > weaponRange) || !inSight)
           && (botHealth >= this.HIGH_HEALTH)
           && ((ammoLeft > 0) && bot.getHolding().isGun() || bot.getHolding().isMelee())) {
         return CHASING;
 
       } else if ((newDist <= weaponRange)
+          && inSight
           && (newDist > prevDist)
           && (botHealth >= this.HIGH_HEALTH)
           && ((ammoLeft > 0) && bot.getHolding().isGun() || bot.getHolding().isMelee())) {
@@ -34,12 +51,14 @@ public enum FSA {
           && (botHealth >= this.MEDIUM_HEALTH)
           && (newDist <= prevDist)
           && (newDist <= weaponRange)
+          && inSight
           && ((ammoLeft > 0) && bot.getHolding().isGun() || bot.getHolding().isMelee())) {
         return FLEEING_ATTACKING;
 
-      } else {
+      } else if (inSight) {
         return ATTACKING;
-      }
+      } else
+        return IDLE;
     }
   },
   CHASING() {
@@ -50,12 +69,24 @@ public enum FSA {
       int ammoLeft = StateInfo.ammoLeft;
       int botHealth = StateInfo.botHealth;
 
+      ArrayList<Collision> rayCast = Physics.raycastAll(bot.getTransform().getPos(),
+          targetPlayer.getTransform().getPos().add(bot.getTransform().getPos().mult(-1)));
+
+      // If the cast is null or returns a Static RigidBody
+      boolean inSight = (rayCast == null) ||
+          rayCast.stream().filter(o -> ((Rigidbody) o.getCollidedObject()
+              .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC)
+              .findFirst()
+              .isPresent();
+
       if ((newDist <= weaponRange)
+          && inSight
           && ((ammoLeft > 0) && bot.getHolding().isGun() || bot.getHolding().isMelee())
           && (botHealth >= this.HIGH_HEALTH)) {
         return ATTACKING;
 
       } else if ((newDist <= weaponRange)
+          && inSight
           && (newDist > prevDist)
           && (botHealth >= this.HIGH_HEALTH)
           && ((ammoLeft > 0) && bot.getHolding().isGun() || bot.getHolding().isMelee())) {
@@ -66,15 +97,16 @@ public enum FSA {
         return FLEEING;
 
       } else if ((botHealth <= this.HIGH_HEALTH)
+          && inSight
           && (botHealth >= this.MEDIUM_HEALTH)
           && (newDist < prevDist)
           && (newDist <= weaponRange)
           && ((ammoLeft > 0) && bot.getHolding().isGun() || bot.getHolding().isMelee())) {
         return FLEEING_ATTACKING;
 
-      } else {
+      } else if (!inSight) {
         return CHASING;
-      }
+      } else return IDLE;
     }
   },
   CHASING_ATTACKING() {
@@ -85,7 +117,18 @@ public enum FSA {
       int ammoLeft = StateInfo.ammoLeft;
       int botHealth = StateInfo.botHealth;
 
+      ArrayList<Collision> rayCast = Physics.raycastAll(bot.getTransform().getPos(),
+          targetPlayer.getTransform().getPos().add(bot.getTransform().getPos().mult(-1)));
+
+      // If the cast is null or returns a Static RigidBody
+      boolean inSight = (rayCast == null) ||
+          rayCast.stream().filter(o -> ((Rigidbody) o.getCollidedObject()
+              .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC)
+              .findFirst()
+              .isPresent();
+
       if ((newDist <= weaponRange)
+          && inSight
           &&
           // Target staying relatively still
           (prevDist * 1.05 <= newDist && newDist <= prevDist * 1.05)
@@ -94,7 +137,7 @@ public enum FSA {
         return ATTACKING;
 
       } else if ((botHealth >= this.HIGH_HEALTH)
-          && (newDist > weaponRange)
+          && (newDist > weaponRange || !inSight)
           && (newDist > prevDist)) {
         return CHASING;
 
@@ -103,15 +146,17 @@ public enum FSA {
         return FLEEING;
 
       } else if ((botHealth <= this.HIGH_HEALTH)
+          && inSight
           && (botHealth >= MEDIUM_HEALTH)
           && (newDist < prevDist)
           && (newDist <= weaponRange)
           && ((ammoLeft > 0) && bot.getHolding().isGun() || bot.getHolding().isMelee())) {
         return FLEEING_ATTACKING;
 
-      } else {
+      } else if (inSight) {
         return CHASING_ATTACKING;
-      }
+      } else
+        return IDLE;
     }
   },
   FLEEING() {
@@ -122,6 +167,16 @@ public enum FSA {
       int ammoLeft = StateInfo.ammoLeft;
       int botHealth = StateInfo.botHealth;
 
+      ArrayList<Collision> rayCast = Physics.raycastAll(bot.getTransform().getPos(),
+          targetPlayer.getTransform().getPos().add(bot.getTransform().getPos().mult(-1)));
+
+      // If the cast is null or returns a Static RigidBody
+      boolean inSight = (rayCast == null) ||
+          rayCast.stream().filter(o -> ((Rigidbody) o.getCollidedObject()
+              .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC)
+              .findFirst()
+              .isPresent();
+
       Melee temp;
 
       double enemyWeaponRange =
@@ -130,22 +185,25 @@ public enum FSA {
               : (temp = (Melee) targetPlayer.getHolding()).getRange();
 
       if ((newDist <= weaponRange)
+          && inSight
           && (botHealth >= this.HIGH_HEALTH)
           && ((ammoLeft > 0) && bot.getHolding().isGun() || bot.getHolding().isMelee())) {
         return ATTACKING;
 
       } else if ((botHealth >= this.HIGH_HEALTH)
           && (newDist > prevDist)
-          && (newDist > weaponRange)) {
+          && (newDist > weaponRange || !inSight)) {
         return CHASING;
 
       } else if ((botHealth >= this.HIGH_HEALTH)
           && (newDist > prevDist)
           && (newDist <= weaponRange)
+          && inSight
           && ((ammoLeft > 0) && bot.getHolding().isGun() || bot.getHolding().isMelee())) {
         return CHASING_ATTACKING;
 
       } else if ((newDist <= weaponRange)
+          && inSight
           && (newDist < prevDist)
           && (botHealth <= this.HIGH_HEALTH)
           && (botHealth >= this.MEDIUM_HEALTH)
@@ -168,17 +226,29 @@ public enum FSA {
       int ammoLeft = StateInfo.ammoLeft;
       int botHealth = StateInfo.botHealth;
 
+      ArrayList<Collision> rayCast = Physics.raycastAll(bot.getTransform().getPos(),
+          targetPlayer.getTransform().getPos().add(bot.getTransform().getPos().mult(-1)));
+
+      // If the cast is null or returns a Static RigidBody
+      boolean inSight = (rayCast == null) ||
+          rayCast.stream().filter(o -> ((Rigidbody) o.getCollidedObject()
+              .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC)
+              .findFirst()
+              .isPresent();
+
       if (((botHealth >= this.HIGH_HEALTH))
           && (newDist < prevDist)
           && (newDist <= weaponRange)
+          && inSight
           && ((bot.getHolding().isGun() && ammoLeft > 0) || bot.getHolding().isMelee())) {
         return ATTACKING;
 
-      } else if (((botHealth >= this.HIGH_HEALTH)) && (newDist > weaponRange)) {
+      } else if (((botHealth >= this.HIGH_HEALTH)) && (newDist > weaponRange || !inSight)) {
         return CHASING;
 
       } else if (((botHealth >= this.HIGH_HEALTH))
           && (newDist <= weaponRange)
+          && inSight
           && (newDist > prevDist)
           && ((ammoLeft > 0) && bot.getHolding().isGun() || bot.getHolding().isMelee())) {
         return CHASING_ATTACKING;
@@ -186,9 +256,10 @@ public enum FSA {
       } else if ((botHealth <= this.MEDIUM_HEALTH) && (prevDist > newDist)) {
         return FLEEING;
 
-      } else {
+      } else if (inSight) {
         return FLEEING_ATTACKING;
-      }
+      } else
+        return IDLE;
     }
   },
   IDLE() {
@@ -199,16 +270,28 @@ public enum FSA {
       int ammoLeft = StateInfo.ammoLeft;
       int botHealth = StateInfo.botHealth;
 
+      ArrayList<Collision> rayCast = Physics.raycastAll(bot.getTransform().getPos(),
+          targetPlayer.getTransform().getPos().add(bot.getTransform().getPos().mult(-1)));
+
+      // If the cast is null or returns a Static RigidBody
+      boolean inSight = (rayCast == null) ||
+          rayCast.stream().filter(o -> ((Rigidbody) o.getCollidedObject()
+              .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC)
+              .findFirst()
+              .isPresent();
+
       if (((botHealth >= this.HIGH_HEALTH))
+          && inSight
           && (newDist <= weaponRange)
           && ((ammoLeft > 0) && bot.getHolding().isGun() || bot.getHolding().isMelee())) {
         return ATTACKING;
 
-      } else if (((botHealth >= this.HIGH_HEALTH)) && (newDist > weaponRange)) {
+      } else if (((botHealth >= this.HIGH_HEALTH)) && (newDist > weaponRange || !inSight)) {
         return CHASING;
 
       } else if (((botHealth >= this.HIGH_HEALTH))
           && (newDist <= weaponRange)
+          && inSight
           && ((ammoLeft > 0) && bot.getHolding().isGun() || bot.getHolding().isMelee())
           && (newDist > prevDist)) {
         return CHASING_ATTACKING;
@@ -217,6 +300,7 @@ public enum FSA {
         return FLEEING;
 
       } else if ((botHealth <= this.HIGH_HEALTH)
+          && inSight
           && (botHealth >= this.MEDIUM_HEALTH)
           && (newDist <= weaponRange)
           && (newDist < prevDist)) {
