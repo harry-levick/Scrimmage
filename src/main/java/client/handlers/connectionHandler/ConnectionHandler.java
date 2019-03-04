@@ -27,7 +27,7 @@ public class ConnectionHandler extends Thread {
     connected = true;
     port = 4446;
     received = new LinkedBlockingQueue<String>();
-    this.address = "192.168.56.1";
+    this.address = "192.168.43.253";
     try {
       clientSocket = new DatagramSocket(port);
       socket = new Socket(this.address, 4445);
