@@ -23,11 +23,11 @@ public class ConnectionHandler extends Thread {
   private Socket socket;
   private PrintWriter out;
 
-  public ConnectionHandler(String test) {
+  public ConnectionHandler(String address) {
     connected = true;
     port = 4446;
     received = new LinkedBlockingQueue<String>();
-    this.address = "192.168.43.253";
+    this.address = address;
     try {
       clientSocket = new DatagramSocket(port);
       socket = new Socket(this.address, 4445);
