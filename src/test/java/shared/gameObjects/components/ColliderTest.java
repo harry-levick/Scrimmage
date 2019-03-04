@@ -6,7 +6,7 @@ import java.util.UUID;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import shared.gameObjects.TestObject;
-import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.ObjectType;
 
 public class ColliderTest {
 
@@ -16,17 +16,17 @@ public class ColliderTest {
 
   @BeforeClass
   public static void InitColliders() {
-    a = new TestObject(2, 2, 2, 2, ObjectID.Player, UUID.randomUUID());
-    b = new TestObject(3, 1, 2, 2, ObjectID.Player, UUID.randomUUID());
-    c = new TestObject(10, 10, 2, 2, ObjectID.Player, UUID.randomUUID());
-    d = new TestObject(11, 11, 1, 1, ObjectID.Player, UUID.randomUUID());
-    e = new TestObject(20, 20, 1, 1, ObjectID.Player, UUID.randomUUID());
-    f = new TestObject(21, 21, 1, 1, ObjectID.Player, UUID.randomUUID());
+    a = new TestObject(2, 2, 2, 2, ObjectType.Player, UUID.randomUUID());
+    b = new TestObject(3, 1, 2, 2, ObjectType.Player, UUID.randomUUID());
+    c = new TestObject(10, 10, 2, 2, ObjectType.Player, UUID.randomUUID());
+    d = new TestObject(11, 11, 1, 1, ObjectType.Player, UUID.randomUUID());
+    e = new TestObject(20, 20, 1, 1, ObjectType.Player, UUID.randomUUID());
+    f = new TestObject(21, 21,1, 1,  ObjectType.Player, UUID.randomUUID());
 
     boxA = new BoxCollider(a, false);
     boxB = new BoxCollider(b, false);
     boxC = new BoxCollider(c, false);
-    circleD = new CircleCollider(d, 1f, false);
+    circleD = new CircleCollider(d, 1, false);
     circleE = new CircleCollider(e, 2, false);
     circleF = new CircleCollider(f, 2, false);
   }

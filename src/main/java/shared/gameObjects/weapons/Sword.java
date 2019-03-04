@@ -1,7 +1,7 @@
 package shared.gameObjects.weapons;
 
 import java.util.UUID;
-import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.players.Player;
 import shared.util.Path;
 
@@ -25,7 +25,7 @@ public class Sword extends Melee {
         y,
         50,
         50,
-        ObjectID.Weapon,
+        ObjectType.Weapon,
         20, // damage
         10, // weight
         name,
