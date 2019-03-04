@@ -29,6 +29,9 @@ public class KeyboardInput implements EventHandler<KeyEvent> {
           clientPlayer.jumpKey = true;
           Client.sendUpdate = true;
           break;
+        case H:
+          clientPlayer.deattach = true;
+          break;
         default:
       }
     } else if (event.getEventType() == KeyEvent.KEY_RELEASED) {
@@ -44,6 +47,9 @@ public class KeyboardInput implements EventHandler<KeyEvent> {
         case W:
           clientPlayer.jumpKey = false;
           Client.sendUpdate = true;
+          break;
+        case H:
+          clientPlayer.deattach = false;
           break;
         default:
       }

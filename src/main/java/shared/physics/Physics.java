@@ -1,6 +1,8 @@
 package shared.physics;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.UUID;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Collider;
@@ -17,12 +19,20 @@ public class Physics {
   public static final float GRAVITY = 100f;
   public static final float TIMESTEP = 1f / 60;
   public static boolean showColliders = false;
-  public static ArrayList<GameObject> gameObjects;
+  public static LinkedHashMap<UUID, GameObject> gameObjects;
+  /*
+   * Order: DEFAULT, PLAYER, OBJECT, WALL
+   */
+  public static boolean[] DEFAULT = {true, true, true, true};
+  public static boolean[] PLAYER = {true, false, true, true};
+  public static boolean[] OBJECT = {true, true, true, true};
+  public static boolean[] WALL = {true, true, true, true};
+  public static boolean[][] COLLISION_LAYERS = {DEFAULT, PLAYER, OBJECT, WALL};
   private static ArrayList<DynamicCollision> collisions = new ArrayList<>();
   private static Physics ourInstance = new Physics();
 
   private Physics() {
-    gameObjects = new ArrayList<>();
+    gameObjects = new LinkedHashMap<>();
   }
   // TODO complete raycast methods
 
@@ -58,7 +68,7 @@ public class Physics {
   public static Collision boxcast(Vector2 sourcePos, Vector2 size) {
     BoxCollider castCollider = new BoxCollider(sourcePos, size);
     Collision collision;
-    for (GameObject object : gameObjects) {
+    for (GameObject object : gameObjects.values()) {
       if (object.getComponent(ComponentType.COLLIDER) != null) {
         collision =
             Collision.resolveCollision(
@@ -82,7 +92,7 @@ public class Physics {
     BoxCollider castCollider = new BoxCollider(sourcePos, size);
     Collision collision;
     ArrayList<Collision> collisions = new ArrayList<>();
-    for (GameObject object : gameObjects) {
+    for (GameObject object : gameObjects.values()) {
       if (object.getComponent(ComponentType.COLLIDER) != null) {
         collision =
             Collision.resolveCollision(

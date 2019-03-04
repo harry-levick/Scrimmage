@@ -1,9 +1,8 @@
 package shared.gameObjects.Blocks.Metal;
 
 import java.util.UUID;
-import javafx.scene.image.Image;
 import shared.gameObjects.GameObject;
-import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
 import shared.physics.data.AngularData;
@@ -12,7 +11,6 @@ import shared.physics.types.RigidbodyType;
 
 public class MetalFloorObject extends GameObject {
 
-  private int health;
 
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
@@ -23,9 +21,8 @@ public class MetalFloorObject extends GameObject {
    * @param id Unique Identifier of every game object
    */
   public MetalFloorObject(
-      double x, double y, double sizeX, double sizeY, ObjectID id, UUID exampleUUID) {
+      double x, double y, double sizeX, double sizeY, ObjectType id, UUID exampleUUID) {
     super(x, y, sizeX, sizeY, id, exampleUUID);
-    health = 100;
     addComponent(
         new Rigidbody(
             RigidbodyType.STATIC,
@@ -43,40 +40,4 @@ public class MetalFloorObject extends GameObject {
     this.animation.supplyAnimation("default", "images/platforms/metal/elementMetal013.png");
   }
 
-  @Override
-  public void update() {
-    super.update();
-  }
-
-  public int getHealth() {
-    return health;
-  }
-
-  public void setHealth(int health) {
-    this.health = health;
-    if (this.health < 0) {
-      this.health = 0;
-    }
-    if (this.health > 100) {
-      this.health = 100;
-    }
-  }
-
-  @Override
-  public void render() {
-    super.render();
-    imageView.relocate(getX(), getY());
-    // Example not best way as every frame rechecking and recreating image
-    if (health > 60) {
-
-    } else if (health < 60 && health > 40) {
-      imageView.setImage(new Image("images/platforms/stone/elementStone016.png"));
-    } else if (health < 40) {
-      imageView.setImage(new Image("images/platforms/stone/elementStone051.png"));
-    }
-  }
-
-  @Override
-  public void interpolatePosition(float alpha) {
-  }
 }

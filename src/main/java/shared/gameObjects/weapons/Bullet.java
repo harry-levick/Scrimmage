@@ -4,7 +4,7 @@ import client.main.Client;
 import java.util.ArrayList;
 import java.util.UUID;
 import shared.gameObjects.GameObject;
-import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Player;
@@ -39,7 +39,7 @@ public abstract class Bullet extends GameObject {
       Player holder, // holder of the gun that fired this bullet
       UUID uuid) { // uuid of this bullet
 
-    super(gunX, gunY, width, width, ObjectID.Bullet, uuid);
+    super(gunX, gunY, width, width, ObjectType.Bullet, uuid);
     setWidth(width);
     setSpeed(speed);
     this.damage = damage;
@@ -78,15 +78,15 @@ public abstract class Bullet extends GameObject {
 
     // check if a player is hit
     for (Collision c : collision) {
-      GameObject g = c.getCollidedObject().getParent();
-      if (g.getId() == ObjectID.Player && !g.equals(holder)) {
+      GameObject g = c.getCollidedObject();
+      if (g.getId() == ObjectType.Player && !g.equals(holder)) {
         isHit = true;
         playersBeingHit.add((Player) g);
       }
     }
 
     if (isHit) {
-      Client.levelHandler.delGameObject(this);
+      Client.levelHandler.removeGameObject(this);
       for (Player p : playersBeingHit) {
         p.deductHp(this.damage);
         // ((Rigidbody) p.getComponent(ComponentType.RIGIDBODY)).moveX(-100, 0.4f);
@@ -94,21 +94,10 @@ public abstract class Bullet extends GameObject {
     } else if ((0 < getX() && getX() < 1920) && (0 < getY() && getY() < 1080)) {
       rb.move(vector.mult((float) speed));
     } else {
-      Client.levelHandler.delGameObject(this);
+      Client.levelHandler.removeGameObject(this);
     }
   }
 
-  @Override
-  public void render() {
-    super.render();
-    imageView.relocate(getX(), getY());
-  }
-
-  @Override
-  public void interpolatePosition(float alpha) {
-    // TODO Auto-generated method stub
-
-  }
 
   @Override
   public String getState() {

@@ -1,7 +1,7 @@
 package shared.gameObjects;
 
 import java.util.UUID;
-import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.ObjectType;
 
 public class TestObject extends GameObject {
 
@@ -13,11 +13,11 @@ public class TestObject extends GameObject {
    * @param y Y coordinate of object in game world
    * @param id Unique Identifier of every game object
    */
-  public TestObject(int x, int y, ObjectID id, UUID testUUID) {
+  public TestObject(int x, int y, ObjectType id, UUID testUUID) {
     super(x, y, 100, 100, id, testUUID);
   }
 
-  public TestObject(int x, int y, int sizeX, int sizeY, ObjectID id, UUID testUUID) {
+  public TestObject(int x, int y, int sizeX, int sizeY, ObjectType id, UUID testUUID) {
     super(x, y, sizeX, sizeY, id, testUUID);
   }
 
