@@ -70,7 +70,7 @@ public class Player extends GameObject {
    * @param that
    */
   public Player(Player that) {
-    this(that.getX(), that.getY(), that.getUUID());
+    this(that.getX(), that.getY(), that.getUUID(), that.levelHandler);
   }
 
 

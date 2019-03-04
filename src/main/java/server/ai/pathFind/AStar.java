@@ -394,7 +394,7 @@ public class AStar {
     // Set the x and y position of the enemy when grounded.
     setEnemyGroundedPos(enemy);
     // Take the game objects from the level handler on each search
-    this.worldScene = this.levelHandler.getGameObjects();
+    this.worldScene = (List) this.levelHandler.getGameObjects().values();
     SearchNode startPosition = new SearchNode(null, null);
     startPosition.sceneSnapshot = backupState();
 
@@ -413,18 +413,15 @@ public class AStar {
    * @return
    */
   private void setEnemyGroundedPos(Player enemy) {
-    //Collision floor = Physics.raycast(enemy.getTransform().getPos(), Vector2.Down());
+    Collision floor = Physics.raycast(enemy.getTransform().getPos(), Vector2.Down());
 
-    //Collision floor2 = Physics
-        //.boxcast(enemy.getTransform().getPos().add(Vector2.Down().mult(100)), enemy.getTransform().getSize());
+    Vector2 floorCoords = floor.getPointOfCollision();
 
-    //Vector2 floorCoords = floor2.getPointOfCollision();
+    enemyX = floorCoords.getX();
+    enemyY = floorCoords.getY();
 
-    //enemyX = floorCoords.getX();
-    //enemyY = floorCoords.getY();
-
-    enemyX = enemy.getX();
-    enemyY = enemy.getY();
+    //enemyX = enemy.getX();
+    //enemyY = enemy.getY();
   }
 
   private ArrayList<boolean[]> createPossibleActions(SearchNode currentPos) {
