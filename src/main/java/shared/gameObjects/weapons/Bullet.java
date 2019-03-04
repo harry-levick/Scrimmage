@@ -6,6 +6,7 @@ import java.util.UUID;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
+import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Player;
 import shared.physics.Physics;
@@ -83,6 +84,8 @@ public abstract class Bullet extends GameObject {
       if (g.getId() == ObjectType.Player && !g.equals(holder)) {
         isHit = true;
         playersBeingHit.add((Player) g);
+      } else if (!g.equals(holder)){
+        isHit = true;
       }
     }
 
@@ -90,7 +93,7 @@ public abstract class Bullet extends GameObject {
       Client.levelHandler.removeGameObject(this);
       for (Player p : playersBeingHit) {
         p.deductHp(this.damage);
-        // ((Rigidbody) p.getComponent(ComponentType.RIGIDBODY)).moveX(-100, 0.4f);
+       // ((Rigidbody) p.getComponent(ComponentType.RIGIDBODY)).moveX((float) speed/10f);
       }
     } else if ((0 < getX() && getX() < 1920) && (0 < getY() && getY() < 1080)) {
       rb.move(vector.mult((float) speed));
