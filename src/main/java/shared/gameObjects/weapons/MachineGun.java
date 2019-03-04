@@ -27,9 +27,6 @@ public class MachineGun extends Gun {
   private double angleGun; // angle of gun (hand and mouse vs x-axis) (radian)
   private Rotate rotate; // rotate property of gun wrt grip
   
-  // variables for when the holder is null
-  private BoxCollider bc;
-  private Rigidbody rb;
 
   public MachineGun(double x, double y, String name, Player holder, UUID uuid) {
 
@@ -50,24 +47,6 @@ public class MachineGun extends Gun {
         true, // fullAutoFire
         false, // singleHanded
         uuid);
-    
-    // TODO: extract to Gun or Weapon
-    if (holder != null)
-      holderHandPos = getHolderHandPos();
-    else {
-      // add collider and rigidbody
-      bc = new BoxCollider(this, true);
-      rb = new Rigidbody(
-              RigidbodyType.DYNAMIC,
-              1f, // mass
-              1f, // gravity scale
-              0.1f,
-              new MaterialProperty(0.1f, 1, 1),
-              new AngularData(0, 0, 0, 0),
-              this); // TODO FIX
-      addComponent(bc);
-      addComponent(rb);
-    }
 
     rotate = new Rotate();
     // pivot = position of the grip
@@ -134,32 +113,6 @@ public class MachineGun extends Gun {
   @Override
   public void initialiseAnimation() {
     this.animation.supplyAnimationWithSize("default", 40, 40, true, Path.convert(this.imagePath));
-  }
-  
-  @Override
-  public void OnCollisionEnter(Collision col) {
-    GameObject g = col.getCollidedObject();
-    if (g.getId() == ObjectType.Player) {
-      Player p = (Player) g;
-      setHolder(p);
-      this.removeComponent(bc);
-      this.removeComponent(rb);
-    }
-  }
-  
-  // Set holder of this gun
-  public void setHolder(Player p) {
-    if (p != null) {
-      this.holder = p;
-      p.setHolding(this);
-    }
-  }
-  
-  // Get holder hand position
-  private double[] getHolderHandPos() {
-      if (holder != null)
-        return holder.getHandPos();
-      return null;
   }
 
   // =============================
