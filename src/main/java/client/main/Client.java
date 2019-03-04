@@ -18,6 +18,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -288,6 +289,9 @@ public class Client extends Application {
     root = new Group();
     backgroundRoot = new Group();
     gameRoot = new Group();
+
+    Font.loadFont("Kenney Future.ttf", 14);
+    root.setStyle("-fx-font-family: Kenney Future");
 
     root.getChildren().add(backgroundRoot);
     root.getChildren().add(gameRoot);
