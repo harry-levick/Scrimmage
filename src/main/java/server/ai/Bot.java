@@ -82,9 +82,9 @@ public class Bot extends Player {
     double prevDist, newDist;
     // Calculate the distance to the target from the previous loop
     prevDist = calcDist();
+    targetPlayer = findTarget();
     // Calculate the distance to the updated target
     newDist = calcDist();
-    targetPlayer = findTarget();
 
     state = state.next(targetPlayer, this, prevDist, newDist);
 
@@ -132,7 +132,6 @@ public class Bot extends Player {
 
         break;
     }
-    System.out.println("JUMP = " + this.jumpKey + ", LEFT = " + this.leftKey + ", RIGHT = " + this.rightKey);
     super.update();
   }
 

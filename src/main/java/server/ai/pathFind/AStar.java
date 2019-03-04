@@ -4,6 +4,7 @@ package server.ai.pathFind;
  * @author Harry Levick (hxl799)
  */
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,7 +32,7 @@ import shared.util.maths.Vector2;
 public class AStar {
 
   LevelHandler levelHandler;
-  List<GameObject> worldScene;
+  ArrayList<GameObject> worldScene;
   public static final int visitedListPenalty = 1500; // penalty for being in the visited-states list
   // The current best position fouond by the planner.
   public SearchNode bestPosition;
@@ -62,7 +63,7 @@ public class AStar {
     // The parent node
     SearchNode parentNode;
     // The list of game objects in this scene
-    List<GameObject> sceneSnapshot;
+    ArrayList<GameObject> sceneSnapshot;
     // The bot that the path-finding is concerned with.
     Bot nodeBot;
 
@@ -382,9 +383,9 @@ public class AStar {
    *
    * @return The clone state.
    */
-  public List<GameObject> backupState() {
+  public ArrayList<GameObject> backupState() {
     ArrayList<GameObject> sceneCopy =
-        (ArrayList<GameObject>) ((ArrayList<GameObject>) worldScene).clone();
+        (ArrayList<GameObject>) worldScene.clone();
 
     return sceneCopy;
   }
@@ -396,7 +397,7 @@ public class AStar {
     // Set the x and y position of the enemy when grounded.
     setEnemyGroundedPos(enemy);
     // Take the game objects from the level handler on each search
-    this.worldScene = (List) this.levelHandler.getGameObjects().values();
+    this.worldScene = new ArrayList<>(this.levelHandler.getGameObjects().values());
     SearchNode startPosition = new SearchNode(null, null);
     startPosition.sceneSnapshot = backupState();
 
@@ -415,15 +416,15 @@ public class AStar {
    * @return
    */
   private void setEnemyGroundedPos(Player enemy) {
-    Collision floor = Physics.raycast(enemy.getTransform().getPos(), Vector2.Down());
+    //Collision floor = Physics.raycast(enemy.getTransform().getPos(), Vector2.Down());
 
-    Vector2 floorCoords = floor.getPointOfCollision();
+    //Vector2 floorCoords = floor.getPointOfCollision();
 
-    enemyX = floorCoords.getX();
-    enemyY = floorCoords.getY();
+    //enemyX = floorCoords.getX();
+    //enemyY = floorCoords.getY();
 
-    //enemyX = enemy.getX();
-    //enemyY = enemy.getY();
+    enemyX = enemy.getX();
+    enemyY = enemy.getY();
   }
 
   private ArrayList<boolean[]> createPossibleActions(SearchNode currentPos) {
