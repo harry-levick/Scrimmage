@@ -22,6 +22,14 @@ Likkan Chung
 
 ## Artwork
 
+Original artwork by:
+
+Matt Hooper
+
+Brett Saunders
+
+<br>
+
 *Physics Assets*
 
 *UI Pack*
@@ -33,6 +41,11 @@ Likkan Chung
 **Licensed under Creative Commons: Public Domain**
 
 **https://creativecommons.org/publicdomain/zero/1.0/**
+
+<br>
+
+(weapons sources)
+
 
 <br>
 
@@ -60,10 +73,12 @@ Likkan Chung
 
 <br>
 
-<br>
+(weapon sources)
 
 <br>
 
-Thank you for playing
+<br>
 
-:)
+**Thank you for playing**
+
+**:)**
