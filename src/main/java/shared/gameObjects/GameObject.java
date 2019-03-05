@@ -92,9 +92,11 @@ public abstract class GameObject implements Serializable {
   // Client Side only
   public void render() {
     imageView.setImage(animation.getImage());
-    imageView.setTranslateX(getX());
-    imageView.setTranslateY(getY());
     imageView.setRotate(getTransform().getRot());
+    if(!shake.active) {
+      imageView.setTranslateX(getX());
+      imageView.setTranslateY(getY());
+    }
   }
 
   // Collision engine

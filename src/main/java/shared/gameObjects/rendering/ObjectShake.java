@@ -52,8 +52,8 @@ public class ObjectShake {
     */
     
     if(alt==-1) {
-      this.gameObject.getImageView().setTranslateX(x+10);
-      this.gameObject.getImageView().setTranslateY(y+10);
+      this.gameObject.getImageView().setTranslateX(x+50);
+      this.gameObject.getImageView().setTranslateY(y+50);
     }
     else {
       this.gameObject.getImageView().setTranslateX(x);
