@@ -16,6 +16,7 @@ public class Settings {
   private double musicVolume;
   private double soundEffectVolume;
   private String s = File.separator;
+  private String resourcesPath;
   private String mapsPath;
   private String menuPath;
   private String musicPath;
@@ -34,15 +35,20 @@ public class Settings {
     username = "TestAccount";
     port = 4446;
     musicVolume = 0;
-    soundEffectVolume = 0;
+    soundEffectVolume = 0.75;
     mapWidth = 1920;
     mapHeight = 1080;
     maxPlayers = 4;
 
-    mapsPath = "src" + s + "main" + s + "resources" + s + "maps";
-    menuPath = "src" + s + "main" + s + "resources" + s + "menus";
-    musicPath = "src" + s + "main" + s + "resources" + s + "audio" + s + "music";
-    SFXPath = "src" + s + "main" + s + "resources" + s + "audio" + s + "sound-effects";
+    resourcesPath = "src" + s + "main" + s + "resources";
+    mapsPath = resourcesPath + s + "maps";
+    menuPath = resourcesPath + s + "menus";
+    musicPath = resourcesPath + s + "audio" + s + "music";
+    SFXPath = resourcesPath + s + "audio" + s + "sound-effects";
+  }
+
+  public String getResourcesPath() {
+    return resourcesPath;
   }
 
   public String getMapsPath() {

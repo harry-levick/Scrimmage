@@ -107,7 +107,8 @@ public class Client extends Application {
     Rectangle bg = new Rectangle(0, 0, settings.getWindowWidth(), settings.getWindowHeight());
     creditsBackground.getChildren().add(bg);
     try {
-      BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/CREDITS.md"));
+      BufferedReader reader = new BufferedReader(
+          new FileReader(settings.getResourcesPath() + File.separator + "CREDITS.md"));
       String line;
       while ((line = reader.readLine()) != null) {
         lines.add(line);
@@ -214,7 +215,7 @@ public class Client extends Application {
     levelHandler.changeMap(
         new Map(
             "Main Menu",
-            Path.convert("src/main/resources/menus/main_menu.map"),
+            Path.convert(settings.getMenuPath() + File.separator + "main_menu.map"),
             GameState.MAIN_MENU),
         false);
   }
@@ -229,7 +230,7 @@ public class Client extends Application {
       playlist.add(
           new Map(
               "Map" + i,
-              Path.convert("src/main/resources/maps/map" + i + ".map"),
+              Path.convert(settings.getMapsPath() + File.separator + "map" + i + ".map"),
               GameState.IN_GAME));
     }
 
@@ -418,7 +419,8 @@ public class Client extends Application {
 
     try {
       globalFont = Font
-          .loadFont(new FileInputStream(new File("src/main/resources/Kenney Future.ttf")), 20);
+          .loadFont(new FileInputStream(
+              new File(settings.getResourcesPath() + File.separator + "Kenney Future.ttf")), 20);
     } catch (FileNotFoundException e) {
       globalFont = Font.font("Consolas", 20);
     }
@@ -473,7 +475,7 @@ public class Client extends Application {
             Client.levelHandler.changeMap(
                 new Map(
                     "main_menu",
-                    Path.convert("src/main/resources/menus/main_menu.map"),
+                    Path.convert(settings.getMenuPath() + File.separator + "main_menu.map"),
                     GameState.IN_GAME),
                 false);
 
