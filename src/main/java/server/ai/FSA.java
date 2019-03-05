@@ -26,10 +26,8 @@ public enum FSA {
 
       // If the cast is null or returns a Static RigidBody
       boolean inSight = (rayCast == null) ||
-          rayCast.stream().filter(o -> ((Rigidbody) o.getCollidedObject()
-              .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC)
-              .findFirst()
-              .isPresent();
+          rayCast.stream().anyMatch(o -> ((Rigidbody) o.getCollidedObject()
+              .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC);
 
       if (((newDist > weaponRange) || !inSight)
           && (botHealth >= this.HIGH_HEALTH)
@@ -73,11 +71,10 @@ public enum FSA {
           targetPlayer.getTransform().getPos().add(bot.getTransform().getPos().mult(-1)));
 
       // If the cast is null or returns a Static RigidBody
+      // If the cast is null or returns a Static RigidBody
       boolean inSight = (rayCast == null) ||
-          rayCast.stream().filter(o -> ((Rigidbody) o.getCollidedObject()
-              .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC)
-              .findFirst()
-              .isPresent();
+          rayCast.stream().anyMatch(o -> ((Rigidbody) o.getCollidedObject()
+              .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC);
 
       if ((newDist <= weaponRange)
           && inSight
@@ -122,10 +119,8 @@ public enum FSA {
 
       // If the cast is null or returns a Static RigidBody
       boolean inSight = (rayCast == null) ||
-          rayCast.stream().filter(o -> ((Rigidbody) o.getCollidedObject()
-              .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC)
-              .findFirst()
-              .isPresent();
+          rayCast.stream().anyMatch(o -> ((Rigidbody) o.getCollidedObject()
+              .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC);
 
       if ((newDist <= weaponRange)
           && inSight
@@ -172,10 +167,8 @@ public enum FSA {
 
       // If the cast is null or returns a Static RigidBody
       boolean inSight = (rayCast == null) ||
-          rayCast.stream().filter(o -> ((Rigidbody) o.getCollidedObject()
-              .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC)
-              .findFirst()
-              .isPresent();
+          rayCast.stream().anyMatch(o -> ((Rigidbody) o.getCollidedObject()
+              .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC);
 
       Melee temp;
 
@@ -231,10 +224,8 @@ public enum FSA {
 
       // If the cast is null or returns a Static RigidBody
       boolean inSight = (rayCast == null) ||
-          rayCast.stream().filter(o -> ((Rigidbody) o.getCollidedObject()
-              .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC)
-              .findFirst()
-              .isPresent();
+          rayCast.stream().anyMatch(o -> ((Rigidbody) o.getCollidedObject()
+              .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC);
 
       if (((botHealth >= this.HIGH_HEALTH))
           && (newDist < prevDist)
@@ -275,10 +266,8 @@ public enum FSA {
 
       // If the cast is null or returns a Static RigidBody
       boolean inSight = (rayCast == null) ||
-          rayCast.stream().filter(o -> ((Rigidbody) o.getCollidedObject()
-              .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC)
-              .findFirst()
-              .isPresent();
+          rayCast.stream().anyMatch(o -> ((Rigidbody) o.getCollidedObject()
+              .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC);
 
       if (((botHealth >= this.HIGH_HEALTH))
           && inSight
