@@ -52,7 +52,7 @@ import shared.util.maths.Vector2;
 
 public class Client extends Application {
 
-  public static boolean musicActive = false;
+  public static boolean musicActive = true;
 
   private static final Logger LOGGER = LogManager.getLogger(Client.class.getName());
   public static LevelHandler levelHandler;
@@ -377,7 +377,10 @@ public class Client extends Application {
         if (credits) {
           creditStartDelay--;
           if (creditStartDelay < 0 && creditStartDelay % 2 == 0) {
-            int maxY = (int) creditsRoot.getChildren().get(0).getLayoutY();
+            int maxY = Integer.MIN_VALUE;
+            if (creditsRoot.getChildren().size() != 0) {
+              maxY = (int) creditsRoot.getChildren().get(0).getLayoutY();
+            }
             for (Node node : creditsRoot.getChildren()) {
               node.setLayoutY(node.getLayoutY() - 1);
               maxY = Math.max(maxY, (int) node.getLayoutY());
