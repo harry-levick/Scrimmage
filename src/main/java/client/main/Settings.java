@@ -12,8 +12,8 @@ public class Settings {
 
   private String username = "TestAccount";
   private int port = 4446;
-  private double musicVolume;
-  private double soundEffectVolume;
+  private double musicVolume = 0;
+  private double soundEffectVolume = 0.75;
   private String mapsPath =
       "src" + File.separator + "main" + File.separator + "resources" + File.separator + "menus";
   private String menuPath =
@@ -28,8 +28,6 @@ public class Settings {
    * Default Constructor Music volume set to 100 and sound effects to 75
    */
   public Settings() {
-    musicVolume = 0;
-    soundEffectVolume = 0.75f;
   }
 
   public String getMapsPath() {
