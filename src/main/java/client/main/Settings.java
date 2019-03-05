@@ -18,7 +18,12 @@ public class Settings {
       "src" + File.separator + "main" + File.separator + "resources" + File.separator + "menus";
   private String menuPath =
       "src" + File.separator + "main" + File.separator + "resources" + File.separator + "menus";
-
+  private String musicPath =
+      "src" + File.separator + "main" + File.separator + "resources" + File.separator + "audio"
+          + File.separator + "music";
+  private String SFXPath =
+      "src" + File.separator + "main" + File.separator + "resources" + File.separator + "audio"
+          + File.separator + "sound-effects";
   /**
    * Default Constructor Music volume set to 100 and sound effects to 75
    */
@@ -43,6 +48,13 @@ public class Settings {
     this.menuPath = menuPath;
   }
 
+  public String getMusicPath() {
+    return musicPath;
+  }
+
+  public String getSFXPath() {
+    return SFXPath;
+  }
   /**
    * @return Current game music volume
    */
