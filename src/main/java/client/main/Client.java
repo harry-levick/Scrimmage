@@ -104,7 +104,7 @@ public class Client extends Application {
     ArrayList<String> lines = new ArrayList<String>();
     levelHandler.getMusicAudioHandler().playMusic(
         "LOCAL_FORECAST"); // not using playlist since assumed length of credits is less than the length of song
-    Rectangle bg = new Rectangle(0, 0, 1920, 1080);
+    Rectangle bg = new Rectangle(0, 0, settings.getWindowWidth(), settings.getWindowHeight());
     creditsBackground.getChildren().add(bg);
     try {
       BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/CREDITS.md"));
@@ -119,7 +119,7 @@ public class Client extends Application {
       // todo io exception
     }
     int yOffset = 0;
-    int x = 1920 / 2; //todo auto fetch
+    int x = settings.getWindowWidth() / 2; // todo auto fetch
     int y = 200;
     ArrayList<Text> textList = new ArrayList<>();
     for (String line : lines) {
@@ -433,7 +433,7 @@ public class Client extends Application {
     primaryStage.setTitle(gameTitle);
     primaryStage.getIcons().add(new Image(Path.convert("images/logo.png")));
 
-    scene = new Scene(root, 1920, 1080);
+    scene = new Scene(root, settings.getWindowWidth(), settings.getWindowHeight());
     scene.setCursor(Cursor.CROSSHAIR);
 
     primaryStage.setScene(scene);
