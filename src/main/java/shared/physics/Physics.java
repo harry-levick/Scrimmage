@@ -1,8 +1,10 @@
 package shared.physics;
 
+import client.main.Client;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.UUID;
+import javafx.scene.shape.Line;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.CircleCollider;
@@ -13,15 +15,14 @@ import shared.physics.data.Collision;
 import shared.physics.data.DynamicCollision;
 import shared.util.maths.Vector2;
 
-/**
- * @author fxa579 The singleton class respomsible for raycasting and physics constants/equations
- */
+/** @author fxa579 The singleton class respomsible for raycasting and physics constants/equations */
 public class Physics {
 
   public static final float GRAVITY = 100f;
   public static final float TIMESTEP = 1f / 60;
   public static final int RAYCAST_INC = 100;
   public static boolean showColliders = false;
+  public static boolean showCasts = true;
   /*
    * Order: DEFAULT, PLAYER, OBJECT, WALL, PARTICLE
    */
@@ -48,10 +49,21 @@ public class Physics {
   public static Collision raycast(Vector2 sourcePos, Vector2 lengthAndDirection) {
     EdgeCollider castCollider = new EdgeCollider(false);
     Collision collision = null;
-    float incrementVal = lengthAndDirection.magnitude() / RAYCAST_INC;
+    Vector2 incrementVal = lengthAndDirection.div(RAYCAST_INC);
     for (int i = 0; i <= RAYCAST_INC; i++) {
-      castCollider.addNode(sourcePos.add(incrementVal * i));
+      castCollider.addNode(sourcePos.add(incrementVal.mult(i)));
     }
+
+    if (showCasts) {
+      Line line = new Line();
+      line.setStartX(castCollider.getNodes().get(0).getX());
+      line.setStartY(castCollider.getNodes().get(0).getY());
+      line.setEndX(castCollider.getNodes().get(castCollider.getNodes().size() - 1).getX());
+      line.setEndY(castCollider.getNodes().get(castCollider.getNodes().size() - 1).getY());
+      line.setStyle("-fx-stroke-width: 4; -fx-stroke: #00FF00;");
+      Client.gameRoot.getChildren().add(line);
+    }
+
     for (GameObject object : gameObjects.values()) {
       if (object.getComponent(ComponentType.COLLIDER) != null) {
         collision =
@@ -76,9 +88,19 @@ public class Physics {
     EdgeCollider castCollider = new EdgeCollider(false);
     Collision collision = null;
     ArrayList<Collision> collisions = new ArrayList<>();
-    float incrementVal = lengthAndDirection.magnitude() / RAYCAST_INC;
+    Vector2 incrementVal = lengthAndDirection.div(RAYCAST_INC);
     for (int i = 0; i <= RAYCAST_INC; i++) {
-      castCollider.addNode(sourcePos.add(incrementVal * i));
+      castCollider.addNode(sourcePos.add(incrementVal.mult(i)));
+    }
+
+    if (showCasts) {
+      Line line = new Line();
+      line.setStartX(castCollider.getNodes().get(0).getX());
+      line.setStartY(castCollider.getNodes().get(0).getY());
+      line.setEndX(castCollider.getNodes().get(castCollider.getNodes().size() - 1).getX());
+      line.setEndY(castCollider.getNodes().get(castCollider.getNodes().size() - 1).getY());
+      line.setStyle("-fx-stroke-width: 4; -fx-stroke: #324401;");
+      Client.gameRoot.getChildren().add(line);
     }
     for (GameObject object : gameObjects.values()) {
       if (object.getComponent(ComponentType.COLLIDER) != null) {
