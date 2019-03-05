@@ -36,16 +36,15 @@ Brett Saunders
 
 *Platformer Characters 1*
 
-**Kenney Game Assets (kenney.nl)**
+**by Kenney Game Assets**
 
-**Licensed under Creative Commons: Public Domain**
+kenney.nl
 
-**https://creativecommons.org/publicdomain/zero/1.0/**
+Licensed under Creative Commons: Public Domain
 
 <br>
 
 (weapons sources)
-
 
 <br>
 
@@ -65,15 +64,37 @@ Brett Saunders
 
 *EDM Detection Mode*
 
-**Kevin MacLeod (incompetech.com)**
+**by Kevin MacLeod**
 
-**Licensed under Creative Commons: By Attribution 3.0**
+incompetech.com
 
-**http://creativecommons.org/licenses/by/3.0/**
+Licensed under Creative Commons: By Attribution 3.0
 
 <br>
 
-(weapon sources)
+*8 Bit Machine Gun*
+
+adapted from original work
+
+**by timgorly**
+
+https://freesound.org/s/170167/
+
+Licensed under Creative Commons: By Attribution 3.0
+
+<br>
+
+## Creative Commons
+
+**By Public Domain**
+
+https://creativecommons.org/publicdomain/zero/1.0/
+
+<br>
+
+**By Attribution 3.0**
+
+http://creativecommons.org/licenses/by/3.0/
 
 <br>
 
