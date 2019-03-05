@@ -403,8 +403,8 @@ public class LevelCreator extends Application {
     for (int i = 0; i < 12; i++) {
       // top row wall
       gameObjects.put(uuid,
-          new StoneWallObject(
-              getAbs(i * 4), getAbs(0), getAbs(1), getAbs(4), ObjectType.Bot, UUID.randomUUID()));
+          new StoneFloorObject(
+              getAbs(i * 4), getAbs(0), getAbs(4), getAbs(1), ObjectType.Bot, UUID.randomUUID()));
       uuid = UUID.randomUUID();
     }
     for (int i = 0; i < 5; i++) {
