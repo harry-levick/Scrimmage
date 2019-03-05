@@ -67,6 +67,7 @@ public class Player extends GameObject {
   @Override
   public void initialise(Group root) {
     super.initialise(root);
+    this.shake.active = true; //Change to true to enable shake.
     addChild(new Leg(true, this));
     addChild(new Leg(false, this));
     addChild(new Body(this));
