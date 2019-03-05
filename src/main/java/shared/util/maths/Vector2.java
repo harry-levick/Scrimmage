@@ -26,7 +26,9 @@ public class Vector2 implements Serializable {
     this.y = vector2.getY();
   }
 
-  public static Vector2 Zero() { return new Vector2(0, 0); }
+  public static Vector2 Zero() {
+    return new Vector2(0, 0);
+  }
 
   public static Vector2 Unit() {
     return new Vector2(1, 1);
@@ -54,7 +56,7 @@ public class Vector2 implements Serializable {
 
   /**
    * Multiply both elements in the vector with a scalar
-   * @param scalar
+   *
    * @return The new product vector
    */
   public Vector2 mult(float scalar) {

@@ -4,15 +4,8 @@ import client.handlers.audioHandler.AudioHandler;
 import client.main.Client;
 import java.util.UUID;
 import javafx.scene.transform.Rotate;
-import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
-import shared.gameObjects.components.BoxCollider;
-import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Player;
-import shared.physics.data.AngularData;
-import shared.physics.data.Collision;
-import shared.physics.data.MaterialProperty;
-import shared.physics.types.RigidbodyType;
 import shared.util.Path;
 import shared.util.maths.Vector2;
 
@@ -26,7 +19,7 @@ public class MachineGun extends Gun {
   private double[] holderHandPos;
   private double angleGun; // angle of gun (hand and mouse vs x-axis) (radian)
   private Rotate rotate; // rotate property of gun wrt grip
-  
+
 
   public MachineGun(double x, double y, String name, Player holder, UUID uuid) {
 
@@ -95,14 +88,14 @@ public class MachineGun extends Gun {
 
     if (holder != null) {
       imageView.getTransforms().remove(rotate);
-  
+
       double mouseX = holder.mouseX;
       double mouseY = holder.mouseY;
       Vector2 mouseV = new Vector2((float) mouseX, (float) mouseY);
       Vector2 gripV = new Vector2((float) holder.getX(), (float) holder.getY());
       angleGun = mouseV.sub(gripV).angle(); // radian
       double angle = angleGun * 180 / PI; // degree
-  
+
       rotate.setAngle(angle);
       imageView.getTransforms().add(rotate);
       imageView.setTranslateX(this.getGripX());

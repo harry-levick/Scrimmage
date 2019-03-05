@@ -54,7 +54,7 @@ public class Player extends GameObject {
   private Limb armRight;
   private Limb handLeft;
   private Limb handRight;
-  
+
   private CircleCollider cc;
 
   //Networking
@@ -73,10 +73,10 @@ public class Player extends GameObject {
     this.levelHandler = levelHandler;
     this.behaviour = Behaviour.IDLE;
     this.bc = new BoxCollider(this, ColliderLayer.PLAYER, false);
-  //  this.cc = new CircleCollider(this, ColliderLayer.PLAYER, transform.getSize().magnitude()*0.5f, false);
+    //  this.cc = new CircleCollider(this, ColliderLayer.PLAYER, transform.getSize().magnitude()*0.5f, false);
     this.rb = new Rigidbody(RigidbodyType.DYNAMIC, 90, 12, 0.2f,
         new MaterialProperty(0.005f, 0.1f, 0.05f), null, this);
-  //  addComponent(cc);
+    //  addComponent(cc);
     addComponent(bc);
     addComponent(rb);
   }
@@ -118,7 +118,7 @@ public class Player extends GameObject {
   @Override
   public void update() {
     checkGrounded(); // Checks if the player is grounded
-   // System.out.println(rb.getVelocity());
+    // System.out.println(rb.getVelocity());
     badWeapon();
     if (deattach) {
       for (int i = 0; i < 8; i++) {
@@ -183,15 +183,13 @@ public class Player extends GameObject {
     } // else punch
     // setX(getX() + (vx * 0.0166));
 
-    
     if (this.getHolding() != null) {
       if (this.getHolding().isMelee()) {
-        this.getHolding().setX(((Sword)this.getHolding()).getGripX());
-        this.getHolding().setY(((Sword)this.getHolding()).getGripY());        
-      }
-      else if (this.getHolding().isGun()) {
-        this.getHolding().setX(((MachineGun)this.getHolding()).getGripX());
-        this.getHolding().setY(((MachineGun)this.getHolding()).getGripY());
+        this.getHolding().setX(((Sword) this.getHolding()).getGripX());
+        this.getHolding().setY(((Sword) this.getHolding()).getGripY());
+      } else if (this.getHolding().isGun()) {
+        this.getHolding().setX(((MachineGun) this.getHolding()).getGripX());
+        this.getHolding().setY(((MachineGun) this.getHolding()).getGripY());
       }
     }
   }

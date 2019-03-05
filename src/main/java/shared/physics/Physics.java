@@ -13,7 +13,9 @@ import shared.physics.data.Collision;
 import shared.physics.data.DynamicCollision;
 import shared.util.maths.Vector2;
 
-/** @author fxa579 The singleton class respomsible for raycasting and physics constants/equations */
+/**
+ * @author fxa579 The singleton class respomsible for raycasting and physics constants/equations
+ */
 public class Physics {
 
   public static final float GRAVITY = 100f;
@@ -207,7 +209,9 @@ public class Physics {
                 object, castCollider, (Collider) object.getComponent(ComponentType.COLLIDER));
         if (collision.isCollided()) {
           float angle = Math.abs(collision.getNormalCollision().angle()) + angleOfCentre;
-          if (angle <= angleOfArc) return collision;
+          if (angle <= angleOfArc) {
+            return collision;
+          }
         }
       }
     }
@@ -235,7 +239,9 @@ public class Physics {
                 object, castCollider, (Collider) object.getComponent(ComponentType.COLLIDER));
         if (collision.isCollided()) {
           float angle = Math.abs(collision.getNormalCollision().angle()) + angleOfCentre;
-          if (angle <= angleOfArc) collisions.add(collision);
+          if (angle <= angleOfArc) {
+            collisions.add(collision);
+          }
         }
       }
     }
