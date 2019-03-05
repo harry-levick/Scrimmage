@@ -7,6 +7,8 @@ import client.handlers.inputHandler.MouseInput;
 import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import de.codecentric.centerdevice.javafxsvg.dimension.PrimitiveDimensionProvider;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -66,6 +68,7 @@ public class Client extends Application {
   public static ArrayList<PacketInput> pendingInputs;
   public static TimerTask task;
   public static Group gameRoot;
+  public static Font globalFont;
   private final float timeStep = 0.0166f;
   private final String gameTitle = "Alone in the Dark";
   private LinkedList<Map> playlist;
@@ -166,7 +169,7 @@ public class Client extends Application {
 
         Text text = new Text();
         text.setText(line);
-        text.setFont(Font.font("Sans Serif", weight, posture, size));
+        text.setFont(Font.font("Helvetica", weight, posture, size));
         text.setFill(Color.WHITE);
         text.setLayoutX(x - (text.getLayoutBounds().getWidth() / 2));
         text.setLayoutY(y + extraBufferSpace + yOffset);
@@ -413,7 +416,13 @@ public class Client extends Application {
     creditsRoot = new Group();
     creditsBackground = new Group();
 
-    Font.loadFont("Kenney Future.ttf", 14);
+    try {
+      globalFont = Font
+          .loadFont(new FileInputStream(new File("src/main/resources/Kenney Future.ttf")), 20);
+    } catch (FileNotFoundException e) {
+      globalFont = Font.font("Consolas", 20);
+    }
+
     root.setStyle("-fx-font-family: Kenney Future");
 
     root.getChildren().add(backgroundRoot);
