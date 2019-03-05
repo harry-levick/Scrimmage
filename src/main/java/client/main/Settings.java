@@ -15,6 +15,7 @@ public class Settings {
   private int port;
   private double musicVolume;
   private double soundEffectVolume;
+  private String s = File.separator;
   private String mapsPath;
   private String menuPath;
   private String musicPath;
@@ -23,7 +24,7 @@ public class Settings {
   private int windowHeight = (int) Screen.getPrimary().getBounds().getHeight();
   private int mapWidth;
   private int mapHeight;
-  private String s = File.separator;
+  private int maxPlayers;
 
   /**
    * Default Constructor Music volume set to 100 and sound effects to 75
@@ -36,6 +37,7 @@ public class Settings {
     soundEffectVolume = 0;
     mapWidth = 1920;
     mapHeight = 1080;
+    maxPlayers = 4;
 
     mapsPath = "src" + s + "main" + s + "resources" + s + "maps";
     menuPath = "src" + s + "main" + s + "resources" + s + "menus";
@@ -59,6 +61,14 @@ public class Settings {
     this.menuPath = menuPath;
   }
 
+  public int getMapWidth() {
+    return mapWidth;
+  }
+
+  public int getMapHeight() {
+    return mapHeight;
+  }
+
   public int getWindowWidth() {
     return windowWidth;
   }
@@ -73,6 +83,10 @@ public class Settings {
 
   public String getSFXPath() {
     return SFXPath;
+  }
+
+  public int getMaxPlayers() {
+    return maxPlayers;
   }
   /**
    * @return Current game music volume
