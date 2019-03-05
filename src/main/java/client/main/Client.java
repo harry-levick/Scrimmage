@@ -1,5 +1,6 @@
 package client.main;
 
+import client.handlers.audioHandler.MusicAssets.PLAYLIST;
 import client.handlers.connectionHandler.ConnectionHandler;
 import client.handlers.inputHandler.KeyboardInput;
 import client.handlers.inputHandler.MouseInput;
@@ -93,6 +94,7 @@ public class Client extends Application {
   public static void showCredits() {
     credits = true;
     ArrayList<String> lines = new ArrayList<String>();
+    levelHandler.getMusicAudioHandler().playMusic("LOCAL_FORECAST");
     try {
       BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/CREDITS.md"));
       String line;
@@ -377,7 +379,8 @@ public class Client extends Application {
               credits = false;
               creditStartDelay = 100; //todo magic number
               creditsRoot.getChildren().clear(); // deletes all children, removing all credit texts
-
+              levelHandler.getMusicAudioHandler()
+                  .playMusicPlaylist(PLAYLIST.MENU); //assume always return to menu map from credits
             }
           }
         }
