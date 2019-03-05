@@ -12,7 +12,7 @@ import shared.util.maths.Vector2;
 
 /**
  * @author fxa579 The primary components responsible for all Physics updates; includes data and
- * methods to process forces and gravity
+ *     methods to process forces and gravity
  */
 public class Rigidbody extends Component implements Serializable {
 
@@ -64,7 +64,7 @@ public class Rigidbody extends Component implements Serializable {
     super(parent, ComponentType.RIGIDBODY);
     this.gravityScale = gravityScale;
     this.mass = mass;
-    this.inv_mass = 1 / mass;
+    this.inv_mass = mass == 0 ? 0 : 1 / mass;
     this.airDrag = airDrag;
     this.material = material;
     this.angularData = angularData;
@@ -104,9 +104,7 @@ public class Rigidbody extends Component implements Serializable {
   }
   // Force Methods
 
-  /**
-   *
-   */
+  /** */
   public void addForce(Vector2 force) {
     forces.add(force);
   }
@@ -149,18 +147,45 @@ public class Rigidbody extends Component implements Serializable {
     move(distance, 0);
   }
 
+  /**
+   * Moves the Object a given distance in the X axis on the next update. The object may end up on another space
+   * due to external forces.
+   *
+   * @param distance The distance to the cover.
+   */
   public void moveX(float distance) {
     move(new Vector2(distance, 0));
   }
 
+  /**
+   * Moves the Object a given distance in the X axis over a defined time. The object may end up on another space
+   * due to external forces.
+   *
+   * @param distance The distance to the cover.
+   * @param time The time it will take to reach the destination
+   */
   public void moveX(float distance, float time) {
     move(new Vector2(distance, 0), time);
   }
+
+  /**
+   * Moves the Object a given distance in the Y axis on the next update. The object may end up on another space
+   * due to external forces.
+   *
+   * @param distance The distance to the cover.
+   */
 
   public void moveY(float distance) {
     move(new Vector2(0, distance));
   }
 
+  /**
+   * Moves the Object a given distance in the Y axis over a defined time. The object may end up on another space
+   * due to external forces.
+   *
+   * @param distance The distance to the cover.
+   * @param time The time it will take to reach the destination
+   */
   public void moveY(float distance, float time) {
     move(new Vector2(0, distance), time);
   }
@@ -170,16 +195,13 @@ public class Rigidbody extends Component implements Serializable {
   /**
    * An update method; all collision updates happen here
    */
-  private void applyCollisions() {
-  }
+  private void applyCollisions() {}
 
   public void correctPosition(Vector2 distance) {
     getParent().getTransform().translate(distance);
   }
 
-  /**
-   * An update method; all force updates happen here.
-   */
+  /** An update method; all force updates happen here. */
   private void applyForces() {
 
     currentForce = Vector2.Zero();
@@ -213,9 +235,7 @@ public class Rigidbody extends Component implements Serializable {
     }
   }
 
-  /**
-   * An update method; all velocity and acceleration updates happen here
-   */
+  /** An update method; all velocity and acceleration updates happen here */
   private void updateVelocity() {
     lastAcceleration = acceleration;
 
@@ -235,14 +255,15 @@ public class Rigidbody extends Component implements Serializable {
     deltaPos = Vector2.Zero();
   }
 
+  //TODO: Make it where this doesn't take you to a different universe
   private void checkForLegalMovement() {
     float percent = 0.8f;
-    ArrayList<Collision> collisions = Physics
-        .boxcastAll(getParent().getTransform().getPos().add(deltaPos),
+    ArrayList<Collision> collisions =
+        Physics.boxcastAll(
+            getParent().getTransform().getPos().add(deltaPos),
             getParent().getTransform().getSize());
-    for (Collision c : collisions) {
+    for (Collision c : collisions) {}
 
-    }
     return;
   }
 
@@ -254,7 +275,6 @@ public class Rigidbody extends Component implements Serializable {
   public void setVelocity(Vector2 velocity) {
     this.velocity = velocity;
     acceleration = Vector2.Zero();
-
   }
 
   public RigidbodyType getBodyType() {
@@ -322,9 +342,7 @@ public class Rigidbody extends Component implements Serializable {
   }
 }
 
-/**
- * Helper class to apply force over time without needed to thread/coroutine
- */
+/** Helper class to apply force over time without needed to thread/coroutine */
 class ForceTime implements Serializable {
 
   private Vector2 force;

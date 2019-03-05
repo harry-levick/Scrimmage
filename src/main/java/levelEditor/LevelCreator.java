@@ -11,6 +11,7 @@ import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.stage.Stage;
 import shared.gameObjects.Blocks.Metal.MetalBlockLargeObject;
+import shared.gameObjects.Blocks.Stone.StoneBlockObject;
 import shared.gameObjects.Blocks.Stone.StoneFloorObject;
 import shared.gameObjects.Blocks.Stone.StoneWallObject;
 import shared.gameObjects.GameObject;
@@ -258,13 +259,20 @@ public class LevelCreator extends Application {
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.MAIN_MENU);
     uuid = UUID.randomUUID();
     mapDataObject.setBackground(
-        new Background1(UUID.randomUUID()));
+        new Background1(uuid));
     uuid = UUID.randomUUID();
     for (int i = 0; i < 24; i++) {
       // top row wall
       gameObjects.put(uuid,
           new StoneWallObject(
-              getAbs(i * 2), getAbs(0), getAbs(2), getAbs(2), ObjectType.Bot, UUID.randomUUID()));
+              getAbs(i * 2), getAbs(0), getAbs(2), getAbs(2), ObjectType.Bot, uuid));
+      uuid = UUID.randomUUID();
+    }
+    for (int i = 0; i < 10; i++) {
+      // top row wall
+      gameObjects.put(uuid,
+          new StoneBlockObject(
+              getAbs(i * 4 + 2), getAbs(20), getAbs(2), getAbs(2), ObjectType.Bot, uuid));
       uuid = UUID.randomUUID();
     }
     for (int i = 0; i < 12; i++) {
@@ -276,7 +284,7 @@ public class LevelCreator extends Application {
               getAbs(2),
               getAbs(2),
               ObjectType.Bot,
-              UUID.randomUUID()));
+              uuid));
       uuid = UUID.randomUUID();
       gameObjects.put(uuid,
           new StoneWallObject(
@@ -285,14 +293,14 @@ public class LevelCreator extends Application {
               getAbs(2),
               getAbs(2),
               ObjectType.Bot,
-              UUID.randomUUID()));
+              uuid));
       uuid = UUID.randomUUID();
     }
     for (int i = 0; i < 12; i++) {
       // bottom row floor
       gameObjects.put(uuid,
           new StoneFloorObject(
-              getAbs(i * 4), getAbs(25), getAbs(4), getAbs(2), ObjectType.Bot, UUID.randomUUID()));
+              getAbs(i * 4), getAbs(25), getAbs(4), getAbs(2), ObjectType.Bot, uuid));
       uuid = UUID.randomUUID();
     }
     uuid = UUID.randomUUID();

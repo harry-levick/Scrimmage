@@ -6,12 +6,14 @@ import javafx.scene.Group;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
+import shared.gameObjects.components.CircleCollider;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Limbs.Arm;
 import shared.gameObjects.players.Limbs.Body;
 import shared.gameObjects.players.Limbs.Hand;
 import shared.gameObjects.players.Limbs.Head;
 import shared.gameObjects.players.Limbs.Leg;
+import shared.gameObjects.weapons.MachineGun;
 import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.weapons.Weapon;
 import shared.handlers.levelHandler.LevelHandler;
@@ -23,7 +25,7 @@ import shared.physics.types.RigidbodyType;
 public class Player extends GameObject {
 
   protected final float speed = 9;
-  protected final float jumpForce = -200;
+  protected final float jumpForce = -300;
   protected final float JUMP_LIMIT = 2.0f;
   public boolean leftKey, rightKey, jumpKey, click;
   //Testing
@@ -43,6 +45,18 @@ public class Player extends GameObject {
   protected double vx;
   private BoxCollider bc;
 
+  // Limbs
+  private Limb head;
+  private Limb body;
+  private Limb legLeft;
+  private Limb legRight;
+  private Limb armLeft;
+  private Limb armRight;
+  private Limb handLeft;
+  private Limb handRight;
+
+  private CircleCollider cc;
+
   //Networking
   private int lastInputCount;
 
@@ -59,8 +73,10 @@ public class Player extends GameObject {
     this.levelHandler = levelHandler;
     this.behaviour = Behaviour.IDLE;
     this.bc = new BoxCollider(this, ColliderLayer.PLAYER, false);
-    this.rb = new Rigidbody(RigidbodyType.DYNAMIC, 80, 8, 0.2f,
+    //  this.cc = new CircleCollider(this, ColliderLayer.PLAYER, transform.getSize().magnitude()*0.5f, false);
+    this.rb = new Rigidbody(RigidbodyType.DYNAMIC, 90, 12, 0.2f,
         new MaterialProperty(0.005f, 0.1f, 0.05f), null, this);
+    //  addComponent(cc);
     addComponent(bc);
     addComponent(rb);
   }
@@ -80,21 +96,29 @@ public class Player extends GameObject {
   @Override
   public void initialise(Group root) {
     super.initialise(root);
-    addChild(new Leg(true, this, levelHandler));
-    addChild(new Leg(false, this, levelHandler));
-    addChild(new Body(this, levelHandler));
-    addChild(new Head(this, levelHandler));
-    Arm rightArm = new Arm(false, this, levelHandler);
-    Arm leftArm = (new Arm(true, this, levelHandler));
-    addChild(rightArm);
-    addChild(leftArm);
-    rightArm.addChild(new Hand(false, rightArm, levelHandler));
-    leftArm.addChild(new Hand(true, leftArm, levelHandler));
+    legLeft = new Leg(true, this, levelHandler);
+    legRight = new Leg(false, this, levelHandler);
+    body = new Body(this, levelHandler);
+    head = new Head(this, levelHandler);
+    armLeft = new Arm(true, this, levelHandler);
+    armRight = new Arm(false, this, levelHandler);
+    handLeft = new Hand(true, armLeft, levelHandler);
+    handRight = new Hand(false, armRight, levelHandler);
+
+    addChild(legLeft);
+    addChild(legRight);
+    addChild(body);
+    addChild(head);
+    addChild(armLeft);
+    addChild(armRight);
+    armRight.addChild(handRight);
+    armLeft.addChild(handLeft);
   }
 
   @Override
   public void update() {
     checkGrounded(); // Checks if the player is grounded
+    // System.out.println(rb.getVelocity());
     badWeapon();
     if (deattach) {
       for (int i = 0; i < 8; i++) {
@@ -144,7 +168,7 @@ public class Player extends GameObject {
       vx = 0;
       behaviour = Behaviour.IDLE;
     }
-    if (jumpKey && !jumped) {
+    if (jumpKey && !jumped && grounded) {
       rb.moveY(jumpForce, 0.33333f);
       jumped = true;
     }
@@ -160,8 +184,13 @@ public class Player extends GameObject {
     // setX(getX() + (vx * 0.0166));
 
     if (this.getHolding() != null) {
-      this.getHolding().setX(this.getX() + 60);
-      this.getHolding().setY(this.getY() + 70);
+      if (this.getHolding().isMelee()) {
+        this.getHolding().setX(((Sword) this.getHolding()).getGripX());
+        this.getHolding().setY(((Sword) this.getHolding()).getGripY());
+      } else if (this.getHolding().isGun()) {
+        this.getHolding().setX(((MachineGun) this.getHolding()).getGripX());
+        this.getHolding().setY(((MachineGun) this.getHolding()).getGripY());
+      }
     }
   }
 
@@ -177,7 +206,6 @@ public class Player extends GameObject {
     if (this.holding.getAmmo() == 0) {
       this.holding.destroyWeapon();
       this.setHolding(null);
-
       Weapon sword =
           new Sword(this.getX(), this.getY(), "newSword@Player", this, UUID.randomUUID());
       sword.initialise(root);
@@ -245,16 +273,24 @@ public class Player extends GameObject {
   }
 
   public double[] getHandPos() {
+    // TODO: remove this section and getHand(Left/Right)(X/Y) methods below
+    /*
     if (jumped && facingLeft) {
       return new double[]{this.getHandLeftJumpX(), this.getHandLeftJumpY()};
     } else if (jumped && facingRight) {
       return new double[]{this.getHandRightJumpX(), this.getHandRightJumpY()};
     } else if (facingLeft) {
-      return new double[]{this.getHandLeftX(), this.getHandLeftY()};
+      return new double[]{this.handLeft.getX(), this.handLeft.getY()};
     } else if (facingRight) {
-      return new double[]{this.getHandRightX(), this.getHandRightY()};
+      return new double[]{this.handRight.getX(), this.handRight.getY()};
     }
     return new double[]{this.getHandRightX(), this.getHandRightY()};
+    */
+    if (facingLeft) {
+      return new double[]{this.handLeft.getX(), this.handLeft.getY()};
+    } else {
+      return new double[]{this.handRight.getX(), this.handRight.getY()};
+    }
   }
 
   /**

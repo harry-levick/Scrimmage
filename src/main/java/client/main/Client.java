@@ -52,6 +52,8 @@ import shared.util.maths.Vector2;
 
 public class Client extends Application {
 
+  public static boolean musicActive = false;
+
   private static final Logger LOGGER = LogManager.getLogger(Client.class.getName());
   public static LevelHandler levelHandler;
   public static Settings settings;
@@ -394,6 +396,28 @@ public class Client extends Application {
     }.start();
   }
 
+  private void setupRender(Stage primaryStage) {
+    root = new Group();
+    backgroundRoot = new Group();
+    gameRoot = new Group();
+
+    Font.loadFont("Kenney Future.ttf", 14);
+    root.setStyle("-fx-font-family: Kenney Future");
+
+    root.getChildren().add(backgroundRoot);
+    root.getChildren().add(gameRoot);
+
+    primaryStage.setTitle(gameTitle);
+    primaryStage.getIcons().add(new Image(Path.convert("images/logo.png")));
+
+    scene = new Scene(root, 1920, 1080);
+    scene.setCursor(Cursor.CROSSHAIR);
+
+    primaryStage.setScene(scene);
+    primaryStage.setFullScreen(false);
+    primaryStage.show();
+  }
+
   public void sendInput() {
     PacketInput input =
         new PacketInput(
@@ -550,28 +574,5 @@ public class Client extends Application {
     levelHandler.getGameObjects().put(Client.levelHandler.getClientPlayer().getHolding().getUUID(),
         Client.levelHandler.getClientPlayer().getHolding());
     levelHandler.getClientPlayer().getHolding().initialise(Client.gameRoot);
-  }
-
-  private void setupRender(Stage primaryStage) {
-    root = new Group();
-    backgroundRoot = new Group();
-    gameRoot = new Group();
-    creditsRoot = new Group();
-    creditsBackground = new Group();
-
-    root.getChildren().add(backgroundRoot);
-    root.getChildren().add(gameRoot);
-    root.getChildren().add(creditsBackground);
-    root.getChildren().add(creditsRoot);
-
-    primaryStage.setTitle(gameTitle);
-    primaryStage.getIcons().add(new Image(Path.convert("images/logo.png")));
-
-    scene = new Scene(root, 1920, 1080);
-    scene.setCursor(Cursor.CROSSHAIR);
-
-    primaryStage.setScene(scene);
-    primaryStage.setFullScreen(false);
-    primaryStage.show();
   }
 }
