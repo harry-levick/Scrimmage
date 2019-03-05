@@ -28,7 +28,7 @@ public class ImageFilters {
   }
   
   private void setGreyScale() {
-    greyScale.setSaturation(0);
+    greyScale.setSaturation(-1.0d);
     
   }
   

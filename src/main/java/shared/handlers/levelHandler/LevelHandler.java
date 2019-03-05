@@ -12,6 +12,7 @@ import shared.gameObjects.MapDataObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.background.Background;
 import shared.gameObjects.players.Player;
+import shared.gameObjects.rendering.ImageFilters;
 import shared.util.Path;
 import shared.util.maths.Vector2;
 
@@ -30,6 +31,7 @@ public class LevelHandler {
   private Group backgroundRoot;
   private Group gameRoot;
   private Background background;
+  private ImageFilters filters;
   private AudioHandler musicPlayer;
   private Settings settings;
   private ArrayList<GameObject> toCreate;
@@ -42,9 +44,12 @@ public class LevelHandler {
     players = new ArrayList<>();
     bots = new ArrayList<>();
     maps = MapLoader.getMaps(settings.getMapsPath());
+    filters = new ImageFilters();
     this.root = root;
+    
     this.backgroundRoot = backgroundRoot;
     this.gameRoot = gameRoot;
+    filters.applyFilter(this.gameRoot,"greyscale");
     musicPlayer = new AudioHandler(settings);
     changeMap(new Map("main_menu.map", Path.convert("src/main/resources/menus/main_menu.map"),
         GameState.MAIN_MENU), true);
