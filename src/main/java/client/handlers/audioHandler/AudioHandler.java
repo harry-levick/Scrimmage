@@ -34,6 +34,7 @@ public class AudioHandler {
    */
   public void playMusic(String trackName) {
     String path = musicAssets.getTrackPath(trackName);
+    stopMusic();
     if (!(path == null)) {
       musicMedia = new Media(new File(path).toURI().toString());
       musicPlayer = new MediaPlayer(musicMedia);
