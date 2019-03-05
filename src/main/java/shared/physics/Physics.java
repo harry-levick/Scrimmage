@@ -13,7 +13,9 @@ import shared.physics.data.Collision;
 import shared.physics.data.DynamicCollision;
 import shared.util.maths.Vector2;
 
-/** @author fxa579 The singleton class respomsible for raycasting and physics constants/equations */
+/**
+ * @author fxa579 The singleton class respomsible for raycasting and physics constants/equations
+ */
 public class Physics {
 
   public static final float GRAVITY = 100f;
@@ -71,12 +73,22 @@ public class Physics {
    * @return All colliders hit in the path, empty if nothing was hit.
    */
   public static ArrayList<Collision> raycastAll(Vector2 sourcePos, Vector2 lengthAndDirection) {
-    EdgeCollider collider = new EdgeCollider(false);
+    EdgeCollider castCollider = new EdgeCollider(false);
     Collision collision = null;
     ArrayList<Collision> collisions = new ArrayList<>();
     float incrementVal = lengthAndDirection.magnitude() / RAYCAST_INC;
     for (int i = 0; i <= RAYCAST_INC; i++) {
-      collider.addNode(sourcePos.add(incrementVal * i));
+      castCollider.addNode(sourcePos.add(incrementVal * i));
+    }
+    for (GameObject object : gameObjects.values()) {
+      if (object.getComponent(ComponentType.COLLIDER) != null) {
+        collision =
+            new Collision(
+                object, castCollider, (Collider) object.getComponent(ComponentType.COLLIDER));
+        if (collision.isCollided()) {
+          collisions.add(collision);
+        }
+      }
     }
     return collisions;
   }
@@ -197,7 +209,9 @@ public class Physics {
                 object, castCollider, (Collider) object.getComponent(ComponentType.COLLIDER));
         if (collision.isCollided()) {
           float angle = Math.abs(collision.getNormalCollision().angle()) + angleOfCentre;
-          if (angle <= angleOfArc) return collision;
+          if (angle <= angleOfArc) {
+            return collision;
+          }
         }
       }
     }
@@ -225,7 +239,9 @@ public class Physics {
                 object, castCollider, (Collider) object.getComponent(ComponentType.COLLIDER));
         if (collision.isCollided()) {
           float angle = Math.abs(collision.getNormalCollision().angle()) + angleOfCentre;
-          if (angle <= angleOfArc) collisions.add(collision);
+          if (angle <= angleOfArc) {
+            collisions.add(collision);
+          }
         }
       }
     }
@@ -243,9 +259,6 @@ public class Physics {
   }
 
   public static void processCollisions() {
-    for (DynamicCollision c : collisions) {
-      // c.process();
-    }
     collisions.clear();
   }
 }

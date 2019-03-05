@@ -21,7 +21,7 @@ public class ColliderTest {
     c = new TestObject(10, 10, 2, 2, ObjectType.Player, UUID.randomUUID());
     d = new TestObject(11, 11, 1, 1, ObjectType.Player, UUID.randomUUID());
     e = new TestObject(20, 20, 1, 1, ObjectType.Player, UUID.randomUUID());
-    f = new TestObject(21, 21,1, 1,  ObjectType.Player, UUID.randomUUID());
+    f = new TestObject(21, 21, 1, 1, ObjectType.Player, UUID.randomUUID());
 
     boxA = new BoxCollider(a, false);
     boxB = new BoxCollider(b, false);
@@ -66,14 +66,18 @@ public class ColliderTest {
   }
 
   @Test
-  public void raycast() {}
+  public void raycast() {
+  }
 
   @Test
-  public void boxcast() {}
+  public void boxcast() {
+  }
 
   @Test
-  public void circlecast() {}
+  public void circlecast() {
+  }
 
   @Test
-  public void arccast() {}
+  public void arccast() {
+  }
 }
