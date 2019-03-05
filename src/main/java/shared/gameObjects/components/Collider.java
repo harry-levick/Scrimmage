@@ -131,6 +131,12 @@ public abstract class Collider extends Component implements Serializable {
         break;
       case EDGE:
         switch (colB.getColliderType()) {
+          case BOX:
+            toRet = pointBoxCollision(((EdgeCollider) colA).findClosestPoint(((BoxCollider) colB).getCentre()), (BoxCollider) colB);
+            break;
+          case CIRCLE:
+            toRet = pointCircleCollision(((EdgeCollider) colA).findClosestPoint(((CircleCollider) colB).getCentre()), (CircleCollider) colB);
+            break;
         }
         break;
     }

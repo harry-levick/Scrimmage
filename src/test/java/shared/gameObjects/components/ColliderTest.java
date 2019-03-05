@@ -2,11 +2,17 @@ package shared.gameObjects.components;
 
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.UUID;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import shared.gameObjects.GameObject;
 import shared.gameObjects.TestObject;
 import shared.gameObjects.Utils.ObjectType;
+import shared.physics.Physics;
+import shared.util.maths.Vector2;
 
 public class ColliderTest {
 
@@ -29,6 +35,15 @@ public class ColliderTest {
     circleD = new CircleCollider(d, 1, false);
     circleE = new CircleCollider(e, 2, false);
     circleF = new CircleCollider(f, 2, false);
+
+    LinkedHashMap<UUID, GameObject> objects = new LinkedHashMap<>();
+    objects.put(UUID.randomUUID(), a);
+    objects.put(UUID.randomUUID(), b);
+    objects.put(UUID.randomUUID(), c);
+    objects.put(UUID.randomUUID(), d);
+    objects.put(UUID.randomUUID(), e);
+    objects.put(UUID.randomUUID(), f);
+    Physics.gameObjects = objects;
   }
 
   @Test
@@ -67,6 +82,7 @@ public class ColliderTest {
 
   @Test
   public void raycast() {
+    assertTrue(Physics.raycast(c.getTransform().getPos().add(new Vector2(-1, - 1)), a.getTransform().getPos().sub(c.getTransform().getPos().add(new Vector2(-1, - 1)))) != null);
   }
 
   @Test
