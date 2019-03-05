@@ -14,6 +14,8 @@ import shared.gameObjects.Blocks.Metal.MetalBlockLargeObject;
 import shared.gameObjects.Blocks.Stone.StoneBlockObject;
 import shared.gameObjects.Blocks.Stone.StoneFloorObject;
 import shared.gameObjects.Blocks.Stone.StoneWallObject;
+import shared.gameObjects.Blocks.Wood.WoodBlockLargeObject;
+import shared.gameObjects.Blocks.Wood.WoodBlockSmallObject;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.MapDataObject;
 import shared.gameObjects.Utils.ObjectType;
@@ -106,11 +108,23 @@ public class LevelCreator extends Application {
     //Middle platforms
     gameObjects.put(uuid,
         new StoneFloorObject(
-            getAbs(7), getAbs(10), getAbs(4), getAbs(1), ObjectType.Bot, UUID.randomUUID()));
+            getAbs(4), getAbs(6), getAbs(4), getAbs(1), ObjectType.Bot, UUID.randomUUID()));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
         new StoneFloorObject(
-            getAbs(3), getAbs(20), getAbs(4), getAbs(1), ObjectType.Bot, UUID.randomUUID()));
+            getAbs(8), getAbs(6), getAbs(4), getAbs(1), ObjectType.Bot, UUID.randomUUID()));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new StoneFloorObject(
+            getAbs(14), getAbs(12), getAbs(4), getAbs(1), ObjectType.Bot, UUID.randomUUID()));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new StoneFloorObject(
+            getAbs(4), getAbs(20), getAbs(4), getAbs(1), ObjectType.Bot, UUID.randomUUID()));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new StoneFloorObject(
+            getAbs(12), getAbs(20), getAbs(4), getAbs(1), ObjectType.Bot, UUID.randomUUID()));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
         new StoneFloorObject(
@@ -124,6 +138,54 @@ public class LevelCreator extends Application {
         new StoneFloorObject(
             getAbs(37), getAbs(13), getAbs(4), getAbs(1), ObjectType.Bot, UUID.randomUUID()));
     uuid = UUID.randomUUID();
+
+    // left side blocks
+    gameObjects.put(uuid,
+        new WoodBlockLargeObject(
+            getAbs(5), getAbs(4), getAbs(2), getAbs(2), ObjectType.Bot, UUID.randomUUID()));
+    uuid = uuid.randomUUID();
+    gameObjects.put(uuid,
+        new WoodBlockSmallObject(
+            getAbs(6), getAbs(3), getAbs(1), getAbs(1), ObjectType.Bot, UUID.randomUUID()));
+    uuid = uuid.randomUUID();
+
+    // right side blocks
+    gameObjects.put(uuid,
+        new WoodBlockLargeObject(
+            getAbs(38), getAbs(25), getAbs(2), getAbs(2), ObjectType.Bot, UUID.randomUUID()));
+    uuid = uuid.randomUUID();
+    gameObjects.put(uuid,
+        new WoodBlockLargeObject(
+            getAbs(40), getAbs(25), getAbs(2), getAbs(2), ObjectType.Bot, UUID.randomUUID()));
+    uuid = uuid.randomUUID();
+    gameObjects.put(uuid,
+        new WoodBlockLargeObject(
+            getAbs(40), getAbs(23), getAbs(2), getAbs(2), ObjectType.Bot, UUID.randomUUID()));
+    uuid = uuid.randomUUID();
+    gameObjects.put(uuid,
+        new WoodBlockSmallObject(
+            getAbs(37), getAbs(26), getAbs(1), getAbs(1), ObjectType.Bot, UUID.randomUUID()));
+    uuid = uuid.randomUUID();
+    gameObjects.put(uuid,
+        new WoodBlockSmallObject(
+            getAbs(38), getAbs(24), getAbs(1), getAbs(1), ObjectType.Bot, UUID.randomUUID()));
+    uuid = uuid.randomUUID();
+    gameObjects.put(uuid,
+        new WoodBlockSmallObject(
+            getAbs(42), getAbs(24), getAbs(1), getAbs(1), ObjectType.Bot, UUID.randomUUID()));
+    uuid = uuid.randomUUID();
+    gameObjects.put(uuid,
+        new WoodBlockSmallObject(
+            getAbs(42), getAbs(25), getAbs(1), getAbs(1), ObjectType.Bot, UUID.randomUUID()));
+    uuid = uuid.randomUUID();
+    gameObjects.put(uuid,
+        new WoodBlockSmallObject(
+            getAbs(42), getAbs(26), getAbs(1), getAbs(1), ObjectType.Bot, UUID.randomUUID()));
+    uuid = uuid.randomUUID();
+    gameObjects.put(uuid,
+        new WoodBlockSmallObject(
+            getAbs(43), getAbs(26), getAbs(1), getAbs(1), ObjectType.Bot, UUID.randomUUID()));
+    uuid = uuid.randomUUID();
 
     for (int i = 0; i < 12; i++) {
       // top row wall
