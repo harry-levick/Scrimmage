@@ -4,18 +4,18 @@ import java.util.UUID;
 import shared.gameObjects.players.Player;
 import shared.util.Path;
 
-public class MachineGunBullet extends Bullet {
+public class CircleBullet extends Bullet {
 
-  private static String imagePath = "images/weapons/fireBullet.png";
+  private static String imagePath = "images/weapons/circleBullet.png";
+  private static final int width = 15;
+  private static final int damage = 5;
+  private static final int speed = 50;
 
-  public MachineGunBullet(
+  public CircleBullet (
       double gunX,
       double gunY,
       double mouseX,
       double mouseY,
-      double width,
-      double speed,
-      int damage,
       Player holder,
       UUID uuid) {
 
@@ -28,4 +28,5 @@ public class MachineGunBullet extends Bullet {
     this.animation.supplyAnimationWithSize(
         "default", this.getWidth(), this.getWidth(), true, Path.convert(this.imagePath));
   }
+
 }
