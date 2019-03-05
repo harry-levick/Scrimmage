@@ -78,6 +78,8 @@ public class Player extends GameObject {
     addChild(leftArm);
     rightArm.addChild(new Hand(false, rightArm));
     leftArm.addChild(new Hand(true, leftArm));
+    
+    
   }
 
   @Override

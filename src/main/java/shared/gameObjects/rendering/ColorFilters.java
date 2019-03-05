@@ -3,14 +3,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.Group;
 import javafx.scene.effect.ColorAdjust;
 
-public class ImageFilters {
+public class ColorFilters {
   
-  //Color adjust definitions 
+  //Colour adjust definitions 
   ColorAdjust greyScale = new ColorAdjust();
   ColorAdjust desaturate = new ColorAdjust();
   ColorAdjust empty = new ColorAdjust();
 
-  public ImageFilters() {
+  public ColorFilters() {
     setGreyScale();
     setDesaturate(0.5);
     
@@ -29,14 +29,16 @@ public class ImageFilters {
   
   private void setGreyScale() {
     greyScale.setSaturation(-1.0d);
+    greyScale.setBrightness(-0.8d);
     
   }
   
   public void setDesaturate(double amount) {
-    greyScale.setSaturation(amount);
+    desaturate.setSaturation(amount);
   }
   
   public void applyFilter(ImageView iv,String... filters) { //Used to set effect for individual imageView
+    
     for (String f : filters) {
       iv.setEffect(getFilter(f));
     }
