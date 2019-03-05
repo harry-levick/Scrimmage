@@ -117,7 +117,7 @@ public class Client extends Application {
     }
     int yOffset = 0;
     int x = 1920 / 2; //todo auto fetch
-    int y = 50;
+    int y = 200;
     ArrayList<Text> textList = new ArrayList<>();
     for (String line : lines) {
       if (!line.equals("")) {
@@ -132,7 +132,7 @@ public class Client extends Application {
           line = m.group(1);
           size = 40;
           weight = FontWeight.EXTRA_BOLD;
-          extraBufferSpace = 40;
+          extraBufferSpace = 50;
         }
         // ## title
         Pattern title2 = Pattern.compile("^## (.*)");
@@ -141,7 +141,7 @@ public class Client extends Application {
           line = m.group(1);
           size = 30;
           weight = FontWeight.EXTRA_BOLD;
-          extraBufferSpace = 20;
+          extraBufferSpace = 50;
         }
         // *..* italics
         Pattern italic = Pattern.compile("(?<!\\*)\\*([^*]+)\\*(?!\\*)");
