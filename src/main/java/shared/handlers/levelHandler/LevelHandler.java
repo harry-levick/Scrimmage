@@ -2,6 +2,7 @@ package shared.handlers.levelHandler;
 
 import client.handlers.audioHandler.AudioHandler;
 import client.handlers.audioHandler.MusicAssets.PLAYLIST;
+import client.main.Client;
 import client.main.Settings;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -13,6 +14,9 @@ import shared.gameObjects.MapDataObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.background.Background;
 import shared.gameObjects.players.Player;
+import shared.gameObjects.weapons.MachineGun;
+import shared.gameObjects.weapons.Sword;
+import shared.gameObjects.weapons.Weapon;
 import shared.util.Path;
 import shared.util.maths.Vector2;
 
@@ -46,7 +50,7 @@ public class LevelHandler {
     this.root = root;
     this.backgroundRoot = backgroundRoot;
     this.gameRoot = gameRoot;
-    musicPlayer = new AudioHandler(settings);
+    musicPlayer = new AudioHandler(settings, Client.musicActive);
     changeMap(new Map("main_menu.map", Path.convert("src/main/resources/menus/main_menu.map"),
         GameState.MAIN_MENU), true);
     previousMap = null;
@@ -63,7 +67,7 @@ public class LevelHandler {
     players = new LinkedHashMap<>();
     bots = new LinkedHashMap<>();
     toCreate = new ArrayList<>();
-    musicPlayer = new AudioHandler(settings);
+    musicPlayer = new AudioHandler(settings, Client.musicActive);
     changeMap(new Map("Lobby", Path.convert("src/main/resources/menus/lobby.map"), GameState.Lobby),
         false);
   }
@@ -71,7 +75,7 @@ public class LevelHandler {
   public void changeMap(Map map, Boolean moveToSpawns) {
     previousMap = this.map;
     this.map = map;
-    generateLevel(root, backgroundRoot, gameRoot, moveToSpawns);
+    generateLevel(backgroundRoot, gameRoot, moveToSpawns);
   }
 
   public void previousMap(Boolean moveToSpawns) {
@@ -79,7 +83,7 @@ public class LevelHandler {
       Map temp = this.map;
       this.map = previousMap;
       previousMap = temp;
-      generateLevel(root, backgroundRoot, gameRoot, moveToSpawns);
+      generateLevel(backgroundRoot, gameRoot, moveToSpawns);
     }
   }
 
@@ -87,8 +91,7 @@ public class LevelHandler {
    * NOTE: This to change the level use change Map Removes current game objects and creates new ones
    * from Map file
    */
-  public void generateLevel(
-      Group root, Group backgroundGroup, Group gameGroup, Boolean moveToSpawns) {
+  public void generateLevel(Group backgroundGroup, Group gameGroup, Boolean moveToSpawns) {
 
     gameObjects.keySet().removeAll(players.keySet());
     gameObjects.keySet().removeAll(bots.keySet());
@@ -229,6 +232,27 @@ public class LevelHandler {
     clientPlayer.initialise(root);
     players.put(clientPlayer.getUUID(), clientPlayer);
     gameObjects.put(clientPlayer.getUUID(), clientPlayer);
+
+    // Add a spawn MachineGun
+    Weapon spawnGun = new MachineGun(200, 200, "MachineGun.spawnGun@LevelHandler.addClientPlayer",
+        null, UUID.randomUUID());
+    spawnGun.initialise(root);
+    gameObjects.put(spawnGun.getUUID(), spawnGun);
+
+    // Add a spawn Sword
+    Weapon spawnSword = new Sword(1300, 200, "Sword.spawnGun@LevelHandler.addClientPlayer", null,
+        UUID.randomUUID());
+    spawnSword.initialise(root);
+    gameObjects.put(spawnSword.getUUID(), spawnSword);
+    
+    /*
+    // Add weapon to player
+    UUID gunUUID = UUID.randomUUID();
+    Weapon gun = new MachineGun(clientPlayer.getX(), clientPlayer.getY(), "MachineGun@LevelHandler.addClientPlayer", clientPlayer, gunUUID);
+    clientPlayer.setHolding(gun);
+    gun.initialise(root);
+    gameObjects.put(gunUUID, gun);
+    */
   }
 
   public Player getClientPlayer() {
@@ -248,7 +272,10 @@ public class LevelHandler {
    * list. Finally clear the list for next frame
    */
   private void clearToRemove() {
-    gameObjects.entrySet().removeAll(toRemove);
+    gameObjects.values().removeAll(toRemove);
+    for (GameObject g : toRemove) {
+      System.out.println(g.toString());
+    }
     toRemove.forEach(gameObject -> gameObject.removeRender());
     toRemove.forEach(gameObject -> gameObject.destroy());
     toRemove.clear();

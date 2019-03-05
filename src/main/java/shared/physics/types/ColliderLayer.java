@@ -1,10 +1,29 @@
 package shared.physics.types;
 
+/**
+ * @author fxa579 Enum used to layer collision boxes
+ */
 public enum ColliderLayer {
+  /**
+   * Default layer all Colliders take when not specified a layer
+   */
   DEFAULT(0),
+  /**
+   * The layer the player and its limbs occupy
+   */
   PLAYER(1),
+  /**
+   * Used for general objects, such as blocks
+   */
   OBJECT(2),
-  WALL(3);
+  /**
+   * Used for static objects in a level, like walls and floors or potentially decorative triggers
+   */
+  WALL(3),
+  /**
+   * Used exclusively by the particle system; do not use this unless you know what you are doing
+   */
+  PARTICLE(4);
 
   int id;
 

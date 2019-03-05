@@ -1,7 +1,5 @@
 package levelEditor;
 
-import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
-import de.codecentric.centerdevice.javafxsvg.dimension.PrimitiveDimensionProvider;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -98,7 +96,6 @@ public class LevelEditor extends Application {
    * instance of the new GameObject. Must break; the case. 4. debug
    */
   public LevelEditor() {
-    SvgImageLoaderFactory.install(new PrimitiveDimensionProvider());
     objectMap.put(OBJECT_TYPES.PLAYER, new GameObjectTuple("Player Spawn", 2, 3));
     objectMap.put(OBJECT_TYPES.BACKGROUND1, new GameObjectTuple("Background 1", 0, 0));
     objectMap.put(OBJECT_TYPES.BACKGROUND2, new GameObjectTuple("Background 2", 0, 0));
