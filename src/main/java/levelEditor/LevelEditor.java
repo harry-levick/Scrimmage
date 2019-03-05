@@ -117,7 +117,7 @@ public class LevelEditor extends Application {
     objectMap.put(OBJECT_TYPES.FLOOR_METAL, new GameObjectTuple("Metal Floor", 4, 1));
     objectMap.put(OBJECT_TYPES.BLOCK_STONE, new GameObjectTuple("Stone Block", 1, 1));
     objectMap.put(OBJECT_TYPES.FLOOR_STONE, new GameObjectTuple("Stone Floor", 4, 1));
-    objectMap.put(OBJECT_TYPES.WALL_STONE, new GameObjectTuple("Stone Wall", 1, 4));
+    objectMap.put(OBJECT_TYPES.WALL_STONE, new GameObjectTuple("Stone Wall", 1, 5));
     objectMap.put(OBJECT_TYPES.BLOCK_WOOD_LARGE, new GameObjectTuple("Wood Block Large", 2, 2));
     objectMap.put(OBJECT_TYPES.BLOCK_WOOD_SMALL, new GameObjectTuple("Wood Block Small", 1, 1));
     objectMap.put(OBJECT_TYPES.FLOOR_WOOD, new GameObjectTuple("Wood Floor", 4, 1));
