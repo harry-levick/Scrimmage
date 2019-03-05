@@ -39,7 +39,7 @@ public class Sword extends Melee {
         50, // beginAngle
         20, // endAngle
         uuid);
-    
+
     translate = new Translate();
     attackAngleSign = 1;
   }
@@ -77,7 +77,8 @@ public class Sword extends Melee {
     }
     */
     if (this.attacking) {
-      this.imageView.setRotate((45*attackAngleSign) + (attackAngleSign * -1 * getAngle(currentAngleIndex)));
+      this.imageView
+          .setRotate((45 * attackAngleSign) + (attackAngleSign * -1 * getAngle(currentAngleIndex)));
       // set incrementation of angles for frames
       currentAngleIndex += 4;
       if (currentAngleIndex >= (int) (beginAngle + endAngle + 1)) {
@@ -94,33 +95,35 @@ public class Sword extends Melee {
     this.animation.supplyAnimationWithSize(
         "default", this.range, this.range, true, Path.convert(this.imagePath));
   }
-  
+
   public double getGripX() {
     if (holder.getFacingLeft()) {
       this.imageView.setScaleX(-1);
-      if (!attacking)
+      if (!attacking) {
         attackAngleSign = -1;
+      }
       return holder.getHandPos()[0] - 34;
-    }
-    else { // facing right
+    } else { // facing right
       this.imageView.setScaleX(1);
-      if (!attacking)
+      if (!attacking) {
         attackAngleSign = 1;
+      }
       return holder.getHandPos()[0] - 6;
     }
   }
-  
+
   public double getGripY() {
     if (holder.getFacingLeft()) {
       this.imageView.setScaleX(-1);
-      if (!attacking)
+      if (!attacking) {
         attackAngleSign = -1;
+      }
       return holder.getHandPos()[1] - 38;
-    }
-    else { // facing right
+    } else { // facing right
       this.imageView.setScaleX(1);
-      if (!attacking)
+      if (!attacking) {
         attackAngleSign = 1;
+      }
       return holder.getHandPos()[1] - 34;
     }
   }

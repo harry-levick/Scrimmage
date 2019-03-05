@@ -26,6 +26,7 @@ import shared.gameObjects.background.Background6;
 import shared.gameObjects.background.Background7;
 import shared.gameObjects.background.Background8;
 import shared.gameObjects.menu.main.ButtonBack;
+import shared.gameObjects.menu.main.ButtonCredits;
 import shared.gameObjects.menu.main.ButtonMultiplayer;
 import shared.gameObjects.menu.main.ButtonSettings;
 import shared.gameObjects.menu.main.ButtonSingleplayer;
@@ -270,8 +271,8 @@ public class LevelCreator extends Application {
     for (int i = 0; i < 10; i++) {
       // top row wall
       gameObjects.put(uuid,
-              new StoneBlockObject(
-                  getAbs(i * 4 + 2), getAbs(20), getAbs(2), getAbs(2), ObjectType.Bot, uuid));
+          new StoneBlockObject(
+              getAbs(i * 4 + 2), getAbs(20), getAbs(2), getAbs(2), ObjectType.Bot, uuid));
       uuid = UUID.randomUUID();
     }
     for (int i = 0; i < 12; i++) {
@@ -329,7 +330,12 @@ public class LevelCreator extends Application {
             "Sound Effects", ObjectType.Button, UUID.randomUUID()));
     uuid = UUID.randomUUID();
     gameObjects
-        .put(uuid, new ButtonBack(getAbs(20), getAbs(12), getAbs(8), getAbs(2), ObjectType.Button,
+        .put(uuid,
+            new ButtonCredits(getAbs(20), getAbs(12), getAbs(8), getAbs(2), ObjectType.Button,
+                UUID.randomUUID()));
+    uuid = UUID.randomUUID();
+    gameObjects
+        .put(uuid, new ButtonBack(getAbs(20), getAbs(15), getAbs(8), getAbs(2), ObjectType.Button,
             UUID.randomUUID()));
     uuid = UUID.randomUUID();
     for (int i = 0; i < 24; i++) {

@@ -83,13 +83,13 @@ public abstract class Weapon extends GameObject {
       // add collider and rigidbody
       bc = new BoxCollider(this, true);
       rb = new Rigidbody(
-              RigidbodyType.DYNAMIC,
-              1f, // mass
-              1f, // gravity scale
-              0.1f,
-              new MaterialProperty(0.1f, 1, 1),
-              new AngularData(0, 0, 0, 0),
-              this); // TODO FIX
+          RigidbodyType.DYNAMIC,
+          1f, // mass
+          1f, // gravity scale
+          0.1f,
+          new MaterialProperty(0.1f, 1, 1),
+          new AngularData(0, 0, 0, 0),
+          this); // TODO FIX
       addComponent(bc);
       addComponent(rb);
     }
@@ -101,8 +101,9 @@ public abstract class Weapon extends GameObject {
 
   // Get holder hand position
   public double[] getHolderHandPos() {
-    if (holder != null)
+    if (holder != null) {
       return holder.getHandPos();
+    }
     return null;
   }
 
@@ -129,18 +130,18 @@ public abstract class Weapon extends GameObject {
   public void destroyWeapon() {
     Client.levelHandler.removeGameObject(this);
   }
-  
+
   @Override
   public void OnCollisionEnter(Collision col) {
     GameObject g = col.getCollidedObject();
-    if (g != null && g.getId() == ObjectType.Player && ((Player)g).getHolding() == null) {
+    if (g != null && g.getId() == ObjectType.Player && ((Player) g).getHolding() == null) {
       Player p = (Player) g;
       setHolder(p);
       this.removeComponent(bc);
       this.removeComponent(rb);
     }
   }
-  
+
   //Set holder of this gun
   public void setHolder(Player p) {
     if (p != null) {

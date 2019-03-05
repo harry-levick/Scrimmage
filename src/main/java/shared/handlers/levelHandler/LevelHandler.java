@@ -232,14 +232,16 @@ public class LevelHandler {
     clientPlayer.initialise(root);
     players.put(clientPlayer.getUUID(), clientPlayer);
     gameObjects.put(clientPlayer.getUUID(), clientPlayer);
-    
+
     // Add a spawn MachineGun
-    Weapon spawnGun = new MachineGun(200, 200, "MachineGun.spawnGun@LevelHandler.addClientPlayer", null, UUID.randomUUID());
+    Weapon spawnGun = new MachineGun(200, 200, "MachineGun.spawnGun@LevelHandler.addClientPlayer",
+        null, UUID.randomUUID());
     spawnGun.initialise(root);
     gameObjects.put(spawnGun.getUUID(), spawnGun);
-    
+
     // Add a spawn Sword
-    Weapon spawnSword = new Sword(1300, 200, "Sword.spawnGun@LevelHandler.addClientPlayer", null, UUID.randomUUID());
+    Weapon spawnSword = new Sword(1300, 200, "Sword.spawnGun@LevelHandler.addClientPlayer", null,
+        UUID.randomUUID());
     spawnSword.initialise(root);
     gameObjects.put(spawnSword.getUUID(), spawnSword);
     
@@ -271,8 +273,9 @@ public class LevelHandler {
    */
   private void clearToRemove() {
     gameObjects.values().removeAll(toRemove);
-    for (GameObject g : toRemove)
+    for (GameObject g : toRemove) {
       System.out.println(g.toString());
+    }
     toRemove.forEach(gameObject -> gameObject.removeRender());
     toRemove.forEach(gameObject -> gameObject.destroy());
     toRemove.clear();

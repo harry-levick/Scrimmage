@@ -27,7 +27,9 @@ public class Collision {
   }
 
   private void resolveCollision(Collider a, Collider b) {
-    if (!(Collider.haveCollided(a, b))) return;
+    if (!(Collider.haveCollided(a, b))) {
+      return;
+    }
     collided = true;
     switch (a.getColliderType()) {
       case BOX:
