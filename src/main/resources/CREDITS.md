@@ -1,6 +1,8 @@
 # TITLE
 
-**Version X.X**
+**Version 1.0**
+
+<br>
 
 ## Developers
 
@@ -16,6 +18,8 @@ Matt Hooper
 
 Likkan Chung
 
+<br>
+
 ## Artwork
 
 *Physics Assets*
@@ -29,6 +33,8 @@ Likkan Chung
 **Licensed under Creative Commons: Public Domain**
 
 **https://creativecommons.org/publicdomain/zero/1.0/**
+
+<br>
 
 ## Music
 
@@ -51,3 +57,13 @@ Likkan Chung
 **Licensed under Creative Commons: By Attribution 3.0**
 
 **http://creativecommons.org/licenses/by/3.0/**
+
+<br>
+
+<br>
+
+<br>
+
+Thank you for playing
+
+:)

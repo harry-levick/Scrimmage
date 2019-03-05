@@ -150,12 +150,18 @@ public class Client extends Application {
           line = m.group(1);
           posture = FontPosture.ITALIC;
         }
-        /// **..** bold
+        // **..** bold
         Pattern bold = Pattern.compile("(?<!\\*)\\*\\*([^*]+)\\*\\*(?!\\*)");
         m = bold.matcher(line);
         if (m.find()) {
           line = m.group(1);
           weight = FontWeight.BOLD;
+        }
+        // <br> blank
+        Pattern blank = Pattern.compile("^<br>(.*)");
+        m = blank.matcher(line);
+        if (m.find()) {
+          line = m.group(1);//m.group(1);
         }
 
         Text text = new Text();
