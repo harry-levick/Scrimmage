@@ -26,6 +26,8 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
@@ -70,6 +72,7 @@ public class Client extends Application {
   private Group root;
   private Group backgroundRoot;
   private static Group creditsRoot;
+  private static Group creditsBackground;
   private Scene scene;
   private float maximumStep;
   private long previousTime;
@@ -95,6 +98,8 @@ public class Client extends Application {
     credits = true;
     ArrayList<String> lines = new ArrayList<String>();
     levelHandler.getMusicAudioHandler().playMusic("LOCAL_FORECAST");
+    Rectangle bg = new Rectangle(0, 0, 1920, 1080);
+    creditsBackground.getChildren().add(bg);
     try {
       BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/CREDITS.md"));
       String line;
@@ -153,11 +158,11 @@ public class Client extends Application {
         Text text = new Text();
         text.setText(line);
         text.setFont(Font.font("Sans Serif", weight, posture, size));
+        text.setFill(Color.WHITE);
         text.setLayoutX(x - (text.getLayoutBounds().getWidth() / 2));
         text.setLayoutY(y + extraBufferSpace + yOffset);
         y += 40 + extraBufferSpace;
         creditsRoot.getChildren().add(text);
-
       }
     }
 
@@ -375,10 +380,11 @@ public class Client extends Application {
               node.setLayoutY(node.getLayoutY() - 1);
               maxY = Math.max(maxY, (int) node.getLayoutY());
             }
-            if (maxY < 0) {
+            if (maxY < -100) { //-100 for some buffer
               credits = false;
               creditStartDelay = 100; //todo magic number
               creditsRoot.getChildren().clear(); // deletes all children, removing all credit texts
+              creditsBackground.getChildren().clear();
               levelHandler.getMusicAudioHandler()
                   .playMusicPlaylist(PLAYLIST.MENU); //assume always return to menu map from credits
             }
@@ -551,9 +557,11 @@ public class Client extends Application {
     backgroundRoot = new Group();
     gameRoot = new Group();
     creditsRoot = new Group();
+    creditsBackground = new Group();
 
     root.getChildren().add(backgroundRoot);
     root.getChildren().add(gameRoot);
+    root.getChildren().add(creditsBackground);
     root.getChildren().add(creditsRoot);
 
     primaryStage.setTitle(gameTitle);
