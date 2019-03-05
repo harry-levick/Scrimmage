@@ -44,14 +44,11 @@ public class Handgun extends Gun {
     if (canFire()) {
       UUID uuid = UUID.randomUUID();
       Bullet bullet =
-          new HandgunBullet(
+          new CircleBullet(
               getX(),
               getY(),
               mouseX,
               mouseY,
-              this.bulletWidth,
-              this.bulletSpeed,
-              this.damage,
               this.holder,
               uuid);
       this.currentCooldown = getDefaultCoolDown();
