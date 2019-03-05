@@ -79,7 +79,6 @@ public abstract class Bullet extends GameObject {
 
     Client.levelHandler.addGameObject(this);
     imageView.getTransforms().add(rotate);
-
     render();
   }
 
