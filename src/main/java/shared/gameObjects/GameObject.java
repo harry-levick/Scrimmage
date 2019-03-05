@@ -14,6 +14,7 @@ import shared.gameObjects.components.Collider;
 import shared.gameObjects.components.Component;
 import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.Rigidbody;
+import shared.gameObjects.rendering.ObjectShake;
 import shared.physics.Physics;
 import shared.physics.data.Collision;
 import shared.physics.data.DynamicCollision;
@@ -30,6 +31,7 @@ public abstract class GameObject implements Serializable {
   protected transient ImageView imageView;
   protected transient Group root;
   protected transient Animator animation;
+  protected transient ObjectShake shake;
   protected double rotation;
 
   protected GameObject parent;
@@ -76,6 +78,7 @@ public abstract class GameObject implements Serializable {
   // Server and Client side
   public void update() {
     animation.update();
+    shake.update();
     Collider col = (Collider) getComponent(ComponentType.COLLIDER);
     Rigidbody rb = (Rigidbody) getComponent(ComponentType.RIGIDBODY);
     if (rb != null) {
@@ -229,6 +232,7 @@ public abstract class GameObject implements Serializable {
   public void initialise(Group root) {
     animation = new Animator();
     initialiseAnimation();
+    shake = new ObjectShake(this,5.0f,3.0f,100.0f);
     imageView = new ImageView();
     imageView.setRotate(rotation);
     if (root != null) {
