@@ -99,7 +99,8 @@ public class Client extends Application {
   public static void showCredits() {
     credits = true;
     ArrayList<String> lines = new ArrayList<String>();
-    levelHandler.getMusicAudioHandler().playMusic("LOCAL_FORECAST");
+    levelHandler.getMusicAudioHandler().playMusic(
+        "LOCAL_FORECAST"); // not using playlist since assumed length of credits is less than the length of song
     Rectangle bg = new Rectangle(0, 0, 1920, 1080);
     creditsBackground.getChildren().add(bg);
     try {
