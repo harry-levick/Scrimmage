@@ -1,8 +1,7 @@
 package shared.physics.types;
 
 /**
- * @author fxa579
- * Enum used to layer collision boxes
+ * @author fxa579 Enum used to layer collision boxes
  */
 public enum ColliderLayer {
   /**

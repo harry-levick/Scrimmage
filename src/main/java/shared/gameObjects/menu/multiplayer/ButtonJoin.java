@@ -3,6 +3,8 @@ package shared.gameObjects.menu.multiplayer;
 import client.handlers.connectionHandler.ConnectionHandler;
 import client.main.Client;
 import java.util.UUID;
+import javafx.scene.Group;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.menu.ButtonObject;
@@ -12,7 +14,7 @@ import shared.util.Path;
 
 public class ButtonJoin extends ButtonObject {
 
-  private String address;
+  private transient TextField addressInput;
 
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
@@ -25,7 +27,14 @@ public class ButtonJoin extends ButtonObject {
   public ButtonJoin(double x, double y, double sizeX, double sizeY, ObjectType id,
       UUID objectUUID) {
     super(x, y, sizeX, sizeY, id, objectUUID);
-    this.address = "localhost";
+  }
+
+  public void initialise(Group root) {
+    super.initialise(root);
+    addressInput = new TextField();
+    addressInput.setTranslateX(getX() + 90);
+    addressInput.setTranslateY(getY() + 120);
+    root.getChildren().add(addressInput);
   }
 
   @Override
@@ -36,9 +45,10 @@ public class ButtonJoin extends ButtonObject {
 
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
-    Client.connectionHandler = new ConnectionHandler("230.0.0.0");
+    Client.connectionHandler = new ConnectionHandler(addressInput.getText());
     Client.connectionHandler.start();
     button.disarm();
+    root.getChildren().remove(addressInput);
     Client.levelHandler.changeMap(
         new Map("Lobby", Path.convert("src/main/resources/menus/lobby.map"), GameState.Lobby),
         false);

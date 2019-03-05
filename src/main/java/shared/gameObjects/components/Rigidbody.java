@@ -89,7 +89,9 @@ public class Rigidbody extends Component implements Serializable {
 
   // Update Methods
 
-  /** Called every physics frame, manages the velocity, forces, position, etc. */
+  /**
+   * Called every physics frame, manages the velocity, forces, position, etc.
+   */
   public void update() {
     if (bodyType == RigidbodyType.DYNAMIC) {
       applyCollisions();
@@ -176,6 +178,7 @@ public class Rigidbody extends Component implements Serializable {
   public void moveY(float distance) {
     move(new Vector2(0, distance));
   }
+
   /**
    * Moves the Object a given distance in the Y axis over a defined time. The object may end up on another space
    * due to external forces.
@@ -189,7 +192,9 @@ public class Rigidbody extends Component implements Serializable {
 
   // Update Methods
 
-  /** An update method; all collision updates happen here */
+  /**
+   * An update method; all collision updates happen here
+   */
   private void applyCollisions() {}
 
   public void correctPosition(Vector2 distance) {
@@ -249,6 +254,7 @@ public class Rigidbody extends Component implements Serializable {
     deltaPosUpdate = Vector2.Zero();
     deltaPos = Vector2.Zero();
   }
+
   //TODO: Make it where this doesn't take you to a different universe
   private void checkForLegalMovement() {
     float percent = 0.8f;

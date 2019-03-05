@@ -7,7 +7,9 @@ import shared.physics.types.ColliderLayer;
 import shared.physics.types.ColliderType;
 import shared.util.maths.Vector2;
 
-/** An edge collider; used only for Raycasts */
+/**
+ * An edge collider; used only for Raycasts
+ */
 public class EdgeCollider extends Collider implements Serializable {
 
   ArrayList<Vector2> nodes;

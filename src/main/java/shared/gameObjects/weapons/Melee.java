@@ -11,6 +11,7 @@ import shared.physics.Physics;
 import shared.physics.data.AngularData;
 import shared.physics.data.Collision;
 import shared.physics.data.MaterialProperty;
+import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
 
@@ -49,7 +50,7 @@ public abstract class Melee extends Weapon {
     this.attacking = false;
     this.currentAngleIndex = 0;
 
-    addComponent(new CircleCollider(this, (float) range, false));
+    addComponent(new CircleCollider(this, ColliderLayer.PLAYER, (float) range, false));
     rb =
         new Rigidbody(
             RigidbodyType.STATIC,
@@ -84,9 +85,7 @@ public abstract class Melee extends Weapon {
 
       for (Collision c : collisions) {
         GameObject g = c.getCollidedObject().getParent();
-        if (g.getId() == ObjectType.Player && !g.equals(holder)) {
-          System.out.print(g.toString() + " -> ");
-
+        if (g != null && g.getId() == ObjectType.Player && !g.equals(holder)) {
           playersBeingHit.add((Player) g);
         }
       }
