@@ -25,7 +25,7 @@ public enum FSA {
           targetPlayer.getTransform().getPos().add(bot.getTransform().getPos().mult(-1)));
 
       // If the cast is null or returns a Static RigidBody
-      boolean inSight = (rayCast == null) ||
+      boolean inSight = (rayCast.size() == 0) ||
           rayCast.stream().anyMatch(o -> ((Rigidbody) o.getCollidedObject()
               .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC);
 
@@ -71,8 +71,7 @@ public enum FSA {
           targetPlayer.getTransform().getPos().add(bot.getTransform().getPos().mult(-1)));
 
       // If the cast is null or returns a Static RigidBody
-      // If the cast is null or returns a Static RigidBody
-      boolean inSight = (rayCast == null) ||
+      boolean inSight = (rayCast.size() == 0) ||
           rayCast.stream().anyMatch(o -> ((Rigidbody) o.getCollidedObject()
               .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC);
 
@@ -118,7 +117,7 @@ public enum FSA {
           targetPlayer.getTransform().getPos().add(bot.getTransform().getPos().mult(-1)));
 
       // If the cast is null or returns a Static RigidBody
-      boolean inSight = (rayCast == null) ||
+      boolean inSight = (rayCast.size() == 0) ||
           rayCast.stream().anyMatch(o -> ((Rigidbody) o.getCollidedObject()
               .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC);
 
@@ -166,7 +165,7 @@ public enum FSA {
           targetPlayer.getTransform().getPos().add(bot.getTransform().getPos().mult(-1)));
 
       // If the cast is null or returns a Static RigidBody
-      boolean inSight = (rayCast == null) ||
+      boolean inSight = (rayCast.size() == 0) ||
           rayCast.stream().anyMatch(o -> ((Rigidbody) o.getCollidedObject()
               .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC);
 
@@ -223,7 +222,7 @@ public enum FSA {
           targetPlayer.getTransform().getPos().add(bot.getTransform().getPos().mult(-1)));
 
       // If the cast is null or returns a Static RigidBody
-      boolean inSight = (rayCast == null) ||
+      boolean inSight = (rayCast.size() == 0) ||
           rayCast.stream().anyMatch(o -> ((Rigidbody) o.getCollidedObject()
               .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC);
 
@@ -265,7 +264,7 @@ public enum FSA {
           targetPlayer.getTransform().getPos().add(bot.getTransform().getPos().mult(-1)));
 
       // If the cast is null or returns a Static RigidBody
-      boolean inSight = (rayCast == null) ||
+      boolean inSight = (rayCast.size() == 0) ||
           rayCast.stream().anyMatch(o -> ((Rigidbody) o.getCollidedObject()
               .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC);
 
