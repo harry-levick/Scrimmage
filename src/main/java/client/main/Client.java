@@ -400,12 +400,16 @@ public class Client extends Application {
     root = new Group();
     backgroundRoot = new Group();
     gameRoot = new Group();
+    creditsRoot = new Group();
+    creditsBackground = new Group();
 
     Font.loadFont("Kenney Future.ttf", 14);
     root.setStyle("-fx-font-family: Kenney Future");
 
     root.getChildren().add(backgroundRoot);
     root.getChildren().add(gameRoot);
+    root.getChildren().add(creditsBackground);
+    root.getChildren().add(creditsRoot);
 
     primaryStage.setTitle(gameTitle);
     primaryStage.getIcons().add(new Image(Path.convert("images/logo.png")));
