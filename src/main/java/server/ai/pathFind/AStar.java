@@ -319,10 +319,8 @@ public class AStar {
         enemyPos.add(botPos.mult(-1)));
 
     // If the cast is null or returns a Static RigidBody
-    boolean inSight = rayCast.stream().filter(o -> ((Rigidbody) o.getCollidedObject()
-            .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC)
-            .findFirst()
-            .isPresent();
+    boolean inSight = rayCast.stream().anyMatch(o -> ((Rigidbody) o.getCollidedObject()
+            .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC);
 
     if (bot.getHolding().isGun()) {
 
@@ -391,8 +389,7 @@ public class AStar {
    * @return The clone state.
    */
   public ArrayList<GameObject> backupState() {
-    ArrayList<GameObject> sceneCopy =
-        (ArrayList<GameObject>) worldScene.clone();
+    ArrayList<GameObject> sceneCopy = (ArrayList<GameObject>) worldScene.clone();
 
     return sceneCopy;
   }
