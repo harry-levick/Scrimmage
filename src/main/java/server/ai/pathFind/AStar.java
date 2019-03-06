@@ -191,7 +191,7 @@ public class AStar {
 
       for (boolean[] action : possibleActions) {
         SearchNode neighbour = new SearchNode(action, this);
-        if (!isInClosed(neighbour))
+        if (!isInClosed(neighbour) || !isInOpen(neighbour))
           list.add(neighbour);
       }
 
@@ -265,7 +265,7 @@ public class AStar {
   private void search() {
     int searchCount = 0;
     // The maximum number of nodes searched before the search is stopped.
-    int seachCutoff  = 1000;
+    int seachCutoff  = Integer.MAX_VALUE;
     // Set the current node to the best position, in case the bot is already at the enemy.
     SearchNode current = bestPosition;
     closedList.add(current);
@@ -273,7 +273,7 @@ public class AStar {
     boolean currentGood = false;
 
     // Search until we're at the enemy coordinates
-    while ((openList.size() != 0) || !atEnemy(current.botX, current.botY)) {
+    while (openList.size() != 0 && !atEnemy(current.botX, current.botY)) {
       // Pick the best node from the open-list
       current = pickBestPos(openList);
       currentGood = false;
@@ -330,12 +330,14 @@ public class AStar {
     double dist = botPos.exactMagnitude(enemyPos);
     Melee tempMelee;
 
-    Collision rayCast = Physics.raycast(botPos,
-        enemyPos.add(botPos.mult(-1)));
+    Vector2 v = botPos.sub(enemyPos);
+    Vector2 v2 = enemyPos.sub(botPos);
+
+    Collision rayCast = Physics.raycast(botPos, enemyPos.sub(botPos));
 
     // If the cast is null or returns a Static RigidBody
-    boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
-        .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
+    boolean inSight = rayCast == null || (((Rigidbody) rayCast.getCollidedObject()
+        .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC);
 
     if (bot.getHolding().isGun()) {
 
@@ -362,10 +364,30 @@ public class AStar {
     // list?
     double nodeX = node.botX;
     double nodeY = node.botY;
+    double xDiff = 1.0;
+    double yDiff = 1.0;
+
+    for (SearchNode n : closedList) {
+
+      if ((Math.abs(n.botX - nodeX) < xDiff) &&
+          (Math.abs(n.botY - nodeY) < yDiff)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * Returns if a node is already in the open list
+   */
+  private boolean isInOpen(SearchNode node) {
+    double nodeX = node.botX;
+    double nodeY = node.botY;
     double xDiff = 3.0;
     double yDiff = 3.0;
 
-    for (SearchNode n : closedList) {
+    for (SearchNode n : openList) {
 
       if ((Math.abs(n.botX - nodeX) < xDiff) &&
           (Math.abs(n.botY - nodeY) < yDiff)) {
@@ -447,7 +469,7 @@ public class AStar {
   }
 
   private ArrayList<boolean[]> createPossibleActions(SearchNode currentPos) {
-    boolean[] parentAction = currentPos.parentNode.action;
+    boolean[] parentAction = currentPos.action;
 
     Bot nodeBot = replicaBot;
     nodeBot.setX(currentPos.botX);
@@ -474,7 +496,7 @@ public class AStar {
         possibleActions.add(createAction(false, true, false));
         left = true;
       }
-    }
+    } else left = true; // Cant move LEFT because the parent action was a RIGHT
 
     if (!Arrays.equals(parentAction, new boolean[] {false, true, false})) {
       // Box cast to the right
@@ -489,21 +511,23 @@ public class AStar {
         possibleActions.add(createAction(false, false, true));
         right = true;
       }
-    }
+    } else right = true; // Cant move RIGHT because the parent action was a LEFT
 
     if (nodeBot.mayJump()) { // If the bot cant jump, theres no point casting upwards
       // Box cast upwards
       Collision viscinityUp = Physics.boxcast(botPosition.add(Vector2.Up().mult(botSize)), botSize);
       // TODO: add a way of detecting if we can jump + (left or right)
       // If no collision, or if collision is far away
-      if (viscinityUp == null || ((Rigidbody) viscinityUp.getCollidedObject().getComponent(ComponentType.RIGIDBODY))
+      if (viscinityUp == null ||
+          ((Rigidbody) viscinityUp.getCollidedObject().getComponent(ComponentType.RIGIDBODY))
               .getBodyType() != RigidbodyType.STATIC) {
 
         Collision viscinityUpLeft = Physics.boxcast(
             botPosition.add(Vector2.Up().mult(botSize)).add(Vector2.Left().mult(botSize)), botSize);
 
         Collision viscinityUpRight = Physics.boxcast(
-            botPosition.add(Vector2.Up().mult(botSize)).add(Vector2.Right().mult(botSize)), botSize);
+            botPosition
+                .add(Vector2.Up().mult(botSize)).add(Vector2.Right().mult(botSize)), botSize);
 
         // Just jump
         possibleActions.add(createAction(true, false, false));
