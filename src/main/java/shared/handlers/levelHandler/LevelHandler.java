@@ -273,9 +273,12 @@ public class LevelHandler {
    */
   private void clearToRemove() {
     gameObjects.values().removeAll(toRemove);
+    /*
     for (GameObject g : toRemove) {
       System.out.println(g.toString());
     }
+
+     */
     toRemove.forEach(gameObject -> gameObject.removeRender());
     toRemove.forEach(gameObject -> gameObject.destroy());
     toRemove.clear();
