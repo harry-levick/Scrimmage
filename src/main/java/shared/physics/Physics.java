@@ -2,6 +2,7 @@ package shared.physics;
 
 import client.main.Client;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.UUID;
 import javafx.scene.shape.Line;
@@ -61,7 +62,9 @@ public class Physics {
 
     }
 
-    for (GameObject object : gameObjects.values()) {
+    Iterator<GameObject> iter = gameObjects.values().iterator();
+    while (iter.hasNext()) {
+      GameObject object = iter.next();
       if (object.getComponent(ComponentType.COLLIDER) != null) {
         collision =
             new Collision(
@@ -71,7 +74,12 @@ public class Physics {
         }
       }
     }
+
     return collision;
+    /*
+    for (GameObject object : gameObjects.values()) {
+    }
+    */
   }
 
   public static void drawCast(double xStart, double xFinish, double yStart, double yFinish) {
@@ -156,7 +164,11 @@ public class Physics {
     BoxCollider castCollider = new BoxCollider(sourcePos, size);
     Collision collision;
     ArrayList<Collision> collisions = new ArrayList<>();
-    for (GameObject object : gameObjects.values()) {
+
+    // USING ITERATOR PREVENTS A ConcurrentModificationException
+    Iterator<GameObject> iter = gameObjects.values().iterator();
+    while (iter.hasNext()) {
+      GameObject object = iter.next();
       if (object.getComponent(ComponentType.COLLIDER) != null) {
         collision =
             new Collision(
@@ -167,6 +179,10 @@ public class Physics {
       }
     }
     return collisions;
+    /*
+    for (GameObject object : gameObjects.values()) {
+    }
+    */
   }
 
   /**
