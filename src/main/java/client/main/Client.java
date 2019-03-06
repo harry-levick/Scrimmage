@@ -8,7 +8,6 @@ import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import de.codecentric.centerdevice.javafxsvg.dimension.PrimitiveDimensionProvider;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -68,7 +67,6 @@ public class Client extends Application {
   public static ArrayList<PacketInput> pendingInputs;
   public static TimerTask task;
   public static Group gameRoot;
-  public static Font globalFont;
   private final float timeStep = 0.0166f;
   private final String gameTitle = "Alone in the Dark";
   private LinkedList<Map> playlist;
@@ -416,14 +414,6 @@ public class Client extends Application {
     gameRoot = new Group();
     creditsRoot = new Group();
     creditsBackground = new Group();
-
-    try {
-      globalFont = Font
-          .loadFont(new FileInputStream(
-              new File(settings.getResourcesPath() + File.separator + "Kenney Future.ttf")), 20);
-    } catch (FileNotFoundException e) {
-      globalFont = Font.font("Consolas", 20);
-    }
 
     root.setStyle("-fx-font-family: Kenney Future");
 

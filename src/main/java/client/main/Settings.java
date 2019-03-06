@@ -1,6 +1,9 @@
 package client.main;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import shared.handlers.levelHandler.LevelHandler;
 
@@ -26,6 +29,9 @@ public class Settings {
   private int mapWidth;
   private int mapHeight;
   private int maxPlayers;
+  private String fontPath;
+  private int defaultFontSize;
+  private Font font;
 
   /**
    * Default Constructor Music volume set to 100 and sound effects to 75
@@ -39,12 +45,14 @@ public class Settings {
     mapWidth = 1920;
     mapHeight = 1080;
     maxPlayers = 4;
+    defaultFontSize = 20;
 
     resourcesPath = "src" + s + "main" + s + "resources";
     mapsPath = resourcesPath + s + "maps";
     menuPath = resourcesPath + s + "menus";
     musicPath = resourcesPath + s + "audio" + s + "music";
     SFXPath = resourcesPath + s + "audio" + s + "sound-effects";
+    fontPath = resourcesPath + s + "Kenney Future.ttf";
   }
 
   public String getResourcesPath() {
@@ -93,6 +101,21 @@ public class Settings {
 
   public int getMaxPlayers() {
     return maxPlayers;
+  }
+
+  public Font getFont() {
+    return getFont(defaultFontSize);
+  }
+
+  public Font getFont(int size) {
+    try {
+      font = Font
+          .loadFont(new FileInputStream(
+              new File(fontPath)), size);
+    } catch (FileNotFoundException e) {
+      font = Font.font("Consolas", 20);
+    }
+    return font;
   }
   /**
    * @return Current game music volume
