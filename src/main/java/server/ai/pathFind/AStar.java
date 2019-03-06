@@ -6,7 +6,9 @@ package server.ai.pathFind;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import server.ai.Bot;
 import shared.gameObjects.GameObject;
@@ -178,7 +180,9 @@ public class AStar {
       ArrayList<boolean[]> possibleActions = createPossibleActions(this);
 
       for (boolean[] action : possibleActions) {
-        list.add(new SearchNode(action, this));
+        SearchNode neighbour = new SearchNode(action, this);
+        if (!isInClosed(neighbour))
+          list.add(neighbour);
       }
 
       return list;
@@ -251,14 +255,15 @@ public class AStar {
   private void search() {
     int searchCount = 0;
     // The maximum number of nodes searched before the search is stopped.
-    int seachCutoff  = 30;
+    int seachCutoff  = 1000;
     // Set the current node to the best position, in case the bot is already at the enemy.
     SearchNode current = bestPosition;
+    closedList.add(current);
     // Is the current node good (= we're not getting hurt)
     boolean currentGood = false;
 
     // Search until we're at the enemy coordinates
-    while ((openList.size() != 0) && !atEnemy(current.nodeBot)) {
+    while ((openList.size() != 0) || !atEnemy(current.nodeBot)) {
       // Pick the best node from the open-list
       current = pickBestPos(openList);
       currentGood = false;
@@ -287,7 +292,7 @@ public class AStar {
         closedList.add(current);
         // Add all children of the current node to the open list.
         openList.addAll(current.generateChildren());
-
+        searchCount++; // Increment the search count only if the current node is good.
       }
 
       if (currentGood) {
@@ -296,7 +301,7 @@ public class AStar {
 
       }
 
-      if (searchCount++ >= seachCutoff)
+      if (searchCount >= seachCutoff)
         break;
 
     }
@@ -309,18 +314,18 @@ public class AStar {
    * @return true if the bot is close enough to the enemy.
    */
   private boolean atEnemy(Bot bot) {
-    Vector2 botPos = new Vector2((float) bot.getX(), (float) bot.getY());
+    Vector2 botPos = bot.getTransform().getPos();
     Vector2 enemyPos = new Vector2((float) enemyX, (float) enemyY);
 
     double dist = botPos.exactMagnitude(enemyPos);
     Melee tempMelee;
 
-    ArrayList<Collision> rayCast = Physics.raycastAll(botPos,
+    Collision rayCast = Physics.raycast(botPos,
         enemyPos.add(botPos.mult(-1)));
 
     // If the cast is null or returns a Static RigidBody
-    boolean inSight = rayCast.stream().anyMatch(o -> ((Rigidbody) o.getCollidedObject()
-            .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC);
+    boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
+        .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
 
     if (bot.getHolding().isGun()) {
 
@@ -352,8 +357,8 @@ public class AStar {
 
     for (SearchNode n : closedList) {
 
-      if ((Math.abs(n.nodeBot.getX()) - nodeX < xDiff) &&
-          (Math.abs(n.nodeBot.getY()) - nodeY < yDiff)) {
+      if ((Math.abs(n.nodeBot.getX() - nodeX) < xDiff) &&
+          (Math.abs(n.nodeBot.getY() - nodeY) < yDiff)) {
         return true;
       }
     }
@@ -433,6 +438,7 @@ public class AStar {
 
   private ArrayList<boolean[]> createPossibleActions(SearchNode currentPos) {
     ArrayList<boolean[]> possibleActions = new ArrayList<>();
+    Set<boolean[]> actionSet = new HashSet<>();
 
     // Vector2 botPosition = this.bot.getTransform().getPos(); <- not taking an updated position
     // in the theory of the search
@@ -449,7 +455,7 @@ public class AStar {
             .getBodyType() != RigidbodyType.STATIC ||
         botPosition.exactMagnitude(viscinityLeft.getPointOfCollision()) > 10) {
       // If no collision, or if the collision is far away
-      possibleActions.add(createAction(false, true, false));
+      actionSet.add(createAction(false, true, false));
     }
 
     // Box cast to the right
@@ -461,42 +467,50 @@ public class AStar {
             .getBodyType() != RigidbodyType.STATIC ||
         botPosition.exactMagnitude(viscinityRight.getPointOfCollision()) > 10) {
       // or if the collision is far away
-      possibleActions.add(createAction(false, false, true));
+      actionSet.add(createAction(false, false, true));
     }
 
-    // Box cast upwards
-    Collision viscinityUp = Physics.boxcast(botPosition.add(Vector2.Up().mult(botSize)), botSize);
-    // TODO: add a way of detecting if we can jump + (left or right)
-    // If no collision, or if collision is far away
-    if (viscinityUp == null ||
-        ((Rigidbody) viscinityUp.getCollidedObject().getComponent(ComponentType.RIGIDBODY))
-            .getBodyType() != RigidbodyType.STATIC &&
-            (bot.mayJump())) {
-
-      Collision viscinityUpLeft = Physics.boxcast(
-          botPosition.add(Vector2.Up().mult(botSize)).add(Vector2.Left().mult(botSize)), botSize);
-
-      Collision viscinityUpRight = Physics.boxcast(
-          botPosition.add(Vector2.Up().mult(botSize)).add(Vector2.Right().mult(botSize)), botSize);
-
-      // Just jump
-      possibleActions.add(createAction(true, false, false));
-
-      if (viscinityUpRight == null ||
-          ((Rigidbody) viscinityUpRight.getCollidedObject().getComponent(ComponentType.RIGIDBODY))
+    if (bot.mayJump()) { // If the bot cant jump, theres no point casting upwards
+      // Box cast upwards
+      Collision viscinityUp = Physics.boxcast(botPosition.add(Vector2.Up().mult(botSize)), botSize);
+      // TODO: add a way of detecting if we can jump + (left or right)
+      // If no collision, or if collision is far away
+      if (viscinityUp == null || ((Rigidbody) viscinityUp.getCollidedObject().getComponent(ComponentType.RIGIDBODY))
               .getBodyType() != RigidbodyType.STATIC) {
-        // Jump to the right
-        possibleActions.add(createAction(true, false, true));
-      }
 
-      if (viscinityUpLeft == null ||
-          ((Rigidbody) viscinityUpLeft.getCollidedObject().getComponent(ComponentType.RIGIDBODY))
-              .getBodyType() != RigidbodyType.STATIC) {
-        // Jump to the left
-        possibleActions.add(createAction(true, true, false));
+        Collision viscinityUpLeft = Physics.boxcast(
+            botPosition.add(Vector2.Up().mult(botSize)).add(Vector2.Left().mult(botSize)), botSize);
+
+        Collision viscinityUpRight = Physics.boxcast(
+            botPosition.add(Vector2.Up().mult(botSize)).add(Vector2.Right().mult(botSize)), botSize);
+
+        // Just jump
+        actionSet.add(createAction(true, false, false));
+
+        if (viscinityUpRight == null ||
+            ((Rigidbody) viscinityUpRight.getCollidedObject().getComponent(ComponentType.RIGIDBODY))
+                .getBodyType() != RigidbodyType.STATIC) {
+          // Jump to the right
+          actionSet.add(createAction(true, false, true));
+        }
+
+        if (viscinityUpLeft == null ||
+            ((Rigidbody) viscinityUpLeft.getCollidedObject().getComponent(ComponentType.RIGIDBODY))
+                .getBodyType() != RigidbodyType.STATIC) {
+          // Jump to the left
+          actionSet.add(createAction(true, true, false));
+        }
+
       }
 
     }
+
+    if (!bot.mayJump()) {
+      actionSet.add(createAction(false, false, false));
+      actionSet.add(createAction(false, true, false));
+      actionSet.add(createAction(false, false, true));
+    }
+    possibleActions.addAll(actionSet);
 
     return possibleActions;
   }

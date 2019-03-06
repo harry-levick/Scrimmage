@@ -8,6 +8,7 @@ import shared.gameObjects.weapons.Melee;
 import shared.physics.Physics;
 import shared.physics.data.Collision;
 import shared.physics.types.RigidbodyType;
+import shared.util.maths.Vector2;
 
 /**
  * @author Harry Levick (hxl799)
@@ -21,13 +22,12 @@ public enum FSA {
       int ammoLeft = StateInfo.ammoLeft;
       int botHealth = StateInfo.botHealth;
 
-      ArrayList<Collision> rayCast = Physics.raycastAll(bot.getTransform().getPos(),
-          targetPlayer.getTransform().getPos().add(bot.getTransform().getPos().mult(-1)));
+      Collision rayCast = Physics.raycast(
+          bot.getTransform().getPos(),
+          targetPlayer.getTransform().getPos());
 
-      // If the cast is null or returns a Static RigidBody
-      boolean inSight = (rayCast.size() == 0) ||
-          rayCast.stream().anyMatch(o -> ((Rigidbody) o.getCollidedObject()
-              .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC);
+      boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
+          .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
 
       if (((newDist > weaponRange) || !inSight)
           && (botHealth >= this.HIGH_HEALTH)
@@ -67,13 +67,12 @@ public enum FSA {
       int ammoLeft = StateInfo.ammoLeft;
       int botHealth = StateInfo.botHealth;
 
-      ArrayList<Collision> rayCast = Physics.raycastAll(bot.getTransform().getPos(),
-          targetPlayer.getTransform().getPos().add(bot.getTransform().getPos().mult(-1)));
+      Collision rayCast = Physics.raycast(
+          bot.getTransform().getPos(),
+          targetPlayer.getTransform().getPos());
 
-      // If the cast is null or returns a Static RigidBody
-      boolean inSight = (rayCast.size() == 0) ||
-          rayCast.stream().anyMatch(o -> ((Rigidbody) o.getCollidedObject()
-              .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC);
+      boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
+          .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
 
       if ((newDist <= weaponRange)
           && inSight
@@ -113,13 +112,12 @@ public enum FSA {
       int ammoLeft = StateInfo.ammoLeft;
       int botHealth = StateInfo.botHealth;
 
-      ArrayList<Collision> rayCast = Physics.raycastAll(bot.getTransform().getPos(),
-          targetPlayer.getTransform().getPos().add(bot.getTransform().getPos().mult(-1)));
+      Collision rayCast = Physics.raycast(
+          bot.getTransform().getPos(),
+          targetPlayer.getTransform().getPos());
 
-      // If the cast is null or returns a Static RigidBody
-      boolean inSight = (rayCast.size() == 0) ||
-          rayCast.stream().anyMatch(o -> ((Rigidbody) o.getCollidedObject()
-              .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC);
+      boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
+          .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
 
       if ((newDist <= weaponRange)
           && inSight
@@ -161,13 +159,12 @@ public enum FSA {
       int ammoLeft = StateInfo.ammoLeft;
       int botHealth = StateInfo.botHealth;
 
-      ArrayList<Collision> rayCast = Physics.raycastAll(bot.getTransform().getPos(),
-          targetPlayer.getTransform().getPos().add(bot.getTransform().getPos().mult(-1)));
+      Collision rayCast = Physics.raycast(
+          bot.getTransform().getPos(),
+          targetPlayer.getTransform().getPos());
 
-      // If the cast is null or returns a Static RigidBody
-      boolean inSight = (rayCast.size() == 0) ||
-          rayCast.stream().anyMatch(o -> ((Rigidbody) o.getCollidedObject()
-              .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC);
+      boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
+          .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
 
       Melee temp;
 
@@ -218,13 +215,12 @@ public enum FSA {
       int ammoLeft = StateInfo.ammoLeft;
       int botHealth = StateInfo.botHealth;
 
-      ArrayList<Collision> rayCast = Physics.raycastAll(bot.getTransform().getPos(),
-          targetPlayer.getTransform().getPos().add(bot.getTransform().getPos().mult(-1)));
+      Collision rayCast = Physics.raycast(
+          bot.getTransform().getPos(),
+          targetPlayer.getTransform().getPos());
 
-      // If the cast is null or returns a Static RigidBody
-      boolean inSight = (rayCast.size() == 0) ||
-          rayCast.stream().anyMatch(o -> ((Rigidbody) o.getCollidedObject()
-              .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC);
+      boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
+          .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
 
       if (((botHealth >= this.HIGH_HEALTH))
           && (newDist < prevDist)
@@ -260,13 +256,12 @@ public enum FSA {
       int ammoLeft = StateInfo.ammoLeft;
       int botHealth = StateInfo.botHealth;
 
-      ArrayList<Collision> rayCast = Physics.raycastAll(bot.getTransform().getPos(),
-          targetPlayer.getTransform().getPos().add(bot.getTransform().getPos().mult(-1)));
+      Collision rayCast = Physics.raycast(
+          bot.getTransform().getPos(),
+          targetPlayer.getTransform().getPos());
 
-      // If the cast is null or returns a Static RigidBody
-      boolean inSight = (rayCast.size() == 0) ||
-          rayCast.stream().anyMatch(o -> ((Rigidbody) o.getCollidedObject()
-              .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC);
+      boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
+          .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
 
       if (((botHealth >= this.HIGH_HEALTH))
           && inSight

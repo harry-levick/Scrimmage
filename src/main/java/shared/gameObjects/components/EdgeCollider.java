@@ -36,7 +36,7 @@ public class EdgeCollider extends Collider implements Serializable {
     Vector2 toRet = nodes.get(0);
     for (Vector2 vec : nodes) {
       toRet = vec.magnitude(point) <= toRet.magnitude(point) ? vec : toRet;
-      System.out.println(vec + "\n" + toRet);
+      //System.out.println(vec + "\n" + toRet);
     }
     return toRet;
   }
