@@ -50,7 +50,7 @@ public abstract class SliderObject extends GameObject {
     text = new Text(label);
     text.setLayoutX(getX());
     text.setLayoutY(getY());
-    text.setFont(Client.globalFont);
+    text.setFont(Client.settings.getFont(20));
     root.getChildren().add(text);
   }
 
