@@ -140,7 +140,11 @@ public class Physics {
   public static Collision boxcast(Vector2 sourcePos, Vector2 size) {
     BoxCollider castCollider = new BoxCollider(sourcePos, size);
     Collision collision;
-    for (GameObject object : gameObjects.values()) {
+
+    Iterator<GameObject> iter = gameObjects.values().iterator();
+
+    while (iter.hasNext()) {
+      GameObject object = iter.next();
       if (object.getComponent(ComponentType.COLLIDER) != null) {
         collision =
             new Collision(
@@ -150,7 +154,12 @@ public class Physics {
         }
       }
     }
+
     return null;
+    /*
+    for (GameObject object : gameObjects.values()) {
+    }
+    */
   }
 
   /**
