@@ -49,6 +49,7 @@ public class Bot extends Player {
     this.plan = Collections.synchronizedList(new ArrayList<>());
 
     this.botThread = new BotThread(this, plan);
+    botThread.setName("Bot Path-Finder");
   }
 
   /**
