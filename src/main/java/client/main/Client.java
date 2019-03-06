@@ -203,7 +203,8 @@ public class Client extends Application {
         for (GameObject gameObject : levelHandler.getGameObjects()) {
           gameObject.update();
         }
-        //levelHandler.getGameObjects().forEach(gameObject -> gameObject.update());
+        
+        
         accumulatedTime -= timeStep;
         float alpha = accumulatedTime / timeStep;
         levelHandler.getGameObjects().forEach(gameObject -> gameObject.interpolatePosition(alpha));
