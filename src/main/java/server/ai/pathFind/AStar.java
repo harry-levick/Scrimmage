@@ -4,11 +4,14 @@ package server.ai.pathFind;
  * @author Harry Levick (hxl799)
  */
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import server.ai.Bot;
 import shared.gameObjects.GameObject;
@@ -51,6 +54,7 @@ public class AStar {
   double enemyY;
   // The bot that the path-finding is concerned with.
   Bot bot;
+  Bot replicaBot; // clone of the bot to be used by search nodes
 
   /**
    * A SearchNode is a node in the A* search, consisting of an action (that got to the current
@@ -67,7 +71,8 @@ public class AStar {
     // The list of game objects in this scene
     ArrayList<GameObject> sceneSnapshot;
     // The bot that the path-finding is concerned with.
-    Bot nodeBot;
+    double botX;
+    double botY;
 
     boolean visited = false;
     // The action used to get to the child node.
@@ -81,18 +86,21 @@ public class AStar {
       Collections.copy(sceneSnapshot, worldScene);
       this.parentNode = parent;
       if (parentNode != null) {
-        // Create a copy of the parents simulated bot
-        this.nodeBot = new Bot(parent.nodeBot);
-        this.nodeBot.setHolding(parent.nodeBot.getHolding());
+        //this.nodeBot = new Bot(parent.nodeBot);
+        //this.nodeBot.setHolding(parent.nodeBot.getHolding());
 
+        replicaBot.setX(parentNode.botX);
+        replicaBot.setY(parentNode.botY);
         // Simulate the bot with the action, using the game physics
-        nodeBot.simulateAction(action);
-        nodeBot.simulateApplyInput();
-        nodeBot.simulateUpdate();
+        replicaBot.simulateAction(action);
+        replicaBot.simulateApplyInput();
+        replicaBot.simulateUpdate();
 
-        Vector2 thisPos = new Vector2((float) nodeBot.getX(), (float) nodeBot.getY());
-        Vector2 parentPos = new Vector2((float) parent.nodeBot.getX(),
-            (float) parent.nodeBot.getY());
+        botX = replicaBot.getX();
+        botY = replicaBot.getY();
+
+        Vector2 thisPos = new Vector2(botX, botY);
+        Vector2 parentPos = new Vector2(parent.botX, parent.botX);
 
         double distChange = thisPos.exactMagnitude(parentPos);
         // Calculate the heuristic value of the node.
@@ -102,8 +110,10 @@ public class AStar {
       } else {
         // Starting node so distanceElapsed is 0
         distanceElapsed = 0;
-        this.nodeBot = new Bot(bot);
-        this.nodeBot.setHolding(bot.getHolding());
+        replicaBot = new Bot(bot);
+        replicaBot.setHolding(bot.getHolding());
+        botX = replicaBot.getX();
+        botY = replicaBot.getY();
 
         /*
         // Create a copy of the bots weapon
@@ -135,7 +145,7 @@ public class AStar {
      * @return the distance
      */
     public double calcRemainingH(List<Weapon> allItems) {
-      Vector2 botPos = new Vector2((float) nodeBot.getX(), (float) nodeBot.getY());
+      Vector2 botPos = new Vector2((float) botX, (float) botY);
       Vector2 enemyPos = new Vector2((float) enemyX, (float) enemyY);
       double totalH = botPos.exactMagnitude(enemyPos);
 
@@ -263,7 +273,7 @@ public class AStar {
     boolean currentGood = false;
 
     // Search until we're at the enemy coordinates
-    while ((openList.size() != 0) || !atEnemy(current.nodeBot)) {
+    while ((openList.size() != 0) || !atEnemy(current.botX, current.botY)) {
       // Pick the best node from the open-list
       current = pickBestPos(openList);
       currentGood = false;
@@ -313,9 +323,9 @@ public class AStar {
    * if they are in sight of the enemy.
    * @return true if the bot is close enough to the enemy.
    */
-  private boolean atEnemy(Bot bot) {
-    Vector2 botPos = bot.getTransform().getPos();
-    Vector2 enemyPos = new Vector2((float) enemyX, (float) enemyY);
+  private boolean atEnemy(double botX, double botY) {
+    Vector2 botPos = new Vector2(botX, botY);
+    Vector2 enemyPos = new Vector2(enemyX, enemyY);
 
     double dist = botPos.exactMagnitude(enemyPos);
     Melee tempMelee;
@@ -350,15 +360,15 @@ public class AStar {
   private boolean isInClosed(SearchNode node) {
     // Is the x and y coords of the given node too close the the coords of a node in the visited
     // list?
-    double nodeX = node.nodeBot.getX();
-    double nodeY = node.nodeBot.getY();
+    double nodeX = node.botX;
+    double nodeY = node.botY;
     double xDiff = 3.0;
     double yDiff = 3.0;
 
     for (SearchNode n : closedList) {
 
-      if ((Math.abs(n.nodeBot.getX() - nodeX) < xDiff) &&
-          (Math.abs(n.nodeBot.getY() - nodeY) < yDiff)) {
+      if ((Math.abs(n.botX - nodeX) < xDiff) &&
+          (Math.abs(n.botY - nodeY) < yDiff)) {
         return true;
       }
     }
@@ -437,40 +447,51 @@ public class AStar {
   }
 
   private ArrayList<boolean[]> createPossibleActions(SearchNode currentPos) {
+    boolean[] parentAction = currentPos.parentNode.action;
+
+    Bot nodeBot = replicaBot;
+    nodeBot.setX(currentPos.botX);
+    nodeBot.setY(currentPos.botY);
+    boolean left = false, right = false;
+
     ArrayList<boolean[]> possibleActions = new ArrayList<>();
-    Set<boolean[]> actionSet = new HashSet<>();
 
     // Vector2 botPosition = this.bot.getTransform().getPos(); <- not taking an updated position
     // in the theory of the search
-    Vector2 botPosition = new Vector2((float) currentPos.nodeBot.getX(),
-        (float) currentPos.nodeBot.getY());
+    Vector2 botPosition = new Vector2((float) currentPos.botX,
+        (float) currentPos.botY);
     Vector2 botSize = this.bot.getTransform().getSize();
 
     // Box cast to the left
-    // TODO possibly change this to .Left()
-    Collision viscinityLeft = Physics
-        .boxcast(botPosition.add(Vector2.Left().mult(botSize)), botSize);
-    if (viscinityLeft == null ||
-        ((Rigidbody) viscinityLeft.getCollidedObject().getComponent(ComponentType.RIGIDBODY))
-            .getBodyType() != RigidbodyType.STATIC ||
-        botPosition.exactMagnitude(viscinityLeft.getPointOfCollision()) > 10) {
-      // If no collision, or if the collision is far away
-      actionSet.add(createAction(false, true, false));
+    if (!Arrays.equals(parentAction, new boolean[] {false, false, true})) {
+      Collision viscinityLeft = Physics
+          .boxcast(botPosition.add(Vector2.Left().mult(botSize)), botSize);
+      if (viscinityLeft == null ||
+          ((Rigidbody) viscinityLeft.getCollidedObject().getComponent(ComponentType.RIGIDBODY))
+              .getBodyType() != RigidbodyType.STATIC //||
+          /*botPosition.exactMagnitude(viscinityLeft.getPointOfCollision()) > 10*/) {
+        // If no collision, or if the collision is far away
+        possibleActions.add(createAction(false, true, false));
+        left = true;
+      }
     }
 
-    // Box cast to the right
-    Collision viscinityRight = Physics
-        .boxcast(botPosition.add(Vector2.Right().mult(botSize)), botSize);
+    if (!Arrays.equals(parentAction, new boolean[] {false, true, false})) {
+      // Box cast to the right
+      Collision viscinityRight = Physics
+          .boxcast(botPosition.add(Vector2.Right().mult(botSize)), botSize);
 
-    if (viscinityRight == null ||
-        ((Rigidbody) viscinityRight.getCollidedObject().getComponent(ComponentType.RIGIDBODY))
-            .getBodyType() != RigidbodyType.STATIC ||
-        botPosition.exactMagnitude(viscinityRight.getPointOfCollision()) > 10) {
-      // or if the collision is far away
-      actionSet.add(createAction(false, false, true));
+      if (viscinityRight == null ||
+          ((Rigidbody) viscinityRight.getCollidedObject().getComponent(ComponentType.RIGIDBODY))
+              .getBodyType() != RigidbodyType.STATIC //||
+          /*botPosition.exactMagnitude(viscinityRight.getPointOfCollision()) > 10*/) {
+        // or if the collision is far away
+        possibleActions.add(createAction(false, false, true));
+        right = true;
+      }
     }
 
-    if (bot.mayJump()) { // If the bot cant jump, theres no point casting upwards
+    if (nodeBot.mayJump()) { // If the bot cant jump, theres no point casting upwards
       // Box cast upwards
       Collision viscinityUp = Physics.boxcast(botPosition.add(Vector2.Up().mult(botSize)), botSize);
       // TODO: add a way of detecting if we can jump + (left or right)
@@ -485,32 +506,31 @@ public class AStar {
             botPosition.add(Vector2.Up().mult(botSize)).add(Vector2.Right().mult(botSize)), botSize);
 
         // Just jump
-        actionSet.add(createAction(true, false, false));
+        possibleActions.add(createAction(true, false, false));
 
         if (viscinityUpRight == null ||
             ((Rigidbody) viscinityUpRight.getCollidedObject().getComponent(ComponentType.RIGIDBODY))
                 .getBodyType() != RigidbodyType.STATIC) {
           // Jump to the right
-          actionSet.add(createAction(true, false, true));
+          possibleActions.add(createAction(true, false, true));
         }
 
         if (viscinityUpLeft == null ||
             ((Rigidbody) viscinityUpLeft.getCollidedObject().getComponent(ComponentType.RIGIDBODY))
                 .getBodyType() != RigidbodyType.STATIC) {
           // Jump to the left
-          actionSet.add(createAction(true, true, false));
+          possibleActions.add(createAction(true, true, false));
         }
 
       }
 
+    } else {
+      possibleActions.add(createAction(false, false, false));
+      if (!left)
+        possibleActions.add(createAction(false, true, false));
+      if (!right)
+        possibleActions.add(createAction(false, false, true));
     }
-
-    if (!bot.mayJump()) {
-      actionSet.add(createAction(false, false, false));
-      actionSet.add(createAction(false, true, false));
-      actionSet.add(createAction(false, false, true));
-    }
-    possibleActions.addAll(actionSet);
 
     return possibleActions;
   }

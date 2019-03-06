@@ -55,13 +55,10 @@ public class Physics {
     }
 
     if (showCasts) {
-      Line line = new Line();
-      line.setStartX(castCollider.getNodes().get(0).getX());
-      line.setStartY(castCollider.getNodes().get(0).getY());
-      line.setEndX(castCollider.getNodes().get(castCollider.getNodes().size() - 1).getX());
-      line.setEndY(castCollider.getNodes().get(castCollider.getNodes().size() - 1).getY());
-      line.setStyle("-fx-stroke-width: 4; -fx-stroke: #00FF00;");
-      Client.gameRoot.getChildren().add(line);
+      drawCast(castCollider.getNodes().get(0).getX(), castCollider.getNodes().get(0).getY(),
+          castCollider.getNodes().get(castCollider.getNodes().size() - 1).getX(),
+          castCollider.getNodes().get(castCollider.getNodes().size() - 1).getY());
+
     }
 
     for (GameObject object : gameObjects.values()) {
@@ -75,6 +72,16 @@ public class Physics {
       }
     }
     return collision;
+  }
+
+  public static void drawCast(double xStart, double xFinish, double yStart, double yFinish) {
+    Line line = new Line();
+    line.setStartX(xStart);
+    line.setStartY(yStart);
+    line.setEndX(xFinish);
+    line.setEndY(yFinish);
+    line.setStyle("-fx-stroke-width: 4; -fx-stroke: #00FF00;");
+    Client.gameRoot.getChildren().add(line);
   }
 
   /**

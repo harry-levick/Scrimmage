@@ -66,7 +66,7 @@ public class Bot extends Player {
   }
 
   public boolean mayJump() {
-    return !grounded;
+    return grounded;
   }
 
   @Override
@@ -105,20 +105,10 @@ public class Bot extends Player {
       case ATTACKING:
         System.out.println("ATTACKING");
         // TODO think about how an attacking script would work.
-        Collision inSight = Physics.raycast(
-            new Vector2((float) this.getX() + 500f, (float) this.getY()),
-            new Vector2((float) targetPlayer.getX(), (float) targetPlayer.getY()));
+        mouseX = targetPlayer.getX();
+        mouseY = targetPlayer.getY();
+        click = true;
 
-        ArrayList<Collision> rayCast = Physics.raycastAll(
-            new Vector2((float) this.getX(), (float) this.getY()),
-            new Vector2((float) targetPlayer.getX(), (float) targetPlayer.getY()));
-
-        // If the target player is in sight of the bot, they can shoot.
-        if (inSight == null) {
-          mouseX = targetPlayer.getX();
-          mouseY = targetPlayer.getY();
-          click = true;
-        }
 
         break;
       case CHASING_ATTACKING:
