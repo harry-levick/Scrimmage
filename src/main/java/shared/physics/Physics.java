@@ -22,7 +22,7 @@ public class Physics {
   public static final float TIMESTEP = 1f / 60;
   public static final int RAYCAST_INC = 100;
   public static boolean showColliders = false;
-  public static boolean showCasts = true;
+  public static boolean showCasts = false;
   /*
    * Order: DEFAULT, PLAYER, OBJECT, WALL, PARTICLE
    */

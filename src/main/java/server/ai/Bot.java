@@ -49,7 +49,6 @@ public class Bot extends Player {
     this.plan = Collections.synchronizedList(new ArrayList<>());
 
     this.botThread = new BotThread(this, plan);
-    System.out.println("BOT UUID = " + playerUUID);
   }
 
   /**
@@ -72,7 +71,6 @@ public class Bot extends Player {
 
   @Override
   public void update() {
-    System.out.println("botx = " + this.getX() + ", boty = " + this.getY());
 
     if (!active) {
       botThread.terminate();
@@ -148,7 +146,6 @@ public class Bot extends Player {
    * @return The distance to the target player
    */
   private double calcDist() {
-    //System.out.println("x = " + targetPlayer.getX() + ", y = " + targetPlayer.getY());
     Vector2 botPos = new Vector2((float) this.getX(), (float) this.getY());
     Vector2 targetPos = new Vector2((float) targetPlayer.getX(),
         (float) targetPlayer.getY());
