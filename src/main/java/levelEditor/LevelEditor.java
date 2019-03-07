@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentSkipListMap;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -62,7 +63,7 @@ import shared.util.maths.Vector2;
 
 public class LevelEditor extends Application {
 
-  private LinkedHashMap<UUID, GameObject> gameObjects;
+  private ConcurrentSkipListMap<UUID, GameObject> gameObjects;
   private ArrayList<Player> playerSpawns = new ArrayList<>();
   private MapDataObject mapDataObject;
   private boolean snapToGrid = true;
@@ -524,7 +525,7 @@ public class LevelEditor extends Application {
   }
 
   private void initialiseNewMap() {
-    gameObjects = new LinkedHashMap<>();
+    gameObjects = new ConcurrentSkipListMap<>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.IN_GAME);
   }
 
@@ -579,7 +580,7 @@ public class LevelEditor extends Application {
   }
 
   private void sceneSecondaryClick(Stage primaryStage, Group root, MouseEvent event) {
-    LinkedHashMap<UUID, GameObject> removeList = gameObjects;
+    ConcurrentSkipListMap<UUID, GameObject> removeList = gameObjects;
     ArrayList<Player> removeSpawn = playerSpawns;
     double x = event.getX();
     double y = event.getY();

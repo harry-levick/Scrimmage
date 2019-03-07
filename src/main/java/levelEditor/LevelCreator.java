@@ -6,6 +6,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentSkipListMap;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Group;
@@ -45,7 +46,7 @@ public class LevelCreator extends Application {
   private static int gridSizeX = stageSizeX / gridSizePX; // 40 px blocks
   private static int gridSizeY = stageSizeY / gridSizePX; // 48 x 27
 
-  private static LinkedHashMap<UUID, GameObject> gameObjects;
+  private static ConcurrentSkipListMap<UUID, GameObject> gameObjects;
   private static ArrayList<Player> playerSpawns;
   private static MapDataObject mapDataObject;
   private UUID uuid = UUID.randomUUID();
@@ -84,7 +85,7 @@ public class LevelCreator extends Application {
     // MAIN MENU
     ////////////////////////////////////////
     filename = "main_menu";
-    gameObjects = new LinkedHashMap<>();
+    gameObjects = new ConcurrentSkipListMap<>();
     playerSpawns = new ArrayList<Player>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.MAIN_MENU);
     mapDataObject.setBackground(
@@ -166,7 +167,7 @@ public class LevelCreator extends Application {
     // SINGLEPLAYER MAP
     ////////////////////////////////////////
     filename = "menu";
-    gameObjects = new LinkedHashMap<>();
+    gameObjects = new ConcurrentSkipListMap<>();
     playerSpawns = new ArrayList<>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.IN_GAME);
     mapDataObject.setBackground(
@@ -203,7 +204,7 @@ public class LevelCreator extends Application {
     // MULTIPLAYER
     ////////////////////////////////////////
     filename = "multiplayer";
-    gameObjects = new LinkedHashMap<>();
+    gameObjects = new ConcurrentSkipListMap<>();
     playerSpawns = new ArrayList<Player>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.MAIN_MENU);
     mapDataObject.setBackground(
@@ -254,7 +255,7 @@ public class LevelCreator extends Application {
     // MULTIPLAYER LOBBY
     ////////////////////////////////////////
     filename = "lobby";
-    gameObjects = new LinkedHashMap<>();
+    gameObjects = new ConcurrentSkipListMap<>();
     playerSpawns = new ArrayList<Player>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.MAIN_MENU);
     uuid = UUID.randomUUID();
@@ -314,7 +315,7 @@ public class LevelCreator extends Application {
     // SETTINGS
     ////////////////////////////////////////
     filename = "settings";
-    gameObjects = new LinkedHashMap<>();
+    gameObjects = new ConcurrentSkipListMap<>();
     playerSpawns = new ArrayList<Player>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.MAIN_MENU);
     uuid = UUID.randomUUID();

@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.LinkedHashMap;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentSkipListMap;
 import org.junit.Before;
 import org.junit.Test;
 import shared.gameObjects.GameObject;
@@ -13,7 +14,7 @@ import shared.gameObjects.Utils.ObjectType;
 
 public class MapLoaderTest {
 
-  LinkedHashMap<UUID, GameObject> gameObjects = new LinkedHashMap<>();
+  ConcurrentSkipListMap<UUID, GameObject> gameObjects = new ConcurrentSkipListMap<>();
   private TestObject g1 = new TestObject(6, 7, ObjectType.Bot, UUID.randomUUID());
   private TestObject g2 = new TestObject(934, 12312, ObjectType.Bot, UUID.randomUUID());
   private TestObject g3 = new TestObject(567560, 12, ObjectType.Player, UUID.randomUUID());
@@ -42,7 +43,7 @@ public class MapLoaderTest {
   @Test
   public void equalAfterLoadAndSave() {
     map.saveMap(gameObjects, mapdata, path);
-    LinkedHashMap<UUID, GameObject> gameObjectsTest = map.loadMap(path);
+    ConcurrentSkipListMap<UUID, GameObject> gameObjectsTest = map.loadMap(path);
     int i = 0;
     while (gameObjectsTest.size() > i) {
       assertEquals(gameObjectsTest.get(i).getX(), gameObjects.get(i).getX(), 0.0001);

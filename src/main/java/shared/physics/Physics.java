@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentSkipListMap;
 import javafx.scene.shape.Line;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.components.BoxCollider;
@@ -33,11 +34,11 @@ public class Physics {
   public static boolean[] WALL = {true, true, true, true, false};
   public static boolean[] PARTICLES = {false, false, false, false, false};
   public static boolean[][] COLLISION_LAYERS = {DEFAULT, PLAYER, OBJECT, WALL, PARTICLES};
-  public static LinkedHashMap<UUID, GameObject> gameObjects;
+  public static ConcurrentSkipListMap<UUID, GameObject> gameObjects;
   private static ArrayList<DynamicCollision> collisions = new ArrayList<>();
 
   private Physics() {
-    gameObjects = new LinkedHashMap<>();
+    gameObjects = new ConcurrentSkipListMap<>();
   }
 
   /**
