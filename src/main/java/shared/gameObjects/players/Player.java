@@ -76,8 +76,8 @@ public class Player extends GameObject {
     this.behaviour = Behaviour.IDLE;
     this.bc = new BoxCollider(this, ColliderLayer.PLAYER, false);
     //  this.cc = new CircleCollider(this, ColliderLayer.PLAYER, transform.getSize().magnitude()*0.5f, false);
-    this.rb = new Rigidbody(RigidbodyType.DYNAMIC, 90, 12, 0.2f,
-        new MaterialProperty(0.005f, 0.1f, 0.05f), null, this);
+    this.rb = new Rigidbody(RigidbodyType.DYNAMIC, 90, 11.67f, 0.2f,
+        new MaterialProperty(0f, 0.1f, 0.05f), null, this);
     //  addComponent(cc);
     addComponent(bc);
     addComponent(rb);

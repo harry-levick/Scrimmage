@@ -172,28 +172,11 @@ public class DynamicCollision {
     Vector2 positionCorrection = positionCorrection();
     bodyA.correctPosition(positionCorrection.mult(-1 * bodyA.getInv_mass()));
     bodyB.correctPosition(positionCorrection.mult(bodyB.getInv_mass()));
-
-    // Friction
-    /*
-    velocityCol = bodyB.getVelocity().sub(bodyA.getVelocity());
-    Vector2 tangent = velocityCol.sub(collisionNormal.mult(velocityCol.dot(collisionNormal))).normalize();
-
-    float jt = velocityCol.dot(tangent)*-1;
-    jt /= bodyA.getInv_mass() + bodyB.getInv_mass();
-
-    float staticFriction = (new Vector2(bodyA.getMaterial().getStaticFriction(), bodyB.getMaterial().getStaticFriction())).magnitude();
-
-    Vector2 frictionImpulse = Math.abs(jt) < j*staticFriction ? tangent.mult(jt) : tangent.mult(-1*j*(new Vector2(bodyA.getMaterial().getKineticFriction(), bodyB.getMaterial().getKineticFriction())).magnitude());
-    if(Math.abs(frictionImpulse.getX()) > 0.00001f && Math.abs(frictionImpulse.getY()) > 0.000001f) {
-      bodyA.setVelocity(bodyA.getVelocity().sub(frictionImpulse.mult(bodyA.getInv_mass())));
-      bodyB.setVelocity(bodyB.getVelocity().add(frictionImpulse.mult(bodyB.getInv_mass())));
-    }
-    */
   }
 
   private Vector2 positionCorrection() {
-    float percent = 0.8f;
-    float slop = 0.05f;
+    float percent = 0.3f;
+    float slop = 0.04f;
 
     Vector2 correction =
         collisionNormal.mult(

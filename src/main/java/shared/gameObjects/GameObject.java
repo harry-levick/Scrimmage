@@ -112,9 +112,6 @@ public abstract class GameObject implements Serializable {
   // Collision engine
   public void updateCollision() {
     ArrayList<Component> cols = getComponents(ComponentType.COLLIDER);
-    if(this instanceof Player) {
-      System.out.println(cols.size());
-    }
     Rigidbody rb = (Rigidbody) getComponent(ComponentType.RIGIDBODY);
     for (Component comp : cols) {
       Collider col = (Collider) comp;
@@ -352,7 +349,7 @@ public abstract class GameObject implements Serializable {
    */
   public void OnCollisionStay(Collision col) {
     for (Component component : getComponents(ComponentType.BEHAVIOUR)) {
-      ((Behaviour) component).OnCollisionEnter(col);
+      ((Behaviour) component).OnCollisionStay(col);
     }
   }
 
@@ -363,7 +360,7 @@ public abstract class GameObject implements Serializable {
    */
   public void OnCollisionExit(Collision col) {
     for (Component component : getComponents(ComponentType.BEHAVIOUR)) {
-      ((Behaviour) component).OnCollisionEnter(col);
+      ((Behaviour) component).OnCollisionExit(col);
     }
   }
 
@@ -374,9 +371,9 @@ public abstract class GameObject implements Serializable {
    * @param col Collision data of the collision.
    */
   public void OnTriggerEnter(Collision col) {
-   // for (Component component : getComponents(ComponentType.BEHAVIOUR)) {
-  //    ((Behaviour) component).OnCollisionEnter(col);
-   // }
+    for (Component component : getComponents(ComponentType.BEHAVIOUR)) {
+      ((Behaviour) component).OnTriggerEnter(col);
+    }
   }
 
   /**
@@ -386,9 +383,9 @@ public abstract class GameObject implements Serializable {
    * @param col Collision data of the collision.
    */
   public void OnTriggerStay(Collision col) {
-  //  for (Component component : getComponents(ComponentType.BEHAVIOUR)) {
-  //    ((Behaviour) component).OnCollisionEnter(col);
-  //  }
+    for (Component component : getComponents(ComponentType.BEHAVIOUR)) {
+      ((Behaviour) component).OnTriggerStay(col);
+    }
   }
 
   /**
@@ -398,9 +395,9 @@ public abstract class GameObject implements Serializable {
    * @param col Collision data of the collision.
    */
   public void OnTriggerExit(Collision col) {
-  //  for (Component component : getComponents(ComponentType.BEHAVIOUR)) {
-  //    ((Behaviour) component).OnCollisionEnter(col);
-   // }
+    for (Component component : getComponents(ComponentType.BEHAVIOUR)) {
+      ((Behaviour) component).OnTriggerExit(col);
+    }
   }
 
   public void destroy() {

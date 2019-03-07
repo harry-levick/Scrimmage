@@ -70,12 +70,12 @@ public class Rigidbody extends Component implements Serializable {
     this.airDrag = airDrag;
     this.material = material;
     this.angularData = angularData;
-    if(this.angularData == null) {
-      this.angularData = new AngularData(parent.getTransform().getSize().magnitude(), 0.1f, 0, 10);
+    if (this.angularData == null) {
+      this.angularData = new AngularData(parent.getTransform().getSize().magnitude(), 0, 0, 0);
     }
     this.bodyType = bodyType;
     if (bodyType == RigidbodyType.STATIC) {
-      this.mass = Integer.MAX_VALUE/2;
+      this.mass = 0;
       this.inv_mass = 0;
     }
 
@@ -93,6 +93,7 @@ public class Rigidbody extends Component implements Serializable {
 
   /**
    * Create a static object with a certain bounciness
+   *
    * @param restitution Bounciness factor
    * @param parent GameObject this body is attached to
    */
@@ -100,9 +101,9 @@ public class Rigidbody extends Component implements Serializable {
     super(parent, ComponentType.RIGIDBODY);
 
     material = new MaterialProperty(restitution, 0.2f, 0.1f);
-    angularData = new AngularData(parent.getTransform().getSize().magnitude(), 0.1f, 0, 1000000);
+    angularData = new AngularData(parent.getTransform().getSize().magnitude(), 0, 0, 0);
     this.bodyType = RigidbodyType.STATIC;
-    this.mass = Integer.MAX_VALUE/2;
+    this.mass = Integer.MAX_VALUE;
     this.inv_mass = 0;
 
     collisions = new ArrayList<>();
@@ -118,9 +119,7 @@ public class Rigidbody extends Component implements Serializable {
   }
   // Update Methods
 
-  /**
-   * Called every physics frame, manages the velocity, forces, position, etc.
-   */
+  /** Called every physics frame, manages the velocity, forces, position, etc. */
   public void update() {
     if (bodyType == RigidbodyType.DYNAMIC) {
       applyCollisions();
@@ -177,8 +176,8 @@ public class Rigidbody extends Component implements Serializable {
   }
 
   /**
-   * Moves the Object a given distance in the X axis on the next update. The object may end up on another space
-   * due to external forces.
+   * Moves the Object a given distance in the X axis on the next update. The object may end up on
+   * another space due to external forces.
    *
    * @param distance The distance to the cover.
    */
@@ -187,8 +186,8 @@ public class Rigidbody extends Component implements Serializable {
   }
 
   /**
-   * Moves the Object a given distance in the X axis over a defined time. The object may end up on another space
-   * due to external forces.
+   * Moves the Object a given distance in the X axis over a defined time. The object may end up on
+   * another space due to external forces.
    *
    * @param distance The distance to the cover.
    * @param time The time it will take to reach the destination
@@ -198,19 +197,18 @@ public class Rigidbody extends Component implements Serializable {
   }
 
   /**
-   * Moves the Object a given distance in the Y axis on the next update. The object may end up on another space
-   * due to external forces.
+   * Moves the Object a given distance in the Y axis on the next update. The object may end up on
+   * another space due to external forces.
    *
    * @param distance The distance to the cover.
    */
-
   public void moveY(float distance) {
     move(new Vector2(0, distance));
   }
 
   /**
-   * Moves the Object a given distance in the Y axis over a defined time. The object may end up on another space
-   * due to external forces.
+   * Moves the Object a given distance in the Y axis over a defined time. The object may end up on
+   * another space due to external forces.
    *
    * @param distance The distance to the cover.
    * @param time The time it will take to reach the destination
@@ -221,9 +219,7 @@ public class Rigidbody extends Component implements Serializable {
 
   // Update Methods
 
-  /**
-   * An update method; all collision updates happen here
-   */
+  /** An update method; all collision updates happen here */
   private void applyCollisions() {}
 
   public void correctPosition(Vector2 distance) {
@@ -280,15 +276,15 @@ public class Rigidbody extends Component implements Serializable {
                 .add(acceleration.mult(0.5f).mult(Physics.TIMESTEP * Physics.TIMESTEP)));
     checkForLegalMovement();
 
-    angularVelocity += currentTorque*Physics.TIMESTEP*angularData.getInvInertia();
-    orientation += angularVelocity*Physics.TIMESTEP;
+    angularVelocity += currentTorque * Physics.TIMESTEP * angularData.getInvInertia();
+    orientation += angularVelocity * Physics.TIMESTEP;
     getParent().getTransform().translate(deltaPos);
-   // getParent().getTransform().setRot((float) Math.toDegrees(orientation));
+    // getParent().getTransform().setRot((float) Math.toDegrees(orientation));
     deltaPosUpdate = Vector2.Zero();
     deltaPos = Vector2.Zero();
   }
 
-  //TODO: Make it where this doesn't take you to a different universe
+  // TODO: Make it where this doesn't take you to a different universe
   private void checkForLegalMovement() {
     float percent = 0.8f;
     ArrayList<Collision> collisions =

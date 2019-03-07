@@ -46,20 +46,13 @@ public class Transform implements Serializable {
     gameObject = parent;
   }
 
-  /**
-   * Moves the attached gameObject to the desired position.
-   */
+  /** Moves the attached gameObject to the desired position. */
   public void translate(Vector2 translateFactor) {
     topPos = topPos.add(translateFactor);
     botPos = botPos.add(translateFactor);
-    for (GameObject child : gameObject.getChildren()) {
-        child.getTransform().translate(translateFactor);
-    }
   }
 
-  /**
-   * [Does not do anything currently]
-   */
+  /** [Does not do anything currently] */
   public void rotate(float rotation) {
     rot += rotation;
     if (rot > 180) {
@@ -70,12 +63,16 @@ public class Transform implements Serializable {
     }
     float angle = (float) Math.toRadians(rot);
     float posX = topPos.getX(), posY = topPos.getY();
-    this.rotatedPos = new Vector2(posX * Math.cos(angle) - posY * Math.sin(angle),
-        posX * Math.sin(angle) + posY * Math.cos(angle));
+    this.rotatedPos =
+        new Vector2(
+            posX * Math.cos(angle) - posY * Math.sin(angle),
+            posX * Math.sin(angle) + posY * Math.cos(angle));
     posX = size.getX();
     posY = size.getY();
-    this.rotatedSize = new Vector2(posX * Math.cos(angle) - posY * Math.sin(angle),
-        posX * Math.sin(angle) + posY * Math.cos(angle));
+    this.rotatedSize =
+        new Vector2(
+            posX * Math.cos(angle) - posY * Math.sin(angle),
+            posX * Math.sin(angle) + posY * Math.cos(angle));
   }
 
   /**
@@ -106,7 +103,7 @@ public class Transform implements Serializable {
     this.rot = rot;
     rotate(0);
     Component rb = gameObject.getComponent(ComponentType.RIGIDBODY);
-    if(rb != null) {
+    if (rb != null) {
       ((Rigidbody) rb).setOrientation((float) Math.toRadians(rot));
     }
   }
