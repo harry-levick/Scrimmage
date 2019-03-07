@@ -101,6 +101,9 @@ public class Client extends Application {
     if (credits) {
       endCredits();
     }
+    // todo check if ingame
+    // show/overlay settings
+
   }
 
   public static void showCredits() {
