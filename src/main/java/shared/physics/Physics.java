@@ -24,14 +24,15 @@ public class Physics {
   public static boolean showColliders = false;
   public static boolean showCasts = true;
   /*
-   * Order: DEFAULT, PLAYER, OBJECT, WALL, PARTICLE
+   * Order: DEFAULT, PLAYER, OBJECT, PLATFORM, PARTICLE, COLLECTABLE
    */
-  public static boolean[] DEFAULT = {true, true, true, true, false};
-  public static boolean[] PLAYER = {true, false, true, true, false};
-  public static boolean[] OBJECT = {true, true, true, true, false};
-  public static boolean[] WALL = {true, true, true, true, false};
-  public static boolean[] PARTICLES = {false, false, false, false, false};
-  public static boolean[][] COLLISION_LAYERS = {DEFAULT, PLAYER, OBJECT, WALL, PARTICLES};
+  public static boolean[] DEFAULT = {true, true, true, true, false, false};
+  public static boolean[] PLAYER = {true, false, true, true, false, false};
+  public static boolean[] OBJECT = {true, true, true, true, false, false};
+  public static boolean[] PLATFORM = {true, true, true, true, false, true};
+  public static boolean[] PARTICLES = {false, false, false, false, false, false};
+  public static boolean[] COLLECTABLE = {false, false, false, true, false, false};
+  public static boolean[][] COLLISION_LAYERS = {DEFAULT, PLAYER, OBJECT, PLATFORM, PARTICLES, COLLECTABLE};
   public static LinkedHashMap<UUID, GameObject> gameObjects;
   private static ArrayList<DynamicCollision> collisions = new ArrayList<>();
 

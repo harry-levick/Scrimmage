@@ -20,7 +20,6 @@ public class Rigidbody extends Component implements Serializable {
   private Vector2 deltaPosUpdate;
 
   private Vector2 velocity;
-  private Vector2 impactVelocity;
 
   private Vector2 currentForce;
   private Vector2 lastAcceleration;
@@ -38,6 +37,9 @@ public class Rigidbody extends Component implements Serializable {
   private float inv_mass;
   private float gravityScale;
   private float airDrag;
+  private float orientation;
+  private float angularVelocity;
+  private float currentTorque;
 
   private boolean grounded;
 
@@ -68,6 +70,9 @@ public class Rigidbody extends Component implements Serializable {
     this.airDrag = airDrag;
     this.material = material;
     this.angularData = angularData;
+    if(this.angularData == null) {
+      this.angularData = new AngularData(parent.getTransform().getSize().magnitude(), 0.1f, 0, 10);
+    }
     this.bodyType = bodyType;
     if (bodyType == RigidbodyType.STATIC) {
       this.mass = Integer.MAX_VALUE;
@@ -78,7 +83,6 @@ public class Rigidbody extends Component implements Serializable {
     forces = new ArrayList<>();
     forceTimes = new ArrayList<>();
 
-    impactVelocity = Vector2.Zero();
     velocity = Vector2.Zero();
     acceleration = Vector2.Zero();
     lastAcceleration = Vector2.Zero();
@@ -250,7 +254,11 @@ public class Rigidbody extends Component implements Serializable {
                 .mult(Physics.TIMESTEP)
                 .add(acceleration.mult(0.5f).mult(Physics.TIMESTEP * Physics.TIMESTEP)));
     checkForLegalMovement();
+
+    angularVelocity += currentTorque*Physics.TIMESTEP*angularData.getInvInertia();
+    orientation += angularVelocity*Physics.TIMESTEP;
     getParent().getTransform().translate(deltaPos);
+    getParent().getTransform().setRot((float) Math.toDegrees(orientation));
     deltaPosUpdate = Vector2.Zero();
     deltaPos = Vector2.Zero();
   }
@@ -335,6 +343,14 @@ public class Rigidbody extends Component implements Serializable {
 
   public void setAirDrag(float airDrag) {
     this.airDrag = airDrag;
+  }
+
+  public float getOrientation() {
+    return orientation;
+  }
+
+  public void setOrientation(float orientation) {
+    this.orientation = orientation;
   }
 
   public ArrayList<Collision> getCollisions() {

@@ -14,13 +14,7 @@ import shared.util.maths.Vector2;
  */
 public abstract class Collider extends Component implements Serializable {
 
-  boolean collisionEnter,
-      collisionExit,
-      collisionStay,
-      triggerEnter,
-      triggerExit,
-      triggerStay,
-      trigger;
+  boolean trigger;
   ColliderType colliderType;
   ColliderLayer layer;
 
@@ -77,8 +71,8 @@ public abstract class Collider extends Component implements Serializable {
   private static boolean boxBoxCollision(BoxCollider boxA, BoxCollider boxB) {
     if (boxA.getCorners()[0].getX() <= boxB.getCorners()[3].getX()
         && (boxA.getCorners()[3].getX() >= boxB.getCorners()[0].getX()
-        && (boxA.getCorners()[0].getY() <= boxB.getCorners()[1].getY()
-        && (boxA.getCorners()[1].getY() >= boxB.getCorners()[0].getY())))) {
+            && (boxA.getCorners()[0].getY() <= boxB.getCorners()[1].getY()
+                && (boxA.getCorners()[1].getY() >= boxB.getCorners()[0].getY())))) {
       return true;
     }
     return false;
@@ -132,10 +126,16 @@ public abstract class Collider extends Component implements Serializable {
       case EDGE:
         switch (colB.getColliderType()) {
           case BOX:
-            toRet = pointBoxCollision(((EdgeCollider) colA).findClosestPoint(((BoxCollider) colB).getCentre()), (BoxCollider) colB);
+            toRet =
+                pointBoxCollision(
+                    ((EdgeCollider) colA).findClosestPoint(((BoxCollider) colB).getCentre()),
+                    (BoxCollider) colB);
             break;
           case CIRCLE:
-            toRet = pointCircleCollision(((EdgeCollider) colA).findClosestPoint(((CircleCollider) colB).getCentre()), (CircleCollider) colB);
+            toRet =
+                pointCircleCollision(
+                    ((EdgeCollider) colA).findClosestPoint(((CircleCollider) colB).getCentre()),
+                    (CircleCollider) colB);
             break;
         }
         break;
@@ -147,42 +147,7 @@ public abstract class Collider extends Component implements Serializable {
     return colliderType;
   }
 
-  public void initialise(Group root) {
-  }
-
-  public void collision() {
-    if (trigger) {
-      if (!triggerStay) {
-        triggerEnter = triggerStay = true;
-        return;
-      }
-      triggerEnter = false;
-    } else {
-      if (!collisionStay) {
-        collisionEnter = collisionStay = true;
-        return;
-      }
-      collisionEnter = false;
-    }
-  }
-
-  public void noCollision() {
-    if (trigger) {
-      if (triggerStay) {
-        triggerExit = true;
-        triggerStay = false;
-        return;
-      }
-      collisionExit = true;
-    } else {
-      if (collisionStay) {
-        collisionExit = true;
-        collisionStay = false;
-        return;
-      }
-      collisionExit = true;
-    }
-  }
+  public void initialise(Group root) {}
 
   // Getters
 
@@ -190,28 +155,8 @@ public abstract class Collider extends Component implements Serializable {
     return layer;
   }
 
-  public boolean onCollisionEnter() {
-    return collisionEnter;
-  }
-
-  public boolean onCollisionExit() {
-    return collisionExit;
-  }
-
-  public boolean onCollisionStay() {
-    return collisionStay;
-  }
-
-  public boolean onTriggerEnter() {
-    return triggerEnter;
-  }
-
-  public boolean onTriggerExit() {
-    return triggerExit;
-  }
-
-  public boolean onTriggerStay() {
-    return triggerStay;
+  public void setLayer(ColliderLayer layer) {
+    this.layer = layer;
   }
 
   public boolean isTrigger() {

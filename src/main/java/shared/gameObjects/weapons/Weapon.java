@@ -10,6 +10,7 @@ import shared.gameObjects.players.Player;
 import shared.physics.data.AngularData;
 import shared.physics.data.Collision;
 import shared.physics.data.MaterialProperty;
+import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
 
 /**
@@ -36,7 +37,8 @@ public abstract class Weapon extends GameObject {
   protected int currentCooldown;
 
   // variables for when the holder is null
-  private BoxCollider bc;
+  private BoxCollider bcTrig;
+  private BoxCollider bcCol;
   private Rigidbody rb;
 
   /**
@@ -81,7 +83,8 @@ public abstract class Weapon extends GameObject {
 
     if (holder == null) {
       // add collider and rigidbody
-      bc = new BoxCollider(this, true);
+      bcTrig = new BoxCollider(this, ColliderLayer.DEFAULT, true);
+      bcCol = new BoxCollider(this, ColliderLayer.COLLECTABLE, false);
       rb = new Rigidbody(
           RigidbodyType.DYNAMIC,
           1f, // mass
@@ -90,7 +93,8 @@ public abstract class Weapon extends GameObject {
           new MaterialProperty(0.1f, 1, 1),
           new AngularData(0, 0, 0, 0),
           this); // TODO FIX
-      addComponent(bc);
+      addComponent(bcCol);
+      addComponent(bcTrig);
       addComponent(rb);
     }
 
@@ -132,12 +136,13 @@ public abstract class Weapon extends GameObject {
   }
 
   @Override
-  public void OnCollisionEnter(Collision col) {
+  public void OnTriggerEnter(Collision col) {
     GameObject g = col.getCollidedObject();
     if (g != null && g.getId() == ObjectType.Player && ((Player) g).getHolding() == null) {
       Player p = (Player) g;
       setHolder(p);
-      this.removeComponent(bc);
+      bcCol.setLayer(ColliderLayer.PARTICLE);
+      bcTrig.setLayer(ColliderLayer.PARTICLE);
       this.removeComponent(rb);
     }
   }

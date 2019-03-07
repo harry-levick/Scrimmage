@@ -25,7 +25,7 @@ public class WoodBlockLargeObject extends GameObject {
     addComponent(
         new Rigidbody(
             RigidbodyType.DYNAMIC,
-            200,
+            300,
             3,
             0,
             new MaterialProperty(0.55f, 1, 1),

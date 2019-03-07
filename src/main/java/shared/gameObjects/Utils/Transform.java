@@ -2,6 +2,9 @@ package shared.gameObjects.Utils;
 
 import java.io.Serializable;
 import shared.gameObjects.GameObject;
+import shared.gameObjects.components.Component;
+import shared.gameObjects.components.ComponentType;
+import shared.gameObjects.components.Rigidbody;
 import shared.util.maths.Vector2;
 
 public class Transform implements Serializable {
@@ -49,6 +52,9 @@ public class Transform implements Serializable {
   public void translate(Vector2 translateFactor) {
     topPos = topPos.add(translateFactor);
     botPos = botPos.add(translateFactor);
+    for (GameObject child : gameObject.getChildren()) {
+        child.getTransform().translate(translateFactor);
+    }
   }
 
   /**
@@ -99,6 +105,10 @@ public class Transform implements Serializable {
   public void setRot(float rot) {
     this.rot = rot;
     rotate(0);
+    Component rb = gameObject.getComponent(ComponentType.RIGIDBODY);
+    if(rb != null) {
+      ((Rigidbody) rb).setOrientation((float) Math.toRadians(rot));
+    }
   }
 
   public Vector2 getPos() {
