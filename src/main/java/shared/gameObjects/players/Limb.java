@@ -66,8 +66,9 @@ public abstract class Limb extends GameObject {
     this.levelHandler = levelHandler;
 
     //Physics
-    //bc = new BoxCollider(this, false);
-    //addComponent(bc);
+    bc = new BoxCollider(this, false);
+    addComponent(bc);
+
     rb =
         new Rigidbody(
             RigidbodyType.DYNAMIC, 80, 8, 0.2f, new MaterialProperty(0.005f, 0.1f, 0.05f), null,
