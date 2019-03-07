@@ -23,8 +23,12 @@ public enum FSA {
       int botHealth = StateInfo.botHealth;
 
       Vector2 botPos = bot.getTransform().getPos();
-      Collision rayCast = Physics.raycast(botPos,
-          targetPlayer.getTransform().getPos().sub(botPos), false);
+      Collision rayCast = Physics.raycastAi(botPos,
+          targetPlayer.getTransform()
+              .getPos().sub(botPos.add(targetPlayer.getTransform().getSize().mult(0.5f))),
+          null,
+          (Bot) bot,
+          true);
 
       boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
           .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
@@ -68,8 +72,13 @@ public enum FSA {
       int botHealth = StateInfo.botHealth;
 
       Vector2 botPos = bot.getTransform().getPos();
-      Collision rayCast = Physics.raycast(botPos,
-          targetPlayer.getTransform().getPos().sub(botPos), false);
+      Collision rayCast = Physics.raycastAi(botPos,
+          targetPlayer
+              .getTransform()
+              .getPos().sub(botPos.add(targetPlayer.getTransform().getSize().mult(0.5f))),
+          null,
+          (Bot) bot,
+          true);
 
       boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
           .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
@@ -113,8 +122,13 @@ public enum FSA {
       int botHealth = StateInfo.botHealth;
 
       Vector2 botPos = bot.getTransform().getPos();
-      Collision rayCast = Physics.raycast(botPos,
-          targetPlayer.getTransform().getPos().sub(botPos), false);
+      Collision rayCast = Physics.raycastAi(botPos,
+          targetPlayer
+              .getTransform()
+              .getPos().sub(botPos.add(targetPlayer.getTransform().getSize().mult(0.5f))),
+          null,
+          (Bot) bot,
+          true);
 
       boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
           .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
@@ -160,8 +174,13 @@ public enum FSA {
       int botHealth = StateInfo.botHealth;
 
       Vector2 botPos = bot.getTransform().getPos();
-      Collision rayCast = Physics.raycast(botPos,
-          targetPlayer.getTransform().getPos().sub(botPos), false);
+      Collision rayCast = Physics.raycastAi(botPos,
+          targetPlayer
+              .getTransform()
+              .getPos().sub(botPos.add(targetPlayer.getTransform().getSize().mult(0.5f))),
+          null,
+          (Bot) bot,
+          true);
 
       boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
           .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
@@ -216,8 +235,13 @@ public enum FSA {
       int botHealth = StateInfo.botHealth;
 
       Vector2 botPos = bot.getTransform().getPos();
-      Collision rayCast = Physics.raycast(botPos,
-          targetPlayer.getTransform().getPos().sub(botPos), false);
+      Collision rayCast = Physics.raycastAi(botPos,
+          targetPlayer
+              .getTransform()
+              .getPos().sub(botPos.add(targetPlayer.getTransform().getSize().mult(0.5f))),
+          null,
+          (Bot) bot,
+          true);
 
       boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
           .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
@@ -257,8 +281,13 @@ public enum FSA {
       int botHealth = StateInfo.botHealth;
 
       Vector2 botPos = bot.getTransform().getPos();
-      Collision rayCast = Physics.raycast(botPos,
-          targetPlayer.getTransform().getPos().sub(botPos), false);
+      Collision rayCast = Physics.raycastAi(botPos,
+          targetPlayer
+              .getTransform()
+              .getPos().sub(botPos.add(targetPlayer.getTransform().getSize().mult(0.5f))),
+          null,
+          (Bot) bot,
+          true);
 
       boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
           .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;

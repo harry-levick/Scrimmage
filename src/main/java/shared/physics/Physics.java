@@ -15,6 +15,7 @@ import shared.gameObjects.components.CircleCollider;
 import shared.gameObjects.components.Collider;
 import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.EdgeCollider;
+import shared.gameObjects.players.Limb;
 import shared.gameObjects.weapons.Weapon;
 import shared.physics.data.Collision;
 import shared.physics.data.DynamicCollision;
@@ -65,7 +66,7 @@ public class Physics {
           () -> {
             drawCast(castCollider.getNodes().get(0).getX(), castCollider.getNodes().get(0).getY(),
                 castCollider.getNodes().get(castCollider.getNodes().size() - 1).getX(),
-                castCollider.getNodes().get(castCollider.getNodes().size() - 1).getY());
+                castCollider.getNodes().get(castCollider.getNodes().size() - 1).getY(), true);
           }
       );
 
@@ -74,6 +75,7 @@ public class Physics {
     Iterator<GameObject> iter = gameObjects.values().iterator();
     while (iter.hasNext()) {
       GameObject object = iter.next();
+
       if (object.getComponent(ComponentType.COLLIDER) != null) {
         collision =
             new Collision(
@@ -102,7 +104,15 @@ public class Physics {
    * @return The first collider hit in the path, null if nothing was hit.
    */
   public static Collision raycastAi(Vector2 sourcePos, Vector2 lengthAndDirection,
-      ArrayList<GameObject> gameObjects, Bot bot, boolean showCollider) {
+      ArrayList<GameObject> objects, Bot bot, boolean showCollider) {
+
+    Iterator<GameObject> iter;
+    if (objects == null) {
+      iter = gameObjects.values().iterator();
+    } else {
+      iter = objects.iterator();
+    }
+
     EdgeCollider castCollider = new EdgeCollider(false);
     Collision collision = null;
     Vector2 incrementVal = lengthAndDirection.div(RAYCAST_INC);
@@ -115,15 +125,18 @@ public class Physics {
           () -> {
             drawCast(castCollider.getNodes().get(0).getX(), castCollider.getNodes().get(0).getY(),
                 castCollider.getNodes().get(castCollider.getNodes().size() - 1).getX(),
-                castCollider.getNodes().get(castCollider.getNodes().size() - 1).getY());
+                castCollider.getNodes().get(castCollider.getNodes().size() - 1).getY(), true);
           }
       );
 
     }
 
-    Iterator<GameObject> iter = gameObjects.iterator();
     while (iter.hasNext()) {
       GameObject object = iter.next();
+
+      if (object instanceof Limb)
+        continue;
+
       if (object.getComponent(ComponentType.COLLIDER) != null) {
         collision =
             new Collision(
@@ -148,14 +161,22 @@ public class Physics {
     */
   }
 
-  public static void drawCast(double xStart, double yStart, double xFinish, double yFinish) {
-    Line line = new Line();
-    line.setStartX(xStart);
-    line.setStartY(yStart);
-    line.setEndX(xFinish);
-    line.setEndY(yFinish);
-    line.setStyle("-fx-stroke-width: 4; -fx-stroke: #00FF00;");
-    Client.gameRoot.getChildren().add(line);
+  public static void drawCast(double xStart, double yStart, double xFinish, double yFinish,
+      boolean green) {
+    Platform.runLater(
+        () -> {
+          Line line = new Line();
+          line.setStartX(xStart);
+          line.setStartY(yStart);
+          line.setEndX(xFinish);
+          line.setEndY(yFinish);
+          if (green)
+            line.setStyle("-fx-stroke-width: 4; -fx-stroke: #00FF00;");
+          else
+            line.setStyle("-fx-stroke-width: 4; -fx-stroke: #ff0000;");
+          Client.gameRoot.getChildren().add(line);
+        }
+    );
   }
 
   /**
