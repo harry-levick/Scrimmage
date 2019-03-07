@@ -27,6 +27,7 @@ import shared.gameObjects.background.Background5;
 import shared.gameObjects.background.Background6;
 import shared.gameObjects.background.Background7;
 import shared.gameObjects.background.Background8;
+import shared.gameObjects.components.behaviours.MovingPlatform;
 import shared.gameObjects.menu.main.ButtonBack;
 import shared.gameObjects.menu.main.ButtonCredits;
 import shared.gameObjects.menu.main.ButtonMultiplayer;
@@ -105,6 +106,13 @@ public class LevelCreator extends Application {
             getAbs(20), getAbs(17), getAbs(8), getAbs(2), ObjectType.Button, UUID.randomUUID()));
     uuid = UUID.randomUUID();
 
+    //Moving Platform
+    GameObject object = new StoneFloorObject(
+        300, 300, getAbs(4), getAbs(1), ObjectType.Bot, uuid
+    );
+    object.addComponent(new MovingPlatform(object));
+    gameObjects.put(uuid, object);
+    uuid = UUID.randomUUID();
     //Middle platforms
     gameObjects.put(uuid,
         new StoneFloorObject(
