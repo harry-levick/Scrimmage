@@ -13,10 +13,12 @@ import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.Utils.TimePosition;
 import shared.gameObjects.Utils.Transform;
 import shared.gameObjects.animator.Animator;
+import shared.gameObjects.components.Behaviour;
 import shared.gameObjects.components.Collider;
 import shared.gameObjects.components.Component;
 import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.Rigidbody;
+import shared.gameObjects.players.Player;
 import shared.physics.Physics;
 import shared.physics.data.Collision;
 import shared.physics.data.DynamicCollision;
@@ -86,13 +88,11 @@ public abstract class GameObject implements Serializable {
   public void update() {
     networkStateUpdate = false;
     animation.update();
-    Collider col = (Collider) getComponent(ComponentType.COLLIDER);
-    Rigidbody rb = (Rigidbody) getComponent(ComponentType.RIGIDBODY);
-    if (rb != null) {
-      rb.update();
-    }
-    if (col != null) {
-      col.update();
+
+    for (Component comp : components) {
+        if(comp.isActive()) {
+          comp.update();
+        }
     }
     //If objects location has changed then send update if server
     if (!(lastPos.equals(getTransform().getPos()))) {
@@ -112,6 +112,9 @@ public abstract class GameObject implements Serializable {
   // Collision engine
   public void updateCollision() {
     ArrayList<Component> cols = getComponents(ComponentType.COLLIDER);
+    if(this instanceof Player) {
+      System.out.println(cols.size());
+    }
     Rigidbody rb = (Rigidbody) getComponent(ComponentType.RIGIDBODY);
     for (Component comp : cols) {
       Collider col = (Collider) comp;
@@ -337,6 +340,9 @@ public abstract class GameObject implements Serializable {
    * @param col Collision data of the collision.
    */
   public void OnCollisionEnter(Collision col) {
+    for (Component component : getComponents(ComponentType.BEHAVIOUR)) {
+      ((Behaviour) component).OnCollisionEnter(col);
+    }
   }
 
   /**
@@ -345,6 +351,9 @@ public abstract class GameObject implements Serializable {
    * @param col Collision data of the collision.
    */
   public void OnCollisionStay(Collision col) {
+    for (Component component : getComponents(ComponentType.BEHAVIOUR)) {
+      ((Behaviour) component).OnCollisionEnter(col);
+    }
   }
 
   /**
@@ -353,6 +362,9 @@ public abstract class GameObject implements Serializable {
    * @param col Collision data of the collision.
    */
   public void OnCollisionExit(Collision col) {
+    for (Component component : getComponents(ComponentType.BEHAVIOUR)) {
+      ((Behaviour) component).OnCollisionEnter(col);
+    }
   }
 
   /**
@@ -362,6 +374,9 @@ public abstract class GameObject implements Serializable {
    * @param col Collision data of the collision.
    */
   public void OnTriggerEnter(Collision col) {
+   // for (Component component : getComponents(ComponentType.BEHAVIOUR)) {
+  //    ((Behaviour) component).OnCollisionEnter(col);
+   // }
   }
 
   /**
@@ -371,6 +386,9 @@ public abstract class GameObject implements Serializable {
    * @param col Collision data of the collision.
    */
   public void OnTriggerStay(Collision col) {
+  //  for (Component component : getComponents(ComponentType.BEHAVIOUR)) {
+  //    ((Behaviour) component).OnCollisionEnter(col);
+  //  }
   }
 
   /**
@@ -380,6 +398,9 @@ public abstract class GameObject implements Serializable {
    * @param col Collision data of the collision.
    */
   public void OnTriggerExit(Collision col) {
+  //  for (Component component : getComponents(ComponentType.BEHAVIOUR)) {
+  //    ((Behaviour) component).OnCollisionEnter(col);
+   // }
   }
 
   public void destroy() {
@@ -433,7 +454,7 @@ public abstract class GameObject implements Serializable {
     return children;
   }
 
-  public List<Component> getComponents() {
+  public ArrayList<Component> getComponents() {
     return components;
   }
 

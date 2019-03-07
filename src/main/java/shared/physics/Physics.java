@@ -18,10 +18,10 @@ import shared.util.maths.Vector2;
 /** @author fxa579 The singleton class respomsible for raycasting and physics constants/equations */
 public class Physics {
 
-  public static final float GRAVITY = 100f;
+  public static final float GRAVITY = 90f;
   public static final float TIMESTEP = 1f / 60;
   public static final int RAYCAST_INC = 100;
-  public static boolean showColliders = false;
+  public static boolean showColliders = true;
   public static boolean showCasts = true;
   /*
    * Order: DEFAULT, PLAYER, OBJECT, PLATFORM, PARTICLE, COLLECTABLE

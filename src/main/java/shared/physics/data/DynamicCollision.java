@@ -192,8 +192,8 @@ public class DynamicCollision {
   }
 
   private Vector2 positionCorrection() {
-    float percent = 0.6f;
-    float slop = 0.03f;
+    float percent = 0.8f;
+    float slop = 0.05f;
 
     Vector2 correction =
         collisionNormal.mult(
