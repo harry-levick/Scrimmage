@@ -4,10 +4,15 @@ import client.handlers.audioHandler.AudioHandler;
 import client.handlers.audioHandler.MusicAssets.PLAYLIST;
 import client.main.Client;
 import client.main.Settings;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.UUID;
 import javafx.scene.Group;
+import server.Server;
 import server.ai.Bot;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.MapDataObject;
@@ -30,15 +35,18 @@ public class LevelHandler {
   private GameState gameState;
   private Map map;
   private Map previousMap;
-  private Group root;
   private Group backgroundRoot;
   private Group gameRoot;
   private Background background;
   private AudioHandler musicPlayer;
   private Settings settings;
   private ArrayList<GameObject> toCreate;
+  private boolean isServer;
+  private Server server;
+  private ByteArrayOutputStream byteArrayOutputStream;
+  private ObjectOutput objectOutput;
 
-  public LevelHandler(Settings settings, Group root, Group backgroundRoot, Group gameRoot) {
+  public LevelHandler(Settings settings, Group backgroundRoot, Group gameRoot) {
     this.settings = settings;
     gameObjects = new LinkedHashMap<>();
     toCreate = new ArrayList<>();
@@ -46,29 +54,31 @@ public class LevelHandler {
     players = new LinkedHashMap<>();
     bots = new LinkedHashMap<>();
     maps = MapLoader.getMaps(settings.getMapsPath());
-    this.root = root;
     this.backgroundRoot = backgroundRoot;
     this.gameRoot = gameRoot;
+    this.isServer = false;
     musicPlayer = new AudioHandler(settings, Client.musicActive);
     changeMap(new Map("main_menu.map", Path.convert("src/main/resources/menus/main_menu.map"),
         GameState.MAIN_MENU), true);
     previousMap = null;
   }
 
-  public LevelHandler(Settings settings, Group root, Group backgroundRoot, Group gameRoot,
-      boolean server) {
-    this.root = root;
-    this.backgroundRoot = backgroundRoot;
-    this.gameRoot = gameRoot;
+  public LevelHandler(Settings settings, Group backgroundRoot, Group gameRoot, Server server) {
     this.settings = settings;
+    this.isServer = true;
     gameObjects = new LinkedHashMap<>();
+    toCreate = new ArrayList<>();
     toRemove = new ArrayList<>();
     players = new LinkedHashMap<>();
     bots = new LinkedHashMap<>();
-    toCreate = new ArrayList<>();
+    maps = MapLoader.getMaps(settings.getMapsPath());
+    this.backgroundRoot = backgroundRoot;
+    this.gameRoot = gameRoot;
+    this.server = server;
     musicPlayer = new AudioHandler(settings, Client.musicActive);
     changeMap(new Map("Lobby", Path.convert("src/main/resources/menus/lobby.map"), GameState.Lobby),
         false);
+    previousMap = null;
   }
 
   public void changeMap(Map map, Boolean moveToSpawns) {
@@ -120,12 +130,13 @@ public class LevelHandler {
 
           } else {
             gameObject.initialise(gameGroup);
+            if (isServer) {
+              sendNewGameObject(gameObject);
+            }
           }
         });
     gameObjects.putAll(players);
-    gameObjects.forEach((key, gameObject) -> {
-      gameObject.setSettings(settings);
-    });
+    gameObjects.forEach((key, gameObject) -> gameObject.setSettings(settings));
     gameState = map.getGameState();
     players.forEach((key, player) -> player.reset());
 
@@ -144,6 +155,28 @@ public class LevelHandler {
 
     }
     System.gc();
+  }
+
+  public void sendNewGameObject(GameObject gameObject) {
+    byteArrayOutputStream = new ByteArrayOutputStream();
+    objectOutput = null;
+    try {
+      byte[] packetID = "19,".getBytes();
+      byteArrayOutputStream.write(packetID);
+      objectOutput = new ObjectOutputStream(byteArrayOutputStream);
+      objectOutput.writeObject(gameObject);
+      objectOutput.flush();
+      byte[] objectBytes = byteArrayOutputStream.toByteArray();
+      server.sendToClients(objectBytes);
+    } catch (IOException e) {
+      System.out.println("Error Writing");
+    } finally {
+      try {
+        byteArrayOutputStream.close();
+      } catch (IOException ex) {
+        System.out.println("Error Writing");
+      }
+    }
   }
 
   /**
@@ -168,6 +201,9 @@ public class LevelHandler {
   public void addGameObject(GameObject gameObject) {
     gameObject.initialise(this.gameRoot);
     this.toCreate.add(gameObject);
+    if (isServer) {
+      sendNewGameObject(gameObject);
+    }
   }
 
   public void addGameObject(ArrayList<GameObject> gameObjects) {
