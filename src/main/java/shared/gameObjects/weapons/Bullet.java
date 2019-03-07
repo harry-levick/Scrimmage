@@ -26,15 +26,16 @@ public abstract class Bullet extends GameObject {
   private double PI = 3.141592654;
 
   public boolean isHit; // true if there is an object at that position
+  protected BoxCollider bc;
   protected Rigidbody rb;
   private double width; // width of bullet
   private double speed; // speed of bullet
   private Vector2 vector; // Vector of the force of bullet fire
   private int damage; // Damage of this bullet
-  private Player holder; // Holder of the gun that fired this bullet
+  protected Player holder; // Holder of the gun that fired this bullet
   private Rotate rotate;
-  private Component holderBoxCollider;  // the BoxCollider of the holder
-  private boolean hitHolder;    // true if it hit the holder (For OnCollisionExit)
+  protected Component holderBoxCollider;  // the BoxCollider of the holder
+  protected boolean hitHolder;    // true if it hit the holder (For OnCollisionExit)
 
   public Bullet(
       double gunX, // gun initial x position
@@ -57,7 +58,7 @@ public abstract class Bullet extends GameObject {
     // Unit vector of the bullet force
     vector = new Vector2((float) (mouseX - gunX), (float) (mouseY - gunY));
     vector = vector.div((float) Math.sqrt(vector.dot(vector)));
-    addComponent(new BoxCollider(this, ColliderLayer.DEFAULT, false));
+    bc = new BoxCollider(this, ColliderLayer.DEFAULT, false);
     rb =
         new Rigidbody(
             RigidbodyType.DYNAMIC,
@@ -67,6 +68,7 @@ public abstract class Bullet extends GameObject {
             new MaterialProperty(0.1f, 1, 1),
             new AngularData(0, 0, 0, 0),
             this); // TODO FIX
+    addComponent(bc);
     addComponent(rb);
 
     // Rotate property of the image
@@ -126,8 +128,9 @@ public abstract class Bullet extends GameObject {
 
   @Override
   public void OnCollisionStay(Collision col) {
-    if (hitHolder)
+    if (hitHolder) {
       removeComponent(holderBoxCollider);
+    }
   }
 
   @Override
