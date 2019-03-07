@@ -7,6 +7,8 @@ import client.main.Settings;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import javafx.scene.Group;
 import server.ai.Bot;
 import shared.gameObjects.GameObject;
@@ -22,8 +24,8 @@ import shared.util.maths.Vector2;
 
 public class LevelHandler {
 
-  private LinkedHashMap<UUID, GameObject> gameObjects;
-  private ArrayList<GameObject> toRemove;
+  private ConcurrentSkipListMap<UUID, GameObject> gameObjects;
+  private CopyOnWriteArrayList<GameObject> toRemove;
   private LinkedHashMap<UUID, Player> players;
   private LinkedHashMap<UUID, Bot> bots;
   private Player clientPlayer;
@@ -41,9 +43,9 @@ public class LevelHandler {
 
   public LevelHandler(Settings settings, Group root, Group backgroundRoot, Group gameRoot) {
     this.settings = settings;
-    gameObjects = new LinkedHashMap<>();
+    gameObjects = new ConcurrentSkipListMap<>();
     toCreate = new ArrayList<>();
-    toRemove = new ArrayList<>();
+    toRemove = new CopyOnWriteArrayList<>();
     players = new LinkedHashMap<>();
     bots = new LinkedHashMap<>();
     maps = MapLoader.getMaps(settings.getMapsPath());
@@ -62,8 +64,8 @@ public class LevelHandler {
     this.backgroundRoot = backgroundRoot;
     this.gameRoot = gameRoot;
     this.settings = settings;
-    gameObjects = new LinkedHashMap<>();
-    toRemove = new ArrayList<>();
+    gameObjects = new ConcurrentSkipListMap<>();
+    toRemove = new CopyOnWriteArrayList<>();
     players = new LinkedHashMap<>();
     bots = new LinkedHashMap<>();
     toCreate = new ArrayList<>();
@@ -152,7 +154,7 @@ public class LevelHandler {
    *
    * @return All Game Objects
    */
-  public LinkedHashMap<UUID, GameObject> getGameObjects() {
+  public ConcurrentSkipListMap<UUID, GameObject> getGameObjects() {
     clearToRemove(); // Remove every gameObjects we no longer need
     return gameObjects;
   }
