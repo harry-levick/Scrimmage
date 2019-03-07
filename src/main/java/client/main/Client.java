@@ -97,6 +97,9 @@ public class Client extends Application {
     launch(args);
   }
 
+  public static void settingsToggle() {
+  }
+
   public static void showCredits() {
     credits = true;
     ArrayList<String> lines = new ArrayList<String>();
