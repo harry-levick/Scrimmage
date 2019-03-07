@@ -105,12 +105,9 @@ public class Client extends Application {
   }
 
   public static void settingsToggle() {
-    if (credits) {
-      endCredits();
-    }
     // todo check if ingame
     // show/overlay settings
-    if (settingsOverlay == false) {
+    if (settingsOverlay == false && credits == false) {
       settingsOverlay = true;
       //add screen saturation
 
@@ -147,6 +144,10 @@ public class Client extends Application {
       settingsOverlay = false;
       creditsRoot.getChildren().clear();
       settingsObjects.clear();
+    }
+
+    if (credits) {
+      endCredits();
     }
   }
 
