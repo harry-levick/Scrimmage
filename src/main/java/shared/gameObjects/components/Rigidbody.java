@@ -20,7 +20,6 @@ public class Rigidbody extends Component implements Serializable {
   private Vector2 deltaPosUpdate;
 
   private Vector2 velocity;
-  private Vector2 impactVelocity;
 
   private Vector2 currentForce;
   private Vector2 lastAcceleration;
@@ -38,6 +37,9 @@ public class Rigidbody extends Component implements Serializable {
   private float inv_mass;
   private float gravityScale;
   private float airDrag;
+  private float orientation;
+  private float angularVelocity;
+  private float currentTorque;
 
   private boolean grounded;
 
@@ -68,9 +70,12 @@ public class Rigidbody extends Component implements Serializable {
     this.airDrag = airDrag;
     this.material = material;
     this.angularData = angularData;
+    if (this.angularData == null) {
+      this.angularData = new AngularData(parent.getTransform().getSize().magnitude(), 0, 0, 0);
+    }
     this.bodyType = bodyType;
     if (bodyType == RigidbodyType.STATIC) {
-      this.mass = Integer.MAX_VALUE;
+      this.mass = 0;
       this.inv_mass = 0;
     }
 
@@ -78,7 +83,6 @@ public class Rigidbody extends Component implements Serializable {
     forces = new ArrayList<>();
     forceTimes = new ArrayList<>();
 
-    impactVelocity = Vector2.Zero();
     velocity = Vector2.Zero();
     acceleration = Vector2.Zero();
     lastAcceleration = Vector2.Zero();
@@ -87,11 +91,35 @@ public class Rigidbody extends Component implements Serializable {
     currentForce = acceleration.mult(mass);
   }
 
+  /**
+   * Create a static object with a certain bounciness
+   *
+   * @param restitution Bounciness factor
+   * @param parent GameObject this body is attached to
+   */
+  public Rigidbody(float restitution, GameObject parent) {
+    super(parent, ComponentType.RIGIDBODY);
+
+    material = new MaterialProperty(restitution, 0.2f, 0.1f);
+    angularData = new AngularData(parent.getTransform().getSize().magnitude(), 0, 0, 0);
+    this.bodyType = RigidbodyType.STATIC;
+    this.mass = Integer.MAX_VALUE;
+    this.inv_mass = 0;
+
+    collisions = new ArrayList<>();
+    forces = new ArrayList<>();
+    forceTimes = new ArrayList<>();
+
+    velocity = Vector2.Zero();
+    acceleration = Vector2.Zero();
+    lastAcceleration = Vector2.Zero();
+    deltaPos = Vector2.Zero();
+    deltaPosUpdate = Vector2.Zero();
+    currentForce = acceleration.mult(mass);
+  }
   // Update Methods
 
-  /**
-   * Called every physics frame, manages the velocity, forces, position, etc.
-   */
+  /** Called every physics frame, manages the velocity, forces, position, etc. */
   public void update() {
     if (bodyType == RigidbodyType.DYNAMIC) {
       applyCollisions();
@@ -148,8 +176,8 @@ public class Rigidbody extends Component implements Serializable {
   }
 
   /**
-   * Moves the Object a given distance in the X axis on the next update. The object may end up on another space
-   * due to external forces.
+   * Moves the Object a given distance in the X axis on the next update. The object may end up on
+   * another space due to external forces.
    *
    * @param distance The distance to the cover.
    */
@@ -158,8 +186,8 @@ public class Rigidbody extends Component implements Serializable {
   }
 
   /**
-   * Moves the Object a given distance in the X axis over a defined time. The object may end up on another space
-   * due to external forces.
+   * Moves the Object a given distance in the X axis over a defined time. The object may end up on
+   * another space due to external forces.
    *
    * @param distance The distance to the cover.
    * @param time The time it will take to reach the destination
@@ -169,19 +197,18 @@ public class Rigidbody extends Component implements Serializable {
   }
 
   /**
-   * Moves the Object a given distance in the Y axis on the next update. The object may end up on another space
-   * due to external forces.
+   * Moves the Object a given distance in the Y axis on the next update. The object may end up on
+   * another space due to external forces.
    *
    * @param distance The distance to the cover.
    */
-
   public void moveY(float distance) {
     move(new Vector2(0, distance));
   }
 
   /**
-   * Moves the Object a given distance in the Y axis over a defined time. The object may end up on another space
-   * due to external forces.
+   * Moves the Object a given distance in the Y axis over a defined time. The object may end up on
+   * another space due to external forces.
    *
    * @param distance The distance to the cover.
    * @param time The time it will take to reach the destination
@@ -192,9 +219,7 @@ public class Rigidbody extends Component implements Serializable {
 
   // Update Methods
 
-  /**
-   * An update method; all collision updates happen here
-   */
+  /** An update method; all collision updates happen here */
   private void applyCollisions() {}
 
   public void correctPosition(Vector2 distance) {
@@ -250,12 +275,16 @@ public class Rigidbody extends Component implements Serializable {
                 .mult(Physics.TIMESTEP)
                 .add(acceleration.mult(0.5f).mult(Physics.TIMESTEP * Physics.TIMESTEP)));
     checkForLegalMovement();
+
+    angularVelocity += currentTorque * Physics.TIMESTEP * angularData.getInvInertia();
+    orientation += angularVelocity * Physics.TIMESTEP;
     getParent().getTransform().translate(deltaPos);
+    // getParent().getTransform().setRot((float) Math.toDegrees(orientation));
     deltaPosUpdate = Vector2.Zero();
     deltaPos = Vector2.Zero();
   }
 
-  //TODO: Make it where this doesn't take you to a different universe
+  // TODO: Make it where this doesn't take you to a different universe
   private void checkForLegalMovement() {
     float percent = 0.8f;
     ArrayList<Collision> collisions =
@@ -335,6 +364,14 @@ public class Rigidbody extends Component implements Serializable {
 
   public void setAirDrag(float airDrag) {
     this.airDrag = airDrag;
+  }
+
+  public float getOrientation() {
+    return orientation;
+  }
+
+  public void setOrientation(float orientation) {
+    this.orientation = orientation;
   }
 
   public ArrayList<Collision> getCollisions() {
