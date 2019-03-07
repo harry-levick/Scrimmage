@@ -107,7 +107,8 @@ public class Client extends Application {
   public static void settingsToggle() {
     // todo check if ingame
     // show/overlay settings
-    if (settingsOverlay == false && credits == false) {
+    System.out.println(levelHandler.getMap().getGameState() + levelHandler.getMap().getName());
+    if (settingsOverlay == false && levelHandler.getMap().getGameState() != GameState.SETTINGS) {
       settingsOverlay = true;
       //add screen saturation
 
@@ -140,6 +141,7 @@ public class Client extends Application {
               settings.getGrisPos(1), SOUND_TYPE.SFX,
               "Sound Effects", ObjectType.Button, UUID.randomUUID()));
       settingsObjects.forEach(slider -> slider.initialise(creditsRoot));
+      settingsObjects.forEach(slider -> slider.initialiseAnimation());
     } else {
       settingsOverlay = false;
       creditsRoot.getChildren().clear();
