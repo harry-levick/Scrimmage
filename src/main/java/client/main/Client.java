@@ -84,7 +84,7 @@ public class Client extends Application {
   private int framesElapsedSinceFPS = 0;
   private UI userInterface;
   private static boolean credits = false;
-  private int creditStartDelay = 100;
+  private static int creditStartDelay = 100;
   private boolean gameOver;
 
   //Networking
@@ -98,6 +98,9 @@ public class Client extends Application {
   }
 
   public static void settingsToggle() {
+    if (credits) {
+      endCredits();
+    }
   }
 
   public static void showCredits() {
@@ -219,6 +222,15 @@ public class Client extends Application {
             Path.convert(settings.getMenuPath() + File.separator + "main_menu.map"),
             GameState.MAIN_MENU),
         false);
+  }
+
+  public static void endCredits() {
+    credits = false;
+    creditStartDelay = 100; //todo magic number
+    creditsRoot.getChildren().clear(); // deletes all children, removing all credit texts
+    creditsBackground.getChildren().clear();
+    levelHandler.getMusicAudioHandler()
+        .playMusicPlaylist(PLAYLIST.MENU); //assume always return to menu map from credits
   }
 
   @Override
@@ -398,12 +410,7 @@ public class Client extends Application {
               maxY = Math.max(maxY, (int) node.getLayoutY());
             }
             if (maxY < -100) { //-100 for some buffer
-              credits = false;
-              creditStartDelay = 100; //todo magic number
-              creditsRoot.getChildren().clear(); // deletes all children, removing all credit texts
-              creditsBackground.getChildren().clear();
-              levelHandler.getMusicAudioHandler()
-                  .playMusicPlaylist(PLAYLIST.MENU); //assume always return to menu map from credits
+              endCredits();
             }
           }
         }
