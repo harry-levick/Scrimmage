@@ -23,7 +23,12 @@ public enum ColliderLayer {
   /**
    * Used exclusively by the particle system; do not use this unless you know what you are doing
    */
-  PARTICLE(4);
+  PARTICLE(4),
+  /**
+   *
+   * Used for the contact collider for collectables so that they don't phase through the floor. Use default for the trigger.
+   */
+  COLLECTABLE(5);
 
   int id;
 

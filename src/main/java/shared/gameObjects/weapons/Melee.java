@@ -50,17 +50,6 @@ public abstract class Melee extends Weapon {
     this.attacking = false;
     this.currentAngleIndex = 0;
 
-    addComponent(new CircleCollider(this, ColliderLayer.PLAYER, (float) range, false));
-    rb =
-        new Rigidbody(
-            RigidbodyType.STATIC,
-            50f,
-            0,
-            0.1f,
-            new MaterialProperty(0, 1, 1),
-            new AngularData(0, 0, 0, 0),
-            this); // TODO FIX
-    addComponent(rb);
   }
 
   @Override

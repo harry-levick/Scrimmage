@@ -17,10 +17,12 @@ import shared.gameObjects.weapons.MachineGun;
 import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.weapons.Weapon;
 import shared.handlers.levelHandler.LevelHandler;
+import shared.physics.Physics;
 import shared.physics.data.Collision;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
+import shared.util.maths.Vector2;
 
 public class Player extends GameObject {
 
@@ -74,8 +76,8 @@ public class Player extends GameObject {
     this.behaviour = Behaviour.IDLE;
     this.bc = new BoxCollider(this, ColliderLayer.PLAYER, false);
     //  this.cc = new CircleCollider(this, ColliderLayer.PLAYER, transform.getSize().magnitude()*0.5f, false);
-    this.rb = new Rigidbody(RigidbodyType.DYNAMIC, 90, 12, 0.2f,
-        new MaterialProperty(0.005f, 0.1f, 0.05f), null, this);
+    this.rb = new Rigidbody(RigidbodyType.DYNAMIC, 90, 11.67f, 0.2f,
+        new MaterialProperty(0f, 0.1f, 0.05f), null, this);
     //  addComponent(cc);
     addComponent(bc);
     addComponent(rb);
@@ -117,6 +119,11 @@ public class Player extends GameObject {
 
   @Override
   public void update() {
+    /** STRESS TEST
+    for (int i = 0; i < 1000; i++) {
+      Physics.raycast(getTransform().getPos(), Vector2.Up().mult(200));
+    }
+     */
     checkGrounded(); // Checks if the player is grounded
     // System.out.println(rb.getVelocity());
     badWeapon();
