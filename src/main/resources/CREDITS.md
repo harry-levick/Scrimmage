@@ -58,29 +58,7 @@ Licensed under Creative Commons: Public Domain
 
 **by veernavya on Vecteezy**
 
-https://www.vecteezy.com/vector-art/160141
-
-https://www.vecteezy.com/vector-art/160142
-
-https://www.vecteezy.com/vector-art/160143
-
-https://www.vecteezy.com/vector-art/160144
-
-https://www.vecteezy.com/vector-art/182944
-
-https://www.vecteezy.com/vector-art/182945
-
-https://www.vecteezy.com/vector-art/182946
-
-https://www.vecteezy.com/vector-art/153590
-
-https://www.vecteezy.com/vector-art/90271
-
-https://www.vecteezy.com/vector-art/168294
-
-https://www.vecteezy.com/vector-art/168292
-
-https://www.vecteezy.com/vector-art/111757
+https://www.vecteezy.com/
 
 Licensed Under Vecteezy Free License
 
@@ -163,3 +141,9 @@ http://creativecommons.org/licenses/by/3.0/
 **Thank you for playing**
 
 **:)**
+
+<br>
+
+<br>
+
+## © 2019
