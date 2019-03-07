@@ -8,6 +8,7 @@ import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import de.codecentric.centerdevice.javafxsvg.dimension.PrimitiveDimensionProvider;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -27,6 +28,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -38,7 +40,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.UI.UI;
+import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.Utils.TimePosition;
+import shared.gameObjects.menu.main.SoundSlider;
+import shared.gameObjects.menu.main.SoundSlider.SOUND_TYPE;
 import shared.gameObjects.players.Limbs.Arm;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.MachineGun;
@@ -86,6 +91,8 @@ public class Client extends Application {
   private static boolean credits = false;
   private static int creditStartDelay = 100;
   private boolean gameOver;
+  private static boolean settingsOverlay = false;
+  private static ArrayList<GameObject> settingsObjects = new ArrayList<>();
 
   //Networking
   private final boolean prediction = false; //Broken
@@ -103,7 +110,44 @@ public class Client extends Application {
     }
     // todo check if ingame
     // show/overlay settings
+    if (settingsOverlay == false) {
+      settingsOverlay = true;
+      //add screen saturation
 
+      //background
+      try {
+        Image popupBackground = new Image(new FileInputStream(
+            settings.getResourcesPath() + File.separator + "images" + File.separator + "ui"
+                + File.separator + "panel.png"));
+        ImageView iv = new ImageView(popupBackground);
+        iv.setX(settings.getGrisPos(18));
+        iv.setY(settings.getGrisPos(5));
+        iv.setFitWidth(settings.getGrisPos(12));
+        iv.setFitHeight(settings.getGrisPos(7));
+        creditsRoot.getChildren().add(iv);
+      } catch (FileNotFoundException e) {
+        Rectangle rect = new Rectangle();
+        rect.setX(settings.getGrisPos(18));
+        rect.setY(settings.getGrisPos(5));
+        rect.setWidth(settings.getGrisPos(12));
+        rect.setHeight(settings.getGrisPos(7));
+        creditsRoot.getChildren().add(rect);
+      }
+      //add sliders
+      settingsObjects.add(
+          new SoundSlider(settings.getGrisPos(20), settings.getGrisPos(7), settings.getGrisPos(8),
+              settings.getGrisPos(1), SOUND_TYPE.MUSIC,
+              "Music", ObjectType.Button, UUID.randomUUID()));
+      settingsObjects.add(
+          new SoundSlider(settings.getGrisPos(20), settings.getGrisPos(9), settings.getGrisPos(8),
+              settings.getGrisPos(1), SOUND_TYPE.SFX,
+              "Sound Effects", ObjectType.Button, UUID.randomUUID()));
+      settingsObjects.forEach(slider -> slider.initialise(creditsRoot));
+    } else {
+      settingsOverlay = false;
+      creditsRoot.getChildren().clear();
+      settingsObjects.clear();
+    }
   }
 
   public static void showCredits() {

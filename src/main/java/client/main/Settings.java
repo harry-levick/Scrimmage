@@ -32,6 +32,7 @@ public class Settings {
   private String fontPath;
   private int defaultFontSize;
   private Font font;
+  private int gridSize;
 
   /**
    * Default Constructor Music volume set to 100 and sound effects to 75
@@ -46,6 +47,7 @@ public class Settings {
     mapHeight = 1080;
     maxPlayers = 4;
     defaultFontSize = 20;
+    gridSize = 40;
 
     resourcesPath = "src" + s + "main" + s + "resources";
     mapsPath = resourcesPath + s + "maps";
@@ -57,6 +59,10 @@ public class Settings {
 
   public String getResourcesPath() {
     return resourcesPath;
+  }
+
+  public int getGrisPos(int gridPos) {
+    return gridPos * gridSize;
   }
 
   public String getMapsPath() {
