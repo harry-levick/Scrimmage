@@ -52,6 +52,7 @@ public class AStar {
   // The enemy that we are path-finding to.
   double enemyX;
   double enemyY;
+  Vector2 enemySize;
   // The bot that the path-finding is concerned with.
   Bot bot;
   Bot replicaBot; // clone of the bot to be used by search nodes
@@ -68,8 +69,6 @@ public class AStar {
     double remainingDistance = 0;
     // The parent node
     SearchNode parentNode;
-    // The list of game objects in this scene
-    ArrayList<GameObject> sceneSnapshot;
     // The bot that the path-finding is concerned with.
     double botX;
     double botY;
@@ -79,11 +78,6 @@ public class AStar {
     boolean[] action;
 
     public SearchNode(boolean[] action, SearchNode parent) {
-      // Instantiate the sceneSnapshot with the world scene so that it is large enough to take
-      // the copy of the world scene on the next line.
-      sceneSnapshot = new ArrayList<>(worldScene);
-      // Take a copy of the current world state
-      Collections.copy(sceneSnapshot, worldScene);
       this.parentNode = parent;
       if (parentNode != null) {
         //this.nodeBot = new Bot(parent.nodeBot);
@@ -104,7 +98,7 @@ public class AStar {
 
         double distChange = thisPos.exactMagnitude(parentPos);
         // Calculate the heuristic value of the node.
-        this.remainingDistance = calcRemainingH(getItems(sceneSnapshot));
+        this.remainingDistance = calcRemainingH(getItems(worldScene));
         // Calculate the distance from the starting node to the current node
         distanceElapsed = parent.distanceElapsed + distChange;
       } else {
@@ -134,7 +128,7 @@ public class AStar {
          */
 
         // Calculate the heuristic value of the node.
-        this.remainingDistance = calcRemainingH(getItems(sceneSnapshot));
+        this.remainingDistance = calcRemainingH(getItems(worldScene));
       }
 
       this.action = action;
@@ -330,10 +324,10 @@ public class AStar {
     double dist = botPos.exactMagnitude(enemyPos);
     Melee tempMelee;
 
-    Vector2 v = botPos.sub(enemyPos);
-    Vector2 v2 = enemyPos.sub(botPos);
-
-    Collision rayCast = Physics.raycast(botPos, enemyPos.sub(botPos));
+    // Use the worldScene of the path finding to raycast, instead of the actual gameObjects list.
+    Collision rayCast = Physics.raycastAi(botPos.add(bot.getTransform().getSize().mult(0.5f)),
+        enemyPos.sub(botPos.add(enemySize.mult(0.5f))),
+        worldScene, bot,false);
 
     // If the cast is null or returns a Static RigidBody
     boolean inSight = rayCast == null || (((Rigidbody) rayCast.getCollidedObject()
@@ -420,18 +414,6 @@ public class AStar {
   }
 
   /**
-   * Make a clone of the current world state (copying the bots state, all enemies, and some level
-   * info).
-   *
-   * @return The clone state.
-   */
-  public ArrayList<GameObject> backupState() {
-    ArrayList<GameObject> sceneCopy = (ArrayList<GameObject>) worldScene.clone();
-
-    return sceneCopy;
-  }
-
-  /**
    * Initialise the planner
    */
   private void initSearch(Player enemy) {
@@ -440,7 +422,6 @@ public class AStar {
     // Take the game objects from the level handler on each search
     this.worldScene = new ArrayList<>(this.levelHandler.getGameObjects().values());
     SearchNode startPosition = new SearchNode(null, null);
-    startPosition.sceneSnapshot = backupState();
 
     openList = new ArrayList<SearchNode>();
     closedList = new ArrayList<SearchNode>();
@@ -466,6 +447,7 @@ public class AStar {
 
     enemyX = enemy.getX();
     enemyY = enemy.getY();
+    enemySize = enemy.getTransform().getSize();
   }
 
   private ArrayList<boolean[]> createPossibleActions(SearchNode currentPos) {
@@ -475,23 +457,19 @@ public class AStar {
     nodeBot.setX(currentPos.botX);
     nodeBot.setY(currentPos.botY);
     boolean left = false, right = false;
-
     ArrayList<boolean[]> possibleActions = new ArrayList<>();
-
-    // Vector2 botPosition = this.bot.getTransform().getPos(); <- not taking an updated position
-    // in the theory of the search
-    Vector2 botPosition = new Vector2((float) currentPos.botX,
-        (float) currentPos.botY);
+    Vector2 botPosition = new Vector2((float) currentPos.botX, (float) currentPos.botY);
     Vector2 botSize = this.bot.getTransform().getSize();
 
     // Box cast to the left
     if (!Arrays.equals(parentAction, new boolean[] {false, false, true})) {
-      Collision viscinityLeft = Physics
-          .boxcast(botPosition.add(Vector2.Left().mult(botSize)), botSize);
+
+      Collision viscinityLeft = Physics.boxcast(
+          botPosition.add(Vector2.Left().mult(botSize)), botSize);
+
       if (viscinityLeft == null ||
           ((Rigidbody) viscinityLeft.getCollidedObject().getComponent(ComponentType.RIGIDBODY))
-              .getBodyType() != RigidbodyType.STATIC //||
-          /*botPosition.exactMagnitude(viscinityLeft.getPointOfCollision()) > 10*/) {
+              .getBodyType() != RigidbodyType.STATIC) {
         // If no collision, or if the collision is far away
         possibleActions.add(createAction(false, true, false));
         left = true;
@@ -500,14 +478,13 @@ public class AStar {
 
     if (!Arrays.equals(parentAction, new boolean[] {false, true, false})) {
       // Box cast to the right
-      Collision viscinityRight = Physics
-          .boxcast(botPosition.add(Vector2.Right().mult(botSize)), botSize);
+      Collision viscinityRight = Physics.boxcast(
+          botPosition.add(Vector2.Right().mult(botSize)), botSize);
 
       if (viscinityRight == null ||
           ((Rigidbody) viscinityRight.getCollidedObject().getComponent(ComponentType.RIGIDBODY))
-              .getBodyType() != RigidbodyType.STATIC //||
-          /*botPosition.exactMagnitude(viscinityRight.getPointOfCollision()) > 10*/) {
-        // or if the collision is far away
+              .getBodyType() != RigidbodyType.STATIC) {
+
         possibleActions.add(createAction(false, false, true));
         right = true;
       }
