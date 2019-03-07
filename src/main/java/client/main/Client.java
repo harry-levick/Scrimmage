@@ -107,7 +107,7 @@ public class Client extends Application {
     pendingInputs = new ArrayList<>();
     singleplayerGame = false;
     sendUpdate = false;
-    levelHandler = new LevelHandler(settings, root, backgroundRoot, gameRoot);
+    levelHandler = new LevelHandler(settings, backgroundRoot, gameRoot);
     settings.setLevelHandler(levelHandler);
     levelHandler.addClientPlayer(gameRoot);
     keyInput = new KeyboardInput();

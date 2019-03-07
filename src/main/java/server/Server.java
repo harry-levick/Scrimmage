@@ -2,7 +2,6 @@ package server;
 
 import client.main.Client;
 import client.main.Settings;
-//import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -45,6 +44,8 @@ import shared.packets.PacketJoin;
 import shared.packets.PacketMap;
 import shared.physics.Physics;
 import shared.util.Path;
+
+//import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 
 public class Server extends Application {
 
@@ -221,7 +222,7 @@ public class Server extends Application {
   @Override
   public void start(Stage primaryStage) throws Exception {
     setupRender(primaryStage);
-    levelHandler = new LevelHandler(settings, root, backgroundRoot, gameRoot, true);
+    levelHandler = new LevelHandler(settings, backgroundRoot, gameRoot, this);
     settings.setLevelHandler(levelHandler);
     running.set(true);
     LOGGER.debug("Running " + threadName);
