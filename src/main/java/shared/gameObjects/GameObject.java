@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
 import shared.gameObjects.Utils.ObjectType;
@@ -197,6 +198,14 @@ public abstract class GameObject implements Serializable {
   public void removeRender() {
     if (imageView != null) {
       imageView.setImage(null);
+      /*
+
+      Platform.runLater(
+          () -> {
+            root.getChildren().remove(imageView);
+          }
+      );
+       */
       root.getChildren().remove(imageView);
     }
   }
@@ -248,6 +257,15 @@ public abstract class GameObject implements Serializable {
     imageView = new ImageView();
     imageView.setRotate(rotation);
     if (root != null) {
+      /*
+
+      Platform.runLater(
+          () -> {
+            this.root = root;
+            root.getChildren().add(this.imageView);
+          }
+      );
+       */
       this.root = root;
       root.getChildren().add(this.imageView);
     }
