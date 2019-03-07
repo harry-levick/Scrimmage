@@ -64,11 +64,6 @@ public abstract class SliderObject extends GameObject {
   }
 
   @Override
-  public void update() {
-
-  }
-
-  @Override
   public void removeRender() {
     super.removeRender();
     root.getChildren().remove(slider);
