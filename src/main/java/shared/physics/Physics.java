@@ -8,12 +8,14 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListMap;
 import javafx.application.Platform;
 import javafx.scene.shape.Line;
+import server.ai.Bot;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.CircleCollider;
 import shared.gameObjects.components.Collider;
 import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.EdgeCollider;
+import shared.gameObjects.weapons.Weapon;
 import shared.physics.data.Collision;
 import shared.physics.data.DynamicCollision;
 import shared.util.maths.Vector2;
@@ -100,7 +102,7 @@ public class Physics {
    * @return The first collider hit in the path, null if nothing was hit.
    */
   public static Collision raycastAi(Vector2 sourcePos, Vector2 lengthAndDirection,
-      ArrayList<GameObject> gameObjects, boolean showCollider) {
+      ArrayList<GameObject> gameObjects, Bot bot, boolean showCollider) {
     EdgeCollider castCollider = new EdgeCollider(false);
     Collision collision = null;
     Vector2 incrementVal = lengthAndDirection.div(RAYCAST_INC);
@@ -126,7 +128,14 @@ public class Physics {
         collision =
             new Collision(
                 object, castCollider, (Collider) object.getComponent(ComponentType.COLLIDER));
-        if (collision.isCollided()) {
+
+        boolean botHolder = false;
+        if (object instanceof Weapon) {
+          Weapon tempWeap = (Weapon) object;
+          botHolder = tempWeap.getHolder() == bot;
+        }
+
+        if (collision.isCollided() && !(object == bot || object.getParent() == bot || botHolder)) {
           return collision;
         }
       }
