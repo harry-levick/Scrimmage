@@ -13,8 +13,15 @@ public class ImATestBehaviour extends Behaviour {
 
   @Override
   public void OnCollisionEnter(Collision col) {
-    if(col.getCollidedObject() instanceof Player) {
+    if (col.getCollidedObject() instanceof Player) {
       System.out.println("I collided as a Behaviour!");
+    }
+  }
+
+  @Override
+  public void OnCollisionExit(Collision col) {
+    if (col.getCollidedObject() instanceof Player) {
+      System.out.println("I left as a Behaviour!");
     }
   }
 }

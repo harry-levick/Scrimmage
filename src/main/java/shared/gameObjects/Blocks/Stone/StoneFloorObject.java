@@ -31,11 +31,10 @@ public class StoneFloorObject extends GameObject {
             0,
             1,
             0,
-            new MaterialProperty(0.1f, 0.2f, 0.1f),
+            new MaterialProperty(0f, 0.2f, 0.1f),
             new AngularData(0, 0, 0, 0),
             this));
     addComponent(new BoxCollider(this, ColliderLayer.WALL,false));
-    //addComponent(new ImATestBehaviour(this));
   }
 
   // Initialise the animation

@@ -21,7 +21,7 @@ public class Physics {
   public static final float GRAVITY = 90f;
   public static final float TIMESTEP = 1f / 60;
   public static final int RAYCAST_INC = 100;
-  public static boolean showColliders = true;
+  public static boolean showColliders = false;
   public static boolean showCasts = true;
   /*
    * Order: DEFAULT, PLAYER, OBJECT, PLATFORM, PARTICLE, COLLECTABLE
