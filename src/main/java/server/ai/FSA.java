@@ -24,7 +24,7 @@ public enum FSA {
 
       Vector2 botPos = bot.getTransform().getPos();
       Collision rayCast = Physics.raycast(botPos,
-          targetPlayer.getTransform().getPos().sub(botPos));
+          targetPlayer.getTransform().getPos().sub(botPos), false);
 
       boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
           .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
@@ -69,7 +69,7 @@ public enum FSA {
 
       Vector2 botPos = bot.getTransform().getPos();
       Collision rayCast = Physics.raycast(botPos,
-          targetPlayer.getTransform().getPos().sub(botPos));
+          targetPlayer.getTransform().getPos().sub(botPos), false);
 
       boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
           .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
@@ -114,7 +114,7 @@ public enum FSA {
 
       Vector2 botPos = bot.getTransform().getPos();
       Collision rayCast = Physics.raycast(botPos,
-          targetPlayer.getTransform().getPos().sub(botPos));
+          targetPlayer.getTransform().getPos().sub(botPos), false);
 
       boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
           .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
@@ -161,7 +161,7 @@ public enum FSA {
 
       Vector2 botPos = bot.getTransform().getPos();
       Collision rayCast = Physics.raycast(botPos,
-          targetPlayer.getTransform().getPos().sub(botPos));
+          targetPlayer.getTransform().getPos().sub(botPos), false);
 
       boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
           .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
@@ -217,7 +217,7 @@ public enum FSA {
 
       Vector2 botPos = bot.getTransform().getPos();
       Collision rayCast = Physics.raycast(botPos,
-          targetPlayer.getTransform().getPos().sub(botPos));
+          targetPlayer.getTransform().getPos().sub(botPos), false);
 
       boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
           .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
@@ -258,7 +258,7 @@ public enum FSA {
 
       Vector2 botPos = bot.getTransform().getPos();
       Collision rayCast = Physics.raycast(botPos,
-          targetPlayer.getTransform().getPos().sub(botPos));
+          targetPlayer.getTransform().getPos().sub(botPos), false);
 
       boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
           .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
