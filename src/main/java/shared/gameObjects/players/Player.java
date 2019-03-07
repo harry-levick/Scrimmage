@@ -17,10 +17,12 @@ import shared.gameObjects.weapons.MachineGun;
 import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.weapons.Weapon;
 import shared.handlers.levelHandler.LevelHandler;
+import shared.physics.Physics;
 import shared.physics.data.Collision;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
+import shared.util.maths.Vector2;
 
 public class Player extends GameObject {
 
@@ -117,6 +119,11 @@ public class Player extends GameObject {
 
   @Override
   public void update() {
+    /** STRESS TEST
+    for (int i = 0; i < 1000; i++) {
+      Physics.raycast(getTransform().getPos(), Vector2.Up().mult(200));
+    }
+     */
     checkGrounded(); // Checks if the player is grounded
     // System.out.println(rb.getVelocity());
     badWeapon();

@@ -111,30 +111,34 @@ public abstract class GameObject implements Serializable {
 
   // Collision engine
   public void updateCollision() {
-    Collider col = (Collider) getComponent(ComponentType.COLLIDER);
+    ArrayList<Component> cols = getComponents(ComponentType.COLLIDER);
     Rigidbody rb = (Rigidbody) getComponent(ComponentType.RIGIDBODY);
-    if (col == null) {
-      return;
-    }
-    if (rb != null) {
-      if (rb.getBodyType() == RigidbodyType.STATIC) {
-        callCollisionMethods(col, false);
+    for (Component comp : cols) {
+      Collider col = (Collider) comp;
+      if (col == null) {
         return;
-      } else {
-        for (GameObject o : Physics.gameObjects.values()) {
-          Collider o_col = (Collider) o.getComponent(ComponentType.COLLIDER);
-          Rigidbody o_rb = (Rigidbody) o.getComponent(ComponentType.RIGIDBODY);
-          if (o_col != null && o_rb != null) {
-            if (Collider.haveCollided(col, o_col)) {
-              Physics.addCollision(new DynamicCollision(rb, o_rb));
+      }
+      if (rb != null && !col.isTrigger()) {
+        if (rb.getBodyType() == RigidbodyType.STATIC) {
+          callCollisionMethods(col, false);
+          return;
+        } else {
+          for (GameObject o : Physics.gameObjects.values()) {
+            Collider o_col = (Collider) o.getComponent(ComponentType.COLLIDER);
+            Rigidbody o_rb = (Rigidbody) o.getComponent(ComponentType.RIGIDBODY);
+            if (o_col != null && o_rb != null) {
+              if (Collider.haveCollided(col, o_col) && !o_col.isTrigger()) {
+                Physics.addCollision(new DynamicCollision(rb, o_rb));
+              }
             }
           }
+          callCollisionMethods(col, false);
         }
-        callCollisionMethods(col, false);
+      } else if (col.isTrigger()) {
+        callCollisionMethods(col, true);
       }
-    } else if (col.isTrigger()) {
-      callCollisionMethods(col, true);
     }
+
   }
 
   private void callCollisionMethods(Collider col, boolean isTrigger) {
