@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentSkipListMap;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import shared.gameObjects.GameObject;
@@ -36,7 +37,7 @@ public class ColliderTest {
     circleE = new CircleCollider(e, 2, false);
     circleF = new CircleCollider(f, 2, false);
 
-    LinkedHashMap<UUID, GameObject> objects = new LinkedHashMap<>();
+    ConcurrentSkipListMap<UUID, GameObject> objects = new ConcurrentSkipListMap<>();
     objects.put(UUID.randomUUID(), a);
     objects.put(UUID.randomUUID(), b);
     objects.put(UUID.randomUUID(), c);
