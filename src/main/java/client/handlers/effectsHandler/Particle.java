@@ -1,16 +1,6 @@
 package client.handlers.effectsHandler;
 
 import client.main.Client;
-import java.util.ArrayList;
-import java.util.UUID;
-import javafx.scene.Group;
-import javafx.scene.image.ImageView;
-import shared.gameObjects.GameObject;
-import shared.gameObjects.Utils.ObjectType;
-import shared.gameObjects.animator.Animator;
-import shared.gameObjects.components.Collider;
-import shared.gameObjects.components.ComponentType;
-import shared.physics.Physics;
 import shared.util.maths.Vector2;
 
 /**

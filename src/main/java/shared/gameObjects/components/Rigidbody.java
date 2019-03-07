@@ -75,7 +75,7 @@ public class Rigidbody extends Component implements Serializable {
     }
     this.bodyType = bodyType;
     if (bodyType == RigidbodyType.STATIC) {
-      this.mass = Integer.MAX_VALUE;
+      this.mass = Integer.MAX_VALUE/2;
       this.inv_mass = 0;
     }
 
@@ -91,6 +91,31 @@ public class Rigidbody extends Component implements Serializable {
     currentForce = acceleration.mult(mass);
   }
 
+  /**
+   * Create a static object with a certain bounciness
+   * @param restitution Bounciness factor
+   * @param parent GameObject this body is attached to
+   */
+  public Rigidbody(float restitution, GameObject parent) {
+    super(parent, ComponentType.RIGIDBODY);
+
+    material = new MaterialProperty(restitution, 0.2f, 0.1f);
+    angularData = new AngularData(parent.getTransform().getSize().magnitude(), 0.1f, 0, 1000000);
+    this.bodyType = RigidbodyType.STATIC;
+    this.mass = Integer.MAX_VALUE/2;
+    this.inv_mass = 0;
+
+    collisions = new ArrayList<>();
+    forces = new ArrayList<>();
+    forceTimes = new ArrayList<>();
+
+    velocity = Vector2.Zero();
+    acceleration = Vector2.Zero();
+    lastAcceleration = Vector2.Zero();
+    deltaPos = Vector2.Zero();
+    deltaPosUpdate = Vector2.Zero();
+    currentForce = acceleration.mult(mass);
+  }
   // Update Methods
 
   /**
@@ -258,7 +283,7 @@ public class Rigidbody extends Component implements Serializable {
     angularVelocity += currentTorque*Physics.TIMESTEP*angularData.getInvInertia();
     orientation += angularVelocity*Physics.TIMESTEP;
     getParent().getTransform().translate(deltaPos);
-    getParent().getTransform().setRot((float) Math.toDegrees(orientation));
+   // getParent().getTransform().setRot((float) Math.toDegrees(orientation));
     deltaPosUpdate = Vector2.Zero();
     deltaPos = Vector2.Zero();
   }
