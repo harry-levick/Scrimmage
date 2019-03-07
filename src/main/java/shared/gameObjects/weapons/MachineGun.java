@@ -10,7 +10,7 @@ import shared.util.maths.Vector2;
 
 public class MachineGun extends Gun {
 
-  private static String imagePath = "images/weapons/machinegun.png"; // path to Machine Gun image
+  private static String imagePath = "images/weapons/test/Asset 4.png"; // path to Machine Gun image
   private static String audioPath = "audio/sound-effects/laser_gun.wav"; // path to Machine Gun sfx
   private static float PI = 3.141592654f;
   private static double sizeX = 80, sizeY = 20;
