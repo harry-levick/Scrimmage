@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListMap;
+import javafx.application.Platform;
 import javafx.scene.shape.Line;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.components.BoxCollider;
@@ -24,7 +25,7 @@ public class Physics {
   public static final float TIMESTEP = 1f / 60;
   public static final int RAYCAST_INC = 100;
   public static boolean showColliders = false;
-  public static boolean showCasts = false;
+  public static boolean showCasts = true;
   /*
    * Order: DEFAULT, PLAYER, OBJECT, WALL, PARTICLE
    */
@@ -48,7 +49,8 @@ public class Physics {
    * @param lengthAndDirection The length and direction of the ray
    * @return The first collider hit in the path, null if nothing was hit.
    */
-  public static Collision raycast(Vector2 sourcePos, Vector2 lengthAndDirection) {
+  public static Collision raycast(Vector2 sourcePos, Vector2 lengthAndDirection,
+      boolean showCollider) {
     EdgeCollider castCollider = new EdgeCollider(false);
     Collision collision = null;
     Vector2 incrementVal = lengthAndDirection.div(RAYCAST_INC);
@@ -56,10 +58,14 @@ public class Physics {
       castCollider.addNode(sourcePos.add(incrementVal.mult(i)));
     }
 
-    if (showCasts) {
-      drawCast(castCollider.getNodes().get(0).getX(), castCollider.getNodes().get(0).getY(),
-          castCollider.getNodes().get(castCollider.getNodes().size() - 1).getX(),
-          castCollider.getNodes().get(castCollider.getNodes().size() - 1).getY());
+    if (showCollider) {
+      Platform.runLater(
+          () -> {
+            drawCast(castCollider.getNodes().get(0).getX(), castCollider.getNodes().get(0).getY(),
+                castCollider.getNodes().get(castCollider.getNodes().size() - 1).getX(),
+                castCollider.getNodes().get(castCollider.getNodes().size() - 1).getY());
+          }
+      );
 
     }
 
@@ -83,7 +89,57 @@ public class Physics {
     */
   }
 
-  public static void drawCast(double xStart, double xFinish, double yStart, double yFinish) {
+  /**
+   * Casts a ray that interacts with colliders.
+   * - Used for the pathfinding in AI, where a different gameObjects list is used - the gameObjects
+   *  list is taken from the node that the search is in.
+   *  - hxl799
+   *
+   * @param sourcePos The point to start casting the ray
+   * @param lengthAndDirection The length and direction of the ray
+   * @return The first collider hit in the path, null if nothing was hit.
+   */
+  public static Collision raycastAi(Vector2 sourcePos, Vector2 lengthAndDirection,
+      ArrayList<GameObject> gameObjects, boolean showCollider) {
+    EdgeCollider castCollider = new EdgeCollider(false);
+    Collision collision = null;
+    Vector2 incrementVal = lengthAndDirection.div(RAYCAST_INC);
+    for (int i = 0; i <= RAYCAST_INC; i++) {
+      castCollider.addNode(sourcePos.add(incrementVal.mult(i)));
+    }
+
+    if (showCollider) {
+      Platform.runLater(
+          () -> {
+            drawCast(castCollider.getNodes().get(0).getX(), castCollider.getNodes().get(0).getY(),
+                castCollider.getNodes().get(castCollider.getNodes().size() - 1).getX(),
+                castCollider.getNodes().get(castCollider.getNodes().size() - 1).getY());
+          }
+      );
+
+    }
+
+    Iterator<GameObject> iter = gameObjects.iterator();
+    while (iter.hasNext()) {
+      GameObject object = iter.next();
+      if (object.getComponent(ComponentType.COLLIDER) != null) {
+        collision =
+            new Collision(
+                object, castCollider, (Collider) object.getComponent(ComponentType.COLLIDER));
+        if (collision.isCollided()) {
+          return collision;
+        }
+      }
+    }
+
+    return collision;
+    /*
+    for (GameObject object : gameObjects.values()) {
+    }
+    */
+  }
+
+  public static void drawCast(double xStart, double yStart, double xFinish, double yFinish) {
     Line line = new Line();
     line.setStartX(xStart);
     line.setStartY(yStart);
