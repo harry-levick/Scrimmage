@@ -1,5 +1,6 @@
 package client.main;
 
+import client.handlers.AchivementHandler.AchivementHandler;
 import client.handlers.audioHandler.MusicAssets.PLAYLIST;
 import client.handlers.connectionHandler.ConnectionHandler;
 import client.handlers.inputHandler.KeyboardInput;
@@ -327,6 +328,9 @@ public class Client extends Application {
 
     //Setup UI
     userInterface = new UI(root, levelHandler.getClientPlayer());
+
+    AchivementHandler handler = new AchivementHandler(settings);
+    handler.showAchivements(creditsRoot);
 
     // Main Game Loop
     new AnimationTimer() {
