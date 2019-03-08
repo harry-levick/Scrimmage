@@ -1,6 +1,7 @@
 package shared.gameObjects.objects;
 
 import java.util.UUID;
+import shared.gameObjects.Destructable;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
@@ -35,10 +36,9 @@ public class Spikes extends GameObject {
 
   @Override
   public void OnCollisionEnter(Collision col) {
-    if (col.getCollidedObject() instanceof Player) {
-      Player player = (Player) col.getCollidedObject();
+    if (col.getCollidedObject() instanceof Destructable) {
+      Destructable player = (Destructable) col.getCollidedObject();
       player.deductHp(10);
-      ((Rigidbody) player.getComponent(ComponentType.RIGIDBODY)).moveY(-90, 0.08f);
     }
   }
 

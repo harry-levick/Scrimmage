@@ -3,6 +3,7 @@ package shared.gameObjects.players;
 import client.main.Client;
 import java.util.UUID;
 import javafx.scene.Group;
+import shared.gameObjects.Destructable;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
@@ -24,7 +25,7 @@ import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
 
-public class Player extends GameObject {
+public class Player extends GameObject implements Destructable {
 
   protected final float speed = 9;
   protected final float jumpForce = -300;
@@ -153,7 +154,7 @@ public class Player extends GameObject {
     this.lastInputCount = Integer.parseInt(unpackedData[6]);
   }
 
-  public void checkGrounded() {
+  private void checkGrounded() {
     grounded = rb.isGrounded();
   }
 
@@ -230,7 +231,7 @@ public class Player extends GameObject {
       transform.translate(new Vector2(0, -80));
       this.setActive(false);
       bc.setLayer(ColliderLayer.PARTICLE);
-      transform.rotate(180);
+      transform.rotate(90);
       this.imageView.setOpacity(0.5);
     }
   }
@@ -401,6 +402,10 @@ public class Player extends GameObject {
 
   public void setBehaviour(Behaviour behaviour) {
     this.behaviour = behaviour;
+  }
+
+  public boolean isGrounded() {
+    return grounded;
   }
 
   @Override

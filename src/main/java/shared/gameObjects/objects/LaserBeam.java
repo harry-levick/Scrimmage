@@ -6,6 +6,7 @@ import client.main.Client;
 import java.util.ArrayList;
 import java.util.UUID;
 import javafx.scene.shape.Rectangle;
+import shared.gameObjects.Destructable;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
@@ -57,8 +58,8 @@ public class LaserBeam extends GameObject {
     if(laserActive) {
       ArrayList<Collision> collisions = Physics.boxcastAll(new Vector2(laser.getX(), laser.getY()), new Vector2(laser.getWidth(), laser.getHeight()));
       for (Collision c : collisions) {
-          if (c.getCollidedObject() instanceof Player) {
-            ((Player) c.getCollidedObject()).deductHp(9999);
+          if (c.getCollidedObject() instanceof Destructable) {
+            ((Destructable) c.getCollidedObject()).deductHp(9999);
           }
       }
       colour.setR(colour.getR()-2);

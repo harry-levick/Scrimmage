@@ -27,6 +27,8 @@ import shared.gameObjects.background.Background5;
 import shared.gameObjects.background.Background6;
 import shared.gameObjects.background.Background7;
 import shared.gameObjects.background.Background8;
+import shared.gameObjects.components.Behaviour;
+import shared.gameObjects.components.behaviours.Crushing;
 import shared.gameObjects.components.behaviours.MovingPlatform;
 import shared.gameObjects.menu.main.ButtonBack;
 import shared.gameObjects.menu.main.ButtonCredits;
@@ -153,9 +155,10 @@ public class LevelCreator extends Application {
     uuid = UUID.randomUUID();
 
     // left side blocks
-    gameObjects.put(uuid,
-        new WoodBlockLargeObject(
-            getAbs(5), getAbs(4), getAbs(2), getAbs(2), ObjectType.Bot, UUID.randomUUID()));
+    GameObject object = new WoodBlockLargeObject(
+        getAbs(5), getAbs(4), getAbs(2), getAbs(2), ObjectType.Bot, uuid);
+    object.addComponent(new Crushing(object));
+    gameObjects.put(uuid, object);
     uuid = uuid.randomUUID();
     gameObjects.put(uuid,
         new WoodBlockSmallObject(

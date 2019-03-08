@@ -24,8 +24,7 @@ public class JumpPad extends GameObject {
 
   public JumpPad(double x, double y, UUID uuid) {
     super(x, y, 50, 40, ObjectType.Bot, uuid);
-    addComponent(new BoxCollider(this, ColliderLayer.WALL, true));
-    addComponent(new BoxCollider(this, ColliderLayer.COLLECTABLE, false));
+    addComponent(new BoxCollider(this, ColliderLayer.WALL, false));
     addComponent(new Rigidbody(0, this));
     originalPosition = transform.getPos();
     timer = TIME_TO_JUMP;
@@ -67,7 +66,7 @@ public class JumpPad extends GameObject {
   }
 
   @Override
-  public void OnTriggerEnter(Collision col) {
+  public void OnCollisionEnter(Collision col) {
     super.OnCollisionEnter(col);
     if(!cooldown && col.getNormalCollision().equals(Vector2.Up())) {
       System.out.println("Entered");
