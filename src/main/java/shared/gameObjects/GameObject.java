@@ -17,6 +17,7 @@ import shared.gameObjects.components.Behaviour;
 import shared.gameObjects.components.Collider;
 import shared.gameObjects.components.Component;
 import shared.gameObjects.components.ComponentType;
+import shared.gameObjects.components.ObjectShake;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Player;
 import shared.physics.Physics;
@@ -99,14 +100,16 @@ public abstract class GameObject implements Serializable {
       networkStateUpdate = true;
     }
     this.lastPos.setVec((float) getX(), (float) getY());
+
   }
 
   // Client Side only
   public void render() {
     imageView.setImage(animation.getImage());
-    imageView.setTranslateX(getX());
-    imageView.setTranslateY(getY());
     imageView.setRotate(getTransform().getRot());
+    //imageView.setTranslateX(getX());
+    //imageView.setTranslateY(getY());
+
   }
 
   // Collision engine
