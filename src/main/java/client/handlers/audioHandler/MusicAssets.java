@@ -17,7 +17,6 @@ public class MusicAssets {
     tracks.put("FUNK_GAME_LOOP", "funk-game-loop-by-kevin-macleod.mp3");
     tracks.put("EDM_DETECTION_MODE", "edm-detection-mode-by-kevin-macleod.mp3");
     tracks.put("GETTING_IT_DONE", "getting-it-done-by-kevin-macleod.mp3");
-    tracks.put("LOCAL_FORECAST", "local-forecast---slower-by-kevin-macleod.mp3");
     tracks.put("MAN_DOWN", "man-down-by-kevin-macleod.mp3");
     tracks.put("OBLITERATION", "obliteration-by-kevin-macleod.mp3");
     tracks.put("SATIATE", "satiate---only-percussion-by-kevin-macleod.mp3");
@@ -25,7 +24,6 @@ public class MusicAssets {
     menuPlaylist.add("FUNK_GAME_LOOP");
     menuPlaylist.add("EDM_DETECTION_MODE");
     menuPlaylist.add("GETTING_IT_DONE");
-    menuPlaylist.add("LOCAL_FORECAST");
     menuPlaylist.add("MAN_DOWN");
     Collections.shuffle(menuPlaylist);
 
