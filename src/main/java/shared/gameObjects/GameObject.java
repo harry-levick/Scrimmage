@@ -147,7 +147,7 @@ public abstract class GameObject implements Serializable {
    *
    * Use to only update the Physics of the object being called
    */
-  public void simulateCollisions() {
+  public void simulateUpdateCollision() {
     ArrayList<Component> cols = getComponents(ComponentType.COLLIDER);
     Rigidbody rb = (Rigidbody) getComponent(ComponentType.RIGIDBODY);
     for (Component comp : cols) {
@@ -235,14 +235,14 @@ public abstract class GameObject implements Serializable {
     if (imageView != null) {
       imageView.setImage(null);
       /*
+       */
 
       Platform.runLater(
           () -> {
             root.getChildren().remove(imageView);
           }
       );
-       */
-      root.getChildren().remove(imageView);
+      //root.getChildren().remove(imageView);
     }
   }
 
