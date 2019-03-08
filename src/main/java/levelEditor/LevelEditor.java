@@ -1,5 +1,6 @@
 package levelEditor;
 
+import client.main.Settings;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -62,15 +63,17 @@ import shared.util.maths.Vector2;
 
 public class LevelEditor extends Application {
 
+  private Settings settings = new Settings(); //todo needs to be chnaged into Client settings since currently detached
+
   private LinkedHashMap<UUID, GameObject> gameObjects;
   private ArrayList<Player> playerSpawns = new ArrayList<>();
   private MapDataObject mapDataObject;
   private boolean snapToGrid = true;
 
-  private int spawnPointLimit = 4; // todo autofetch
+  private int spawnPointLimit = settings.getMaxPlayers();
 
-  private int stageSizeX = 1920; // todo autofetch
-  private int stageSizeY = 1080;
+  private int stageSizeX = settings.getMapWidth();
+  private int stageSizeY = settings.getMapHeight();
   private int gridSizePX = 40;
   private int gridSizeX = stageSizeX / gridSizePX; // 40 px blocks //48
   private int gridSizeY = stageSizeY / gridSizePX;                 //27
@@ -79,15 +82,7 @@ public class LevelEditor extends Application {
   private OBJECT_TYPES objectTypeSelected = OBJECT_TYPES.PLAYER; // default
 
   private String filename = "";
-  private String filepath =
-      "src"
-          + File.separator
-          + "main"
-          + File.separator
-          + "resources"
-          + File.separator
-          + "maps"
-          + File.separator;
+  private String filepath = settings.getMapsPath();
 
   /**
    * ADDING NEW OBJECTS TO THE MAP CREATOR: 1. add a new object name in the enum OBJECT_TYPES 2. in
