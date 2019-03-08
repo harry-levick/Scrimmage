@@ -53,7 +53,7 @@ public class LevelHandler {
     this.backgroundRoot = backgroundRoot;
     this.gameRoot = gameRoot;
     musicPlayer = new AudioHandler(settings, Client.musicActive);
-    changeMap(new Map("main_menu.map", Path.convert("src/main/resources/menus/main_menu.map"),
+    changeMap(new Map("menus/main_menu.map", Path.convert("src/main/resources/menus/main_menu.map"),
         GameState.MAIN_MENU), true);
     previousMap = null;
   }

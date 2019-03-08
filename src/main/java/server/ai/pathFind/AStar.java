@@ -130,7 +130,7 @@ public class AStar {
         replicaBot.simulateAction(action);
         replicaBot.simulateApplyInput();
         replicaBot.simulateUpdate();
-        replicaBot.simulateUpdateCollision(worldScene);
+        replicaBot.simulateUpdateCollision();
       }
     }
 
@@ -249,7 +249,7 @@ public class AStar {
    */
   private void search() {
     int searchCount = 0;
-    int seachCutoff  = Integer.MAX_VALUE;
+    int seachCutoff  = 200;
     SearchNode current = bestPosition;
     closedList.add(current);
     boolean currentGood = false;
@@ -322,6 +322,7 @@ public class AStar {
     // If the cast is null or returns a Static RigidBody
     boolean inSight = rayCast == null || (((Rigidbody) rayCast.getCollidedObject()
         .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC);
+
 
     if (bot.getHolding().isGun()) {
 
@@ -434,7 +435,7 @@ public class AStar {
 
   private ArrayList<boolean[]> createPossibleActions(SearchNode currentPos) {
     boolean[] parentAction = currentPos.action;
-
+    System.out.print("");
     Bot nodeBot = replicaBot;
     nodeBot.setX(currentPos.botX);
     nodeBot.setY(currentPos.botY);
