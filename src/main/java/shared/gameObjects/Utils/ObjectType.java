@@ -1,11 +1,12 @@
 package shared.gameObjects.Utils;
 
-public enum ObjectID {
+public enum ObjectType {
   Player,
   Bot,
   MapDataObject,
   Weapon,
   Bullet,
   Background,
-  Button
+  Button,
+  Limb
 }

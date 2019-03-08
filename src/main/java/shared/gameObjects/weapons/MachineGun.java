@@ -1,9 +1,10 @@
 package shared.gameObjects.weapons;
 
 import client.handlers.audioHandler.AudioHandler;
+import client.main.Client;
 import java.util.UUID;
 import javafx.scene.transform.Rotate;
-import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.players.Player;
 import shared.util.Path;
 import shared.util.maths.Vector2;
@@ -19,6 +20,7 @@ public class MachineGun extends Gun {
   private double angleGun; // angle of gun (hand and mouse vs x-axis) (radian)
   private Rotate rotate; // rotate property of gun wrt grip
 
+
   public MachineGun(double x, double y, String name, Player holder, UUID uuid) {
 
     super(
@@ -26,7 +28,7 @@ public class MachineGun extends Gun {
         y,
         sizeX, // sizeX
         sizeY, // sizeY
-        ObjectID.Weapon, // ObjectID
+        ObjectType.Weapon, // ObjectType
         5, // damage
         10, // weight
         name,
@@ -38,7 +40,6 @@ public class MachineGun extends Gun {
         true, // fullAutoFire
         false, // singleHanded
         uuid);
-    holderHandPos = holder.getHandPos();
 
     rotate = new Rotate();
     // pivot = position of the grip
@@ -58,19 +59,16 @@ public class MachineGun extends Gun {
       double bulletFlipX = getMuzzleFlipX() + 68 - 68 * Math.cos(angleGun);
       double bulletFlipY = getMuzzleFlipY() - 68 * Math.sin(angleGun);
       Bullet bullet =
-          new MachineGunBullet(
+          new FireBullet(
               (holder.getFacingRight() ? bulletX : bulletFlipX),
               (holder.getFacingRight() ? bulletY : bulletFlipY),
               mouseX,
               mouseY,
-              this.bulletWidth,
-              this.bulletSpeed,
-              this.damage,
               this.holder,
               uuid);
       this.currentCooldown = getDefaultCoolDown();
       // new AudioHandler(super.getSettings()).playSFX("CHOOSE_YOUR_CHARACTER");
-      new AudioHandler(settings).playSFX("MACHINEGUN");
+      new AudioHandler(settings, Client.musicActive).playSFX("MACHINEGUN");
       deductAmmo();
     }
   }
@@ -78,26 +76,28 @@ public class MachineGun extends Gun {
   @Override
   public void update() {
     super.update();
-    holderHandPos = holder.getHandPos();
+    holderHandPos = getHolderHandPos();
   }
 
   @Override
   public void render() {
     super.render();
 
-    imageView.getTransforms().remove(rotate);
+    if (holder != null) {
+      imageView.getTransforms().remove(rotate);
 
-    double mouseX = holder.mouseX;
-    double mouseY = holder.mouseY;
-    Vector2 mouseV = new Vector2((float) mouseX, (float) mouseY);
-    Vector2 gripV = new Vector2((float) holder.getX(), (float) holder.getY());
-    angleGun = mouseV.sub(gripV).angle(); // radian
-    double angle = angleGun * 180 / PI; // degree
+      double mouseX = holder.mouseX;
+      double mouseY = holder.mouseY;
+      Vector2 mouseV = new Vector2((float) mouseX, (float) mouseY);
+      Vector2 gripV = new Vector2((float) holder.getX(), (float) holder.getY());
+      angleGun = mouseV.sub(gripV).angle(); // radian
+      double angle = angleGun * 180 / PI; // degree
 
-    rotate.setAngle(angle);
-    imageView.getTransforms().add(rotate);
-    imageView.setTranslateX(this.getGripX());
-    imageView.setTranslateY(this.getGripY());
+      rotate.setAngle(angle);
+      imageView.getTransforms().add(rotate);
+      imageView.setTranslateX(this.getGripX());
+      imageView.setTranslateY(this.getGripY());
+    }
   }
 
   @Override

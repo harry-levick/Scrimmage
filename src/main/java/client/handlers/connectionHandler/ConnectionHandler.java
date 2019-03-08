@@ -23,11 +23,11 @@ public class ConnectionHandler extends Thread {
   private Socket socket;
   private PrintWriter out;
 
-  public ConnectionHandler(String test) {
+  public ConnectionHandler(String address) {
     connected = true;
     port = 4446;
     received = new LinkedBlockingQueue<String>();
-    this.address = "192.168.0.13";
+    this.address = address;
     try {
       clientSocket = new DatagramSocket(port);
       socket = new Socket(this.address, 4445);
@@ -48,12 +48,11 @@ public class ConnectionHandler extends Thread {
 
     Client.multiplayer = true;
     while (connected) {
-      buffer = new byte[1024];
+      buffer = new byte[3200];
       DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
       try {
         clientSocket.receive(packet);
         String msg = new String(packet.getData(), packet.getOffset(), packet.getLength());
-        System.out.println(msg.trim());
         received.add(msg.trim());
       } catch (IOException e) {
         e.printStackTrace();
@@ -73,8 +72,6 @@ public class ConnectionHandler extends Thread {
   }
 
   public void send(String data) {
-    System.out.println(data);
-    System.out.println(Client.levelHandler.getClientPlayer().getX());
     out.println(data);
   }
 }

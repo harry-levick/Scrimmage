@@ -4,7 +4,7 @@ import client.Menu;
 import client.main.Client;
 import java.util.UUID;
 import javafx.scene.input.MouseEvent;
-import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.menu.ButtonObject;
 import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.Map;
@@ -19,7 +19,7 @@ public class ButtonHost extends ButtonObject {
    * @param y Y coordinate of object in game world
    * @param id Unique Identifier of every game object
    */
-  public ButtonHost(double x, double y, ObjectID id, UUID objectUUID) {
+  public ButtonHost(double x, double y, ObjectType id, UUID objectUUID) {
     super(x, y, 50, 50, id, objectUUID);
   }
 

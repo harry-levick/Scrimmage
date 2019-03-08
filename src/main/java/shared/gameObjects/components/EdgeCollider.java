@@ -3,18 +3,22 @@ package shared.gameObjects.components;
 import java.io.Serializable;
 import java.util.ArrayList;
 import shared.gameObjects.GameObject;
+import shared.physics.types.ColliderLayer;
 import shared.physics.types.ColliderType;
 import shared.util.maths.Vector2;
 
-/**
- * An edge collider, primarily for use with static obbjects (eg. floor)
- */
+/** An edge collider; used only for Raycasts */
 public class EdgeCollider extends Collider implements Serializable {
 
   ArrayList<Vector2> nodes;
 
-  public EdgeCollider(GameObject parent, boolean isTrigger) {
-    super(parent, ColliderType.EDGE, isTrigger);
+  public EdgeCollider(boolean isTrigger) {
+    super(null, ColliderType.EDGE, isTrigger);
+    nodes = new ArrayList<>();
+  }
+
+  public EdgeCollider(GameObject parent, ColliderLayer layer, boolean isTrigger) {
+    super(parent, ColliderType.EDGE, layer, isTrigger);
     nodes = new ArrayList<>();
   }
 
@@ -24,5 +28,13 @@ public class EdgeCollider extends Collider implements Serializable {
 
   public ArrayList<Vector2> getNodes() {
     return nodes;
+  }
+
+  public Vector2 findClosestPoint(Vector2 point) {
+    Vector2 toRet = nodes.get(0);
+    for (Vector2 vec : nodes) {
+      toRet = vec.magnitude(point) <= toRet.magnitude(point) ? vec : toRet;
+    }
+    return toRet;
   }
 }

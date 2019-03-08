@@ -1,7 +1,7 @@
 package shared.gameObjects.weapons;
 
 import java.util.UUID;
-import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.players.Player;
 import shared.util.Path;
 
@@ -25,7 +25,7 @@ public class Handgun extends Gun {
         y,
         sizeX,
         sizeY,
-        ObjectID.Weapon, // ObjectID
+        ObjectType.Weapon, // ObjectType
         10, // damage
         10, // weight
         name,
@@ -44,14 +44,11 @@ public class Handgun extends Gun {
     if (canFire()) {
       UUID uuid = UUID.randomUUID();
       Bullet bullet =
-          new HandgunBullet(
+          new CircleBullet(
               getX(),
               getY(),
               mouseX,
               mouseY,
-              this.bulletWidth,
-              this.bulletSpeed,
-              this.damage,
               this.holder,
               uuid);
       this.currentCooldown = getDefaultCoolDown();

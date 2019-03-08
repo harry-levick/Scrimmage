@@ -19,12 +19,14 @@ public class AudioHandler {
   private ArrayList<String> playlist = new ArrayList<>();
   private boolean playingPlaylist = false;
   private PLAYLIST currentPlaylist;
+  private boolean active;
 
   private MusicAssets musicAssets = new MusicAssets();
   private EffectsAssets effectsAssets = new EffectsAssets();
 
-  public AudioHandler(Settings settings) {
+  public AudioHandler(Settings settings, boolean active) {
     this.settings = settings;
+    this.active = active;
   }
 
   /**
@@ -33,45 +35,51 @@ public class AudioHandler {
    * @param trackName Music resource to play
    */
   public void playMusic(String trackName) {
-    String path = musicAssets.getTrackPath(trackName);
-    if (!(path == null)) {
-      musicMedia = new Media(new File(path).toURI().toString());
-      musicPlayer = new MediaPlayer(musicMedia);
-      updateMusicVolume();
-      musicPlayer.play();
-    } else {
-      // todo log error
+    if (active) {
+      String path = musicAssets.getTrackPath(trackName);
+      stopMusic();
+      if (!(path == null)) {
+        musicMedia = new Media(new File(path).toURI().toString());
+        musicPlayer = new MediaPlayer(musicMedia);
+        updateMusicVolume();
+        musicPlayer.play();
+      } else {
+        // todo log error
+      }
     }
   }
 
   public void playMusicPlaylist(PLAYLIST playlistSet) {
-    if ((currentPlaylist != null) && (playlistSet != currentPlaylist)) {
-      //playlist change
-      trackPos = 0;
-    }
-    currentPlaylist = playlistSet;
-    playingPlaylist = true;
-    playlist = musicAssets.getPlaylist(playlistSet);
-    playMusic(playlist.get(trackPos));
-    musicPlayer.setOnEndOfMedia(new Runnable() {
-      @Override
-      public void run() {
-        incrementTrack();
-        playMusicPlaylist(playlistSet);
+    if (active) {
+      if ((currentPlaylist != null) && (playlistSet != currentPlaylist)) {
+        //playlist change
+        trackPos = 0;
       }
-    });
-
+      currentPlaylist = playlistSet;
+      playingPlaylist = true;
+      playlist = musicAssets.getPlaylist(playlistSet);
+      playMusic(playlist.get(trackPos));
+      musicPlayer.setOnEndOfMedia(new Runnable() {
+        @Override
+        public void run() {
+          incrementTrack();
+          playMusicPlaylist(playlistSet);
+        }
+      });
+    }
   }
 
   /**
    * Stop any game music from playing
    */
   public void stopMusic() {
-    if (musicPlayer != null) {
-      if (playingPlaylist) {
-        incrementTrack();
+    if (active) {
+      if (musicPlayer != null) {
+        if (playingPlaylist) {
+          incrementTrack();
+        }
+        musicPlayer.stop();
       }
-      musicPlayer.stop();
     }
   }
 
@@ -81,39 +89,51 @@ public class AudioHandler {
    * @param trackName sound effect resource
    */
   public void playSFX(String trackName) {
-    String path = effectsAssets.getTrackPath(trackName);
-    if (!(path == null)) {
-      effectMedia = new Media(new File(path).toURI().toString());
-      effectPlayer = new MediaPlayer(effectMedia);
-      updateEffectVolume();
-      effectPlayer.play();
-    } else {
-      // todo log error
+    if (active) {
+      String path = effectsAssets.getTrackPath(trackName);
+      if (!(path == null)) {
+        effectMedia = new Media(new File(path).toURI().toString());
+        effectPlayer = new MediaPlayer(effectMedia);
+        updateEffectVolume();
+        effectPlayer.play();
+      } else {
+        // todo log error
+      }
     }
   }
 
   private void incrementTrack() {
-    trackPos++;
-    if (trackPos == playlist.size()) {
-      trackPos = 0;
+    if (active) {
+      trackPos++;
+      if (trackPos == playlist.size()) {
+        trackPos = 0;
+      }
     }
   }
 
   public void stopSFX() {
-    if (effectPlayer != null) {
+    if (active && effectPlayer != null) {
       effectPlayer.stop();
     }
   }
 
   public void updateMusicVolume() {
-    if (musicPlayer != null) {
+    if (active && musicPlayer != null) {
       musicPlayer.setVolume(settings.getMusicVolume());
     }
   }
 
   public void updateEffectVolume() {
-    if (effectPlayer != null) {
+    if (active && effectPlayer != null) {
       effectPlayer.setVolume(settings.getSoundEffectVolume());
     }
+  }
+
+  public boolean getActive() {
+    return this.active;
+  }
+
+  public void setActive(boolean active) {
+    this.active = active;
   }
 }

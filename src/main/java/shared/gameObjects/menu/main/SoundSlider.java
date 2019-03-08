@@ -5,7 +5,7 @@ import java.util.UUID;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Group;
-import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.menu.SliderObject;
 
 public class SoundSlider extends SliderObject {
@@ -19,7 +19,7 @@ public class SoundSlider extends SliderObject {
       double sizeY,
       SOUND_TYPE soundType,
       String label,
-      ObjectID id,
+      ObjectType id,
       UUID objectUUID) {
     super(x, y, sizeX, sizeY, label, id, objectUUID);
     this.soundType = soundType;
@@ -63,6 +63,11 @@ public class SoundSlider extends SliderObject {
         Client.settings.setSoundEffectVolume(slider.getValue() / 100f);
         break;
     }
+  }
+
+  @Override
+  public void update() {
+    onValueChange();
   }
 
   public enum SOUND_TYPE {
