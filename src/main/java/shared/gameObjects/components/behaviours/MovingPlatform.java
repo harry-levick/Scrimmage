@@ -20,8 +20,8 @@ public class MovingPlatform extends Behaviour {
     super(parent);
     // Temp for Testing
     speed = 150f;
-    endpointA = parent.getTransform().getPos().add(new Vector2(-200, 0));
-    endpointB = parent.getTransform().getPos().add(new Vector2(200, 0));
+    endpointA = parent.getTransform().getPos().add(new Vector2(-40, 0));
+    endpointB = parent.getTransform().getPos().add(new Vector2(+280, 0));
     movementFactor = endpointB.sub(endpointA).div(speed);
   }
 

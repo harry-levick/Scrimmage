@@ -11,6 +11,7 @@ import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.Rigidbody;
+import shared.gameObjects.components.behaviours.MovingPlatform;
 import shared.gameObjects.players.Player;
 import shared.physics.Physics;
 import shared.physics.data.Collision;
@@ -36,6 +37,7 @@ public class LaserBeam extends GameObject {
     addComponent(bc);
     addComponent(new Rigidbody(0, this));
     colour = new Colour(255, 0, 0);
+    addComponent(new MovingPlatform(this));
   }
 
   @Override
@@ -48,6 +50,8 @@ public class LaserBeam extends GameObject {
     super.update();
     if(laser == null) {
       intialiseLaser();
+    } else {
+      recalculatePositions();
     }
 
     if(laserActive) {
@@ -88,7 +92,7 @@ public class LaserBeam extends GameObject {
     laser.setOpacity(0);
     laser.setX(bc.getCorners()[1].getX() + bc.getSize().getX()*0.28f);
     laser.setY(bc.getCentre().getY());
-    ArrayList<Collision> collisions = Physics.boxcastAll(bc.getCorners()[1], new Vector2(transform.getSize().getX(), 1080));
+    ArrayList<Collision> collisions = Physics.boxcastAll( new Vector2(laser.getX(), laser.getY()), new Vector2(transform.getSize().getX()*0.44f, 1080));
     float closestPoint = 1100;
     for (Collision c : collisions) {
       if(c.getCollidedObject().getComponent(ComponentType.RIGIDBODY) != null) {
@@ -101,5 +105,21 @@ public class LaserBeam extends GameObject {
     laser.setHeight(closestPoint - laser.getY());
     laser.setStyle("-fx-fill: " + colour.toHex() + ";");
     root.getChildren().add(1, laser);
+  }
+
+  void recalculatePositions() {
+    laser.setX(bc.getCorners()[1].getX() + bc.getSize().getX()*0.28f);
+    laser.setY(bc.getCentre().getY());
+    ArrayList<Collision> collisions = Physics.boxcastAll( new Vector2(laser.getX(), laser.getY()), new Vector2(transform.getSize().getX()*0.44f, 1080));
+    float closestPoint = 1100;
+    for (Collision c : collisions) {
+      if(c.getCollidedObject().getComponent(ComponentType.RIGIDBODY) != null) {
+        if (((Rigidbody) c.getCollidedObject().getComponent(ComponentType.RIGIDBODY) ).getBodyType() == RigidbodyType.STATIC && c.getCollidedObject() != this) {
+          closestPoint = c.getPointOfCollision().getY() < closestPoint ? c.getPointOfCollision().getY() : closestPoint;
+        }
+      }
+    }
+    laser.setWidth(transform.getSize().getX()*0.44f);
+    laser.setHeight(closestPoint - laser.getY());
   }
 }
