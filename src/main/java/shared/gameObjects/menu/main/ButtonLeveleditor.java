@@ -16,7 +16,7 @@ public class ButtonLeveleditor extends ButtonObject {
    */
   public ButtonLeveleditor(
       double x, double y, double sizeX, double sizeY, ObjectType id, UUID objectUUID) {
-    super(x, y, sizeX, sizeY, id, objectUUID);
+    super(x, y, sizeX, sizeY, "Level Editor", id, objectUUID);
   }
 
   @Override

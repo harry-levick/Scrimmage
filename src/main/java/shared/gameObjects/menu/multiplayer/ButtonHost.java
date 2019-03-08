@@ -20,7 +20,7 @@ public class ButtonHost extends ButtonObject {
    * @param id Unique Identifier of every game object
    */
   public ButtonHost(double x, double y, ObjectType id, UUID objectUUID) {
-    super(x, y, 50, 50, id, objectUUID);
+    super(x, y, 50, 50, "Host", id, objectUUID);
   }
 
   @Override
