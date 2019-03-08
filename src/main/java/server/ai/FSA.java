@@ -28,7 +28,7 @@ public enum FSA {
               .getPos().sub(botPos.add(targetPlayer.getTransform().getSize().mult(0.5f))),
           null,
           (Bot) bot,
-          true);
+          false);
 
       boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
           .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
@@ -78,7 +78,7 @@ public enum FSA {
               .getPos().sub(botPos.add(targetPlayer.getTransform().getSize().mult(0.5f))),
           null,
           (Bot) bot,
-          true);
+          false);
 
       boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
           .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
@@ -128,7 +128,7 @@ public enum FSA {
               .getPos().sub(botPos.add(targetPlayer.getTransform().getSize().mult(0.5f))),
           null,
           (Bot) bot,
-          true);
+          false);
 
       boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
           .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
@@ -180,7 +180,7 @@ public enum FSA {
               .getPos().sub(botPos.add(targetPlayer.getTransform().getSize().mult(0.5f))),
           null,
           (Bot) bot,
-          true);
+          false);
 
       boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
           .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
@@ -241,7 +241,7 @@ public enum FSA {
               .getPos().sub(botPos.add(targetPlayer.getTransform().getSize().mult(0.5f))),
           null,
           (Bot) bot,
-          true);
+          false);
 
       boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
           .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
@@ -287,7 +287,7 @@ public enum FSA {
               .getPos().sub(botPos.add(targetPlayer.getTransform().getSize().mult(0.5f))),
           null,
           (Bot) bot,
-          true);
+          false);
 
       boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
           .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
