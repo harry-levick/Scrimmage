@@ -3,9 +3,9 @@ package shared.physics;
 import client.main.Client;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import javafx.application.Platform;
 import javafx.scene.shape.Line;
 import server.ai.Bot;
@@ -66,7 +66,7 @@ public class Physics {
           () -> {
             drawCast(castCollider.getNodes().get(0).getX(), castCollider.getNodes().get(0).getY(),
                 castCollider.getNodes().get(castCollider.getNodes().size() - 1).getX(),
-                castCollider.getNodes().get(castCollider.getNodes().size() - 1).getY(), true);
+                castCollider.getNodes().get(castCollider.getNodes().size() - 1).getY(), "#00ff00");
           }
       );
 
@@ -125,7 +125,7 @@ public class Physics {
           () -> {
             drawCast(castCollider.getNodes().get(0).getX(), castCollider.getNodes().get(0).getY(),
                 castCollider.getNodes().get(castCollider.getNodes().size() - 1).getX(),
-                castCollider.getNodes().get(castCollider.getNodes().size() - 1).getY(), true);
+                castCollider.getNodes().get(castCollider.getNodes().size() - 1).getY(), "#00ff00");
           }
       );
 
@@ -162,7 +162,7 @@ public class Physics {
   }
 
   public static void drawCast(double xStart, double yStart, double xFinish, double yFinish,
-      boolean green) {
+      String colour) {
     Platform.runLater(
         () -> {
           Line line = new Line();
@@ -170,10 +170,8 @@ public class Physics {
           line.setStartY(yStart);
           line.setEndX(xFinish);
           line.setEndY(yFinish);
-          if (green)
-            line.setStyle("-fx-stroke-width: 4; -fx-stroke: #00FF00;");
-          else
-            line.setStyle("-fx-stroke-width: 4; -fx-stroke: #ff0000;");
+
+          line.setStyle(String.format("-fx-stroke-width: 4; -fx-stroke: %s;", colour));
           Client.gameRoot.getChildren().add(line);
         }
     );
@@ -232,6 +230,11 @@ public class Physics {
 
     while (iter.hasNext()) {
       GameObject object = iter.next();
+
+      // FIX ISSUE WHEN COLLIDING WITH LIMB, POSSIBLY ONLY A TEMP FIX
+      if (object instanceof Limb)
+        continue;
+
       if (object.getComponent(ComponentType.COLLIDER) != null) {
         collision =
             new Collision(
