@@ -95,11 +95,10 @@ public class AStar {
       } else {
         distanceElapsed = 0;
         replicaBot = new Bot(bot);
-        replicaBot.setHolding(bot.getHolding());
+        //replicaBot.setHolding(bot.getHolding());
         botX = replicaBot.getX();
         botY = replicaBot.getY();
 
-        /*
         // Create a copy of the bots weapon
         Weapon botWeapon = bot.getHolding();
         Weapon cloneWeapon = null;
@@ -113,9 +112,9 @@ public class AStar {
         } else if (botWeapon instanceof Sword) {
           cloneWeapon = new Sword((Sword) botWeapon);
         }
-        this.nodeBot.setHolding(cloneWeapon);
+        replicaBot.setHolding(cloneWeapon);
 
-         */
+
 
         // Calculate the heuristic value of the node.
         this.remainingDistance = calcH(getItems(worldScene));

@@ -48,6 +48,10 @@ public class MachineGun extends Gun {
     rotate.setPivotY(10);
   }
 
+  public MachineGun(MachineGun that) {
+    this(that.getX(), that.getY(), that.name, that.holder, UUID.randomUUID());
+  }
+
   @Override
   public void fire(double mouseX, double mouseY) {
     if (canFire()) {
