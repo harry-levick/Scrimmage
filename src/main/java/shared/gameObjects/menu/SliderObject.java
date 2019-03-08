@@ -1,5 +1,6 @@
 package shared.gameObjects.menu;
 
+import client.main.Client;
 import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.control.Slider;
@@ -9,7 +10,7 @@ import shared.gameObjects.Utils.ObjectType;
 
 public abstract class SliderObject extends GameObject {
 
-  private final float yOffset = 30;
+  private final float yOffset = 20;
   protected transient Slider slider;
   protected transient Text text;
   protected String label;
@@ -49,6 +50,7 @@ public abstract class SliderObject extends GameObject {
     text = new Text(label);
     text.setLayoutX(getX());
     text.setLayoutY(getY());
+    text.setFont(Client.settings.getFont(20));
     root.getChildren().add(text);
   }
 
@@ -58,11 +60,6 @@ public abstract class SliderObject extends GameObject {
 
   @Override
   public void render() {
-
-  }
-
-  @Override
-  public void update() {
 
   }
 
