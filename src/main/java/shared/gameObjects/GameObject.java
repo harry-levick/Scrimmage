@@ -13,8 +13,8 @@ import shared.gameObjects.animator.Animator;
 import shared.gameObjects.components.Collider;
 import shared.gameObjects.components.Component;
 import shared.gameObjects.components.ComponentType;
+import shared.gameObjects.components.ObjectShake;
 import shared.gameObjects.components.Rigidbody;
-import shared.gameObjects.rendering.ObjectShake;
 import shared.physics.Physics;
 import shared.physics.data.Collision;
 import shared.physics.data.DynamicCollision;
@@ -31,7 +31,6 @@ public abstract class GameObject implements Serializable {
   protected transient ImageView imageView;
   protected transient Group root;
   protected transient Animator animation;
-  protected transient ObjectShake shake;
   protected double rotation;
 
   protected GameObject parent;
@@ -78,14 +77,17 @@ public abstract class GameObject implements Serializable {
   // Server and Client side
   public void update() {
     animation.update();
-    shake.update();
     Collider col = (Collider) getComponent(ComponentType.COLLIDER);
     Rigidbody rb = (Rigidbody) getComponent(ComponentType.RIGIDBODY);
+    ObjectShake shake = (ObjectShake) getComponent(ComponentType.SHAKE);
     if (rb != null) {
       rb.update();
     }
     if (col != null) {
       col.update();
+    }
+    if (shake != null) {
+      shake.update();
     }
   }
 
@@ -93,10 +95,9 @@ public abstract class GameObject implements Serializable {
   public void render() {
     imageView.setImage(animation.getImage());
     imageView.setRotate(getTransform().getRot());
-    if(!shake.active) {
-      imageView.setTranslateX(getX());
-      imageView.setTranslateY(getY());
-    }
+    //imageView.setTranslateX(getX());
+    //imageView.setTranslateY(getY());
+
   }
 
   // Collision engine
@@ -234,7 +235,6 @@ public abstract class GameObject implements Serializable {
   public void initialise(Group root) {
     animation = new Animator();
     initialiseAnimation();
-    shake = new ObjectShake(this,5.0f,3.0f,100.0f);
     imageView = new ImageView();
     imageView.setRotate(rotation);
     if (root != null) {

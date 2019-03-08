@@ -10,4 +10,5 @@ public enum ComponentType {
   IMAGE,
   AUDIO,
   TRANSFORM,
+  SHAKE,
 }

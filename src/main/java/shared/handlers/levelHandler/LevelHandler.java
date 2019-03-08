@@ -49,6 +49,10 @@ public class LevelHandler {
     this.backgroundRoot = backgroundRoot;
     this.gameRoot = gameRoot;
 
+    filters.setDesaturate(-0.5);
+    filters.applyFilter(this.root,"desaturate");
+    
+    
     musicPlayer = new AudioHandler(settings);
     changeMap(new Map("main_menu.map", Path.convert("src/main/resources/menus/main_menu.map"),
         GameState.MAIN_MENU), true);

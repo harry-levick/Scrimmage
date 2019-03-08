@@ -6,6 +6,7 @@ import javafx.scene.Group;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectID;
 import shared.gameObjects.components.BoxCollider;
+import shared.gameObjects.components.ObjectShake;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Limbs.Arm;
 import shared.gameObjects.players.Limbs.Body;
@@ -40,6 +41,7 @@ public class Player extends GameObject {
   protected Rigidbody rb;
   protected double vx;
   private BoxCollider bc;
+  private ObjectShake shake;
 
   public Player(double x, double y, UUID playerUUID) {
     super(x, y, 80, 110, ObjectID.Player, playerUUID);
@@ -51,11 +53,13 @@ public class Player extends GameObject {
     this.health = 100;
     this.holding = null;
     this.behaviour = Behaviour.IDLE;
+    this.shake = new ObjectShake(this);
     this.bc = new BoxCollider(this, ColliderLayer.PLAYER, false);
     this.rb = new Rigidbody(RigidbodyType.DYNAMIC, 80, 8, 0.2f,
         new MaterialProperty(0.005f, 0.1f, 0.05f), null, this);
     addComponent(bc);
     addComponent(rb);
+    addComponent(shake);
   }
 
   // Initialise the animation
@@ -67,7 +71,6 @@ public class Player extends GameObject {
   @Override
   public void initialise(Group root) {
     super.initialise(root);
-    this.shake.active = true; //Change to true to enable shake.
     addChild(new Leg(true, this));
     addChild(new Leg(false, this));
     addChild(new Body(this));
