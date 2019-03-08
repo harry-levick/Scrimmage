@@ -15,12 +15,12 @@ import shared.util.maths.Vector2;
  */
 public class DynamicCollision {
 
-  private Rigidbody bodyA;
-  private Rigidbody bodyB;
-  private Vector2 collisionNormal;
-  private Vector2 penetrationDistance;
-  private CollisionDirection dir;
-  private float pentrationDepth;
+  protected Rigidbody bodyA;
+  protected Rigidbody bodyB;
+  protected Vector2 collisionNormal;
+  protected Vector2 penetrationDistance;
+  protected CollisionDirection dir;
+  protected float pentrationDepth;
 
   public DynamicCollision(Rigidbody bodyA, Rigidbody bodyB) {
     this.bodyA = bodyA;
@@ -174,7 +174,7 @@ public class DynamicCollision {
     bodyB.correctPosition(positionCorrection.mult(bodyB.getInv_mass()));
   }
 
-  private Vector2 positionCorrection() {
+  protected Vector2 positionCorrection() {
     float percent = 0.3f;
     float slop = 0.04f;
 

@@ -22,6 +22,7 @@ import shared.gameObjects.players.Player;
 import shared.physics.Physics;
 import shared.physics.data.Collision;
 import shared.physics.data.DynamicCollision;
+import shared.physics.data.SimulatedDynamicCollision;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
 
@@ -136,6 +137,37 @@ public abstract class GameObject implements Serializable {
         }
       } else if (col.isTrigger()) {
         callCollisionMethods(col, true);
+      }
+    }
+
+  }
+
+  /**
+   *
+   * Use to only update the Physics of the object being called
+   */
+  public void simulateCollisions() {
+    ArrayList<Component> cols = getComponents(ComponentType.COLLIDER);
+    Rigidbody rb = (Rigidbody) getComponent(ComponentType.RIGIDBODY);
+    for (Component comp : cols) {
+      Collider col = (Collider) comp;
+      if (col == null) {
+        return;
+      }
+      if (rb != null && !col.isTrigger()) {
+        if (rb.getBodyType() == RigidbodyType.STATIC) {
+          return;
+        } else {
+          for (GameObject o : Physics.gameObjects.values()) {
+            Collider o_col = (Collider) o.getComponent(ComponentType.COLLIDER);
+            Rigidbody o_rb = (Rigidbody) o.getComponent(ComponentType.RIGIDBODY);
+            if (o_col != null && o_rb != null) {
+              if (Collider.haveCollided(col, o_col) && !o_col.isTrigger()) {
+                new SimulatedDynamicCollision(rb, o_rb);
+              }
+            }
+          }
+        }
       }
     }
 
