@@ -78,25 +78,7 @@ public class AStar {
         replicaBot.setX(parentNode.botX);
         replicaBot.setY(parentNode.botY);
         // Simulate the bot with the action, using the game physics
-        replicaBot.simulateAction(action);
-        replicaBot.simulateApplyInput();
-        replicaBot.simulateUpdate();
-        replicaBot.updateCollision();
-
-        replicaBot.simulateAction(action);
-        replicaBot.simulateApplyInput();
-        replicaBot.simulateUpdate();
-        replicaBot.updateCollision();
-
-        replicaBot.simulateAction(action);
-        replicaBot.simulateApplyInput();
-        replicaBot.simulateUpdate();
-        replicaBot.updateCollision();
-
-        replicaBot.simulateAction(action);
-        replicaBot.simulateApplyInput();
-        replicaBot.simulateUpdate();
-        replicaBot.updateCollision();
+        simulateBot(action);
 
         botX = replicaBot.getX();
         botY = replicaBot.getY();
@@ -105,14 +87,12 @@ public class AStar {
         Vector2 parentPos = new Vector2(parent.botX, parent.botX);
 
         double distChange = thisPos.exactMagnitude(parentPos);
-        // Calculate the heuristic value of the node.
         this.remainingDistance = calcH(getItems(worldScene));
-        // Calculate the distance from the starting node to the current node
+        // Distance from the starting node to the current node
         this.distanceElapsed = parent.distanceElapsed + distChange;
 
         this.fValue = /*distanceElapsed +*/ remainingDistance;
       } else {
-        // Starting node so distanceElapsed is 0
         distanceElapsed = 0;
         replicaBot = new Bot(bot);
         replicaBot.setHolding(bot.getHolding());
@@ -145,7 +125,13 @@ public class AStar {
       this.action = action;
     }
 
-    private void simulateBot(Bot replicaBot) {
+    private void simulateBot(boolean[] action) {
+      for (int i = 0; i <= 4; i++) {
+        replicaBot.simulateAction(action);
+        replicaBot.simulateApplyInput();
+        replicaBot.simulateUpdate();
+        replicaBot.simulateUpdateCollision(worldScene);
+      }
     }
 
     /**
@@ -252,9 +238,7 @@ public class AStar {
   public List<boolean[]> optimise(Player enemy) {
     // Initialise the variables needed by the search.
     initSearch(enemy);
-    // Run the search.
     search();
-    // Extract the plan from the search.
     currentPlan = extractPlan();
 
     return currentPlan;
@@ -265,24 +249,15 @@ public class AStar {
    */
   private void search() {
     int searchCount = 0;
-    // The maximum number of nodes searched before the search is stopped.
     int seachCutoff  = Integer.MAX_VALUE;
-    // Set the current node to the best position, in case the bot is already at the enemy.
     SearchNode current = bestPosition;
     closedList.add(current);
-    // Is the current node good (= we're not getting hurt)
     boolean currentGood = false;
 
-    // Search until we're at the enemy coordinates
     while (openList.size() != 0 && !atEnemy(current.botX, current.botY)) {
-      // Pick the best node from the open-list
       current = pickBestNode(openList);
       currentGood = false;
 
-      // get the heuristic value of the best node
-      double nodeF = current.fValue;
-
-      // Now act on what we get as a remaining distance.
       if (!current.visited && isInClosed(current)) {
         /**
          * If the node is not directly visited, but it is close to a node that has been visited.
@@ -291,30 +266,21 @@ public class AStar {
          * Closed List -> Nodes too close to a node in the closed list are considered visited, even
          * though they are a bit different.
          */
-        nodeF += visitedListPenalty;
+        current.fValue += visitedListPenalty;
         current.visited = true;
-        current.fValue = nodeF;
         openList.add(current);
         //Physics.drawCast(current.botX, current.botY, current.botX, current.botY, "#800080");
 
       } else {
-        // Accept the node
         currentGood = true;
-        double nodeFValue = current.fValue;
-        // Put it into the visited list.
         closedList.add(current);
-        // Add all children of the current node to the open list.
         openList.addAll(current.generateChildren());
-        searchCount++; // Increment the search count only if the current node is good.
+        searchCount++;
         //Physics.drawCast(current.botX, current.botY, current.botX, current.botY, "#00ff00");
       }
 
-      if (currentGood) {
-        // The current node is the best node
+      if (currentGood)
         bestPosition = current;
-
-      }
-
       if (searchCount >= seachCutoff)
         break;
 
