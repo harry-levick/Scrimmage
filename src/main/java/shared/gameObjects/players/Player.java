@@ -6,6 +6,7 @@ import javafx.scene.Group;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
+import shared.gameObjects.components.ObjectShake;
 import shared.gameObjects.components.CircleCollider;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Limbs.Arm;
@@ -46,6 +47,7 @@ public class Player extends GameObject {
   protected Rigidbody rb;
   protected double vx;
   private BoxCollider bc;
+  private ObjectShake shake;
 
   // Limbs
   private Limb head;
@@ -74,6 +76,7 @@ public class Player extends GameObject {
     this.holding = null;
     this.levelHandler = levelHandler;
     this.behaviour = Behaviour.IDLE;
+    this.shake = new ObjectShake(this);
     this.bc = new BoxCollider(this, ColliderLayer.PLAYER, false);
     //  this.cc = new CircleCollider(this, ColliderLayer.PLAYER, transform.getSize().magnitude()*0.5f, false);
     this.rb = new Rigidbody(RigidbodyType.DYNAMIC, 90, 11.67f, 0.2f,
@@ -81,6 +84,7 @@ public class Player extends GameObject {
     //  addComponent(cc);
     addComponent(bc);
     addComponent(rb);
+    addComponent(shake);
   }
 
   // Initialise the animation
@@ -98,6 +102,7 @@ public class Player extends GameObject {
   @Override
   public void initialise(Group root) {
     super.initialise(root);
+
     legLeft = new Leg(true, this, levelHandler);
     legRight = new Leg(false, this, levelHandler);
     body = new Body(this, levelHandler);
