@@ -55,6 +55,7 @@ public class Transform implements Serializable {
   /** [Does not do anything currently] */
   public void rotate(float rotation) {
     rot += rotation;
+    System.out.println("Rotated: " + rot);
     while (rot > 180) {
       rot -= 180;
     }

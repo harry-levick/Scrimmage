@@ -2,6 +2,7 @@ package shared.gameObjects.weapons;
 
 import java.util.ArrayList;
 import java.util.UUID;
+import shared.gameObjects.Destructable;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.CircleCollider;
@@ -70,18 +71,18 @@ public abstract class Melee extends Weapon {
           Physics.boxcastAll(
               new Vector2((float) (this.getX() + this.range), (float) (this.getY() - this.range)),
               new Vector2((float) this.range, (float) this.range));
-      ArrayList<Player> playersBeingHit = new ArrayList<>();
+      ArrayList<Destructable> playersBeingHit = new ArrayList<>();
 
       for (Collision c : collisions) {
         GameObject g = c.getCollidedObject().getParent();
-        if (g != null && g.getId() == ObjectType.Player && !g.equals(holder)) {
-          playersBeingHit.add((Player) g);
+        if (g instanceof Destructable && !g.equals(holder)) {
+          playersBeingHit.add((Destructable) g);
         }
       }
 
       this.currentCooldown = getDefaultCoolDown();
 
-      for (Player p : playersBeingHit) {
+      for (Destructable p : playersBeingHit) {
         p.deductHp(this.damage);
       }
 

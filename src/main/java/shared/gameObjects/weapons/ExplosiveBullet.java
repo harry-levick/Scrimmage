@@ -3,6 +3,7 @@ package shared.gameObjects.weapons;
 import client.main.Client;
 import java.util.ArrayList;
 import java.util.UUID;
+import shared.gameObjects.Destructable;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.ComponentType;
@@ -13,6 +14,7 @@ import shared.physics.data.Collision;
 import shared.physics.types.RigidbodyType;
 import shared.util.Path;
 import shared.util.maths.Vector2;
+import sun.security.krb5.internal.crypto.Des;
 
 public class ExplosiveBullet extends Bullet {
 
@@ -54,18 +56,16 @@ public class ExplosiveBullet extends Bullet {
   public void OnCollisionEnter(Collision col) {
     ArrayList<Collision> collision = Physics.circlecastAll(this.bc.getCentre(), radius);
     GameObject gCol = col.getCollidedObject();
-    Player pCol;
     boolean remove = true;
 
-    if (gCol.getId() == ObjectType.Player) {
-      pCol = (Player) gCol;
-      if (pCol.equals(holder)) {
+    if (gCol.getId() == ObjectType.Player || gCol instanceof Destructable) {
+      if (gCol.equals(holder)) {
         hitHolder = true;
         remove = false;
       }
       else {
         // Player on direct impact takes full damage (another half dealt in circleCasting down there)
-        pCol.deductHp(damage/2);
+        ((Destructable) gCol).deductHp(damage/2);
       }
     }
 
@@ -79,9 +79,9 @@ public class ExplosiveBullet extends Bullet {
       if (g.equals(gCol) && hitHolder) { continue; }
 
       // Not going to deal damage to holder
-      if (g.getId() == ObjectType.Player && !g.equals(holder)) {
+      if (g instanceof Destructable && !g.equals(holder)) {
         // Every player in the explosion area deals half the damage
-        ((Player) g).deductHp(damage/2);
+        ((Destructable) g).deductHp(damage/2);
       }
 
       // Knockback here
