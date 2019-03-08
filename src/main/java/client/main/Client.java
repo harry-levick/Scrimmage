@@ -396,6 +396,13 @@ public class Client extends Application {
           levelHandler.getBotPlayerList().forEach((key, bot) -> bot.applyInput());
         }
 
+
+        /** Render Game Objects */
+        levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.render());
+        if (levelHandler.getBackground() != null) {
+          levelHandler.getBackground().render();
+        }
+
         /** Check Collisions */
         Physics.gameObjects = levelHandler.getGameObjects();
 
@@ -433,11 +440,6 @@ public class Client extends Application {
           interpolateEntities();
         }
 
-        /** Render Game Objects */
-        levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.render());
-        if (levelHandler.getBackground() != null) {
-          levelHandler.getBackground().render();
-        }
 
         /** Draw the UI */
         if (levelHandler.getGameState() == GameState.IN_GAME

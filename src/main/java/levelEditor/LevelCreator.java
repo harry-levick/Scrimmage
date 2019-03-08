@@ -36,6 +36,7 @@ import shared.gameObjects.menu.main.ButtonSingleplayer;
 import shared.gameObjects.menu.main.SoundSlider;
 import shared.gameObjects.menu.main.SoundSlider.SOUND_TYPE;
 import shared.gameObjects.menu.multiplayer.ButtonJoin;
+import shared.gameObjects.objects.JumpPad;
 import shared.gameObjects.objects.LaserBeam;
 import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.GameState;
@@ -111,6 +112,10 @@ public class LevelCreator extends Application {
 
     //Laser
     gameObjects.put(uuid, new LaserBeam(getAbs(4), getAbs(7), uuid));
+    uuid = UUID.randomUUID();
+
+    //JumpPad
+    gameObjects.put(uuid, new JumpPad(getAbs(2), getAbs(25), uuid));
     uuid = UUID.randomUUID();
 
     //Middle platforms

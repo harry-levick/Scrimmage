@@ -11,7 +11,7 @@ import shared.util.maths.Vector2;
 
 /**
  * @author fxa579 Base class to process and manage collisions happening with Dynamic Objects on
- * other Rigidbodies. Used in the backend.
+ *     other Rigidbodies. Used in the backend.
  */
 public class DynamicCollision {
 
@@ -119,8 +119,7 @@ public class DynamicCollision {
     }
   }
 
-  private void resolveCollision(CircleCollider circA, CircleCollider circB) {
-  }
+  private void resolveCollision(CircleCollider circA, CircleCollider circB) {}
 
   private void resolveCollision(CircleCollider circB, BoxCollider boxA) {
     Vector2 n = boxA.getCentre().sub(circB.getCentre());
@@ -160,7 +159,7 @@ public class DynamicCollision {
     if (vOnNormal > 0) {
       return;
     }
-    float e = Math.max(bodyA.getMaterial().getRestitution(), bodyB.getMaterial().getRestitution());
+    float e = Math.min(bodyA.getMaterial().getRestitution(), bodyB.getMaterial().getRestitution());
 
     float j = -1 * (1 + e) * vOnNormal;
     j /= bodyA.getInv_mass() + bodyB.getInv_mass();
@@ -175,8 +174,8 @@ public class DynamicCollision {
   }
 
   protected Vector2 positionCorrection() {
-    float percent = 0.3f;
-    float slop = 0.04f;
+    float percent = 0.8f;
+    float slop = 0.08f;
 
     Vector2 correction =
         collisionNormal.mult(
