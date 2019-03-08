@@ -1,5 +1,6 @@
 package client.handlers.audioHandler;
 
+import client.main.Client;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,16 +11,7 @@ public class MusicAssets {
   private final HashMap<String, String> tracks = new HashMap<String, String>();
   private final ArrayList<String> menuPlaylist = new ArrayList<>();
   private final ArrayList<String> ingamePlaylist = new ArrayList<>();
-  private String filePath =
-      "src"
-          + File.separator
-          + "main"
-          + File.separator
-          + "resources"
-          + File.separator
-          + "audio"
-          + File.separator
-          + "music";
+  private String filePath = Client.settings.getMusicPath();
 
   public MusicAssets() {
     tracks.put("FUNK_GAME_LOOP", "funk-game-loop-by-kevin-macleod.mp3");
