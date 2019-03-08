@@ -59,14 +59,11 @@ public class MachineGun extends Gun {
       double bulletFlipX = getMuzzleFlipX() + 68 - 68 * Math.cos(angleGun);
       double bulletFlipY = getMuzzleFlipY() - 68 * Math.sin(angleGun);
       Bullet bullet =
-          new MachineGunBullet(
+          new FireBullet(
               (holder.getFacingRight() ? bulletX : bulletFlipX),
               (holder.getFacingRight() ? bulletY : bulletFlipY),
               mouseX,
               mouseY,
-              this.bulletWidth,
-              this.bulletSpeed,
-              this.damage,
               this.holder,
               uuid);
       this.currentCooldown = getDefaultCoolDown();

@@ -8,9 +8,7 @@ import shared.physics.types.ColliderLayer;
 import shared.physics.types.ColliderType;
 import shared.util.maths.Vector2;
 
-/**
- * Constructs a Circle shaped Collider
- */
+/** Constructs a Circle shaped Collider */
 public class CircleCollider extends Collider implements Serializable {
 
   private float radius;

@@ -24,20 +24,21 @@ import shared.util.maths.Vector2;
 /** @author fxa579 The singleton class respomsible for raycasting and physics constants/equations */
 public class Physics {
 
-  public static final float GRAVITY = 100f;
+  public static final float GRAVITY = 90f;
   public static final float TIMESTEP = 1f / 60;
   public static final int RAYCAST_INC = 100;
   public static boolean showColliders = false;
   public static boolean showCasts = true;
   /*
-   * Order: DEFAULT, PLAYER, OBJECT, WALL, PARTICLE
+   * Order: DEFAULT, PLAYER, OBJECT, PLATFORM, PARTICLE, COLLECTABLE
    */
-  public static boolean[] DEFAULT = {true, true, true, true, false};
-  public static boolean[] PLAYER = {true, false, true, true, false};
-  public static boolean[] OBJECT = {true, true, true, true, false};
-  public static boolean[] WALL = {true, true, true, true, false};
-  public static boolean[] PARTICLES = {false, false, false, false, false};
-  public static boolean[][] COLLISION_LAYERS = {DEFAULT, PLAYER, OBJECT, WALL, PARTICLES};
+  public static boolean[] DEFAULT = {true, true, true, true, false, false};
+  public static boolean[] PLAYER = {true, false, true, true, false, false};
+  public static boolean[] OBJECT = {true, true, true, true, false, false};
+  public static boolean[] PLATFORM = {true, true, true, true, false, true};
+  public static boolean[] PARTICLES = {false, false, false, false, false, false};
+  public static boolean[] COLLECTABLE = {false, false, false, true, false, false};
+  public static boolean[][] COLLISION_LAYERS = {DEFAULT, PLAYER, OBJECT, PLATFORM, PARTICLES, COLLECTABLE};
   public static ConcurrentSkipListMap<UUID, GameObject> gameObjects;
   private static ArrayList<DynamicCollision> collisions = new ArrayList<>();
 
@@ -153,12 +154,7 @@ public class Physics {
         }
       }
     }
-
     return collision;
-    /*
-    for (GameObject object : gameObjects.values()) {
-    }
-    */
   }
 
   public static void drawCast(double xStart, double yStart, double xFinish, double yFinish,
@@ -244,12 +240,7 @@ public class Physics {
         }
       }
     }
-
     return null;
-    /*
-    for (GameObject object : gameObjects.values()) {
-    }
-    */
   }
 
   /**
@@ -278,10 +269,6 @@ public class Physics {
       }
     }
     return collisions;
-    /*
-    for (GameObject object : gameObjects.values()) {
-    }
-    */
   }
 
   /**

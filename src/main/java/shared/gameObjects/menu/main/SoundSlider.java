@@ -65,6 +65,11 @@ public class SoundSlider extends SliderObject {
     }
   }
 
+  @Override
+  public void update() {
+    onValueChange();
+  }
+
   public enum SOUND_TYPE {
     MUSIC,
     SFX

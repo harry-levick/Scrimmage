@@ -1,5 +1,6 @@
 package levelEditor;
 
+import client.main.Settings;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -63,32 +64,25 @@ import shared.util.maths.Vector2;
 
 public class LevelEditor extends Application {
 
+  private Settings settings = new Settings(); //todo needs to be chnaged into Client settings since currently detached
   private ConcurrentSkipListMap<UUID, GameObject> gameObjects;
   private ArrayList<Player> playerSpawns = new ArrayList<>();
   private MapDataObject mapDataObject;
   private boolean snapToGrid = true;
 
-  private int spawnPointLimit = 4; // todo autofetch
+  private int spawnPointLimit = settings.getMaxPlayers();
 
-  private int stageSizeX = 1920; // todo autofetch
-  private int stageSizeY = 1080;
+  private int stageSizeX = settings.getMapWidth();
+  private int stageSizeY = settings.getMapHeight();
   private int gridSizePX = 40;
-  private int gridSizeX = stageSizeX / gridSizePX; // 40 px blocks
-  private int gridSizeY = stageSizeY / gridSizePX;
+  private int gridSizeX = stageSizeX / gridSizePX; // 40 px blocks //48
+  private int gridSizeY = stageSizeY / gridSizePX;                 //27
 
   private LinkedHashMap<OBJECT_TYPES, GameObjectTuple> objectMap = new LinkedHashMap<>();
   private OBJECT_TYPES objectTypeSelected = OBJECT_TYPES.PLAYER; // default
 
   private String filename = "";
-  private String filepath =
-      "src"
-          + File.separator
-          + "main"
-          + File.separator
-          + "resources"
-          + File.separator
-          + "maps"
-          + File.separator;
+  private String filepath = settings.getMapsPath();
 
   /**
    * ADDING NEW OBJECTS TO THE MAP CREATOR: 1. add a new object name in the enum OBJECT_TYPES 2. in
@@ -115,13 +109,13 @@ public class LevelEditor extends Application {
     objectMap.put(OBJECT_TYPES.UI_HP, new GameObjectTuple("UI Base", 8, 2));
     objectMap.put(OBJECT_TYPES.BLOCK_METAL_LARGE, new GameObjectTuple("Metal Block Large", 2, 2));
     objectMap.put(OBJECT_TYPES.BLOCK_METAL_SMALL, new GameObjectTuple("Metal Block Small", 1, 1));
-    objectMap.put(OBJECT_TYPES.FLOOR_METAL, new GameObjectTuple("Metal Floor", 5, 2));
+    objectMap.put(OBJECT_TYPES.FLOOR_METAL, new GameObjectTuple("Metal Floor", 4, 1));
     objectMap.put(OBJECT_TYPES.BLOCK_STONE, new GameObjectTuple("Stone Block", 1, 1));
-    objectMap.put(OBJECT_TYPES.FLOOR_STONE, new GameObjectTuple("Stone Floor", 5, 2));
+    objectMap.put(OBJECT_TYPES.FLOOR_STONE, new GameObjectTuple("Stone Floor", 4, 1));
     objectMap.put(OBJECT_TYPES.WALL_STONE, new GameObjectTuple("Stone Wall", 1, 5));
     objectMap.put(OBJECT_TYPES.BLOCK_WOOD_LARGE, new GameObjectTuple("Wood Block Large", 2, 2));
     objectMap.put(OBJECT_TYPES.BLOCK_WOOD_SMALL, new GameObjectTuple("Wood Block Small", 1, 1));
-    objectMap.put(OBJECT_TYPES.FLOOR_WOOD, new GameObjectTuple("Wood Floor", 5, 2));
+    objectMap.put(OBJECT_TYPES.FLOOR_WOOD, new GameObjectTuple("Wood Floor", 4, 1));
     objectMap.put(OBJECT_TYPES.SPIKES, new GameObjectTuple("Spikes", 3, 1));
   }
 
