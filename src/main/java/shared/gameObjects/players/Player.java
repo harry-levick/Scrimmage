@@ -6,10 +6,7 @@ import javafx.scene.Group;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
-<<<<<<< HEAD
 import shared.gameObjects.components.ObjectShake;
-=======
->>>>>>> master
 import shared.gameObjects.components.CircleCollider;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Limbs.Arm;
@@ -50,10 +47,7 @@ public class Player extends GameObject {
   protected Rigidbody rb;
   protected double vx;
   private BoxCollider bc;
-<<<<<<< HEAD
   private ObjectShake shake;
-=======
->>>>>>> master
 
   // Limbs
   private Limb head;
@@ -108,10 +102,7 @@ public class Player extends GameObject {
   @Override
   public void initialise(Group root) {
     super.initialise(root);
-<<<<<<< HEAD
 
-=======
->>>>>>> master
     legLeft = new Leg(true, this, levelHandler);
     legRight = new Leg(false, this, levelHandler);
     body = new Body(this, levelHandler);
