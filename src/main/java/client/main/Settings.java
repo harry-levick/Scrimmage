@@ -23,6 +23,7 @@ public class Settings {
   private String mapsPath;
   private String menuPath;
   private String musicPath;
+  private String achivementPath;
   private String SFXPath;
   private int windowWidth = (int) Screen.getPrimary().getBounds().getWidth();
   private int windowHeight = (int) Screen.getPrimary().getBounds().getHeight();
@@ -55,6 +56,7 @@ public class Settings {
     musicPath = resourcesPath + s + "audio" + s + "music";
     SFXPath = resourcesPath + s + "audio" + s + "sound-effects";
     fontPath = resourcesPath + s + "Kenney Future.ttf";
+    achivementPath = resourcesPath + s + "achivements.txt";
   }
 
   public String getResourcesPath() {
@@ -67,6 +69,10 @@ public class Settings {
 
   public String getMapsPath() {
     return mapsPath;
+  }
+
+  public String getAchivementPath() {
+    return achivementPath;
   }
 
   public void setMapsPath(String mapsPath) {
