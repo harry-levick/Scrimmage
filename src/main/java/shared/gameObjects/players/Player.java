@@ -227,10 +227,11 @@ public class Player extends GameObject {
     this.health -= damage;
     if (this.health <= 0) {
       // For testing
-      this.imageView.setTranslateY(getY() + 70);
+      transform.translate(new Vector2(0, -80));
       this.setActive(false);
-      this.removeComponent(bc);
-      this.imageView.setRotate(90);
+      bc.setLayer(ColliderLayer.PARTICLE);
+      transform.rotate(180);
+      this.imageView.setOpacity(0.5);
     }
   }
 
@@ -240,7 +241,7 @@ public class Player extends GameObject {
       this.imageView.setRotate(0);
       this.imageView.setTranslateY(getY() - 70);
       this.setActive(true);
-      this.addComponent(bc);
+      this.bc.setLayer(ColliderLayer.PLAYER);
     }
     children.forEach(child -> {
       Limb limb = (Limb) child;

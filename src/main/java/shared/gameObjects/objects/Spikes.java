@@ -30,7 +30,7 @@ public class Spikes extends GameObject {
   }
 
   public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", "images/objects/debrisStone_1.png");
+    this.animation.supplyAnimation("default", "images/objects/debris/debrisStone_1.png");
   }
 
   @Override

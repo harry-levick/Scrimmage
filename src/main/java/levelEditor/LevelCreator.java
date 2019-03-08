@@ -36,6 +36,7 @@ import shared.gameObjects.menu.main.ButtonSingleplayer;
 import shared.gameObjects.menu.main.SoundSlider;
 import shared.gameObjects.menu.main.SoundSlider.SOUND_TYPE;
 import shared.gameObjects.menu.multiplayer.ButtonJoin;
+import shared.gameObjects.objects.LaserBeam;
 import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.MapLoader;
@@ -86,6 +87,7 @@ public class LevelCreator extends Application {
     ////////////////////////////////////////
     // MAIN MENU
     ////////////////////////////////////////
+    System.out.println("Generating Main Menu");
     filename = "main_menu";
     gameObjects = new LinkedHashMap<>();
     playerSpawns = new ArrayList<Player>();
@@ -106,13 +108,11 @@ public class LevelCreator extends Application {
             getAbs(20), getAbs(17), getAbs(8), getAbs(2), ObjectType.Button, UUID.randomUUID()));
     uuid = UUID.randomUUID();
 
-    //Moving Platform
-    GameObject object = new StoneFloorObject(
-        300, 300, getAbs(4), getAbs(1), ObjectType.Bot, uuid
-    );
-    object.addComponent(new MovingPlatform(object));
-    gameObjects.put(uuid, object);
+
+    //Laser
+    gameObjects.put(uuid, new LaserBeam(getAbs(4), getAbs(7), uuid));
     uuid = UUID.randomUUID();
+
     //Middle platforms
     gameObjects.put(uuid,
         new StoneFloorObject(
@@ -235,6 +235,7 @@ public class LevelCreator extends Application {
     ////////////////////////////////////////
     // SINGLEPLAYER MAP
     ////////////////////////////////////////
+    System.out.println("Generating Single Player Map");
     filename = "menu";
     gameObjects = new LinkedHashMap<>();
     playerSpawns = new ArrayList<>();
@@ -272,6 +273,7 @@ public class LevelCreator extends Application {
     ////////////////////////////////////////
     // MULTIPLAYER
     ////////////////////////////////////////
+    System.out.println("Generating Multiplayer Map");
     filename = "multiplayer";
     gameObjects = new LinkedHashMap<>();
     playerSpawns = new ArrayList<Player>();
@@ -323,6 +325,7 @@ public class LevelCreator extends Application {
     ////////////////////////////////////////
     // MULTIPLAYER LOBBY
     ////////////////////////////////////////
+    System.out.println("Generating Lobby");
     filename = "lobby";
     gameObjects = new LinkedHashMap<>();
     playerSpawns = new ArrayList<Player>();
@@ -383,6 +386,7 @@ public class LevelCreator extends Application {
     ////////////////////////////////////////
     // SETTINGS
     ////////////////////////////////////////
+    System.out.println("Generating Settings");
     filename = "settings";
     gameObjects = new LinkedHashMap<>();
     playerSpawns = new ArrayList<Player>();

@@ -15,7 +15,6 @@ public class Particle {
   private float lifetime;
 
   public Particle(Vector2 sourcePosition, Vector2 initialVelocity, Vector2 acceleration, Vector2 size, float spawnRadius, float lifetime) {
-
   }
 
 }
