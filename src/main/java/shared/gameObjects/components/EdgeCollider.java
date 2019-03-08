@@ -7,9 +7,7 @@ import shared.physics.types.ColliderLayer;
 import shared.physics.types.ColliderType;
 import shared.util.maths.Vector2;
 
-/**
- * An edge collider; used only for Raycasts
- */
+/** An edge collider; used only for Raycasts */
 public class EdgeCollider extends Collider implements Serializable {
 
   ArrayList<Vector2> nodes;
@@ -36,7 +34,6 @@ public class EdgeCollider extends Collider implements Serializable {
     Vector2 toRet = nodes.get(0);
     for (Vector2 vec : nodes) {
       toRet = vec.magnitude(point) <= toRet.magnitude(point) ? vec : toRet;
-      //System.out.println(vec + "\n" + toRet);
     }
     return toRet;
   }

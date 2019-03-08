@@ -2,6 +2,9 @@ package shared.gameObjects.Utils;
 
 import java.io.Serializable;
 import shared.gameObjects.GameObject;
+import shared.gameObjects.components.Component;
+import shared.gameObjects.components.ComponentType;
+import shared.gameObjects.components.Rigidbody;
 import shared.util.maths.Vector2;
 
 public class Transform implements Serializable {
@@ -43,33 +46,33 @@ public class Transform implements Serializable {
     gameObject = parent;
   }
 
-  /**
-   * Moves the attached gameObject to the desired position.
-   */
+  /** Moves the attached gameObject to the desired position. */
   public void translate(Vector2 translateFactor) {
     topPos = topPos.add(translateFactor);
     botPos = botPos.add(translateFactor);
   }
 
-  /**
-   * [Does not do anything currently]
-   */
+  /** [Does not do anything currently] */
   public void rotate(float rotation) {
     rot += rotation;
-    if (rot > 180) {
+    while (rot > 180) {
       rot -= 180;
     }
-    if (rot < -180) {
+    while (rot < -180) {
       rot += 180;
     }
     float angle = (float) Math.toRadians(rot);
     float posX = topPos.getX(), posY = topPos.getY();
-    this.rotatedPos = new Vector2(posX * Math.cos(angle) - posY * Math.sin(angle),
-        posX * Math.sin(angle) + posY * Math.cos(angle));
+    this.rotatedPos =
+        new Vector2(
+            posX * Math.cos(angle) - posY * Math.sin(angle),
+            posX * Math.sin(angle) + posY * Math.cos(angle));
     posX = size.getX();
     posY = size.getY();
-    this.rotatedSize = new Vector2(posX * Math.cos(angle) - posY * Math.sin(angle),
-        posX * Math.sin(angle) + posY * Math.cos(angle));
+    this.rotatedSize =
+        new Vector2(
+            posX * Math.cos(angle) - posY * Math.sin(angle),
+            posX * Math.sin(angle) + posY * Math.cos(angle));
   }
 
   /**
@@ -99,6 +102,10 @@ public class Transform implements Serializable {
   public void setRot(float rot) {
     this.rot = rot;
     rotate(0);
+    Component rb = gameObject.getComponent(ComponentType.RIGIDBODY);
+    if (rb != null) {
+      ((Rigidbody) rb).setOrientation((float) Math.toRadians(rot));
+    }
   }
 
   public Vector2 getPos() {

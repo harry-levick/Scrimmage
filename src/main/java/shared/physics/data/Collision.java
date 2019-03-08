@@ -90,6 +90,7 @@ public class Collision {
       }
       penDepth = y_overlap;
     }
+    pointOfCollision = b.getCentre().sub(normalCollision.mult(penDepth));
   }
 
   private void calculateData(BoxCollider a, CircleCollider b) {

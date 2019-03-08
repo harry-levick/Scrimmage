@@ -32,6 +32,8 @@ public class KeyboardInput implements EventHandler<KeyEvent> {
         case H:
           clientPlayer.deattach = true;
           break;
+        case ESCAPE:
+          Client.settingsToggle();
         default:
       }
     } else if (event.getEventType() == KeyEvent.KEY_RELEASED) {

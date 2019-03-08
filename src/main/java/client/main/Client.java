@@ -7,6 +7,8 @@ import client.handlers.inputHandler.MouseInput;
 import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import de.codecentric.centerdevice.javafxsvg.dimension.PrimitiveDimensionProvider;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -26,6 +28,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -37,7 +40,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.UI.UI;
+import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.Utils.TimePosition;
+import shared.gameObjects.menu.main.SoundSlider;
+import shared.gameObjects.menu.main.SoundSlider.SOUND_TYPE;
 import shared.gameObjects.players.Limbs.Arm;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.MachineGun;
@@ -52,7 +58,7 @@ import shared.util.maths.Vector2;
 
 public class Client extends Application {
 
-  public static boolean musicActive = false;
+  public static boolean musicActive = true;
 
   private static final Logger LOGGER = LogManager.getLogger(Client.class.getName());
   public static LevelHandler levelHandler;
@@ -83,8 +89,10 @@ public class Client extends Application {
   private int framesElapsedSinceFPS = 0;
   private UI userInterface;
   private static boolean credits = false;
-  private int creditStartDelay = 100;
+  private static int creditStartDelay = 100;
   private boolean gameOver;
+  private static boolean settingsOverlay = false;
+  private static ArrayList<GameObject> settingsObjects = new ArrayList<>();
 
   //Networking
   private final boolean prediction = false; //Broken
@@ -96,14 +104,65 @@ public class Client extends Application {
     launch(args);
   }
 
+  public static void settingsToggle() {
+    // todo check if ingame
+    // show/overlay settings
+    System.out.println(levelHandler.getMap().getGameState() + levelHandler.getMap().getName());
+    if (settingsOverlay == false && levelHandler.getMap().getGameState() != GameState.SETTINGS) {
+      settingsOverlay = true;
+      //add screen saturation
+
+      //background
+      try {
+        Image popupBackground = new Image(new FileInputStream(
+            settings.getResourcesPath() + File.separator + "images" + File.separator + "ui"
+                + File.separator + "panel.png"));
+        ImageView iv = new ImageView(popupBackground);
+        iv.setX(settings.getGrisPos(18));
+        iv.setY(settings.getGrisPos(5));
+        iv.setFitWidth(settings.getGrisPos(12));
+        iv.setFitHeight(settings.getGrisPos(7));
+        creditsRoot.getChildren().add(iv);
+      } catch (FileNotFoundException e) {
+        Rectangle rect = new Rectangle();
+        rect.setX(settings.getGrisPos(18));
+        rect.setY(settings.getGrisPos(5));
+        rect.setWidth(settings.getGrisPos(12));
+        rect.setHeight(settings.getGrisPos(7));
+        creditsRoot.getChildren().add(rect);
+      }
+      //add sliders
+      settingsObjects.add(
+          new SoundSlider(settings.getGrisPos(20), settings.getGrisPos(7), settings.getGrisPos(8),
+              settings.getGrisPos(1), SOUND_TYPE.MUSIC,
+              "Music", ObjectType.Button, UUID.randomUUID()));
+      settingsObjects.add(
+          new SoundSlider(settings.getGrisPos(20), settings.getGrisPos(9), settings.getGrisPos(8),
+              settings.getGrisPos(1), SOUND_TYPE.SFX,
+              "Sound Effects", ObjectType.Button, UUID.randomUUID()));
+      settingsObjects.forEach(slider -> slider.initialise(creditsRoot));
+      settingsObjects.forEach(slider -> slider.initialiseAnimation());
+    } else {
+      settingsOverlay = false;
+      creditsRoot.getChildren().clear();
+      settingsObjects.clear();
+    }
+
+    if (credits) {
+      endCredits();
+    }
+  }
+
   public static void showCredits() {
     credits = true;
     ArrayList<String> lines = new ArrayList<String>();
-    levelHandler.getMusicAudioHandler().playMusic("LOCAL_FORECAST");
-    Rectangle bg = new Rectangle(0, 0, 1920, 1080);
+    levelHandler.getMusicAudioHandler().playMusic(
+        "LOCAL_FORECAST"); // not using playlist since assumed length of credits is less than the length of song
+    Rectangle bg = new Rectangle(0, 0, settings.getWindowWidth(), settings.getWindowHeight());
     creditsBackground.getChildren().add(bg);
     try {
-      BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/CREDITS.md"));
+      BufferedReader reader = new BufferedReader(
+          new FileReader(settings.getResourcesPath() + File.separator + "CREDITS.md"));
       String line;
       while ((line = reader.readLine()) != null) {
         lines.add(line);
@@ -115,8 +174,8 @@ public class Client extends Application {
       // todo io exception
     }
     int yOffset = 0;
-    int x = 1920 / 2; //todo auto fetch
-    int y = 50;
+    int x = settings.getWindowWidth() / 2; // todo auto fetch
+    int y = 200;
     ArrayList<Text> textList = new ArrayList<>();
     for (String line : lines) {
       if (!line.equals("")) {
@@ -131,7 +190,7 @@ public class Client extends Application {
           line = m.group(1);
           size = 40;
           weight = FontWeight.EXTRA_BOLD;
-          extraBufferSpace = 40;
+          extraBufferSpace = 50;
         }
         // ## title
         Pattern title2 = Pattern.compile("^## (.*)");
@@ -140,7 +199,7 @@ public class Client extends Application {
           line = m.group(1);
           size = 30;
           weight = FontWeight.EXTRA_BOLD;
-          extraBufferSpace = 20;
+          extraBufferSpace = 50;
         }
         // *..* italics
         Pattern italic = Pattern.compile("(?<!\\*)\\*([^*]+)\\*(?!\\*)");
@@ -149,17 +208,23 @@ public class Client extends Application {
           line = m.group(1);
           posture = FontPosture.ITALIC;
         }
-        /// **..** bold
+        // **..** bold
         Pattern bold = Pattern.compile("(?<!\\*)\\*\\*([^*]+)\\*\\*(?!\\*)");
         m = bold.matcher(line);
         if (m.find()) {
           line = m.group(1);
           weight = FontWeight.BOLD;
         }
+        // <br> blank
+        Pattern blank = Pattern.compile("^<br>(.*)");
+        m = blank.matcher(line);
+        if (m.find()) {
+          line = m.group(1);//m.group(1);
+        }
 
         Text text = new Text();
         text.setText(line);
-        text.setFont(Font.font("Sans Serif", weight, posture, size));
+        text.setFont(Font.font("Helvetica", weight, posture, size));
         text.setFill(Color.WHITE);
         text.setLayoutX(x - (text.getLayoutBounds().getWidth() / 2));
         text.setLayoutY(y + extraBufferSpace + yOffset);
@@ -204,9 +269,18 @@ public class Client extends Application {
     levelHandler.changeMap(
         new Map(
             "Main Menu",
-            Path.convert("src/main/resources/menus/main_menu.map"),
+            Path.convert(settings.getMenuPath() + File.separator + "main_menu.map"),
             GameState.MAIN_MENU),
         false);
+  }
+
+  public static void endCredits() {
+    credits = false;
+    creditStartDelay = 100; //todo magic number
+    creditsRoot.getChildren().clear(); // deletes all children, removing all credit texts
+    creditsBackground.getChildren().clear();
+    levelHandler.getMusicAudioHandler()
+        .playMusicPlaylist(PLAYLIST.MENU); //assume always return to menu map from credits
   }
 
   @Override
@@ -219,7 +293,7 @@ public class Client extends Application {
       playlist.add(
           new Map(
               "Map" + i,
-              Path.convert("src/main/resources/maps/map" + i + ".map"),
+              Path.convert(settings.getMapsPath() + File.separator + "map" + i + ".map"),
               GameState.IN_GAME));
     }
 
@@ -377,18 +451,16 @@ public class Client extends Application {
         if (credits) {
           creditStartDelay--;
           if (creditStartDelay < 0 && creditStartDelay % 2 == 0) {
-            int maxY = (int) creditsRoot.getChildren().get(0).getLayoutY();
+            int maxY = Integer.MIN_VALUE;
+            if (creditsRoot.getChildren().size() != 0) {
+              maxY = (int) creditsRoot.getChildren().get(0).getLayoutY();
+            }
             for (Node node : creditsRoot.getChildren()) {
               node.setLayoutY(node.getLayoutY() - 1);
               maxY = Math.max(maxY, (int) node.getLayoutY());
             }
             if (maxY < -100) { //-100 for some buffer
-              credits = false;
-              creditStartDelay = 100; //todo magic number
-              creditsRoot.getChildren().clear(); // deletes all children, removing all credit texts
-              creditsBackground.getChildren().clear();
-              levelHandler.getMusicAudioHandler()
-                  .playMusicPlaylist(PLAYLIST.MENU); //assume always return to menu map from credits
+              endCredits();
             }
           }
         }
@@ -403,7 +475,6 @@ public class Client extends Application {
     creditsRoot = new Group();
     creditsBackground = new Group();
 
-    Font.loadFont("Kenney Future.ttf", 14);
     root.setStyle("-fx-font-family: Kenney Future");
 
     root.getChildren().add(backgroundRoot);
@@ -414,7 +485,7 @@ public class Client extends Application {
     primaryStage.setTitle(gameTitle);
     primaryStage.getIcons().add(new Image(Path.convert("images/logo.png")));
 
-    scene = new Scene(root, 1920, 1080);
+    scene = new Scene(root, settings.getWindowWidth(), settings.getWindowHeight());
     scene.setCursor(Cursor.CROSSHAIR);
 
     primaryStage.setScene(scene);
@@ -454,7 +525,7 @@ public class Client extends Application {
             Client.levelHandler.changeMap(
                 new Map(
                     "main_menu",
-                    Path.convert("src/main/resources/menus/main_menu.map"),
+                    Path.convert(settings.getMenuPath() + File.separator + "main_menu.map"),
                     GameState.IN_GAME),
                 false);
 

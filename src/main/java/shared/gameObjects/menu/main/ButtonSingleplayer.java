@@ -50,7 +50,7 @@ public class ButtonSingleplayer extends ButtonObject {
       Collection<GameObject> values = Client.levelHandler.getGameObjects().values();
       ArrayList<GameObject> physicsGameObjects = new ArrayList<>(values);
       Bot botPlayer = new Bot(500, 600, UUID.randomUUID(), Client.levelHandler);
-      botPlayer.setHolding(new Sword(500, 200, "Sword@LevelHandler", botPlayer, UUID.randomUUID()));
+      botPlayer.setHolding(new Sword(500, 600, "Sword@ButtonSinglePlayer", botPlayer, UUID.randomUUID()));
       botPlayer.getHolding().initialise(Client.gameRoot);
       botPlayer.initialise(Client.gameRoot);
       Client.levelHandler.getPlayers().put(botPlayer.getUUID(), botPlayer);
@@ -68,13 +68,10 @@ public class ButtonSingleplayer extends ButtonObject {
             new MachineGun(
                 500,
                 500,
-                "MachineGun@LevelHandler",
+                "MachineGun@ButtonSinglePlayer",
                 Client.levelHandler.getClientPlayer(),
                 UUID.randomUUID()));
-    Client.levelHandler.getGameObjects()
-        .put(Client.levelHandler.getClientPlayer().getHolding().getUUID(),
-            Client.levelHandler.getClientPlayer().getHolding());
-    Client.levelHandler.getClientPlayer().getHolding().initialise(Client.gameRoot);
+    Client.levelHandler.addGameObject(Client.levelHandler.getClientPlayer().getHolding());
     Client.singleplayerGame = true;
     //Client.timer.schedule(Client.task, 30000L);
 
