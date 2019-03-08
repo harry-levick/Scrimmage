@@ -1,5 +1,6 @@
 package levelEditor;
 
+import client.main.Settings;
 import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import de.codecentric.centerdevice.javafxsvg.dimension.PrimitiveDimensionProvider;
 import java.io.File;
@@ -53,6 +54,8 @@ public class LevelCreator extends Application {
   private static MapDataObject mapDataObject;
   private UUID uuid = UUID.randomUUID();
 
+  private Settings settings = new Settings();
+
   private static int getAbs(int gridPos) {
     return gridPos * gridSizePX;
   }
@@ -63,25 +66,9 @@ public class LevelCreator extends Application {
     Group root = new Group();
     // CLASS TO AUTO RECREATE MAPS
     String filename = "";
-    String filepath =
-        "src"
-            + File.separator
-            + "main"
-            + File.separator
-            + "resources"
-            + File.separator
-            + "menus"
-            + File.separator;
+    String filepath = settings.getMenuPath() + File.separator;
 
-    String filepathMaps =
-        "src"
-            + File.separator
-            + "main"
-            + File.separator
-            + "resources"
-            + File.separator
-            + "maps"
-            + File.separator;
+    String filepathMaps = settings.getMapsPath() + File.separator;
 
     ////////////////////////////////////////
     // MAIN MENU
@@ -93,13 +80,11 @@ public class LevelCreator extends Application {
     mapDataObject.setBackground(
         new Background1(uuid));
     uuid = UUID.randomUUID();
-    gameObjects.put(uuid,
-        new ButtonSingleplayer(
-            getAbs(20), getAbs(6), getAbs(8), getAbs(2), ObjectType.Button, uuid));
+    gameObjects.put(uuid, new ButtonSingleplayer(
+        getAbs(20), getAbs(6), getAbs(8), getAbs(2), ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
-    gameObjects.put(uuid,
-        new ButtonMultiplayer(
-            getAbs(20), getAbs(11), getAbs(8), getAbs(2), ObjectType.Button, UUID.randomUUID()));
+    gameObjects.put(uuid, new ButtonMultiplayer(
+        getAbs(20), getAbs(11), getAbs(8), getAbs(2), ObjectType.Button, UUID.randomUUID()));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
         new ButtonSettings(
