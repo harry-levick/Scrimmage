@@ -3,8 +3,15 @@ package shared.gameObjects.weapons;
 import client.main.Client;
 import java.util.UUID;
 import shared.gameObjects.GameObject;
-import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.ObjectType;
+import shared.gameObjects.components.BoxCollider;
+import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Player;
+import shared.physics.data.AngularData;
+import shared.physics.data.Collision;
+import shared.physics.data.MaterialProperty;
+import shared.physics.types.ColliderLayer;
+import shared.physics.types.RigidbodyType;
 
 /**
  * @author hlf764 The abstract class for all weapons in the game.
@@ -29,12 +36,17 @@ public abstract class Weapon extends GameObject {
 
   protected int currentCooldown;
 
+  // variables for when the holder is null
+  private BoxCollider bcTrig;
+  private BoxCollider bcCol;
+  private Rigidbody rb;
+
   /**
    * Constructor of the weapon class
    *
    * @param x X position of this weapon
    * @param y Y position of this weapon
-   * @param id ObjectID of this weapon
+   * @param id ObjectType of this weapon
    * @param damage Damage of this weapon
    * @param weight Weight of this weapon
    * @param name Name of this weapon
@@ -49,7 +61,7 @@ public abstract class Weapon extends GameObject {
       double y,
       double sizeX,
       double sizeY,
-      ObjectID id,
+      ObjectType id,
       int damage,
       double weight,
       String name,
@@ -69,10 +81,35 @@ public abstract class Weapon extends GameObject {
     setFireRate(fireRate);
     this.holder = holder;
 
+    if (holder == null) {
+      // add collider and rigidbody
+      bcTrig = new BoxCollider(this, ColliderLayer.DEFAULT, true);
+      bcCol = new BoxCollider(this, ColliderLayer.COLLECTABLE, false);
+      rb = new Rigidbody(
+          RigidbodyType.DYNAMIC,
+          1f, // mass
+          1f, // gravity scale
+          0.1f,
+          new MaterialProperty(0.1f, 1, 1),
+          new AngularData(0, 0, 0, 0),
+          this); // TODO FIX
+      addComponent(bcCol);
+      addComponent(bcTrig);
+      addComponent(rb);
+    }
+
     this.currentCooldown = 0;
   }
 
   public abstract void fire(double mouseX, double mouseY);
+
+  // Get holder hand position
+  public double[] getHolderHandPos() {
+    if (holder != null) {
+      return holder.getHandPos();
+    }
+    return null;
+  }
 
   public int getDefaultCoolDown() {
     return MAX_COOLDOWN - this.fireRate;
@@ -96,6 +133,26 @@ public abstract class Weapon extends GameObject {
 
   public void destroyWeapon() {
     Client.levelHandler.removeGameObject(this);
+  }
+
+  @Override
+  public void OnTriggerEnter(Collision col) {
+    GameObject g = col.getCollidedObject();
+    if (g != null && g.getId() == ObjectType.Player && ((Player) g).getHolding() == null) {
+      Player p = (Player) g;
+      setHolder(p);
+      bcCol.setLayer(ColliderLayer.PARTICLE);
+      bcTrig.setLayer(ColliderLayer.PARTICLE);
+      this.removeComponent(rb);
+    }
+  }
+
+  //Set holder of this gun
+  public void setHolder(Player p) {
+    if (p != null) {
+      this.holder = p;
+      p.setHolding(this);
+    }
   }
 
   // -------START-------

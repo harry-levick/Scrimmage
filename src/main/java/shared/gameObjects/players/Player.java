@@ -4,32 +4,38 @@ import client.main.Client;
 import java.util.UUID;
 import javafx.scene.Group;
 import shared.gameObjects.GameObject;
-import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.ObjectShake;
+import shared.gameObjects.components.CircleCollider;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Limbs.Arm;
 import shared.gameObjects.players.Limbs.Body;
 import shared.gameObjects.players.Limbs.Hand;
 import shared.gameObjects.players.Limbs.Head;
 import shared.gameObjects.players.Limbs.Leg;
+import shared.gameObjects.weapons.MachineGun;
 import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.weapons.Weapon;
+import shared.handlers.levelHandler.LevelHandler;
+import shared.physics.Physics;
 import shared.physics.data.Collision;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
+import shared.util.maths.Vector2;
 
 public class Player extends GameObject {
 
   protected final float speed = 9;
-  protected final float jumpForce = -200;
+  protected final float jumpForce = -300;
   protected final float JUMP_LIMIT = 2.0f;
   public boolean leftKey, rightKey, jumpKey, click;
   //Testing
   public boolean deattach;
   public double mouseX, mouseY;
   public int score;
+  protected LevelHandler levelHandler;
   protected Behaviour behaviour;
   protected float jumpTime;
   protected boolean jumped;
@@ -43,8 +49,24 @@ public class Player extends GameObject {
   private BoxCollider bc;
   private ObjectShake shake;
 
-  public Player(double x, double y, UUID playerUUID) {
-    super(x, y, 80, 110, ObjectID.Player, playerUUID);
+  // Limbs
+  private Limb head;
+  private Limb body;
+  private Limb legLeft;
+  private Limb legRight;
+  private Limb armLeft;
+  private Limb armRight;
+  private Limb handLeft;
+  private Limb handRight;
+
+  private CircleCollider cc;
+
+  //Networking
+  private int lastInputCount;
+
+  public Player(double x, double y, UUID playerUUID, LevelHandler levelHandler) {
+    super(x, y, 80, 110, ObjectType.Player, playerUUID);
+    this.lastInputCount = 0;
     this.score = 0;
     this.leftKey = false;
     this.rightKey = false;
@@ -52,11 +74,14 @@ public class Player extends GameObject {
     this.click = false;
     this.health = 100;
     this.holding = null;
+    this.levelHandler = levelHandler;
     this.behaviour = Behaviour.IDLE;
     this.shake = new ObjectShake(this);
     this.bc = new BoxCollider(this, ColliderLayer.PLAYER, false);
-    this.rb = new Rigidbody(RigidbodyType.DYNAMIC, 80, 8, 0.2f,
-        new MaterialProperty(0.005f, 0.1f, 0.05f), null, this);
+    //  this.cc = new CircleCollider(this, ColliderLayer.PLAYER, transform.getSize().magnitude()*0.5f, false);
+    this.rb = new Rigidbody(RigidbodyType.DYNAMIC, 90, 11.67f, 0.2f,
+        new MaterialProperty(0f, 0.1f, 0.05f), null, this);
+    //  addComponent(cc);
     addComponent(bc);
     addComponent(rb);
     addComponent(shake);
@@ -69,25 +94,43 @@ public class Player extends GameObject {
   }
 
   @Override
+  public void addChild(GameObject child) {
+    children.add(child);
+    levelHandler.addGameObject(child);
+  }
+
+  @Override
   public void initialise(Group root) {
     super.initialise(root);
-    addChild(new Leg(true, this));
-    addChild(new Leg(false, this));
-    addChild(new Body(this));
-    addChild(new Head(this));
-    Arm rightArm = new Arm(false, this);
-    Arm leftArm = (new Arm(true, this));
-    addChild(rightArm);
-    addChild(leftArm);
-    rightArm.addChild(new Hand(false, rightArm));
-    leftArm.addChild(new Hand(true, leftArm));
-    
-    
+
+    legLeft = new Leg(true, this, levelHandler);
+    legRight = new Leg(false, this, levelHandler);
+    body = new Body(this, levelHandler);
+    head = new Head(this, levelHandler);
+    armLeft = new Arm(true, this, levelHandler);
+    armRight = new Arm(false, this, levelHandler);
+    handLeft = new Hand(true, armLeft, levelHandler);
+    handRight = new Hand(false, armRight, levelHandler);
+
+    addChild(legLeft);
+    addChild(legRight);
+    addChild(body);
+    addChild(head);
+    addChild(armLeft);
+    addChild(armRight);
+    armRight.addChild(handRight);
+    armLeft.addChild(handLeft);
   }
 
   @Override
   public void update() {
+    /** STRESS TEST
+    for (int i = 0; i < 1000; i++) {
+      Physics.raycast(getTransform().getPos(), Vector2.Up().mult(200));
+    }
+     */
     checkGrounded(); // Checks if the player is grounded
+    // System.out.println(rb.getVelocity());
     badWeapon();
     if (deattach) {
       for (int i = 0; i < 8; i++) {
@@ -101,17 +144,18 @@ public class Player extends GameObject {
 
   @Override
   public String getState() {
-    return objectUUID + ";" + getX() + ";" + getY() + ";" + animation.getName() + ";" + health;
-    // add holding
+    return objectUUID + ";" + id + ";" + getX() + ";" + getY() + ";" + animation.getName() + ";"
+        + health + ";"
+        + lastInputCount;
   }
 
   @Override
-  public void setState(String data) {
+  public void setState(String data, Boolean snap) {
+    super.setState(data, snap);
     String[] unpackedData = data.split(";");
-    setX(Double.parseDouble(unpackedData[1]));
-    setY(Double.parseDouble(unpackedData[2]));
-    this.animation.switchAnimation(unpackedData[3]);
-    this.health = Integer.parseInt(unpackedData[4]);
+    //this.animation.switchAnimation(unpackedData[4]);
+    this.health = Integer.parseInt(unpackedData[5]);
+    this.lastInputCount = Integer.parseInt(unpackedData[6]);
   }
 
   public void checkGrounded() {
@@ -136,7 +180,7 @@ public class Player extends GameObject {
       vx = 0;
       behaviour = Behaviour.IDLE;
     }
-    if (jumpKey && !jumped) {
+    if (jumpKey && !jumped && grounded) {
       rb.moveY(jumpForce, 0.33333f);
       jumped = true;
     }
@@ -152,8 +196,13 @@ public class Player extends GameObject {
     // setX(getX() + (vx * 0.0166));
 
     if (this.getHolding() != null) {
-      this.getHolding().setX(this.getX() + 60);
-      this.getHolding().setY(this.getY() + 70);
+      if (this.getHolding().isMelee()) {
+        this.getHolding().setX(((Sword) this.getHolding()).getGripX());
+        this.getHolding().setY(((Sword) this.getHolding()).getGripY());
+      } else if (this.getHolding().isGun()) {
+        this.getHolding().setX(((MachineGun) this.getHolding()).getGripX());
+        this.getHolding().setY(((MachineGun) this.getHolding()).getGripY());
+      }
     }
   }
 
@@ -169,7 +218,6 @@ public class Player extends GameObject {
     if (this.holding.getAmmo() == 0) {
       this.holding.destroyWeapon();
       this.setHolding(null);
-
       Weapon sword =
           new Sword(this.getX(), this.getY(), "newSword@Player", this, UUID.randomUUID());
       sword.initialise(root);
@@ -237,16 +285,24 @@ public class Player extends GameObject {
   }
 
   public double[] getHandPos() {
+    // TODO: remove this section and getHand(Left/Right)(X/Y) methods below
+    /*
     if (jumped && facingLeft) {
       return new double[]{this.getHandLeftJumpX(), this.getHandLeftJumpY()};
     } else if (jumped && facingRight) {
       return new double[]{this.getHandRightJumpX(), this.getHandRightJumpY()};
     } else if (facingLeft) {
-      return new double[]{this.getHandLeftX(), this.getHandLeftY()};
+      return new double[]{this.handLeft.getX(), this.handLeft.getY()};
     } else if (facingRight) {
-      return new double[]{this.getHandRightX(), this.getHandRightY()};
+      return new double[]{this.handRight.getX(), this.handRight.getY()};
     }
     return new double[]{this.getHandRightX(), this.getHandRightY()};
+    */
+    if (facingLeft) {
+      return new double[]{this.handLeft.getX(), this.handLeft.getY()};
+    } else {
+      return new double[]{this.handRight.getX(), this.handRight.getY()};
+    }
   }
 
   /**
@@ -358,11 +414,19 @@ public class Player extends GameObject {
 
   @Override
   public void OnCollisionExit(Collision col) {
-    // System.out.println("Exited Collision!");
+
   }
 
   @Override
   public void OnCollisionStay(Collision col) {
     //  System.out.println("Stayed in Collision!");
+  }
+
+  public int getLastInputCount() {
+    return lastInputCount;
+  }
+
+  public void setLastInputCount(int lastInputCount) {
+    this.lastInputCount = lastInputCount;
   }
 }

@@ -1,12 +1,13 @@
 package shared.gameObjects.menu;
 
 import client.handlers.audioHandler.AudioHandler;
+import client.main.Client;
 import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import shared.gameObjects.GameObject;
-import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
 import shared.physics.data.AngularData;
@@ -26,7 +27,7 @@ public abstract class ButtonObject extends GameObject {
    * @param id Unique Identifier of every game object
    */
   public ButtonObject(
-      double x, double y, double sizeX, double sizeY, ObjectID id, UUID objectUUID) {
+      double x, double y, double sizeX, double sizeY, ObjectType id, UUID objectUUID) {
     super(x, y, sizeX, sizeY, id, objectUUID);
     button = new Button("", imageView);
     addComponent(
@@ -44,7 +45,7 @@ public abstract class ButtonObject extends GameObject {
 
   public void doOnClick(MouseEvent e) {
     animation.switchAnimation("clicked");
-    new AudioHandler(settings).playSFX("CLICK");
+    new AudioHandler(settings, Client.musicActive).playSFX("CLICK");
   }
 
   public void doOnUnClick(MouseEvent e) {

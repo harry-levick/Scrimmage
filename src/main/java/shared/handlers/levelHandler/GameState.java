@@ -5,6 +5,7 @@ package shared.handlers.levelHandler;
  */
 public enum GameState {
   MAIN_MENU,
+  SETTINGS,
   IN_GAME,
   Lobby,
   Start_Connection,

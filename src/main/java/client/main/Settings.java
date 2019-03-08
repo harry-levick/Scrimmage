@@ -1,6 +1,10 @@
 package client.main;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import javafx.scene.text.Font;
+import javafx.stage.Screen;
 import shared.handlers.levelHandler.LevelHandler;
 
 /**
@@ -10,21 +14,55 @@ public class Settings {
 
   public static LevelHandler levelHandler;
 
-  private String username = "TestAccount";
-  private int port = 4446;
+  private String username;
+  private int port;
   private double musicVolume;
   private double soundEffectVolume;
-  private String mapsPath =
-      "src" + File.separator + "main" + File.separator + "resources" + File.separator + "menus";
-  private String menuPath =
-      "src" + File.separator + "main" + File.separator + "resources" + File.separator + "menus";
+  private String s = File.separator;
+  private String resourcesPath;
+  private String mapsPath;
+  private String menuPath;
+  private String musicPath;
+  private String SFXPath;
+  private int windowWidth = (int) Screen.getPrimary().getBounds().getWidth();
+  private int windowHeight = (int) Screen.getPrimary().getBounds().getHeight();
+  private int mapWidth;
+  private int mapHeight;
+  private int maxPlayers;
+  private String fontPath;
+  private int defaultFontSize;
+  private Font font;
+  private int gridSize;
 
   /**
    * Default Constructor Music volume set to 100 and sound effects to 75
    */
   public Settings() {
+    //settings that are set arbitrarily
+    username = "TestAccount";
+    port = 4446;
     musicVolume = 0;
-    soundEffectVolume = 0.75f;
+    soundEffectVolume = 0.75;
+    mapWidth = 1920;
+    mapHeight = 1080;
+    maxPlayers = 4;
+    defaultFontSize = 20;
+    gridSize = 40;
+
+    resourcesPath = "src" + s + "main" + s + "resources";
+    mapsPath = resourcesPath + s + "maps";
+    menuPath = resourcesPath + s + "menus";
+    musicPath = resourcesPath + s + "audio" + s + "music";
+    SFXPath = resourcesPath + s + "audio" + s + "sound-effects";
+    fontPath = resourcesPath + s + "Kenney Future.ttf";
+  }
+
+  public String getResourcesPath() {
+    return resourcesPath;
+  }
+
+  public int getGrisPos(int gridPos) {
+    return gridPos * gridSize;
   }
 
   public String getMapsPath() {
@@ -43,6 +81,48 @@ public class Settings {
     this.menuPath = menuPath;
   }
 
+  public int getMapWidth() {
+    return mapWidth;
+  }
+
+  public int getMapHeight() {
+    return mapHeight;
+  }
+
+  public int getWindowWidth() {
+    return windowWidth;
+  }
+
+  public int getWindowHeight() {
+    return windowHeight;
+  }
+
+  public String getMusicPath() {
+    return musicPath;
+  }
+
+  public String getSFXPath() {
+    return SFXPath;
+  }
+
+  public int getMaxPlayers() {
+    return maxPlayers;
+  }
+
+  public Font getFont() {
+    return getFont(defaultFontSize);
+  }
+
+  public Font getFont(int size) {
+    try {
+      font = Font
+          .loadFont(new FileInputStream(
+              new File(fontPath)), size);
+    } catch (FileNotFoundException e) {
+      font = Font.font("Consolas", 20);
+    }
+    return font;
+  }
   /**
    * @return Current game music volume
    */

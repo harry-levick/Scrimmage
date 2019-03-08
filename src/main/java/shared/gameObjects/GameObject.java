@@ -1,5 +1,7 @@
 package shared.gameObjects;
 
+import static client.main.Settings.levelHandler;
+
 import client.main.Settings;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -7,14 +9,17 @@ import java.util.List;
 import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
-import shared.gameObjects.Utils.ObjectID;
+import shared.gameObjects.Utils.ObjectType;
+import shared.gameObjects.Utils.TimePosition;
 import shared.gameObjects.Utils.Transform;
 import shared.gameObjects.animator.Animator;
+import shared.gameObjects.components.Behaviour;
 import shared.gameObjects.components.Collider;
 import shared.gameObjects.components.Component;
 import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.ObjectShake;
 import shared.gameObjects.components.Rigidbody;
+import shared.gameObjects.players.Player;
 import shared.physics.Physics;
 import shared.physics.data.Collision;
 import shared.physics.data.DynamicCollision;
@@ -24,7 +29,7 @@ import shared.util.maths.Vector2;
 public abstract class GameObject implements Serializable {
 
   protected UUID objectUUID;
-  protected ObjectID id;
+  protected ObjectType id;
 
   protected Settings settings;
 
@@ -40,7 +45,11 @@ public abstract class GameObject implements Serializable {
 
   protected boolean active;
   protected boolean destroyed;
-  protected boolean updated;
+
+  //Networking
+  protected boolean networkStateUpdate;
+  protected Vector2 lastPos;
+  protected ArrayList<TimePosition> positionBuffer;
 
   protected ArrayList<GameObject> collidedObjects;
   protected ArrayList<GameObject> collidedThisFrame;
@@ -54,16 +63,18 @@ public abstract class GameObject implements Serializable {
    * @param y Y coordinate of object in game world
    * @param id Unique Identifier of every game object
    */
-  public GameObject(double x, double y, double sizeX, double sizeY, ObjectID id, UUID objectUUID) {
-    this.updated = false;
+  public GameObject(double x, double y, double sizeX, double sizeY, ObjectType id,
+      UUID objectUUID) {
+    this.networkStateUpdate = false;
     this.id = id;
     this.objectUUID = objectUUID;
     this.active = true;
     this.transform = new Transform(this, new Vector2((float) x, (float) y),
         new Vector2((float) sizeX, (float) sizeY));
     this.components = new ArrayList<>();
+    //So update sent by server on first frame
+    this.lastPos = new Vector2((float) x + 1, (float) y + 1);
     this.children = new ArrayList<>();
-    this.parent = null;
     this.animation = new Animator();
     this.collidedObjects = new ArrayList<>();
     this.collidedThisFrame = new ArrayList<>();
@@ -76,19 +87,20 @@ public abstract class GameObject implements Serializable {
 
   // Server and Client side
   public void update() {
+    networkStateUpdate = false;
     animation.update();
-    Collider col = (Collider) getComponent(ComponentType.COLLIDER);
-    Rigidbody rb = (Rigidbody) getComponent(ComponentType.RIGIDBODY);
-    ObjectShake shake = (ObjectShake) getComponent(ComponentType.SHAKE);
-    if (rb != null) {
-      rb.update();
+
+    for (Component comp : components) {
+        if(comp.isActive()) {
+          comp.update();
+        }
     }
-    if (col != null) {
-      col.update();
+    //If objects location has changed then send update if server
+    if (!(lastPos.equals(getTransform().getPos()))) {
+      networkStateUpdate = true;
     }
-    if (shake != null) {
-      shake.update();
-    }
+    this.lastPos.setVec((float) getX(), (float) getY());
+
   }
 
   // Client Side only
@@ -101,40 +113,44 @@ public abstract class GameObject implements Serializable {
   }
 
   // Collision engine
-  public void updateCollision(ArrayList<GameObject> gameObjects) {
-    Collider col = (Collider) getComponent(ComponentType.COLLIDER);
+  public void updateCollision() {
+    ArrayList<Component> cols = getComponents(ComponentType.COLLIDER);
     Rigidbody rb = (Rigidbody) getComponent(ComponentType.RIGIDBODY);
-    if (col == null) {
-      return;
-    }
-    if (rb != null) {
-      if (rb.getBodyType() == RigidbodyType.STATIC) {
-        callCollisionMethods(col, false);
+    for (Component comp : cols) {
+      Collider col = (Collider) comp;
+      if (col == null) {
         return;
-      } else {
-        for (GameObject o : Physics.gameObjects) {
-          Collider o_col = (Collider) o.getComponent(ComponentType.COLLIDER);
-          Rigidbody o_rb = (Rigidbody) o.getComponent(ComponentType.RIGIDBODY);
-          if (o_col != null && o_rb != null) {
-            if (Collision.haveCollided(col, o_col)) {
-              Physics.addCollision(new DynamicCollision(rb, o_rb));
+      }
+      if (rb != null && !col.isTrigger()) {
+        if (rb.getBodyType() == RigidbodyType.STATIC) {
+          callCollisionMethods(col, false);
+          return;
+        } else {
+          for (GameObject o : Physics.gameObjects.values()) {
+            Collider o_col = (Collider) o.getComponent(ComponentType.COLLIDER);
+            Rigidbody o_rb = (Rigidbody) o.getComponent(ComponentType.RIGIDBODY);
+            if (o_col != null && o_rb != null) {
+              if (Collider.haveCollided(col, o_col) && !o_col.isTrigger()) {
+                Physics.addCollision(new DynamicCollision(rb, o_rb));
+              }
             }
           }
+          callCollisionMethods(col, false);
         }
-        callCollisionMethods(col, false);
+      } else if (col.isTrigger()) {
+        callCollisionMethods(col, true);
       }
-    } else if (col.isTrigger()) {
-      callCollisionMethods(col, true);
     }
+
   }
 
   private void callCollisionMethods(Collider col, boolean isTrigger) {
     if (!isTrigger) {
-      for (GameObject o : Physics.gameObjects) {
+      for (GameObject o : Physics.gameObjects.values()) {
         Collider o_col = (Collider) o.getComponent(ComponentType.COLLIDER);
         if (o_col != null) {
-          if (Collision.haveCollided(col, o_col)) {
-            Collision collision = new Collision(o, Vector2.Zero(), 0);
+          if (Collider.haveCollided(col, o_col)) {
+            Collision collision = new Collision(o, col, o_col);
             collidedThisFrame.add(o);
             if (!collidedObjects.contains(o)) {
               OnCollisionEnter(collision);
@@ -147,16 +163,16 @@ public abstract class GameObject implements Serializable {
       for (GameObject o : collidedObjects) {
         if (!collidedThisFrame.contains(o)) {
           collidedToRemove.add(o);
-          OnCollisionExit(new Collision(o, Vector2.Zero(), 0));
+          OnCollisionExit(new Collision(o, col, (Collider) o.getComponent(ComponentType.COLLIDER)));
         }
       }
 
     } else {
-      for (GameObject o : Physics.gameObjects) {
+      for (GameObject o : Physics.gameObjects.values()) {
         Collider o_col = (Collider) o.getComponent(ComponentType.COLLIDER);
         if (o_col != null) {
-          if (Collision.haveCollided(col, o_col)) {
-            Collision collision = new Collision(o, Vector2.Zero(), 0);
+          if (Collider.haveCollided(col, o_col)) {
+            Collision collision = new Collision(o, col, o_col);
             collidedThisFrame.add(o);
             if (!collidedObjects.contains(o)) {
               OnTriggerEnter(collision);
@@ -170,7 +186,7 @@ public abstract class GameObject implements Serializable {
       for (GameObject o : collidedObjects) {
         if (!collidedThisFrame.contains(o)) {
           collidedToRemove.add(o);
-          OnTriggerExit(new Collision(o, Vector2.Zero(), 0));
+          OnCollisionExit(new Collision(o, col, (Collider) o.getComponent(ComponentType.COLLIDER)));
         }
       }
     }
@@ -208,31 +224,32 @@ public abstract class GameObject implements Serializable {
    * @return State of object
    */
   public String getState() {
-    /*
-    String s = "X:0:Y:0";
-    if(getComponent(ComponentType.RIGIDBODY) != null) {
-      s = ((Rigidbody) getComponent(ComponentType.RIGIDBODY)).getVelocity().toString();
-    }
-    */
-    String test =
-        objectUUID + ";" + getX() + ";" + getY() + ";" + animation.getName(); // + ";" + s;
-    return test;
+    return objectUUID + ";" + id + ";" + (float) getX() + ";" + (float) getY();
   }
 
-  public void setState(String data) {
+  public void setState(String data, Boolean snap) {
     String[] unpackedData = data.split(";");
-    setX(Double.parseDouble(unpackedData[1]));
-    setY(Double.parseDouble(unpackedData[2]));
-    this.animation.switchAnimation(unpackedData[3]);
-    /*
-    if(getComponent(ComponentType.RIGIDBODY) != null) {
-      ((Rigidbody) getComponent(ComponentType.RIGIDBODY)).setVelocity(new Vector2(unpackedData[4]));
+    Vector2 statePos = new Vector2(Double.parseDouble(unpackedData[2]),
+        Double.parseDouble(unpackedData[3]));
+    if (snap) {
+      setX(Double.parseDouble(unpackedData[2]));
+      setY(Double.parseDouble(unpackedData[3]));
+    } else {
+      Vector2 difference = statePos.sub(transform.getPos());
+      double distance = statePos.magnitude(transform.getPos());
+
+      if (distance > 50) {
+        transform.setPos(statePos);
+      } else if (distance > 1) {
+        transform.setPos((difference.mult(0.5f)).add(getTransform().getPos()));
+      }
     }
-    */
   }
 
   // Ignore for now, added due to unSerializable objects
   public void initialise(Group root) {
+    this.positionBuffer = new ArrayList<>();
+    this.networkStateUpdate = false;
     animation = new Animator();
     initialiseAnimation();
     imageView = new ImageView();
@@ -254,7 +271,7 @@ public abstract class GameObject implements Serializable {
 
   public void addChild(GameObject child) {
     children.add(child);
-    Settings.levelHandler.addGameObject(child);
+    levelHandler.addGameObject(child);
   }
 
   public void removeChild(GameObject child) {
@@ -323,6 +340,9 @@ public abstract class GameObject implements Serializable {
    * @param col Collision data of the collision.
    */
   public void OnCollisionEnter(Collision col) {
+    for (Component component : getComponents(ComponentType.BEHAVIOUR)) {
+      ((Behaviour) component).OnCollisionEnter(col);
+    }
   }
 
   /**
@@ -331,6 +351,9 @@ public abstract class GameObject implements Serializable {
    * @param col Collision data of the collision.
    */
   public void OnCollisionStay(Collision col) {
+    for (Component component : getComponents(ComponentType.BEHAVIOUR)) {
+      ((Behaviour) component).OnCollisionStay(col);
+    }
   }
 
   /**
@@ -339,6 +362,9 @@ public abstract class GameObject implements Serializable {
    * @param col Collision data of the collision.
    */
   public void OnCollisionExit(Collision col) {
+    for (Component component : getComponents(ComponentType.BEHAVIOUR)) {
+      ((Behaviour) component).OnCollisionExit(col);
+    }
   }
 
   /**
@@ -348,6 +374,9 @@ public abstract class GameObject implements Serializable {
    * @param col Collision data of the collision.
    */
   public void OnTriggerEnter(Collision col) {
+    for (Component component : getComponents(ComponentType.BEHAVIOUR)) {
+      ((Behaviour) component).OnTriggerEnter(col);
+    }
   }
 
   /**
@@ -357,6 +386,9 @@ public abstract class GameObject implements Serializable {
    * @param col Collision data of the collision.
    */
   public void OnTriggerStay(Collision col) {
+    for (Component component : getComponents(ComponentType.BEHAVIOUR)) {
+      ((Behaviour) component).OnTriggerStay(col);
+    }
   }
 
   /**
@@ -366,6 +398,9 @@ public abstract class GameObject implements Serializable {
    * @param col Collision data of the collision.
    */
   public void OnTriggerExit(Collision col) {
+    for (Component component : getComponents(ComponentType.BEHAVIOUR)) {
+      ((Behaviour) component).OnTriggerExit(col);
+    }
   }
 
   public void destroy() {
@@ -391,7 +426,7 @@ public abstract class GameObject implements Serializable {
     this.transform.getPos().setY((float) y);
   }
 
-  public ObjectID getId() {
+  public ObjectType getId() {
     return id;
   }
 
@@ -407,11 +442,19 @@ public abstract class GameObject implements Serializable {
     this.parent = parent;
   }
 
+  public boolean isNetworkStateUpdate() {
+    return networkStateUpdate;
+  }
+
+  public void setNetworkStateUpdate(boolean networkStateUpdate) {
+    this.networkStateUpdate = networkStateUpdate;
+  }
+
   public ArrayList<GameObject> getChildren() {
     return children;
   }
 
-  public List<Component> getComponents() {
+  public ArrayList<Component> getComponents() {
     return components;
   }
 
@@ -441,14 +484,6 @@ public abstract class GameObject implements Serializable {
     this.settings = settings;
   }
 
-  public boolean isUpdated() {
-    return updated;
-  }
-
-  public void setUpdated(boolean updated) {
-    this.updated = updated;
-  }
-
   public boolean isDestroyed() {
     return destroyed;
   }
@@ -459,6 +494,10 @@ public abstract class GameObject implements Serializable {
 
   public void rotateImage(double rotation) {
     imageView.setRotate(imageView.getRotate() + rotation);
+  }
+
+  public ArrayList<TimePosition> getPositionBuffer() {
+    return positionBuffer;
   }
 
   @Override
