@@ -85,15 +85,14 @@ public class Bot extends Player {
     // Calculate the distance to the updated target
     newDist = calcDist();
 
-    //state = state.next(targetPlayer, this, prevDist, newDist);
-    state = FSA.CHASING;
+    state = state.next(targetPlayer, this, prevDist, newDist);
 
     switch (state) {
       case IDLE:
         System.out.println("IDLE");
         break;
       case CHASING:
-        System.out.println("CHASING");
+        //System.out.println("CHASING");
         // Find the next best move to take, and execute this move.
         executeAction(PathFindState.PERSUE);
 
@@ -107,8 +106,9 @@ public class Bot extends Player {
       case ATTACKING:
         System.out.println("ATTACKING");
         // TODO think about how an attacking script would work.
-        mouseX = targetPlayer.getX();
-        mouseY = targetPlayer.getY();
+        Vector2 enemyPosCenter = targetPlayer.getTransform().getPos().add(targetPlayer.getTransform().getSize().mult(0.5f));
+        mouseX = enemyPosCenter.getX();
+        mouseY = enemyPosCenter.getY();
         click = true;
 
 
