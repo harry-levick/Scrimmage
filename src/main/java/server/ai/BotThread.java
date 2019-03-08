@@ -21,7 +21,6 @@ public class BotThread extends Thread {
 
   public void run() {
     while (running) {
-      System.out.println("THREAD RUNNING");
       targetPlayer = bot.findTarget();
 
       List<boolean[]> tempList = pathFinder.optimise(targetPlayer);

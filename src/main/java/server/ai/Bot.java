@@ -85,7 +85,8 @@ public class Bot extends Player {
     // Calculate the distance to the updated target
     newDist = calcDist();
 
-    state = state.next(targetPlayer, this, prevDist, newDist);
+    //state = state.next(targetPlayer, this, prevDist, newDist);
+    state = FSA.CHASING;
 
     switch (state) {
       case IDLE:
