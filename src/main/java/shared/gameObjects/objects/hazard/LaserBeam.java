@@ -40,7 +40,7 @@ public class LaserBeam extends GameObject {
     addComponent(bc);
     addComponent(new Rigidbody(0, this));
     colour = new Colour(255, 0, 0);
-    addComponent(new MovingPlatform(this));
+    //addComponent(new MovingPlatform(this));
   }
 
   @Override
