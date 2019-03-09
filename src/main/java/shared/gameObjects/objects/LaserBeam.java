@@ -5,6 +5,9 @@ import client.handlers.effectsHandler.Colour;
 import client.main.Client;
 import java.util.ArrayList;
 import java.util.UUID;
+import javafx.scene.effect.BlurType;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import shared.gameObjects.Destructable;
 import shared.gameObjects.GameObject;
@@ -13,7 +16,6 @@ import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.components.behaviours.MovingPlatform;
-import shared.gameObjects.players.Player;
 import shared.physics.Physics;
 import shared.physics.data.Collision;
 import shared.physics.types.ColliderLayer;
@@ -49,6 +51,7 @@ public class LaserBeam extends GameObject {
   @Override
   public void update() {
     super.update();
+    imageView.setEffect(new DropShadow(BlurType.TWO_PASS_BOX, Color.BLACK, 1, 1, 1, 1));
     if(laser == null) {
       intialiseLaser();
     } else {
