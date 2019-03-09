@@ -45,9 +45,9 @@ public class ExplosiveBullet extends Bullet {
 
   @Override
   /**
-   * Holder: Not going to take damage, Will be knocked back by explosion but not on direct impact
-   * In explosion area, every player will take half the damage this bullet dealt
-   * Player on direct impact will take half the damage on collision, then half the damage on
+   * Holder: Not going to take hazard, Will be knocked back by explosion but not on direct impact
+   * In explosion area, every player will take half the hazard this bullet dealt
+   * Player on direct impact will take half the hazard on collision, then half the hazard on
    *   explosion
    *
    * @param col The collision on direct impact
@@ -64,7 +64,7 @@ public class ExplosiveBullet extends Bullet {
         remove = false;
       }
       else {
-        // Player on direct impact takes full damage (another half dealt in circleCasting down there)
+        // Player on direct impact takes full hazard (another half dealt in circleCasting down there)
         ((Destructable) gCol).deductHp(damage/2);
       }
     }
@@ -78,9 +78,9 @@ public class ExplosiveBullet extends Bullet {
       // Not going to push holder if he is the first collided object (i.e. the impact)
       if (g.equals(gCol) && hitHolder) { continue; }
 
-      // Not going to deal damage to holder
+      // Not going to deal hazard to holder
       if (g instanceof Destructable && !g.equals(holder)) {
-        // Every player in the explosion area deals half the damage
+        // Every player in the explosion area deals half the hazard
         ((Destructable) g).deductHp(damage/2);
       }
 

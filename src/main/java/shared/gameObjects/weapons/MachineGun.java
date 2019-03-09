@@ -29,7 +29,7 @@ public class MachineGun extends Gun {
         sizeX, // sizeX
         sizeY, // sizeY
         ObjectType.Weapon, // ObjectType
-        5, // damage
+        5, // hazard
         10, // weight
         name,
         50, // ammo

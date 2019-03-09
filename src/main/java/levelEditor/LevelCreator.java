@@ -27,9 +27,7 @@ import shared.gameObjects.background.Background5;
 import shared.gameObjects.background.Background6;
 import shared.gameObjects.background.Background7;
 import shared.gameObjects.background.Background8;
-import shared.gameObjects.components.Behaviour;
-import shared.gameObjects.components.behaviours.Crushing;
-import shared.gameObjects.components.behaviours.MovingPlatform;
+import shared.gameObjects.components.behaviours.blockBehaviours.Crushing;
 import shared.gameObjects.menu.main.ButtonBack;
 import shared.gameObjects.menu.main.ButtonCredits;
 import shared.gameObjects.menu.main.ButtonMultiplayer;
@@ -38,8 +36,12 @@ import shared.gameObjects.menu.main.ButtonSingleplayer;
 import shared.gameObjects.menu.main.SoundSlider;
 import shared.gameObjects.menu.main.SoundSlider.SOUND_TYPE;
 import shared.gameObjects.menu.multiplayer.ButtonJoin;
-import shared.gameObjects.objects.JumpPad;
-import shared.gameObjects.objects.LaserBeam;
+import shared.gameObjects.objects.utility.BlueBlock;
+import shared.gameObjects.objects.utility.GreenBlock;
+import shared.gameObjects.objects.utility.JumpPad;
+import shared.gameObjects.objects.hazard.LaserBeam;
+import shared.gameObjects.objects.utility.RedBlock;
+import shared.gameObjects.objects.utility.YellowBlock;
 import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.MapLoader;
@@ -114,6 +116,19 @@ public class LevelCreator extends Application {
 
     //Laser
     gameObjects.put(uuid, new LaserBeam(getAbs(4), getAbs(7), uuid));
+    uuid = UUID.randomUUID();
+
+    //ColouredBlocks
+    gameObjects.put(uuid, new RedBlock(getAbs(4), getAbs(10), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    //ColouredBlocks
+    gameObjects.put(uuid, new BlueBlock(getAbs(5), getAbs(10), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    //ColouredBlocks
+    gameObjects.put(uuid, new GreenBlock(getAbs(6), getAbs(10), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    //ColouredBlocks
+    gameObjects.put(uuid, new YellowBlock(getAbs(7), getAbs(10), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
     uuid = UUID.randomUUID();
 
     //JumpPad
