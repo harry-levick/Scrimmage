@@ -273,6 +273,28 @@ public class LevelCreator extends Application {
               getAbs(i * 4), getAbs(26), getAbs(4), getAbs(1), ObjectType.Bot, UUID.randomUUID()));
       uuid = UUID.randomUUID();
     }
+
+    for (int i = 0; i < 48; i += 4) {
+      //Red Blocks and Lasers
+      gameObjects.put(uuid,
+          new RedBlock(getAbs(i), getAbs(8), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+      uuid = UUID.randomUUID();
+      gameObjects.put(uuid,
+          new BlueBlock(getAbs(i + 1), getAbs(8), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+      uuid = UUID.randomUUID();
+      gameObjects.put(uuid,
+          new GreenBlock(getAbs(i + 2), getAbs(8), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+      uuid = UUID.randomUUID();
+      gameObjects.put(uuid,
+          new YellowBlock(getAbs(i + 3), getAbs(8), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+      uuid = UUID.randomUUID();
+      gameObjects.put(uuid,
+          new LaserBeam(getAbs(i), getAbs(0), uuid));
+      uuid = UUID.randomUUID();
+      gameObjects.put(uuid,
+          new LaserBeam(getAbs(i+2), getAbs(0), uuid));
+      uuid = UUID.randomUUID();
+    }
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "map1" + ".map");
     mapDataObject.setBackground(new Background2(UUID.randomUUID()));
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "map2" + ".map");

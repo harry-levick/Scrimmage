@@ -54,7 +54,12 @@ import shared.gameObjects.menu.main.ButtonMultiplayer;
 import shared.gameObjects.menu.main.ButtonSettings;
 import shared.gameObjects.menu.main.ButtonSingleplayer;
 import shared.gameObjects.menu.multiplayer.ButtonJoin;
+import shared.gameObjects.objects.hazard.LaserBeam;
 import shared.gameObjects.objects.hazard.Spikes;
+import shared.gameObjects.objects.utility.BlueBlock;
+import shared.gameObjects.objects.utility.GreenBlock;
+import shared.gameObjects.objects.utility.RedBlock;
+import shared.gameObjects.objects.utility.YellowBlock;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.Handgun;
 import shared.handlers.levelHandler.GameState;
@@ -117,6 +122,11 @@ public class LevelEditor extends Application {
     objectMap.put(OBJECT_TYPES.BLOCK_WOOD_SMALL, new GameObjectTuple("Wood Block Small", 1, 1));
     objectMap.put(OBJECT_TYPES.FLOOR_WOOD, new GameObjectTuple("Wood Floor", 4, 1));
     objectMap.put(OBJECT_TYPES.SPIKES, new GameObjectTuple("Spikes", 3, 1));
+    objectMap.put(OBJECT_TYPES.REDB, new GameObjectTuple("Red Block", 1, 1));
+    objectMap.put(OBJECT_TYPES.BLUEB, new GameObjectTuple("Blue Block", 1, 1));
+    objectMap.put(OBJECT_TYPES.GREENB, new GameObjectTuple("Green Block", 1, 1));
+    objectMap.put(OBJECT_TYPES.YELLOWB, new GameObjectTuple("Yellow Block", 1, 1));
+    objectMap.put(OBJECT_TYPES.LASER, new GameObjectTuple("Laser", 2, 2));
   }
 
   private void scenePrimaryClick(
@@ -346,6 +356,58 @@ public class LevelEditor extends Application {
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
                   ObjectType.Bot,
                   uuid);
+          break;
+        case REDB:
+          temp =
+              new RedBlock(
+                  getGridX(event.getX()),
+                  getGridY(event.getY()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getX()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getY()),
+                  ObjectType.Bot,
+                  uuid
+              );
+          break;
+        case BLUEB:
+          temp =
+              new BlueBlock(
+                  getGridX(event.getX()),
+                  getGridY(event.getY()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getX()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getY()),
+                  ObjectType.Bot,
+                  uuid
+              );
+          break;
+        case GREENB:
+          temp =
+              new GreenBlock(
+                  getGridX(event.getX()),
+                  getGridY(event.getY()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getX()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getY()),
+                  ObjectType.Bot,
+                  uuid
+              );
+          break;
+        case YELLOWB:
+          temp =
+              new YellowBlock(
+                  getGridX(event.getX()),
+                  getGridY(event.getY()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getX()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getY()),
+                  ObjectType.Bot,
+                  uuid
+              );
+          break;
+        case LASER:
+          temp =
+              new LaserBeam(
+                  getGridX(event.getX()),
+                  getGridY(event.getY()),
+                  uuid
+              );
           break;
       }
 
@@ -722,6 +784,11 @@ public class LevelEditor extends Application {
     BLOCK_WOOD_SMALL,
     FLOOR_WOOD,
     SPIKES,
+    REDB,
+    BLUEB,
+    GREENB,
+    YELLOWB,
+    LASER,
   }
 }
 
