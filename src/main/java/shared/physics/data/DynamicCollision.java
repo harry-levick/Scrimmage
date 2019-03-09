@@ -60,6 +60,7 @@ public class DynamicCollision {
   }
 
   private void resolveCollision(BoxCollider boxA, BoxCollider boxB) {
+    //TODO Fix Up Rotation Pen Depth
     Vector2 n = boxB.getCentre().sub(boxA.getCentre());
     float x_overlap =
         boxA.getSize().getX() * 0.5f + boxB.getSize().getX() * 0.5f - Math.abs(n.getX());
@@ -88,7 +89,8 @@ public class DynamicCollision {
   }
 
   private void resolveCollision(BoxCollider boxA, CircleCollider circB) {
-    Vector2 n = circB.getCentre().sub(circB.getCentre());
+
+    Vector2 n = circB.getCentre().sub(boxA.getCentre());
     Vector2 extents = boxA.getSize().mult(0.5f);
     Vector2 closestPoint = n.clamp(extents.mult(-1), extents);
     boolean inside = false;

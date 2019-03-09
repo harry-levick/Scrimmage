@@ -18,11 +18,13 @@ public class BoxCollider extends Collider implements Serializable {
   private Double[] polygonCoordinates;
 
   private transient Polygon polygon;
+  private Vector2[] axes;
 
   public BoxCollider(GameObject parent, boolean isTrigger) {
     super(parent, ColliderType.BOX, isTrigger);
     rotation = getParent().getTransform().getRot();
     corners = new Vector2[4];
+    axes = new Vector2[2];
     polygonCoordinates = new Double[8];
     update();
   }
@@ -31,6 +33,7 @@ public class BoxCollider extends Collider implements Serializable {
     super(parent, ColliderType.BOX, layer, isTrigger);
     rotation = getParent().getTransform().getRot();
     corners = new Vector2[4];
+    axes = new Vector2[2];
     polygonCoordinates = new Double[8];
     update();
   }
@@ -41,12 +44,16 @@ public class BoxCollider extends Collider implements Serializable {
     rotation = 0f;
     centre = sourcePos.add(size.mult(0.25f));
     corners = new Vector2[4];
+    axes = new Vector2[2];
     polygonCoordinates = new Double[8];
 
     corners[0] = sourcePos.applyRotation(rotation);
     corners[1] = sourcePos.add(Vector2.Down().mult(size)).applyRotation(rotation);
     corners[2] = sourcePos.add(size).applyRotation(rotation);
     corners[3] = sourcePos.add(Vector2.Right().mult(size)).applyRotation(rotation);
+
+    axes[0] = corners[0].sub(corners[3]).normal().normalize();
+    axes[1] = corners[0].sub(corners[1]).normal().normalize();
 
     polygonCoordinates[0] = (double) corners[0].getX();
     polygonCoordinates[1] = (double) corners[0].getY();
@@ -78,6 +85,9 @@ public class BoxCollider extends Collider implements Serializable {
     corners[2] = sourcePos.add(size).applyRotation(rotation).add(centre);
     corners[3] = sourcePos.add(Vector2.Right().mult(size)).applyRotation(rotation).add(centre);
 
+    axes[0] = corners[0].sub(corners[3]).normal().normalize();
+    axes[1] = corners[0].sub(corners[1]).normal().normalize();
+
     if (polygon != null) {
       polygon.getPoints().clear();
       polygonCoordinates[0] = (double) corners[0].getX();
@@ -103,5 +113,9 @@ public class BoxCollider extends Collider implements Serializable {
 
   public Vector2[] getCorners() {
     return corners;
+  }
+
+  public Vector2[] getAxes() {
+    return axes;
   }
 }
