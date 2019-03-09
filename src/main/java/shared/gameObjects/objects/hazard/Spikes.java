@@ -1,13 +1,11 @@
-package shared.gameObjects.objects;
+package shared.gameObjects.objects.hazard;
 
 import java.util.UUID;
 import shared.gameObjects.Destructable;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
-import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.Rigidbody;
-import shared.gameObjects.players.Player;
 import shared.physics.data.AngularData;
 import shared.physics.data.Collision;
 import shared.physics.data.MaterialProperty;

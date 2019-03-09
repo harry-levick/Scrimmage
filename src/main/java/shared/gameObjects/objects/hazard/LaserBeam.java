@@ -1,4 +1,4 @@
-package shared.gameObjects.objects;
+package shared.gameObjects.objects.hazard;
 
 import client.handlers.audioHandler.AudioHandler;
 import client.handlers.effectsHandler.Colour;
@@ -15,7 +15,7 @@ import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.Rigidbody;
-import shared.gameObjects.components.behaviours.MovingPlatform;
+import shared.gameObjects.components.behaviours.blockBehaviours.MovingPlatform;
 import shared.physics.Physics;
 import shared.physics.data.Collision;
 import shared.physics.types.ColliderLayer;
@@ -36,7 +36,7 @@ public class LaserBeam extends GameObject {
     super(x, y, 80, 80, ObjectType.Bot, uuid);
     timer = TIME_BETWEEN_STATES;
     laserActive = false;
-    bc = new BoxCollider(this, ColliderLayer.WALL, false);
+    bc = new BoxCollider(this, ColliderLayer.PLATFORM, false);
     addComponent(bc);
     addComponent(new Rigidbody(0, this));
     colour = new Colour(255, 0, 0);

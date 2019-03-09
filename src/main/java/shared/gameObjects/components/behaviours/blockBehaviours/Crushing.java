@@ -1,4 +1,4 @@
-package shared.gameObjects.components.behaviours;
+package shared.gameObjects.components.behaviours.blockBehaviours;
 
 
 import shared.gameObjects.GameObject;

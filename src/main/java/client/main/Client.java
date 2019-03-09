@@ -44,6 +44,7 @@ import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.Utils.TimePosition;
 import shared.gameObjects.menu.main.SoundSlider;
 import shared.gameObjects.menu.main.SoundSlider.SOUND_TYPE;
+import shared.gameObjects.objects.ObjectManager;
 import shared.gameObjects.players.Limbs.Arm;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.MachineGun;
@@ -415,6 +416,8 @@ public class Client extends Application {
           /** Update Game Objects */
           levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.update());
         }
+        //Update Generic Object Timers
+        ObjectManager.update();
 
         if (multiplayer) {
           if (prediction) {
