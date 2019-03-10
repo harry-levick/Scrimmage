@@ -69,7 +69,7 @@ public abstract class Melee extends Weapon {
       ArrayList<Collision> collisions =
           Physics.boxcastAll(
               new Vector2((float) (this.getX() + this.range), (float) (this.getY() - this.range)),
-              new Vector2((float) this.range, (float) this.range));
+              new Vector2((float) this.range, (float) this.range), false);
       ArrayList<Player> playersBeingHit = new ArrayList<>();
 
       for (Collision c : collisions) {

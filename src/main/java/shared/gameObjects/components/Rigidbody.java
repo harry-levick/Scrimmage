@@ -290,7 +290,7 @@ public class Rigidbody extends Component implements Serializable {
     ArrayList<Collision> collisions =
         Physics.boxcastAll(
             getParent().getTransform().getPos().add(deltaPos),
-            getParent().getTransform().getSize());
+            getParent().getTransform().getSize(), false);
     for (Collision c : collisions) {}
 
     return;

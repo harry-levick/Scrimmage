@@ -1,6 +1,7 @@
 package shared.physics;
 
 import client.main.Client;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.UUID;
@@ -8,6 +9,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javafx.application.Platform;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import server.ai.Bot;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.components.BoxCollider;
@@ -173,6 +175,16 @@ public class Physics {
     );
   }
 
+  public static void drawBoxCast(Vector2 sourcePos, Vector2 size) {
+    Platform.runLater(
+        () -> {
+          Rectangle r2 = new Rectangle(sourcePos.getX(), sourcePos.getY(), size.getX(),
+              size.getY());
+          r2.setStyle("-fx-stroke-width: 4; -fx-stroke: #00ff00;");
+          Client.gameRoot.getChildren().add(r2);
+        });
+  }
+
   /**
    * Casts a ray that interacts with colliders.
    *
@@ -227,7 +239,6 @@ public class Physics {
     while (iter.hasNext()) {
       GameObject object = iter.next();
 
-      // FIX ISSUE WHEN COLLIDING WITH LIMB, POSSIBLY ONLY A TEMP FIX
       if (object instanceof Limb)
         continue;
 
@@ -250,15 +261,20 @@ public class Physics {
    * @param size The extents of the box
    * @return All colliders hit in the path, empty if nothing was hit
    */
-  public static ArrayList<Collision> boxcastAll(Vector2 sourcePos, Vector2 size) {
+  public static ArrayList<Collision> boxcastAll(Vector2 sourcePos, Vector2 size, boolean bot) {
     BoxCollider castCollider = new BoxCollider(sourcePos, size);
     Collision collision;
     ArrayList<Collision> collisions = new ArrayList<>();
+    if (bot) drawBoxCast(sourcePos, size);
 
     // USING ITERATOR PREVENTS A ConcurrentModificationException
     Iterator<GameObject> iter = gameObjects.values().iterator();
     while (iter.hasNext()) {
       GameObject object = iter.next();
+
+      if (object instanceof Limb)
+        continue;
+
       if (object.getComponent(ComponentType.COLLIDER) != null) {
         collision =
             new Collision(
