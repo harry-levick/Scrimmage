@@ -16,12 +16,6 @@ public class ButtonLeveleditor extends ButtonObject {
    */
   public ButtonLeveleditor(
       double x, double y, double sizeX, double sizeY, ObjectType id, UUID objectUUID) {
-    super(x, y, sizeX, sizeY, id, objectUUID);
-  }
-
-  @Override
-  public void initialiseAnimation() {
-    super.initialiseAnimation(
-        "images/buttons/leveleditor_unpressed.png", "images/buttons/leveleditor_pressed.png");
+    super(x, y, sizeX, sizeY, "Level Editor", id, objectUUID);
   }
 }

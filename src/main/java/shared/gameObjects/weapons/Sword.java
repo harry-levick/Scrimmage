@@ -29,7 +29,7 @@ public class Sword extends Melee {
         50,
         50,
         ObjectType.Weapon,
-        20, // damage
+        20, // hazard
         10, // weight
         name,
         30, // ammo

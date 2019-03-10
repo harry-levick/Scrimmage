@@ -14,6 +14,7 @@ import shared.gameObjects.MapDataObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.background.Background;
 import shared.gameObjects.players.Player;
+import shared.gameObjects.rendering.ColorFilters;
 import shared.gameObjects.weapons.MachineGun;
 import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.weapons.Weapon;
@@ -35,6 +36,7 @@ public class LevelHandler {
   private Group backgroundRoot;
   private Group gameRoot;
   private Background background;
+  private ColorFilters filters;
   private AudioHandler musicPlayer;
   private Settings settings;
   private ArrayList<GameObject> toCreate;
@@ -47,12 +49,14 @@ public class LevelHandler {
     players = new LinkedHashMap<>();
     bots = new LinkedHashMap<>();
     maps = MapLoader.getMaps(settings.getMapsPath());
+    filters = new ColorFilters();
     this.root = root;
     this.backgroundRoot = backgroundRoot;
     this.gameRoot = gameRoot;
+
     musicPlayer = new AudioHandler(settings, Client.musicActive);
-    changeMap(new Map("main_menu.map", Path.convert("src/main/resources/menus/main_menu.map"),
-        GameState.MAIN_MENU), true);
+    changeMap(new Map("main_menu.map", Path.convert("src/main/resources/menus/main_menu.map")),
+        true);
     previousMap = null;
   }
 
@@ -68,13 +72,14 @@ public class LevelHandler {
     bots = new LinkedHashMap<>();
     toCreate = new ArrayList<>();
     musicPlayer = new AudioHandler(settings, Client.musicActive);
-    changeMap(new Map("Lobby", Path.convert("src/main/resources/menus/lobby.map"), GameState.Lobby),
+    changeMap(new Map("LOBBY", Path.convert("src/main/resources/menus/lobby.map")),
         false);
   }
 
   public void changeMap(Map map, Boolean moveToSpawns) {
     previousMap = this.map;
     this.map = map;
+    Client.closeSettingsOverlay();
     generateLevel(backgroundRoot, gameRoot, moveToSpawns);
   }
 
@@ -103,9 +108,11 @@ public class LevelHandler {
     gameObjects = MapLoader.loadMap(map.getPath());
     gameObjects.forEach(
         (key, gameObject) -> {
+          gameObject.setSettings(settings);
           if (gameObject.getId() == ObjectType.MapDataObject) {
             this.background = ((MapDataObject) gameObject).getBackground();
             ArrayList<Vector2> spawnPoints = ((MapDataObject) gameObject).getSpawnPoints();
+            this.map.setGameState(((MapDataObject) gameObject).getGameState());
             if (this.background != null) {
               background.initialise(backgroundGroup);
             }
@@ -136,9 +143,9 @@ public class LevelHandler {
         musicPlayer.playMusicPlaylist(PLAYLIST.INGAME);
         break;
       case MAIN_MENU:
-      case Lobby:
-      case Start_Connection:
-      case Multiplayer:
+      case LOBBY:
+      case START_CONNECTION:
+      case MULTIPLAYER:
       default:
         musicPlayer.playMusicPlaylist(PLAYLIST.MENU);
         break;
