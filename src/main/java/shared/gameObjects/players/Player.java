@@ -7,6 +7,7 @@ import shared.gameObjects.Destructable;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
+import shared.gameObjects.components.behaviours.ObjectShake;
 import shared.gameObjects.components.CircleCollider;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Limbs.Arm;
@@ -18,12 +19,10 @@ import shared.gameObjects.weapons.MachineGun;
 import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.weapons.Weapon;
 import shared.handlers.levelHandler.LevelHandler;
-import shared.physics.Physics;
 import shared.physics.data.Collision;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
-import shared.util.maths.Vector2;
 
 public class Player extends GameObject implements Destructable {
 
@@ -47,6 +46,7 @@ public class Player extends GameObject implements Destructable {
   protected Rigidbody rb;
   protected double vx;
   private BoxCollider bc;
+  private ObjectShake shake;
 
   // Limbs
   private Limb head;
@@ -75,6 +75,7 @@ public class Player extends GameObject implements Destructable {
     this.holding = null;
     this.levelHandler = levelHandler;
     this.behaviour = Behaviour.IDLE;
+    this.shake = new ObjectShake(this);
     this.bc = new BoxCollider(this, ColliderLayer.PLAYER, false);
     //  this.cc = new CircleCollider(this, ColliderLayer.PLAYER, transform.getSize().magnitude()*0.5f, false);
     this.rb = new Rigidbody(RigidbodyType.DYNAMIC, 90, 11.67f, 0.2f,
@@ -82,6 +83,7 @@ public class Player extends GameObject implements Destructable {
     //  addComponent(cc);
     addComponent(bc);
     addComponent(rb);
+    addComponent(shake);
   }
 
   // Initialise the animation
@@ -99,6 +101,7 @@ public class Player extends GameObject implements Destructable {
   @Override
   public void initialise(Group root) {
     super.initialise(root);
+
     legLeft = new Leg(true, this, levelHandler);
     legRight = new Leg(false, this, levelHandler);
     body = new Body(this, levelHandler);

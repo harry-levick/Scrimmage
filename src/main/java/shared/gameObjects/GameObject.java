@@ -5,7 +5,6 @@ import static client.main.Settings.levelHandler;
 import client.main.Settings;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.effect.BlurType;
@@ -22,7 +21,6 @@ import shared.gameObjects.components.Collider;
 import shared.gameObjects.components.Component;
 import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.Rigidbody;
-import shared.gameObjects.players.Player;
 import shared.physics.Physics;
 import shared.physics.data.Collision;
 import shared.physics.data.DynamicCollision;
@@ -116,14 +114,16 @@ public abstract class GameObject implements Serializable {
       networkStateUpdate = true;
     }
     this.lastPos.setVec((float) getX(), (float) getY());
+
   }
 
   // Client Side only
   public void render() {
     imageView.setImage(animation.getImage());
-    imageView.setTranslateX(getX());
-    imageView.setTranslateY(getY());
     imageView.setRotate(getTransform().getRot());
+    //imageView.setTranslateX(getX());
+    //imageView.setTranslateY(getY());
+
   }
 
   // Collision engine
