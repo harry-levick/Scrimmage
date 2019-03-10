@@ -91,7 +91,7 @@ public class Physics {
         }
       }
     }
-    if(collisions.size() > 0) {
+    if (collisions.size() > 0) {
       Collision toRet = collisions.get(0);
       for (Collision c : collisions) {
         toRet = c.getPointOfCollision().sub(sourcePos).magnitude() <= toRet.getPointOfCollision().sub(sourcePos).magnitude() ? c : toRet;
@@ -122,6 +122,8 @@ public class Physics {
 
     EdgeCollider castCollider = new EdgeCollider(false);
     Collision collision = null;
+    ArrayList<Collision> collisions = new ArrayList<>();
+
     Vector2 incrementVal = lengthAndDirection.div(RAYCAST_INC);
     for (int i = 0; i <= RAYCAST_INC; i++) {
       castCollider.addNode(sourcePos.add(incrementVal.mult(i)));
@@ -156,11 +158,20 @@ public class Physics {
         }
 
         if (collision.isCollided() && !(object == bot || object.getParent() == bot || botHolder)) {
-          return collision;
+          collisions.add(collision);
         }
       }
+
     }
-    return collision;
+    if (collisions.size() > 0) {
+      Collision toRet = collisions.get(0);
+      for (Collision c : collisions) {
+        toRet = c.getPointOfCollision().sub(sourcePos).magnitude() <= toRet.getPointOfCollision()
+            .sub(sourcePos).magnitude() ? c : toRet;
+      }
+      return toRet;
+
+    } else return null;
   }
 
 
