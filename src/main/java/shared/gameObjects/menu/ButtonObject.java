@@ -83,13 +83,7 @@ public abstract class ButtonObject extends GameObject {
     imageView.setTranslateY(0);
   }
 
-// REDACTED TODO REMOVE REDACTED
-//  public void initialiseAnimation(String unclickedPath, String clickedPath) {
-//    this.animation.supplyAnimation("default", unclickedPath);
-//    this.animation.supplyAnimation("clicked", clickedPath);
-//  }
-
-  public void initialiseAnimation(String unclickedPath, String clickedPath) {
+  public void initialiseAnimation() {
     this.animation.supplyAnimation("default", "images/buttons/blank_unpressed.png");
     this.animation.supplyAnimation("clicked", "images/buttons/blank_pressed.png");
   }

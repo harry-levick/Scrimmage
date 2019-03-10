@@ -37,11 +37,6 @@ public class ButtonJoin extends ButtonObject {
     root.getChildren().add(addressInput);
   }
 
-  @Override
-  public void initialiseAnimation() {
-    super.initialiseAnimation(
-        "images/buttons/multiplayer_unpressed.png", "images/buttons/multiplayer_pressed.png");
-  }
 
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);

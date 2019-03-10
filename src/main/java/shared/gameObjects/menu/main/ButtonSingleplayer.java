@@ -32,12 +32,6 @@ public class ButtonSingleplayer extends ButtonObject {
     super(x, y, sizeX, sizeY, "Singleplayer", id, objectUUID);
   }
 
-  @Override
-  public void initialiseAnimation() {
-    super.initialiseAnimation(
-        "images/buttons/singleplayer_unpressed.png", "images/buttons/singleplayer_pressed.png");
-  }
-
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
 
