@@ -33,6 +33,7 @@ import shared.gameObjects.components.behaviours.blockBehaviours.Crushing;
 import shared.gameObjects.menu.main.ButtonBack;
 import shared.gameObjects.menu.main.ButtonCredits;
 import shared.gameObjects.menu.main.ButtonMultiplayer;
+import shared.gameObjects.menu.main.ButtonQuit;
 import shared.gameObjects.menu.main.ButtonSettings;
 import shared.gameObjects.menu.main.ButtonSingleplayer;
 import shared.gameObjects.menu.main.SoundSlider;
@@ -92,11 +93,13 @@ public class LevelCreator extends Application {
         getAbs(20), getAbs(6), getAbs(8), getAbs(2), ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid, new ButtonMultiplayer(
-        getAbs(20), getAbs(11), getAbs(8), getAbs(2), ObjectType.Button, UUID.randomUUID()));
+        getAbs(20), getAbs(9), getAbs(8), getAbs(2), ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
-    gameObjects.put(uuid,
-        new ButtonSettings(
-            getAbs(20), getAbs(17), getAbs(8), getAbs(2), ObjectType.Button, UUID.randomUUID()));
+    gameObjects.put(uuid, new ButtonSettings(
+        getAbs(20), getAbs(14), getAbs(8), getAbs(2), ObjectType.Button, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid, new ButtonQuit(
+        getAbs(20), getAbs(17), getAbs(8), getAbs(2), ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
 
     //Laser
@@ -307,11 +310,11 @@ public class LevelCreator extends Application {
     ////////////////////////////////////////
     // MULTIPLAYER
     ////////////////////////////////////////
-    System.out.println("Generating Multiplayer Map");
+    System.out.println("Generating MULTIPLAYER Map");
     filename = "multiplayer";
     gameObjects = new ConcurrentSkipListMap<>();
     playerSpawns = new ArrayList<Player>();
-    mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.MAIN_MENU);
+    mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.MULTIPLAYER);
     mapDataObject.setBackground(
         new Background1(UUID.randomUUID()));
     uuid = UUID.randomUUID();
@@ -359,11 +362,11 @@ public class LevelCreator extends Application {
     ////////////////////////////////////////
     // MULTIPLAYER LOBBY
     ////////////////////////////////////////
-    System.out.println("Generating Lobby");
+    System.out.println("Generating LOBBY");
     filename = "lobby";
     gameObjects = new ConcurrentSkipListMap<>();
     playerSpawns = new ArrayList<Player>();
-    mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.MAIN_MENU);
+    mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.LOBBY);
     uuid = UUID.randomUUID();
     mapDataObject.setBackground(
         new Background1(uuid));
