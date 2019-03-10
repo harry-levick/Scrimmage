@@ -169,18 +169,19 @@ public class Client extends Application {
       settingsObjects.forEach(obj -> obj.initialiseAnimation());
       settingsObjects.forEach(obj -> obj.initialise(creditsRoot));
       settingsObjects.forEach(obj -> obj.render());
-
-
-
     } else {
-      settingsOverlay = false;
-      creditsRoot.getChildren().clear();
-      settingsObjects.clear();
+      closeSettingsOverlay();
     }
 
     if (credits) {
       endCredits();
     }
+  }
+
+  public static void closeSettingsOverlay() {
+    settingsOverlay = false;
+    creditsRoot.getChildren().clear();
+    settingsObjects.clear();
   }
 
   public static void showCredits() {
