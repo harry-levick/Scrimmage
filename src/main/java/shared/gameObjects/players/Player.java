@@ -76,7 +76,7 @@ public class Player extends GameObject implements Destructable {
     this.holding = null;
     this.levelHandler = levelHandler;
     this.behaviour = Behaviour.IDLE;
-    this.shake = new ObjectShake(this);
+  //  this.shake = new ObjectShake(this);
     this.bc = new BoxCollider(this, ColliderLayer.PLAYER, false);
     //  this.cc = new CircleCollider(this, ColliderLayer.PLAYER, transform.getSize().magnitude()*0.5f, false);
     this.rb = new Rigidbody(RigidbodyType.DYNAMIC, 90, 11.67f, 0.2f,
@@ -84,7 +84,7 @@ public class Player extends GameObject implements Destructable {
     //  addComponent(cc);
     addComponent(bc);
     addComponent(rb);
-    addComponent(shake);
+  //  addComponent(shake);
   }
 
   // Initialise the animation
