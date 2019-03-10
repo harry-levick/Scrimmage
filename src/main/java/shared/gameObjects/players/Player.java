@@ -300,6 +300,15 @@ public class Player extends GameObject {
     }
   }
 
+  public void setHandRightX(double pos) { this.handRight.setX(pos); }
+
+  public void setHandRightY(double pos) { this.handRight.setY(pos); }
+
+  public void setHandLeftX(double pos) { this.handLeft.setX(pos); }
+
+  public void setHandLeftY(double pos) { this.handLeft.setY(pos); }
+
+
   /**
    * Hand position x of the player when facing left
    *
