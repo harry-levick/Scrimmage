@@ -92,6 +92,8 @@ public class Client extends Application {
   private UI userInterface;
   private static boolean credits = false;
   private static int creditStartDelay = 100;
+  private static double resolutionX;
+  private static double resolutionY;
   private boolean gameOver;
   private static boolean settingsOverlay = false;
   private static ArrayList<GameObject> settingsObjects = new ArrayList<>();
@@ -288,6 +290,8 @@ public class Client extends Application {
     accumulatedTime = 0;
     settings = new Settings();
     multiplayer = false;
+    resolutionX = settings.getMapWidth();
+    resolutionY = settings.getMapHeight();
     // Start off screen
   }
 
@@ -425,7 +429,15 @@ public class Client extends Application {
           levelHandler.getBotPlayerList().forEach((key, bot) -> bot.applyInput());
         }
 
-        /** Render Game Objects */
+        /** Scale and Render Game Objects */
+        double resolutionXNew = primaryStage.getWidth();
+        double resolutionYNew = primaryStage.getHeight();
+        Vector2 scaleRatio = new Vector2(resolutionXNew / resolutionX,
+            resolutionYNew / resolutionY);
+        resolutionX = resolutionXNew;
+        resolutionY = resolutionYNew;
+
+        //levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.getTransform().scaleScreen(scaleRatio));
         levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.render());
         if (levelHandler.getBackground() != null) {
           levelHandler.getBackground().render();
