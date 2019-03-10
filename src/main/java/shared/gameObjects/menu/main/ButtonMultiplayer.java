@@ -20,14 +20,14 @@ public class ButtonMultiplayer extends ButtonObject {
    */
   public ButtonMultiplayer(
       double x, double y, double sizeX, double sizeY, ObjectType id, UUID objectUUID) {
-    super(x, y, sizeX, sizeY, "Multiplayer", id, objectUUID);
+    super(x, y, sizeX, sizeY, "MULTIPLAYER", id, objectUUID);
   }
 
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
     Client.levelHandler.changeMap(
         new Map(
-            "Multiplayer",
+            "MULTIPLAYER",
             Path.convert("src/main/resources/menus/multiplayer.map")),
         false);
   }
