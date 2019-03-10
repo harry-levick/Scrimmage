@@ -107,6 +107,7 @@ public class LevelHandler {
     gameObjects = MapLoader.loadMap(map.getPath());
     gameObjects.forEach(
         (key, gameObject) -> {
+          gameObject.setSettings(settings);
           if (gameObject.getId() == ObjectType.MapDataObject) {
             this.background = ((MapDataObject) gameObject).getBackground();
             ArrayList<Vector2> spawnPoints = ((MapDataObject) gameObject).getSpawnPoints();
