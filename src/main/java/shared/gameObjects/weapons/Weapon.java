@@ -106,7 +106,10 @@ public abstract class Weapon extends GameObject {
   // Get holder hand position
   public double[] getHolderHandPos() {
     if (holder != null) {
-      return holder.getHandPos();
+      if (this.isGun)
+        return holder.getGunHandPos();
+      else  // isMelee
+        return holder.getMeleeHandPos();
     }
     return null;
   }
