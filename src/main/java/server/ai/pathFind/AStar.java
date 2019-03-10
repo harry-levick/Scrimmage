@@ -358,9 +358,8 @@ public class AStar {
     double dist = botPos.exactMagnitude(enemyPos);
     Melee tempMelee;
 
-    Collision rayCast;
     // Use the worldScene of the path finding to raycast, instead of the actual gameObjects list.
-    rayCast = Physics.raycastAi(botPosCenter,
+    Collision rayCast = Physics.raycastAi(botPosCenter,
         enemyPosCenter.sub(botPosCenter),
         worldScene,
         bot,

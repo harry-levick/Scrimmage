@@ -157,6 +157,7 @@ public class Physics {
     return collision;
   }
 
+
   public static void drawCast(double xStart, double yStart, double xFinish, double yFinish,
       String colour) {
     Platform.runLater(
@@ -190,7 +191,9 @@ public class Physics {
    * @param lengthAndDirection The length and direction of the ray
    * @return All colliders hit in the path, empty if nothing was hit.
    */
-  public static ArrayList<Collision> raycastAll(Vector2 sourcePos, Vector2 lengthAndDirection) {
+  public static ArrayList<Collision> raycastAll(Vector2 sourcePos, Vector2 lengthAndDirection,
+      ArrayList<GameObject> objects) {
+
     EdgeCollider castCollider = new EdgeCollider(false);
     Collision collision = null;
     ArrayList<Collision> collisions = new ArrayList<>();
