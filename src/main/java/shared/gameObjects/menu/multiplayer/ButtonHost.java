@@ -6,7 +6,6 @@ import java.util.UUID;
 import javafx.scene.input.MouseEvent;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.menu.ButtonObject;
-import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.Map;
 
 public class ButtonHost extends ButtonObject {
@@ -23,15 +22,9 @@ public class ButtonHost extends ButtonObject {
     super(x, y, 50, 50, "Host", id, objectUUID);
   }
 
-  @Override
-  public void initialiseAnimation() {
-    super.initialiseAnimation(
-        "images/buttons/multiplayer_unpressed.png", "images/buttons/multiplayer_pressed.png");
-  }
-
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
     Client.levelHandler.changeMap(
-        new Map("Host", Menu.HOST.getMenuPath(), GameState.MAIN_MENU), false);
+        new Map("Host", Menu.HOST.getMenuPath()), false);
   }
 }
