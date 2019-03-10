@@ -42,6 +42,7 @@ import shared.gameObjects.GameObject;
 import shared.gameObjects.UI.UI;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.Utils.TimePosition;
+import shared.gameObjects.menu.main.ButtonQuit;
 import shared.gameObjects.menu.main.SoundSlider;
 import shared.gameObjects.menu.main.SoundSlider.SOUND_TYPE;
 import shared.gameObjects.objects.ObjectManager;
@@ -110,6 +111,21 @@ public class Client extends Application {
     // show/overlay settings
     if (settingsOverlay == false && levelHandler.getMap().getGameState() != GameState.SETTINGS) {
       settingsOverlay = true;
+
+      int quitButtonExtraPadding = 0;
+      switch (levelHandler.getGameState()) {
+        case IN_GAME:
+        case LOBBY:
+        case HOST:
+        case START_CONNECTION:
+        case MULTIPLAYER:
+          quitButtonExtraPadding = settings.getGrisPos(3);
+          break;
+        default:
+          quitButtonExtraPadding = 0;
+          break;
+      }
+
       //add screen saturation
 
       //background
@@ -118,20 +134,20 @@ public class Client extends Application {
             settings.getResourcesPath() + File.separator + "images" + File.separator + "ui"
                 + File.separator + "panel.png"));
         ImageView iv = new ImageView(popupBackground);
+        iv.setFitWidth(settings.getGrisPos(12));
+        iv.setFitHeight(settings.getGrisPos(7) + quitButtonExtraPadding);
         iv.setX(settings.getGrisPos(18));
         iv.setY(settings.getGrisPos(5));
-        iv.setFitWidth(settings.getGrisPos(12));
-        iv.setFitHeight(settings.getGrisPos(7));
         creditsRoot.getChildren().add(iv);
       } catch (FileNotFoundException e) {
         Rectangle rect = new Rectangle();
+        rect.setWidth(settings.getGrisPos(12));
+        rect.setHeight(settings.getGrisPos(7) + quitButtonExtraPadding);
         rect.setX(settings.getGrisPos(18));
         rect.setY(settings.getGrisPos(5));
-        rect.setWidth(settings.getGrisPos(12));
-        rect.setHeight(settings.getGrisPos(7));
         creditsRoot.getChildren().add(rect);
       }
-      //add sliders
+      //add controls
       settingsObjects.add(
           new SoundSlider(settings.getGrisPos(20), settings.getGrisPos(7), settings.getGrisPos(8),
               settings.getGrisPos(1), SOUND_TYPE.MUSIC,
@@ -140,8 +156,22 @@ public class Client extends Application {
           new SoundSlider(settings.getGrisPos(20), settings.getGrisPos(9), settings.getGrisPos(8),
               settings.getGrisPos(1), SOUND_TYPE.SFX,
               "Sound Effects", ObjectType.Button, UUID.randomUUID()));
-      settingsObjects.forEach(slider -> slider.initialise(creditsRoot));
-      settingsObjects.forEach(slider -> slider.initialiseAnimation());
+      if (quitButtonExtraPadding != 0) {
+        ButtonQuit quit = new ButtonQuit(
+            settings.getGrisPos(20),
+            settings.getGrisPos(11),
+            settings.getGrisPos(8),
+            settings.getGrisPos(2),
+            ObjectType.Button,
+            UUID.randomUUID());
+        settingsObjects.add(quit);
+      }
+      settingsObjects.forEach(obj -> obj.initialiseAnimation());
+      settingsObjects.forEach(obj -> obj.initialise(creditsRoot));
+      settingsObjects.forEach(obj -> obj.render());
+
+
+
     } else {
       settingsOverlay = false;
       creditsRoot.getChildren().clear();
@@ -398,6 +428,9 @@ public class Client extends Application {
         levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.render());
         if (levelHandler.getBackground() != null) {
           levelHandler.getBackground().render();
+        }
+        if (settingsOverlay) {
+          settingsObjects.forEach(obj -> obj.update());
         }
 
         /** Check Collisions */
