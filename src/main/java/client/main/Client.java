@@ -108,7 +108,6 @@ public class Client extends Application {
   public static void settingsToggle() {
     // todo check if ingame
     // show/overlay settings
-    System.out.println(levelHandler.getMap().getGameState() + levelHandler.getMap().getName());
     if (settingsOverlay == false && levelHandler.getMap().getGameState() != GameState.SETTINGS) {
       settingsOverlay = true;
       //add screen saturation
