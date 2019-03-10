@@ -28,13 +28,13 @@ public class ObjectShake extends Behaviour implements Serializable {
   private void testMovement() {
     if(alt==-1) {
       System.out.println("moving");
-      getParent().getImageView().setTranslateX(objectX+50);
-      getParent().getImageView().setTranslateY(objectY+50);
+      getParent().getImageView().setTranslateX(objectX+100);
+      getParent().getImageView().setTranslateY(objectY+100);
     }
     else {
       System.out.println("resetting.");
-      getParent().getImageView().setTranslateX(objectX);
-      getParent().getImageView().setTranslateY(objectY);
+      getParent().getImageView().setTranslateX(objectX-50);
+      getParent().getImageView().setTranslateY(objectY-50);
     }
     alt = alt * -1;
   }

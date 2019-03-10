@@ -121,8 +121,8 @@ public abstract class GameObject implements Serializable {
   public void render() {
     imageView.setImage(animation.getImage());
     imageView.setRotate(getTransform().getRot());
-    //imageView.setTranslateX(getX());
-    //imageView.setTranslateY(getY());
+    imageView.setTranslateX(getX());
+    imageView.setTranslateY(getY());
 
   }
 
