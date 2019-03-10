@@ -26,13 +26,15 @@ public class Physics {
   /*
    * Order: DEFAULT, PLAYER, OBJECT, PLATFORM, PARTICLE, COLLECTABLE
    */
-  public static boolean[] DEFAULT = {true, true, true, true, false, false};
-  public static boolean[] PLAYER = {true, false, true, true, false, false};
-  public static boolean[] OBJECT = {true, true, true, true, false, false};
-  public static boolean[] PLATFORM = {true, true, true, true, false, true};
-  public static boolean[] PARTICLES = {false, false, false, false, false, false};
-  public static boolean[] COLLECTABLE = {false, false, false, true, false, false};
-  public static boolean[][] COLLISION_LAYERS = {DEFAULT, PLAYER, OBJECT, PLATFORM, PARTICLES, COLLECTABLE};
+  public static boolean[] DEFAULT = {true, true, true, true, false, false, true};
+  public static boolean[] PLAYER = {true, false, true, true, false, false, false};
+  public static boolean[] OBJECT = {true, true, true, true, false, false, true};
+  public static boolean[] PLATFORM = {true, true, true, true, false, true, true};
+  public static boolean[] PARTICLES = {false, false, false, false, false, false, false};
+  public static boolean[] COLLECTABLE = {false, false, false, true, false, false, false};
+  public static boolean[] LIMBS = {true, false, true, true, false, false, false};
+  public static boolean[][] COLLISION_LAYERS = {DEFAULT, PLAYER, OBJECT, PLATFORM, PARTICLES,
+      COLLECTABLE, LIMBS};
   public static LinkedHashMap<UUID, GameObject> gameObjects;
   private static ArrayList<DynamicCollision> collisions = new ArrayList<>();
 

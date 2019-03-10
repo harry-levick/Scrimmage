@@ -14,6 +14,7 @@ import shared.gameObjects.MapDataObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.background.Background;
 import shared.gameObjects.players.Player;
+import shared.gameObjects.rendering.ColorFilters;
 import shared.gameObjects.weapons.MachineGun;
 import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.weapons.Weapon;
@@ -35,6 +36,7 @@ public class LevelHandler {
   private Group backgroundRoot;
   private Group gameRoot;
   private Background background;
+  private ColorFilters filters;
   private AudioHandler musicPlayer;
   private Settings settings;
   private ArrayList<GameObject> toCreate;
@@ -47,9 +49,11 @@ public class LevelHandler {
     players = new LinkedHashMap<>();
     bots = new LinkedHashMap<>();
     maps = MapLoader.getMaps(settings.getMapsPath());
+    filters = new ColorFilters();
     this.root = root;
     this.backgroundRoot = backgroundRoot;
     this.gameRoot = gameRoot;
+
     musicPlayer = new AudioHandler(settings, Client.musicActive);
     changeMap(new Map("main_menu.map", Path.convert("src/main/resources/menus/main_menu.map"),
         GameState.MAIN_MENU), true);

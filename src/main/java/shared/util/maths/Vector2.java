@@ -10,6 +10,11 @@ public class Vector2 implements Serializable {
   private float x;
   private float y;
 
+  public Vector2(int x, int y) {
+    this.x = x;
+    this.y = y;
+  }
+
   public Vector2(float x, float y) {
     this.x = x;
     this.y = y;
@@ -50,6 +55,10 @@ public class Vector2 implements Serializable {
     return a.magnitude() > b.magnitude() ? a : b;
   }
 
+  public static Vector2 min(Vector2 a, Vector2 b) {
+    return a.magnitude() > b.magnitude() ? b : a;
+  }
+
   public static Vector2 Up() {
     return new Vector2(0, -1);
   }
@@ -68,6 +77,7 @@ public class Vector2 implements Serializable {
 
   /**
    * Multiply the corresponding elements in the vectors
+   *
    * @param vector
    * @return The new product vector
    */
@@ -80,6 +90,7 @@ public class Vector2 implements Serializable {
 
   /**
    * Add both elements in the vector with a scalar
+   *
    * @param scalar
    * @return The new summed vector
    */
@@ -92,6 +103,7 @@ public class Vector2 implements Serializable {
 
   /**
    * Add the corresponding elements in the vectors
+   *
    * @param vector
    * @return The new summed vector
    */
@@ -104,6 +116,7 @@ public class Vector2 implements Serializable {
 
   /**
    * Subtract both elements in the vector with a scalar
+   *
    * @param scalar
    * @return The new subtracted vector
    */
@@ -116,6 +129,7 @@ public class Vector2 implements Serializable {
 
   /**
    * Subtract the corresponding elements in the vectors
+   *
    * @param vector
    * @return The new subtracted vector
    */
@@ -128,6 +142,7 @@ public class Vector2 implements Serializable {
 
   /**
    * Divide both elements in the vector with a scalar
+   *
    * @param scalar
    * @return The new quotient vector
    */
@@ -140,6 +155,7 @@ public class Vector2 implements Serializable {
 
   /**
    * Divide the corresponding elements in the vectors
+   *
    * @param vector
    * @return The new quotient vector
    */
@@ -188,7 +204,7 @@ public class Vector2 implements Serializable {
    */
   public float exactMagnitude(Vector2 vector) {
     return (float)
-         Math.sqrt(Math.pow(vector.getX() - getX(), 2) + Math.pow(vector.getY() - getY(), 2));
+        Math.sqrt(Math.pow(vector.getX() - getX(), 2) + Math.pow(vector.getY() - getY(), 2));
   }
 
   /**
@@ -257,14 +273,35 @@ public class Vector2 implements Serializable {
   }
 
   /**
+   * Computes the normal vector of the vector
+   *
+   * @return The normal corresponding to this vector
+   */
+  public Vector2 normal() {
+    return new Vector2(-y, x);
+  }
+
+  /**
+   *
+   */
+  public float overlap(Vector2 projection) {
+    return (y - projection.getX());
+  }
+
+  public boolean canOverlap(Vector2 projection) {
+    return (!(projection.getY() < this.x || this.y < projection.getX()));
+  }
+
+  /**
    * Rotates the vector by the corresponding amount
+   *
    * @param rotation The amount IN DEGREES to rotate the vector
    * @return New points of rotated vector
    */
   public Vector2 applyRotation(float rotation) {
     float angle = (float) Math.toRadians(rotation);
-    return new Vector2(x * Math.cos(angle) - y * Math.sin(angle),
-        x * Math.sin(angle) + y * Math.cos(angle));
+    return new Vector2(
+        x * Math.cos(angle) - y * Math.sin(angle), x * Math.sin(angle) + y * Math.cos(angle));
   }
 
   @Override

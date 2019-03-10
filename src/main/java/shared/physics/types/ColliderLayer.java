@@ -19,7 +19,7 @@ public enum ColliderLayer {
   /**
    * Used for static objects in a level, like walls and floors or potentially decorative triggers
    */
-  WALL(3),
+  PLATFORM(3),
   /**
    * Used exclusively by the particle system; do not use this unless you know what you are doing
    */
@@ -28,8 +28,11 @@ public enum ColliderLayer {
    *
    * Used for the contact collider for collectables so that they don't phase through the floor. Use default for the trigger.
    */
-  COLLECTABLE(5);
-
+  COLLECTABLE(5),
+  /**
+   * Limbs
+   */
+  LIMBS(6);
   int id;
 
   ColliderLayer(int i) {

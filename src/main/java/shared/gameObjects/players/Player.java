@@ -3,11 +3,13 @@ package shared.gameObjects.players;
 import client.main.Client;
 import java.util.UUID;
 import javafx.scene.Group;
+import shared.gameObjects.Destructable;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.CircleCollider;
 import shared.gameObjects.components.Rigidbody;
+import shared.gameObjects.components.behaviours.ObjectShake;
 import shared.gameObjects.players.Limbs.Arm;
 import shared.gameObjects.players.Limbs.Body;
 import shared.gameObjects.players.Limbs.Hand;
@@ -17,14 +19,13 @@ import shared.gameObjects.weapons.MachineGun;
 import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.weapons.Weapon;
 import shared.handlers.levelHandler.LevelHandler;
-import shared.physics.Physics;
 import shared.physics.data.Collision;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
 
-public class Player extends GameObject {
+public class Player extends GameObject implements Destructable {
 
   protected final float speed = 9;
   protected final float jumpForce = -300;
@@ -46,6 +47,7 @@ public class Player extends GameObject {
   protected Rigidbody rb;
   protected double vx;
   private BoxCollider bc;
+  private ObjectShake shake;
 
   // Limbs
   private Limb head;
@@ -74,6 +76,7 @@ public class Player extends GameObject {
     this.holding = null;
     this.levelHandler = levelHandler;
     this.behaviour = Behaviour.IDLE;
+    this.shake = new ObjectShake(this);
     this.bc = new BoxCollider(this, ColliderLayer.PLAYER, false);
     //  this.cc = new CircleCollider(this, ColliderLayer.PLAYER, transform.getSize().magnitude()*0.5f, false);
     this.rb = new Rigidbody(RigidbodyType.DYNAMIC, 90, 11.67f, 0.2f,
@@ -81,6 +84,7 @@ public class Player extends GameObject {
     //  addComponent(cc);
     addComponent(bc);
     addComponent(rb);
+    addComponent(shake);
   }
 
   // Initialise the animation
@@ -98,6 +102,7 @@ public class Player extends GameObject {
   @Override
   public void initialise(Group root) {
     super.initialise(root);
+
     legLeft = new Leg(true, this, levelHandler);
     legRight = new Leg(false, this, levelHandler);
     body = new Body(this, levelHandler);
@@ -153,7 +158,7 @@ public class Player extends GameObject {
     this.lastInputCount = Integer.parseInt(unpackedData[6]);
   }
 
-  public void checkGrounded() {
+  private void checkGrounded() {
     grounded = rb.isGrounded();
   }
 
@@ -227,10 +232,11 @@ public class Player extends GameObject {
     this.health -= damage;
     if (this.health <= 0) {
       // For testing
-      this.imageView.setTranslateY(getY() + 70);
+      transform.translate(new Vector2(0, -80));
       this.setActive(false);
-      this.removeComponent(bc);
-      this.imageView.setRotate(90);
+      bc.setLayer(ColliderLayer.PARTICLE);
+      transform.rotate(90);
+      this.imageView.setOpacity(0.5);
     }
   }
 
@@ -240,7 +246,7 @@ public class Player extends GameObject {
       this.imageView.setRotate(0);
       this.imageView.setTranslateY(getY() - 70);
       this.setActive(true);
-      this.addComponent(bc);
+      this.bc.setLayer(ColliderLayer.PLAYER);
     }
     children.forEach(child -> {
       Limb limb = (Limb) child;
@@ -400,6 +406,10 @@ public class Player extends GameObject {
 
   public void setBehaviour(Behaviour behaviour) {
     this.behaviour = behaviour;
+  }
+
+  public boolean isGrounded() {
+    return grounded;
   }
 
   @Override
