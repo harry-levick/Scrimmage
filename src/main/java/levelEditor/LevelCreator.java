@@ -1,5 +1,6 @@
 package levelEditor;
 
+import client.main.Settings;
 import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import de.codecentric.centerdevice.javafxsvg.dimension.PrimitiveDimensionProvider;
 import java.io.File;
@@ -37,10 +38,10 @@ import shared.gameObjects.menu.main.ButtonSingleplayer;
 import shared.gameObjects.menu.main.SoundSlider;
 import shared.gameObjects.menu.main.SoundSlider.SOUND_TYPE;
 import shared.gameObjects.menu.multiplayer.ButtonJoin;
+import shared.gameObjects.objects.hazard.LaserBeam;
 import shared.gameObjects.objects.utility.BlueBlock;
 import shared.gameObjects.objects.utility.GreenBlock;
 import shared.gameObjects.objects.utility.JumpPad;
-import shared.gameObjects.objects.hazard.LaserBeam;
 import shared.gameObjects.objects.utility.RedBlock;
 import shared.gameObjects.objects.utility.YellowBlock;
 import shared.gameObjects.players.Player;
@@ -60,6 +61,8 @@ public class LevelCreator extends Application {
   private static MapDataObject mapDataObject;
   private UUID uuid = UUID.randomUUID();
 
+  private Settings settings = new Settings();
+
   private static int getAbs(int gridPos) {
     return gridPos * gridSizePX;
   }
@@ -70,25 +73,9 @@ public class LevelCreator extends Application {
     Group root = new Group();
     // CLASS TO AUTO RECREATE MAPS
     String filename = "";
-    String filepath =
-        "src"
-            + File.separator
-            + "main"
-            + File.separator
-            + "resources"
-            + File.separator
-            + "menus"
-            + File.separator;
+    String filepath = settings.getMenuPath() + File.separator;
 
-    String filepathMaps =
-        "src"
-            + File.separator
-            + "main"
-            + File.separator
-            + "resources"
-            + File.separator
-            + "maps"
-            + File.separator;
+    String filepathMaps = settings.getMapsPath() + File.separator;
 
     ////////////////////////////////////////
     // MAIN MENU
@@ -101,35 +88,36 @@ public class LevelCreator extends Application {
     mapDataObject.setBackground(
         new Background1(uuid));
     uuid = UUID.randomUUID();
-    gameObjects.put(uuid,
-        new ButtonSingleplayer(
-            getAbs(20), getAbs(6), getAbs(8), getAbs(2), ObjectType.Button, uuid));
+    gameObjects.put(uuid, new ButtonSingleplayer(
+        getAbs(20), getAbs(6), getAbs(8), getAbs(2), ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
-    gameObjects.put(uuid,
-        new ButtonMultiplayer(
-            getAbs(20), getAbs(11), getAbs(8), getAbs(2), ObjectType.Button, UUID.randomUUID()));
+    gameObjects.put(uuid, new ButtonMultiplayer(
+        getAbs(20), getAbs(11), getAbs(8), getAbs(2), ObjectType.Button, UUID.randomUUID()));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
         new ButtonSettings(
             getAbs(20), getAbs(17), getAbs(8), getAbs(2), ObjectType.Button, UUID.randomUUID()));
     uuid = UUID.randomUUID();
 
-
     //Laser
     gameObjects.put(uuid, new LaserBeam(getAbs(4), getAbs(7), uuid));
     uuid = UUID.randomUUID();
 
     //ColouredBlocks
-    gameObjects.put(uuid, new RedBlock(getAbs(4), getAbs(10), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    gameObjects
+        .put(uuid, new RedBlock(getAbs(4), getAbs(10), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
     uuid = UUID.randomUUID();
     //ColouredBlocks
-    gameObjects.put(uuid, new BlueBlock(getAbs(5), getAbs(10), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    gameObjects.put(uuid,
+        new BlueBlock(getAbs(5), getAbs(10), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
     uuid = UUID.randomUUID();
     //ColouredBlocks
-    gameObjects.put(uuid, new GreenBlock(getAbs(6), getAbs(10), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    gameObjects.put(uuid,
+        new GreenBlock(getAbs(6), getAbs(10), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
     uuid = UUID.randomUUID();
     //ColouredBlocks
-    gameObjects.put(uuid, new YellowBlock(getAbs(7), getAbs(10), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    gameObjects.put(uuid,
+        new YellowBlock(getAbs(7), getAbs(10), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
     uuid = UUID.randomUUID();
 
     //JumpPad
@@ -293,7 +281,7 @@ public class LevelCreator extends Application {
           new LaserBeam(getAbs(i), getAbs(0), uuid));
       uuid = UUID.randomUUID();
       gameObjects.put(uuid,
-          new LaserBeam(getAbs(i+2), getAbs(0), uuid));
+          new LaserBeam(getAbs(i + 2), getAbs(0), uuid));
       uuid = UUID.randomUUID();
     }
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "map1" + ".map");

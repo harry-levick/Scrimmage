@@ -10,7 +10,7 @@ public class ButtonCredits extends ButtonObject {
 
   public ButtonCredits(
       double x, double y, double sizeX, double sizeY, ObjectType id, UUID objectUUID) {
-    super(x, y, sizeX, sizeY, id, objectUUID);
+    super(x, y, sizeX, sizeY, "Credits", id, objectUUID);
   }
 
   @Override

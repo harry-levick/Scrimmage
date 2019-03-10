@@ -26,7 +26,7 @@ public class ButtonJoin extends ButtonObject {
    */
   public ButtonJoin(double x, double y, double sizeX, double sizeY, ObjectType id,
       UUID objectUUID) {
-    super(x, y, sizeX, sizeY, id, objectUUID);
+    super(x, y, sizeX, sizeY, "Join", id, objectUUID);
   }
 
   public void initialise(Group root) {

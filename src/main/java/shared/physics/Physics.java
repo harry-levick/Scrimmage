@@ -33,12 +33,12 @@ public class Physics {
   /*
    * Order: DEFAULT, PLAYER, OBJECT, PLATFORM, PARTICLE, COLLECTABLE
    */
-  public static boolean[] DEFAULT = {true, true, true, true, false, false};
-  public static boolean[] PLAYER = {true, false, true, true, false, false};
-  public static boolean[] OBJECT = {true, true, true, true, false, false};
-  public static boolean[] PLATFORM = {true, true, true, true, false, true};
-  public static boolean[] PARTICLES = {false, false, false, false, false, false};
-  public static boolean[] COLLECTABLE = {false, false, false, true, false, false};
+  public static boolean[] DEFAULT = {true, true, true, true, false, false, true};
+  public static boolean[] PLAYER = {true, false, true, true, false, false, false};
+  public static boolean[] OBJECT = {true, true, true, true, false, false, true};
+  public static boolean[] PLATFORM = {true, true, true, true, false, true, true};
+  public static boolean[] PARTICLES = {false, false, false, false, false, false, false};
+  public static boolean[] COLLECTABLE = {false, false, false, true, false, false, false};
   public static boolean[] LIMBS = {true, false, true, true, false, false, false};
   public static boolean[][] COLLISION_LAYERS = {DEFAULT, PLAYER, OBJECT, PLATFORM, PARTICLES, COLLECTABLE, LIMBS};
   public static ConcurrentSkipListMap<UUID, GameObject> gameObjects;
@@ -61,6 +61,7 @@ public class Physics {
       boolean showCollider) {
     EdgeCollider castCollider = new EdgeCollider(false);
     Collision collision = null;
+    ArrayList<Collision> collisions = new ArrayList<>();
     Vector2 incrementVal = lengthAndDirection.div(RAYCAST_INC);
     for (int i = 0; i <= RAYCAST_INC; i++) {
       castCollider.addNode(sourcePos.add(incrementVal.mult(i)));
@@ -86,12 +87,17 @@ public class Physics {
             new Collision(
                 object, castCollider, (Collider) object.getComponent(ComponentType.COLLIDER));
         if (collision.isCollided()) {
-          return collision;
+          collisions.add(collision);
         }
       }
     }
-
-    return collision;
+    if(collisions.size() > 0) {
+      Collision toRet = collisions.get(0);
+      for (Collision c : collisions) {
+        toRet = c.getPointOfCollision().sub(sourcePos).magnitude() <= toRet.getPointOfCollision().sub(sourcePos).magnitude() ? c : toRet;
+      }
+      return toRet;
+    } else return null;
   }
 
   /**
@@ -191,9 +197,7 @@ public class Physics {
    * @param lengthAndDirection The length and direction of the ray
    * @return All colliders hit in the path, empty if nothing was hit.
    */
-  public static ArrayList<Collision> raycastAll(Vector2 sourcePos, Vector2 lengthAndDirection,
-      ArrayList<GameObject> objects) {
-
+  public static ArrayList<Collision> raycastAll(Vector2 sourcePos, Vector2 lengthAndDirection) {
     EdgeCollider castCollider = new EdgeCollider(false);
     Collision collision = null;
     ArrayList<Collision> collisions = new ArrayList<>();
@@ -234,25 +238,31 @@ public class Physics {
   public static Collision boxcast(Vector2 sourcePos, Vector2 size) {
     BoxCollider castCollider = new BoxCollider(sourcePos, size);
     Collision collision;
+    ArrayList<Collision> collisions = new ArrayList<>();
 
     Iterator<GameObject> iter = gameObjects.values().iterator();
-
     while (iter.hasNext()) {
       GameObject object = iter.next();
 
       if (object instanceof Limb)
         continue;
 
-      if (object.getComponent(ComponentType.COLLIDER) != null) {
-        collision =
-            new Collision(
-                object, castCollider, (Collider) object.getComponent(ComponentType.COLLIDER));
-        if (collision.isCollided()) {
-          return collision;
-        }
+    if (object.getComponent(ComponentType.COLLIDER) != null) {
+      collision =
+          new Collision(
+              object, castCollider, (Collider) object.getComponent(ComponentType.COLLIDER));
+      if (collision.isCollided()) {
+          collisions.add(collision);
       }
     }
-    return null;
+    }
+    if(collisions.size() > 0) {
+      Collision toRet = collisions.get(0);
+      for (Collision c : collisions) {
+        toRet = c.getPointOfCollision().sub(sourcePos).magnitude() <= toRet.getPointOfCollision().sub(sourcePos).magnitude() ? c : toRet;
+      }
+      return toRet;
+    } else return null;
   }
 
   /**
@@ -267,7 +277,6 @@ public class Physics {
     Collision collision;
     ArrayList<Collision> collisions = new ArrayList<>();
 
-    // USING ITERATOR PREVENTS A ConcurrentModificationException
     Iterator<GameObject> iter = gameObjects.values().iterator();
     while (iter.hasNext()) {
       GameObject object = iter.next();

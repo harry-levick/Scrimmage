@@ -5,7 +5,9 @@ import client.main.Client;
 import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
@@ -17,6 +19,7 @@ import shared.physics.types.RigidbodyType;
 public abstract class ButtonObject extends GameObject {
 
   protected transient Button button;
+  protected String text;
 
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
@@ -27,9 +30,10 @@ public abstract class ButtonObject extends GameObject {
    * @param id Unique Identifier of every game object
    */
   public ButtonObject(
-      double x, double y, double sizeX, double sizeY, ObjectType id, UUID objectUUID) {
+      double x, double y, double sizeX, double sizeY, String text, ObjectType id, UUID objectUUID) {
     super(x, y, sizeX, sizeY, id, objectUUID);
-    button = new Button("", imageView);
+    button = new Button(text, imageView);
+    this.text = text;
     addComponent(
         new Rigidbody(
             RigidbodyType.STATIC,
@@ -55,7 +59,10 @@ public abstract class ButtonObject extends GameObject {
   @Override
   public void initialise(Group root) {
     super.initialise(root);
-    button = new Button("", imageView);
+    button = new Button(this.text, imageView);
+    button.setFont(Client.settings.getFont(30));
+    button.setTextFill(Color.WHITE);
+    button.setContentDisplay(ContentDisplay.CENTER);
     button.setStyle("-fx-border-color: transparent;-fx-background-color: transparent;");
     root.getChildren().add(button);
     button.setOnMousePressed(event -> doOnClick(event));
@@ -76,10 +83,15 @@ public abstract class ButtonObject extends GameObject {
     imageView.setTranslateY(0);
   }
 
+// REDACTED TODO REMOVE REDACTED
+//  public void initialiseAnimation(String unclickedPath, String clickedPath) {
+//    this.animation.supplyAnimation("default", unclickedPath);
+//    this.animation.supplyAnimation("clicked", clickedPath);
+//  }
 
   public void initialiseAnimation(String unclickedPath, String clickedPath) {
-    this.animation.supplyAnimation("default", unclickedPath);
-    this.animation.supplyAnimation("clicked", clickedPath);
+    this.animation.supplyAnimation("default", "images/buttons/blank_unpressed.png");
+    this.animation.supplyAnimation("clicked", "images/buttons/blank_pressed.png");
   }
 
   @Override
