@@ -106,7 +106,7 @@ public class LevelEditor extends Application {
     objectMap.put(OBJECT_TYPES.BACKGROUND7, new GameObjectTuple("Background 7", 0, 0));
     objectMap.put(OBJECT_TYPES.BACKGROUND8, new GameObjectTuple("Background 8", 0, 0));
     objectMap.put(OBJECT_TYPES.BTN_SP, new GameObjectTuple("Singeplayer Button", 6, 2));
-    objectMap.put(OBJECT_TYPES.BTN_MP, new GameObjectTuple("Multiplayer Button", 6, 2));
+    objectMap.put(OBJECT_TYPES.BTN_MP, new GameObjectTuple("MULTIPLAYER Button", 6, 2));
     objectMap.put(OBJECT_TYPES.BTN_ST, new GameObjectTuple("Settings Button", 6, 2));
     objectMap.put(OBJECT_TYPES.BTN_LE, new GameObjectTuple("Level Editor Button", 6, 2));
     objectMap.put(OBJECT_TYPES.WPN_HG, new GameObjectTuple("Handgun", 2, 2));

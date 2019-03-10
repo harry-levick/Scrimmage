@@ -56,7 +56,7 @@ public class MapLoader {
     File[] list = folder.listFiles();
     ArrayList<Map> maps = new ArrayList<>();
     for (File file : Objects.requireNonNull(list)) {
-      Map tempMap = new Map(file.getName(), file.getPath(), GameState.IN_GAME);
+      Map tempMap = new Map(file.getName(), file.getPath());
       maps.add(tempMap);
     }
     return maps;
@@ -74,7 +74,7 @@ public class MapLoader {
             });
     ConcurrentSkipListMap<String, Map> maps = new ConcurrentSkipListMap<>();
     for (File file : Objects.requireNonNull(files)) {
-      Map tempMap = new Map(file.getName(), file.getPath(), GameState.MAIN_MENU);
+      Map tempMap = new Map(file.getName(), file.getPath());
       maps.put(file.getName(), tempMap);
     }
     return maps;

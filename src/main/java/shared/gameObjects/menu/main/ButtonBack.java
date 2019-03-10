@@ -13,12 +13,6 @@ public class ButtonBack extends ButtonObject {
     super(x, y, sizeX, sizeY, "Back", id, objectUUID);
   }
 
-  @Override
-  public void initialiseAnimation() {
-    super.initialiseAnimation(
-        "images/buttons/back_unpressed.png", "images/buttons/back_pressed.png");
-  }
-
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
     Client.levelHandler.previousMap(false);

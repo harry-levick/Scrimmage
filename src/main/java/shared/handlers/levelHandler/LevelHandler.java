@@ -57,8 +57,8 @@ public class LevelHandler {
     this.gameRoot = gameRoot;
 
     musicPlayer = new AudioHandler(settings, Client.musicActive);
-    changeMap(new Map("menus/main_menu.map", Path.convert("src/main/resources/menus/main_menu.map"),
-        GameState.MAIN_MENU), true);
+    changeMap(new Map("main_menu.map", Path.convert("src/main/resources/menus/main_menu.map")),
+        true);
     previousMap = null;
   }
 
@@ -74,7 +74,7 @@ public class LevelHandler {
     bots = new LinkedHashMap<>();
     toCreate = new ArrayList<>();
     musicPlayer = new AudioHandler(settings, Client.musicActive);
-    changeMap(new Map("Lobby", Path.convert("src/main/resources/menus/lobby.map"), GameState.Lobby),
+    changeMap(new Map("LOBBY", Path.convert("src/main/resources/menus/lobby.map")),
         false);
   }
 
@@ -112,6 +112,7 @@ public class LevelHandler {
           if (gameObject.getId() == ObjectType.MapDataObject) {
             this.background = ((MapDataObject) gameObject).getBackground();
             ArrayList<Vector2> spawnPoints = ((MapDataObject) gameObject).getSpawnPoints();
+            this.map.setGameState(((MapDataObject) gameObject).getGameState());
             if (this.background != null) {
               background.initialise(backgroundGroup);
             }
@@ -142,9 +143,9 @@ public class LevelHandler {
         musicPlayer.playMusicPlaylist(PLAYLIST.INGAME);
         break;
       case MAIN_MENU:
-      case Lobby:
-      case Start_Connection:
-      case Multiplayer:
+      case LOBBY:
+      case START_CONNECTION:
+      case MULTIPLAYER:
       default:
         musicPlayer.playMusicPlaylist(PLAYLIST.MENU);
         break;
@@ -279,12 +280,6 @@ public class LevelHandler {
    */
   private void clearToRemove() {
     gameObjects.values().removeAll(toRemove);
-    /*
-    for (GameObject g : toRemove) {
-      System.out.println(g.toString());
-    }
-
-     */
     toRemove.forEach(gameObject -> gameObject.removeRender());
     toRemove.forEach(gameObject -> gameObject.destroy());
     toRemove.clear();
