@@ -11,10 +11,10 @@ import shared.util.maths.Vector2;
 
 public class MachineGun extends Gun {
 
-  private static String imagePath = "images/weapons/machinegun.png"; // path to Machine Gun image
+  private static String imagePath = "images/weapons/test/Asset 4.png"; // path to Machine Gun image
   private static String audioPath = "audio/sound-effects/laser_gun.wav"; // path to Machine Gun sfx
   private static float PI = 3.141592654f;
-  private static double sizeX = 80, sizeY = 20;
+  private static double sizeX = 84, sizeY = 35;
 
   private double[] holderHandPos;
   private double angleGun; // angle of gun (hand and mouse vs x-axis) (radian)
@@ -102,7 +102,7 @@ public class MachineGun extends Gun {
 
   @Override
   public void initialiseAnimation() {
-    this.animation.supplyAnimationWithSize("default", 40, 40, true, Path.convert(this.imagePath));
+    this.animation.supplyAnimation("default", Path.convert(this.imagePath));
   }
 
   // =============================
