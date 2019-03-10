@@ -15,6 +15,7 @@ public class EffectsAssets {
     tracks.put("STEPS_2", "steps_platform2.mp3");
     tracks.put("MACHINEGUN", "machinegun.mp3");
     tracks.put("CLICK", "click.mp3");
+    tracks.put("LASER", "laser_gun.wav");
   }
 
   protected String getTrackPath(String trackIndex) {

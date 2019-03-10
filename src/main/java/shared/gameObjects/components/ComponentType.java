@@ -5,5 +5,6 @@ public enum ComponentType {
   RIGIDBODY,
   COLLIDER,
   TRANSFORM,
+  SHAKE,
   BEHAVIOUR,
 }
