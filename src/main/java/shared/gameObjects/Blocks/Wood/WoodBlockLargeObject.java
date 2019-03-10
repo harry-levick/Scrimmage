@@ -8,6 +8,7 @@ import shared.gameObjects.components.Rigidbody;
 import shared.physics.data.AngularData;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.RigidbodyType;
+import shared.util.maths.Vector2;
 
 public class WoodBlockLargeObject extends GameObject {
 
