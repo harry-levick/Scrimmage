@@ -21,7 +21,8 @@ public abstract class ColouredBlock extends GameObject {
   }
 
   // Initialise the animation
-  public void initialiseAnimation() {}
+  public void initialiseAnimation() {
+  }
 
   @Override
   public void update() {

@@ -14,7 +14,6 @@ import shared.physics.data.Collision;
 import shared.physics.types.RigidbodyType;
 import shared.util.Path;
 import shared.util.maths.Vector2;
-import sun.security.krb5.internal.crypto.Des;
 
 public class ExplosiveBullet extends Bullet {
 
@@ -65,7 +64,7 @@ public class ExplosiveBullet extends Bullet {
       }
       else {
         // Player on direct impact takes full hazard (another half dealt in circleCasting down there)
-        ((Destructable) gCol).deductHp(damage/2);
+        ((Destructable) gCol).deductHp(damage / 2);
       }
     }
 
@@ -81,7 +80,7 @@ public class ExplosiveBullet extends Bullet {
       // Not going to deal hazard to holder
       if (g instanceof Destructable && !g.equals(holder)) {
         // Every player in the explosion area deals half the hazard
-        ((Destructable) g).deductHp(damage/2);
+        ((Destructable) g).deductHp(damage / 2);
       }
 
       // Knockback here

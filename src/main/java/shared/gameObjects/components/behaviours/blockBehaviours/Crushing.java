@@ -15,7 +15,8 @@ public class Crushing extends Behaviour {
 
   @Override
   public void OnCollisionEnter(Collision col) {
-    if(col.getCollidedObject() instanceof Player && col.getNormalCollision().equals(Vector2.Down())) {
+    if (col.getCollidedObject() instanceof Player && col.getNormalCollision()
+        .equals(Vector2.Down())) {
       if (((Player) col.getCollidedObject()).isGrounded()) {
         ((Player) col.getCollidedObject()).deductHp(9999);
       }

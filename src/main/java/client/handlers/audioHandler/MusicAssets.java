@@ -25,7 +25,6 @@ public class MusicAssets {
     menuPlaylist.add("FUNK_GAME_LOOP");
     menuPlaylist.add("EDM_DETECTION_MODE");
     menuPlaylist.add("GETTING_IT_DONE");
-    menuPlaylist.add("LOCAL_FORECAST");
     menuPlaylist.add("MAN_DOWN");
     Collections.shuffle(menuPlaylist);
 

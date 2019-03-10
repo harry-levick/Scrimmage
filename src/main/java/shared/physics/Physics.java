@@ -33,7 +33,8 @@ public class Physics {
   public static boolean[] PARTICLES = {false, false, false, false, false, false, false};
   public static boolean[] COLLECTABLE = {false, false, false, true, false, false, false};
   public static boolean[] LIMBS = {true, false, true, true, false, false, false};
-  public static boolean[][] COLLISION_LAYERS = {DEFAULT, PLAYER, OBJECT, PLATFORM, PARTICLES, COLLECTABLE, LIMBS};
+  public static boolean[][] COLLISION_LAYERS = {DEFAULT, PLAYER, OBJECT, PLATFORM, PARTICLES,
+      COLLECTABLE, LIMBS};
   public static LinkedHashMap<UUID, GameObject> gameObjects;
   private static ArrayList<DynamicCollision> collisions = new ArrayList<>();
 
