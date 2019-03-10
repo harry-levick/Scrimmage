@@ -84,7 +84,7 @@ public class Player extends GameObject implements Destructable {
     //  addComponent(cc);
     addComponent(bc);
     addComponent(rb);
-    addComponent(shake);
+    //addComponent(shake);
   }
 
   // Initialise the animation
