@@ -8,11 +8,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 import javafx.application.Platform;
 import javafx.scene.Group;
-import javafx.scene.effect.BlurType;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.Utils.TimePosition;
 import shared.gameObjects.Utils.Transform;
@@ -94,19 +90,19 @@ public abstract class GameObject implements Serializable {
     animation.update();
 
     for (Component comp : getComponents(ComponentType.RIGIDBODY)) {
-      if(comp.isActive()) {
+      if (comp.isActive()) {
         comp.update();
       }
     }
 
     for (Component comp : getComponents(ComponentType.COLLIDER)) {
-        if(comp.isActive()) {
-          comp.update();
-        }
+      if (comp.isActive()) {
+        comp.update();
+      }
     }
 
     for (Component comp : getComponents(ComponentType.BEHAVIOUR)) {
-      if(comp.isActive()) {
+      if (comp.isActive()) {
         comp.update();
       }
     }
@@ -160,7 +156,6 @@ public abstract class GameObject implements Serializable {
   }
 
   /**
-   *
    * Use to only update the Physics of the object being called
    */
   public void simulateUpdateCollision() {

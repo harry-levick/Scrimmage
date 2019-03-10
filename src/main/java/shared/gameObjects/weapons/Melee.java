@@ -5,15 +5,10 @@ import java.util.UUID;
 import shared.gameObjects.Destructable;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
-import shared.gameObjects.components.CircleCollider;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Player;
 import shared.physics.Physics;
-import shared.physics.data.AngularData;
 import shared.physics.data.Collision;
-import shared.physics.data.MaterialProperty;
-import shared.physics.types.ColliderLayer;
-import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
 
 public abstract class Melee extends Weapon {

@@ -29,7 +29,7 @@ public class ButtonSingleplayer extends ButtonObject {
    */
   public ButtonSingleplayer(
       double x, double y, double sizeX, double sizeY, ObjectType id, UUID objectUUID) {
-    super(x, y, sizeX, sizeY, id, objectUUID);
+    super(x, y, sizeX, sizeY, "Singleplayer", id, objectUUID);
   }
 
   @Override

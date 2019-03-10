@@ -397,7 +397,6 @@ public class Client extends Application {
           levelHandler.getBotPlayerList().forEach((key, bot) -> bot.applyInput());
         }
 
-
         /** Render Game Objects */
         levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.render());
         if (levelHandler.getBackground() != null) {

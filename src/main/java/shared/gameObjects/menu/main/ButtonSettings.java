@@ -21,7 +21,7 @@ public class ButtonSettings extends ButtonObject {
    */
   public ButtonSettings(
       double x, double y, double sizeX, double sizeY, ObjectType id, UUID objectUUID) {
-    super(x, y, sizeX, sizeY, id, objectUUID);
+    super(x, y, sizeX, sizeY, "Settings", id, objectUUID);
   }
 
   @Override

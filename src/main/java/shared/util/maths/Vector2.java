@@ -2,7 +2,9 @@ package shared.util.maths;
 
 import java.io.Serializable;
 
-/** @author fxa579 Base class for Vector mathematics in 2-Dimensions */
+/**
+ * @author fxa579 Base class for Vector mathematics in 2-Dimensions
+ */
 public class Vector2 implements Serializable {
 
   private float x;
@@ -272,6 +274,7 @@ public class Vector2 implements Serializable {
 
   /**
    * Computes the normal vector of the vector
+   *
    * @return The normal corresponding to this vector
    */
   public Vector2 normal() {
@@ -280,11 +283,9 @@ public class Vector2 implements Serializable {
 
   /**
    *
-   * @param projection
-   * @return
    */
   public float overlap(Vector2 projection) {
-      return (y - projection.getX());
+    return (y - projection.getX());
   }
 
   public boolean canOverlap(Vector2 projection) {

@@ -81,16 +81,16 @@ public abstract class Collider extends Component implements Serializable {
    */
   private static boolean boxBoxCollision(BoxCollider boxA, BoxCollider boxB) {
     for (Vector2 axisOfProjection : boxA.getAxes()) {
-        Vector2 pA = projectToAxis(boxA, axisOfProjection);
-        Vector2 pB = projectToAxis(boxB, axisOfProjection);
-        if(!pA.canOverlap(pB)) {
-          return false;
-        }
+      Vector2 pA = projectToAxis(boxA, axisOfProjection);
+      Vector2 pB = projectToAxis(boxB, axisOfProjection);
+      if (!pA.canOverlap(pB)) {
+        return false;
+      }
     }
     for (Vector2 axisOfProjection : boxB.getAxes()) {
       Vector2 pA = projectToAxis(boxA, axisOfProjection);
       Vector2 pB = projectToAxis(boxB, axisOfProjection);
-      if(!pA.canOverlap(pB)) {
+      if (!pA.canOverlap(pB)) {
         return false;
       }
     }
@@ -110,7 +110,7 @@ public abstract class Collider extends Component implements Serializable {
       }
     }
     return new Vector2(min, max);
-    }
+  }
 
   private static boolean pointBoxCollision(Vector2 pointA, BoxCollider boxB) {
 
