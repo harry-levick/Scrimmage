@@ -72,7 +72,7 @@ public class LevelHandler {
     bots = new LinkedHashMap<>();
     toCreate = new ArrayList<>();
     musicPlayer = new AudioHandler(settings, Client.musicActive);
-    changeMap(new Map("Lobby", Path.convert("src/main/resources/menus/lobby.map")),
+    changeMap(new Map("LOBBY", Path.convert("src/main/resources/menus/lobby.map")),
         false);
   }
 
@@ -141,9 +141,9 @@ public class LevelHandler {
         musicPlayer.playMusicPlaylist(PLAYLIST.INGAME);
         break;
       case MAIN_MENU:
-      case Lobby:
-      case Start_Connection:
-      case Multiplayer:
+      case LOBBY:
+      case START_CONNECTION:
+      case MULTIPLAYER:
       default:
         musicPlayer.playMusicPlaylist(PLAYLIST.MENU);
         break;

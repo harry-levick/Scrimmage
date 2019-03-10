@@ -22,9 +22,9 @@ public class ButtonQuit extends ButtonObject {
     // MAIN MENU -> CLOSE
     switch (Client.levelHandler.getMap().getGameState()) {
       case IN_GAME:
-      case Lobby:
-      case Start_Connection:
-      case Multiplayer:
+      case LOBBY:
+      case START_CONNECTION:
+      case MULTIPLAYER:
         //todo go to main menu
         break;
       case MAIN_MENU:

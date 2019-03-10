@@ -44,7 +44,7 @@ public class ButtonJoin extends ButtonObject {
     button.disarm();
     root.getChildren().remove(addressInput);
     Client.levelHandler.changeMap(
-        new Map("Lobby", Path.convert("src/main/resources/menus/lobby.map")),
+        new Map("LOBBY", Path.convert("src/main/resources/menus/lobby.map")),
         false);
   }
 }
