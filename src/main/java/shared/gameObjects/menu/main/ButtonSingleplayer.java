@@ -35,22 +35,25 @@ public class ButtonSingleplayer extends ButtonObject {
   @Override
   public void initialiseAnimation() {
     super.initialiseAnimation(
-        "images/buttons/singleplayer_unpressed.png", "images/buttons/singleplayer_pressed.png");
+        "images/buttons/singleplayer_unpressed.png",
+        "images/buttons/singleplayer_pressed.png");
   }
 
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
 
     Client.levelHandler.changeMap(
-        new Map("map1", Path.convert("src/main/resources/maps/map1.map"), GameState.IN_GAME),
+        new Map("map1", Path.convert("src/main/resources/maps/map1.map"),
+            GameState.IN_GAME),
         true);
     int botsToAdd = maxPlayers - Client.levelHandler.getPlayers().size();
     for (int b = 0; b < botsToAdd; b++) {
       //TODO Change physics to LinkedHashMaps
       Collection<GameObject> values = Client.levelHandler.getGameObjects().values();
       ArrayList<GameObject> physicsGameObjects = new ArrayList<>(values);
-      Bot botPlayer = new Bot(500, 600, UUID.randomUUID(), Client.levelHandler);
-      botPlayer.setHolding(new Sword(500, 600, "Sword@ButtonSinglePlayer", botPlayer, UUID.randomUUID()) /*new MachineGun(500, 600, "MachineGun@ButtonSinglePlayer", botPlayer, UUID.randomUUID())*/);
+      Bot botPlayer = new Bot(500, 400, UUID.randomUUID(), Client.levelHandler);
+      botPlayer.setHolding(new Sword(500, 400, "Sword@ButtonSinglePlayer",
+          botPlayer, UUID.randomUUID()) /*new MachineGun(500, 600, "MachineGun@ButtonSinglePlayer", botPlayer, UUID.randomUUID())*/);
       botPlayer.getHolding().initialise(Client.gameRoot);
       botPlayer.initialise(Client.gameRoot);
       Client.levelHandler.getPlayers().put(botPlayer.getUUID(), botPlayer);

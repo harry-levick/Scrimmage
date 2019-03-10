@@ -65,7 +65,7 @@ public class Bot extends Player {
 
   public void startThread() {
     chasingThread.start();
-    fleeingThread.start();
+    //fleeingThread.start();
   }
 
   public boolean mayJump() {
@@ -95,7 +95,7 @@ public class Bot extends Player {
         System.out.println("IDLE");
         break;
       case CHASING:
-        //System.out.println("CHASING");
+        System.out.println("CHASING");
         executeAction(FSA.CHASING);
 
         break;
@@ -132,8 +132,7 @@ public class Bot extends Player {
 
   private void executeAction(FSA state) {
     boolean[] action = new boolean[] {false, false, false};
-
-
+    
     if (state == FSA.CHASING) {
       if (chasingPlan.size() > 0) action = chasingPlan.remove(0);
 

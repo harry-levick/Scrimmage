@@ -124,12 +124,10 @@ public class AStar {
     }
 
     private void simulateBot(boolean[] action) {
-      for (int i = 0; i <= 2; i++) {
-        replicaBot.simulateAction(action);
-        replicaBot.simulateApplyInput();
-        replicaBot.simulateUpdate();
-        replicaBot.simulateUpdateCollision();
-      }
+      replicaBot.simulateAction(action);
+      replicaBot.simulateApplyInput();
+      replicaBot.simulateUpdate();
+      replicaBot.simulateUpdateCollision();
     }
 
     /**
@@ -183,7 +181,7 @@ public class AStar {
 
       for (boolean[] action : possibleActions) {
         SearchNode neighbour = new SearchNode(action, this);
-        if (!isInClosed(neighbour) || !isInOpen(neighbour)) {
+        if (!isInClosed(neighbour) && !isInOpen(neighbour)) {
           list.add(neighbour);
           //Physics.drawCast(neighbour.botX, neighbour.botY, neighbour.botX, neighbour.botY, "ff0000");
         }
@@ -272,7 +270,7 @@ public class AStar {
    * The main search function
    */
   private void search() {
-    int searchCount = 0, seachCutoff  = 200;
+    int searchCount = 0, seachCutoff  = 400;
     SearchNode current = bestPosition;
     closedList.add(current);
     boolean currentGood = false;
@@ -397,8 +395,8 @@ public class AStar {
     // list?
     double nodeX = node.botX;
     double nodeY = node.botY;
-    double xDiff = 1.0;
-    double yDiff = 1.0;
+    double xDiff = 5.0;
+    double yDiff = 5.0;
 
     for (SearchNode n : closedList) {
 
@@ -417,8 +415,8 @@ public class AStar {
   private boolean isInOpen(SearchNode node) {
     double nodeX = node.botX;
     double nodeY = node.botY;
-    double xDiff = 3.0;
-    double yDiff = 3.0;
+    double xDiff = 5.0;
+    double yDiff = 5.0;
 
     for (SearchNode n : openList) {
 
@@ -445,8 +443,13 @@ public class AStar {
 
     SearchNode current = bestPosition;
     while (current.parentNode != null) {
+      // Add the same action twice because the physics simulation in the path finding is less
+      // than the actual physics in the main game loop, so one acton in path finding ~= two actions
+      // in the main game loop.
+      actions.add(0, current.action);
       actions.add(0, current.action);
       current = current.parentNode;
+      //Physics.drawCast(current.botX, current.botY, current.botX, current.botY, "#00ff00");
     }
 
     return actions;
@@ -481,7 +484,7 @@ public class AStar {
 
       ArrayList<Collision> viscinityLeft = Physics.boxcastAll(
           botPosition.add(Vector2.Left().mult(botSize.mult(new Vector2(0.6, 0.9)))).add(Vector2.Down().mult(3)),
-          botSize.mult(new Vector2(0.6, 0.85)), false);
+          botSize.mult(new Vector2(0.6, 0.85)));
 
       if (viscinityLeft.size() == 0 ||
           (viscinityLeft.stream().allMatch( o -> ((Rigidbody) o.getCollidedObject()
@@ -499,7 +502,7 @@ public class AStar {
 
       ArrayList<Collision> viscinityRight = Physics.boxcastAll(
           botPosition.add(Vector2.Right().mult(botSize)).add(Vector2.Down().mult(3)),
-              botSize.mult(new Vector2(0.6, 0.85)), false);
+              botSize.mult(new Vector2(0.6, 0.85)));
 
       if (viscinityRight.size() == 0 ||
           (viscinityRight.stream().allMatch( o -> ((Rigidbody) o.getCollidedObject()
@@ -517,7 +520,7 @@ public class AStar {
 
       ArrayList<Collision> viscinityUp = Physics.boxcastAll(
           botPosition.add(Vector2.Up().mult(botSize.mult(new Vector2(1, 0.5)))),
-          botSize.mult(new Vector2(1, 0.5)), false);
+          botSize.mult(new Vector2(1, 0.5)));
 
       // If no collision
       if (viscinityUp.size() == 0 ||
@@ -528,12 +531,12 @@ public class AStar {
         ArrayList<Collision> viscinityUpLeft = Physics.boxcastAll(
             botPosition.add(Vector2.Up().mult(botSize)).add(Vector2.Left()
                 .mult(new Vector2(0.5, 1))),
-            botSize.mult(new Vector2(0.5, 1)), false);
+            botSize.mult(new Vector2(0.5, 1)));
 
         ArrayList<Collision> viscinityUpRight = Physics.boxcastAll(
             botPosition.add(Vector2.Up().mult(botSize)).add(Vector2.Right()
                 .mult(botSize.mult(new Vector2(0.5, 1)))),
-            botSize.mult(new Vector2(0.5, 1)), false);
+            botSize.mult(new Vector2(0.5, 1)));
 
         // Just jump
         possibleActions.add(createAction(true, false, false));
