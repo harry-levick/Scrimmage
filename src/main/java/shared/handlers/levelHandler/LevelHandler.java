@@ -79,6 +79,7 @@ public class LevelHandler {
   public void changeMap(Map map, Boolean moveToSpawns) {
     previousMap = this.map;
     this.map = map;
+    Client.closeSettingsOverlay();
     generateLevel(backgroundRoot, gameRoot, moveToSpawns);
   }
 
