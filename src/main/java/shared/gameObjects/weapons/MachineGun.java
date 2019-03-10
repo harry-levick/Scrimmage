@@ -131,8 +131,8 @@ public class MachineGun extends Gun {
         imageView.setTranslateX(this.getGripFlipX());
         imageView.setTranslateY(this.getGripFlipY());
 
-        holder.setHandRightX(this.getForeGripFlipX());
-        holder.setHandRightY(this.getForeGripFlipY());
+        holder.setHandLeftX(this.getForeGripFlipX());
+        holder.setHandLeftY(this.getForeGripFlipY());
       } else if (holder.getFacingRight()) {
         imageView.setScaleX(1);
         rotate.setAngle(angle);
@@ -140,8 +140,8 @@ public class MachineGun extends Gun {
         imageView.setTranslateX(this.getGripX());
         imageView.setTranslateY(this.getGripY());
 
-        holder.setHandLeftX(this.getForeGripX());
-        holder.setHandLeftY(this.getForeGripY());
+        holder.setHandRightX(this.getForeGripX());
+        holder.setHandRightY(this.getForeGripY());
       }
     }
   }

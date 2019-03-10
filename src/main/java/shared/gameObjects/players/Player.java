@@ -294,9 +294,9 @@ public class Player extends GameObject {
     return new double[]{this.getHandRightX(), this.getHandRightY()};
     */
     if (facingLeft) {
-      return new double[]{this.handLeft.getX(), this.handLeft.getY()};
-    } else {
       return new double[]{this.handRight.getX(), this.handRight.getY()};
+    } else {
+      return new double[]{this.handLeft.getX(), this.handLeft.getY()};
     }
   }
 
