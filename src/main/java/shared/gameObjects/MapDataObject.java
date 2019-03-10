@@ -42,6 +42,10 @@ public class MapDataObject extends GameObject implements Serializable {
     this.background = background;
   }
 
+  public GameState getGameState() {
+    return gameState;
+  }
+
   @Override
   public void update() {
   }

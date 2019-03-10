@@ -55,10 +55,10 @@ public class Transform implements Serializable {
   /** [Does not do anything currently] */
   public void rotate(float rotation) {
     rot += rotation;
-    if (rot > 180) {
+    while (rot > 180) {
       rot -= 180;
     }
-    if (rot < -180) {
+    while (rot < -180) {
       rot += 180;
     }
     float angle = (float) Math.toRadians(rot);
