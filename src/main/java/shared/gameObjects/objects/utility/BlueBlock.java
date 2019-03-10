@@ -6,6 +6,7 @@ import shared.gameObjects.objects.ColourBlock;
 import shared.gameObjects.objects.ColouredBlock;
 
 public class BlueBlock extends ColouredBlock {
+
   public BlueBlock(
       double x, double y, double sizeX, double sizeY, ObjectType id, UUID exampleUUID) {
     super(x, y, sizeX, sizeY, id, exampleUUID);

@@ -10,7 +10,7 @@ public class ButtonBack extends ButtonObject {
 
   public ButtonBack(
       double x, double y, double sizeX, double sizeY, ObjectType id, UUID objectUUID) {
-    super(x, y, sizeX, sizeY, id, objectUUID);
+    super(x, y, sizeX, sizeY, "Back", id, objectUUID);
   }
 
   @Override

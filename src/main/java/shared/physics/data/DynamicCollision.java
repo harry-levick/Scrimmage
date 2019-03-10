@@ -121,7 +121,8 @@ public class DynamicCollision {
     }
   }
 
-  private void resolveCollision(CircleCollider circA, CircleCollider circB) {}
+  private void resolveCollision(CircleCollider circA, CircleCollider circB) {
+  }
 
   private void resolveCollision(CircleCollider circB, BoxCollider boxA) {
     Vector2 n = boxA.getCentre().sub(circB.getCentre());

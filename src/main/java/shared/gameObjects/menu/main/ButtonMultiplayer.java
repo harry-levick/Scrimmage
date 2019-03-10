@@ -21,7 +21,7 @@ public class ButtonMultiplayer extends ButtonObject {
    */
   public ButtonMultiplayer(
       double x, double y, double sizeX, double sizeY, ObjectType id, UUID objectUUID) {
-    super(x, y, sizeX, sizeY, id, objectUUID);
+    super(x, y, sizeX, sizeY, "Multiplayer", id, objectUUID);
   }
 
   @Override

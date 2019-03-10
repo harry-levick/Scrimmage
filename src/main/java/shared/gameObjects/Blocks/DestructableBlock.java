@@ -13,6 +13,7 @@ public class DestructableBlock extends GameObject implements Destructable {
       double x, double y, double sizeX, double sizeY, ObjectType id, UUID exampleUUID) {
     super(x, y, sizeX, sizeY, id, exampleUUID);
   }
+
   @Override
   public void initialiseAnimation() {
 
