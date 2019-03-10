@@ -1,7 +1,6 @@
 package shared.physics;
 
 import client.main.Client;
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.UUID;
@@ -40,8 +39,11 @@ public class Physics {
   public static boolean[] PLATFORM = {true, true, true, true, false, true};
   public static boolean[] PARTICLES = {false, false, false, false, false, false};
   public static boolean[] COLLECTABLE = {false, false, false, true, false, false};
-  public static boolean[][] COLLISION_LAYERS = {DEFAULT, PLAYER, OBJECT, PLATFORM, PARTICLES, COLLECTABLE};
+  public static boolean[] LIMBS = {true, false, true, true, false, false, false};
+  public static boolean[][] COLLISION_LAYERS = {DEFAULT, PLAYER, OBJECT, PLATFORM, PARTICLES, COLLECTABLE, LIMBS};
   public static ConcurrentSkipListMap<UUID, GameObject> gameObjects;
+
+
   private static ArrayList<DynamicCollision> collisions = new ArrayList<>();
 
   private Physics() {
@@ -90,10 +92,6 @@ public class Physics {
     }
 
     return collision;
-    /*
-    for (GameObject object : gameObjects.values()) {
-    }
-    */
   }
 
   /**
@@ -261,11 +259,10 @@ public class Physics {
    * @param size The extents of the box
    * @return All colliders hit in the path, empty if nothing was hit
    */
-  public static ArrayList<Collision> boxcastAll(Vector2 sourcePos, Vector2 size, boolean bot) {
+  public static ArrayList<Collision> boxcastAll(Vector2 sourcePos, Vector2 size) {
     BoxCollider castCollider = new BoxCollider(sourcePos, size);
     Collision collision;
     ArrayList<Collision> collisions = new ArrayList<>();
-    if (bot) drawBoxCast(sourcePos, size);
 
     // USING ITERATOR PREVENTS A ConcurrentModificationException
     Iterator<GameObject> iter = gameObjects.values().iterator();

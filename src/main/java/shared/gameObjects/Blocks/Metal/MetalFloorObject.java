@@ -33,7 +33,7 @@ public class MetalFloorObject extends GameObject {
             new MaterialProperty(0.1f, 1, 1),
             new AngularData(0, 0, 0, 0),
             this));
-    addComponent(new BoxCollider(this, ColliderLayer.WALL,false));
+    addComponent(new BoxCollider(this, ColliderLayer.PLATFORM,false));
   }
 
   // Initialise the animation
