@@ -29,7 +29,7 @@ public abstract class GameObject implements Serializable {
   protected UUID objectUUID;
   protected ObjectType id;
 
-  protected Settings settings;
+  protected Settings settings = new Settings();
 
   protected transient ImageView imageView;
   protected transient Group root;

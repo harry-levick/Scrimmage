@@ -108,7 +108,6 @@ public class Client extends Application {
   public static void settingsToggle() {
     // todo check if ingame
     // show/overlay settings
-    System.out.println(levelHandler.getMap().getGameState() + levelHandler.getMap().getName());
     if (settingsOverlay == false && levelHandler.getMap().getGameState() != GameState.SETTINGS) {
       settingsOverlay = true;
       //add screen saturation
@@ -270,8 +269,7 @@ public class Client extends Application {
     levelHandler.changeMap(
         new Map(
             "Main Menu",
-            Path.convert(settings.getMenuPath() + File.separator + "main_menu.map"),
-            GameState.MAIN_MENU),
+            Path.convert(settings.getMenuPath() + File.separator + "main_menu.map")),
         false);
   }
 
@@ -294,8 +292,7 @@ public class Client extends Application {
       playlist.add(
           new Map(
               "Map" + i,
-              Path.convert(settings.getMapsPath() + File.separator + "map" + i + ".map"),
-              GameState.IN_GAME));
+              Path.convert(settings.getMapsPath() + File.separator + "map" + i + ".map")));
     }
 
     /** Setup Game timer */
@@ -445,7 +442,7 @@ public class Client extends Application {
 
         /** Draw the UI */
         if (levelHandler.getGameState() == GameState.IN_GAME
-            || levelHandler.getGameState() == GameState.Multiplayer) {
+            || levelHandler.getGameState() == GameState.MULTIPLAYER) {
           userInterface.render();
         }
 
@@ -529,8 +526,7 @@ public class Client extends Application {
             Client.levelHandler.changeMap(
                 new Map(
                     "main_menu",
-                    Path.convert(settings.getMenuPath() + File.separator + "main_menu.map"),
-                    GameState.IN_GAME),
+                    Path.convert(settings.getMenuPath() + File.separator + "main_menu.map")),
                 false);
 
             break;

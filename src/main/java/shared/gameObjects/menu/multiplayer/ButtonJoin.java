@@ -8,7 +8,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.menu.ButtonObject;
-import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.Map;
 import shared.util.Path;
 
@@ -37,11 +36,6 @@ public class ButtonJoin extends ButtonObject {
     root.getChildren().add(addressInput);
   }
 
-  @Override
-  public void initialiseAnimation() {
-    super.initialiseAnimation(
-        "images/buttons/multiplayer_unpressed.png", "images/buttons/multiplayer_pressed.png");
-  }
 
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
@@ -50,7 +44,7 @@ public class ButtonJoin extends ButtonObject {
     button.disarm();
     root.getChildren().remove(addressInput);
     Client.levelHandler.changeMap(
-        new Map("Lobby", Path.convert("src/main/resources/menus/lobby.map"), GameState.Lobby),
+        new Map("LOBBY", Path.convert("src/main/resources/menus/lobby.map")),
         false);
   }
 }

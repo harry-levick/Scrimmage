@@ -11,7 +11,7 @@ public class Map {
   private GameState gameState;
   private String mapUUID;
 
-  public Map(String name, String path, GameState gameState) {
+  public Map(String name, String path) {
     this.name = name;
     this.playlist = "N/A";
     this.path = path;
@@ -29,6 +29,10 @@ public class Map {
 
   public GameState getGameState() {
     return gameState;
+  }
+
+  public void setGameState(GameState state) {
+    this.gameState = state;
   }
 
   public Image getMapIcon() {
