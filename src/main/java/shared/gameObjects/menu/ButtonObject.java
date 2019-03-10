@@ -60,7 +60,7 @@ public abstract class ButtonObject extends GameObject {
   public void initialise(Group root) {
     super.initialise(root);
     button = new Button(this.text, imageView);
-    button.setFont(Client.settings.getFont(30));
+    button.setFont(settings.getFont(30));
     button.setTextFill(Color.WHITE);
     button.setContentDisplay(ContentDisplay.CENTER);
     button.setStyle("-fx-border-color: transparent;-fx-background-color: transparent;");
