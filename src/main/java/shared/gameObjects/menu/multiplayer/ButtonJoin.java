@@ -34,6 +34,7 @@ public class ButtonJoin extends ButtonObject {
     addressInput.setTranslateX(getX() + 90);
     addressInput.setTranslateY(getY() + 120);
     root.getChildren().add(addressInput);
+    //TODO note: this does not currently get removed by the gamObject clear when changing maps
   }
 
 
