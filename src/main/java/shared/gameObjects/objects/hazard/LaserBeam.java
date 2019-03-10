@@ -134,4 +134,13 @@ public class LaserBeam extends GameObject {
     laser.setWidth(transform.getSize().getX() * 0.44f);
     laser.setHeight(closestPoint - laser.getY());
   }
+
+  @Override
+  public void removeRender() {
+    super.removeRender();
+    if (laser != null) {
+      laser.setOpacity(0);
+      root.getChildren().remove(imageView);
+    }
+  }
 }
