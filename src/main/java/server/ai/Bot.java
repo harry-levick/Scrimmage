@@ -7,12 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import server.ai.pathFind.PathFindState;
 import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.LevelHandler;
-import shared.physics.Physics;
-import shared.physics.data.Collision;
 import shared.util.maths.Vector2;
 
 /**
@@ -30,8 +26,10 @@ public class Bot extends Player {
   LinkedHashMap<UUID, Player> allPlayers;
   // Get the LevelHandler through the constructor
   LevelHandler levelHandler;
-  BotThread botThread;
-  List<boolean[]> plan;
+  ChasingThread chasingThread;
+  FleeingThread fleeingThread;
+  List<boolean[]> chasingPlan;
+  List<boolean[]> fleeingPlan;
 
   /**
    *
@@ -46,10 +44,13 @@ public class Bot extends Player {
     this.state = FSA.INITIAL_STATE;
     this.levelHandler = levelHandler;
     this.targetPlayer = findTarget();
-    this.plan = Collections.synchronizedList(new ArrayList<>());
+    this.chasingPlan = Collections.synchronizedList(new ArrayList<>());
+    this.fleeingPlan = Collections.synchronizedList(new ArrayList<>());
 
-    this.botThread = new BotThread(this, plan);
-    botThread.setName("Bot Path-Finder");
+    this.chasingThread = new ChasingThread(this, chasingPlan);
+    chasingThread.setName("Bot chasingThread");
+    this.fleeingThread = new FleeingThread(this, fleeingPlan);
+
   }
 
   /**
@@ -63,7 +64,8 @@ public class Bot extends Player {
   }
 
   public void startThread() {
-    botThread.start();
+    chasingThread.start();
+    fleeingThread.start();
   }
 
   public boolean mayJump() {
@@ -74,7 +76,8 @@ public class Bot extends Player {
   public void update() {
 
     if (!active) {
-      botThread.terminate();
+      chasingThread.terminate();
+      fleeingThread.terminate();
     }
     click = false;
 
@@ -93,39 +96,21 @@ public class Bot extends Player {
         break;
       case CHASING:
         //System.out.println("CHASING");
-        // Find the next best move to take, and execute this move.
-        executeAction(PathFindState.PERSUE);
+        executeAction(FSA.CHASING);
 
         break;
       case FLEEING:
         System.out.println("FLEEING");
-        executeAction(PathFindState.FLEE);
-        // TODO calculate and execute the best path away from the target.
+        executeAction(FSA.FLEEING);
 
         break;
       case ATTACKING:
         System.out.println("ATTACKING");
-        // TODO think about how an attacking script would work.
-        Vector2 enemyPosCenter = targetPlayer.getTransform().getPos().add(targetPlayer.getTransform().getSize().mult(0.5f));
+        Vector2 enemyPosCenter = targetPlayer.getTransform().getPos()
+            .add(targetPlayer.getTransform().getSize().mult(0.5f));
         mouseX = enemyPosCenter.getX();
         mouseY = enemyPosCenter.getY();
         click = true;
-
-
-        break;
-      case CHASING_ATTACKING:
-        System.out.println("CHASING-ATTACKING");
-        executeAction(PathFindState.PERSUE);
-        mouseX = targetPlayer.getX();
-        mouseY = targetPlayer.getY();
-
-        break;
-      case FLEEING_ATTACKING:
-        System.out.println("FLEEING-ATTACKING");
-        executeAction(PathFindState.FLEE);
-        // TODO calculate and execute the best path away from the target whilst attacking.
-        mouseX = targetPlayer.getX();
-        mouseY = targetPlayer.getY();
 
         break;
     }
@@ -145,42 +130,19 @@ public class Bot extends Player {
     return botPos.exactMagnitude(targetPos);
   }
 
-  private void executeAction(PathFindState state) {
+  private void executeAction(FSA state) {
     boolean[] action = new boolean[] {false, false, false};
 
-    System.out.println("PLAN SIZE: " + plan.size());
-    if (plan.size() > 0) {
-      action = plan.remove(0);
-    }
 
-    if (state == PathFindState.PERSUE) {
+    if (state == FSA.CHASING) {
+      if (chasingPlan.size() > 0) action = chasingPlan.remove(0);
+
       this.jumpKey = action[Bot.KEY_JUMP];
       this.leftKey = action[Bot.KEY_LEFT];
       this.rightKey = action[Bot.KEY_RIGHT];
-      /*
-      Random r = new Random();
-      // 60% chance of jumping when asked to.
-      boolean jump = r.nextDouble() <= 0.60;
-      if (jump) {
-        this.jumpKey = action[Bot.KEY_JUMP];
-      } else this.jumpKey = false;
 
-      // 60% chance of moving left when asked to.
-      boolean left = r.nextDouble() <= 0.60;
-      if (left) {
-        this.leftKey = action[Bot.KEY_LEFT];
-      } else this.leftKey = false;
-
-      // 60% chance of moving right when asked to
-      boolean right = r.nextDouble() <= 0.60;
-      if (right) {
-        this.rightKey = action[Bot.KEY_RIGHT];
-      } else this.rightKey = false;
-
-       */
-
-    } else if (state == PathFindState.FLEE) {
-      action = invertAction(action);
+    } else if (state == FSA.FLEEING) {
+      if (fleeingPlan.size() > 0) action = fleeingPlan.remove(0);
       this.jumpKey = action[Bot.KEY_JUMP];
       this.leftKey = action[Bot.KEY_LEFT];
       this.rightKey = action[Bot.KEY_RIGHT];
