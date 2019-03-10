@@ -23,6 +23,7 @@ import shared.physics.data.Collision;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
+import shared.util.maths.Vector2;
 
 public class Player extends GameObject implements Destructable {
 
