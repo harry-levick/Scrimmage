@@ -68,15 +68,49 @@ public abstract class Collider extends Component implements Serializable {
     return false;
   }
 
-  private static boolean boxBoxCollision(BoxCollider boxA, BoxCollider boxB) {
+  /*
+    private static boolean boxBoxCollision(BoxCollider boxA, BoxCollider boxB) {
     if (boxA.getCorners()[0].getX() <= boxB.getCorners()[3].getX()
         && (boxA.getCorners()[3].getX() >= boxB.getCorners()[0].getX()
-            && (boxA.getCorners()[0].getY() <= boxB.getCorners()[1].getY()
-                && (boxA.getCorners()[1].getY() >= boxB.getCorners()[0].getY())))) {
+        && (boxA.getCorners()[0].getY() <= boxB.getCorners()[1].getY()
+        && (boxA.getCorners()[1].getY() >= boxB.getCorners()[0].getY())))) {
       return true;
     }
     return false;
   }
+   */
+  private static boolean boxBoxCollision(BoxCollider boxA, BoxCollider boxB) {
+    for (Vector2 axisOfProjection : boxA.getAxes()) {
+        Vector2 pA = projectToAxis(boxA, axisOfProjection);
+        Vector2 pB = projectToAxis(boxB, axisOfProjection);
+        if(!pA.canOverlap(pB)) {
+          return false;
+        }
+    }
+    for (Vector2 axisOfProjection : boxB.getAxes()) {
+      Vector2 pA = projectToAxis(boxA, axisOfProjection);
+      Vector2 pB = projectToAxis(boxB, axisOfProjection);
+      if(!pA.canOverlap(pB)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  private static Vector2 projectToAxis(BoxCollider a, Vector2 axis) {
+    // Project the shapes along the axis
+    float min = axis.dot(a.getCorners()[0]); // Get the first min
+    double max = min;
+    for (int i = 1; i < a.getCorners().length; i++) {
+      float temp = axis.dot(a.getCorners()[i]); // Get the dot product between the axis and the node
+      if (temp < min) {
+        min = temp;
+      } else if (temp > max) {
+        max = temp;
+      }
+    }
+    return new Vector2(min, max);
+    }
 
   private static boolean pointBoxCollision(Vector2 pointA, BoxCollider boxB) {
 

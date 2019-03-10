@@ -279,20 +279,33 @@ public class Rigidbody extends Component implements Serializable {
     angularVelocity += currentTorque * Physics.TIMESTEP * angularData.getInvInertia();
     orientation += angularVelocity * Physics.TIMESTEP;
     getParent().getTransform().translate(deltaPos);
-    // getParent().getTransform().setRot((float) Math.toDegrees(orientation));
+    getParent().getTransform().setRot((float) Math.toDegrees(orientation));
     deltaPosUpdate = Vector2.Zero();
     deltaPos = Vector2.Zero();
   }
 
   // TODO: Make it where this doesn't take you to a different universe
   private void checkForLegalMovement() {
-    float percent = 0.8f;
+    /*
+    float percent = 0.4f;
+    float slop = 0.08f;
     ArrayList<Collision> collisions =
         Physics.boxcastAll(
             getParent().getTransform().getPos().add(deltaPos),
-            getParent().getTransform().getSize(), false);
-    for (Collision c : collisions) {}
+            getParent().getTransform().getSize());
+    for (Collision c : collisions) {
+      Rigidbody bodyB = (Rigidbody) c.getCollidedObject().getComponent(ComponentType.RIGIDBODY);
+      if(c.getCollidedObject() != parent && bodyB.getBodyType() == RigidbodyType.STATIC) {
 
+        Vector2 correction =
+            c.getNormalCollision().mult(
+                Math.max(c.getPenetrationDepth() - slop, 0.0f)
+                    * percent);
+
+        deltaPos = deltaPos.sub(correction);
+      }
+    }
+    */
     return;
   }
 

@@ -5,11 +5,14 @@ import static client.main.Settings.levelHandler;
 import client.main.Settings;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 import javafx.application.Platform;
 import javafx.scene.Group;
+import javafx.scene.effect.BlurType;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.Utils.TimePosition;
 import shared.gameObjects.Utils.Transform;
@@ -19,7 +22,6 @@ import shared.gameObjects.components.Collider;
 import shared.gameObjects.components.Component;
 import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.Rigidbody;
-import shared.gameObjects.players.Player;
 import shared.physics.Physics;
 import shared.physics.data.Collision;
 import shared.physics.data.DynamicCollision;
@@ -91,24 +93,38 @@ public abstract class GameObject implements Serializable {
     networkStateUpdate = false;
     animation.update();
 
-    for (Component comp : components) {
+    for (Component comp : getComponents(ComponentType.RIGIDBODY)) {
+      if(comp.isActive()) {
+        comp.update();
+      }
+    }
+
+    for (Component comp : getComponents(ComponentType.COLLIDER)) {
         if(comp.isActive()) {
           comp.update();
         }
+    }
+
+    for (Component comp : getComponents(ComponentType.BEHAVIOUR)) {
+      if(comp.isActive()) {
+        comp.update();
+      }
     }
     //If objects location has changed then send update if server
     if (!(lastPos.equals(getTransform().getPos()))) {
       networkStateUpdate = true;
     }
     this.lastPos.setVec((float) getX(), (float) getY());
+
   }
 
   // Client Side only
   public void render() {
     imageView.setImage(animation.getImage());
+    imageView.setRotate(getTransform().getRot());
     imageView.setTranslateX(getX());
     imageView.setTranslateY(getY());
-    imageView.setRotate(getTransform().getRot());
+
   }
 
   // Collision engine

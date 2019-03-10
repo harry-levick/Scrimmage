@@ -44,7 +44,7 @@ public abstract class Bullet extends GameObject {
       double mouseY, // mouse initial y position
       double width, // the width of the bullet
       double speed, // the speed of the bullet
-      int damage, // damage of this bullet
+      int damage, // hazard of this bullet
       Player holder, // holder of the gun that fired this bullet
       UUID uuid) { // uuid of this bullet
 
