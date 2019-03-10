@@ -35,7 +35,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -433,7 +432,8 @@ public class Client extends Application {
         /** Scale and Render Game Objects */
         double resolutionXNew = primaryStage.getWidth();
         double resolutionYNew = primaryStage.getHeight();
-        Vector2 scaleRatio = new Vector2(resolutionXNew/resolutionX, resolutionYNew/resolutionY);
+        Vector2 scaleRatio = new Vector2(resolutionXNew / resolutionX,
+            resolutionYNew / resolutionY);
         resolutionX = resolutionXNew;
         resolutionY = resolutionYNew;
 
