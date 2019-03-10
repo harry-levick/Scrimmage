@@ -12,7 +12,7 @@ public class ButtonQuit extends ButtonObject {
 
   public ButtonQuit(
       double x, double y, double sizeX, double sizeY, ObjectType id, UUID objectUUID) {
-    super(x, y, sizeX, sizeY, "Quit", id, objectUUID);
+    super(x, y, sizeX, sizeY, "QUIT", id, objectUUID);
   }
 
   public void doOnClick(MouseEvent e) {
