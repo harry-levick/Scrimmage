@@ -94,10 +94,22 @@ public abstract class GameObject implements Serializable {
     networkStateUpdate = false;
     animation.update();
 
-    for (Component comp : components) {
+    for (Component comp : getComponents(ComponentType.RIGIDBODY)) {
+      if(comp.isActive()) {
+        comp.update();
+      }
+    }
+
+    for (Component comp : getComponents(ComponentType.COLLIDER)) {
         if(comp.isActive()) {
           comp.update();
         }
+    }
+
+    for (Component comp : getComponents(ComponentType.BEHAVIOUR)) {
+      if(comp.isActive()) {
+        comp.update();
+      }
     }
     //If objects location has changed then send update if server
     if (!(lastPos.equals(getTransform().getPos()))) {
