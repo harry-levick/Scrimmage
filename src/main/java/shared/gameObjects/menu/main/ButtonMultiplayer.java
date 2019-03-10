@@ -24,12 +24,6 @@ public class ButtonMultiplayer extends ButtonObject {
     super(x, y, sizeX, sizeY, "Multiplayer", id, objectUUID);
   }
 
-  @Override
-  public void initialiseAnimation() {
-    super.initialiseAnimation(
-        "images/buttons/multiplayer_unpressed.png", "images/buttons/multiplayer_pressed.png");
-  }
-
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
     Client.levelHandler.changeMap(

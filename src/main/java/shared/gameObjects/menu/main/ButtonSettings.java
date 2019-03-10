@@ -24,12 +24,6 @@ public class ButtonSettings extends ButtonObject {
     super(x, y, sizeX, sizeY, "Settings", id, objectUUID);
   }
 
-  @Override
-  public void initialiseAnimation() {
-    super.initialiseAnimation(
-        "images/buttons/settings_unpressed.png", "images/buttons/settings_pressed.png");
-  }
-
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
 
