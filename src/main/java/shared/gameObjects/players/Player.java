@@ -285,7 +285,12 @@ public class Player extends GameObject implements Destructable {
     return score;
   }
 
-  public double[] getHandPos() {
+  /**
+   * The back hand will be the main hand which holds the gun
+   *
+   * @return A 2 elements array, a[0] = X position of the hand, a[1] = Y position of the hand
+   */
+  public double[] getGunHandPos() {
     // TODO: remove this section and getHand(Left/Right)(X/Y) methods below
     /*
     if (jumped && facingLeft) {
@@ -303,6 +308,20 @@ public class Player extends GameObject implements Destructable {
       return new double[]{this.handRight.getX(), this.handRight.getY()};
     } else {
       return new double[]{this.handLeft.getX(), this.handLeft.getY()};
+    }
+  }
+
+  /**
+   * The front facing hand will be the main hand which holds the melee
+   *
+   * @return A 2 elements array, a[0] = X position of the hand, a[1] = Y position of the hand
+   */
+  public double[] getMeleeHandPos() {
+    if (facingLeft) {
+      return new double[]{this.handLeft.getX(), this.handLeft.getY()};
+    }
+    else {
+      return new double[]{this.handRight.getX(), this.handRight.getY()};
     }
   }
 
