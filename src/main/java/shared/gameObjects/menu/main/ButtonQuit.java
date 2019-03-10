@@ -5,12 +5,14 @@ import java.util.UUID;
 import javafx.scene.input.MouseEvent;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.menu.ButtonObject;
+import shared.handlers.levelHandler.Map;
+import shared.util.Path;
 
 public class ButtonQuit extends ButtonObject {
 
   public ButtonQuit(
       double x, double y, double sizeX, double sizeY, ObjectType id, UUID objectUUID) {
-    super(x, y, sizeX, sizeY, "Quit", id, objectUUID);
+    super(x, y, sizeX, sizeY, "QUIT", id, objectUUID);
   }
 
   public void doOnClick(MouseEvent e) {
@@ -25,7 +27,9 @@ public class ButtonQuit extends ButtonObject {
       case LOBBY:
       case START_CONNECTION:
       case MULTIPLAYER:
-        //todo go to main menu
+        Client.levelHandler.changeMap(
+            new Map("main_menu.map", Path.convert("src/main/resources/menus/main_menu.map")),
+            true);
         break;
       case MAIN_MENU:
         System.exit(0);

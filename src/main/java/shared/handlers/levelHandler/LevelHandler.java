@@ -79,6 +79,7 @@ public class LevelHandler {
   public void changeMap(Map map, Boolean moveToSpawns) {
     previousMap = this.map;
     this.map = map;
+    Client.closeSettingsOverlay();
     generateLevel(backgroundRoot, gameRoot, moveToSpawns);
   }
 
@@ -107,6 +108,7 @@ public class LevelHandler {
     gameObjects = MapLoader.loadMap(map.getPath());
     gameObjects.forEach(
         (key, gameObject) -> {
+          gameObject.setSettings(settings);
           if (gameObject.getId() == ObjectType.MapDataObject) {
             this.background = ((MapDataObject) gameObject).getBackground();
             ArrayList<Vector2> spawnPoints = ((MapDataObject) gameObject).getSpawnPoints();
