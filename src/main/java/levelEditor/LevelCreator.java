@@ -313,7 +313,7 @@ public class LevelCreator extends Application {
     filename = "multiplayer";
     gameObjects = new LinkedHashMap<>();
     playerSpawns = new ArrayList<Player>();
-    mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.MAIN_MENU);
+    mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.Multiplayer);
     mapDataObject.setBackground(
         new Background1(UUID.randomUUID()));
     uuid = UUID.randomUUID();
@@ -365,7 +365,7 @@ public class LevelCreator extends Application {
     filename = "lobby";
     gameObjects = new LinkedHashMap<>();
     playerSpawns = new ArrayList<Player>();
-    mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.MAIN_MENU);
+    mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.Lobby);
     uuid = UUID.randomUUID();
     mapDataObject.setBackground(
         new Background1(uuid));

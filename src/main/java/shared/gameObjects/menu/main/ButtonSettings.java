@@ -5,7 +5,6 @@ import java.util.UUID;
 import javafx.scene.input.MouseEvent;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.menu.ButtonObject;
-import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.Map;
 import shared.util.Path;
 
@@ -29,7 +28,7 @@ public class ButtonSettings extends ButtonObject {
 
     Client.levelHandler.changeMap(
         new Map(
-            "Settings", Path.convert("src/main/resources/menus/settings.map"), GameState.SETTINGS),
+            "Settings", Path.convert("src/main/resources/menus/settings.map")),
         false);
   }
 }
