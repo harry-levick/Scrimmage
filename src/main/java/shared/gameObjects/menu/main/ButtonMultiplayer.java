@@ -5,7 +5,6 @@ import java.util.UUID;
 import javafx.scene.input.MouseEvent;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.menu.ButtonObject;
-import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.Map;
 import shared.util.Path;
 
@@ -29,8 +28,7 @@ public class ButtonMultiplayer extends ButtonObject {
     Client.levelHandler.changeMap(
         new Map(
             "Multiplayer",
-            Path.convert("src/main/resources/menus/multiplayer.map"),
-            GameState.Multiplayer),
+            Path.convert("src/main/resources/menus/multiplayer.map")),
         false);
   }
 }

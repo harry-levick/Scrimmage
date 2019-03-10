@@ -269,8 +269,7 @@ public class Client extends Application {
     levelHandler.changeMap(
         new Map(
             "Main Menu",
-            Path.convert(settings.getMenuPath() + File.separator + "main_menu.map"),
-            GameState.MAIN_MENU),
+            Path.convert(settings.getMenuPath() + File.separator + "main_menu.map")),
         false);
   }
 
@@ -293,8 +292,7 @@ public class Client extends Application {
       playlist.add(
           new Map(
               "Map" + i,
-              Path.convert(settings.getMapsPath() + File.separator + "map" + i + ".map"),
-              GameState.IN_GAME));
+              Path.convert(settings.getMapsPath() + File.separator + "map" + i + ".map")));
     }
 
     /** Setup Game timer */
@@ -528,8 +526,7 @@ public class Client extends Application {
             Client.levelHandler.changeMap(
                 new Map(
                     "main_menu",
-                    Path.convert(settings.getMenuPath() + File.separator + "main_menu.map"),
-                    GameState.IN_GAME),
+                    Path.convert(settings.getMenuPath() + File.separator + "main_menu.map")),
                 false);
 
             break;

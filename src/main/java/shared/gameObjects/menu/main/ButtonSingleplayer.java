@@ -11,7 +11,6 @@ import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.menu.ButtonObject;
 import shared.gameObjects.weapons.MachineGun;
 import shared.gameObjects.weapons.Sword;
-import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.Map;
 import shared.util.Path;
 
@@ -36,7 +35,7 @@ public class ButtonSingleplayer extends ButtonObject {
     super.doOnClick(e);
 
     Client.levelHandler.changeMap(
-        new Map("map1", Path.convert("src/main/resources/maps/map1.map"), GameState.IN_GAME),
+        new Map("map1", Path.convert("src/main/resources/maps/map1.map")),
         true);
     int botsToAdd = maxPlayers - Client.levelHandler.getPlayers().size();
     for (int b = 0; b < botsToAdd; b++) {
