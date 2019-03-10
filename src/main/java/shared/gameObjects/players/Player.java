@@ -6,7 +6,7 @@ import javafx.scene.Group;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
-import shared.gameObjects.components.ObjectShake;
+import shared.gameObjects.components.behaviours.ObjectShake;
 import shared.gameObjects.components.CircleCollider;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Limbs.Arm;
@@ -18,12 +18,10 @@ import shared.gameObjects.weapons.MachineGun;
 import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.weapons.Weapon;
 import shared.handlers.levelHandler.LevelHandler;
-import shared.physics.Physics;
 import shared.physics.data.Collision;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
-import shared.util.maths.Vector2;
 
 public class Player extends GameObject {
 

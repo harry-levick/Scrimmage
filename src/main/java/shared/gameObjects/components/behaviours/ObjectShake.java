@@ -1,10 +1,11 @@
-package shared.gameObjects.components;
+package shared.gameObjects.components.behaviours;
 
 import java.io.Serializable;
 import shared.gameObjects.GameObject;
 import javafx.scene.image.ImageView;
+import shared.gameObjects.components.Behaviour;
 
-public class ObjectShake extends Component implements Serializable {
+public class ObjectShake extends Behaviour implements Serializable {
   
   private double objectX;
   private double objectY;
@@ -12,7 +13,7 @@ public class ObjectShake extends Component implements Serializable {
   private int alt = 1;
 
   public ObjectShake(GameObject parent) {
-    super(parent, ComponentType.SHAKE);
+    super(parent);
     // TODO Auto-generated constructor stub
     objectX = parent.getX();
     objectY = parent.getY();
