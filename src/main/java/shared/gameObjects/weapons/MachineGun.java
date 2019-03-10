@@ -121,6 +121,8 @@ public class MachineGun extends Gun {
         }
       }
 
+      angleGun = angle * PI / 180;
+
       // Rotate and translate the image
       if (holder.getFacingLeft()) {
         imageView.setScaleX(-1);
@@ -128,12 +130,18 @@ public class MachineGun extends Gun {
         imageView.getTransforms().add(rotate);
         imageView.setTranslateX(this.getGripFlipX());
         imageView.setTranslateY(this.getGripFlipY());
+
+        holder.setHandRightX(this.getForeGripFlipX());
+        holder.setHandRightY(this.getForeGripFlipY());
       } else if (holder.getFacingRight()) {
         imageView.setScaleX(1);
         rotate.setAngle(angle);
         imageView.getTransforms().add(rotate);
         imageView.setTranslateX(this.getGripX());
         imageView.setTranslateY(this.getGripY());
+
+        holder.setHandLeftX(this.getForeGripX());
+        holder.setHandLeftY(this.getForeGripY());
       }
     }
   }
@@ -141,6 +149,26 @@ public class MachineGun extends Gun {
   @Override
   public void initialiseAnimation() {
     this.animation.supplyAnimationWithSize("default", 40, 40, true, Path.convert(this.imagePath));
+  }
+
+  public double getForeGripX() {
+    if (holder.getFacingLeft())
+      return getForeGripFlipX();
+    return getGripX() + 50 * Math.cos(-angleGun);
+  }
+
+  public double getForeGripY() {
+    if (holder.getFacingLeft())
+      return getForeGripFlipY();
+    return getGripY() + 50 * Math.sin(angleGun);
+  }
+
+  public double getForeGripFlipX() {
+    return getGripX() + 50 - 30 * Math.cos(angleGun);
+  }
+
+  public double getForeGripFlipY() {
+    return getGripY() - 50 * Math.sin(angleGun);
   }
 
   // =============================
