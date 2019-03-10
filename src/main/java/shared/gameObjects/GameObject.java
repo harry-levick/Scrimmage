@@ -119,7 +119,8 @@ public abstract class GameObject implements Serializable {
     imageView.setRotate(getTransform().getRot());
     imageView.setTranslateX(getX());
     imageView.setTranslateY(getY());
-
+    imageView.setFitWidth(transform.getSize().getX());
+    imageView.setFitHeight(transform.getSize().getY());
   }
 
   // Collision engine
