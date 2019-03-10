@@ -4,7 +4,7 @@ import java.util.List;
 import server.ai.pathFind.AStar;
 import shared.gameObjects.players.Player;
 
-public class BotThread extends Thread {
+public class FleeingThread extends Thread {
 
   Bot bot;
   AStar pathFinder;
@@ -12,7 +12,7 @@ public class BotThread extends Thread {
   public List<boolean[]> plan;
   boolean running;
 
-  public BotThread(Bot bot, List<boolean[]> plan) {
+  public FleeingThread(Bot bot, List<boolean[]> plan) {
     this.bot = bot;
     this.plan = plan;
     pathFinder = new AStar(bot, bot.getLevelHandler());
@@ -21,14 +21,13 @@ public class BotThread extends Thread {
 
   public void run() {
     while (running) {
-      targetPlayer = bot.findTarget();
 
-      List<boolean[]> tempList = pathFinder.optimise(targetPlayer);
+      targetPlayer = bot.findTarget();
+      List<boolean[]> tempList = pathFinder.optimise(targetPlayer,  FSA.FLEEING);
       plan.clear();
       plan.addAll(tempList);
 
     }
-    System.out.println("THREAD STOPPED");
   }
 
   public void terminate() {
