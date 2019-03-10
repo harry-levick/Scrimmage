@@ -269,7 +269,7 @@ public class Client extends Application {
     levelHandler.changeMap(
         new Map(
             "Main Menu",
-            Path.convert(settings.getMenuPath() + File.separator + "main_menu.map")),
+            Path.convert(settings.getMenuPath() + File.separator + "menus/main_menu.map")),
         false);
   }
 
@@ -526,7 +526,7 @@ public class Client extends Application {
             Client.levelHandler.changeMap(
                 new Map(
                     "main_menu",
-                    Path.convert(settings.getMenuPath() + File.separator + "main_menu.map")),
+                    Path.convert(settings.getMenuPath() + File.separator + "menus/main_menu.map")),
                 false);
 
             break;
