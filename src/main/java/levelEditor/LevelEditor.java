@@ -87,7 +87,7 @@ public class LevelEditor extends Application {
   private OBJECT_TYPES objectTypeSelected = OBJECT_TYPES.PLAYER; // default
 
   private String filename = "";
-  private String filepath = settings.getMapsPath();
+  private String filepath = settings.getMapsPath() + File.separator;
 
   /**
    * ADDING NEW OBJECTS TO THE MAP CREATOR: 1. add a new object name in the enum OBJECT_TYPES 2. in

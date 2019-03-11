@@ -13,6 +13,7 @@ public class Sword extends Melee {
   private int currentAngleIndex;
   private Translate translate;
   private double attackAngleSign; // -1 if facingLeft, 1 if facingRight
+  private double[] holderHandPos;
 
   /**
    * Constructor of the Sword class
@@ -51,6 +52,12 @@ public class Sword extends Melee {
   @Override
   public void fire(double mouseX, double mouseY) {
     super.fire(mouseX, mouseY);
+  }
+
+  @Override
+  public void update() {
+    super.update();
+    holderHandPos = getHolderHandPos();
   }
 
 
@@ -106,13 +113,13 @@ public class Sword extends Melee {
       if (!attacking) {
         attackAngleSign = -1;
       }
-      return holder.getHandPos()[0] - 34;
+      return holderHandPos[0] - 34;
     } else { // facing right
       this.imageView.setScaleX(1);
       if (!attacking) {
         attackAngleSign = 1;
       }
-      return holder.getHandPos()[0] - 6;
+      return holderHandPos[0] - 6;
     }
   }
 
@@ -122,13 +129,13 @@ public class Sword extends Melee {
       if (!attacking) {
         attackAngleSign = -1;
       }
-      return holder.getHandPos()[1] - 38;
+      return holderHandPos[1] - 38;
     } else { // facing right
       this.imageView.setScaleX(1);
       if (!attacking) {
         attackAngleSign = 1;
       }
-      return holder.getHandPos()[1] - 34;
+      return holderHandPos[1] - 34;
     }
   }
 }
