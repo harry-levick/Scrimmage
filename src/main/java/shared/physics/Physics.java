@@ -35,12 +35,8 @@ public class Physics {
   public static boolean[] LIMBS = {true, false, true, true, false, false, false};
   public static boolean[][] COLLISION_LAYERS = {DEFAULT, PLAYER, OBJECT, PLATFORM, PARTICLES,
       COLLECTABLE, LIMBS};
-  public static LinkedHashMap<UUID, GameObject> gameObjects;
+  public static LinkedHashMap<UUID, GameObject> gameObjects = new LinkedHashMap<>();
   private static ArrayList<DynamicCollision> collisions = new ArrayList<>();
-
-  private Physics() {
-    gameObjects = new LinkedHashMap<>();
-  }
 
   /**
    * Casts a ray that interacts with colliders.
