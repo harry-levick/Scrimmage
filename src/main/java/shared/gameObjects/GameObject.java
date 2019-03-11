@@ -30,7 +30,7 @@ public abstract class GameObject implements Serializable {
   protected UUID objectUUID;
   protected ObjectType id;
 
-  protected Settings settings = new Settings();
+  protected transient Settings settings = new Settings();
 
   protected transient ImageView imageView;
   protected transient Group root;
@@ -120,7 +120,8 @@ public abstract class GameObject implements Serializable {
     imageView.setRotate(getTransform().getRot());
     imageView.setTranslateX(getX());
     imageView.setTranslateY(getY());
-
+    imageView.setFitWidth(transform.getSize().getX());
+    imageView.setFitHeight(transform.getSize().getY());
   }
 
   // Collision engine

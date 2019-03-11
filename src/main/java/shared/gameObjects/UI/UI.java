@@ -24,7 +24,6 @@ public class UI {
     health.render();
     ammo.render();
     score.render();
-
   }
 
 
