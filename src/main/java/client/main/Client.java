@@ -81,6 +81,7 @@ public class Client extends Application {
   private MouseInput mouseInput;
   private Group root;
   private Group backgroundRoot;
+  private Group uiRoot;
   private static Group creditsRoot;
   private static Group creditsBackground;
   private Scene scene;
@@ -359,7 +360,7 @@ public class Client extends Application {
     scene.setOnMouseDragged(mouseInput);
 
     //Setup UI
-    userInterface = new UI(root, levelHandler.getClientPlayer());
+    userInterface = new UI(uiRoot, levelHandler.getClientPlayer());
 
     // Main Game Loop
     new AnimationTimer() {
@@ -519,6 +520,7 @@ public class Client extends Application {
     root = new Group();
     backgroundRoot = new Group();
     gameRoot = new Group();
+    uiRoot = new Group();
     creditsRoot = new Group();
     creditsBackground = new Group();
 
@@ -526,6 +528,7 @@ public class Client extends Application {
 
     root.getChildren().add(backgroundRoot);
     root.getChildren().add(gameRoot);
+    root.getChildren().add(uiRoot);
     root.getChildren().add(creditsBackground);
     root.getChildren().add(creditsRoot);
 
