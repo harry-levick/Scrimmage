@@ -6,6 +6,9 @@ import java.util.UUID;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import shared.gameObjects.Utils.ObjectType;
+import shared.gameObjects.components.BoxCollider;
+import shared.gameObjects.components.Collider;
+import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.players.Player;
 import shared.util.Path;
 import shared.util.maths.Vector2;
@@ -57,12 +60,22 @@ public class MachineGun extends Gun {
   public void fire(double mouseX, double mouseY) {
     if (canFire()) {
       UUID uuid = UUID.randomUUID();
-      // double bulletX     = getGripX() + 68 * Math.cos(angleGun) - 4 * Math.sin(angleGun);
-      // double bulletY     = getGripY() + 68 * Math.sin(angleGun) - 4 * Math.cos(angleGun);
+      //Vector2 playerCentre = ((BoxCollider) (holder.getComponent(ComponentType.COLLIDER))).getCentre(); // centre = body.centre
+      Vector2 playerCentre = new Vector2(holderHandPos[0], holderHandPos[1]); // centre = main hand
+      double playerRadius = 55 + 65; // Player.sizeY / 2 + bias
+
+      double bulletX = playerCentre.getX() + playerRadius * Math.cos(-angleGun);
+      double bulletY = playerCentre.getY() - playerRadius * Math.sin(-angleGun);
+      double bulletFlipX = playerCentre.getX() - playerRadius * Math.cos(angleGun);
+      double bulletFlipY = playerCentre.getY() - playerRadius * Math.sin(angleGun);
+
+      System.out.println(String.format("centre(%f,%f) (%f,%f) flip(%f,%f) angle(%f)", playerCentre.getX(), playerCentre.getY(), bulletX, bulletY, bulletFlipX, bulletFlipY, angleGun*180/PI));
+      /*
       double bulletX = getMuzzleX() - 68 + 68 * Math.cos(-angleGun);
       double bulletY = getMuzzleY() - 68 * Math.sin(-angleGun);
       double bulletFlipX = getMuzzleFlipX() + 68 - 68 * Math.cos(angleGun);
       double bulletFlipY = getMuzzleFlipY() - 68 * Math.sin(angleGun);
+      */
       Bullet bullet =
           new FireBullet(
               (holder.getFacingRight() ? bulletX : bulletFlipX),
