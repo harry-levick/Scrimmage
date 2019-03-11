@@ -41,7 +41,7 @@ public class JumpPad extends GameObject {
         cooldown = true;
         timer = TIME_TO_JUMP;
         ArrayList<Collision> collisions =
-            Physics.boxcastAll(transform.getPos().add(Vector2.Up().mult(30)), transform.getSize());
+            Physics.boxcastAll(transform.getPos().add(Vector2.Up().mult(30)), transform.getSize(), false);
         for (Collision c : collisions) {
           Rigidbody rb = (Rigidbody) c.getCollidedObject().getComponent(ComponentType.RIGIDBODY);
           if (rb.getBodyType() == RigidbodyType.DYNAMIC) {

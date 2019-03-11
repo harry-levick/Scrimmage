@@ -42,8 +42,8 @@ public class ButtonSingleplayer extends ButtonObject {
       //TODO Change physics to LinkedHashMaps
       Collection<GameObject> values = Client.levelHandler.getGameObjects().values();
       ArrayList<GameObject> physicsGameObjects = new ArrayList<>(values);
-      Bot botPlayer = new Bot(500, 600, UUID.randomUUID(), Client.levelHandler);
-      botPlayer.setHolding(/*new Sword(500, 400, "Sword@ButtonSinglePlayer",
+      Bot botPlayer = new Bot(200, 600, UUID.randomUUID(), Client.levelHandler);
+      botPlayer.setHolding(/*new Sword(200, 600, "Sword@ButtonSinglePlayer",
           botPlayer, UUID.randomUUID()) */new MachineGun(500, 600, "MachineGun@ButtonSinglePlayer", botPlayer, UUID.randomUUID()));
       botPlayer.getHolding().initialise(Client.gameRoot);
       botPlayer.initialise(Client.gameRoot);

@@ -11,6 +11,7 @@ public class ChasingThread extends Thread {
   Player targetPlayer;
   public List<boolean[]> plan;
   boolean running;
+  int TIME_TO_SLEEP = 300;
 
   public ChasingThread(Bot bot, List<boolean[]> plan) {
     this.bot = bot;
@@ -27,8 +28,13 @@ public class ChasingThread extends Thread {
       plan.clear();
       plan.addAll(tempList);
 
+      try {
+        Thread.sleep(TIME_TO_SLEEP);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+
     }
-    System.out.println("THREAD STOPPED");
   }
 
   public void terminate() {

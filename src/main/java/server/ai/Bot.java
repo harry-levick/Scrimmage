@@ -65,7 +65,7 @@ public class Bot extends Player {
 
   public void startThread() {
     chasingThread.start();
-    //fleeingThread.start();
+    fleeingThread.start();
   }
 
   public boolean mayJump() {
