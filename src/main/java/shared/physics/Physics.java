@@ -102,9 +102,6 @@ public class Physics {
 
   /**
    * Casts a ray that interacts with colliders.
-   * - Used for the pathfinding in AI, where a different gameObjects list is used - the gameObjects
-   *  list is taken from the node that the search is in.
-   *  - hxl799
    *
    * @param sourcePos The point to start casting the ray
    * @param lengthAndDirection The length and direction of the ray
@@ -123,7 +120,6 @@ public class Physics {
     EdgeCollider castCollider = new EdgeCollider(false);
     Collision collision = null;
     ArrayList<Collision> collisions = new ArrayList<>();
-
     Vector2 incrementVal = lengthAndDirection.div(RAYCAST_INC);
     for (int i = 0; i <= RAYCAST_INC; i++) {
       castCollider.addNode(sourcePos.add(incrementVal.mult(i)));
@@ -161,16 +157,13 @@ public class Physics {
           collisions.add(collision);
         }
       }
-
     }
     if (collisions.size() > 0) {
       Collision toRet = collisions.get(0);
       for (Collision c : collisions) {
-        toRet = c.getPointOfCollision().sub(sourcePos).magnitude() <= toRet.getPointOfCollision()
-            .sub(sourcePos).magnitude() ? c : toRet;
+        toRet = c.getPointOfCollision().sub(sourcePos).magnitude() <= toRet.getPointOfCollision().sub(sourcePos).magnitude() ? c : toRet;
       }
       return toRet;
-
     } else return null;
   }
 
@@ -283,10 +276,12 @@ public class Physics {
    * @param size The extents of the box
    * @return All colliders hit in the path, empty if nothing was hit
    */
-  public static ArrayList<Collision> boxcastAll(Vector2 sourcePos, Vector2 size) {
+  public static ArrayList<Collision> boxcastAll(Vector2 sourcePos, Vector2 size, boolean cast) {
     BoxCollider castCollider = new BoxCollider(sourcePos, size);
     Collision collision;
     ArrayList<Collision> collisions = new ArrayList<>();
+
+    if (cast) drawBoxCast(sourcePos, size);
 
     Iterator<GameObject> iter = gameObjects.values().iterator();
     while (iter.hasNext()) {

@@ -270,7 +270,7 @@ public class AStar {
    * The main search function
    */
   private void search() {
-    int searchCount = 0, seachCutoff  = 400;
+    int searchCount = 0, seachCutoff  = 1300;
     SearchNode current = bestPosition;
     closedList.add(current);
     boolean currentGood = false;
@@ -445,8 +445,9 @@ public class AStar {
       // Add the same action twice because the physics simulation in the path finding is less
       // than the actual physics in the main game loop, so one acton in path finding ~= two actions
       // in the main game loop.
-      actions.add(0, current.action);
-      actions.add(0, current.action);
+      for (int i = 0; i < 1; i++) {
+        actions.add(0, current.action);
+      }
       current = current.parentNode;
       //Physics.drawCast(current.botX, current.botY, current.botX, current.botY, "#00ff00");
     }
@@ -483,7 +484,7 @@ public class AStar {
 
       ArrayList<Collision> viscinityLeft = Physics.boxcastAll(
           botPosition.add(Vector2.Left().mult(botSize.mult(new Vector2(0.6, 0.9)))).add(Vector2.Down().mult(3)),
-          botSize.mult(new Vector2(0.6, 0.85)));
+          botSize.mult(new Vector2(0.6, 0.85)), false);
 
       if (viscinityLeft.size() == 0 ||
           (viscinityLeft.stream().allMatch( o -> ((Rigidbody) o.getCollidedObject()
@@ -501,7 +502,7 @@ public class AStar {
 
       ArrayList<Collision> viscinityRight = Physics.boxcastAll(
           botPosition.add(Vector2.Right().mult(botSize)).add(Vector2.Down().mult(3)),
-              botSize.mult(new Vector2(0.6, 0.85)));
+              botSize.mult(new Vector2(0.6, 0.85)), false);
 
       if (viscinityRight.size() == 0 ||
           (viscinityRight.stream().allMatch( o -> ((Rigidbody) o.getCollidedObject()
@@ -519,7 +520,7 @@ public class AStar {
 
       ArrayList<Collision> viscinityUp = Physics.boxcastAll(
           botPosition.add(Vector2.Up().mult(botSize.mult(new Vector2(1, 0.5)))),
-          botSize.mult(new Vector2(1, 0.5)));
+          botSize.mult(new Vector2(1, 0.5)), false);
 
       // If no collision
       if (viscinityUp.size() == 0 ||
@@ -530,12 +531,12 @@ public class AStar {
         ArrayList<Collision> viscinityUpLeft = Physics.boxcastAll(
             botPosition.add(Vector2.Up().mult(botSize)).add(Vector2.Left()
                 .mult(new Vector2(0.5, 1))),
-            botSize.mult(new Vector2(0.5, 1)));
+            botSize.mult(new Vector2(0.5, 1)), false);
 
         ArrayList<Collision> viscinityUpRight = Physics.boxcastAll(
             botPosition.add(Vector2.Up().mult(botSize)).add(Vector2.Right()
                 .mult(botSize.mult(new Vector2(0.5, 1)))),
-            botSize.mult(new Vector2(0.5, 1)));
+            botSize.mult(new Vector2(0.5, 1)), false);
 
         // Just jump
         possibleActions.add(createAction(true, false, false));

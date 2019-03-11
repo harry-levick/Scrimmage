@@ -32,7 +32,7 @@ public enum FSA {
           enemyPosCenter.sub(botPosCenter),
           null,
           (Bot) bot,
-          true);
+          false);
 
       boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
           .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
@@ -150,11 +150,17 @@ public enum FSA {
       int ammoLeft = StateInfo.ammoLeft;
       int botHealth = StateInfo.botHealth;
 
-      Vector2 botPos = bot.getTransform().getPos().add(bot.getTransform().getSize().mult(0.5f));
-      Vector2 enemyPos = targetPlayer.getTransform().getPos().add(bot.getTransform().getSize()
-          .mult(0.5f));
+      Vector2 botPos = bot.getTransform().getPos();
+      Vector2 botPosCenter = botPos.add(bot.getTransform().getSize().mult(0.5f));
+      Vector2 enemyPos = targetPlayer.getTransform().getPos();
+      Vector2 enemyPosCenter = enemyPos.add(bot.getTransform().getSize().mult(0.5f));
 
-      Collision rayCast = Physics.raycastAi(botPos, enemyPos, null, (Bot) bot,false);
+      // Use the worldScene of the path finding to raycast, instead of the actual gameObjects list.
+      Collision rayCast = Physics.raycastAi(botPosCenter,
+          enemyPosCenter.sub(botPosCenter),
+          null,
+          (Bot) bot,
+          false);
 
       boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
           .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;

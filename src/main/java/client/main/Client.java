@@ -110,7 +110,6 @@ public class Client extends Application {
   }
 
   public static void setUserInterface() {
-    System.out.println("levelhandler: " + levelHandler);
     userInterface = new UI(uiRoot, levelHandler.getClientPlayer());
   }
 
@@ -350,9 +349,7 @@ public class Client extends Application {
     pendingInputs = new ArrayList<>();
     singleplayerGame = false;
     sendUpdate = false;
-    System.out.println("Creating levelhandler");
     levelHandler = new LevelHandler(settings, root, backgroundRoot, gameRoot, uiRoot);
-    System.out.println("Created levelhandler");
     settings.setLevelHandler(levelHandler);
     levelHandler.addClientPlayer(gameRoot);
     keyInput = new KeyboardInput();
