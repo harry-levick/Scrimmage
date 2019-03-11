@@ -90,7 +90,9 @@ public class LevelHandler {
     switch (gameState) {
       case IN_GAME:
       case MULTIPLAYER:
-        Client.setUserInterface();
+        if (Client.levelHandler != null) {
+          Client.setUserInterface();
+        }
         break;
     }
   }
