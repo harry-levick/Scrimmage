@@ -35,13 +35,15 @@ public class LevelHandler {
   private Group root;
   private Group backgroundRoot;
   private Group gameRoot;
+  private Group uiRoot;
   private Background background;
   private ColorFilters filters;
   private AudioHandler musicPlayer;
   private Settings settings;
   private ArrayList<GameObject> toCreate;
 
-  public LevelHandler(Settings settings, Group root, Group backgroundRoot, Group gameRoot) {
+  public LevelHandler(Settings settings, Group root, Group backgroundRoot, Group gameRoot,
+      Group uiRoot) {
     this.settings = settings;
     gameObjects = new LinkedHashMap<>();
     toCreate = new ArrayList<>();
@@ -53,6 +55,7 @@ public class LevelHandler {
     this.root = root;
     this.backgroundRoot = backgroundRoot;
     this.gameRoot = gameRoot;
+    this.uiRoot = uiRoot;
 
     musicPlayer = new AudioHandler(settings, Client.musicActive);
     changeMap(new Map("main_menu.map", Path.convert("src/main/resources/menus/main_menu.map")),
@@ -81,6 +84,13 @@ public class LevelHandler {
     this.map = map;
     Client.closeSettingsOverlay();
     generateLevel(backgroundRoot, gameRoot, moveToSpawns);
+    uiRoot.getChildren().clear();
+    switch (gameState) {
+      case IN_GAME:
+      case MULTIPLAYER:
+        Client.setUserInterface();
+        break;
+    }
   }
 
   public void previousMap(Boolean moveToSpawns) {
