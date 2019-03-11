@@ -86,6 +86,15 @@ public class Transform implements Serializable {
   }
 
   /**
+   * Scales an object in accordance with the screen size
+   */
+  public void scaleScreen(Vector2 scaleRatio) {
+    this.topPos = topPos.mult(scaleRatio);
+    this.size = size.mult(scaleRatio);
+    botPos = topPos.add(size);
+  }
+
+  /**
    * Computes the (approximated) distance between two objects
    *
    * @param transform The object comparing to
