@@ -28,7 +28,7 @@ public class ButtonQuit extends ButtonObject {
       case START_CONNECTION:
       case MULTIPLAYER:
         Client.levelHandler.changeMap(
-            new Map("main_menu.map", Path.convert("src/main/resources/menus/main_menu.map")),
+            new Map("menus/main_menu.map", Path.convert("src/main/resources/menus/main_menu.map")),
             true);
         break;
       case MAIN_MENU:
