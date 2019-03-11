@@ -81,7 +81,7 @@ public class Client extends Application {
   private MouseInput mouseInput;
   private Group root;
   private Group backgroundRoot;
-  private Group uiRoot;
+  private static Group uiRoot;
   private static Group creditsRoot;
   private static Group creditsBackground;
   private Scene scene;
@@ -90,7 +90,7 @@ public class Client extends Application {
   private float accumulatedTime;
   private float elapsedSinceFPS = 0f;
   private int framesElapsedSinceFPS = 0;
-  private UI userInterface;
+  private static UI userInterface;
   private static boolean credits = false;
   private static int creditStartDelay = 100;
   private static double resolutionX;
@@ -107,6 +107,10 @@ public class Client extends Application {
 
   public static void main(String args[]) {
     launch(args);
+  }
+
+  public static void setUserInterface() {
+    userInterface = new UI(uiRoot, levelHandler.getClientPlayer());
   }
 
   public static void settingsToggle() {
@@ -345,7 +349,7 @@ public class Client extends Application {
     pendingInputs = new ArrayList<>();
     singleplayerGame = false;
     sendUpdate = false;
-    levelHandler = new LevelHandler(settings, root, backgroundRoot, gameRoot);
+    levelHandler = new LevelHandler(settings, root, backgroundRoot, gameRoot, uiRoot);
     settings.setLevelHandler(levelHandler);
     levelHandler.addClientPlayer(gameRoot);
     keyInput = new KeyboardInput();
@@ -360,7 +364,7 @@ public class Client extends Application {
     scene.setOnMouseDragged(mouseInput);
 
     //Setup UI
-    userInterface = new UI(uiRoot, levelHandler.getClientPlayer());
+    setUserInterface();
 
     // Main Game Loop
     new AnimationTimer() {
