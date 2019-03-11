@@ -81,14 +81,12 @@ public class Bot extends Player {
     }
     click = false;
 
-    double prevDist, newDist;
-    // Calculate the distance to the target from the previous loop
-    prevDist = calcDist();
+    double newDist;
     targetPlayer = findTarget();
     // Calculate the distance to the updated target
     newDist = calcDist();
 
-    state = state.next(targetPlayer, this, prevDist, newDist);
+    state = state.next(targetPlayer, this, newDist);
 
     switch (state) {
       case IDLE:
