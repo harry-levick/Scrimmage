@@ -251,14 +251,14 @@ public class Physics {
       if (object instanceof Limb)
         continue;
 
-    if (object.getComponent(ComponentType.COLLIDER) != null) {
-      collision =
-          new Collision(
-              object, castCollider, (Collider) object.getComponent(ComponentType.COLLIDER));
-      if (collision.isCollided()) {
-          collisions.add(collision);
+      if (object.getComponent(ComponentType.COLLIDER) != null) {
+        collision =
+            new Collision(
+                object, castCollider, (Collider) object.getComponent(ComponentType.COLLIDER));
+        if (collision.isCollided()) {
+            collisions.add(collision);
+        }
       }
-    }
     }
     if(collisions.size() > 0) {
       Collision toRet = collisions.get(0);
