@@ -36,6 +36,7 @@ public class ButtonSingleplayer extends ButtonObject {
     Client.levelHandler.changeMap(
         new Map("map1", Path.convert("src/main/resources/maps/map1.map")),
         true);
+
     int botsToAdd = maxPlayers - Client.levelHandler.getPlayers().size();
     for (int b = 0; b < botsToAdd; b++) {
       //TODO Change physics to LinkedHashMaps

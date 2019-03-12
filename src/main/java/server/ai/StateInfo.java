@@ -3,6 +3,9 @@ package server.ai;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.Melee;
 
+/**
+ * A Utility class
+ */
 public class StateInfo {
 
   protected static Melee tempMelee;
@@ -10,6 +13,11 @@ public class StateInfo {
   protected static int ammoLeft;
   protected static int botHealth;
 
+  /**
+   * Gets the info needed by the automata.
+   * @param target The target of the bot
+   * @param bot The bot
+   */
   protected static void setInfo(Player target, Player bot) {
     weaponRange =
         (bot.getHolding().isGun())
