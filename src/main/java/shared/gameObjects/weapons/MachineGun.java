@@ -197,7 +197,7 @@ public class MachineGun extends Gun {
     if (holder.getFacingLeft()) {
       return getGripFlipX();
     } else {
-      return holderHandPos[0] - 20;
+      return holderHandPos == null ? 0 : holderHandPos[0] - 20;
     }
   }
 
@@ -205,7 +205,7 @@ public class MachineGun extends Gun {
     if (holder.getFacingLeft()) {
       return getGripFlipY();
     } else {
-      return holderHandPos[1] - 10;
+      return holderHandPos == null ? 0 : holderHandPos[1] - 20;
     }
   }
 

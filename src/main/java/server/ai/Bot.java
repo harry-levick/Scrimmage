@@ -54,7 +54,7 @@ public class Bot extends Player {
   }
 
   /**
-   * Copy constructor
+   * Constructor to copy an object of Bot.
    * @param that object to be copied
    */
   public Bot(Bot that) {
@@ -63,11 +63,18 @@ public class Bot extends Player {
 
   }
 
+  /**
+   * Begins the loops of both the chasing path-finder thread and the fleeing path-finder thread.
+   */
   public void startThread() {
     chasingThread.start();
     fleeingThread.start();
   }
 
+  /**
+   *
+   * @return True if the bot is on the ground (can jump).
+   */
   public boolean mayJump() {
     return grounded;
   }
@@ -79,7 +86,7 @@ public class Bot extends Player {
       chasingThread.terminate();
       fleeingThread.terminate();
     }
-    click = false;
+    setFalse();
 
     double newDist;
     targetPlayer = findTarget();
@@ -128,6 +135,10 @@ public class Bot extends Player {
     return botPos.exactMagnitude(targetPos);
   }
 
+  /**
+   * Executes the action given the state the bot is in (Fleeing or Attacking)
+   * @param state The state the bot is in when this method is called.
+   */
   private void executeAction(FSA state) {
     boolean[] action = new boolean[]{false, false, false};
 
@@ -149,46 +160,30 @@ public class Bot extends Player {
       this.rightKey = action[Bot.KEY_RIGHT];
     }
 
-
   }
 
   /**
-   * Invert a persuing action so that it can be used as a un-intelligente fleeing action
-   * @param action
-   * @return
+   * Updates the bot, used only by the path-finder when simulating in the world.
    */
-  private boolean[] invertAction(boolean[] action) {
-    Random r = new Random();
-    boolean move = r.nextDouble() <= 0.50;
-
-    if (action[Bot.KEY_LEFT]) {
-      action[Bot.KEY_LEFT] = false;
-      action[Bot.KEY_RIGHT] = true;
-      if (move) {
-        action[Bot.KEY_JUMP] = true;
-      }
-
-    } else if (action[Bot.KEY_RIGHT]) {
-      action[Bot.KEY_RIGHT] = false;
-      action[Bot.KEY_LEFT] = true;
-      if (move) {
-        action[Bot.KEY_JUMP] = true;
-      }
-    }
-
-    return action;
-  }
-
   public void simulateUpdate() {
     super.update();
   }
 
+  /**
+   * Used by the path-finder to simulate the action of the bot, setting the movement booleans based
+   * on the action given.
+   * @param action The action the bot is to take.
+   */
   public void simulateAction(boolean[] action) {
     this.jumpKey = action[Bot.KEY_JUMP];
     this.leftKey = action[Bot.KEY_LEFT];
     this.rightKey = action[Bot.KEY_RIGHT];
   }
 
+  /**
+   * Used by the path-finder to simulate the bots position, doesnt have the same visual
+   * effects as the applyInput() method.
+   */
   public void simulateApplyInput() {
     if (rightKey) {
       rb.moveX(speed);
@@ -217,8 +212,8 @@ public class Bot extends Player {
   }
 
   /**
-   * Finds the closest player
-   * @return The player who is the closest to the bot
+   * Finds the closest player to the bot.
+   * @return The target player
    */
   public Player findTarget() {
     allPlayers = levelHandler.getPlayers();
@@ -247,6 +242,20 @@ public class Bot extends Player {
     return target;
   }
 
+  /**
+   * Set all of the movement booleans false.
+   */
+  private void setFalse() {
+    jumpKey = false;
+    leftKey = false;
+    rightKey = false;
+    click = false;
+  }
+
+  /**
+   * Returns the LevelHandler that was given to the bot on creation.
+   * @return LevelHandler
+   */
   public LevelHandler getLevelHandler() {
     return levelHandler;
   }

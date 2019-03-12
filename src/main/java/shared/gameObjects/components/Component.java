@@ -12,16 +12,29 @@ public abstract class Component implements Serializable {
   protected ComponentType componentType;
   private boolean isActive;
 
+  /**
+   * Base parent constructor for components
+   * @param parent The object the component is attached to
+   * @param componentType The type of component
+   */
   Component(GameObject parent, ComponentType componentType) {
     this.parent = parent;
     this.componentType = componentType;
     isActive = true;
   }
 
+  /**
+   *
+   * @param state Sets the active state of the component
+   */
   public void setIsActive(boolean state) {
     isActive = state;
   }
 
+  /**
+   *
+   * @return If the component is active or not
+   */
   public boolean isActive() {
     return isActive;
   }
