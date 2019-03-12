@@ -45,6 +45,10 @@ public class Sword extends Melee {
     attackAngleSign = 1;
   }
 
+  public Sword(Sword that) {
+    this(that.getX(), that.getY(), that.name, that.holder, UUID.randomUUID());
+  }
+
   @Override
   public void fire(double mouseX, double mouseY) {
     super.fire(mouseX, mouseY);

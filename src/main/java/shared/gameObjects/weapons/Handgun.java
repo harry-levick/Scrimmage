@@ -39,6 +39,11 @@ public class Handgun extends Gun {
         uuid);
   }
 
+  public Handgun(Handgun that) {
+    this(that.getX(), that.getY(), that.getTransform().getSize().getX(),
+        that.getTransform().getSize().getY(), that.name, that.holder, UUID.randomUUID());
+  }
+
   @Override
   public void fire(double mouseX, double mouseY) {
     if (canFire()) {

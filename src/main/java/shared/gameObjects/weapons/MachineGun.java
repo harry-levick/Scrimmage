@@ -6,9 +6,6 @@ import java.util.UUID;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import shared.gameObjects.Utils.ObjectType;
-import shared.gameObjects.components.BoxCollider;
-import shared.gameObjects.components.Collider;
-import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.players.Player;
 import shared.util.Path;
 import shared.util.maths.Vector2;
@@ -56,6 +53,10 @@ public class MachineGun extends Gun {
     scale.setX(-1);
   }
 
+  public MachineGun(MachineGun that) {
+    this(that.getX(), that.getY(), that.name, that.holder, UUID.randomUUID());
+  }
+
   @Override
   public void fire(double mouseX, double mouseY) {
     if (canFire()) {
@@ -69,7 +70,10 @@ public class MachineGun extends Gun {
       double bulletFlipX = playerCentre.getX() - playerRadius * Math.cos(angleGun);
       double bulletFlipY = playerCentre.getY() - playerRadius * Math.sin(angleGun);
 
-      System.out.println(String.format("centre(%f,%f) (%f,%f) flip(%f,%f) angle(%f)", playerCentre.getX(), playerCentre.getY(), bulletX, bulletY, bulletFlipX, bulletFlipY, angleGun*180/PI));
+      System.out.println(String
+          .format("centre(%f,%f) (%f,%f) flip(%f,%f) angle(%f)", playerCentre.getX(),
+              playerCentre.getY(), bulletX, bulletY, bulletFlipX, bulletFlipY,
+              angleGun * 180 / PI));
       /*
       double bulletX = getMuzzleX() - 68 + 68 * Math.cos(-angleGun);
       double bulletY = getMuzzleY() - 68 * Math.sin(-angleGun);
@@ -165,14 +169,16 @@ public class MachineGun extends Gun {
   }
 
   public double getForeGripX() {
-    if (holder.getFacingLeft())
+    if (holder.getFacingLeft()) {
       return getForeGripFlipX();
+    }
     return getGripX() + 50 * Math.cos(-angleGun);
   }
 
   public double getForeGripY() {
-    if (holder.getFacingLeft())
+    if (holder.getFacingLeft()) {
       return getForeGripFlipY();
+    }
     return getGripY() + 50 * Math.sin(angleGun);
   }
 

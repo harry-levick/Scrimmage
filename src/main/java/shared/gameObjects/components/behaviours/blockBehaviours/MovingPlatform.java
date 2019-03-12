@@ -30,14 +30,15 @@ public class MovingPlatform extends Behaviour {
   public void update() {
     getParent().getTransform().translate(movementFactor);
     if (getParent().getTransform().getPos().getX() >= endpointB.getX()
-        || getParent().getTransform().getPos().getX() <= endpointA.getX())
+        || getParent().getTransform().getPos().getX() <= endpointA.getX()) {
       movementFactor = movementFactor.mult(-1);
+    }
   }
 
   @Override
   public void OnCollisionStay(Collision col) {
     if (((Rigidbody) col.getCollidedObject().getComponent(ComponentType.RIGIDBODY)).getBodyType()
-            == RigidbodyType.DYNAMIC
+        == RigidbodyType.DYNAMIC
         && col.getNormalCollision().equals(Vector2.Up())) {
       col.getCollidedObject().getTransform().translate(movementFactor);
     }

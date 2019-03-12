@@ -3,7 +3,9 @@ package shared.gameObjects.components;
 import java.io.Serializable;
 import shared.gameObjects.GameObject;
 
-/** @author fxa579 Base class for components, all GameObject components extend this class */
+/**
+ * @author fxa579 Base class for components, all GameObject components extend this class
+ */
 public abstract class Component implements Serializable {
 
   protected GameObject parent;
@@ -49,5 +51,6 @@ public abstract class Component implements Serializable {
     return componentType;
   }
 
-  public void update() {}
+  public void update() {
+  }
 }

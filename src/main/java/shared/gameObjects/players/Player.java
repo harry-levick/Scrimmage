@@ -19,7 +19,6 @@ import shared.gameObjects.weapons.MachineGun;
 import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.weapons.Weapon;
 import shared.handlers.levelHandler.LevelHandler;
-import shared.physics.data.Collision;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
@@ -76,7 +75,7 @@ public class Player extends GameObject implements Destructable {
     this.holding = null;
     this.levelHandler = levelHandler;
     this.behaviour = Behaviour.IDLE;
-  //  this.shake = new ObjectShake(this);
+    this.shake = new ObjectShake(this);
     this.bc = new BoxCollider(this, ColliderLayer.PLAYER, false);
     //  this.cc = new CircleCollider(this, ColliderLayer.PLAYER, transform.getSize().magnitude()*0.5f, false);
     this.rb = new Rigidbody(RigidbodyType.DYNAMIC, 90, 11.67f, 0.2f,
@@ -84,7 +83,7 @@ public class Player extends GameObject implements Destructable {
     //  addComponent(cc);
     addComponent(bc);
     addComponent(rb);
-  //  addComponent(shake);
+    //addComponent(shake);
   }
 
   // Initialise the animation
@@ -93,7 +92,6 @@ public class Player extends GameObject implements Destructable {
     this.animation.supplyAnimation("default", "images/player/player_idle.png");
   }
 
-  @Override
   public void addChild(GameObject child) {
     children.add(child);
     levelHandler.addGameObject(child);
@@ -102,7 +100,10 @@ public class Player extends GameObject implements Destructable {
   @Override
   public void initialise(Group root) {
     super.initialise(root);
+    addLimbs();
+  }
 
+  private void addLimbs() {
     legLeft = new Leg(true, this, levelHandler);
     legRight = new Leg(false, this, levelHandler);
     body = new Body(this, levelHandler);
@@ -111,7 +112,6 @@ public class Player extends GameObject implements Destructable {
     armRight = new Arm(false, this, levelHandler);
     handLeft = new Hand(true, armLeft, levelHandler);
     handRight = new Hand(false, armRight, levelHandler);
-
     addChild(legLeft);
     addChild(legRight);
     addChild(body);
@@ -124,13 +124,7 @@ public class Player extends GameObject implements Destructable {
 
   @Override
   public void update() {
-    /** STRESS TEST
-    for (int i = 0; i < 1000; i++) {
-      Physics.raycast(getTransform().getPos(), Vector2.Up().mult(200));
-    }
-     */
     checkGrounded(); // Checks if the player is grounded
-    // System.out.println(rb.getVelocity());
     badWeapon();
     if (deattach) {
       for (int i = 0; i < 8; i++) {
@@ -252,6 +246,8 @@ public class Player extends GameObject implements Destructable {
       Limb limb = (Limb) child;
       limb.reset();
     });
+    children.clear();
+    addLimbs();
   }
 
   public void increaseScore() {
@@ -319,91 +315,25 @@ public class Player extends GameObject implements Destructable {
   public double[] getMeleeHandPos() {
     if (facingLeft) {
       return new double[]{this.handLeft.getX(), this.handLeft.getY()};
-    }
-    else {
+    } else {
       return new double[]{this.handRight.getX(), this.handRight.getY()};
     }
   }
 
-  public void setHandRightX(double pos) { this.handRight.setX(pos); }
-
-  public void setHandRightY(double pos) { this.handRight.setY(pos); }
-
-  public void setHandLeftX(double pos) { this.handLeft.setX(pos); }
-
-  public void setHandLeftY(double pos) { this.handLeft.setY(pos); }
-
-
-  /**
-   * Hand position x of the player when facing left
-   *
-   * @return x position of the hand
-   */
-  public double getHandLeftX() {
-    return this.getX() + 13;
+  public void setHandRightX(double pos) {
+    this.handRight.setX(pos);
   }
 
-  /**
-   * Hand position y of the player when facing left
-   *
-   * @return y position of the hand
-   */
-  public double getHandLeftY() {
-    return this.getY() + 90;
+  public void setHandRightY(double pos) {
+    this.handRight.setY(pos);
   }
 
-  /**
-   * Hand position x of the player when facing right
-   *
-   * @return x position of the hand
-   */
-  public double getHandRightX() {
-    return this.getX() + 60;
+  public void setHandLeftX(double pos) {
+    this.handLeft.setX(pos);
   }
 
-  /**
-   * Hand position y of the player when facing right
-   *
-   * @return y position of the hand
-   */
-  public double getHandRightY() {
-    return this.getY() + 90;
-  }
-
-  /**
-   * Hand position x of the player when jumping and facing left
-   *
-   * @return x position of the hand
-   */
-  public double getHandLeftJumpX() {
-    return this.getX() + 7;
-  }
-
-  /**
-   * Hand position y of the player when jumping and facing left
-   *
-   * @return y position of the hand
-   */
-  public double getHandLeftJumpY() {
-    return this.getY() + 30;
-  }
-
-  /**
-   * Hand position x of the player when jumping and facing right
-   *
-   * @return x position of the hand
-   */
-  public double getHandRightJumpX() {
-    return this.getX() + 67;
-  }
-
-  /**
-   * Hand position y of the player when jumping and facing right
-   *
-   * @return y position of the hand
-   */
-  public double getHandRightJumpY() {
-    return this.getY() + 30;
+  public void setHandLeftY(double pos) {
+    this.handLeft.setY(pos);
   }
 
   public boolean getJumped() {
@@ -428,31 +358,8 @@ public class Player extends GameObject implements Destructable {
     this.facingRight = b;
   }
 
-  public Behaviour getBehaviour() {
-    return behaviour;
-  }
-
-  public void setBehaviour(Behaviour behaviour) {
-    this.behaviour = behaviour;
-  }
-
   public boolean isGrounded() {
     return grounded;
-  }
-
-  @Override
-  public void OnCollisionEnter(Collision col) {
-    //  System.out.println("Entered Collision!");
-  }
-
-  @Override
-  public void OnCollisionExit(Collision col) {
-
-  }
-
-  @Override
-  public void OnCollisionStay(Collision col) {
-    //  System.out.println("Stayed in Collision!");
   }
 
   public int getLastInputCount() {

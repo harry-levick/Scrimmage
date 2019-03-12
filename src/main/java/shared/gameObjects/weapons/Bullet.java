@@ -115,13 +115,14 @@ public abstract class Bullet extends GameObject {
       if (p.equals(holder)) {
         remove = false;
         hitHolder = true;
-      }
-      else
+      } else {
         p.deductHp(this.damage);
+      }
     }
 
-    if (remove)
+    if (remove) {
       Client.levelHandler.removeGameObject(this);
+    }
   }
 
   @Override

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentSkipListMap;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -40,6 +41,7 @@ import shared.gameObjects.Blocks.Wood.WoodBlockSmallObject;
 import shared.gameObjects.Blocks.Wood.WoodFloorObject;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.MapDataObject;
+import shared.gameObjects.PlayerSpawnpoint;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.background.Background1;
 import shared.gameObjects.background.Background2;
@@ -60,7 +62,6 @@ import shared.gameObjects.objects.utility.BlueBlock;
 import shared.gameObjects.objects.utility.GreenBlock;
 import shared.gameObjects.objects.utility.RedBlock;
 import shared.gameObjects.objects.utility.YellowBlock;
-import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.Handgun;
 import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.MapLoader;
@@ -69,9 +70,8 @@ import shared.util.maths.Vector2;
 public class LevelEditor extends Application {
 
   private Settings settings = new Settings(); //todo needs to be chnaged into Client settings since currently detached
-
-  private LinkedHashMap<UUID, GameObject> gameObjects;
-  private ArrayList<Player> playerSpawns = new ArrayList<>();
+  private ConcurrentSkipListMap<UUID, GameObject> gameObjects;
+  private ArrayList<PlayerSpawnpoint> playerSpawns = new ArrayList<>();
   private MapDataObject mapDataObject;
   private boolean snapToGrid = true;
 
@@ -141,7 +141,7 @@ public class LevelEditor extends Application {
       switch (objectTypeSelected) {
         case PLAYER:
           if (mapDataObject.getSpawnPoints().size() < spawnPointLimit) {
-            temp = new Player(getGridX(event.getX()), getGridY(event.getY()), uuid, null);
+            temp = new PlayerSpawnpoint(getGridX(event.getX()), getGridY(event.getY()), uuid);
             mapDataObject.addSpawnPoint(getGridX(event.getX()), getGridY(event.getY()));
           } else {
             popup(
@@ -418,7 +418,7 @@ public class LevelEditor extends Application {
           temp.initialise(objects);
         }
         if (objectTypeSelected == OBJECT_TYPES.PLAYER && temp.getId() != ObjectType.Background) {
-          playerSpawns.add((Player) temp);
+          playerSpawns.add((PlayerSpawnpoint) temp);
         } else if (temp.getId() != ObjectType.Background) {
           gameObjects.put(temp.getUUID(), temp);
         }
@@ -581,7 +581,7 @@ public class LevelEditor extends Application {
   }
 
   private void initialiseNewMap() {
-    gameObjects = new LinkedHashMap<>();
+    gameObjects = new ConcurrentSkipListMap<>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.IN_GAME);
   }
 
@@ -618,7 +618,7 @@ public class LevelEditor extends Application {
         conflict = true;
       }
     }
-    for (Player object : playerSpawns) {
+    for (PlayerSpawnpoint object : playerSpawns) {
       double ulX = object.getX();
       double ulY = object.getY();
       double lrX = ulX + object.getTransform().getSize().getX();
@@ -636,8 +636,8 @@ public class LevelEditor extends Application {
   }
 
   private void sceneSecondaryClick(Stage primaryStage, Group root, MouseEvent event) {
-    LinkedHashMap<UUID, GameObject> removeList = gameObjects;
-    ArrayList<Player> removeSpawn = playerSpawns;
+    ConcurrentSkipListMap<UUID, GameObject> removeList = gameObjects;
+    ArrayList<PlayerSpawnpoint> removeSpawn = playerSpawns;
     double x = event.getX();
     double y = event.getY();
     gameObjects.forEach((key2, object) -> {
@@ -653,7 +653,7 @@ public class LevelEditor extends Application {
       }
     });
 
-    for (Player object : playerSpawns) {
+    for (PlayerSpawnpoint object : playerSpawns) {
       double ulX = object.getX();
       double ulY = object.getY();
       double lrX = ulX + object.getTransform().getSize().getX();
