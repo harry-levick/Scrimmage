@@ -32,7 +32,7 @@ public enum FSA {
           enemyPosCenter.sub(botPosCenter),
           null,
           (Bot) bot,
-          false);
+          true);
 
       boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
           .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
@@ -71,7 +71,7 @@ public enum FSA {
           enemyPosCenter.sub(botPosCenter),
           null,
           (Bot) bot,
-          false);
+          true);
 
       boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
           .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
@@ -110,7 +110,7 @@ public enum FSA {
           enemyPosCenter.sub(botPosCenter),
           null,
           (Bot) bot,
-          false);
+          true);
 
       boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
           .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
@@ -159,7 +159,7 @@ public enum FSA {
           enemyPosCenter.sub(botPosCenter),
           null,
           (Bot) bot,
-          false);
+          true);
 
       boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
           .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
