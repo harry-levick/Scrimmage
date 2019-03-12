@@ -1,4 +1,4 @@
-package client.handlers.connectionHandler;
+package client.handlers.networkHandlers;
 
 import client.main.Client;
 import java.io.IOException;

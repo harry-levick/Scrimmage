@@ -6,10 +6,10 @@ import shared.gameObjects.players.Player;
 
 public class ChasingThread extends Thread {
 
+  public List<boolean[]> plan;
   Bot bot;
   AStar pathFinder;
   Player targetPlayer;
-  public List<boolean[]> plan;
   boolean running;
   int TIME_TO_SLEEP = 300;
 

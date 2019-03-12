@@ -305,15 +305,6 @@ public abstract class GameObject implements Serializable {
     imageView = new ImageView();
     imageView.setRotate(rotation);
     if (root != null) {
-      /*
-
-      Platform.runLater(
-          () -> {
-            this.root = root;
-            root.getChildren().add(this.imageView);
-          }
-      );
-       */
       this.root = root;
       root.getChildren().add(this.imageView);
     }
@@ -322,10 +313,6 @@ public abstract class GameObject implements Serializable {
     }
     imageView.setFitHeight(transform.getSize().getY());
     imageView.setFitWidth(transform.getSize().getX());
-    children.forEach(child -> {
-      child.initialiseAnimation();
-      child.initialise(root);
-    });
   }
 
   public void addChild(GameObject child) {
