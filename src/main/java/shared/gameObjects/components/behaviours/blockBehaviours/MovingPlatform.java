@@ -16,6 +16,7 @@ public class MovingPlatform extends Behaviour {
   private Vector2 movementFactor;
   private boolean movingRight;
 
+  //TODO Add JavaDoc
   public MovingPlatform(GameObject parent) {
     super(parent);
     // Temp for Testing
