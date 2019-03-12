@@ -8,9 +8,7 @@ import shared.physics.types.ColliderLayer;
 import shared.physics.types.ColliderType;
 import shared.util.maths.Vector2;
 
-/**
- * Constructs an AABB or Squareshaped Collider
- */
+/** Constructs an AABB Collider */
 public class BoxCollider extends Collider implements Serializable {
 
   private Vector2 size;
@@ -22,6 +20,11 @@ public class BoxCollider extends Collider implements Serializable {
   private transient Polygon polygon;
   private Vector2[] axes;
 
+  /**
+   * BoxCollider constructor with DEFAULT Layer. Maintains same size as parent
+   * @param parent The object the collider is attached to
+   * @param isTrigger Whether this collider is a trigger or a collider
+   */
   public BoxCollider(GameObject parent, boolean isTrigger) {
     super(parent, ColliderType.BOX, isTrigger);
     rotation = getParent().getTransform().getRot();
@@ -30,6 +33,13 @@ public class BoxCollider extends Collider implements Serializable {
     polygonCoordinates = new Double[8];
     update();
   }
+
+  /**
+   * BoxCollider constructor. Maintains same size as parent
+   * @param parent The object the collider is attached to
+   * @param layer The collision layer the collider is a part of
+   * @param isTrigger Whether this collider is a trigger or a collider
+   */
 
   public BoxCollider(GameObject parent, ColliderLayer layer, boolean isTrigger) {
     super(parent, ColliderType.BOX, layer, isTrigger);
@@ -40,6 +50,11 @@ public class BoxCollider extends Collider implements Serializable {
     update();
   }
 
+  /**
+   * BoxCollider constructor with no parent.
+   * @param sourcePos The top-left position from which the collider is sourced at
+   * @param size Size of the Collider
+   */
   public BoxCollider(Vector2 sourcePos, Vector2 size) {
     super(null, ColliderType.BOX, false);
     this.size = size;
@@ -109,6 +124,7 @@ public class BoxCollider extends Collider implements Serializable {
     return size;
   }
 
+  @Override
   public Vector2 getCentre() {
     return centre;
   }
