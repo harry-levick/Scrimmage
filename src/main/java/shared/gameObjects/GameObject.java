@@ -24,6 +24,9 @@ import shared.physics.data.SimulatedDynamicCollision;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
 
+/**
+ * Base Class for all objects in a scene
+ */
 public abstract class GameObject implements Serializable {
 
   protected UUID objectUUID;

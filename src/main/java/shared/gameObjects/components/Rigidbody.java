@@ -122,7 +122,6 @@ public class Rigidbody extends Component implements Serializable {
   /** Called every physics frame, manages the velocity, forces, position, etc. */
   public void update() {
     if (bodyType == RigidbodyType.DYNAMIC) {
-      applyCollisions();
       applyForces();
       updateVelocity();
       grounded = false;
@@ -219,9 +218,6 @@ public class Rigidbody extends Component implements Serializable {
 
   // Update Methods
 
-  /** An update method; all collision updates happen here */
-  private void applyCollisions() {}
-
   public void correctPosition(Vector2 distance) {
     getParent().getTransform().translate(distance);
   }
@@ -274,7 +270,6 @@ public class Rigidbody extends Component implements Serializable {
             velocity
                 .mult(Physics.TIMESTEP)
                 .add(acceleration.mult(0.5f).mult(Physics.TIMESTEP * Physics.TIMESTEP)));
-    checkForLegalMovement();
 
     angularVelocity += currentTorque * Physics.TIMESTEP * angularData.getInvInertia();
     orientation += angularVelocity * Physics.TIMESTEP;
@@ -282,31 +277,6 @@ public class Rigidbody extends Component implements Serializable {
     getParent().getTransform().setRot((float) Math.toDegrees(orientation));
     deltaPosUpdate = Vector2.Zero();
     deltaPos = Vector2.Zero();
-  }
-
-  // TODO: Make it where this doesn't take you to a different universe
-  private void checkForLegalMovement() {
-    /*
-    float percent = 0.4f;
-    float slop = 0.08f;
-    ArrayList<Collision> collisions =
-        Physics.boxcastAll(
-            getParent().getTransform().getPos().add(deltaPos),
-            getParent().getTransform().getSize());
-    for (Collision c : collisions) {
-      Rigidbody bodyB = (Rigidbody) c.getCollidedObject().getComponent(ComponentType.RIGIDBODY);
-      if(c.getCollidedObject() != parent && bodyB.getBodyType() == RigidbodyType.STATIC) {
-
-        Vector2 correction =
-            c.getNormalCollision().mult(
-                Math.max(c.getPenetrationDepth() - slop, 0.0f)
-                    * percent);
-
-        deltaPos = deltaPos.sub(correction);
-      }
-    }
-    */
-    return;
   }
 
   // Getters and Setters
@@ -319,6 +289,10 @@ public class Rigidbody extends Component implements Serializable {
     acceleration = Vector2.Zero();
   }
 
+  /**
+   * Returns either Static or Dynamic
+   * @return Rigidbody Type (Static or Dynamic)
+   */
   public RigidbodyType getBodyType() {
     return bodyType;
   }
@@ -385,10 +359,6 @@ public class Rigidbody extends Component implements Serializable {
 
   public void setOrientation(float orientation) {
     this.orientation = orientation;
-  }
-
-  public ArrayList<Collision> getCollisions() {
-    return collisions;
   }
 }
 
