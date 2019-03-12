@@ -46,8 +46,8 @@ public class AchivementHandler {
         x = 0;
         pages += 1;
         page.setAlignment(Pos.CENTER);
-        page.setHgap(150);
-        page.setVgap(60);
+        page.setHgap(50);
+        page.setVgap(30);
         achivementPane.add(page);
         page = new GridPane();
       }
@@ -60,7 +60,7 @@ public class AchivementHandler {
     background.setFitWidth(1920);
     root.getChildren().add(background);
     root.getChildren().add(achivementPane.get(0));
-    achivementPane.get(0).setTranslateX(300);
+    achivementPane.get(0).setTranslateX(150);
     achivementPane.get(0).setTranslateY(150);
   }
 

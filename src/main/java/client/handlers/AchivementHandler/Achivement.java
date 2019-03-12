@@ -15,13 +15,14 @@ import shared.util.Path;
 
 public class Achivement {
 
-  private String name;
+  private String name, description;
   private double progress, total;
 
   public Achivement(String name, int progress, int total) {
     this.name = name;
     this.progress = progress;
     this.total = total;
+    this.description = "Probably should put something here";
   }
 
 
@@ -51,6 +52,11 @@ public class Achivement {
     VBox holder = new VBox();
     holder.setAlignment(Pos.CENTER);
 
+    //Name
+    Label nameLabel = new Label(getName());
+    nameLabel.setStyle("-fx-font-size:30px; -fx-text-fill: white;");
+    holder.getChildren().add(nameLabel);
+
     StackPane stackPane = new StackPane();
 
     //Grey Icon
@@ -58,7 +64,7 @@ public class Achivement {
         new Image(Path.convert("images/Achivements/golden_trophy_greyed.png")));
     iconGrey.setFitWidth(120);
     iconGrey.setFitHeight(145);
-    iconGrey.setOpacity(0.5);
+    iconGrey.setOpacity(0.8);
     stackPane.getChildren().add(iconGrey);
 
     //Icon
@@ -69,15 +75,16 @@ public class Achivement {
 
     holder.getChildren().add(stackPane);
 
-    //Name
-    Label nameLabel = new Label(getName());
-    nameLabel.setStyle("-fx-font-size:20px; -fx-text-fill: white;");
-    holder.getChildren().add(nameLabel);
 
     //Progress
     Label progressLabel = new Label((int) progress + " / " + (int) total);
     progressLabel.setStyle("-fx-font-size:15px; -fx-text-fill: white;");
     holder.getChildren().add(progressLabel);
+
+    //Progress
+    Label descriptionLabel = new Label(description);
+    descriptionLabel.setStyle("-fx-font-size:15px; -fx-text-fill: white;");
+    holder.getChildren().add(descriptionLabel);
 
     return holder;
   }
