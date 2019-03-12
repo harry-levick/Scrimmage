@@ -129,17 +129,21 @@ public class Bot extends Player {
   }
 
   private void executeAction(FSA state) {
-    boolean[] action = new boolean[] {false, false, false};
-    
+    boolean[] action = new boolean[]{false, false, false};
+
     if (state == FSA.CHASING) {
-      if (chasingPlan.size() > 0) action = chasingPlan.remove(0);
+      if (chasingPlan.size() > 0) {
+        action = chasingPlan.remove(0);
+      }
 
       this.jumpKey = action[Bot.KEY_JUMP];
       this.leftKey = action[Bot.KEY_LEFT];
       this.rightKey = action[Bot.KEY_RIGHT];
 
     } else if (state == FSA.FLEEING) {
-      if (fleeingPlan.size() > 0) action = fleeingPlan.remove(0);
+      if (fleeingPlan.size() > 0) {
+        action = fleeingPlan.remove(0);
+      }
       this.jumpKey = action[Bot.KEY_JUMP];
       this.leftKey = action[Bot.KEY_LEFT];
       this.rightKey = action[Bot.KEY_RIGHT];
@@ -160,12 +164,16 @@ public class Bot extends Player {
     if (action[Bot.KEY_LEFT]) {
       action[Bot.KEY_LEFT] = false;
       action[Bot.KEY_RIGHT] = true;
-      if (move) action[Bot.KEY_JUMP] = true;
+      if (move) {
+        action[Bot.KEY_JUMP] = true;
+      }
 
     } else if (action[Bot.KEY_RIGHT]) {
       action[Bot.KEY_RIGHT] = false;
       action[Bot.KEY_LEFT] = true;
-      if (move) action[Bot.KEY_JUMP] = true;
+      if (move) {
+        action[Bot.KEY_JUMP] = true;
+      }
     }
 
     return action;

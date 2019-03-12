@@ -18,7 +18,8 @@ import shared.gameObjects.MapDataObject;
 public class MapLoader {
 
   public static void saveMap(
-      ConcurrentSkipListMap<UUID, GameObject> gameObjects, MapDataObject mapDataObject, String path) {
+      ConcurrentSkipListMap<UUID, GameObject> gameObjects, MapDataObject mapDataObject,
+      String path) {
     try {
       FileOutputStream fos = new FileOutputStream(path);
       ObjectOutputStream oos = new ObjectOutputStream(fos);

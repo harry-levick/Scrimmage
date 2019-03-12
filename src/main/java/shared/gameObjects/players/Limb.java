@@ -1,6 +1,5 @@
 package shared.gameObjects.players;
 
-import client.main.Settings;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
@@ -97,6 +96,13 @@ public abstract class Limb extends GameObject {
     }
   }
 
+  public void addChild(GameObject child, boolean init) {
+    if (init) {
+      children.add(child);
+    }
+    levelHandler.addGameObject(child);
+  }
+
   @Override
   public void update() {
     super.update();
@@ -110,25 +116,17 @@ public abstract class Limb extends GameObject {
         addComponent(rb);
       }
     }
-    updateAction();
     imageView.getTransforms().remove(rotate);
     lastAttachedCheck = limbAttached;
-
   }
 
   public void reset() {
-    Settings.levelHandler.addGameObject(this);
-    children.forEach(child -> {
-      Limb limb = (Limb) child;
-      limb.reset();
-    });
+    removeRender();
   }
 
-  public void updateAction() {
-    if (behaviour != lastBehaviour) {
-      action = 0;
-      lastBehaviour = behaviour;
-    }
+  @Override
+  public void render() {
+    super.render();
   }
 
   public boolean isLimbAttached() {

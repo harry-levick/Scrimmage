@@ -1,6 +1,5 @@
 package server.ai;
 
-import java.util.ArrayList;
 import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Player;
@@ -89,7 +88,9 @@ public enum FSA {
       } else if (!inSight) {
         return CHASING;
 
-      } else return IDLE;
+      } else {
+        return IDLE;
+      }
     }
   },
   FLEEING() {
