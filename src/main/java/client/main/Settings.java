@@ -5,7 +5,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
+import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.LevelHandler;
+import shared.handlers.levelHandler.Map;
+import shared.util.Path;
 
 /**
  * @author Brett Saunders
@@ -34,6 +37,11 @@ public class Settings {
   private int defaultFontSize;
   private Font font;
   private int gridSize;
+  private Map mainMenu;
+  private Map multiplayerLobby;
+  private Map multiplayerJoin;
+  private Map settingsMenu;
+  private Map achivementsMenu;
 
   /**
    * Default Constructor Music volume set to 100 and sound effects to 75
@@ -57,6 +65,12 @@ public class Settings {
     SFXPath = resourcesPath + s + "audio" + s + "sound-effects";
     fontPath = resourcesPath + s + "Kenney Future.ttf";
     achivementPath = resourcesPath + s + "achivements.txt";
+
+    mainMenu = new Map("main_menu.map", Path.convert("src/main/resources/menus/main_menu.map"), GameState.MAIN_MENU);
+    multiplayerLobby = new Map("lobby.map", Path.convert("src/main/resources/menus/lobby.map"), GameState.Lobby);
+    settingsMenu = new Map("settings.map", Path.convert("src/main/resources/menu/settings.map"), GameState.SETTINGS);
+    multiplayerJoin = new Map("multiplayer.map", Path.convert("src/main/resources/menu/multiplayer.map"), GameState.Multiplayer);
+
   }
 
   public String getResourcesPath() {
@@ -114,6 +128,16 @@ public class Settings {
   public int getMaxPlayers() {
     return maxPlayers;
   }
+
+  public Map getMainMenu() { return mainMenu; }
+
+  public Map getMultiplayerLobby() { return multiplayerLobby; }
+
+  public Map getMultiplayerJoin() { return multiplayerJoin; }
+
+  public Map getSettingsMenu() { return settingsMenu; }
+
+  public Map getAchivementsMenu() { return achivementsMenu; }
 
   public Font getFont() {
     return getFont(defaultFontSize);
