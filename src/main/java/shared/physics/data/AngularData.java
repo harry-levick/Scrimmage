@@ -2,12 +2,13 @@ package shared.physics.data;
 
 import java.io.Serializable;
 
-/** @author fxa579 The class contains data required for rotational kinematics/dynamics */
+/**
+ * @author fxa579 The class contains data required for rotational kinematics/dynamics
+ */
 public class AngularData implements Serializable {
 
   private float angularRadius;
   private float angularCoefficient;
-  private float angularVelocity;
   private float inertia;
   private float invInertia;
 
@@ -22,7 +23,6 @@ public class AngularData implements Serializable {
       float angularRadius, float angularCoefficient, float angularVelocity, float inertia) {
     this.angularRadius = angularRadius;
     this.angularCoefficient = angularCoefficient;
-    this.angularVelocity = angularVelocity;
     this.inertia = inertia;
     invInertia = inertia == 0 ? 0 : 1 / inertia;
   }
@@ -31,12 +31,12 @@ public class AngularData implements Serializable {
     return angularRadius;
   }
 
-  public float getAngularCoefficient() {
-    return angularCoefficient;
+  public void setAngularRadius(float angularRadius) {
+    this.angularRadius = angularRadius;
   }
 
-  public float getAngularVelocity() {
-    return angularVelocity;
+  public float getAngularCoefficient() {
+    return angularCoefficient;
   }
 
   public float getInertia() {

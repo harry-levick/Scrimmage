@@ -1,7 +1,13 @@
 package server.ai;
 
+import shared.gameObjects.components.ComponentType;
+import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.Melee;
+import shared.physics.Physics;
+import shared.physics.data.Collision;
+import shared.physics.types.RigidbodyType;
+import shared.util.maths.Vector2;
 
 /**
  * @author Harry Levick (hxl799)
@@ -15,30 +21,35 @@ public enum FSA {
       int ammoLeft = StateInfo.ammoLeft;
       int botHealth = StateInfo.botHealth;
 
-      if ((newDist > weaponRange)
+      Vector2 botPos = bot.getTransform().getPos();
+      Vector2 botPosCenter = botPos.add(bot.getTransform().getSize().mult(0.5f));
+      Vector2 enemyPos = targetPlayer.getTransform().getPos();
+      Vector2 enemyPosCenter = enemyPos.add(bot.getTransform().getSize().mult(0.5f));
+
+      // Use the worldScene of the path finding to raycast, instead of the actual gameObjects list.
+      Collision rayCast = Physics.raycastAi(botPosCenter,
+          enemyPosCenter.sub(botPosCenter),
+          null,
+          (Bot) bot,
+          false);
+
+      boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
+          .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
+
+      if (((newDist > weaponRange) || !inSight)
           && (botHealth >= this.HIGH_HEALTH)
           && ((ammoLeft > 0) && bot.getHolding().isGun() || bot.getHolding().isMelee())) {
         return CHASING;
-
-      } else if ((newDist <= weaponRange)
-          && (newDist > prevDist)
-          && (botHealth >= this.HIGH_HEALTH)
-          && ((ammoLeft > 0) && bot.getHolding().isGun() || bot.getHolding().isMelee())) {
-        return CHASING_ATTACKING;
 
       } else if ((botHealth <= this.MEDIUM_HEALTH)
           || ((ammoLeft == 0) && bot.getHolding().isGun())) {
         return FLEEING;
 
-      } else if ((botHealth <= this.HIGH_HEALTH)
-          && (botHealth >= this.MEDIUM_HEALTH)
-          && (newDist <= prevDist)
-          && (newDist <= weaponRange)
-          && ((ammoLeft > 0) && bot.getHolding().isGun() || bot.getHolding().isMelee())) {
-        return FLEEING_ATTACKING;
+      } else if (inSight) {
+        return ATTACKING;
 
       } else {
-        return ATTACKING;
+        return IDLE;
       }
     }
   },
@@ -50,67 +61,36 @@ public enum FSA {
       int ammoLeft = StateInfo.ammoLeft;
       int botHealth = StateInfo.botHealth;
 
+      Vector2 botPos = bot.getTransform().getPos();
+      Vector2 botPosCenter = botPos.add(bot.getTransform().getSize().mult(0.5f));
+      Vector2 enemyPos = targetPlayer.getTransform().getPos();
+      Vector2 enemyPosCenter = enemyPos.add(bot.getTransform().getSize().mult(0.5f));
+
+      // Use the worldScene of the path finding to raycast, instead of the actual gameObjects list.
+      Collision rayCast = Physics.raycastAi(botPosCenter,
+          enemyPosCenter.sub(botPosCenter),
+          null,
+          (Bot) bot,
+          false);
+
+      boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
+          .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
+
       if ((newDist <= weaponRange)
+          && inSight
           && ((ammoLeft > 0) && bot.getHolding().isGun() || bot.getHolding().isMelee())
           && (botHealth >= this.HIGH_HEALTH)) {
         return ATTACKING;
-
-      } else if ((newDist <= weaponRange)
-          && (newDist > prevDist)
-          && (botHealth >= this.HIGH_HEALTH)
-          && ((ammoLeft > 0) && bot.getHolding().isGun() || bot.getHolding().isMelee())) {
-        return CHASING_ATTACKING;
 
       } else if ((botHealth <= this.MEDIUM_HEALTH)
           || ((bot.getHolding().isGun()) && (ammoLeft == 0))) {
         return FLEEING;
 
-      } else if ((botHealth <= this.HIGH_HEALTH)
-          && (botHealth >= this.MEDIUM_HEALTH)
-          && (newDist < prevDist)
-          && (newDist <= weaponRange)
-          && ((ammoLeft > 0) && bot.getHolding().isGun() || bot.getHolding().isMelee())) {
-        return FLEEING_ATTACKING;
-
-      } else {
-        return CHASING;
-      }
-    }
-  },
-  CHASING_ATTACKING() {
-    public FSA next(Player targetPlayer, Player bot, double prevDist, double newDist) {
-      StateInfo.setInfo(targetPlayer, bot);
-
-      double weaponRange = StateInfo.weaponRange;
-      int ammoLeft = StateInfo.ammoLeft;
-      int botHealth = StateInfo.botHealth;
-
-      if ((newDist <= weaponRange)
-          &&
-          // Target staying relatively still
-          (prevDist * 1.05 <= newDist && newDist <= prevDist * 1.05)
-          && ((ammoLeft > 0) && bot.getHolding().isGun() || bot.getHolding().isMelee())
-          && (botHealth >= this.HIGH_HEALTH)) {
-        return ATTACKING;
-
-      } else if ((botHealth >= this.HIGH_HEALTH)
-          && (newDist > weaponRange)
-          && (newDist > prevDist)) {
+      } else if (!inSight) {
         return CHASING;
 
-      } else if ((botHealth <= this.MEDIUM_HEALTH)
-          || ((bot.getHolding().isGun()) && (ammoLeft == 0))) {
-        return FLEEING;
-
-      } else if ((botHealth <= this.HIGH_HEALTH)
-          && (botHealth >= MEDIUM_HEALTH)
-          && (newDist < prevDist)
-          && (newDist <= weaponRange)
-          && ((ammoLeft > 0) && bot.getHolding().isGun() || bot.getHolding().isMelee())) {
-        return FLEEING_ATTACKING;
-
       } else {
-        return CHASING_ATTACKING;
+        return IDLE;
       }
     }
   },
@@ -122,6 +102,21 @@ public enum FSA {
       int ammoLeft = StateInfo.ammoLeft;
       int botHealth = StateInfo.botHealth;
 
+      Vector2 botPos = bot.getTransform().getPos();
+      Vector2 botPosCenter = botPos.add(bot.getTransform().getSize().mult(0.5f));
+      Vector2 enemyPos = targetPlayer.getTransform().getPos();
+      Vector2 enemyPosCenter = enemyPos.add(bot.getTransform().getSize().mult(0.5f));
+
+      // Use the worldScene of the path finding to raycast, instead of the actual gameObjects list.
+      Collision rayCast = Physics.raycastAi(botPosCenter,
+          enemyPosCenter.sub(botPosCenter),
+          null,
+          (Bot) bot,
+          false);
+
+      boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
+          .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
+
       Melee temp;
 
       double enemyWeaponRange =
@@ -130,64 +125,22 @@ public enum FSA {
               : (temp = (Melee) targetPlayer.getHolding()).getRange();
 
       if ((newDist <= weaponRange)
+          && inSight
           && (botHealth >= this.HIGH_HEALTH)
           && ((ammoLeft > 0) && bot.getHolding().isGun() || bot.getHolding().isMelee())) {
         return ATTACKING;
 
       } else if ((botHealth >= this.HIGH_HEALTH)
           && (newDist > prevDist)
-          && (newDist > weaponRange)) {
+          && (newDist > weaponRange || !inSight)) {
         return CHASING;
 
-      } else if ((botHealth >= this.HIGH_HEALTH)
-          && (newDist > prevDist)
-          && (newDist <= weaponRange)
-          && ((ammoLeft > 0) && bot.getHolding().isGun() || bot.getHolding().isMelee())) {
-        return CHASING_ATTACKING;
-
-      } else if ((newDist <= weaponRange)
-          && (newDist < prevDist)
-          && (botHealth <= this.HIGH_HEALTH)
-          && (botHealth >= this.MEDIUM_HEALTH)
-          && (((ammoLeft > 0) && bot.getHolding().isGun()) || bot.getHolding().isMelee())) {
-        return FLEEING_ATTACKING;
         // If we have run out of the range of the enemy
       } else if ((newDist > enemyWeaponRange) && (botHealth >= this.HIGH_HEALTH)) {
         return IDLE;
 
       } else {
         return FLEEING;
-      }
-    }
-  },
-  FLEEING_ATTACKING() {
-    public FSA next(Player targetPlayer, Player bot, double prevDist, double newDist) {
-      StateInfo.setInfo(targetPlayer, bot);
-
-      double weaponRange = StateInfo.weaponRange;
-      int ammoLeft = StateInfo.ammoLeft;
-      int botHealth = StateInfo.botHealth;
-
-      if (((botHealth >= this.HIGH_HEALTH))
-          && (newDist < prevDist)
-          && (newDist <= weaponRange)
-          && ((bot.getHolding().isGun() && ammoLeft > 0) || bot.getHolding().isMelee())) {
-        return ATTACKING;
-
-      } else if (((botHealth >= this.HIGH_HEALTH)) && (newDist > weaponRange)) {
-        return CHASING;
-
-      } else if (((botHealth >= this.HIGH_HEALTH))
-          && (newDist <= weaponRange)
-          && (newDist > prevDist)
-          && ((ammoLeft > 0) && bot.getHolding().isGun() || bot.getHolding().isMelee())) {
-        return CHASING_ATTACKING;
-
-      } else if ((botHealth <= this.MEDIUM_HEALTH) && (prevDist > newDist)) {
-        return FLEEING;
-
-      } else {
-        return FLEEING_ATTACKING;
       }
     }
   },
@@ -199,28 +152,32 @@ public enum FSA {
       int ammoLeft = StateInfo.ammoLeft;
       int botHealth = StateInfo.botHealth;
 
+      Vector2 botPos = bot.getTransform().getPos();
+      Vector2 botPosCenter = botPos.add(bot.getTransform().getSize().mult(0.5f));
+      Vector2 enemyPos = targetPlayer.getTransform().getPos();
+      Vector2 enemyPosCenter = enemyPos.add(bot.getTransform().getSize().mult(0.5f));
+
+      // Use the worldScene of the path finding to raycast, instead of the actual gameObjects list.
+      Collision rayCast = Physics.raycastAi(botPosCenter,
+          enemyPosCenter.sub(botPosCenter),
+          null,
+          (Bot) bot,
+          false);
+
+      boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
+          .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
+
       if (((botHealth >= this.HIGH_HEALTH))
+          && inSight
           && (newDist <= weaponRange)
           && ((ammoLeft > 0) && bot.getHolding().isGun() || bot.getHolding().isMelee())) {
         return ATTACKING;
 
-      } else if (((botHealth >= this.HIGH_HEALTH)) && (newDist > weaponRange)) {
+      } else if (((botHealth >= this.HIGH_HEALTH)) && (newDist > weaponRange || !inSight)) {
         return CHASING;
-
-      } else if (((botHealth >= this.HIGH_HEALTH))
-          && (newDist <= weaponRange)
-          && ((ammoLeft > 0) && bot.getHolding().isGun() || bot.getHolding().isMelee())
-          && (newDist > prevDist)) {
-        return CHASING_ATTACKING;
 
       } else if ((botHealth < this.MEDIUM_HEALTH)) {
         return FLEEING;
-
-      } else if ((botHealth <= this.HIGH_HEALTH)
-          && (botHealth >= this.MEDIUM_HEALTH)
-          && (newDist <= weaponRange)
-          && (newDist < prevDist)) {
-        return FLEEING_ATTACKING;
 
       } else {
         return IDLE;
@@ -228,7 +185,7 @@ public enum FSA {
     }
   },
   INITIAL_STATE() {
-    // The initial state just acts as an entry point, and so directs straight to the still state.
+    // The initial state just acts as an entry point, and so directs straight to the IDLE state.
     public FSA next(Player targetPlayer, Player bot, double prevDist, double newDist) {
       return FSA.IDLE;
     }

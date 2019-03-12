@@ -1,38 +1,39 @@
 package shared.gameObjects.weapons;
 
 import client.main.Client;
-import javafx.scene.transform.Rotate;
-import java.util.ArrayList;
 import java.util.UUID;
+import javafx.scene.transform.Rotate;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
+import shared.gameObjects.components.Component;
 import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Player;
-import shared.physics.Physics;
 import shared.physics.data.AngularData;
 import shared.physics.data.Collision;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
-
 /**
  * @author hlf764
  */
 public abstract class Bullet extends GameObject {
-  
+
   private double PI = 3.141592654;
 
   public boolean isHit; // true if there is an object at that position
+  protected BoxCollider bc;
   protected Rigidbody rb;
   private double width; // width of bullet
   private double speed; // speed of bullet
   private Vector2 vector; // Vector of the force of bullet fire
   private int damage; // Damage of this bullet
-  private Player holder; // Holder of the gun that fired this bullet
+  protected Player holder; // Holder of the gun that fired this bullet
   private Rotate rotate;
+  protected Component holderBoxCollider;  // the BoxCollider of the holder
+  protected boolean hitHolder;    // true if it hit the holder (For OnCollisionExit)
 
   public Bullet(
       double gunX, // gun initial x position
@@ -41,7 +42,7 @@ public abstract class Bullet extends GameObject {
       double mouseY, // mouse initial y position
       double width, // the width of the bullet
       double speed, // the speed of the bullet
-      int damage, // damage of this bullet
+      int damage, // hazard of this bullet
       Player holder, // holder of the gun that fired this bullet
       UUID uuid) { // uuid of this bullet
 
@@ -55,7 +56,7 @@ public abstract class Bullet extends GameObject {
     // Unit vector of the bullet force
     vector = new Vector2((float) (mouseX - gunX), (float) (mouseY - gunY));
     vector = vector.div((float) Math.sqrt(vector.dot(vector)));
-    addComponent(new BoxCollider(this, ColliderLayer.PARTICLE, false));
+    bc = new BoxCollider(this, ColliderLayer.DEFAULT, false);
     rb =
         new Rigidbody(
             RigidbodyType.DYNAMIC,
@@ -65,6 +66,7 @@ public abstract class Bullet extends GameObject {
             new MaterialProperty(0.1f, 1, 1),
             new AngularData(0, 0, 0, 0),
             this); // TODO FIX
+    addComponent(bc);
     addComponent(rb);
 
     // Rotate property of the image
@@ -73,54 +75,70 @@ public abstract class Bullet extends GameObject {
     Vector2 gunV = new Vector2((float) gunX, (float) gunY);
     Double bulletAngle = (double) mouseV.sub(gunV).angle(); // radian
     double angleDegree = bulletAngle * 180 / PI; // degree
-    if (mouseX < gunX)
+    if (mouseX < gunX) {
       angleDegree = angleDegree + 180;
+    }
     rotate.setAngle(angleDegree);
+
+    // Get the BoxCollider of the holder
+    holderBoxCollider = holder.getComponent(ComponentType.COLLIDER);
+    hitHolder = false;
 
     Client.levelHandler.addGameObject(this);
     imageView.getTransforms().add(rotate);
-
     render();
   }
 
   @Override
   public void update() {
     super.update();
-    ArrayList<Collision> collision =
-        Physics.boxcastAll(
-            getTransform().getPos(),
-            getTransform().getSize());
-    ArrayList<Player> playersBeingHit = new ArrayList<>();
 
-    // check if a player is hit
-    for (Collision c : collision) {
-      GameObject g = c.getCollidedObject();
-      if (g.getId() == ObjectType.Player && !g.equals(holder)) {
-        isHit = true;
-        playersBeingHit.add((Player) g);
-      } else if (!g.equals(holder)){
-        isHit = true;
-      }
-    }
-
-    if (isHit) {
-      Client.levelHandler.removeGameObject(this);
-      for (Player p : playersBeingHit) {
-        p.deductHp(this.damage);
-       // ((Rigidbody) p.getComponent(ComponentType.RIGIDBODY)).moveX((float) speed/10f);
-      }
-    } else if ((0 < getX() && getX() < 1920) && (0 < getY() && getY() < 1080)) {
+    if ((0 < getX() && getX() < 1920) && (0 < getY() && getY() < 1080))
       rb.move(vector.mult((float) speed));
-    } else {
+    else
       Client.levelHandler.removeGameObject(this);
-    }
   }
-  
+
   @Override
   public void render() {
     super.render();
   }
 
+  @Override
+  public void OnCollisionEnter(Collision col) {
+    boolean remove = true;    // true: will remove this object at the end
+    GameObject g = col.getCollidedObject();
+
+    // collision = player
+    if (g.getId() == ObjectType.Player) {
+      Player p = (Player) g;
+      if (p.equals(holder)) {
+        remove = false;
+        hitHolder = true;
+      } else {
+        p.deductHp(this.damage);
+      }
+    }
+
+    if (remove) {
+      Client.levelHandler.removeGameObject(this);
+    }
+  }
+
+  @Override
+  public void OnCollisionStay(Collision col) {
+    if (hitHolder) {
+      removeComponent(holderBoxCollider);
+    }
+  }
+
+  @Override
+  public void OnCollisionExit(Collision col) {
+    if (hitHolder) {
+      addComponent(holderBoxCollider);
+      hitHolder = false;
+    }
+  }
 
   @Override
   public String getState() {

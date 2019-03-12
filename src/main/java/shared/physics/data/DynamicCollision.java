@@ -15,12 +15,12 @@ import shared.util.maths.Vector2;
  */
 public class DynamicCollision {
 
-  private Rigidbody bodyA;
-  private Rigidbody bodyB;
-  private Vector2 collisionNormal;
-  private Vector2 penetrationDistance;
-  private CollisionDirection dir;
-  private float pentrationDepth;
+  protected Rigidbody bodyA;
+  protected Rigidbody bodyB;
+  protected Vector2 collisionNormal;
+  protected Vector2 penetrationDistance;
+  protected CollisionDirection dir;
+  protected float pentrationDepth;
 
   public DynamicCollision(Rigidbody bodyA, Rigidbody bodyB) {
     this.bodyA = bodyA;
@@ -60,6 +60,7 @@ public class DynamicCollision {
   }
 
   private void resolveCollision(BoxCollider boxA, BoxCollider boxB) {
+    //TODO Fix Up Rotation Pen Depth
     Vector2 n = boxB.getCentre().sub(boxA.getCentre());
     float x_overlap =
         boxA.getSize().getX() * 0.5f + boxB.getSize().getX() * 0.5f - Math.abs(n.getX());
@@ -88,7 +89,8 @@ public class DynamicCollision {
   }
 
   private void resolveCollision(BoxCollider boxA, CircleCollider circB) {
-    Vector2 n = circB.getCentre().sub(circB.getCentre());
+
+    Vector2 n = circB.getCentre().sub(boxA.getCentre());
     Vector2 extents = boxA.getSize().mult(0.5f);
     Vector2 closestPoint = n.clamp(extents.mult(-1), extents);
     boolean inside = false;
@@ -119,7 +121,8 @@ public class DynamicCollision {
     }
   }
 
-  private void resolveCollision(CircleCollider circA, CircleCollider circB) {}
+  private void resolveCollision(CircleCollider circA, CircleCollider circB) {
+  }
 
   private void resolveCollision(CircleCollider circB, BoxCollider boxA) {
     Vector2 n = boxA.getCentre().sub(circB.getCentre());
@@ -159,7 +162,7 @@ public class DynamicCollision {
     if (vOnNormal > 0) {
       return;
     }
-    float e = Math.max(bodyA.getMaterial().getRestitution(), bodyB.getMaterial().getRestitution());
+    float e = Math.min(bodyA.getMaterial().getRestitution(), bodyB.getMaterial().getRestitution());
 
     float j = -1 * (1 + e) * vOnNormal;
     j /= bodyA.getInv_mass() + bodyB.getInv_mass();
@@ -171,28 +174,11 @@ public class DynamicCollision {
     Vector2 positionCorrection = positionCorrection();
     bodyA.correctPosition(positionCorrection.mult(-1 * bodyA.getInv_mass()));
     bodyB.correctPosition(positionCorrection.mult(bodyB.getInv_mass()));
-
-    // Friction
-    /*
-    velocityCol = bodyB.getVelocity().sub(bodyA.getVelocity());
-    Vector2 tangent = velocityCol.sub(collisionNormal.mult(velocityCol.dot(collisionNormal))).normalize();
-
-    float jt = velocityCol.dot(tangent)*-1;
-    jt /= bodyA.getInv_mass() + bodyB.getInv_mass();
-
-    float staticFriction = (new Vector2(bodyA.getMaterial().getStaticFriction(), bodyB.getMaterial().getStaticFriction())).magnitude();
-
-    Vector2 frictionImpulse = Math.abs(jt) < j*staticFriction ? tangent.mult(jt) : tangent.mult(-1*j*(new Vector2(bodyA.getMaterial().getKineticFriction(), bodyB.getMaterial().getKineticFriction())).magnitude());
-    if(Math.abs(frictionImpulse.getX()) > 0.00001f && Math.abs(frictionImpulse.getY()) > 0.000001f) {
-      bodyA.setVelocity(bodyA.getVelocity().sub(frictionImpulse.mult(bodyA.getInv_mass())));
-      bodyB.setVelocity(bodyB.getVelocity().add(frictionImpulse.mult(bodyB.getInv_mass())));
-    }
-    */
   }
 
-  private Vector2 positionCorrection() {
-    float percent = 0.6f;
-    float slop = 0.03f;
+  protected Vector2 positionCorrection() {
+    float percent = 0.8f;
+    float slop = 0.08f;
 
     Vector2 correction =
         collisionNormal.mult(

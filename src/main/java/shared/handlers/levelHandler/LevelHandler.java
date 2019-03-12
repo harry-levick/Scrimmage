@@ -11,6 +11,8 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import javafx.scene.Group;
 import server.Server;
 import server.ai.Bot;
@@ -19,15 +21,17 @@ import shared.gameObjects.MapDataObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.background.Background;
 import shared.gameObjects.players.Player;
+import shared.gameObjects.rendering.ColorFilters;
 import shared.gameObjects.weapons.MachineGun;
+import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.weapons.Weapon;
 import shared.util.Path;
 import shared.util.maths.Vector2;
 
 public class LevelHandler {
 
-  private LinkedHashMap<UUID, GameObject> gameObjects;
-  private ArrayList<GameObject> toRemove;
+  private ConcurrentSkipListMap<UUID, GameObject> gameObjects;
+  private CopyOnWriteArrayList<GameObject> toRemove;
   private LinkedHashMap<UUID, Player> players;
   private LinkedHashMap<UUID, Bot> bots;
   private Player clientPlayer;
@@ -37,7 +41,9 @@ public class LevelHandler {
   private Map previousMap;
   private Group backgroundRoot;
   private Group gameRoot;
+  private Group uiRoot;
   private Background background;
+  private ColorFilters filters;
   private AudioHandler musicPlayer;
   private Settings settings;
   private ArrayList<GameObject> toCreate;
@@ -46,29 +52,32 @@ public class LevelHandler {
   private ByteArrayOutputStream byteArrayOutputStream;
   private ObjectOutput objectOutput;
 
-  public LevelHandler(Settings settings, Group backgroundRoot, Group gameRoot) {
+  public LevelHandler(Settings settings, Group backgroundRoot, Group gameRoot,
+      Group uiRoot) {
     this.settings = settings;
-    gameObjects = new LinkedHashMap<>();
+    gameObjects = new ConcurrentSkipListMap<>();
     toCreate = new ArrayList<>();
-    toRemove = new ArrayList<>();
+    toRemove = new CopyOnWriteArrayList<>();
     players = new LinkedHashMap<>();
     bots = new LinkedHashMap<>();
     maps = MapLoader.getMaps(settings.getMapsPath());
+    filters = new ColorFilters();
     this.backgroundRoot = backgroundRoot;
     this.gameRoot = gameRoot;
     this.isServer = false;
+    this.uiRoot = uiRoot;
+
     musicPlayer = new AudioHandler(settings, Client.musicActive);
-    changeMap(new Map("main_menu.map", Path.convert("src/main/resources/menus/main_menu.map"),
-        GameState.MAIN_MENU), true);
+    changeMap(
+        new Map("menus/main_menu.map", Path.convert("src/main/resources/menus/main_menu.map")),
+        true);
     previousMap = null;
   }
 
   public LevelHandler(Settings settings, Group backgroundRoot, Group gameRoot, Server server) {
     this.settings = settings;
-    this.isServer = true;
-    gameObjects = new LinkedHashMap<>();
-    toCreate = new ArrayList<>();
-    toRemove = new ArrayList<>();
+    gameObjects = new ConcurrentSkipListMap<>();
+    toRemove = new CopyOnWriteArrayList<>();
     players = new LinkedHashMap<>();
     bots = new LinkedHashMap<>();
     maps = MapLoader.getMaps(settings.getMapsPath());
@@ -76,7 +85,7 @@ public class LevelHandler {
     this.gameRoot = gameRoot;
     this.server = server;
     musicPlayer = new AudioHandler(settings, Client.musicActive);
-    changeMap(new Map("Lobby", Path.convert("src/main/resources/menus/lobby.map"), GameState.Lobby),
+    changeMap(new Map("LOBBY", Path.convert("src/main/resources/menus/lobby.map")),
         false);
     previousMap = null;
   }
@@ -84,7 +93,17 @@ public class LevelHandler {
   public void changeMap(Map map, Boolean moveToSpawns) {
     previousMap = this.map;
     this.map = map;
+    Client.closeSettingsOverlay();
     generateLevel(backgroundRoot, gameRoot, moveToSpawns);
+    uiRoot.getChildren().clear();
+    switch (gameState) {
+      case IN_GAME:
+      case MULTIPLAYER:
+        if (Client.levelHandler != null) {
+          Client.setUserInterface();
+        }
+        break;
+    }
   }
 
   public void previousMap(Boolean moveToSpawns) {
@@ -112,9 +131,11 @@ public class LevelHandler {
     gameObjects = MapLoader.loadMap(map.getPath());
     gameObjects.forEach(
         (key, gameObject) -> {
+          gameObject.setSettings(settings);
           if (gameObject.getId() == ObjectType.MapDataObject) {
             this.background = ((MapDataObject) gameObject).getBackground();
             ArrayList<Vector2> spawnPoints = ((MapDataObject) gameObject).getSpawnPoints();
+            this.map.setGameState(((MapDataObject) gameObject).getGameState());
             if (this.background != null) {
               background.initialise(backgroundGroup);
             }
@@ -146,9 +167,9 @@ public class LevelHandler {
         musicPlayer.playMusicPlaylist(PLAYLIST.INGAME);
         break;
       case MAIN_MENU:
-      case Lobby:
-      case Start_Connection:
-      case Multiplayer:
+      case LOBBY:
+      case START_CONNECTION:
+      case MULTIPLAYER:
       default:
         musicPlayer.playMusicPlaylist(PLAYLIST.MENU);
         break;
@@ -184,7 +205,7 @@ public class LevelHandler {
    *
    * @return All Game Objects
    */
-  public LinkedHashMap<UUID, GameObject> getGameObjects() {
+  public ConcurrentSkipListMap<UUID, GameObject> getGameObjects() {
     clearToRemove(); // Remove every gameObjects we no longer need
     return gameObjects;
   }
@@ -267,12 +288,27 @@ public class LevelHandler {
     clientPlayer.initialise(root);
     players.put(clientPlayer.getUUID(), clientPlayer);
     gameObjects.put(clientPlayer.getUUID(), clientPlayer);
-    
-    // Add a spawn gun
-    Weapon spawnGun = new MachineGun(200, 200, "MachineGun.spawnGun@LevelHandler.addClientPlayer", null, UUID.randomUUID());
+
+    // Add a spawn MachineGun
+    Weapon spawnGun = new MachineGun(200, 350, "MachineGun.spawnGun@LevelHandler.addClientPlayer",
+        null, UUID.randomUUID());
     spawnGun.initialise(root);
     gameObjects.put(spawnGun.getUUID(), spawnGun);
 
+    // Add a spawn Sword
+    Weapon spawnSword = new Sword(1300, 200, "Sword.spawnGun@LevelHandler.addClientPlayer", null,
+        UUID.randomUUID());
+    spawnSword.initialise(root);
+    gameObjects.put(spawnSword.getUUID(), spawnSword);
+
+    /*
+    // Add weapon to player
+    UUID gunUUID = UUID.randomUUID();
+    Weapon gun = new MachineGun(clientPlayer.getX(), clientPlayer.getY(), "MachineGun@LevelHandler.addClientPlayer", clientPlayer, gunUUID);
+    clientPlayer.setHolding(gun);
+    gun.initialise(root);
+    gameObjects.put(gunUUID, gun);
+    */
   }
 
   public Player getClientPlayer() {
@@ -292,7 +328,7 @@ public class LevelHandler {
    * list. Finally clear the list for next frame
    */
   private void clearToRemove() {
-    gameObjects.entrySet().removeAll(toRemove);
+    gameObjects.values().removeAll(toRemove);
     toRemove.forEach(gameObject -> gameObject.removeRender());
     toRemove.forEach(gameObject -> gameObject.destroy());
     toRemove.clear();

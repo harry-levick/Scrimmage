@@ -8,13 +8,14 @@ import shared.gameObjects.GameObject;
  */
 public abstract class Component implements Serializable {
 
+  protected GameObject parent;
+  protected ComponentType componentType;
   private boolean isActive;
-  private GameObject parent;
-  private ComponentType componentType;
 
   Component(GameObject parent, ComponentType componentType) {
     this.parent = parent;
     this.componentType = componentType;
+    isActive = true;
   }
 
   public void setIsActive(boolean state) {
