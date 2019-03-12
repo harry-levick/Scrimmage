@@ -29,6 +29,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -43,6 +44,7 @@ import shared.packets.PacketJoin;
 import shared.packets.PacketMap;
 import shared.physics.Physics;
 import shared.util.Path;
+import shared.util.maths.Vector2;
 
 //import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 
@@ -218,6 +220,13 @@ public class Server extends Application {
 
   }
 
+  public void scaleRendering(Stage primaryStage) {
+    Vector2 scaleRatio = new Vector2(primaryStage.getWidth() / 1920,
+        primaryStage.getHeight() / 1080);
+    Scale scale = new Scale(scaleRatio.getX(), scaleRatio.getY(), 0, 0);
+    primaryStage.getScene().getRoot().getTransforms().setAll(scale);
+  }
+
   @Override
   public void start(Stage primaryStage) throws Exception {
     setupRender(primaryStage);
@@ -274,6 +283,8 @@ public class Server extends Application {
 
         /** Process Update */
         updateSimulation();
+
+        scaleRendering(primaryStage);
 
         /** Render Game Objects */
         levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.render());

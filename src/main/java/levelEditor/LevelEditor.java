@@ -26,6 +26,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
+import javafx.scene.transform.Scale;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
@@ -547,6 +548,7 @@ public class LevelEditor extends Application {
     new AnimationTimer() {
       @Override
       public void handle(long now) {
+        scaleRendering(primaryStage);
         gameObjects.forEach((key, gameObject) -> gameObject.render());
         playerSpawns.forEach(player -> player.render());
         if (mapDataObject.getBackground() != null) {
@@ -755,6 +757,13 @@ public class LevelEditor extends Application {
     Scene dialogScene = new Scene(dialogVbox, 450, 60);
     dialog.setScene(dialogScene);
     dialog.show();
+  }
+
+  public void scaleRendering(Stage primaryStage) {
+    Vector2 scaleRatio = new Vector2(primaryStage.getWidth() / 1920,
+        primaryStage.getHeight() / 1080);
+    Scale scale = new Scale(scaleRatio.getX(), scaleRatio.getY(), 0, 0);
+    primaryStage.getScene().getRoot().getTransforms().setAll(scale);
   }
 
   protected enum OBJECT_TYPES {
