@@ -306,11 +306,7 @@ public class Client extends Application {
     levelHandler.getBotPlayerList().forEach((key, gameObject) -> gameObject.removeRender());
     levelHandler.getBotPlayerList().forEach((key, gameObject) -> gameObject = null);
     levelHandler.getBotPlayerList().clear();
-    levelHandler.changeMap(
-        new Map(
-            "Main Menu",
-            Path.convert(settings.getMenuPath() + File.separator + "menus/main_menu.map")),
-        false);
+    levelHandler.changeMap(Settings.getMainMenu(), false);
   }
 
   @Override

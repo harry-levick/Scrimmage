@@ -25,7 +25,6 @@ import shared.gameObjects.rendering.ColorFilters;
 import shared.gameObjects.weapons.MachineGun;
 import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.weapons.Weapon;
-import shared.util.Path;
 import shared.util.maths.Vector2;
 
 public class LevelHandler {
@@ -68,9 +67,7 @@ public class LevelHandler {
     this.uiRoot = uiRoot;
 
     musicPlayer = new AudioHandler(settings, Client.musicActive);
-    changeMap(
-        new Map("menus/main_menu.map", Path.convert("src/main/resources/menus/main_menu.map")),
-        true);
+    changeMap(Settings.getMainMenu(), true);
     previousMap = null;
   }
 
@@ -85,8 +82,7 @@ public class LevelHandler {
     this.gameRoot = gameRoot;
     this.server = server;
     musicPlayer = new AudioHandler(settings, Client.musicActive);
-    changeMap(new Map("LOBBY", Path.convert("src/main/resources/menus/lobby.map")),
-        false);
+    changeMap(Settings.getMultiplayerLobby(), false);
     previousMap = null;
   }
 

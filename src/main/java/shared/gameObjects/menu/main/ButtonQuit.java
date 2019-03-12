@@ -1,12 +1,11 @@
 package shared.gameObjects.menu.main;
 
 import client.main.Client;
+import client.main.Settings;
 import java.util.UUID;
 import javafx.scene.input.MouseEvent;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.menu.ButtonObject;
-import shared.handlers.levelHandler.Map;
-import shared.util.Path;
 
 public class ButtonQuit extends ButtonObject {
 
@@ -27,9 +26,7 @@ public class ButtonQuit extends ButtonObject {
       case LOBBY:
       case START_CONNECTION:
       case MULTIPLAYER:
-        Client.levelHandler.changeMap(
-            new Map("menus/main_menu.map", Path.convert("src/main/resources/menus/main_menu.map")),
-            true);
+        Client.levelHandler.changeMap(Settings.getMainMenu(), true);
         break;
       case MAIN_MENU:
         System.exit(0);

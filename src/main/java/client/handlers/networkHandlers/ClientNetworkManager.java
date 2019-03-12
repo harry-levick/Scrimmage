@@ -1,7 +1,7 @@
 package client.handlers.networkHandlers;
 
 import client.main.Client;
-import java.io.File;
+import client.main.Settings;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,10 +10,8 @@ import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.TimePosition;
 import shared.gameObjects.players.Limbs.Arm;
 import shared.gameObjects.players.Player;
-import shared.handlers.levelHandler.Map;
 import shared.packets.PacketGameState;
 import shared.packets.PacketInput;
-import shared.util.Path;
 import shared.util.maths.Vector2;
 
 public class ClientNetworkManager {
@@ -94,12 +92,7 @@ public class ClientNetworkManager {
             Client.connectionHandler = null;
             // Show score board
             Client.multiplayer = false;
-            Client.levelHandler.changeMap(
-                new Map(
-                    "main_menu",
-                    Path.convert(
-                        Client.settings.getMenuPath() + File.separator + "menus/main_menu.map")),
-                false);
+            Client.levelHandler.changeMap(Settings.getMainMenu(), false);
 
             break;
           case 7:

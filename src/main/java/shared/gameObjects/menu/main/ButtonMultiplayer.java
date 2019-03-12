@@ -1,12 +1,11 @@
 package shared.gameObjects.menu.main;
 
 import client.main.Client;
+import client.main.Settings;
 import java.util.UUID;
 import javafx.scene.input.MouseEvent;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.menu.ButtonObject;
-import shared.handlers.levelHandler.Map;
-import shared.util.Path;
 
 public class ButtonMultiplayer extends ButtonObject {
 
@@ -25,10 +24,7 @@ public class ButtonMultiplayer extends ButtonObject {
 
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
-    Client.levelHandler.changeMap(
-        new Map(
-            "MULTIPLAYER",
-            Path.convert("src/main/resources/menus/multiplayer.map")),
+    Client.levelHandler.changeMap(Settings.getMultiplayerJoin(),
         false);
   }
 }

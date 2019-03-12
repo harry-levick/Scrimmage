@@ -2,14 +2,13 @@ package shared.gameObjects.menu.multiplayer;
 
 import client.handlers.networkHandlers.ConnectionHandler;
 import client.main.Client;
+import client.main.Settings;
 import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.menu.ButtonObject;
-import shared.handlers.levelHandler.Map;
-import shared.util.Path;
 
 public class ButtonJoin extends ButtonObject {
 
@@ -44,8 +43,6 @@ public class ButtonJoin extends ButtonObject {
     Client.connectionHandler.start();
     button.disarm();
     root.getChildren().remove(addressInput);
-    Client.levelHandler.changeMap(
-        new Map("LOBBY", Path.convert("src/main/resources/menus/lobby.map")),
-        false);
+    Client.levelHandler.changeMap(Settings.getMultiplayerLobby(), false);
   }
 }
