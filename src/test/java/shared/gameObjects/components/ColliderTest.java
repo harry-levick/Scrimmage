@@ -2,9 +2,6 @@ package shared.gameObjects.components;
 
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListMap;
 import org.junit.BeforeClass;
@@ -83,7 +80,9 @@ public class ColliderTest {
 
   @Test
   public void raycast() {
-    assertTrue(Physics.raycast(c.getTransform().getPos().add(new Vector2(-1, - 1)), a.getTransform().getPos().sub(c.getTransform().getPos().add(new Vector2(-1, - 1))), false) != null);
+    assertTrue(Physics.raycast(c.getTransform().getPos().add(new Vector2(-1, -1)),
+        a.getTransform().getPos().sub(c.getTransform().getPos().add(new Vector2(-1, -1))), false)
+        != null);
   }
 
   @Test

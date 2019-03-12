@@ -2,7 +2,6 @@ package shared.handlers.levelHandler;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.LinkedHashMap;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListMap;
 import org.junit.Before;

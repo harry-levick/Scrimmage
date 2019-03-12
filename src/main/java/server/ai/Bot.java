@@ -55,6 +55,7 @@ public class Bot extends Player {
 
   /**
    * Copy constructor
+   *
    * @param that object to be copied
    */
   public Bot(Bot that) {
@@ -131,17 +132,21 @@ public class Bot extends Player {
   }
 
   private void executeAction(FSA state) {
-    boolean[] action = new boolean[] {false, false, false};
-    
+    boolean[] action = new boolean[]{false, false, false};
+
     if (state == FSA.CHASING) {
-      if (chasingPlan.size() > 0) action = chasingPlan.remove(0);
+      if (chasingPlan.size() > 0) {
+        action = chasingPlan.remove(0);
+      }
 
       this.jumpKey = action[Bot.KEY_JUMP];
       this.leftKey = action[Bot.KEY_LEFT];
       this.rightKey = action[Bot.KEY_RIGHT];
 
     } else if (state == FSA.FLEEING) {
-      if (fleeingPlan.size() > 0) action = fleeingPlan.remove(0);
+      if (fleeingPlan.size() > 0) {
+        action = fleeingPlan.remove(0);
+      }
       this.jumpKey = action[Bot.KEY_JUMP];
       this.leftKey = action[Bot.KEY_LEFT];
       this.rightKey = action[Bot.KEY_RIGHT];
@@ -152,8 +157,6 @@ public class Bot extends Player {
 
   /**
    * Invert a persuing action so that it can be used as a un-intelligente fleeing action
-   * @param action
-   * @return
    */
   private boolean[] invertAction(boolean[] action) {
     Random r = new Random();
@@ -162,12 +165,16 @@ public class Bot extends Player {
     if (action[Bot.KEY_LEFT]) {
       action[Bot.KEY_LEFT] = false;
       action[Bot.KEY_RIGHT] = true;
-      if (move) action[Bot.KEY_JUMP] = true;
+      if (move) {
+        action[Bot.KEY_JUMP] = true;
+      }
 
     } else if (action[Bot.KEY_RIGHT]) {
       action[Bot.KEY_RIGHT] = false;
       action[Bot.KEY_LEFT] = true;
-      if (move) action[Bot.KEY_JUMP] = true;
+      if (move) {
+        action[Bot.KEY_JUMP] = true;
+      }
     }
 
     return action;
@@ -221,12 +228,12 @@ public class Bot extends Player {
     double targetDistance = Double.POSITIVE_INFINITY;
     Vector2 botPos = new Vector2((float) this.getX(), (float) this.getY());
 
-
     for (Map.Entry<UUID, Player> entry : allPlayers.entrySet()) {
       Player player = entry.getValue();
 
-      if (player.equals(this))
+      if (player.equals(this)) {
         continue;
+      }
 
       Vector2 playerPos = new Vector2((float) player.getX(), (float) player.getY());
       double distance = botPos.exactMagnitude(playerPos);

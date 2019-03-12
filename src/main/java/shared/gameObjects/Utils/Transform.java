@@ -46,13 +46,17 @@ public class Transform implements Serializable {
     gameObject = parent;
   }
 
-  /** Moves the attached gameObject to the desired position. */
+  /**
+   * Moves the attached gameObject to the desired position.
+   */
   public void translate(Vector2 translateFactor) {
     topPos = topPos.add(translateFactor);
     botPos = botPos.add(translateFactor);
   }
 
-  /** [Does not do anything currently] */
+  /**
+   * [Does not do anything currently]
+   */
   public void rotate(float rotation) {
     rot += rotation;
     while (rot > 180) {

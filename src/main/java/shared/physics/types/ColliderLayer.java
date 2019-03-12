@@ -25,8 +25,8 @@ public enum ColliderLayer {
    */
   PARTICLE(4),
   /**
-   *
-   * Used for the contact collider for collectables so that they don't phase through the floor. Use default for the trigger.
+   * Used for the contact collider for collectables so that they don't phase through the floor. Use
+   * default for the trigger.
    */
   COLLECTABLE(5),
   /**
