@@ -71,7 +71,6 @@ public class Client extends Application {
   public static ArrayList<PacketInput> pendingInputs;
   public static TimerTask task;
   public static Group gameRoot;
-  private final float timeStep = 0.0166f;
   private final String gameTitle = "Alone in the Dark";
   private LinkedList<Map> playlist;
   private KeyboardInput keyInput;
@@ -82,20 +81,14 @@ public class Client extends Application {
   private static Group creditsRoot;
   private static Group creditsBackground;
   private Scene scene;
-  private float maximumStep;
-  private long previousTime;
-  private float accumulatedTime;
   private float elapsedSinceFPS = 0f;
   private int framesElapsedSinceFPS = 0;
   private static UI userInterface;
   private static boolean credits = false;
   private static int creditStartDelay = 100;
-  private static double resolutionX;
-  private static double resolutionY;
   private boolean gameOver;
   private static boolean settingsOverlay = false;
   private static ArrayList<GameObject> settingsObjects = new ArrayList<>();
-  private static ClientNetworkManager networkManager;
 
   public static void main(String args[]) {
     launch(args);
@@ -289,15 +282,8 @@ public class Client extends Application {
   }
 
   public void init() {
-    maximumStep = 0.0166f;
-    previousTime = 0;
-    accumulatedTime = 0;
     settings = new Settings();
     multiplayer = false;
-    resolutionX = settings.getMapWidth();
-    resolutionY = settings.getMapHeight();
-    networkManager = new ClientNetworkManager();
-    // Start off screen
   }
 
   public void endGame() {
@@ -424,14 +410,7 @@ public class Client extends Application {
         ObjectManager.update();
 
         /** Scale and Render Game Objects */
-        double resolutionXNew = primaryStage.getWidth();
-        double resolutionYNew = primaryStage.getHeight();
-        Vector2 scaleRatio = new Vector2(resolutionXNew / 1920,
-            resolutionYNew / 1080);
-        resolutionX = resolutionXNew;
-        resolutionY = resolutionYNew;
-        Scale scale = new Scale(scaleRatio.getX(), scaleRatio.getY(), 0, 0);
-        scene.getRoot().getTransforms().setAll(scale);
+        scaleRendering(primaryStage);
 
         //levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.getTransform().scaleScreen(scaleRatio));
         levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.render());
@@ -493,13 +472,12 @@ public class Client extends Application {
     primaryStage.show();
   }
 
-
-
-
-
-
-
-
+  public void scaleRendering(Stage primaryStage) {
+    Vector2 scaleRatio = new Vector2(primaryStage.getWidth() / 1920,
+        primaryStage.getHeight() / 1080);
+    Scale scale = new Scale(scaleRatio.getX(), scaleRatio.getY(), 0, 0);
+    scene.getRoot().getTransforms().setAll(scale);
+  }
 
   public void giveWeapon() {
     levelHandler
