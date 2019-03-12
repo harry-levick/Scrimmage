@@ -1,7 +1,6 @@
 package shared.gameObjects.weapons;
 
 import client.main.Client;
-import java.util.ArrayList;
 import java.util.UUID;
 import javafx.scene.transform.Rotate;
 import shared.gameObjects.GameObject;
@@ -11,7 +10,6 @@ import shared.gameObjects.components.Component;
 import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Player;
-import shared.physics.Physics;
 import shared.physics.data.AngularData;
 import shared.physics.data.Collision;
 import shared.physics.data.MaterialProperty;
@@ -44,7 +42,7 @@ public abstract class Bullet extends GameObject {
       double mouseY, // mouse initial y position
       double width, // the width of the bullet
       double speed, // the speed of the bullet
-      int damage, // damage of this bullet
+      int damage, // hazard of this bullet
       Player holder, // holder of the gun that fired this bullet
       UUID uuid) { // uuid of this bullet
 
@@ -117,13 +115,14 @@ public abstract class Bullet extends GameObject {
       if (p.equals(holder)) {
         remove = false;
         hitHolder = true;
-      }
-      else
+      } else {
         p.deductHp(this.damage);
+      }
     }
 
-    if (remove)
+    if (remove) {
       Client.levelHandler.removeGameObject(this);
+    }
   }
 
   @Override

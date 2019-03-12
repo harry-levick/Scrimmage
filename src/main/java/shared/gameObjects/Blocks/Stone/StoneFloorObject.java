@@ -5,7 +5,6 @@ import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
-import shared.gameObjects.components.behaviours.ImATestBehaviour;
 import shared.physics.data.AngularData;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.ColliderLayer;
@@ -34,7 +33,7 @@ public class StoneFloorObject extends GameObject {
             new MaterialProperty(0f, 0.2f, 0.1f),
             new AngularData(0, 0, 0, 0),
             this));
-    addComponent(new BoxCollider(this, ColliderLayer.WALL,false));
+    addComponent(new BoxCollider(this, ColliderLayer.PLATFORM, false));
   }
 
   // Initialise the animation

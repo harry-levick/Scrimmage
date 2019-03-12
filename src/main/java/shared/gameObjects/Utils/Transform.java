@@ -46,19 +46,23 @@ public class Transform implements Serializable {
     gameObject = parent;
   }
 
-  /** Moves the attached gameObject to the desired position. */
+  /**
+   * Moves the attached gameObject to the desired position.
+   */
   public void translate(Vector2 translateFactor) {
     topPos = topPos.add(translateFactor);
     botPos = botPos.add(translateFactor);
   }
 
-  /** [Does not do anything currently] */
+  /**
+   * [Does not do anything currently]
+   */
   public void rotate(float rotation) {
     rot += rotation;
-    if (rot > 180) {
+    while (rot > 180) {
       rot -= 180;
     }
-    if (rot < -180) {
+    while (rot < -180) {
       rot += 180;
     }
     float angle = (float) Math.toRadians(rot);
@@ -82,6 +86,15 @@ public class Transform implements Serializable {
    */
   public void scale(Vector2 scaleFactor) {
     this.size = size.mult(scaleFactor);
+    botPos = topPos.add(size);
+  }
+
+  /**
+   * Scales an object in accordance with the screen size
+   */
+  public void scaleScreen(Vector2 scaleRatio) {
+    this.topPos = topPos.mult(scaleRatio);
+    this.size = size.mult(scaleRatio);
     botPos = topPos.add(size);
   }
 

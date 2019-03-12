@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentSkipListMap;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -40,6 +41,7 @@ import shared.gameObjects.Blocks.Wood.WoodBlockSmallObject;
 import shared.gameObjects.Blocks.Wood.WoodFloorObject;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.MapDataObject;
+import shared.gameObjects.PlayerSpawnpoint;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.background.Background1;
 import shared.gameObjects.background.Background2;
@@ -54,8 +56,12 @@ import shared.gameObjects.menu.main.ButtonMultiplayer;
 import shared.gameObjects.menu.main.ButtonSettings;
 import shared.gameObjects.menu.main.ButtonSingleplayer;
 import shared.gameObjects.menu.multiplayer.ButtonJoin;
-import shared.gameObjects.objects.Spikes;
-import shared.gameObjects.players.Player;
+import shared.gameObjects.objects.hazard.LaserBeam;
+import shared.gameObjects.objects.hazard.Spikes;
+import shared.gameObjects.objects.utility.BlueBlock;
+import shared.gameObjects.objects.utility.GreenBlock;
+import shared.gameObjects.objects.utility.RedBlock;
+import shared.gameObjects.objects.utility.YellowBlock;
 import shared.gameObjects.weapons.Handgun;
 import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.MapLoader;
@@ -64,9 +70,8 @@ import shared.util.maths.Vector2;
 public class LevelEditor extends Application {
 
   private Settings settings = new Settings(); //todo needs to be chnaged into Client settings since currently detached
-
-  private LinkedHashMap<UUID, GameObject> gameObjects;
-  private ArrayList<Player> playerSpawns = new ArrayList<>();
+  private ConcurrentSkipListMap<UUID, GameObject> gameObjects;
+  private ArrayList<PlayerSpawnpoint> playerSpawns = new ArrayList<>();
   private MapDataObject mapDataObject;
   private boolean snapToGrid = true;
 
@@ -82,7 +87,7 @@ public class LevelEditor extends Application {
   private OBJECT_TYPES objectTypeSelected = OBJECT_TYPES.PLAYER; // default
 
   private String filename = "";
-  private String filepath = settings.getMapsPath();
+  private String filepath = settings.getMapsPath() + File.separator;
 
   /**
    * ADDING NEW OBJECTS TO THE MAP CREATOR: 1. add a new object name in the enum OBJECT_TYPES 2. in
@@ -101,7 +106,7 @@ public class LevelEditor extends Application {
     objectMap.put(OBJECT_TYPES.BACKGROUND7, new GameObjectTuple("Background 7", 0, 0));
     objectMap.put(OBJECT_TYPES.BACKGROUND8, new GameObjectTuple("Background 8", 0, 0));
     objectMap.put(OBJECT_TYPES.BTN_SP, new GameObjectTuple("Singeplayer Button", 6, 2));
-    objectMap.put(OBJECT_TYPES.BTN_MP, new GameObjectTuple("Multiplayer Button", 6, 2));
+    objectMap.put(OBJECT_TYPES.BTN_MP, new GameObjectTuple("MULTIPLAYER Button", 6, 2));
     objectMap.put(OBJECT_TYPES.BTN_ST, new GameObjectTuple("Settings Button", 6, 2));
     objectMap.put(OBJECT_TYPES.BTN_LE, new GameObjectTuple("Level Editor Button", 6, 2));
     objectMap.put(OBJECT_TYPES.WPN_HG, new GameObjectTuple("Handgun", 2, 2));
@@ -117,6 +122,11 @@ public class LevelEditor extends Application {
     objectMap.put(OBJECT_TYPES.BLOCK_WOOD_SMALL, new GameObjectTuple("Wood Block Small", 1, 1));
     objectMap.put(OBJECT_TYPES.FLOOR_WOOD, new GameObjectTuple("Wood Floor", 4, 1));
     objectMap.put(OBJECT_TYPES.SPIKES, new GameObjectTuple("Spikes", 3, 1));
+    objectMap.put(OBJECT_TYPES.REDB, new GameObjectTuple("Red Block", 1, 1));
+    objectMap.put(OBJECT_TYPES.BLUEB, new GameObjectTuple("Blue Block", 1, 1));
+    objectMap.put(OBJECT_TYPES.GREENB, new GameObjectTuple("Green Block", 1, 1));
+    objectMap.put(OBJECT_TYPES.YELLOWB, new GameObjectTuple("Yellow Block", 1, 1));
+    objectMap.put(OBJECT_TYPES.LASER, new GameObjectTuple("Laser", 2, 2));
   }
 
   private void scenePrimaryClick(
@@ -131,7 +141,7 @@ public class LevelEditor extends Application {
       switch (objectTypeSelected) {
         case PLAYER:
           if (mapDataObject.getSpawnPoints().size() < spawnPointLimit) {
-            temp = new Player(getGridX(event.getX()), getGridY(event.getY()), uuid, null);
+            temp = new PlayerSpawnpoint(getGridX(event.getX()), getGridY(event.getY()), uuid);
             mapDataObject.addSpawnPoint(getGridX(event.getX()), getGridY(event.getY()));
           } else {
             popup(
@@ -347,6 +357,58 @@ public class LevelEditor extends Application {
                   ObjectType.Bot,
                   uuid);
           break;
+        case REDB:
+          temp =
+              new RedBlock(
+                  getGridX(event.getX()),
+                  getGridY(event.getY()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getX()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getY()),
+                  ObjectType.Bot,
+                  uuid
+              );
+          break;
+        case BLUEB:
+          temp =
+              new BlueBlock(
+                  getGridX(event.getX()),
+                  getGridY(event.getY()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getX()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getY()),
+                  ObjectType.Bot,
+                  uuid
+              );
+          break;
+        case GREENB:
+          temp =
+              new GreenBlock(
+                  getGridX(event.getX()),
+                  getGridY(event.getY()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getX()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getY()),
+                  ObjectType.Bot,
+                  uuid
+              );
+          break;
+        case YELLOWB:
+          temp =
+              new YellowBlock(
+                  getGridX(event.getX()),
+                  getGridY(event.getY()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getX()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getY()),
+                  ObjectType.Bot,
+                  uuid
+              );
+          break;
+        case LASER:
+          temp =
+              new LaserBeam(
+                  getGridX(event.getX()),
+                  getGridY(event.getY()),
+                  uuid
+              );
+          break;
       }
 
       if (temp != null) {
@@ -356,7 +418,7 @@ public class LevelEditor extends Application {
           temp.initialise(objects);
         }
         if (objectTypeSelected == OBJECT_TYPES.PLAYER && temp.getId() != ObjectType.Background) {
-          playerSpawns.add((Player) temp);
+          playerSpawns.add((PlayerSpawnpoint) temp);
         } else if (temp.getId() != ObjectType.Background) {
           gameObjects.put(temp.getUUID(), temp);
         }
@@ -519,7 +581,7 @@ public class LevelEditor extends Application {
   }
 
   private void initialiseNewMap() {
-    gameObjects = new LinkedHashMap<>();
+    gameObjects = new ConcurrentSkipListMap<>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.IN_GAME);
   }
 
@@ -556,7 +618,7 @@ public class LevelEditor extends Application {
         conflict = true;
       }
     }
-    for (Player object : playerSpawns) {
+    for (PlayerSpawnpoint object : playerSpawns) {
       double ulX = object.getX();
       double ulY = object.getY();
       double lrX = ulX + object.getTransform().getSize().getX();
@@ -574,8 +636,8 @@ public class LevelEditor extends Application {
   }
 
   private void sceneSecondaryClick(Stage primaryStage, Group root, MouseEvent event) {
-    LinkedHashMap<UUID, GameObject> removeList = gameObjects;
-    ArrayList<Player> removeSpawn = playerSpawns;
+    ConcurrentSkipListMap<UUID, GameObject> removeList = gameObjects;
+    ArrayList<PlayerSpawnpoint> removeSpawn = playerSpawns;
     double x = event.getX();
     double y = event.getY();
     gameObjects.forEach((key2, object) -> {
@@ -591,7 +653,7 @@ public class LevelEditor extends Application {
       }
     });
 
-    for (Player object : playerSpawns) {
+    for (PlayerSpawnpoint object : playerSpawns) {
       double ulX = object.getX();
       double ulY = object.getY();
       double lrX = ulX + object.getTransform().getSize().getX();
@@ -722,6 +784,11 @@ public class LevelEditor extends Application {
     BLOCK_WOOD_SMALL,
     FLOOR_WOOD,
     SPIKES,
+    REDB,
+    BLUEB,
+    GREENB,
+    YELLOWB,
+    LASER,
   }
 }
 

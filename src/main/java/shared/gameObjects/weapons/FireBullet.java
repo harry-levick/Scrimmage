@@ -11,7 +11,7 @@ public class FireBullet extends Bullet {
   private static final int damage = 5;
   private static final int speed = 50;
 
-  public FireBullet (
+  public FireBullet(
       double gunX,
       double gunY,
       double mouseX,

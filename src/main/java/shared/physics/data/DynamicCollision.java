@@ -11,16 +11,16 @@ import shared.util.maths.Vector2;
 
 /**
  * @author fxa579 Base class to process and manage collisions happening with Dynamic Objects on
- * other Rigidbodies. Used in the backend.
+ *     other Rigidbodies. Used in the backend.
  */
 public class DynamicCollision {
 
-  private Rigidbody bodyA;
-  private Rigidbody bodyB;
-  private Vector2 collisionNormal;
-  private Vector2 penetrationDistance;
-  private CollisionDirection dir;
-  private float pentrationDepth;
+  protected Rigidbody bodyA;
+  protected Rigidbody bodyB;
+  protected Vector2 collisionNormal;
+  protected Vector2 penetrationDistance;
+  protected CollisionDirection dir;
+  protected float pentrationDepth;
 
   public DynamicCollision(Rigidbody bodyA, Rigidbody bodyB) {
     this.bodyA = bodyA;
@@ -60,6 +60,7 @@ public class DynamicCollision {
   }
 
   private void resolveCollision(BoxCollider boxA, BoxCollider boxB) {
+    //TODO Fix Up Rotation Pen Depth
     Vector2 n = boxB.getCentre().sub(boxA.getCentre());
     float x_overlap =
         boxA.getSize().getX() * 0.5f + boxB.getSize().getX() * 0.5f - Math.abs(n.getX());
@@ -88,7 +89,8 @@ public class DynamicCollision {
   }
 
   private void resolveCollision(BoxCollider boxA, CircleCollider circB) {
-    Vector2 n = circB.getCentre().sub(circB.getCentre());
+
+    Vector2 n = circB.getCentre().sub(boxA.getCentre());
     Vector2 extents = boxA.getSize().mult(0.5f);
     Vector2 closestPoint = n.clamp(extents.mult(-1), extents);
     boolean inside = false;
@@ -160,7 +162,7 @@ public class DynamicCollision {
     if (vOnNormal > 0) {
       return;
     }
-    float e = Math.max(bodyA.getMaterial().getRestitution(), bodyB.getMaterial().getRestitution());
+    float e = Math.min(bodyA.getMaterial().getRestitution(), bodyB.getMaterial().getRestitution());
 
     float j = -1 * (1 + e) * vOnNormal;
     j /= bodyA.getInv_mass() + bodyB.getInv_mass();
@@ -174,9 +176,9 @@ public class DynamicCollision {
     bodyB.correctPosition(positionCorrection.mult(bodyB.getInv_mass()));
   }
 
-  private Vector2 positionCorrection() {
-    float percent = 0.3f;
-    float slop = 0.04f;
+  protected Vector2 positionCorrection() {
+    float percent = 0.8f;
+    float slop = 0.08f;
 
     Vector2 correction =
         collisionNormal.mult(

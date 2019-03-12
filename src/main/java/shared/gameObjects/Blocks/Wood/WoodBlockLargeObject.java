@@ -34,6 +34,11 @@ public class WoodBlockLargeObject extends GameObject {
     addComponent(new BoxCollider(this, false));
   }
 
+  @Override
+  public void update() {
+    super.update();
+    transform.rotate(1);
+  }
   // Initialise the animation
   public void initialiseAnimation() {
     this.animation.supplyAnimation("default", "images/platforms/wood/elementWood017.png");

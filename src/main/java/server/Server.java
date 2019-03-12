@@ -35,7 +35,6 @@ import org.apache.logging.log4j.Logger;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.MapDataObject;
 import shared.gameObjects.players.Player;
-import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.LevelHandler;
 import shared.handlers.levelHandler.Map;
 import shared.packets.PacketGameState;
@@ -109,9 +108,9 @@ public class Server extends Application {
 
     // Testing code
     playlist.add(
-        new Map("Map1", Path.convert("src/main/resources/maps/menu.map"), GameState.IN_GAME));
+        new Map("Map1", Path.convert("src/main/resources/maps/menu.map")));
     playlist.add(
-        new Map("Map2", Path.convert("src/main/resources/maps/map2.map"), GameState.IN_GAME));
+        new Map("Map2", Path.convert("src/main/resources/maps/map2.map")));
   }
 
   public void stop() {
@@ -222,7 +221,7 @@ public class Server extends Application {
   @Override
   public void start(Stage primaryStage) throws Exception {
     setupRender(primaryStage);
-    levelHandler = new LevelHandler(settings, root, backgroundRoot, gameRoot, true);
+    levelHandler = new LevelHandler(settings, backgroundRoot, gameRoot, this);
     settings.setLevelHandler(levelHandler);
     running.set(true);
     LOGGER.debug("Running " + threadName);
