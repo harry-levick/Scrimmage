@@ -1,4 +1,4 @@
-package shared.gameObjects.components.behaviours;
+package shared.gameObjects.components.behaviours.blockBehaviours;
 
 import shared.gameObjects.GameObject;
 import shared.gameObjects.components.Behaviour;
@@ -20,8 +20,8 @@ public class MovingPlatform extends Behaviour {
     super(parent);
     // Temp for Testing
     speed = 150f;
-    endpointA = new Vector2(300, 0);
-    endpointB = new Vector2(600, 0);
+    endpointA = parent.getTransform().getPos().add(new Vector2(-40, 0));
+    endpointB = parent.getTransform().getPos().add(new Vector2(+280, 0));
     movementFactor = endpointB.sub(endpointA).div(speed);
   }
 
@@ -29,14 +29,15 @@ public class MovingPlatform extends Behaviour {
   public void update() {
     getParent().getTransform().translate(movementFactor);
     if (getParent().getTransform().getPos().getX() >= endpointB.getX()
-        || getParent().getTransform().getPos().getX() <= endpointA.getX())
+        || getParent().getTransform().getPos().getX() <= endpointA.getX()) {
       movementFactor = movementFactor.mult(-1);
+    }
   }
 
   @Override
   public void OnCollisionStay(Collision col) {
     if (((Rigidbody) col.getCollidedObject().getComponent(ComponentType.RIGIDBODY)).getBodyType()
-            == RigidbodyType.DYNAMIC
+        == RigidbodyType.DYNAMIC
         && col.getNormalCollision().equals(Vector2.Up())) {
       col.getCollidedObject().getTransform().translate(movementFactor);
     }

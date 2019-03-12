@@ -5,8 +5,8 @@ import static client.main.Settings.levelHandler;
 import client.main.Settings;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
+import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
 import shared.gameObjects.Utils.ObjectType;
@@ -18,10 +18,10 @@ import shared.gameObjects.components.Collider;
 import shared.gameObjects.components.Component;
 import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.Rigidbody;
-import shared.gameObjects.players.Player;
 import shared.physics.Physics;
 import shared.physics.data.Collision;
 import shared.physics.data.DynamicCollision;
+import shared.physics.data.SimulatedDynamicCollision;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
 
@@ -30,7 +30,7 @@ public abstract class GameObject implements Serializable {
   protected UUID objectUUID;
   protected ObjectType id;
 
-  protected Settings settings;
+  protected transient Settings settings = new Settings();
 
   protected transient ImageView imageView;
   protected transient Group root;
@@ -89,24 +89,39 @@ public abstract class GameObject implements Serializable {
     networkStateUpdate = false;
     animation.update();
 
-    for (Component comp : components) {
-        if(comp.isActive()) {
-          comp.update();
-        }
+    for (Component comp : getComponents(ComponentType.RIGIDBODY)) {
+      if (comp.isActive()) {
+        comp.update();
+      }
+    }
+
+    for (Component comp : getComponents(ComponentType.COLLIDER)) {
+      if (comp.isActive()) {
+        comp.update();
+      }
+    }
+
+    for (Component comp : getComponents(ComponentType.BEHAVIOUR)) {
+      if (comp.isActive()) {
+        comp.update();
+      }
     }
     //If objects location has changed then send update if server
     if (!(lastPos.equals(getTransform().getPos()))) {
       networkStateUpdate = true;
     }
     this.lastPos.setVec((float) getX(), (float) getY());
+
   }
 
   // Client Side only
   public void render() {
     imageView.setImage(animation.getImage());
+    imageView.setRotate(getTransform().getRot());
     imageView.setTranslateX(getX());
     imageView.setTranslateY(getY());
-    imageView.setRotate(getTransform().getRot());
+    imageView.setFitWidth(transform.getSize().getX());
+    imageView.setFitHeight(transform.getSize().getY());
   }
 
   // Collision engine
@@ -136,6 +151,36 @@ public abstract class GameObject implements Serializable {
         }
       } else if (col.isTrigger()) {
         callCollisionMethods(col, true);
+      }
+    }
+
+  }
+
+  /**
+   * Use to only update the Physics of the object being called
+   */
+  public void simulateUpdateCollision() {
+    ArrayList<Component> cols = getComponents(ComponentType.COLLIDER);
+    Rigidbody rb = (Rigidbody) getComponent(ComponentType.RIGIDBODY);
+    for (Component comp : cols) {
+      Collider col = (Collider) comp;
+      if (col == null) {
+        return;
+      }
+      if (rb != null && !col.isTrigger()) {
+        if (rb.getBodyType() == RigidbodyType.STATIC) {
+          return;
+        } else {
+          for (GameObject o : Physics.gameObjects.values()) {
+            Collider o_col = (Collider) o.getComponent(ComponentType.COLLIDER);
+            Rigidbody o_rb = (Rigidbody) o.getComponent(ComponentType.RIGIDBODY);
+            if (o_col != null && o_rb != null) {
+              if (Collider.haveCollided(col, o_col) && !o_col.isTrigger()) {
+                new SimulatedDynamicCollision(rb, o_rb);
+              }
+            }
+          }
+        }
       }
     }
 
@@ -201,7 +246,15 @@ public abstract class GameObject implements Serializable {
   public void removeRender() {
     if (imageView != null) {
       imageView.setImage(null);
-      root.getChildren().remove(imageView);
+      /*
+       */
+
+      Platform.runLater(
+          () -> {
+            root.getChildren().remove(imageView);
+          }
+      );
+      //root.getChildren().remove(imageView);
     }
   }
 
@@ -260,10 +313,6 @@ public abstract class GameObject implements Serializable {
     }
     imageView.setFitHeight(transform.getSize().getY());
     imageView.setFitWidth(transform.getSize().getX());
-    children.forEach(child -> {
-      child.initialiseAnimation();
-      child.initialise(root);
-    });
   }
 
   public void addChild(GameObject child) {

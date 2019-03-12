@@ -1,12 +1,11 @@
-package shared.gameObjects.objects;
+package shared.gameObjects.objects.hazard;
 
 import java.util.UUID;
+import shared.gameObjects.Destructable;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
-import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.Rigidbody;
-import shared.gameObjects.players.Player;
 import shared.physics.data.AngularData;
 import shared.physics.data.Collision;
 import shared.physics.data.MaterialProperty;
@@ -30,15 +29,14 @@ public class Spikes extends GameObject {
   }
 
   public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", "images/objects/debrisStone_1.png");
+    this.animation.supplyAnimation("default", "images/objects/debris/debrisStone_1.png");
   }
 
   @Override
   public void OnCollisionEnter(Collision col) {
-    if (col.getCollidedObject() instanceof Player) {
-      Player player = (Player) col.getCollidedObject();
+    if (col.getCollidedObject() instanceof Destructable) {
+      Destructable player = (Destructable) col.getCollidedObject();
       player.deductHp(10);
-      ((Rigidbody) player.getComponent(ComponentType.RIGIDBODY)).moveY(-90, 0.08f);
     }
   }
 
