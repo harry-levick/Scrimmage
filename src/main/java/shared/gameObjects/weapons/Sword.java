@@ -119,7 +119,7 @@ public class Sword extends Melee {
       if (!attacking) {
         attackAngleSign = 1;
       }
-      return holderHandPos[0] - 6;
+      return holderHandPos == null ? 0 : holderHandPos[0] - 6;
     }
   }
 
@@ -135,7 +135,7 @@ public class Sword extends Melee {
       if (!attacking) {
         attackAngleSign = 1;
       }
-      return holderHandPos[1] - 34;
+      return holderHandPos == null ? 0 : holderHandPos[1] - 34;
     }
   }
 }

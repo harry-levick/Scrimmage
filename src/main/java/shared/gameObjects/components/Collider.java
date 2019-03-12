@@ -139,12 +139,14 @@ public abstract class Collider extends Component implements Serializable {
     return new Vector2(min, max);
   }
   //TODO Comments
-  private static boolean pointBoxCollision(Vector2 pointA, BoxCollider boxB) {
-
-    return pointA.getX() >= boxB.getCorners()[0].getX()
-        && pointA.getX() <= boxB.getCorners()[3].getX()
-        && pointA.getY() >= boxB.getCorners()[0].getY()
-        && pointA.getY() <= boxB.getCorners()[2].getY();
+  private static boolean pointBoxCollision(EdgeCollider edgeA, BoxCollider boxB) {
+    for (Vector2 node : edgeA.getNodes()) {
+      if (node.getX() >= boxB.getCorners()[0].getX()
+          && node.getX() <= boxB.getCorners()[3].getX()
+          && node.getY() >= boxB.getCorners()[0].getY()
+          && node.getY() <= boxB.getCorners()[2].getY()) return true;
+    }
+    return false;
   }
 
   private static boolean pointCircleCollision(Vector2 pointA, CircleCollider circB) {
@@ -195,7 +197,7 @@ public abstract class Collider extends Component implements Serializable {
           case BOX:
             toRet =
                 pointBoxCollision(
-                    ((EdgeCollider) colA).findClosestPoint(((BoxCollider) colB).getCentre()),
+                    (EdgeCollider) colA,
                     (BoxCollider) colB);
             break;
           case CIRCLE:
