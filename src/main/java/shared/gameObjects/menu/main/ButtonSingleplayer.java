@@ -10,7 +10,6 @@ import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.menu.ButtonObject;
 import shared.gameObjects.weapons.MachineGun;
-import shared.gameObjects.weapons.Sword;
 import shared.handlers.levelHandler.Map;
 import shared.util.Path;
 
@@ -44,7 +43,8 @@ public class ButtonSingleplayer extends ButtonObject {
       ArrayList<GameObject> physicsGameObjects = new ArrayList<>(values);
       Bot botPlayer = new Bot(200, 600, UUID.randomUUID(), Client.levelHandler);
       botPlayer.setHolding(/*new Sword(200, 600, "Sword@ButtonSinglePlayer",
-          botPlayer, UUID.randomUUID()) */new MachineGun(500, 600, "MachineGun@ButtonSinglePlayer", botPlayer, UUID.randomUUID()));
+          botPlayer, UUID.randomUUID()) */
+          new MachineGun(500, 600, "MachineGun@ButtonSinglePlayer", botPlayer, UUID.randomUUID()));
       botPlayer.getHolding().initialise(Client.gameRoot);
       botPlayer.initialise(Client.gameRoot);
       Client.levelHandler.getPlayers().put(botPlayer.getUUID(), botPlayer);
@@ -56,16 +56,6 @@ public class ButtonSingleplayer extends ButtonObject {
       botPlayer.startThread();
     }
 
-    Client.levelHandler
-        .getClientPlayer()
-        .setHolding(
-            new MachineGun(
-                500,
-                500,
-                "MachineGun@ButtonSinglePlayer",
-                Client.levelHandler.getClientPlayer(),
-                UUID.randomUUID()));
-    Client.levelHandler.addGameObject(Client.levelHandler.getClientPlayer().getHolding());
     Client.singleplayerGame = true;
     //Client.timer.schedule(Client.task, 30000L);
 

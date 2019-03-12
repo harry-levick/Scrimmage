@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 import javafx.application.Platform;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -40,7 +39,8 @@ public class Physics {
   public static boolean[] PARTICLES = {false, false, false, false, false, false, false};
   public static boolean[] COLLECTABLE = {false, false, false, true, false, false, false};
   public static boolean[] LIMBS = {true, false, true, true, false, false, false};
-  public static boolean[][] COLLISION_LAYERS = {DEFAULT, PLAYER, OBJECT, PLATFORM, PARTICLES, COLLECTABLE, LIMBS};
+  public static boolean[][] COLLISION_LAYERS = {DEFAULT, PLAYER, OBJECT, PLATFORM, PARTICLES,
+      COLLECTABLE, LIMBS};
   public static ConcurrentSkipListMap<UUID, GameObject> gameObjects;
 
 
@@ -94,10 +94,13 @@ public class Physics {
     if (collisions.size() > 0) {
       Collision toRet = collisions.get(0);
       for (Collision c : collisions) {
-        toRet = c.getPointOfCollision().sub(sourcePos).magnitude() <= toRet.getPointOfCollision().sub(sourcePos).magnitude() ? c : toRet;
+        toRet = c.getPointOfCollision().sub(sourcePos).magnitude() <= toRet.getPointOfCollision()
+            .sub(sourcePos).magnitude() ? c : toRet;
       }
       return toRet;
-    } else return null;
+    } else {
+      return null;
+    }
   }
 
   /**
@@ -139,8 +142,9 @@ public class Physics {
     while (iter.hasNext()) {
       GameObject object = iter.next();
 
-      if (object instanceof Limb)
+      if (object instanceof Limb) {
         continue;
+      }
 
       if (object.getComponent(ComponentType.COLLIDER) != null) {
         collision =
@@ -161,10 +165,13 @@ public class Physics {
     if (collisions.size() > 0) {
       Collision toRet = collisions.get(0);
       for (Collision c : collisions) {
-        toRet = c.getPointOfCollision().sub(sourcePos).magnitude() <= toRet.getPointOfCollision().sub(sourcePos).magnitude() ? c : toRet;
+        toRet = c.getPointOfCollision().sub(sourcePos).magnitude() <= toRet.getPointOfCollision()
+            .sub(sourcePos).magnitude() ? c : toRet;
       }
       return toRet;
-    } else return null;
+    } else {
+      return null;
+    }
   }
 
 
@@ -248,25 +255,29 @@ public class Physics {
     while (iter.hasNext()) {
       GameObject object = iter.next();
 
-      if (object instanceof Limb)
+      if (object instanceof Limb) {
         continue;
+      }
 
       if (object.getComponent(ComponentType.COLLIDER) != null) {
         collision =
             new Collision(
                 object, castCollider, (Collider) object.getComponent(ComponentType.COLLIDER));
         if (collision.isCollided()) {
-            collisions.add(collision);
+          collisions.add(collision);
         }
       }
     }
-    if(collisions.size() > 0) {
+    if (collisions.size() > 0) {
       Collision toRet = collisions.get(0);
       for (Collision c : collisions) {
-        toRet = c.getPointOfCollision().sub(sourcePos).magnitude() <= toRet.getPointOfCollision().sub(sourcePos).magnitude() ? c : toRet;
+        toRet = c.getPointOfCollision().sub(sourcePos).magnitude() <= toRet.getPointOfCollision()
+            .sub(sourcePos).magnitude() ? c : toRet;
       }
       return toRet;
-    } else return null;
+    } else {
+      return null;
+    }
   }
 
   /**
@@ -281,14 +292,17 @@ public class Physics {
     Collision collision;
     ArrayList<Collision> collisions = new ArrayList<>();
 
-    if (cast) drawBoxCast(sourcePos, size);
+    if (cast) {
+      drawBoxCast(sourcePos, size);
+    }
 
     Iterator<GameObject> iter = gameObjects.values().iterator();
     while (iter.hasNext()) {
       GameObject object = iter.next();
 
-      if (object instanceof Limb)
+      if (object instanceof Limb) {
         continue;
+      }
 
       if (object.getComponent(ComponentType.COLLIDER) != null) {
         collision =

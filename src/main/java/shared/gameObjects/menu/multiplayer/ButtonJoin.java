@@ -1,6 +1,6 @@
 package shared.gameObjects.menu.multiplayer;
 
-import client.handlers.connectionHandler.ConnectionHandler;
+import client.handlers.networkHandlers.ConnectionHandler;
 import client.main.Client;
 import java.util.UUID;
 import javafx.scene.Group;

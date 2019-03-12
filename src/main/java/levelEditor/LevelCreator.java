@@ -5,7 +5,6 @@ import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import de.codecentric.centerdevice.javafxsvg.dimension.PrimitiveDimensionProvider;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListMap;
 import javafx.application.Application;
@@ -266,27 +265,6 @@ public class LevelCreator extends Application {
       uuid = UUID.randomUUID();
     }
 
-    for (int i = 0; i < 48; i += 4) {
-      //Red Blocks and Lasers
-      gameObjects.put(uuid,
-          new RedBlock(getAbs(i), getAbs(8), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
-      uuid = UUID.randomUUID();
-      gameObjects.put(uuid,
-          new BlueBlock(getAbs(i + 1), getAbs(8), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
-      uuid = UUID.randomUUID();
-      gameObjects.put(uuid,
-          new GreenBlock(getAbs(i + 2), getAbs(8), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
-      uuid = UUID.randomUUID();
-      gameObjects.put(uuid,
-          new YellowBlock(getAbs(i + 3), getAbs(8), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
-      uuid = UUID.randomUUID();
-      gameObjects.put(uuid,
-          new LaserBeam(getAbs(i), getAbs(0), uuid));
-      uuid = UUID.randomUUID();
-      gameObjects.put(uuid,
-          new LaserBeam(getAbs(i + 2), getAbs(0), uuid));
-      uuid = UUID.randomUUID();
-    }
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "map1" + ".map");
     mapDataObject.setBackground(new Background2(UUID.randomUUID()));
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "map2" + ".map");
