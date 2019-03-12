@@ -35,17 +35,18 @@ public class AudioHandler {
    * @param trackName Music resource to play
    */
   public void playMusic(String trackName) {
-	if (active) {
-	  String path = musicAssets.getTrackPath(trackName);
-	  if (!(path == null)) {
-	    musicMedia = new Media(new File(path).toURI().toString());
-	    musicPlayer = new MediaPlayer(musicMedia);
-	    updateMusicVolume();
+    if (active) {
+      String path = musicAssets.getTrackPath(trackName);
+      stopMusic();
+      if (!(path == null)) {
+        musicMedia = new Media(new File(path).toURI().toString());
+        musicPlayer = new MediaPlayer(musicMedia);
+        updateMusicVolume();
         musicPlayer.play();
-	  } else {
-	    // todo log error
-	  }
-	}
+      } else {
+        // todo log error
+      }
+    }
   }
 
   public void playMusicPlaylist(PLAYLIST playlistSet) {
@@ -127,11 +128,11 @@ public class AudioHandler {
       effectPlayer.setVolume(settings.getSoundEffectVolume());
     }
   }
-  
+
   public boolean getActive() {
-	return this.active;
+    return this.active;
   }
-  
+
   public void setActive(boolean active) {
     this.active = active;
   }

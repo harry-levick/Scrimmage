@@ -27,7 +27,9 @@ public class Collision {
   }
 
   private void resolveCollision(Collider a, Collider b) {
-    if (!(Collider.haveCollided(a, b))) return;
+    if (!(Collider.haveCollided(a, b))) {
+      return;
+    }
     collided = true;
     switch (a.getColliderType()) {
       case BOX:
@@ -88,6 +90,7 @@ public class Collision {
       }
       penDepth = y_overlap;
     }
+    pointOfCollision = b.getCentre().sub(normalCollision.mult(penDepth));
   }
 
   private void calculateData(BoxCollider a, CircleCollider b) {

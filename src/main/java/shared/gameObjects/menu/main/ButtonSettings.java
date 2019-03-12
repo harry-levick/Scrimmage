@@ -5,7 +5,6 @@ import java.util.UUID;
 import javafx.scene.input.MouseEvent;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.menu.ButtonObject;
-import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.Map;
 import shared.util.Path;
 
@@ -21,13 +20,7 @@ public class ButtonSettings extends ButtonObject {
    */
   public ButtonSettings(
       double x, double y, double sizeX, double sizeY, ObjectType id, UUID objectUUID) {
-    super(x, y, sizeX, sizeY, id, objectUUID);
-  }
-
-  @Override
-  public void initialiseAnimation() {
-    super.initialiseAnimation(
-        "images/buttons/settings_unpressed.png", "images/buttons/settings_pressed.png");
+    super(x, y, sizeX, sizeY, "Settings", id, objectUUID);
   }
 
   public void doOnClick(MouseEvent e) {
@@ -35,7 +28,7 @@ public class ButtonSettings extends ButtonObject {
 
     Client.levelHandler.changeMap(
         new Map(
-            "Settings", Path.convert("src/main/resources/menus/settings.map"), GameState.MAIN_MENU),
+            "Settings", Path.convert("src/main/resources/menus/settings.map")),
         false);
   }
 }

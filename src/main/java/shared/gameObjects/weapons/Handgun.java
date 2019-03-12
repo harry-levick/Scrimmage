@@ -26,7 +26,7 @@ public class Handgun extends Gun {
         sizeX,
         sizeY,
         ObjectType.Weapon, // ObjectType
-        10, // damage
+        10, // hazard
         10, // weight
         name,
         30, // ammo
@@ -39,19 +39,21 @@ public class Handgun extends Gun {
         uuid);
   }
 
+  public Handgun(Handgun that) {
+    this(that.getX(), that.getY(), that.getTransform().getSize().getX(),
+        that.getTransform().getSize().getY(), that.name, that.holder, UUID.randomUUID());
+  }
+
   @Override
   public void fire(double mouseX, double mouseY) {
     if (canFire()) {
       UUID uuid = UUID.randomUUID();
       Bullet bullet =
-          new HandgunBullet(
+          new CircleBullet(
               getX(),
               getY(),
               mouseX,
               mouseY,
-              this.bulletWidth,
-              this.bulletSpeed,
-              this.damage,
               this.holder,
               uuid);
       this.currentCooldown = getDefaultCoolDown();

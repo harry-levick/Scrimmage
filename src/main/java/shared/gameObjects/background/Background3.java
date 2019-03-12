@@ -4,7 +4,7 @@ import java.util.UUID;
 
 public class Background3 extends Background {
 
-  private final String imagePath = "images/backgrounds/background3.svg";
+  private final String imagePath = "images/backgrounds/background3.png";
 
   public Background3(UUID objectUUID) {
     super(objectUUID);
@@ -12,6 +12,6 @@ public class Background3 extends Background {
 
   @Override
   public void initialiseAnimation() {
-    this.animation.supplyAnimationWithSize("default", 700, 700, false, imagePath);
+    this.animation.supplyAnimation("default", imagePath);
   }
 }

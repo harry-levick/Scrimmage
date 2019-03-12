@@ -14,13 +14,7 @@ import shared.util.maths.Vector2;
  */
 public abstract class Collider extends Component implements Serializable {
 
-  boolean collisionEnter,
-      collisionExit,
-      collisionStay,
-      triggerEnter,
-      triggerExit,
-      triggerStay,
-      trigger;
+  boolean trigger;
   ColliderType colliderType;
   ColliderLayer layer;
 
@@ -74,14 +68,48 @@ public abstract class Collider extends Component implements Serializable {
     return false;
   }
 
-  private static boolean boxBoxCollision(BoxCollider boxA, BoxCollider boxB) {
+  /*
+    private static boolean boxBoxCollision(BoxCollider boxA, BoxCollider boxB) {
     if (boxA.getCorners()[0].getX() <= boxB.getCorners()[3].getX()
         && (boxA.getCorners()[3].getX() >= boxB.getCorners()[0].getX()
-            && (boxA.getCorners()[0].getY() <= boxB.getCorners()[1].getY()
-                && (boxA.getCorners()[1].getY() >= boxB.getCorners()[0].getY())))) {
+        && (boxA.getCorners()[0].getY() <= boxB.getCorners()[1].getY()
+        && (boxA.getCorners()[1].getY() >= boxB.getCorners()[0].getY())))) {
       return true;
     }
     return false;
+  }
+   */
+  private static boolean boxBoxCollision(BoxCollider boxA, BoxCollider boxB) {
+    for (Vector2 axisOfProjection : boxA.getAxes()) {
+      Vector2 pA = projectToAxis(boxA, axisOfProjection);
+      Vector2 pB = projectToAxis(boxB, axisOfProjection);
+      if (!pA.canOverlap(pB)) {
+        return false;
+      }
+    }
+    for (Vector2 axisOfProjection : boxB.getAxes()) {
+      Vector2 pA = projectToAxis(boxA, axisOfProjection);
+      Vector2 pB = projectToAxis(boxB, axisOfProjection);
+      if (!pA.canOverlap(pB)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  private static Vector2 projectToAxis(BoxCollider a, Vector2 axis) {
+    // Project the shapes along the axis
+    float min = axis.dot(a.getCorners()[0]); // Get the first min
+    double max = min;
+    for (int i = 1; i < a.getCorners().length; i++) {
+      float temp = axis.dot(a.getCorners()[i]); // Get the dot product between the axis and the node
+      if (temp < min) {
+        min = temp;
+      } else if (temp > max) {
+        max = temp;
+      }
+    }
+    return new Vector2(min, max);
   }
 
   private static boolean pointBoxCollision(Vector2 pointA, BoxCollider boxB) {
@@ -131,6 +159,18 @@ public abstract class Collider extends Component implements Serializable {
         break;
       case EDGE:
         switch (colB.getColliderType()) {
+          case BOX:
+            toRet =
+                pointBoxCollision(
+                    ((EdgeCollider) colA).findClosestPoint(((BoxCollider) colB).getCentre()),
+                    (BoxCollider) colB);
+            break;
+          case CIRCLE:
+            toRet =
+                pointCircleCollision(
+                    ((EdgeCollider) colA).findClosestPoint(((CircleCollider) colB).getCentre()),
+                    (CircleCollider) colB);
+            break;
         }
         break;
     }
@@ -143,68 +183,14 @@ public abstract class Collider extends Component implements Serializable {
 
   public void initialise(Group root) {}
 
-  public void collision() {
-    if (trigger) {
-      if (!triggerStay) {
-        triggerEnter = triggerStay = true;
-        return;
-      }
-      triggerEnter = false;
-    } else {
-      if (!collisionStay) {
-        collisionEnter = collisionStay = true;
-        return;
-      }
-      collisionEnter = false;
-    }
-  }
-
-  public void noCollision() {
-    if (trigger) {
-      if (triggerStay) {
-        triggerExit = true;
-        triggerStay = false;
-        return;
-      }
-      collisionExit = true;
-    } else {
-      if (collisionStay) {
-        collisionExit = true;
-        collisionStay = false;
-        return;
-      }
-      collisionExit = true;
-    }
-  }
-
   // Getters
 
   public ColliderLayer getLayer() {
     return layer;
   }
 
-  public boolean onCollisionEnter() {
-    return collisionEnter;
-  }
-
-  public boolean onCollisionExit() {
-    return collisionExit;
-  }
-
-  public boolean onCollisionStay() {
-    return collisionStay;
-  }
-
-  public boolean onTriggerEnter() {
-    return triggerEnter;
-  }
-
-  public boolean onTriggerExit() {
-    return triggerExit;
-  }
-
-  public boolean onTriggerStay() {
-    return triggerStay;
+  public void setLayer(ColliderLayer layer) {
+    this.layer = layer;
   }
 
   public boolean isTrigger() {

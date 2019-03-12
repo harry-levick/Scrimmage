@@ -31,7 +31,14 @@ public class Punch extends Melee {
       Player holder,
       double range,
       UUID uuid) {
-    super(x, y, sizeX, sizeY, id, damage, 1, name, -1, 60, holder, range, 1, 1, uuid);
+    super(x, y, sizeX, sizeY, id, damage, 1, name, -1,
+        60, holder, range, 1, 1, uuid);
+  }
+
+  public Punch(Punch that) {
+    this(that.getX(), that.getY(), that.getTransform().getSize().getX(),
+        that.getTransform().getSize().getY(), that.id, that.damage,
+        that.name, that.holder, that.range, UUID.randomUUID());
   }
 
   @Override

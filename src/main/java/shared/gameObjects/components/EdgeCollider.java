@@ -33,7 +33,7 @@ public class EdgeCollider extends Collider implements Serializable {
   public Vector2 findClosestPoint(Vector2 point) {
     Vector2 toRet = nodes.get(0);
     for (Vector2 vec : nodes) {
-      toRet = vec.magnitude(point) <= toRet.magnitude() ? vec : toRet;
+      toRet = vec.magnitude(point) <= toRet.magnitude(point) ? vec : toRet;
     }
     return toRet;
   }
