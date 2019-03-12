@@ -14,7 +14,7 @@ import shared.util.maths.Vector2;
  */
 public enum FSA {
   ATTACKING() {
-    public FSA next(Player targetPlayer, Player bot, double prevDist, double newDist) {
+    public FSA next(Player targetPlayer, Player bot, double newDist) {
       StateInfo.setInfo(targetPlayer, bot);
 
       double weaponRange = StateInfo.weaponRange;
@@ -48,13 +48,12 @@ public enum FSA {
       } else if (inSight) {
         return ATTACKING;
 
-      } else {
+      } else
         return IDLE;
-      }
     }
   },
   CHASING() {
-    public FSA next(Player targetPlayer, Player bot, double prevDist, double newDist) {
+    public FSA next(Player targetPlayer, Player bot, double newDist) {
       StateInfo.setInfo(targetPlayer, bot);
 
       double weaponRange = StateInfo.weaponRange;
@@ -95,7 +94,7 @@ public enum FSA {
     }
   },
   FLEEING() {
-    public FSA next(Player targetPlayer, Player bot, double prevDist, double newDist) {
+    public FSA next(Player targetPlayer, Player bot, double newDist) {
       StateInfo.setInfo(targetPlayer, bot);
 
       double weaponRange = StateInfo.weaponRange;
@@ -131,7 +130,6 @@ public enum FSA {
         return ATTACKING;
 
       } else if ((botHealth >= this.HIGH_HEALTH)
-          && (newDist > prevDist)
           && (newDist > weaponRange || !inSight)) {
         return CHASING;
 
@@ -145,7 +143,7 @@ public enum FSA {
     }
   },
   IDLE() {
-    public FSA next(Player targetPlayer, Player bot, double prevDist, double newDist) {
+    public FSA next(Player targetPlayer, Player bot, double newDist) {
       StateInfo.setInfo(targetPlayer, bot);
 
       double weaponRange = StateInfo.weaponRange;
@@ -186,7 +184,7 @@ public enum FSA {
   },
   INITIAL_STATE() {
     // The initial state just acts as an entry point, and so directs straight to the IDLE state.
-    public FSA next(Player targetPlayer, Player bot, double prevDist, double newDist) {
+    public FSA next(Player targetPlayer, Player bot, double newDist) {
       return FSA.IDLE;
     }
   };
@@ -197,5 +195,5 @@ public enum FSA {
   FSA() {
   }
 
-  public abstract FSA next(Player targetPlayer, Player bot, double prevDist, double newDist);
+  public abstract FSA next(Player targetPlayer, Player bot, double newDist);
 }

@@ -6,10 +6,10 @@ import shared.gameObjects.players.Player;
 
 public class FleeingThread extends Thread {
 
-  public List<boolean[]> plan;
   Bot bot;
   AStar pathFinder;
   Player targetPlayer;
+  public List<boolean[]> plan;
   boolean running;
 
   public FleeingThread(Bot bot, List<boolean[]> plan) {

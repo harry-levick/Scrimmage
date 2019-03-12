@@ -55,7 +55,6 @@ public class Bot extends Player {
 
   /**
    * Copy constructor
-   *
    * @param that object to be copied
    */
   public Bot(Bot that) {
@@ -82,14 +81,12 @@ public class Bot extends Player {
     }
     click = false;
 
-    double prevDist, newDist;
-    // Calculate the distance to the target from the previous loop
-    prevDist = calcDist();
+    double newDist;
     targetPlayer = findTarget();
     // Calculate the distance to the updated target
     newDist = calcDist();
 
-    state = state.next(targetPlayer, this, prevDist, newDist);
+    state = state.next(targetPlayer, this, newDist);
 
     switch (state) {
       case IDLE:
@@ -157,6 +154,8 @@ public class Bot extends Player {
 
   /**
    * Invert a persuing action so that it can be used as a un-intelligente fleeing action
+   * @param action
+   * @return
    */
   private boolean[] invertAction(boolean[] action) {
     Random r = new Random();
@@ -228,12 +227,12 @@ public class Bot extends Player {
     double targetDistance = Double.POSITIVE_INFINITY;
     Vector2 botPos = new Vector2((float) this.getX(), (float) this.getY());
 
+
     for (Map.Entry<UUID, Player> entry : allPlayers.entrySet()) {
       Player player = entry.getValue();
 
-      if (player.equals(this)) {
+      if (player.equals(this))
         continue;
-      }
 
       Vector2 playerPos = new Vector2((float) player.getX(), (float) player.getY());
       double distance = botPos.exactMagnitude(playerPos);
