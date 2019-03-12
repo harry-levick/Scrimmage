@@ -1,6 +1,5 @@
 package client.handlers.effectsHandler;
 
-import client.main.Client;
 import shared.util.maths.Vector2;
 
 /**
@@ -14,7 +13,8 @@ public class Particle {
   private float radius;
   private float lifetime;
 
-  public Particle(Vector2 sourcePosition, Vector2 initialVelocity, Vector2 acceleration, Vector2 size, float spawnRadius, float lifetime) {
+  public Particle(Vector2 sourcePosition, Vector2 initialVelocity, Vector2 acceleration,
+      Vector2 size, float spawnRadius, float lifetime) {
 
   }
 

@@ -59,7 +59,7 @@ public class LaserBeam extends GameObject {
 
     if (laserActive) {
       ArrayList<Collision> collisions = Physics.boxcastAll(new Vector2(laser.getX(), laser.getY()),
-          new Vector2(laser.getWidth(), laser.getHeight()));
+          new Vector2(laser.getWidth(), laser.getHeight()), false);
       for (Collision c : collisions) {
         if (c.getCollidedObject() instanceof Destructable) {
           ((Destructable) c.getCollidedObject()).deductHp(9999);
@@ -97,7 +97,7 @@ public class LaserBeam extends GameObject {
     laser.setX(bc.getCorners()[1].getX() + bc.getSize().getX() * 0.28f);
     laser.setY(bc.getCentre().getY());
     ArrayList<Collision> collisions = Physics.boxcastAll(new Vector2(laser.getX(), laser.getY()),
-        new Vector2(transform.getSize().getX() * 0.44f, 1080));
+        new Vector2(transform.getSize().getX() * 0.44f, 1080), false);
     float closestPoint = 1100;
     for (Collision c : collisions) {
       if (c.getCollidedObject().getComponent(ComponentType.RIGIDBODY) != null) {
@@ -119,7 +119,7 @@ public class LaserBeam extends GameObject {
     laser.setX(bc.getCorners()[1].getX() + bc.getSize().getX() * 0.28f);
     laser.setY(bc.getCentre().getY());
     ArrayList<Collision> collisions = Physics.boxcastAll(new Vector2(laser.getX(), laser.getY()),
-        new Vector2(transform.getSize().getX() * 0.44f, 1080));
+        new Vector2(transform.getSize().getX() * 0.44f, 1080), false);
     float closestPoint = 1100;
     for (Collision c : collisions) {
       if (c.getCollidedObject().getComponent(ComponentType.RIGIDBODY) != null) {

@@ -221,7 +221,7 @@ public class Server extends Application {
   @Override
   public void start(Stage primaryStage) throws Exception {
     setupRender(primaryStage);
-    levelHandler = new LevelHandler(settings, root, backgroundRoot, gameRoot, true);
+    levelHandler = new LevelHandler(settings, backgroundRoot, gameRoot, this);
     settings.setLevelHandler(levelHandler);
     running.set(true);
     LOGGER.debug("Running " + threadName);

@@ -6,6 +6,7 @@ import client.main.Settings;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
+import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
 import shared.gameObjects.Utils.ObjectType;
@@ -161,7 +162,7 @@ public abstract class GameObject implements Serializable {
   /**
    * Use to only update the Physics of the object being called
    */
-  public void simulateCollisions() {
+  public void simulateUpdateCollision() {
     ArrayList<Component> cols = getComponents(ComponentType.COLLIDER);
     Rigidbody rb = (Rigidbody) getComponent(ComponentType.RIGIDBODY);
     for (Component comp : cols) {
@@ -248,7 +249,15 @@ public abstract class GameObject implements Serializable {
   public void removeRender() {
     if (imageView != null) {
       imageView.setImage(null);
-      root.getChildren().remove(imageView);
+      /*
+       */
+
+      Platform.runLater(
+          () -> {
+            root.getChildren().remove(imageView);
+          }
+      );
+      //root.getChildren().remove(imageView);
     }
   }
 
@@ -307,10 +316,6 @@ public abstract class GameObject implements Serializable {
     }
     imageView.setFitHeight(transform.getSize().getY());
     imageView.setFitWidth(transform.getSize().getX());
-    children.forEach(child -> {
-      child.initialiseAnimation();
-      child.initialise(root);
-    });
   }
 
   public void addChild(GameObject child) {
