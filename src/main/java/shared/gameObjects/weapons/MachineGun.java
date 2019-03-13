@@ -69,11 +69,6 @@ public class MachineGun extends Gun {
       double bulletY = playerCentre.getY() - playerRadius * Math.sin(-angleGun);
       double bulletFlipX = playerCentre.getX() - playerRadius * Math.cos(angleGun);
       double bulletFlipY = playerCentre.getY() - playerRadius * Math.sin(angleGun);
-
-      System.out.println(String
-          .format("centre(%f,%f) (%f,%f) flip(%f,%f) angle(%f)", playerCentre.getX(),
-              playerCentre.getY(), bulletX, bulletY, bulletFlipX, bulletFlipY,
-              angleGun * 180 / PI));
       /*
       double bulletX = getMuzzleX() - 68 + 68 * Math.cos(-angleGun);
       double bulletY = getMuzzleY() - 68 * Math.sin(-angleGun);
@@ -89,7 +84,6 @@ public class MachineGun extends Gun {
               this.holder,
               uuid);
       this.currentCooldown = getDefaultCoolDown();
-      // new AudioHandler(super.getSettings()).playSFX("CHOOSE_YOUR_CHARACTER");
       new AudioHandler(settings, Client.musicActive).playSFX("MACHINEGUN");
       deductAmmo();
     }
@@ -168,32 +162,6 @@ public class MachineGun extends Gun {
     this.animation.supplyAnimation("default", Path.convert(this.imagePath));
   }
 
-  @Override
-  public double getForeGripX() {
-    if (holder.getFacingLeft()) {
-      return getForeGripFlipX();
-    }
-    return getGripX() + 50 * Math.cos(-angleGun);
-  }
-
-  @Override
-  public double getForeGripY() {
-    if (holder.getFacingLeft()) {
-      return getForeGripFlipY();
-    }
-    return getGripY() + 50 * Math.sin(angleGun);
-  }
-
-  @Override
-  public double getForeGripFlipX() {
-    return getGripX() + 50 - 30 * Math.cos(angleGun);
-  }
-
-  @Override
-  public double getForeGripFlipY() {
-    return getGripY() - 50 * Math.sin(angleGun);
-  }
-
   // =============================
   // Get Grip and Muzzle positions
   // =============================
@@ -223,6 +191,32 @@ public class MachineGun extends Gun {
   @Override
   public double getGripFlipY() {
     return holderHandPos[1] - 10;
+  }
+
+  @Override
+  public double getForeGripX() {
+    if (holder.getFacingLeft()) {
+      return getForeGripFlipX();
+    }
+    return getGripX() + 50 * Math.cos(-angleGun);
+  }
+
+  @Override
+  public double getForeGripY() {
+    if (holder.getFacingLeft()) {
+      return getForeGripFlipY();
+    }
+    return getGripY() + 50 * Math.sin(angleGun);
+  }
+
+  @Override
+  public double getForeGripFlipX() {
+    return getGripX() + 50 - 30 * Math.cos(angleGun);
+  }
+
+  @Override
+  public double getForeGripFlipY() {
+    return getGripY() - 50 * Math.sin(angleGun);
   }
 
   public double getMuzzleX() {
