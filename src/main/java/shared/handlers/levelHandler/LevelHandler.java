@@ -5,9 +5,7 @@ import client.handlers.audioHandler.MusicAssets.PLAYLIST;
 import client.main.Client;
 import client.main.Settings;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.UUID;
@@ -70,7 +68,7 @@ public class LevelHandler {
     musicPlayer = new AudioHandler(settings, Client.musicActive);
     changeMap(
         new Map("menus/main_menu.map", Path.convert("src/main/resources/menus/main_menu.map")),
-        true);
+        true, false);
     previousMap = null;
   }
 
@@ -79,30 +77,34 @@ public class LevelHandler {
     gameObjects = new ConcurrentSkipListMap<>();
     toRemove = new CopyOnWriteArrayList<>();
     players = new LinkedHashMap<>();
+    toCreate = new ArrayList<>();
     bots = new LinkedHashMap<>();
     maps = MapLoader.getMaps(settings.getMapsPath());
     this.backgroundRoot = backgroundRoot;
     this.gameRoot = gameRoot;
     this.server = server;
-    musicPlayer = new AudioHandler(settings, Client.musicActive);
     changeMap(new Map("LOBBY", Path.convert("src/main/resources/menus/lobby.map")),
-        false);
+        false, true);
     previousMap = null;
   }
 
-  public void changeMap(Map map, Boolean moveToSpawns) {
+  public void changeMap(Map map, Boolean moveToSpawns, Boolean isServer) {
     previousMap = this.map;
     this.map = map;
-    Client.closeSettingsOverlay();
-    generateLevel(backgroundRoot, gameRoot, moveToSpawns);
-    uiRoot.getChildren().clear();
-    switch (gameState) {
-      case IN_GAME:
-      case MULTIPLAYER:
-        if (Client.levelHandler != null) {
-          Client.setUserInterface();
-        }
-        break;
+    if (!isServer) {
+      Client.closeSettingsOverlay();
+    }
+    generateLevel(backgroundRoot, gameRoot, moveToSpawns, isServer);
+    if (!isServer) {
+      uiRoot.getChildren().clear();
+      switch (gameState) {
+        case IN_GAME:
+        case MULTIPLAYER:
+          if (Client.levelHandler != null) {
+            Client.setUserInterface();
+          }
+          break;
+      }
     }
   }
 
@@ -111,7 +113,7 @@ public class LevelHandler {
       Map temp = this.map;
       this.map = previousMap;
       previousMap = temp;
-      generateLevel(backgroundRoot, gameRoot, moveToSpawns);
+      generateLevel(backgroundRoot, gameRoot, moveToSpawns, false);
     }
   }
 
@@ -119,7 +121,8 @@ public class LevelHandler {
    * NOTE: This to change the level use change Map Removes current game objects and creates new ones
    * from Map file
    */
-  public void generateLevel(Group backgroundGroup, Group gameGroup, Boolean moveToSpawns) {
+  public void generateLevel(Group backgroundGroup, Group gameGroup, Boolean moveToSpawns,
+      Boolean isServer) {
 
     gameObjects.keySet().removeAll(players.keySet());
     gameObjects.keySet().removeAll(bots.keySet());
@@ -151,9 +154,6 @@ public class LevelHandler {
 
           } else {
             gameObject.initialise(gameGroup);
-            if (isServer) {
-              sendNewGameObject(gameObject);
-            }
           }
         });
     gameObjects.putAll(players);
@@ -161,43 +161,24 @@ public class LevelHandler {
     gameState = map.getGameState();
     players.forEach((key, player) -> player.reset());
 
-    musicPlayer.stopMusic();
-    switch (gameState) {
-      case IN_GAME:
-        musicPlayer.playMusicPlaylist(PLAYLIST.INGAME);
-        break;
-      case MAIN_MENU:
-      case LOBBY:
-      case START_CONNECTION:
-      case MULTIPLAYER:
-      default:
-        musicPlayer.playMusicPlaylist(PLAYLIST.MENU);
-        break;
-
+    if (!isServer) {
+      musicPlayer.stopMusic();
+      switch (gameState) {
+        case IN_GAME:
+          musicPlayer.playMusicPlaylist(PLAYLIST.INGAME);
+          break;
+        case MAIN_MENU:
+        case LOBBY:
+        case START_CONNECTION:
+        case MULTIPLAYER:
+        default:
+          musicPlayer.playMusicPlaylist(PLAYLIST.MENU);
+          break;
+      }
+    } else {
+      server.sendObjects(gameObjects);
     }
     System.gc();
-  }
-
-  public void sendNewGameObject(GameObject gameObject) {
-    byteArrayOutputStream = new ByteArrayOutputStream();
-    objectOutput = null;
-    try {
-      byte[] packetID = "19,".getBytes();
-      byteArrayOutputStream.write(packetID);
-      objectOutput = new ObjectOutputStream(byteArrayOutputStream);
-      objectOutput.writeObject(gameObject);
-      objectOutput.flush();
-      byte[] objectBytes = byteArrayOutputStream.toByteArray();
-      server.sendToClients(objectBytes);
-    } catch (IOException e) {
-      System.out.println("Error Writing");
-    } finally {
-      try {
-        byteArrayOutputStream.close();
-      } catch (IOException ex) {
-        System.out.println("Error Writing");
-      }
-    }
   }
 
   /**
@@ -215,7 +196,7 @@ public class LevelHandler {
   }
 
   /**
-   * Add a new bullet to game object list
+   * Add a gameobject to list to be created next update
    *
    * @param gameObject GameObject to be added
    */
@@ -223,17 +204,29 @@ public class LevelHandler {
     gameObject.initialise(this.gameRoot);
     this.toCreate.add(gameObject);
     if (isServer) {
-      sendNewGameObject(gameObject);
+      ConcurrentSkipListMap<UUID, GameObject> temp = new ConcurrentSkipListMap<>();
+      temp.put(gameObject.getUUID(), gameObject);
+      server.sendObjects(temp);
     }
   }
 
-  public void addGameObject(ArrayList<GameObject> gameObjects) {
-    gameObjects.forEach(gameObject -> gameObject.initialise(this.gameRoot));
-    this.toCreate.addAll(gameObjects);
+  public void addGameObjects(ConcurrentSkipListMap<UUID, GameObject> gameObjectsT) {
+    gameObjectsT.forEach(((uuid, gameObject) -> {
+      if (!gameObjects.containsKey(uuid)) {
+        gameObject.initialise(this.gameRoot);
+        this.toCreate.add(gameObject);
+      }
+    }));
   }
 
   public void createObjects() {
-    toCreate.forEach(gameObject -> gameObjects.put(gameObject.getUUID(), gameObject));
+    toCreate.forEach(gameObject -> {
+      if (gameObject instanceof Player) {
+        addPlayer((Player) gameObject, Client.gameRoot);
+      } else {
+        gameObjects.put(gameObject.getUUID(), gameObject);
+      }
+    });
     toCreate.clear();
   }
 
@@ -279,6 +272,7 @@ public class LevelHandler {
 
   public void addPlayer(Player newPlayer, Group root) {
     newPlayer.initialise(root);
+    newPlayer.setLevelHandler(this);
     players.put(newPlayer.getUUID(), newPlayer);
     gameObjects.put(newPlayer.getUUID(), newPlayer);
   }

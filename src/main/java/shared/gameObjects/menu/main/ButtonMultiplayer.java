@@ -29,6 +29,6 @@ public class ButtonMultiplayer extends ButtonObject {
         new Map(
             "MULTIPLAYER",
             Path.convert("src/main/resources/menus/multiplayer.map")),
-        false);
+        false, false);
   }
 }

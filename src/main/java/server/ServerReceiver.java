@@ -52,6 +52,7 @@ public class ServerReceiver implements Runnable {
       Platform.runLater(
           () -> {
             player = server.addPlayer(joinPacket, socket.getInetAddress());
+            server.sendObjects(Server.getLevelHandler().getGameObjects());
           }
       );
 
@@ -72,13 +73,14 @@ public class ServerReceiver implements Runnable {
         }
         packetID = Integer.parseInt(message.split(",")[0]);
         switch (packetID) {
+          //Player Input
           case 2:
             PacketInput inputPacket = new PacketInput(message);
-            // if (inputPacket.getUuid() == player.getUUID()) {
             // Change to add to list
             server.getQueue(player).add(inputPacket);
             // }
             break;
+          //Player Ready
           case 5:
             PacketReady readyPacket = new PacketReady(message);
             if (readyPacket.getUUID() == player.getUUID()

@@ -344,6 +344,10 @@ public class Player extends GameObject implements Destructable {
     return this.facingLeft;
   }
 
+  public void setLevelHandler(LevelHandler levelHandler) {
+    this.levelHandler = levelHandler;
+  }
+
   public void setFacingLeft(boolean b) {
     this.facingLeft = b;
     this.facingRight = !b;
