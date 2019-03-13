@@ -410,7 +410,6 @@ public class Client extends Application {
         /** Scale and Render Game Objects */
         scaleRendering(primaryStage);
 
-        //levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.getTransform().scaleScreen(scaleRatio));
         levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.render());
         if (levelHandler.getBackground() != null) {
           levelHandler.getBackground().render();

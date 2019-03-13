@@ -208,6 +208,7 @@ public class LevelHandler {
    * @param gameObject GameObject to be added
    */
   public void addGameObject(GameObject gameObject) {
+    gameObject.initialise(this.gameRoot);
     this.toCreate.add(gameObject);
     if (isServer) {
       ConcurrentSkipListMap<UUID, GameObject> temp = new ConcurrentSkipListMap<>();
@@ -227,7 +228,7 @@ public class LevelHandler {
   public void createObjects() {
     toCreate.forEach(gameObject -> {
       gameObject.initialise(gameRoot);
-      if (gameObject instanceof Player) {
+      if (gameObject instanceof Player && gameObject.getUUID() != clientPlayer.getUUID()) {
         addPlayer((Player) gameObject, Client.gameRoot);
       } else {
         gameObjects.put(gameObject.getUUID(), gameObject);
