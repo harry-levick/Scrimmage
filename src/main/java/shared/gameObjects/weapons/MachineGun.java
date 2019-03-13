@@ -16,8 +16,6 @@ public class MachineGun extends Gun {
   private static String audioPath = "audio/sound-effects/laser_gun.wav"; // path to Machine Gun sfx
   private static float PI = 3.141592654f;
   private static double sizeX = 84, sizeY = 35;
-
-  private double[] holderHandPos;
   private double angleGun; // angle of gun (hand and mouse vs x-axis) (radian)
   private Rotate rotate; // rotate property of gun wrt grip
   private Scale scale;   // scale the image to mirror it
@@ -30,7 +28,6 @@ public class MachineGun extends Gun {
         y,
         sizeX, // sizeX
         sizeY, // sizeY
-        ObjectType.Weapon, // ObjectType
         10, // weight
         name,
         50, // ammo
@@ -84,12 +81,6 @@ public class MachineGun extends Gun {
       new AudioHandler(settings, Client.musicActive).playSFX("MACHINEGUN");
       deductAmmo();
     }
-  }
-
-  @Override
-  public void update() {
-    super.update();
-    holderHandPos = getHolderHandPos();
   }
 
   @Override
