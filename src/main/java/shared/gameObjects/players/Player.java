@@ -34,7 +34,7 @@ public class Player extends GameObject implements Destructable {
   public boolean deattach;
   public double mouseX, mouseY;
   public int score;
-  protected LevelHandler levelHandler;
+  protected transient LevelHandler levelHandler;
   protected Behaviour behaviour;
   protected float jumpTime;
   protected boolean jumped;
