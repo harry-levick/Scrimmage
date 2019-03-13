@@ -31,13 +31,10 @@ public class MachineGun extends Gun {
         sizeX, // sizeX
         sizeY, // sizeY
         ObjectType.Weapon, // ObjectType
-        5, // hazard
         10, // weight
         name,
         50, // ammo
-        50, // bulletSpeed
         70, // fireRate
-        12, // bulletWidth
         holder,
         true, // fullAutoFire
         false, // singleHanded
@@ -69,11 +66,6 @@ public class MachineGun extends Gun {
       double bulletY = playerCentre.getY() - playerRadius * Math.sin(-angleGun);
       double bulletFlipX = playerCentre.getX() - playerRadius * Math.cos(angleGun);
       double bulletFlipY = playerCentre.getY() - playerRadius * Math.sin(angleGun);
-
-      System.out.println(String
-          .format("centre(%f,%f) (%f,%f) flip(%f,%f) angle(%f)", playerCentre.getX(),
-              playerCentre.getY(), bulletX, bulletY, bulletFlipX, bulletFlipY,
-              angleGun * 180 / PI));
       /*
       double bulletX = getMuzzleX() - 68 + 68 * Math.cos(-angleGun);
       double bulletY = getMuzzleY() - 68 * Math.sin(-angleGun);

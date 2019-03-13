@@ -25,7 +25,6 @@ public abstract class Weapon extends GameObject {
    */
   protected int MAX_COOLDOWN = 81;
 
-  protected int damage;
   protected double weight; // grams
   protected String name; // name of the weapon
   protected boolean isGun;
@@ -47,7 +46,6 @@ public abstract class Weapon extends GameObject {
    * @param x X position of this weapon
    * @param y Y position of this weapon
    * @param id ObjectType of this weapon
-   * @param damage Damage of this weapon
    * @param weight Weight of this weapon
    * @param name Name of this weapon
    * @param isGun True if this weapon is a gun
@@ -62,7 +60,6 @@ public abstract class Weapon extends GameObject {
       double sizeX,
       double sizeY,
       ObjectType id,
-      int damage,
       double weight,
       String name,
       boolean isGun,
@@ -74,7 +71,6 @@ public abstract class Weapon extends GameObject {
     super(x, y, sizeX, sizeY, id, uuid);
     this.isGun = isGun;
     this.isMelee = isMelee;
-    setDamage(damage);
     setWeight(weight);
     this.name = name;
     setAmmo(ammo);
@@ -165,16 +161,6 @@ public abstract class Weapon extends GameObject {
   // -------------------
   public int getCoolDown() {
     return this.currentCooldown;
-  }
-
-  public int getDamage() {
-    return this.damage;
-  }
-
-  public void setDamage(int newDamage) {
-    if (newDamage > 0 && newDamage < 100.0f) {
-      this.damage = newDamage;
-    }
   }
 
   public double getWeight() {
