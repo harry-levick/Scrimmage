@@ -33,7 +33,6 @@ public abstract class Gun extends Weapon {
       double y,
       double sizeX,
       double sizeY,
-      ObjectType id,
       double weight,
       String name,
       int ammo,
@@ -43,7 +42,7 @@ public abstract class Gun extends Weapon {
       boolean singleHanded,
       UUID uuid) {
 
-    super(x, y, sizeX, sizeY, id, weight, name, true, false, ammo, fireRate, holder, uuid);
+    super(x, y, sizeX, sizeY, ObjectType.Weapon, weight, name, true, false, ammo, fireRate, holder, uuid);
 
     this.fullAutoFire = fullAutoFire;
     this.singleHanded = singleHanded;
