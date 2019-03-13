@@ -15,8 +15,6 @@ import shared.gameObjects.players.Limbs.Body;
 import shared.gameObjects.players.Limbs.Hand;
 import shared.gameObjects.players.Limbs.Head;
 import shared.gameObjects.players.Limbs.Leg;
-import shared.gameObjects.weapons.Gun;
-import shared.gameObjects.weapons.MachineGun;
 import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.weapons.Weapon;
 import shared.handlers.levelHandler.LevelHandler;
@@ -189,16 +187,6 @@ public class Player extends GameObject implements Destructable {
       holding.fire(mouseX, mouseY);
     } // else punch
     // setX(getX() + (vx * 0.0166));
-
-    if (this.getHolding() != null) {
-      if (this.getHolding().isMelee()) {
-        this.getHolding().setX(((Sword) this.getHolding()).getGripX());
-        this.getHolding().setY(((Sword) this.getHolding()).getGripY());
-      } else if (this.getHolding().isGun()) {
-        this.getHolding().setX(((Gun) this.getHolding()).getGripX());
-        this.getHolding().setY(((Gun) this.getHolding()).getGripY());
-      }
-    }
   }
 
   /**
@@ -213,11 +201,10 @@ public class Player extends GameObject implements Destructable {
     if (this.holding.getAmmo() == 0) {
       this.holding.destroyWeapon();
       this.setHolding(null);
-      Weapon sword =
+      Weapon newSword =
           new Sword(this.getX(), this.getY(), "newSword@Player", this, UUID.randomUUID());
-      sword.initialise(root);
-      Client.levelHandler.addGameObject(sword);
-      this.setHolding(sword);
+      Client.levelHandler.addGameObject(newSword);
+      this.setHolding(newSword);
       return true;
     }
     return false;
