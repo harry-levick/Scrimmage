@@ -106,9 +106,6 @@ public class ClientNetworkManager {
                 false, false);
 
             break;
-          case 9:
-            createGameObjects(message.split(";")[1].getBytes());
-            break;
           case 7:
             PacketGameState gameState = new PacketGameState(message);
             HashMap<UUID, String> data = gameState.getGameObjects();
@@ -137,7 +134,6 @@ public class ClientNetworkManager {
             }
             break;
           default:
-            createGameObjects(message.getBytes());
         }
       } catch (InterruptedException e) {
         e.printStackTrace();

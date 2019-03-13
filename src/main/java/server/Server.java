@@ -120,7 +120,7 @@ public class Server extends Application {
     running.set(false);
   }
 
-  public void sendToClients(byte[] buffer) {
+  public void sendToClients(byte[] buffer, boolean object) {
     synchronized (connected) {
       connected.forEach(
           address -> {
@@ -130,6 +130,12 @@ public class Server extends Application {
               DatagramPacket packet = new DatagramPacket(lengthBuffer, lengthBuffer.length,
                   (InetAddress) address, serverPort);
               socket.send(packet);
+
+              if (object) {
+                packet = new DatagramPacket("object".getBytes(), "object".getBytes().length,
+                    (InetAddress) address, serverPort);
+                socket.send(packet);
+              }
 
               packet = new DatagramPacket(buffer, buffer.length,
                   (InetAddress) address, serverPort);
@@ -182,7 +188,7 @@ public class Server extends Application {
     levelHandler.changeMap(nextMap, true, true);
     // TODO Change to actual UUID
     PacketMap mapPacket = new PacketMap(nextMap.getName(), UUID.randomUUID());
-    sendToClients(mapPacket.getData());
+    sendToClients(mapPacket.getData(), false);
   }
 
   public void add(Player player) {
@@ -205,7 +211,7 @@ public class Server extends Application {
 
     if (gameState.isUpdate()) {
       byte[] buffer = gameState.getData();
-      sendToClients(buffer);
+      sendToClients(buffer, false);
     }
   }
 
@@ -312,12 +318,11 @@ public class Server extends Application {
     ByteArrayOutputStream byteArrayOutputStream = null;
     try {
       byteArrayOutputStream = new ByteArrayOutputStream();
-      byteArrayOutputStream.write("9;".getBytes());
       ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
       objectOutputStream.writeObject(gameobjects);
       objectOutputStream.flush();
 
-      sendToClients(byteArrayOutputStream.toByteArray());
+      sendToClients(byteArrayOutputStream.toByteArray(), true);
     } catch (IOException e) {
       LOGGER.error("Unable to send new objects to clients ");
       e.printStackTrace();
