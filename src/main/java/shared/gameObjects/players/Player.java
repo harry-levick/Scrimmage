@@ -15,6 +15,7 @@ import shared.gameObjects.players.Limbs.Body;
 import shared.gameObjects.players.Limbs.Hand;
 import shared.gameObjects.players.Limbs.Head;
 import shared.gameObjects.players.Limbs.Leg;
+import shared.gameObjects.weapons.Gun;
 import shared.gameObjects.weapons.MachineGun;
 import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.weapons.Weapon;
@@ -194,8 +195,8 @@ public class Player extends GameObject implements Destructable {
         this.getHolding().setX(((Sword) this.getHolding()).getGripX());
         this.getHolding().setY(((Sword) this.getHolding()).getGripY());
       } else if (this.getHolding().isGun()) {
-        this.getHolding().setX(((MachineGun) this.getHolding()).getGripX());
-        this.getHolding().setY(((MachineGun) this.getHolding()).getGripY());
+        this.getHolding().setX(((Gun) this.getHolding()).getGripX());
+        this.getHolding().setY(((Gun) this.getHolding()).getGripY());
       }
     }
   }
