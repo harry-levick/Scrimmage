@@ -40,6 +40,7 @@ public class Player extends GameObject implements Destructable {
   protected boolean grounded;
   protected boolean facingLeft;
   protected boolean facingRight;
+  protected boolean aimLeft;
   protected int health;
   protected Weapon holding;
   protected Rigidbody rb;
@@ -262,6 +263,7 @@ public class Player extends GameObject implements Destructable {
     this.holding = holding;
     if (holding != null) {
       holding.setSettings(settings);
+      aimLeft = false;
     }
   }
 
@@ -288,7 +290,7 @@ public class Player extends GameObject implements Destructable {
     }
     return new double[]{this.getHandRightX(), this.getHandRightY()};
     */
-    if (facingLeft) {
+    if (isAimingLeft()) {
       return new double[]{this.handRight.getX(), this.handRight.getY()};
     } else {
       return new double[]{this.handLeft.getX(), this.handLeft.getY()};
@@ -301,7 +303,7 @@ public class Player extends GameObject implements Destructable {
    * @return A 2 elements array, a[0] = X position of the hand, a[1] = Y position of the hand
    */
   public double[] getMeleeHandPos() {
-    if (facingLeft) {
+    if (isAimingLeft()) {
       return new double[]{this.handLeft.getX(), this.handLeft.getY()};
     } else {
       return new double[]{this.handRight.getX(), this.handRight.getY()};
@@ -344,6 +346,12 @@ public class Player extends GameObject implements Destructable {
   public void setFacingRight(boolean b) {
     this.facingLeft = !b;
     this.facingRight = b;
+  }
+
+  public boolean isAimingLeft() { return this.aimLeft; }
+
+  public void setAimingLeft(boolean b) {
+    this.aimLeft = b;
   }
 
   public boolean isGrounded() {
