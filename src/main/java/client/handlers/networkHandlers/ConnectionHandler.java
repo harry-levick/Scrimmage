@@ -57,6 +57,11 @@ public class ConnectionHandler extends Thread {
         String msg = new String(packet.getData(), packet.getOffset(), packet.getLength());
         if (msg.startsWith("length:")) {
           size = Integer.parseInt(msg.split(":")[1]);
+          System.out.println("Size now " + size);
+        } else if (msg.startsWith("objects")) {
+          packet = new DatagramPacket(buffer, buffer.length);
+          clientSocket.receive(packet);
+          ClientNetworkManager.createGameObjects(packet.getData());
         } else {
           received.add(msg.trim());
         }
