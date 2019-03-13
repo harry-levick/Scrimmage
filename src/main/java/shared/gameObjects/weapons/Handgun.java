@@ -28,7 +28,6 @@ public class Handgun extends Gun {
         y,
         sizeX,
         sizeY,
-        ObjectType.Weapon, // ObjectType
         10, // weight
         name,
         30, // ammo
