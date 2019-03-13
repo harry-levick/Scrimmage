@@ -168,6 +168,7 @@ public class MachineGun extends Gun {
     this.animation.supplyAnimation("default", Path.convert(this.imagePath));
   }
 
+  @Override
   public double getForeGripX() {
     if (holder.getFacingLeft()) {
       return getForeGripFlipX();
@@ -175,6 +176,7 @@ public class MachineGun extends Gun {
     return getGripX() + 50 * Math.cos(-angleGun);
   }
 
+  @Override
   public double getForeGripY() {
     if (holder.getFacingLeft()) {
       return getForeGripFlipY();
@@ -182,10 +184,12 @@ public class MachineGun extends Gun {
     return getGripY() + 50 * Math.sin(angleGun);
   }
 
+  @Override
   public double getForeGripFlipX() {
     return getGripX() + 50 - 30 * Math.cos(angleGun);
   }
 
+  @Override
   public double getForeGripFlipY() {
     return getGripY() - 50 * Math.sin(angleGun);
   }
@@ -193,6 +197,7 @@ public class MachineGun extends Gun {
   // =============================
   // Get Grip and Muzzle positions
   // =============================
+  @Override
   public double getGripX() {
     if (holder.getFacingLeft()) {
       return getGripFlipX();
@@ -201,6 +206,7 @@ public class MachineGun extends Gun {
     }
   }
 
+  @Override
   public double getGripY() {
     if (holder.getFacingLeft()) {
       return getGripFlipY();
@@ -209,10 +215,12 @@ public class MachineGun extends Gun {
     }
   }
 
+  @Override
   public double getGripFlipX() {
     return holderHandPos[0] - 55;
   }
 
+  @Override
   public double getGripFlipY() {
     return holderHandPos[1] - 10;
   }
