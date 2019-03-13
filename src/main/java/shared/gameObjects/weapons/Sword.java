@@ -101,7 +101,7 @@ public class Sword extends Melee {
 
   @Override
   public double getGripX() {
-    if (holder.getFacingLeft()) {
+    if (holder.isAimingLeft()) {
       return getGripFlipX();
     }
 
@@ -114,7 +114,7 @@ public class Sword extends Melee {
 
   @Override
   public double getGripY() {
-    if (holder.getFacingLeft()) {
+    if (holder.isAimingLeft()) {
       return getGripFlipY();
     }
 

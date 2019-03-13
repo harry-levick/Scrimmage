@@ -80,30 +80,30 @@ public abstract class Gun extends Weapon {
 
     // Change the facing of the player when aiming the other way
     double angleHorizontal;  // degree
-    if (holder.getFacingRight()) {
-      angleHorizontal = (mouseSubGrip.angleBetween(Vector2.Right())) * 180 / PI;
-      if (angleHorizontal > aimAngleMax) {
-        holder.setFacingLeft(true);
-        angle = 180f - angleHorizontal;
-      }
-      if (angleHorizontal > 90f) {
-        angle = angleHorizontal * (mouseY > this.getGripY() ? 1 : -1);
-      }
-    } else {  // holder facing Left
+    if (holder.isAimingLeft()) {
       angleHorizontal = (mouseSubGrip.angleBetween(Vector2.Left())) * 180 / PI;
       if (angleHorizontal > aimAngleMax) {
-        holder.setFacingRight(true);
+        holder.setAimingLeft(false);
         angle = angleHorizontal - 180f;
       }
       if (angleHorizontal > 90f) {
         angle = angleHorizontal * (mouseY > this.getGripY() ? -1 : 1);
+      }
+    } else { // holder aiming Right
+      angleHorizontal = (mouseSubGrip.angleBetween(Vector2.Right())) * 180 / PI;
+      if (angleHorizontal > aimAngleMax) {
+        holder.setAimingLeft(true);
+        angle = 180f - angleHorizontal;
+      }
+      if (angleHorizontal > 90f) {
+        angle = angleHorizontal * (mouseY > this.getGripY() ? 1 : -1);
       }
     }
 
     angleRadian = angle * PI / 180;
 
     // Rotate and translate the image
-    if (holder.getFacingLeft()) {
+    if (holder.isAimingLeft()) {
       imageView.setScaleX(-1);
       rotate.setAngle(-angle);
       imageView.getTransforms().add(rotate);
@@ -112,7 +112,7 @@ public abstract class Gun extends Weapon {
 
       holder.setHandLeftX(this.getForeGripFlipX());
       holder.setHandLeftY(this.getForeGripFlipY());
-    } else if (holder.getFacingRight()) {
+    } else {
       imageView.setScaleX(1);
       rotate.setAngle(angle);
       imageView.getTransforms().add(rotate);
