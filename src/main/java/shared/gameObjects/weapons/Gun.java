@@ -21,13 +21,10 @@ abstract class Gun extends Weapon {
    *
    * @param x The x position of the gun
    * @param y The y position of the gun
-   * @param damage Damage of the gun
    * @param weight Weight of the gun
    * @param name Name of the gun
    * @param ammo Total amount of ammo
-   * @param bulletSpeed Speed of the bullets
    * @param fireRate Fire rate of the gun (bullets per minute)
-   * @param bulletWidth Width of the bullet
    * @param fullAutoFire Is it full-automatic fire or single-shot
    * @param singleHanded Is it be hold with one hand or two hands
    */
@@ -37,22 +34,17 @@ abstract class Gun extends Weapon {
       double sizeX,
       double sizeY,
       ObjectType id,
-      int damage,
       double weight,
       String name,
       int ammo,
-      double bulletSpeed,
       int fireRate,
-      double bulletWidth,
       Player holder,
       boolean fullAutoFire,
       boolean singleHanded,
       UUID uuid) {
 
-    super(x, y, sizeX, sizeY, id, damage, weight, name, true, false, ammo, fireRate, holder, uuid);
+    super(x, y, sizeX, sizeY, id, weight, name, true, false, ammo, fireRate, holder, uuid);
 
-    this.bulletSpeed = bulletSpeed;
-    this.bulletWidth = bulletWidth;
     this.fullAutoFire = fullAutoFire;
     this.singleHanded = singleHanded;
   }
@@ -97,23 +89,4 @@ abstract class Gun extends Weapon {
   // -------------------
   // Setters and Getters
   // --------END--------
-
-  /**
-   * For testing
-   */
-  @Override
-  public String toString() {
-    String s = "";
-
-    s += "Damage        = " + getDamage() + "\n";
-    s += "Weight        = " + getWeight() + "\n";
-    s += "Name          = " + getName() + "\n";
-    s += "BulletSpeed   = " + getBulletSpeed() + "\n";
-    s += "FireRate      = " + getFireRate() + "\n";
-    s += "BulletWidth   = " + getBulletWidth() + "\n";
-    s += "FullAutoFire  = " + isFullAutoFire() + "\n";
-    s += "SingleHanded  = " + isSingleHanded() + "\n";
-
-    return s;
-  }
 }

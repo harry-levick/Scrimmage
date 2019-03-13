@@ -26,13 +26,10 @@ public class Handgun extends Gun {
         sizeX,
         sizeY,
         ObjectType.Weapon, // ObjectType
-        10, // hazard
         10, // weight
         name,
         30, // ammo
-        1, // bulletSpeed
         50, // fireRate
-        50, // bulletWidth
         holder,
         false, // fullAutoFire
         true, // singleHanded
