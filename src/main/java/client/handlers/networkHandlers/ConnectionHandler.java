@@ -58,7 +58,7 @@ public class ConnectionHandler extends Thread {
         if (msg.startsWith("length:")) {
           size = Integer.parseInt(msg.split(":")[1]);
           System.out.println("Size now " + size);
-        } else if (msg.startsWith("objects")) {
+        } else if (msg.startsWith("object")) {
           packet = new DatagramPacket(buffer, buffer.length);
           clientSocket.receive(packet);
           ClientNetworkManager.createGameObjects(packet.getData());
