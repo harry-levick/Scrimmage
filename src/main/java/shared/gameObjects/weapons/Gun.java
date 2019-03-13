@@ -3,11 +3,14 @@ package shared.gameObjects.weapons;
 import java.util.UUID;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.players.Player;
+import shared.util.maths.Vector2;
 
 /**
  * @author hlf764 The abstract class for all guns type weapon.
  */
 public abstract class Gun extends Weapon {
+
+  protected float aimAngleMax = 110f; // Maximum angle of aiming before switching holding hand
 
   protected double bulletSpeed; // pixel per second
   protected int fireRate; // bullets per minute
@@ -48,11 +51,6 @@ public abstract class Gun extends Weapon {
     this.singleHanded = singleHanded;
   }
 
-  public abstract double getGripX();
-  public abstract double getGripY();
-  public abstract double getGripFlipX();
-  public abstract double getGripFlipY();
-
   public abstract double getForeGripX();
   public abstract double getForeGripY();
   public abstract double getForeGripFlipX();
@@ -62,6 +60,68 @@ public abstract class Gun extends Weapon {
   public void update() {
     deductCooldown();
     super.update();
+  }
+
+  @Override
+  public void render() {
+    super.render();
+
+    if (holder == null) return;
+
+    imageView.getTransforms().clear();
+
+    double mouseX = holder.mouseX;
+    double mouseY = holder.mouseY;
+    Vector2 mouseV = new Vector2((float) mouseX, (float) mouseY);
+    Vector2 gripV = new Vector2((float) this.getGripX(), (float) this.getGripY());
+    Vector2 mouseSubGrip = mouseV.sub(gripV);
+    angleRadian = mouseSubGrip.normalize().angleBetween(Vector2.Zero());  // radian
+    double angle = angleRadian * 180 / PI;  // degree
+
+    // Change the facing of the player when aiming the other way
+    double angleHorizontal;  // degree
+    if (holder.getFacingRight()) {
+      angleHorizontal = (mouseSubGrip.angleBetween(Vector2.Right())) * 180 / PI;
+      if (angleHorizontal > aimAngleMax) {
+        holder.setFacingLeft(true);
+        angle = 180f - angleHorizontal;
+      }
+      if (angleHorizontal > 90f) {
+        angle = angleHorizontal * (mouseY > this.getGripY() ? 1 : -1);
+      }
+    } else {  // holder facing Left
+      angleHorizontal = (mouseSubGrip.angleBetween(Vector2.Left())) * 180 / PI;
+      if (angleHorizontal > aimAngleMax) {
+        holder.setFacingRight(true);
+        angle = angleHorizontal - 180f;
+      }
+      if (angleHorizontal > 90f) {
+        angle = angleHorizontal * (mouseY > this.getGripY() ? -1 : 1);
+      }
+    }
+
+    angleRadian = angle * PI / 180;
+
+    // Rotate and translate the image
+    if (holder.getFacingLeft()) {
+      imageView.setScaleX(-1);
+      rotate.setAngle(-angle);
+      imageView.getTransforms().add(rotate);
+      imageView.setTranslateX(this.getGripFlipX());
+      imageView.setTranslateY(this.getGripFlipY());
+
+      holder.setHandLeftX(this.getForeGripFlipX());
+      holder.setHandLeftY(this.getForeGripFlipY());
+    } else if (holder.getFacingRight()) {
+      imageView.setScaleX(1);
+      rotate.setAngle(angle);
+      imageView.getTransforms().add(rotate);
+      imageView.setTranslateX(this.getGripX());
+      imageView.setTranslateY(this.getGripY());
+
+      holder.setHandRightX(this.getForeGripX());
+      holder.setHandRightY(this.getForeGripY());
+    }
   }
 
   // -------START-------
