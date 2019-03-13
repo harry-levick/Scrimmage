@@ -201,7 +201,6 @@ public class LevelHandler {
    * @param gameObject GameObject to be added
    */
   public void addGameObject(GameObject gameObject) {
-    gameObject.initialise(this.gameRoot);
     this.toCreate.add(gameObject);
     if (isServer) {
       ConcurrentSkipListMap<UUID, GameObject> temp = new ConcurrentSkipListMap<>();
@@ -213,7 +212,6 @@ public class LevelHandler {
   public void addGameObjects(ConcurrentSkipListMap<UUID, GameObject> gameObjectsT) {
     gameObjectsT.forEach(((uuid, gameObject) -> {
       if (!gameObjects.containsKey(uuid)) {
-        gameObject.initialise(this.gameRoot);
         this.toCreate.add(gameObject);
       }
     }));
@@ -221,6 +219,7 @@ public class LevelHandler {
 
   public void createObjects() {
     toCreate.forEach(gameObject -> {
+      gameObject.initialise(gameRoot);
       if (gameObject instanceof Player) {
         addPlayer((Player) gameObject, Client.gameRoot);
       } else {
