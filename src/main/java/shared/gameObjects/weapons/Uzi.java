@@ -1,6 +1,7 @@
 package shared.gameObjects.weapons;
 
 import java.util.UUID;
+import javafx.scene.transform.Rotate;
 import shared.gameObjects.players.Player;
 import shared.util.Path;
 
@@ -24,23 +25,16 @@ public class Uzi extends Gun {
         false, // singleHanded
         uuid
     );
+
+    rotate = new Rotate();
+    // Not calibrated
+    rotate.setPivotX(20);
+    rotate.setPivotY(10);
   }
 
   @Override
   public void fire(double mouseX, double mouseY) {
 
-  }
-
-  @Override
-  public void render() {
-    super.render();
-
-    if (holder == null) return;
-
-    imageView.getTransforms().clear();
-
-    double mouseX = holder.mouseX;
-    double mouseY = holder.mouseY;
   }
 
   @Override
