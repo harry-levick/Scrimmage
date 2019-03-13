@@ -7,7 +7,7 @@ import shared.gameObjects.players.Player;
 /**
  * @author hlf764 The abstract class for all guns type weapon.
  */
-abstract class Gun extends Weapon {
+public abstract class Gun extends Weapon {
 
   protected double bulletSpeed; // pixel per second
   protected int fireRate; // bullets per minute
@@ -48,6 +48,16 @@ abstract class Gun extends Weapon {
     this.fullAutoFire = fullAutoFire;
     this.singleHanded = singleHanded;
   }
+
+  public abstract double getGripX();
+  public abstract double getGripY();
+  public abstract double getGripFlipX();
+  public abstract double getGripFlipY();
+
+  public abstract double getForeGripX();
+  public abstract double getForeGripY();
+  public abstract double getForeGripFlipX();
+  public abstract double getForeGripFlipY();
 
   @Override
   public void update() {
