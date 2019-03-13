@@ -62,8 +62,8 @@ public class MachineGun extends Gun {
       */
       Bullet bullet =
           new FireBullet(
-              (holder.getFacingRight() ? bulletX : bulletFlipX),
-              (holder.getFacingRight() ? bulletY : bulletFlipY),
+              (holder.isAimingLeft() ? bulletFlipX : bulletX),
+              (holder.isAimingLeft() ? bulletFlipY : bulletY),
               mouseX,
               mouseY,
               this.holder,
@@ -86,7 +86,7 @@ public class MachineGun extends Gun {
   // =============================
   @Override
   public double getGripX() {
-    if (holder.getFacingLeft()) {
+    if (holder.isAimingLeft()) {
       return getGripFlipX();
     } else {
       return holderHandPos == null ? 0 : holderHandPos[0] - 20;
@@ -95,7 +95,7 @@ public class MachineGun extends Gun {
 
   @Override
   public double getGripY() {
-    if (holder.getFacingLeft()) {
+    if (holder.isAimingLeft()) {
       return getGripFlipY();
     } else {
       return holderHandPos == null ? 0 : holderHandPos[1] - 20;
@@ -114,7 +114,7 @@ public class MachineGun extends Gun {
 
   @Override
   public double getForeGripX() {
-    if (holder.getFacingLeft()) {
+    if (holder.isAimingLeft()) {
       return getForeGripFlipX();
     }
     return getGripX() + 50 * Math.cos(-angleRadian);
@@ -122,7 +122,7 @@ public class MachineGun extends Gun {
 
   @Override
   public double getForeGripY() {
-    if (holder.getFacingLeft()) {
+    if (holder.isAimingLeft()) {
       return getForeGripFlipY();
     }
     return getGripY() + 50 * Math.sin(angleRadian);
