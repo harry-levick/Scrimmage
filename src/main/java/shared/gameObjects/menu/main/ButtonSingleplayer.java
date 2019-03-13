@@ -35,7 +35,7 @@ public class ButtonSingleplayer extends ButtonObject {
 
     Client.levelHandler.changeMap(
         new Map("map1", Path.convert("src/main/resources/maps/map1.map")),
-        true);
+        true, false);
 
     int botsToAdd = maxPlayers - Client.levelHandler.getPlayers().size();
     for (int b = 0; b < botsToAdd; b++) {

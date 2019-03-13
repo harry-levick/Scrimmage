@@ -529,6 +529,7 @@ public abstract class GameObject implements Serializable {
     }
   }
 
+
   public void setSettings(Settings settings) {
     this.settings = settings;
   }

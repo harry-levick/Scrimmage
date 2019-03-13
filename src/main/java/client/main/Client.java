@@ -296,7 +296,7 @@ public class Client extends Application {
         new Map(
             "Main Menu",
             Path.convert(settings.getMenuPath() + File.separator + "menus/main_menu.map")),
-        false);
+        false, false);
   }
 
   @Override
@@ -381,7 +381,7 @@ public class Client extends Application {
           if (alive.size() == 1) {
             alive.forEach(player -> player.increaseScore());
             Map nextMap = playlist.poll();
-            levelHandler.changeMap(nextMap, true);
+            levelHandler.changeMap(nextMap, true, false);
             giveWeapon();
           }
           /** Move bots */

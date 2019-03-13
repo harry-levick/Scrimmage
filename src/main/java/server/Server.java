@@ -2,7 +2,9 @@ package server;
 
 import client.main.Client;
 import client.main.Settings;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -18,6 +20,7 @@ import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -45,8 +48,6 @@ import shared.packets.PacketMap;
 import shared.physics.Physics;
 import shared.util.Path;
 import shared.util.maths.Vector2;
-
-//import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 
 public class Server extends Application {
 
@@ -124,7 +125,13 @@ public class Server extends Application {
       connected.forEach(
           address -> {
             try {
-              DatagramPacket packet = new DatagramPacket(buffer, buffer.length,
+              //Send buffer size to set
+              byte[] lengthBuffer = ("length:" + buffer.length).getBytes();
+              DatagramPacket packet = new DatagramPacket(lengthBuffer, lengthBuffer.length,
+                  (InetAddress) address, serverPort);
+              socket.send(packet);
+
+              packet = new DatagramPacket(buffer, buffer.length,
                   (InetAddress) address, serverPort);
               socket.send(packet);
               System.out.println("SEND: " + new String(buffer));
@@ -172,7 +179,7 @@ public class Server extends Application {
 
   public void nextMap() {
     Map nextMap = playlist.pop();
-    levelHandler.changeMap(nextMap, true);
+    levelHandler.changeMap(nextMap, true, true);
     // TODO Change to actual UUID
     PacketMap mapPacket = new PacketMap(nextMap.getName(), UUID.randomUUID());
     sendToClients(mapPacket.getData());
@@ -299,6 +306,25 @@ public class Server extends Application {
         }
       }
     }.start();
+  }
+
+  public void sendObjects(ConcurrentSkipListMap<UUID, GameObject> gameobjects) {
+    ByteArrayOutputStream byteArrayOutputStream = null;
+    try {
+      byteArrayOutputStream = new ByteArrayOutputStream();
+      ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+      objectOutputStream.writeObject(gameobjects);
+      objectOutputStream.flush();
+      sendToClients(byteArrayOutputStream.toByteArray());
+    } catch (IOException e) {
+      LOGGER.error("Unable to send new objects to clients ");
+    } finally {
+      try {
+        byteArrayOutputStream.close();
+      } catch (IOException e) {
+        LOGGER.error("Can't close Byte Array Output Stream on Server");
+      }
+    }
   }
 
   //Rendering
