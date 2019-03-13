@@ -38,6 +38,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.MapDataObject;
+import shared.gameObjects.objects.ObjectManager;
 import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.LevelHandler;
 import shared.handlers.levelHandler.Map;
@@ -170,8 +171,10 @@ public class Server extends Application {
     levelHandler.getPlayers().forEach((key, player) -> player.applyInput());
 
     levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.updateCollision());
+    Physics.processCollisions();
     /** Update Game Objects */
     levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.update());
+    ObjectManager.update();
   }
 
   public void startMatch() {
@@ -191,7 +194,7 @@ public class Server extends Application {
   }
 
   public void add(Player player) {
-    inputQueue.put(player, new LinkedBlockingQueue<>());
+    inputQueue.put(player, new LinkedBlockingQueue<PacketInput>());
   }
 
   public BlockingQueue<PacketInput> getQueue(Player player) {

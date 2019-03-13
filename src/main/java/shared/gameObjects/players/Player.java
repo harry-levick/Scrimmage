@@ -320,6 +320,15 @@ public class Player extends GameObject implements Destructable {
     }
   }
 
+  public boolean containsChild(GameObject child) {
+    for (GameObject c : children) {
+      if (c.getUUID() == child.getUUID()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public void setHandRightX(double pos) {
     this.handRight.setX(pos);
   }
