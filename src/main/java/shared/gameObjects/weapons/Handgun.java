@@ -69,7 +69,7 @@ public class Handgun extends Gun {
   //       handgun yet *****
   @Override
   public double getForeGripX() {
-    if (holder.getFacingLeft()) {
+    if (holder.isAimingLeft()) {
       return getForeGripFlipX();
     }
     return getGripX() + 50 * Math.cos(-angleGun);
@@ -77,7 +77,7 @@ public class Handgun extends Gun {
 
   @Override
   public double getForeGripY() {
-    if (holder.getFacingLeft()) {
+    if (holder.isAimingLeft()) {
       return getForeGripFlipY();
     }
     return getGripY() + 50 * Math.sin(angleGun);
@@ -95,7 +95,7 @@ public class Handgun extends Gun {
 
   @Override
   public double getGripX() {
-    if (holder.getFacingLeft()) {
+    if (holder.isAimingLeft()) {
       return getGripFlipX();
     } else {
       return holderHandPos == null ? 0 : holderHandPos[0] - 20;
@@ -104,7 +104,7 @@ public class Handgun extends Gun {
 
   @Override
   public double getGripY() {
-    if (holder.getFacingLeft()) {
+    if (holder.isAimingLeft()) {
       return getGripFlipY();
     } else {
       return holderHandPos == null ? 0 : holderHandPos[1] - 20;
