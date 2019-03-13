@@ -23,9 +23,4 @@ public class HandgunTest {
 
     assertTrue(true);
   }
-
-  @Test
-  public void test2() {
-    assertEquals(10, handgun.getDamage(), 0.0001f);
-  }
 }

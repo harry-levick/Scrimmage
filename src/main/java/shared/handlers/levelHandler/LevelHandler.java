@@ -24,6 +24,7 @@ import shared.gameObjects.players.Player;
 import shared.gameObjects.rendering.ColorFilters;
 import shared.gameObjects.weapons.MachineGun;
 import shared.gameObjects.weapons.Sword;
+import shared.gameObjects.weapons.Uzi;
 import shared.gameObjects.weapons.Weapon;
 import shared.util.Path;
 import shared.util.maths.Vector2;
@@ -300,6 +301,12 @@ public class LevelHandler {
         UUID.randomUUID());
     spawnSword.initialise(root);
     gameObjects.put(spawnSword.getUUID(), spawnSword);
+
+    // Add a spawn Uzi
+    Weapon spawnUzi = new Uzi(330,350, "Uzi.spawnGun@LevelHandler.addClientPlayer",null,
+        UUID.randomUUID());
+    spawnUzi.initialise(root);
+    gameObjects.put(spawnUzi.getUUID(), spawnUzi);
 
     /*
     // Add weapon to player
