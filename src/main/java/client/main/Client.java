@@ -5,8 +5,6 @@ import client.handlers.inputHandler.KeyboardInput;
 import client.handlers.inputHandler.MouseInput;
 import client.handlers.networkHandlers.ClientNetworkManager;
 import client.handlers.networkHandlers.ConnectionHandler;
-import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
-import de.codecentric.centerdevice.javafxsvg.dimension.PrimitiveDimensionProvider;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -302,7 +300,6 @@ public class Client extends Application {
   @Override
   public void start(Stage primaryStage) {
     gameOver = false;
-    SvgImageLoaderFactory.install(new PrimitiveDimensionProvider());
     playlist = new LinkedList<>();
     // Testing code
     for (int i = 1; i < 11; i++) {
@@ -362,6 +359,7 @@ public class Client extends Application {
         levelHandler.getClientPlayer().applyInput();
 
         if (multiplayer && sendUpdate) {
+          System.out.println("Send inp");
           ClientNetworkManager.sendInput();
           sendUpdate = false;
         }
@@ -392,15 +390,15 @@ public class Client extends Application {
           settingsObjects.forEach(obj -> obj.update());
         }
 
-        /** Check Collisions */
-        Physics.gameObjects = levelHandler.getGameObjects();
-
-        levelHandler
-            .getGameObjects()
-            .forEach((key, gameObject) -> gameObject.updateCollision());
-        Physics.processCollisions();
-
         if (!multiplayer) {
+          /** Check Collisions */
+          Physics.gameObjects = levelHandler.getGameObjects();
+
+          levelHandler
+              .getGameObjects()
+              .forEach((key, gameObject) -> gameObject.updateCollision());
+          Physics.processCollisions();
+
           /** Update Game Objects */
           levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.update());
         } else {

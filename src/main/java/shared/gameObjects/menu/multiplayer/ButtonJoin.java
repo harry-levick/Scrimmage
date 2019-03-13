@@ -47,5 +47,6 @@ public class ButtonJoin extends ButtonObject {
     Client.levelHandler.changeMap(
         new Map("LOBBY", Path.convert("src/main/resources/menus/lobby.map")),
         false, false);
+    System.out.println("dfd");
   }
 }

@@ -191,6 +191,13 @@ public class LevelHandler {
     return gameObjects;
   }
 
+  public ConcurrentSkipListMap<UUID, GameObject> getGameObjectsFiltered() {
+    clearToRemove(); // Remove every gameObjects we no longer need
+    ConcurrentSkipListMap<UUID, GameObject> filtered = gameObjects;
+    players.forEach((key, player) -> filtered.remove(key));
+    return gameObjects;
+  }
+
   public Background getBackground() {
     return this.background;
   }

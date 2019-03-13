@@ -94,7 +94,6 @@ public class Server extends Application {
   }
 
   public void init() {
-    //SvgImageLoaderFactory.install();
     server = this;
     executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     threadName = "Server";
@@ -192,7 +191,7 @@ public class Server extends Application {
   }
 
   public void add(Player player) {
-    inputQueue.put(player, new LinkedBlockingQueue<PacketInput>());
+    inputQueue.put(player, new LinkedBlockingQueue<>());
   }
 
   public BlockingQueue<PacketInput> getQueue(Player player) {
