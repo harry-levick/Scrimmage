@@ -312,12 +312,15 @@ public class Server extends Application {
     ByteArrayOutputStream byteArrayOutputStream = null;
     try {
       byteArrayOutputStream = new ByteArrayOutputStream();
+      byteArrayOutputStream.write("9;".getBytes());
       ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
       objectOutputStream.writeObject(gameobjects);
       objectOutputStream.flush();
+
       sendToClients(byteArrayOutputStream.toByteArray());
     } catch (IOException e) {
       LOGGER.error("Unable to send new objects to clients ");
+      e.printStackTrace();
     } finally {
       try {
         byteArrayOutputStream.close();

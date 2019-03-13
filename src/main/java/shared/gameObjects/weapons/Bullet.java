@@ -31,7 +31,7 @@ public abstract class Bullet extends GameObject {
   private Vector2 vector; // Vector of the force of bullet fire
   private int damage; // Damage of this bullet
   protected Player holder; // Holder of the gun that fired this bullet
-  private Rotate rotate;
+  private transient Rotate rotate;
   protected Component holderBoxCollider;  // the BoxCollider of the holder
   protected boolean hitHolder;    // true if it hit the holder (For OnCollisionExit)
 

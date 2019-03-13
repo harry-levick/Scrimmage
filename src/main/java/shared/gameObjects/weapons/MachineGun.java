@@ -19,7 +19,7 @@ public class MachineGun extends Gun {
 
   private double[] holderHandPos;
   private double angleGun; // angle of gun (hand and mouse vs x-axis) (radian)
-  private Rotate rotate; // rotate property of gun wrt grip
+  private transient Rotate rotate; // rotate property of gun wrt grip
   private Scale scale;   // scale the image to mirror it
 
 

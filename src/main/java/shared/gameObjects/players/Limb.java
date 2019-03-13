@@ -18,7 +18,7 @@ public abstract class Limb extends GameObject {
   protected final double pivotX;
   protected final double pivotY;
   protected boolean isLeft;
-  protected Rotate rotate;
+  protected transient Rotate rotate;
   protected boolean limbAttached;
   protected boolean lastAttachedCheck;
   protected Behaviour behaviour;
@@ -34,7 +34,7 @@ public abstract class Limb extends GameObject {
   protected Rigidbody rb;
   protected BoxCollider bc;
 
-  protected LevelHandler levelHandler;
+  protected transient LevelHandler levelHandler;
 
 
   /**
