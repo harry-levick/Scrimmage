@@ -2,6 +2,7 @@ package shared.gameObjects.weapons;
 
 import client.main.Client;
 import java.util.UUID;
+import javafx.scene.transform.Rotate;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
@@ -14,7 +15,7 @@ import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
 
 /**
- * @author hlf764 The abstract class for all weapons in the game.
+ * The abstract class of all weapons in the game.
  */
 public abstract class Weapon extends GameObject {
 
@@ -24,6 +25,7 @@ public abstract class Weapon extends GameObject {
    * left-clicked
    */
   protected int MAX_COOLDOWN = 81;
+  protected float PI = 3.141592654f;
 
   protected double weight; // grams
   protected String name; // name of the weapon
@@ -31,9 +33,13 @@ public abstract class Weapon extends GameObject {
   protected boolean isMelee;
   protected int ammo; // -1 = unlimited
   protected int fireRate; // max = MAX_COOLDOWN - 1
-  protected Player holder; // holder of the weapon
-
   protected int currentCooldown;
+
+  protected Player holder; // holder of the weapon
+  protected double[] holderHandPos;
+
+  protected double angleRadian; // angle of gun (hand and mouse vs x-axis) (radian)
+  protected Rotate rotate;
 
   // variables for when the holder is null
   private BoxCollider bcTrig;
@@ -76,6 +82,7 @@ public abstract class Weapon extends GameObject {
     setAmmo(ammo);
     setFireRate(fireRate);
     this.holder = holder;
+    holderHandPos = new double[]{};
 
     if (holder == null) {
       // add collider and rigidbody
@@ -98,6 +105,24 @@ public abstract class Weapon extends GameObject {
   }
 
   public abstract void fire(double mouseX, double mouseY);
+
+  public abstract double getGripX();
+
+  public abstract double getGripY();
+
+  public abstract double getGripFlipX();
+
+  public abstract double getGripFlipY();
+
+  @Override
+  public void update() {
+    super.update();
+    if (holder != null) {
+      holderHandPos = getHolderHandPos();
+      this.setX(getGripX());
+      this.setY(getGripY());
+    }
+  }
 
   // Get holder hand position
   public double[] getHolderHandPos() {
@@ -145,14 +170,6 @@ public abstract class Weapon extends GameObject {
       bcCol.setLayer(ColliderLayer.PARTICLE);
       bcTrig.setLayer(ColliderLayer.PARTICLE);
       this.removeComponent(rb);
-    }
-  }
-
-  //Set holder of this gun
-  public void setHolder(Player p) {
-    if (p != null) {
-      this.holder = p;
-      p.setHolding(this);
     }
   }
 
@@ -219,6 +236,14 @@ public abstract class Weapon extends GameObject {
 
   public Player getHolder() {
     return this.holder;
+  }
+
+  //Set holder of this gun
+  public void setHolder(Player p) {
+    if (p != null) {
+      this.holder = p;
+      p.setHolding(this);
+    }
   }
   // -------------------
   // Setters and Getters
