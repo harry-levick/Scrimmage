@@ -52,16 +52,18 @@ public class ServerReceiver implements Runnable {
       Platform.runLater(
           () -> {
             player = server.addPlayer(joinPacket, socket.getInetAddress());
-            server.sendObjects(Server.getLevelHandler().getGameObjects());
+            server.sendObjects(Server.getLevelHandler().getGameObjectsFiltered());
           }
       );
 
       // socket.setSoTimeout(5000);
+      System.out.println("Im HERE");
 
       /** Main Loop */
       while (true) {
         try {
           message = input.readLine();
+          System.out.println("GOT" + message);
         } catch (SocketTimeoutException e) {
           server.playerCount.decrementAndGet();
           connected.remove(socket.getInetAddress());
