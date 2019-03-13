@@ -10,6 +10,9 @@ import shared.util.Path;
  */
 public class Handgun extends Gun {
 
+  private double[] holderHandPos;
+  private double angleGun;
+
   /**
    * Constructor of the Handgun class
    *
@@ -25,14 +28,10 @@ public class Handgun extends Gun {
         y,
         sizeX,
         sizeY,
-        ObjectType.Weapon, // ObjectType
-        10, // hazard
         10, // weight
         name,
         30, // ammo
-        1, // bulletSpeed
         50, // fireRate
-        50, // bulletWidth
         holder,
         false, // fullAutoFire
         true, // singleHanded
@@ -64,5 +63,61 @@ public class Handgun extends Gun {
   @Override
   public void initialiseAnimation() {
     this.animation.supplyAnimation("default", Path.convert("images/weapons/handgun.jpg"));
+  }
+
+  // TODO: *****All these getters copied from MachineGun, not calibrated with
+  //       handgun yet *****
+  @Override
+  public double getForeGripX() {
+    if (holder.isAimingLeft()) {
+      return getForeGripFlipX();
+    }
+    return getGripX() + 50 * Math.cos(-angleGun);
+  }
+
+  @Override
+  public double getForeGripY() {
+    if (holder.isAimingLeft()) {
+      return getForeGripFlipY();
+    }
+    return getGripY() + 50 * Math.sin(angleGun);
+  }
+
+  @Override
+  public double getForeGripFlipX() {
+    return getGripX() + 50 - 30 * Math.cos(angleGun);
+  }
+
+  @Override
+  public double getForeGripFlipY() {
+    return getGripY() - 50 * Math.sin(angleGun);
+  }
+
+  @Override
+  public double getGripX() {
+    if (holder.isAimingLeft()) {
+      return getGripFlipX();
+    } else {
+      return holderHandPos == null ? 0 : holderHandPos[0] - 20;
+    }
+  }
+
+  @Override
+  public double getGripY() {
+    if (holder.isAimingLeft()) {
+      return getGripFlipY();
+    } else {
+      return holderHandPos == null ? 0 : holderHandPos[1] - 20;
+    }
+  }
+
+  @Override
+  public double getGripFlipX() {
+    return holderHandPos[0] - 55;
+  }
+
+  @Override
+  public double getGripFlipY() {
+    return holderHandPos[1] - 10;
   }
 }

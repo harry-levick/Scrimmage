@@ -15,7 +15,6 @@ import shared.gameObjects.players.Limbs.Body;
 import shared.gameObjects.players.Limbs.Hand;
 import shared.gameObjects.players.Limbs.Head;
 import shared.gameObjects.players.Limbs.Leg;
-import shared.gameObjects.weapons.MachineGun;
 import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.weapons.Weapon;
 import shared.handlers.levelHandler.LevelHandler;
@@ -41,6 +40,7 @@ public class Player extends GameObject implements Destructable {
   protected boolean grounded;
   protected boolean facingLeft;
   protected boolean facingRight;
+  protected boolean aimLeft;
   protected int health;
   protected Weapon holding;
   protected Rigidbody rb;
@@ -188,16 +188,6 @@ public class Player extends GameObject implements Destructable {
       holding.fire(mouseX, mouseY);
     } // else punch
     // setX(getX() + (vx * 0.0166));
-
-    if (this.getHolding() != null) {
-      if (this.getHolding().isMelee()) {
-        this.getHolding().setX(((Sword) this.getHolding()).getGripX());
-        this.getHolding().setY(((Sword) this.getHolding()).getGripY());
-      } else if (this.getHolding().isGun()) {
-        this.getHolding().setX(((MachineGun) this.getHolding()).getGripX());
-        this.getHolding().setY(((MachineGun) this.getHolding()).getGripY());
-      }
-    }
   }
 
   /**
@@ -212,11 +202,10 @@ public class Player extends GameObject implements Destructable {
     if (this.holding.getAmmo() == 0) {
       this.holding.destroyWeapon();
       this.setHolding(null);
-      Weapon sword =
+      Weapon newSword =
           new Sword(this.getX(), this.getY(), "newSword@Player", this, UUID.randomUUID());
-      sword.initialise(root);
-      Client.levelHandler.addGameObject(sword);
-      this.setHolding(sword);
+      Client.levelHandler.addGameObject(newSword);
+      this.setHolding(newSword);
       return true;
     }
     return false;
@@ -274,6 +263,7 @@ public class Player extends GameObject implements Destructable {
     this.holding = holding;
     if (holding != null) {
       holding.setSettings(settings);
+      aimLeft = false;
     }
   }
 
@@ -300,7 +290,7 @@ public class Player extends GameObject implements Destructable {
     }
     return new double[]{this.getHandRightX(), this.getHandRightY()};
     */
-    if (facingLeft) {
+    if (isAimingLeft()) {
       return new double[]{this.handRight.getX(), this.handRight.getY()};
     } else {
       return new double[]{this.handLeft.getX(), this.handLeft.getY()};
@@ -313,7 +303,7 @@ public class Player extends GameObject implements Destructable {
    * @return A 2 elements array, a[0] = X position of the hand, a[1] = Y position of the hand
    */
   public double[] getMeleeHandPos() {
-    if (facingLeft) {
+    if (isAimingLeft()) {
       return new double[]{this.handLeft.getX(), this.handLeft.getY()};
     } else {
       return new double[]{this.handRight.getX(), this.handRight.getY()};
@@ -356,6 +346,12 @@ public class Player extends GameObject implements Destructable {
   public void setFacingRight(boolean b) {
     this.facingLeft = !b;
     this.facingRight = b;
+  }
+
+  public boolean isAimingLeft() { return this.aimLeft; }
+
+  public void setAimingLeft(boolean b) {
+    this.aimLeft = b;
   }
 
   public boolean isGrounded() {

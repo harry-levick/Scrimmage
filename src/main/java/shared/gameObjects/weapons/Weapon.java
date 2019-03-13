@@ -2,6 +2,7 @@ package shared.gameObjects.weapons;
 
 import client.main.Client;
 import java.util.UUID;
+import javafx.scene.transform.Rotate;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
@@ -14,7 +15,7 @@ import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
 
 /**
- * @author hlf764 The abstract class for all weapons in the game.
+ * The abstract class of all weapons in the game.
  */
 public abstract class Weapon extends GameObject {
 
@@ -24,17 +25,21 @@ public abstract class Weapon extends GameObject {
    * left-clicked
    */
   protected int MAX_COOLDOWN = 81;
+  protected float PI = 3.141592654f;
 
-  protected int damage;
   protected double weight; // grams
   protected String name; // name of the weapon
   protected boolean isGun;
   protected boolean isMelee;
   protected int ammo; // -1 = unlimited
   protected int fireRate; // max = MAX_COOLDOWN - 1
-  protected Player holder; // holder of the weapon
-
   protected int currentCooldown;
+
+  protected Player holder; // holder of the weapon
+  protected double[] holderHandPos;
+
+  protected double angleRadian; // angle of gun (hand and mouse vs x-axis) (radian)
+  protected Rotate rotate;
 
   // variables for when the holder is null
   private BoxCollider bcTrig;
@@ -47,7 +52,6 @@ public abstract class Weapon extends GameObject {
    * @param x X position of this weapon
    * @param y Y position of this weapon
    * @param id ObjectType of this weapon
-   * @param damage Damage of this weapon
    * @param weight Weight of this weapon
    * @param name Name of this weapon
    * @param isGun True if this weapon is a gun
@@ -62,7 +66,6 @@ public abstract class Weapon extends GameObject {
       double sizeX,
       double sizeY,
       ObjectType id,
-      int damage,
       double weight,
       String name,
       boolean isGun,
@@ -74,12 +77,12 @@ public abstract class Weapon extends GameObject {
     super(x, y, sizeX, sizeY, id, uuid);
     this.isGun = isGun;
     this.isMelee = isMelee;
-    setDamage(damage);
     setWeight(weight);
     this.name = name;
     setAmmo(ammo);
     setFireRate(fireRate);
     this.holder = holder;
+    holderHandPos = new double[]{};
 
     if (holder == null) {
       // add collider and rigidbody
@@ -102,6 +105,24 @@ public abstract class Weapon extends GameObject {
   }
 
   public abstract void fire(double mouseX, double mouseY);
+
+  public abstract double getGripX();
+
+  public abstract double getGripY();
+
+  public abstract double getGripFlipX();
+
+  public abstract double getGripFlipY();
+
+  @Override
+  public void update() {
+    super.update();
+    if (holder != null) {
+      holderHandPos = getHolderHandPos();
+      this.setX(getGripX());
+      this.setY(getGripY());
+    }
+  }
 
   // Get holder hand position
   public double[] getHolderHandPos() {
@@ -152,29 +173,11 @@ public abstract class Weapon extends GameObject {
     }
   }
 
-  //Set holder of this gun
-  public void setHolder(Player p) {
-    if (p != null) {
-      this.holder = p;
-      p.setHolding(this);
-    }
-  }
-
   // -------START-------
   // Setters and Getters
   // -------------------
   public int getCoolDown() {
     return this.currentCooldown;
-  }
-
-  public int getDamage() {
-    return this.damage;
-  }
-
-  public void setDamage(int newDamage) {
-    if (newDamage > 0 && newDamage < 100.0f) {
-      this.damage = newDamage;
-    }
   }
 
   public double getWeight() {
@@ -233,6 +236,14 @@ public abstract class Weapon extends GameObject {
 
   public Player getHolder() {
     return this.holder;
+  }
+
+  //Set holder of this gun
+  public void setHolder(Player p) {
+    if (p != null) {
+      this.holder = p;
+      p.setHolding(this);
+    }
   }
   // -------------------
   // Setters and Getters
