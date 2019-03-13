@@ -55,7 +55,7 @@ public class AchivementHandler {
     }
     //Rectangle rec = new Rectangle(0, 0, settings.getWindowWidth(), settings.getWindowHeight());
     //root.getChildren().add(rec);
-    ImageView background = new ImageView(new Image(("images/backgrounds/background1.svg")));
+    ImageView background = new ImageView(new Image(("images/backgrounds/background1.png")));
     background.setFitHeight(1080);
     background.setFitWidth(1920);
     root.getChildren().add(background);
