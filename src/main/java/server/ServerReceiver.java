@@ -69,6 +69,7 @@ public class ServerReceiver implements Runnable {
           connected.remove(socket.getInetAddress());
           server.levelHandler.getPlayers().remove(player);
           server.levelHandler.getGameObjects().remove(player);
+          LOGGER.debug("Removing player");
           break;
         } catch (IOException e) {
           e.printStackTrace();

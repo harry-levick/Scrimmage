@@ -193,9 +193,9 @@ public class LevelHandler {
 
   public ConcurrentSkipListMap<UUID, GameObject> getGameObjectsFiltered() {
     clearToRemove(); // Remove every gameObjects we no longer need
-    ConcurrentSkipListMap<UUID, GameObject> filtered = gameObjects;
+    ConcurrentSkipListMap<UUID, GameObject> filtered = gameObjects.clone();
     players.forEach((key, player) -> filtered.remove(key));
-    return gameObjects;
+    return filtered;
   }
 
   public Background getBackground() {
@@ -279,13 +279,13 @@ public class LevelHandler {
 
   public void addPlayer(Player newPlayer, Group root) {
     newPlayer.initialise(root);
-    newPlayer.setLevelHandler(this);
     players.put(newPlayer.getUUID(), newPlayer);
     gameObjects.put(newPlayer.getUUID(), newPlayer);
+    System.out.println("test");
   }
 
   public void addClientPlayer(Group root) {
-    clientPlayer = new Player(500, 200, UUID.randomUUID(), this);
+    clientPlayer = new Player(500, 200, UUID.randomUUID());
     clientPlayer.initialise(root);
     players.put(clientPlayer.getUUID(), clientPlayer);
     gameObjects.put(clientPlayer.getUUID(), clientPlayer);
