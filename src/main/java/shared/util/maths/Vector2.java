@@ -10,45 +10,87 @@ public class Vector2 implements Serializable {
   private float x;
   private float y;
 
+  /**
+   * Constructs a 2D Vector of floats
+   * @param x
+   * @param y
+   */
   public Vector2(int x, int y) {
     this.x = x;
     this.y = y;
   }
 
+  /**
+   * Constructs a 2D Vector of floats
+   * @param x
+   * @param y
+   */
   public Vector2(float x, float y) {
     this.x = x;
     this.y = y;
   }
-
+  /**
+   * Constructs a 2D Vector of floats
+   * @param x
+   * @param y
+   */
   public Vector2(double x, double y) {
     this.x = (float) x;
     this.y = (float) y;
   }
-
+  /**
+   * Constructs a 2D Vector of floats from a class-generated string
+   * @param vector the string obtains from toString
+   */
   public Vector2(String vector) {
     Vector2 vector2 = fromString(vector);
     this.x = vector2.getX();
     this.y = vector2.getY();
   }
 
+  /**
+   * Constructs a zero vector.
+   * @return (0,0)
+   */
   public static Vector2 Zero() {
     return new Vector2(0, 0);
   }
 
+  /**
+   * Constructs a unit vector.
+   * @return (1,1)
+   */
   public static Vector2 Unit() {
     return new Vector2(1, 1);
   }
-
+  /**
+   * Constructs a unit vector pointing right.
+   * @return (1,0)
+   */
   public static Vector2 Right() {
     return new Vector2(1, 0);
   }
-
+  /**
+   * Constructs a unit vector pointing left.
+   * @return (-1,0)
+   */
   public static Vector2 Left() {
     return new Vector2(-1, 0);
   }
-
+  /**
+   * Constructs a unit vector pointing down.
+   * @return (0,1)
+   */
   public static Vector2 Down() {
     return new Vector2(0, 1);
+  }
+  /**
+   * Constructs a unit vector pointing up.
+   * @return (0,-1)
+   */
+
+  public static Vector2 Up() {
+    return new Vector2(0, -1);
   }
 
   public static Vector2 max(Vector2 a, Vector2 b) {
@@ -57,10 +99,6 @@ public class Vector2 implements Serializable {
 
   public static Vector2 min(Vector2 a, Vector2 b) {
     return a.magnitude() > b.magnitude() ? b : a;
-  }
-
-  public static Vector2 Up() {
-    return new Vector2(0, -1);
   }
 
   /**
@@ -282,7 +320,7 @@ public class Vector2 implements Serializable {
   }
 
   /**
-   *
+   * Measures the overlap distance assuming both vectors are in a 1D space
    */
   public float overlap(Vector2 projection) {
     return (y - projection.getX());

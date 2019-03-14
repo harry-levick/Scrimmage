@@ -51,7 +51,7 @@ public class Physics {
   }
 
   /**
-   * Casts a ray that interacts with colliders.
+   * Casts a ray that interacts with colliders, returning the first collider it hits.
    *
    * @param sourcePos The point to start casting the ray
    * @param lengthAndDirection The length and direction of the ray
@@ -104,7 +104,7 @@ public class Physics {
   }
 
   /**
-   * Casts a ray that interacts with colliders.
+   * Casts a ray that interacts with colliders, returning the first collider it hits, ignoring Limbs.
    *
    * @param sourcePos The point to start casting the ray
    * @param lengthAndDirection The length and direction of the ray
@@ -174,7 +174,9 @@ public class Physics {
     }
   }
 
-
+    /**
+     * Draws a raycast for debugging
+     */
   public static void drawCast(double xStart, double yStart, double xFinish, double yFinish,
       String colour) {
     Platform.runLater(
@@ -190,7 +192,9 @@ public class Physics {
         }
     );
   }
-
+    /**
+     * Draws a boxcast for debugging
+     */
   public static void drawBoxCast(Vector2 sourcePos, Vector2 size) {
     Platform.runLater(
         () -> {
@@ -202,7 +206,7 @@ public class Physics {
   }
 
   /**
-   * Casts a ray that interacts with colliders.
+   * Casts a ray that interacts with colliders, returning all colliders hit.
    *
    * @param sourcePos The point to start casting the ray
    * @param lengthAndDirection The length and direction of the ray
@@ -424,6 +428,9 @@ public class Physics {
     return collisions;
   }
 
+    /**
+     * Used by collision system to add a DynamicCollision if no duplicate existss
+     */
   public static boolean addCollision(DynamicCollision dcol) {
     for (DynamicCollision c : collisions) {
       if (c.getBodyA() == dcol.getBodyB() && c.getBodyB() == dcol.getBodyA()) {

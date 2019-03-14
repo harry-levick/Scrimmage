@@ -88,6 +88,10 @@ public abstract class GameObject implements Serializable {
   public abstract void initialiseAnimation();
 
   // Server and Client side
+
+  /**
+   * Update loops update all components and updates server with new positions
+   */
   public void update() {
     networkStateUpdate = false;
     animation.update();
@@ -118,6 +122,10 @@ public abstract class GameObject implements Serializable {
   }
 
   // Client Side only
+
+  /**
+   * Renders the game object in the client view with all changes applied
+   */
   public void render() {
     imageView.setImage(animation.getImage());
     imageView.setRotate(getTransform().getRot());
@@ -128,6 +136,10 @@ public abstract class GameObject implements Serializable {
   }
 
   // Collision engine
+
+  /**
+   *
+   */
   public void updateCollision() {
     ArrayList<Component> cols = getComponents(ComponentType.COLLIDER);
     Rigidbody rb = (Rigidbody) getComponent(ComponentType.RIGIDBODY);

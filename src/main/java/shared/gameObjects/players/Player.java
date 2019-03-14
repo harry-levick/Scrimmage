@@ -1,7 +1,6 @@
 package shared.gameObjects.players;
 
 import client.main.Client;
-import java.util.UUID;
 import javafx.scene.Group;
 import shared.gameObjects.Destructable;
 import shared.gameObjects.GameObject;
@@ -10,11 +9,7 @@ import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.CircleCollider;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.components.behaviours.ObjectShake;
-import shared.gameObjects.players.Limbs.Arm;
-import shared.gameObjects.players.Limbs.Body;
-import shared.gameObjects.players.Limbs.Hand;
-import shared.gameObjects.players.Limbs.Head;
-import shared.gameObjects.players.Limbs.Leg;
+import shared.gameObjects.players.Limbs.*;
 import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.weapons.Weapon;
 import shared.handlers.levelHandler.LevelHandler;
@@ -23,13 +18,15 @@ import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
 
+import java.util.UUID;
+
 public class Player extends GameObject implements Destructable {
 
   protected final float speed = 9;
   protected final float jumpForce = -300;
   protected final float JUMP_LIMIT = 2.0f;
   public boolean leftKey, rightKey, jumpKey, click;
-  //Testing
+  // Testing
   public boolean deattach;
   public double mouseX, mouseY;
   public int score;
@@ -60,9 +57,17 @@ public class Player extends GameObject implements Destructable {
 
   private CircleCollider cc;
 
-  //Networking
+  // Networking
   private int lastInputCount;
 
+  /**
+   * Constructs a controllable player object
+   *
+   * @param x X Coordinate
+   * @param y Y Coordinate
+   * @param playerUUID random UUID
+   * @param levelHandler The level handler currently active
+   */
   public Player(double x, double y, UUID playerUUID, LevelHandler levelHandler) {
     super(x, y, 80, 110, ObjectType.Player, playerUUID);
     this.lastInputCount = 0;
@@ -77,13 +82,21 @@ public class Player extends GameObject implements Destructable {
     this.behaviour = Behaviour.IDLE;
     this.shake = new ObjectShake(this);
     this.bc = new BoxCollider(this, ColliderLayer.PLAYER, false);
-    //  this.cc = new CircleCollider(this, ColliderLayer.PLAYER, transform.getSize().magnitude()*0.5f, false);
-    this.rb = new Rigidbody(RigidbodyType.DYNAMIC, 90, 11.67f, 0.2f,
-        new MaterialProperty(0f, 0.1f, 0.05f), null, this);
+    //  this.cc = new CircleCollider(this, ColliderLayer.PLAYER,
+    // transform.getSize().magnitude()*0.5f, false);
+    this.rb =
+        new Rigidbody(
+            RigidbodyType.DYNAMIC,
+            90,
+            11.67f,
+            0.2f,
+            new MaterialProperty(0f, 0.1f, 0.05f),
+            null,
+            this);
     //  addComponent(cc);
     addComponent(bc);
     addComponent(rb);
-    //addComponent(shake);
+    // addComponent(shake);
   }
 
   // Initialise the animation
@@ -92,6 +105,10 @@ public class Player extends GameObject implements Destructable {
     this.animation.supplyAnimation("default", "images/player/player_idle.png");
   }
 
+  /**
+   * Adds a child object to player and adds it to level handler
+   * @param child Child to add
+   */
   public void addChild(GameObject child) {
     children.add(child);
     levelHandler.addGameObject(child);
@@ -135,11 +152,20 @@ public class Player extends GameObject implements Destructable {
     super.update();
   }
 
-
   @Override
   public String getState() {
-    return objectUUID + ";" + id + ";" + getX() + ";" + getY() + ";" + animation.getName() + ";"
-        + health + ";"
+    return objectUUID
+        + ";"
+        + id
+        + ";"
+        + getX()
+        + ";"
+        + getY()
+        + ";"
+        + animation.getName()
+        + ";"
+        + health
+        + ";"
         + lastInputCount;
   }
 
@@ -147,7 +173,7 @@ public class Player extends GameObject implements Destructable {
   public void setState(String data, Boolean snap) {
     super.setState(data, snap);
     String[] unpackedData = data.split(";");
-    //this.animation.switchAnimation(unpackedData[4]);
+    // this.animation.switchAnimation(unpackedData[4]);
     this.health = Integer.parseInt(unpackedData[5]);
     this.lastInputCount = Integer.parseInt(unpackedData[6]);
   }
@@ -231,10 +257,11 @@ public class Player extends GameObject implements Destructable {
       this.setActive(true);
       this.bc.setLayer(ColliderLayer.PLAYER);
     }
-    children.forEach(child -> {
-      Limb limb = (Limb) child;
-      limb.reset();
-    });
+    children.forEach(
+        child -> {
+          Limb limb = (Limb) child;
+          limb.reset();
+        });
     children.clear();
     addLimbs();
   }
@@ -291,9 +318,9 @@ public class Player extends GameObject implements Destructable {
     return new double[]{this.getHandRightX(), this.getHandRightY()};
     */
     if (isAimingLeft()) {
-      return new double[]{this.handRight.getX(), this.handRight.getY()};
+      return new double[] {this.handRight.getX(), this.handRight.getY()};
     } else {
-      return new double[]{this.handLeft.getX(), this.handLeft.getY()};
+      return new double[] {this.handLeft.getX(), this.handLeft.getY()};
     }
   }
 
@@ -304,9 +331,9 @@ public class Player extends GameObject implements Destructable {
    */
   public double[] getMeleeHandPos() {
     if (isAimingLeft()) {
-      return new double[]{this.handLeft.getX(), this.handLeft.getY()};
+      return new double[] {this.handLeft.getX(), this.handLeft.getY()};
     } else {
-      return new double[]{this.handRight.getX(), this.handRight.getY()};
+      return new double[] {this.handRight.getX(), this.handRight.getY()};
     }
   }
 
@@ -348,7 +375,9 @@ public class Player extends GameObject implements Destructable {
     this.facingRight = b;
   }
 
-  public boolean isAimingLeft() { return this.aimLeft; }
+  public boolean isAimingLeft() {
+    return this.aimLeft;
+  }
 
   public void setAimingLeft(boolean b) {
     this.aimLeft = b;
