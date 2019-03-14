@@ -2,6 +2,7 @@ package shared.gameObjects.menu;
 
 import client.handlers.audioHandler.AudioHandler;
 import client.main.Client;
+import client.main.Settings;
 import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
@@ -57,8 +58,8 @@ public abstract class ButtonObject extends GameObject {
   }
 
   @Override
-  public void initialise(Group root) {
-    super.initialise(root);
+  public void initialise(Group root, Settings settings) {
+    super.initialise(root, settings);
     button = new Button(this.text, imageView);
     button.setFont(settings.getFont(30));
     button.setTextFill(Color.WHITE);

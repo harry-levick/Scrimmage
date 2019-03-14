@@ -140,7 +140,7 @@ public class LevelHandler {
             ArrayList<Vector2> spawnPoints = ((MapDataObject) gameObject).getSpawnPoints();
             this.map.setGameState(((MapDataObject) gameObject).getGameState());
             if (this.background != null) {
-              background.initialise(backgroundGroup);
+              background.initialise(backgroundGroup, settings);
             }
             if (moveToSpawns && spawnPoints != null && spawnPoints.size() >= players.size()) {
               players.forEach(
@@ -153,7 +153,7 @@ public class LevelHandler {
             }
 
           } else {
-            gameObject.initialise(gameGroup);
+            gameObject.initialise(gameGroup, settings);
           }
         });
     gameObjects.putAll(players);
@@ -208,7 +208,7 @@ public class LevelHandler {
    * @param gameObject GameObject to be added
    */
   public void addGameObject(GameObject gameObject) {
-    gameObject.initialise(this.gameRoot);
+    gameObject.initialise(this.gameRoot, settings);
     this.toCreate.add(gameObject);
     if (isServer) {
       ConcurrentSkipListMap<UUID, GameObject> temp = new ConcurrentSkipListMap<>();
@@ -227,7 +227,7 @@ public class LevelHandler {
 
   public void createObjects() {
     toCreate.forEach(gameObject -> {
-      gameObject.initialise(gameRoot);
+      gameObject.initialise(gameRoot, settings);
       if (gameObject instanceof Player && gameObject.getUUID() != clientPlayer.getUUID()) {
         addPlayer((Player) gameObject, Client.gameRoot);
       } else {
@@ -278,7 +278,7 @@ public class LevelHandler {
   }
 
   public void addPlayer(Player newPlayer, Group root) {
-    newPlayer.initialise(root);
+    newPlayer.initialise(root, settings);
     players.put(newPlayer.getUUID(), newPlayer);
     gameObjects.put(newPlayer.getUUID(), newPlayer);
     System.out.println("test");
@@ -286,20 +286,20 @@ public class LevelHandler {
 
   public void addClientPlayer(Group root) {
     clientPlayer = new Player(500, 200, UUID.randomUUID());
-    clientPlayer.initialise(root);
+    clientPlayer.initialise(root, settings);
     players.put(clientPlayer.getUUID(), clientPlayer);
     gameObjects.put(clientPlayer.getUUID(), clientPlayer);
 
     // Add a spawn MachineGun
     Weapon spawnGun = new MachineGun(200, 350, "MachineGun.spawnGun@LevelHandler.addClientPlayer",
         null, UUID.randomUUID());
-    spawnGun.initialise(root);
+    spawnGun.initialise(root, settings);
     gameObjects.put(spawnGun.getUUID(), spawnGun);
 
     // Add a spawn Sword
     Weapon spawnSword = new Sword(1300, 200, "Sword.spawnGun@LevelHandler.addClientPlayer", null,
         UUID.randomUUID());
-    spawnSword.initialise(root);
+    spawnSword.initialise(root, settings);
     gameObjects.put(spawnSword.getUUID(), spawnSword);
 
     /*

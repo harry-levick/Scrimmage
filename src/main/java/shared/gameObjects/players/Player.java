@@ -1,5 +1,6 @@
 package shared.gameObjects.players;
 
+import client.main.Settings;
 import java.util.UUID;
 import javafx.scene.Group;
 import shared.gameObjects.Destructable;
@@ -94,8 +95,8 @@ public class Player extends GameObject implements Destructable {
   }
 
   @Override
-  public void initialise(Group root) {
-    super.initialise(root);
+  public void initialise(Group root, Settings settings) {
+    super.initialise(root, settings);
     addLimbs();
   }
 
@@ -210,7 +211,7 @@ public class Player extends GameObject implements Destructable {
       this.setHolding(null);
       Weapon sword =
           new Sword(this.getX(), this.getY(), "newSword@Player", this, UUID.randomUUID());
-      sword.initialise(root);
+      sword.initialise(root, settings);
       levelHandler.addGameObject(sword);
       this.setHolding(sword);
       return true;

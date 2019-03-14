@@ -2,6 +2,7 @@ package shared.gameObjects.weapons;
 
 import client.handlers.audioHandler.AudioHandler;
 import client.main.Client;
+import client.main.Settings;
 import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.transform.Rotate;
@@ -103,8 +104,8 @@ public class MachineGun extends Gun {
   }
 
   @Override
-  public void initialise(Group root) {
-    super.initialise(root);
+  public void initialise(Group root, Settings settings) {
+    super.initialise(root, settings);
     rotate = new Rotate();
     // pivot = position of the grip
     // If changing the value of this, change the value in all getGrip() methods

@@ -1,6 +1,7 @@
 package shared.gameObjects.menu;
 
 import client.main.Client;
+import client.main.Settings;
 import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.control.Slider;
@@ -25,9 +26,9 @@ public abstract class SliderObject extends GameObject {
 
 
   @Override
-  public void initialise(Group root) {
+  public void initialise(Group root, Settings settings) {
     slider = new Slider();
-    super.initialise(root);
+    super.initialise(root, settings);
     //   slider.setStyle( todo fix this
     //  ".slider {-fx-border-color: red;-fx-background-color: transparent;}" +
     // ".thumb {-fx-background-image: url(\"images/buttons/slider_thumb.png\");}} " +

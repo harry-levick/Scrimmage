@@ -23,6 +23,7 @@ public class PacketGameState extends Packet {
         data += "," + object.getState();
       }
     }
+    System.out.println("fdg");
   }
 
   public PacketGameState(String data) {
