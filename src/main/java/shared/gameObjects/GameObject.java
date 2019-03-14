@@ -33,7 +33,7 @@ public abstract class GameObject implements Serializable {
   protected ObjectType id;
   protected transient LevelHandler levelHandler;
 
-  protected transient Settings settings = new Settings();
+  protected transient Settings settings;
 
   protected transient ImageView imageView;
   protected transient Group root;
@@ -71,7 +71,8 @@ public abstract class GameObject implements Serializable {
     this.id = id;
     this.objectUUID = objectUUID;
     this.active = true;
-    this.levelHandler = Settings.levelHandler;
+    this.settings = new Settings();
+    this.levelHandler = settings.levelHandler;
     this.transform = new Transform(this, new Vector2((float) x, (float) y),
         new Vector2((float) sizeX, (float) sizeY));
     this.components = new ArrayList<>();
@@ -301,8 +302,9 @@ public abstract class GameObject implements Serializable {
   }
 
   // Ignore for now, added due to unSerializable objects
-  public void initialise(Group root) {
-    this.levelHandler = Settings.levelHandler;
+  public void initialise(Group root, Settings settings) {
+    this.settings = settings;
+    this.levelHandler = settings.levelHandler;
     this.positionBuffer = new ArrayList<>();
     this.networkStateUpdate = false;
     animation = new Animator();

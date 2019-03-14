@@ -46,8 +46,8 @@ public class ButtonSingleplayer extends ButtonObject {
       botPlayer.setHolding(/*new Sword(200, 600, "Sword@ButtonSinglePlayer",
           botPlayer, UUID.randomUUID()) */
           new MachineGun(500, 600, "MachineGun@ButtonSinglePlayer", botPlayer, UUID.randomUUID()));
-      botPlayer.getHolding().initialise(Client.gameRoot);
-      botPlayer.initialise(Client.gameRoot);
+      botPlayer.getHolding().initialise(Client.gameRoot, settings);
+      botPlayer.initialise(Client.gameRoot, settings);
       Client.levelHandler.getPlayers().put(botPlayer.getUUID(), botPlayer);
       Client.levelHandler.getBotPlayerList().put(botPlayer.getUUID(), botPlayer);
       Client.levelHandler.getGameObjects().put(botPlayer.getUUID(), botPlayer);

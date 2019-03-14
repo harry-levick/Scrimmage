@@ -1,5 +1,6 @@
 package shared.gameObjects.players.Limbs;
 
+import client.main.Settings;
 import javafx.scene.Group;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
@@ -19,8 +20,8 @@ public class Hand extends Limb {
 
 
   @Override
-  public void initialise(Group root) {
-    super.initialise(root);
+  public void initialise(Group root, Settings settings) {
+    super.initialise(root, settings);
     if (isLeft) {
       imageView.setRotate(11);
     } else {

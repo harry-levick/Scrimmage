@@ -157,7 +157,7 @@ public class Client extends Application {
         settingsObjects.add(quit);
       }
       settingsObjects.forEach(obj -> obj.initialiseAnimation());
-      settingsObjects.forEach(obj -> obj.initialise(creditsRoot));
+      settingsObjects.forEach(obj -> obj.initialise(creditsRoot, settings));
       settingsObjects.forEach(obj -> obj.render());
     } else {
       closeSettingsOverlay();
@@ -488,6 +488,6 @@ public class Client extends Application {
                 UUID.randomUUID()));
     levelHandler.getGameObjects().put(Client.levelHandler.getClientPlayer().getHolding().getUUID(),
         Client.levelHandler.getClientPlayer().getHolding());
-    levelHandler.getClientPlayer().getHolding().initialise(Client.gameRoot);
+    levelHandler.getClientPlayer().getHolding().initialise(gameRoot, settings);
   }
 }

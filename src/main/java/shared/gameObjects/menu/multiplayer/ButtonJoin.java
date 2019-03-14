@@ -2,6 +2,7 @@ package shared.gameObjects.menu.multiplayer;
 
 import client.handlers.networkHandlers.ConnectionHandler;
 import client.main.Client;
+import client.main.Settings;
 import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.control.TextField;
@@ -28,8 +29,8 @@ public class ButtonJoin extends ButtonObject {
     super(x, y, sizeX, sizeY, "Join", id, objectUUID);
   }
 
-  public void initialise(Group root) {
-    super.initialise(root);
+  public void initialise(Group root, Settings settings) {
+    super.initialise(root, settings);
     addressInput = new TextField();
     addressInput.setTranslateX(getX() + 90);
     addressInput.setTranslateY(getY() + 120);

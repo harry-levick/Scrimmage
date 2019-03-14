@@ -1,5 +1,6 @@
 package shared.gameObjects.players;
 
+import client.main.Settings;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
@@ -89,8 +90,8 @@ public abstract class Limb extends GameObject {
   }
 
   @Override
-  public void initialise(Group root) {
-    super.initialise(root);
+  public void initialise(Group root, Settings settings) {
+    super.initialise(root, settings);
     if (isLeft) {
       imageView.setScaleX(-1);
     }
