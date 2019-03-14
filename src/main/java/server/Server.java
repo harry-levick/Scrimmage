@@ -1,6 +1,5 @@
 package server;
 
-import client.main.Client;
 import client.main.Settings;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -52,7 +51,7 @@ import shared.util.maths.Vector2;
 
 public class Server extends Application {
 
-  private static final Logger LOGGER = LogManager.getLogger(Client.class.getName());
+  private static final Logger LOGGER = LogManager.getLogger(Server.class.getName());
 
   public static LevelHandler levelHandler;
   public static Group gameRoot;
@@ -98,7 +97,10 @@ public class Server extends Application {
     server = this;
     executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     threadName = "Server";
-    settings = new Settings();
+    settings = new Settings(levelHandler, gameRoot);
+    levelHandler = new LevelHandler(settings, backgroundRoot, gameRoot, this);
+    settings.setLevelHandler(levelHandler);
+    running.set(true);
     settings.setLevelHandler(levelHandler);
     playlist = new LinkedList();
     inputQueue = new ConcurrentHashMap<>();
@@ -108,6 +110,7 @@ public class Server extends Application {
     } catch (IOException e) {
       e.printStackTrace();
     }
+    serverState = ServerState.WAITING_FOR_PLAYERS;
 
     // Testing code
     playlist.add(
@@ -245,11 +248,7 @@ public class Server extends Application {
   @Override
   public void start(Stage primaryStage) throws Exception {
     setupRender(primaryStage);
-    levelHandler = new LevelHandler(settings, backgroundRoot, gameRoot, this);
-    settings.setLevelHandler(levelHandler);
-    running.set(true);
     LOGGER.debug("Running " + threadName);
-    serverState = ServerState.WAITING_FOR_PLAYERS;
     /** Receiver from clients */
     executor.execute(new ServerReceiver(this, serverSocket, connected));
 

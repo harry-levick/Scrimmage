@@ -1,6 +1,5 @@
 package shared.gameObjects;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.UUID;
@@ -22,10 +21,5 @@ public class HandgunTest {
   public void test1() {
 
     assertTrue(true);
-  }
-
-  @Test
-  public void test2() {
-    assertEquals(10, handgun.getDamage(), 0.0001f);
   }
 }

@@ -82,7 +82,6 @@ public abstract class Bullet extends GameObject {
     // Get the BoxCollider of the holder
     holderBoxCollider = holder.getComponent(ComponentType.COLLIDER);
     hitHolder = false;
-
     levelHandler.addGameObject(this);
     imageView.getTransforms().add(rotate);
     render();

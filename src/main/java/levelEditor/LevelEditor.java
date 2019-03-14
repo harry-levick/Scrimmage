@@ -70,7 +70,7 @@ import shared.util.maths.Vector2;
 
 public class LevelEditor extends Application {
 
-  private Settings settings = new Settings(); //todo needs to be chnaged into Client settings since currently detached
+  private Settings settings = new Settings(null, null);
   private ConcurrentSkipListMap<UUID, GameObject> gameObjects;
   private ArrayList<PlayerSpawnpoint> playerSpawns = new ArrayList<>();
   private MapDataObject mapDataObject;

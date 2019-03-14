@@ -280,7 +280,7 @@ public class Client extends Application {
   }
 
   public void init() {
-    settings = new Settings();
+    settings = new Settings(levelHandler, gameRoot);
     multiplayer = false;
   }
 
@@ -299,7 +299,7 @@ public class Client extends Application {
 
   @Override
   public void start(Stage primaryStage) {
-    gameOver = false;
+
     playlist = new LinkedList<>();
     // Testing code
     for (int i = 1; i < 11; i++) {
@@ -319,13 +319,15 @@ public class Client extends Application {
         };
 
     setupRender(primaryStage);
+    levelHandler = new LevelHandler(settings, backgroundRoot, gameRoot, uiRoot);
+    settings.setLevelHandler(levelHandler);
+    levelHandler.addClientPlayer(gameRoot);
+
+    gameOver = false;
     inputSequenceNumber = 0;
     pendingInputs = new ArrayList<>();
     singleplayerGame = false;
     sendUpdate = false;
-    levelHandler = new LevelHandler(settings, backgroundRoot, gameRoot, uiRoot);
-    settings.setLevelHandler(levelHandler);
-    levelHandler.addClientPlayer(gameRoot);
     keyInput = new KeyboardInput();
     mouseInput = new MouseInput();
 
@@ -336,7 +338,6 @@ public class Client extends Application {
     scene.setOnMouseMoved(mouseInput);
     scene.setOnMouseReleased(mouseInput);
     scene.setOnMouseDragged(mouseInput);
-
     //Setup UI
     setUserInterface();
 

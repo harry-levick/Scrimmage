@@ -36,11 +36,6 @@ public class SwordTest {
   }
 
   @Test
-  public void testGetDamage() {
-    assertEquals(10, sword.getDamage(), delta);
-  }
-
-  @Test
   public void testGetWeight() {
     assertEquals(10, sword.getWeight(), delta);
   }

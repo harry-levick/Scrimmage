@@ -71,11 +71,6 @@ public abstract class ButtonObject extends GameObject {
   }
 
   @Override
-  public void interpolatePosition(float alpha) {
-
-  }
-
-  @Override
   public void render() {
     imageView.setImage(animation.getImage());
     button.setTranslateX(getX());
