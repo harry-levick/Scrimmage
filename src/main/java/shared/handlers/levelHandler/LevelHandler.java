@@ -4,8 +4,6 @@ import client.handlers.audioHandler.AudioHandler;
 import client.handlers.audioHandler.MusicAssets.PLAYLIST;
 import client.main.Client;
 import client.main.Settings;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutput;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.UUID;
@@ -22,6 +20,7 @@ import shared.gameObjects.players.Player;
 import shared.gameObjects.rendering.ColorFilters;
 import shared.gameObjects.weapons.MachineGun;
 import shared.gameObjects.weapons.Sword;
+import shared.gameObjects.weapons.Uzi;
 import shared.gameObjects.weapons.Weapon;
 import shared.util.Path;
 import shared.util.maths.Vector2;
@@ -47,8 +46,6 @@ public class LevelHandler {
   private ArrayList<GameObject> toCreate;
   private boolean isServer;
   private Server server;
-  private ByteArrayOutputStream byteArrayOutputStream;
-  private ObjectOutput objectOutput;
 
   public LevelHandler(Settings settings, Group backgroundRoot, Group gameRoot,
       Group uiRoot) {
@@ -229,7 +226,7 @@ public class LevelHandler {
     toCreate.forEach(gameObject -> {
       gameObject.initialise(gameRoot, settings);
       if (gameObject instanceof Player && gameObject.getUUID() != clientPlayer.getUUID()) {
-        addPlayer((Player) gameObject, Client.gameRoot);
+        addPlayer((Player) gameObject, settings.getGameRoot());
       } else {
         gameObjects.put(gameObject.getUUID(), gameObject);
       }
@@ -301,6 +298,12 @@ public class LevelHandler {
         UUID.randomUUID());
     spawnSword.initialise(root, settings);
     gameObjects.put(spawnSword.getUUID(), spawnSword);
+
+    // Add a spawn Uzi
+    Weapon spawnUzi = new Uzi(330, 350, "Uzi.spawnGun@LevelHandler.addClientPlayer", null,
+        UUID.randomUUID());
+    spawnUzi.initialise(root, settings);
+    gameObjects.put(spawnUzi.getUUID(), spawnUzi);
 
     /*
     // Add weapon to player

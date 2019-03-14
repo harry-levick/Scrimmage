@@ -1,15 +1,18 @@
 package client.handlers.audioHandler;
 
-import client.main.Client;
+import client.main.Settings;
 import java.io.File;
 import java.util.HashMap;
 
 public class EffectsAssets {
 
   private final HashMap<String, String> tracks = new HashMap<String, String>();
-  private String filePath = Client.settings.getSFXPath();
+  private String filePath;
+  private Settings settings;
 
-  public EffectsAssets() {
+  public EffectsAssets(Settings settings) {
+    this.settings = settings;
+    filePath = settings.getSFXPath();
     // put tracks into hashmap
     tracks.put("STEPS_1", "steps_platform.mp3");
     tracks.put("STEPS_2", "steps_platform2.mp3");

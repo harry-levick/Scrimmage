@@ -61,7 +61,7 @@ public class LevelCreator extends Application {
   private static MapDataObject mapDataObject;
   private UUID uuid = UUID.randomUUID();
 
-  private Settings settings = new Settings();
+  private Settings settings = new Settings(null, null);
 
   private static int getAbs(int gridPos) {
     return gridPos * gridSizePX;

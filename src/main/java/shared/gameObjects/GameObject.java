@@ -71,8 +71,8 @@ public abstract class GameObject implements Serializable {
     this.id = id;
     this.objectUUID = objectUUID;
     this.active = true;
-    this.settings = new Settings();
-    this.levelHandler = settings.levelHandler;
+    this.settings = new Settings(levelHandler, root);
+    this.levelHandler = settings.getLevelHandler();
     this.transform = new Transform(this, new Vector2((float) x, (float) y),
         new Vector2((float) sizeX, (float) sizeY));
     this.components = new ArrayList<>();
@@ -263,15 +263,6 @@ public abstract class GameObject implements Serializable {
     }
   }
 
-  // Interpolate Position Client only
-  public void interpolatePosition(float alpha) {
-    if (!isActive()) {
-      return;
-    }
-    imageView.setTranslateX(alpha * getX() + (1 - alpha) * imageView.getTranslateX());
-    imageView.setTranslateY(alpha * getY() + (1 - alpha) * imageView.getTranslateY());
-  }
-
   /**
    * Contains the state of the object for sending over server Only contains items that need sending
    * separate by commas
@@ -301,10 +292,10 @@ public abstract class GameObject implements Serializable {
     }
   }
 
-  // Ignore for now, added due to unSerializable objects
+
   public void initialise(Group root, Settings settings) {
     this.settings = settings;
-    this.levelHandler = settings.levelHandler;
+    this.levelHandler = settings.getLevelHandler();
     this.positionBuffer = new ArrayList<>();
     this.networkStateUpdate = false;
     animation = new Animator();

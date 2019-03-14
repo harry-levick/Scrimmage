@@ -13,7 +13,6 @@ public class Sword extends Melee {
   private int currentAngleIndex;
   private Translate translate;
   private double attackAngleSign; // -1 if facingLeft, 1 if facingRight
-  private double[] holderHandPos;
 
   /**
    * Constructor of the Sword class
@@ -53,13 +52,6 @@ public class Sword extends Melee {
   public void fire(double mouseX, double mouseY) {
     super.fire(mouseX, mouseY);
   }
-
-  @Override
-  public void update() {
-    super.update();
-    holderHandPos = getHolderHandPos();
-  }
-
 
   @Override
   public void render() {
@@ -107,35 +99,47 @@ public class Sword extends Melee {
         "default", this.range, this.range, true, Path.convert(this.imagePath));
   }
 
+  @Override
   public double getGripX() {
-    if (holder.getFacingLeft()) {
-      this.imageView.setScaleX(-1);
-      if (!attacking) {
-        attackAngleSign = -1;
-      }
-      return holderHandPos[0] - 34;
-    } else { // facing right
-      this.imageView.setScaleX(1);
-      if (!attacking) {
-        attackAngleSign = 1;
-      }
-      return holderHandPos == null ? 0 : holderHandPos[0] - 6;
+    if (holder.isAimingLeft()) {
+      return getGripFlipX();
     }
+
+    this.imageView.setScaleX(1);
+    if (!attacking) {
+      attackAngleSign = 1;
+    }
+    return holderHandPos[0] - 6;
   }
 
+  @Override
   public double getGripY() {
-    if (holder.getFacingLeft()) {
-      this.imageView.setScaleX(-1);
-      if (!attacking) {
-        attackAngleSign = -1;
-      }
-      return holderHandPos[1] - 38;
-    } else { // facing right
-      this.imageView.setScaleX(1);
-      if (!attacking) {
-        attackAngleSign = 1;
-      }
-      return holderHandPos == null ? 0 : holderHandPos[1] - 34;
+    if (holder.isAimingLeft()) {
+      return getGripFlipY();
     }
+
+    this.imageView.setScaleX(1);
+    if (!attacking) {
+      attackAngleSign = 1;
+    }
+    return holderHandPos[1] - 34;
+  }
+
+  @Override
+  public double getGripFlipX() {
+    this.imageView.setScaleX(-1);
+    if (!attacking) {
+      attackAngleSign = -1;
+    }
+    return holderHandPos[0] - 34;
+  }
+
+  @Override
+  public double getGripFlipY() {
+    this.imageView.setScaleX(-1);
+    if (!attacking) {
+      attackAngleSign = -1;
+    }
+    return holderHandPos[1] - 38;
   }
 }

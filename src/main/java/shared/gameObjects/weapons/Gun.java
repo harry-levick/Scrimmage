@@ -3,11 +3,14 @@ package shared.gameObjects.weapons;
 import java.util.UUID;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.players.Player;
+import shared.util.maths.Vector2;
 
 /**
  * @author hlf764 The abstract class for all guns type weapon.
  */
-abstract class Gun extends Weapon {
+public abstract class Gun extends Weapon {
+
+  protected float aimAngleMax = 110f; // Maximum angle of aiming before switching holding hand
 
   protected double bulletSpeed; // pixel per second
   protected int fireRate; // bullets per minute
@@ -21,13 +24,10 @@ abstract class Gun extends Weapon {
    *
    * @param x The x position of the gun
    * @param y The y position of the gun
-   * @param damage Damage of the gun
    * @param weight Weight of the gun
    * @param name Name of the gun
    * @param ammo Total amount of ammo
-   * @param bulletSpeed Speed of the bullets
    * @param fireRate Fire rate of the gun (bullets per minute)
-   * @param bulletWidth Width of the bullet
    * @param fullAutoFire Is it full-automatic fire or single-shot
    * @param singleHanded Is it be hold with one hand or two hands
    */
@@ -36,31 +36,98 @@ abstract class Gun extends Weapon {
       double y,
       double sizeX,
       double sizeY,
-      ObjectType id,
-      int damage,
       double weight,
       String name,
       int ammo,
-      double bulletSpeed,
       int fireRate,
-      double bulletWidth,
       Player holder,
       boolean fullAutoFire,
       boolean singleHanded,
       UUID uuid) {
 
-    super(x, y, sizeX, sizeY, id, damage, weight, name, true, false, ammo, fireRate, holder, uuid);
+    super(x, y, sizeX, sizeY, ObjectType.Weapon, weight, name, true, false, ammo, fireRate, holder,
+        uuid);
 
-    this.bulletSpeed = bulletSpeed;
-    this.bulletWidth = bulletWidth;
     this.fullAutoFire = fullAutoFire;
     this.singleHanded = singleHanded;
   }
+
+  public abstract double getForeGripX();
+
+  public abstract double getForeGripY();
+
+  public abstract double getForeGripFlipX();
+
+  public abstract double getForeGripFlipY();
 
   @Override
   public void update() {
     deductCooldown();
     super.update();
+  }
+
+  @Override
+  public void render() {
+    super.render();
+
+    if (holder == null) {
+      return;
+    }
+
+    imageView.getTransforms().clear();
+
+    double mouseX = holder.mouseX;
+    double mouseY = holder.mouseY;
+    Vector2 mouseV = new Vector2((float) mouseX, (float) mouseY);
+    Vector2 gripV = new Vector2((float) this.getGripX(), (float) this.getGripY());
+    Vector2 mouseSubGrip = mouseV.sub(gripV);
+    angleRadian = mouseSubGrip.normalize().angleBetween(Vector2.Zero());  // radian
+    double angle = angleRadian * 180 / PI;  // degree
+
+    // Change the facing of the player when aiming the other way
+    double angleHorizontal;  // degree
+    if (holder.isAimingLeft()) {
+      angleHorizontal = (mouseSubGrip.angleBetween(Vector2.Left())) * 180 / PI;
+      if (angleHorizontal > aimAngleMax) {
+        holder.setAimingLeft(false);
+        angle = angleHorizontal - 180f;
+      }
+      if (angleHorizontal > 90f) {
+        angle = angleHorizontal * (mouseY > this.getGripY() ? -1 : 1);
+      }
+    } else { // holder aiming Right
+      angleHorizontal = (mouseSubGrip.angleBetween(Vector2.Right())) * 180 / PI;
+      if (angleHorizontal > aimAngleMax) {
+        holder.setAimingLeft(true);
+        angle = 180f - angleHorizontal;
+      }
+      if (angleHorizontal > 90f) {
+        angle = angleHorizontal * (mouseY > this.getGripY() ? 1 : -1);
+      }
+    }
+
+    angleRadian = angle * PI / 180;
+
+    // Rotate and translate the image
+    if (holder.isAimingLeft()) {
+      imageView.setScaleX(-1);
+      rotate.setAngle(-angle);
+      imageView.getTransforms().add(rotate);
+      imageView.setTranslateX(this.getGripFlipX());
+      imageView.setTranslateY(this.getGripFlipY());
+
+      holder.setHandLeftX(this.getForeGripFlipX());
+      holder.setHandLeftY(this.getForeGripFlipY());
+    } else {
+      imageView.setScaleX(1);
+      rotate.setAngle(angle);
+      imageView.getTransforms().add(rotate);
+      imageView.setTranslateX(this.getGripX());
+      imageView.setTranslateY(this.getGripY());
+
+      holder.setHandRightX(this.getForeGripX());
+      holder.setHandRightY(this.getForeGripY());
+    }
   }
 
   // -------START-------
@@ -97,23 +164,4 @@ abstract class Gun extends Weapon {
   // -------------------
   // Setters and Getters
   // --------END--------
-
-  /**
-   * For testing
-   */
-  @Override
-  public String toString() {
-    String s = "";
-
-    s += "Damage        = " + getDamage() + "\n";
-    s += "Weight        = " + getWeight() + "\n";
-    s += "Name          = " + getName() + "\n";
-    s += "BulletSpeed   = " + getBulletSpeed() + "\n";
-    s += "FireRate      = " + getFireRate() + "\n";
-    s += "BulletWidth   = " + getBulletWidth() + "\n";
-    s += "FullAutoFire  = " + isFullAutoFire() + "\n";
-    s += "SingleHanded  = " + isSingleHanded() + "\n";
-
-    return s;
-  }
 }

@@ -1,6 +1,5 @@
 package server;
 
-import client.main.Client;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,7 +17,7 @@ import shared.packets.PacketReady;
 
 public class ServerReceiver implements Runnable {
 
-  private static final Logger LOGGER = LogManager.getLogger(Client.class.getName());
+  private static final Logger LOGGER = LogManager.getLogger(ServerReceiver.class.getName());
   private Player player;
   private Socket socket;
   private Server server;

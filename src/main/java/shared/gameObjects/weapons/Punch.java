@@ -45,4 +45,24 @@ public class Punch extends Melee {
   public void initialiseAnimation() {
 
   }
+
+  @Override
+  public double getGripX() {
+    return 0;
+  }
+
+  @Override
+  public double getGripY() {
+    return 0;
+  }
+
+  @Override
+  public double getGripFlipX() {
+    return 0;
+  }
+
+  @Override
+  public double getGripFlipY() {
+    return 0;
+  }
 }
