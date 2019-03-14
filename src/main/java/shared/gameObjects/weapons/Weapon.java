@@ -157,7 +157,7 @@ public abstract class Weapon extends GameObject {
   }
 
   public void destroyWeapon() {
-    levelHandler.removeGameObject(this);
+    settings.getLevelHandler().removeGameObject(this);
   }
 
   @Override

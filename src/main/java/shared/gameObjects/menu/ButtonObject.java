@@ -84,11 +84,6 @@ public abstract class ButtonObject extends GameObject {
     this.animation.supplyAnimation("clicked", "images/buttons/blank_pressed.png");
   }
 
-  @Override
-  public String getState() {
-    return null;
-  }
-
 
   public void removeRender() {
     super.removeRender();

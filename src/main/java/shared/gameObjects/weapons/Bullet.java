@@ -1,6 +1,8 @@
 package shared.gameObjects.weapons;
 
+import client.main.Settings;
 import java.util.UUID;
+import javafx.scene.Group;
 import javafx.scene.transform.Rotate;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
@@ -33,6 +35,7 @@ public abstract class Bullet extends GameObject {
   private transient Rotate rotate;
   protected Component holderBoxCollider;  // the BoxCollider of the holder
   protected boolean hitHolder;    // true if it hit the holder (For OnCollisionExit)
+  private double angleDegree;
 
   public Bullet(
       double gunX, // gun initial x position
@@ -73,7 +76,7 @@ public abstract class Bullet extends GameObject {
     Vector2 mouseV = new Vector2((float) mouseX, (float) mouseY);
     Vector2 gunV = new Vector2((float) gunX, (float) gunY);
     Double bulletAngle = (double) mouseV.sub(gunV).angle(); // radian
-    double angleDegree = bulletAngle * 180 / PI; // degree
+    angleDegree = bulletAngle * 180 / PI; // degree
     if (mouseX < gunX) {
       angleDegree = angleDegree + 180;
     }
@@ -82,7 +85,14 @@ public abstract class Bullet extends GameObject {
     // Get the BoxCollider of the holder
     holderBoxCollider = holder.getComponent(ComponentType.COLLIDER);
     hitHolder = false;
-    levelHandler.addGameObject(this);
+  }
+
+  @Override
+  public void initialise(Group root, Settings settings) {
+    super.initialise(root, settings);
+    // Rotate property of the image
+    rotate = new Rotate();
+    rotate.setAngle(angleDegree);
     imageView.getTransforms().add(rotate);
     render();
   }
@@ -94,7 +104,7 @@ public abstract class Bullet extends GameObject {
     if ((0 < getX() && getX() < 1920) && (0 < getY() && getY() < 1080))
       rb.move(vector.mult((float) speed));
     else {
-      levelHandler.removeGameObject(this);
+      settings.getLevelHandler().removeGameObject(this);
     }
   }
 
@@ -120,7 +130,7 @@ public abstract class Bullet extends GameObject {
     }
 
     if (remove) {
-      levelHandler.removeGameObject(this);
+      settings.getLevelHandler().removeGameObject(this);
     }
   }
 
@@ -137,11 +147,6 @@ public abstract class Bullet extends GameObject {
       addComponent(holderBoxCollider);
       hitHolder = false;
     }
-  }
-
-  @Override
-  public String getState() {
-    return null;
   }
 
   // -------START-------

@@ -98,8 +98,6 @@ public class Server extends Application {
     executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     threadName = "Server";
     settings = new Settings(levelHandler, gameRoot);
-    levelHandler = new LevelHandler(settings, backgroundRoot, gameRoot, this);
-    settings.setLevelHandler(levelHandler);
     running.set(true);
     settings.setLevelHandler(levelHandler);
     playlist = new LinkedList();
@@ -248,6 +246,9 @@ public class Server extends Application {
   @Override
   public void start(Stage primaryStage) throws Exception {
     setupRender(primaryStage);
+    levelHandler = new LevelHandler(settings, backgroundRoot, gameRoot, this);
+    settings.setLevelHandler(levelHandler);
+    settings.setGameRoot(gameRoot);
     LOGGER.debug("Running " + threadName);
     /** Receiver from clients */
     executor.execute(new ServerReceiver(this, serverSocket, connected));

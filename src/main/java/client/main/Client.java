@@ -360,7 +360,6 @@ public class Client extends Application {
         levelHandler.getClientPlayer().applyInput();
 
         if (multiplayer && sendUpdate) {
-          System.out.println("Send inp");
           ClientNetworkManager.sendInput();
           sendUpdate = false;
         }

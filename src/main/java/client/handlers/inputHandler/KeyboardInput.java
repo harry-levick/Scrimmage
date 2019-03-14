@@ -47,6 +47,7 @@ public class KeyboardInput implements EventHandler<KeyEvent> {
           Client.sendUpdate = true;
           break;
         case W:
+          System.out.println("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
           clientPlayer.jumpKey = false;
           Client.sendUpdate = true;
           break;

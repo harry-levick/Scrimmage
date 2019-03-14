@@ -23,7 +23,7 @@ public class ButtonHost extends ButtonObject {
 
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
-    levelHandler.changeMap(
+    settings.getLevelHandler().changeMap(
         new Map("Host", Menu.HOST.getMenuPath()), false, false);
   }
 }

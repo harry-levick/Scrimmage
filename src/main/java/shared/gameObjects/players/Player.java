@@ -91,7 +91,7 @@ public class Player extends GameObject implements Destructable {
 
   public void addChild(GameObject child) {
     children.add(child);
-    levelHandler.addGameObject(child);
+    settings.getLevelHandler().addGameObject(child);
   }
 
   @Override
@@ -101,14 +101,14 @@ public class Player extends GameObject implements Destructable {
   }
 
   private void addLimbs() {
-    legLeft = new Leg(true, this, levelHandler);
-    legRight = new Leg(false, this, levelHandler);
-    body = new Body(this, levelHandler);
-    head = new Head(this, levelHandler);
-    armLeft = new Arm(true, this, levelHandler);
-    armRight = new Arm(false, this, levelHandler);
-    handLeft = new Hand(true, armLeft, levelHandler);
-    handRight = new Hand(false, armRight, levelHandler);
+    legLeft = new Leg(true, this, settings.getLevelHandler());
+    legRight = new Leg(false, this, settings.getLevelHandler());
+    body = new Body(this, settings.getLevelHandler());
+    head = new Head(this, settings.getLevelHandler());
+    armLeft = new Arm(true, this, settings.getLevelHandler());
+    armRight = new Arm(false, this, settings.getLevelHandler());
+    handLeft = new Hand(true, armLeft, settings.getLevelHandler());
+    handRight = new Hand(false, armRight, settings.getLevelHandler());
     addChild(legLeft);
     addChild(legRight);
     addChild(body);
@@ -124,7 +124,7 @@ public class Player extends GameObject implements Destructable {
     checkGrounded(); // Checks if the player is grounded
     badWeapon();
     if (deattach) {
-      for (int i = 0; i < 8; i++) {
+      for (int i = 0; i < 6; i++) {
         Limb test = (Limb) children.get(i);
         test.detachLimb();
       }
@@ -201,7 +201,7 @@ public class Player extends GameObject implements Destructable {
       this.setHolding(null);
       Weapon newSword =
           new Sword(this.getX(), this.getY(), "newSword@Player", this, UUID.randomUUID());
-      levelHandler.addGameObject(newSword);
+      settings.getLevelHandler().addGameObject(newSword);
       this.setHolding(newSword);
       return true;
     }

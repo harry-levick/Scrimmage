@@ -1,6 +1,9 @@
 package shared.gameObjects.weapons;
 
+import client.main.Settings;
 import java.util.UUID;
+import javafx.scene.Group;
+import javafx.scene.transform.Rotate;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.players.Player;
 import shared.util.maths.Vector2;
@@ -59,6 +62,12 @@ public abstract class Gun extends Weapon {
   public abstract double getForeGripFlipX();
 
   public abstract double getForeGripFlipY();
+
+  @Override
+  public void initialise(Group root, Settings settings) {
+    super.initialise(root, settings);
+    rotate = new Rotate();
+  }
 
   @Override
   public void update() {

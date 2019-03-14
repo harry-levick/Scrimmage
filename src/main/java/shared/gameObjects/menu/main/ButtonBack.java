@@ -14,6 +14,6 @@ public class ButtonBack extends ButtonObject {
 
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
-    levelHandler.previousMap(false);
+    settings.getLevelHandler().previousMap(false);
   }
 }

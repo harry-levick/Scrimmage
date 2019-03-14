@@ -37,21 +37,21 @@ public class ButtonSingleplayer extends ButtonObject {
         new Map("map1", Path.convert("src/main/resources/maps/map1.map")),
         true, false);
 
-    int botsToAdd = maxPlayers - levelHandler.getPlayers().size();
+    int botsToAdd = maxPlayers - settings.getLevelHandler().getPlayers().size();
     for (int b = 0; b < botsToAdd; b++) {
       //TODO Change physics to LinkedHashMaps
-      Collection<GameObject> values = levelHandler.getGameObjects().values();
+      Collection<GameObject> values = settings.getLevelHandler().getGameObjects().values();
       ArrayList<GameObject> physicsGameObjects = new ArrayList<>(values);
-      Bot botPlayer = new Bot(200, 600, UUID.randomUUID(), levelHandler);
+      Bot botPlayer = new Bot(200, 600, UUID.randomUUID(), settings.getLevelHandler());
       botPlayer.setHolding(/*new Sword(200, 600, "Sword@ButtonSinglePlayer",
           botPlayer, UUID.randomUUID()) */
           new MachineGun(500, 600, "MachineGun@ButtonSinglePlayer", botPlayer, UUID.randomUUID()));
       botPlayer.getHolding().initialise(settings.getGameRoot(), settings);
       botPlayer.initialise(settings.getGameRoot(), settings);
-      levelHandler.getPlayers().put(botPlayer.getUUID(), botPlayer);
-      levelHandler.getBotPlayerList().put(botPlayer.getUUID(), botPlayer);
-      levelHandler.getGameObjects().put(botPlayer.getUUID(), botPlayer);
-      levelHandler.getGameObjects()
+      settings.getLevelHandler().getPlayers().put(botPlayer.getUUID(), botPlayer);
+      settings.getLevelHandler().getBotPlayerList().put(botPlayer.getUUID(), botPlayer);
+      settings.getLevelHandler().getGameObjects().put(botPlayer.getUUID(), botPlayer);
+      settings.getLevelHandler().getGameObjects()
           .put(botPlayer.getHolding().getUUID(), botPlayer.getHolding());
 
       botPlayer.startThread();
