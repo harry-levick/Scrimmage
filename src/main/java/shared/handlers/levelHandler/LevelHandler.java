@@ -77,6 +77,7 @@ public class LevelHandler {
     toCreate = new ArrayList<>();
     bots = new LinkedHashMap<>();
     maps = MapLoader.getMaps(settings.getMapsPath());
+    this.isServer = true;
     this.backgroundRoot = backgroundRoot;
     this.gameRoot = gameRoot;
     this.server = server;
@@ -211,6 +212,7 @@ public class LevelHandler {
       ConcurrentSkipListMap<UUID, GameObject> temp = new ConcurrentSkipListMap<>();
       temp.put(gameObject.getUUID(), gameObject);
       server.sendObjects(temp);
+      System.out.println("DIDIDIDIIDIDIDIDIDIDIID");
     }
   }
 
@@ -278,7 +280,6 @@ public class LevelHandler {
     newPlayer.initialise(root, settings);
     players.put(newPlayer.getUUID(), newPlayer);
     gameObjects.put(newPlayer.getUUID(), newPlayer);
-    System.out.println("test");
   }
 
   public void addClientPlayer(Group root) {

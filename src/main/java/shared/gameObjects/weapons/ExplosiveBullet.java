@@ -96,7 +96,7 @@ public class ExplosiveBullet extends Bullet {
     }
 
     if (remove) {
-      levelHandler.removeGameObject(this);
+      settings.getLevelHandler().removeGameObject(this);
     }
   }
 

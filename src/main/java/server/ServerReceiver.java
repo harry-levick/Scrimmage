@@ -56,7 +56,6 @@ public class ServerReceiver implements Runnable {
       );
 
       // socket.setSoTimeout(5000);
-      System.out.println("Im HERE");
 
       /** Main Loop */
       while (true) {

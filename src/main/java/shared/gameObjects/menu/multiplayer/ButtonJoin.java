@@ -45,7 +45,7 @@ public class ButtonJoin extends ButtonObject {
     Client.connectionHandler.start();
     button.disarm();
     root.getChildren().remove(addressInput);
-    levelHandler.changeMap(
+    settings.getLevelHandler().changeMap(
         new Map("LOBBY", Path.convert("src/main/resources/menus/lobby.map")),
         false, false);
     System.out.println("dfd");

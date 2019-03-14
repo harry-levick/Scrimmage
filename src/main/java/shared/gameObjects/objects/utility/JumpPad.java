@@ -71,7 +71,6 @@ public class JumpPad extends GameObject {
   public void OnCollisionStay(Collision col) {
     super.OnCollisionEnter(col);
     if (!cooldown && col.getNormalCollision().equals(Vector2.Up())) {
-      System.out.println("Entered");
       spring = true;
     }
   }

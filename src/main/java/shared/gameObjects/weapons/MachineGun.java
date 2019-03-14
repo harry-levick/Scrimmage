@@ -2,7 +2,9 @@ package shared.gameObjects.weapons;
 
 import client.handlers.audioHandler.AudioHandler;
 import client.main.Client;
+import client.main.Settings;
 import java.util.UUID;
+import javafx.scene.Group;
 import javafx.scene.transform.Rotate;
 import shared.gameObjects.players.Player;
 import shared.util.Path;
@@ -42,6 +44,13 @@ public class MachineGun extends Gun {
   }
 
   @Override
+  public void initialise(Group root, Settings settings) {
+    super.initialise(root, settings);
+    rotate.setPivotX(20);
+    rotate.setPivotY(10);
+  }
+
+  @Override
   public void fire(double mouseX, double mouseY) {
     if (canFire()) {
       UUID uuid = UUID.randomUUID();
@@ -67,6 +76,7 @@ public class MachineGun extends Gun {
               mouseY,
               this.holder,
               uuid);
+      settings.getLevelHandler().addGameObject(bullet);
       this.currentCooldown = getDefaultCoolDown();
       new AudioHandler(settings, Client.musicActive).playSFX("MACHINEGUN");
       deductAmmo();

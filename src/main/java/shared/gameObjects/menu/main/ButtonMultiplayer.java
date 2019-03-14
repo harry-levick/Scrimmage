@@ -24,7 +24,7 @@ public class ButtonMultiplayer extends ButtonObject {
 
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
-    levelHandler.changeMap(
+    settings.getLevelHandler().changeMap(
         new Map(
             "MULTIPLAYER",
             Path.convert("src/main/resources/menus/multiplayer.map")),

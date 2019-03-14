@@ -21,12 +21,12 @@ public class ButtonQuit extends ButtonObject {
     // SINGLEPLAYER -> MAIN MENU
     // MULTIPLAYER -> MAIN MENU
     // MAIN MENU -> CLOSE
-    switch (levelHandler.getMap().getGameState()) {
+    switch (settings.getLevelHandler().getMap().getGameState()) {
       case IN_GAME:
       case LOBBY:
       case START_CONNECTION:
       case MULTIPLAYER:
-        levelHandler.changeMap(
+        settings.getLevelHandler().changeMap(
             new Map("menus/main_menu.map", Path.convert("src/main/resources/menus/main_menu.map")),
             true, false);
         break;
