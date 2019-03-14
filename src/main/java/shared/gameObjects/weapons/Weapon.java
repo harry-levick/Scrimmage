@@ -1,6 +1,5 @@
 package shared.gameObjects.weapons;
 
-import client.main.Client;
 import java.util.UUID;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
@@ -137,7 +136,7 @@ public abstract class Weapon extends GameObject {
   }
 
   public void destroyWeapon() {
-    Client.levelHandler.removeGameObject(this);
+    levelHandler.removeGameObject(this);
   }
 
   @Override

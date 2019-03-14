@@ -1,7 +1,5 @@
 package shared.gameObjects;
 
-import static client.main.Settings.levelHandler;
-
 import client.main.Settings;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -18,6 +16,7 @@ import shared.gameObjects.components.Collider;
 import shared.gameObjects.components.Component;
 import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.Rigidbody;
+import shared.handlers.levelHandler.LevelHandler;
 import shared.physics.Physics;
 import shared.physics.data.Collision;
 import shared.physics.data.DynamicCollision;
@@ -32,6 +31,7 @@ public abstract class GameObject implements Serializable {
 
   protected UUID objectUUID;
   protected ObjectType id;
+  protected transient LevelHandler levelHandler;
 
   protected transient Settings settings = new Settings();
 
@@ -71,6 +71,7 @@ public abstract class GameObject implements Serializable {
     this.id = id;
     this.objectUUID = objectUUID;
     this.active = true;
+    this.levelHandler = Settings.levelHandler;
     this.transform = new Transform(this, new Vector2((float) x, (float) y),
         new Vector2((float) sizeX, (float) sizeY));
     this.components = new ArrayList<>();
@@ -301,6 +302,7 @@ public abstract class GameObject implements Serializable {
 
   // Ignore for now, added due to unSerializable objects
   public void initialise(Group root) {
+    this.levelHandler = Settings.levelHandler;
     this.positionBuffer = new ArrayList<>();
     this.networkStateUpdate = false;
     animation = new Animator();

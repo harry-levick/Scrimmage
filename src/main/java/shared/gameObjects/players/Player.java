@@ -1,6 +1,5 @@
 package shared.gameObjects.players;
 
-import client.main.Client;
 import java.util.UUID;
 import javafx.scene.Group;
 import shared.gameObjects.Destructable;
@@ -18,7 +17,6 @@ import shared.gameObjects.players.Limbs.Leg;
 import shared.gameObjects.weapons.MachineGun;
 import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.weapons.Weapon;
-import shared.handlers.levelHandler.LevelHandler;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
@@ -34,7 +32,6 @@ public class Player extends GameObject implements Destructable {
   public boolean deattach;
   public double mouseX, mouseY;
   public int score;
-  protected transient LevelHandler levelHandler;
   protected Behaviour behaviour;
   protected float jumpTime;
   protected boolean jumped;
@@ -63,7 +60,7 @@ public class Player extends GameObject implements Destructable {
   //Networking
   private int lastInputCount;
 
-  public Player(double x, double y, UUID playerUUID, LevelHandler levelHandler) {
+  public Player(double x, double y, UUID playerUUID) {
     super(x, y, 80, 110, ObjectType.Player, playerUUID);
     this.lastInputCount = 0;
     this.score = 0;
@@ -73,7 +70,6 @@ public class Player extends GameObject implements Destructable {
     this.click = false;
     this.health = 100;
     this.holding = null;
-    this.levelHandler = levelHandler;
     this.behaviour = Behaviour.IDLE;
     this.shake = new ObjectShake(this);
     this.bc = new BoxCollider(this, ColliderLayer.PLAYER, false);
@@ -215,7 +211,7 @@ public class Player extends GameObject implements Destructable {
       Weapon sword =
           new Sword(this.getX(), this.getY(), "newSword@Player", this, UUID.randomUUID());
       sword.initialise(root);
-      Client.levelHandler.addGameObject(sword);
+      levelHandler.addGameObject(sword);
       this.setHolding(sword);
       return true;
     }
@@ -351,10 +347,6 @@ public class Player extends GameObject implements Destructable {
 
   public boolean getFacingLeft() {
     return this.facingLeft;
-  }
-
-  public void setLevelHandler(LevelHandler levelHandler) {
-    this.levelHandler = levelHandler;
   }
 
   public void setFacingLeft(boolean b) {

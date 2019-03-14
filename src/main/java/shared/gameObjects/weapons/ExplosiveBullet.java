@@ -1,6 +1,5 @@
 package shared.gameObjects.weapons;
 
-import client.main.Client;
 import java.util.ArrayList;
 import java.util.UUID;
 import shared.gameObjects.Destructable;
@@ -97,7 +96,7 @@ public class ExplosiveBullet extends Bullet {
     }
 
     if (remove) {
-      Client.levelHandler.removeGameObject(this);
+      levelHandler.removeGameObject(this);
     }
   }
 

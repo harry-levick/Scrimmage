@@ -1,6 +1,5 @@
 package shared.gameObjects.weapons;
 
-import client.main.Client;
 import java.util.UUID;
 import javafx.scene.transform.Rotate;
 import shared.gameObjects.GameObject;
@@ -84,7 +83,7 @@ public abstract class Bullet extends GameObject {
     holderBoxCollider = holder.getComponent(ComponentType.COLLIDER);
     hitHolder = false;
 
-    Client.levelHandler.addGameObject(this);
+    levelHandler.addGameObject(this);
     imageView.getTransforms().add(rotate);
     render();
   }
@@ -95,8 +94,9 @@ public abstract class Bullet extends GameObject {
 
     if ((0 < getX() && getX() < 1920) && (0 < getY() && getY() < 1080))
       rb.move(vector.mult((float) speed));
-    else
-      Client.levelHandler.removeGameObject(this);
+    else {
+      levelHandler.removeGameObject(this);
+    }
   }
 
   @Override
@@ -121,7 +121,7 @@ public abstract class Bullet extends GameObject {
     }
 
     if (remove) {
-      Client.levelHandler.removeGameObject(this);
+      levelHandler.removeGameObject(this);
     }
   }
 

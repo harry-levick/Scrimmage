@@ -3,6 +3,7 @@ package shared.gameObjects.weapons;
 import client.handlers.audioHandler.AudioHandler;
 import client.main.Client;
 import java.util.UUID;
+import javafx.scene.Group;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import shared.gameObjects.Utils.ObjectType;
@@ -20,7 +21,7 @@ public class MachineGun extends Gun {
   private double[] holderHandPos;
   private double angleGun; // angle of gun (hand and mouse vs x-axis) (radian)
   private transient Rotate rotate; // rotate property of gun wrt grip
-  private Scale scale;   // scale the image to mirror it
+  private transient Scale scale;   // scale the image to mirror it
 
 
   public MachineGun(double x, double y, String name, Player holder, UUID uuid) {
@@ -99,6 +100,19 @@ public class MachineGun extends Gun {
   public void update() {
     super.update();
     holderHandPos = getHolderHandPos();
+  }
+
+  @Override
+  public void initialise(Group root) {
+    super.initialise(root);
+    rotate = new Rotate();
+    // pivot = position of the grip
+    // If changing the value of this, change the value in all getGrip() methods
+    rotate.setPivotX(20);
+    rotate.setPivotY(10);
+
+    scale = new Scale();
+    scale.setX(-1);
   }
 
   @Override
