@@ -94,6 +94,7 @@ public abstract class Bullet extends GameObject {
     rotate = new Rotate();
     rotate.setAngle(angleDegree);
     imageView.getTransforms().add(rotate);
+    render();
   }
 
   @Override
