@@ -1,6 +1,7 @@
 package shared.gameObjects.menu.main;
 
 import client.main.Client;
+import client.main.Settings;
 import java.util.UUID;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -26,8 +27,8 @@ public class SoundSlider extends SliderObject {
   }
 
   @Override
-  public void initialise(Group root) {
-    super.initialise(root);
+  public void initialise(Group root, Settings settings) {
+    super.initialise(root, settings);
     slider
         .valueProperty()
         .addListener(

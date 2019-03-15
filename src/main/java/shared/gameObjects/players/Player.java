@@ -1,6 +1,6 @@
 package shared.gameObjects.players;
 
-import client.main.Client;
+import client.main.Settings;
 import java.util.UUID;
 import javafx.scene.Group;
 import shared.gameObjects.Destructable;
@@ -17,7 +17,6 @@ import shared.gameObjects.players.Limbs.Head;
 import shared.gameObjects.players.Limbs.Leg;
 import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.weapons.Weapon;
-import shared.handlers.levelHandler.LevelHandler;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
@@ -33,7 +32,6 @@ public class Player extends GameObject implements Destructable {
   public boolean deattach;
   public double mouseX, mouseY;
   public int score;
-  protected LevelHandler levelHandler;
   protected Behaviour behaviour;
   protected float jumpTime;
   protected boolean jumped;
@@ -63,7 +61,7 @@ public class Player extends GameObject implements Destructable {
   //Networking
   private int lastInputCount;
 
-  public Player(double x, double y, UUID playerUUID, LevelHandler levelHandler) {
+  public Player(double x, double y, UUID playerUUID) {
     super(x, y, 80, 110, ObjectType.Player, playerUUID);
     this.lastInputCount = 0;
     this.score = 0;
@@ -73,7 +71,6 @@ public class Player extends GameObject implements Destructable {
     this.click = false;
     this.health = 100;
     this.holding = null;
-    this.levelHandler = levelHandler;
     this.behaviour = Behaviour.IDLE;
     this.shake = new ObjectShake(this);
     this.bc = new BoxCollider(this, ColliderLayer.PLAYER, false);
@@ -94,24 +91,24 @@ public class Player extends GameObject implements Destructable {
 
   public void addChild(GameObject child) {
     children.add(child);
-    levelHandler.addGameObject(child);
+    settings.getLevelHandler().addGameObject(child);
   }
 
   @Override
-  public void initialise(Group root) {
-    super.initialise(root);
+  public void initialise(Group root, Settings settings) {
+    super.initialise(root, settings);
     addLimbs();
   }
 
   private void addLimbs() {
-    legLeft = new Leg(true, this, levelHandler);
-    legRight = new Leg(false, this, levelHandler);
-    body = new Body(this, levelHandler);
-    head = new Head(this, levelHandler);
-    armLeft = new Arm(true, this, levelHandler);
-    armRight = new Arm(false, this, levelHandler);
-    handLeft = new Hand(true, armLeft, levelHandler);
-    handRight = new Hand(false, armRight, levelHandler);
+    legLeft = new Leg(true, this, settings.getLevelHandler());
+    legRight = new Leg(false, this, settings.getLevelHandler());
+    body = new Body(this, settings.getLevelHandler());
+    head = new Head(this, settings.getLevelHandler());
+    armLeft = new Arm(true, this, settings.getLevelHandler());
+    armRight = new Arm(false, this, settings.getLevelHandler());
+    handLeft = new Hand(true, armLeft, settings.getLevelHandler());
+    handRight = new Hand(false, armRight, settings.getLevelHandler());
     addChild(legLeft);
     addChild(legRight);
     addChild(body);
@@ -127,7 +124,7 @@ public class Player extends GameObject implements Destructable {
     checkGrounded(); // Checks if the player is grounded
     badWeapon();
     if (deattach) {
-      for (int i = 0; i < 8; i++) {
+      for (int i = 0; i < 6; i++) {
         Limb test = (Limb) children.get(i);
         test.detachLimb();
       }
@@ -204,7 +201,7 @@ public class Player extends GameObject implements Destructable {
       this.setHolding(null);
       Weapon newSword =
           new Sword(this.getX(), this.getY(), "newSword@Player", this, UUID.randomUUID());
-      Client.levelHandler.addGameObject(newSword);
+      settings.getLevelHandler().addGameObject(newSword);
       this.setHolding(newSword);
       return true;
     }
@@ -310,6 +307,15 @@ public class Player extends GameObject implements Destructable {
     }
   }
 
+  public boolean containsChild(GameObject child) {
+    for (GameObject c : children) {
+      if (c.getUUID() == child.getUUID()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public void setHandRightX(double pos) {
     this.handRight.setX(pos);
   }
@@ -348,7 +354,9 @@ public class Player extends GameObject implements Destructable {
     this.facingRight = b;
   }
 
-  public boolean isAimingLeft() { return this.aimLeft; }
+  public boolean isAimingLeft() {
+    return this.aimLeft;
+  }
 
   public void setAimingLeft(boolean b) {
     this.aimLeft = b;

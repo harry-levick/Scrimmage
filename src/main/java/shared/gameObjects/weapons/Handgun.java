@@ -1,7 +1,6 @@
 package shared.gameObjects.weapons;
 
 import java.util.UUID;
-import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.players.Player;
 import shared.util.Path;
 

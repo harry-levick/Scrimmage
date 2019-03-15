@@ -1,6 +1,5 @@
 package server;
 
-import client.main.Client;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,7 +17,7 @@ import shared.packets.PacketReady;
 
 public class ServerReceiver implements Runnable {
 
-  private static final Logger LOGGER = LogManager.getLogger(Client.class.getName());
+  private static final Logger LOGGER = LogManager.getLogger(ServerReceiver.class.getName());
   private Player player;
   private Socket socket;
   private Server server;
@@ -52,6 +51,7 @@ public class ServerReceiver implements Runnable {
       Platform.runLater(
           () -> {
             player = server.addPlayer(joinPacket, socket.getInetAddress());
+            server.sendObjects(Server.getLevelHandler().getGameObjectsFiltered());
           }
       );
 
@@ -61,24 +61,27 @@ public class ServerReceiver implements Runnable {
       while (true) {
         try {
           message = input.readLine();
+          System.out.println("GOT" + message);
         } catch (SocketTimeoutException e) {
           server.playerCount.decrementAndGet();
           connected.remove(socket.getInetAddress());
           server.levelHandler.getPlayers().remove(player);
           server.levelHandler.getGameObjects().remove(player);
+          LOGGER.debug("Removing player");
           break;
         } catch (IOException e) {
           e.printStackTrace();
         }
         packetID = Integer.parseInt(message.split(",")[0]);
         switch (packetID) {
+          //Player Input
           case 2:
             PacketInput inputPacket = new PacketInput(message);
-            // if (inputPacket.getUuid() == player.getUUID()) {
             // Change to add to list
             server.getQueue(player).add(inputPacket);
             // }
             break;
+          //Player Ready
           case 5:
             PacketReady readyPacket = new PacketReady(message);
             if (readyPacket.getUUID() == player.getUUID()

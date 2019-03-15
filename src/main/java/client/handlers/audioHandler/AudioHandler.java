@@ -21,12 +21,14 @@ public class AudioHandler {
   private PLAYLIST currentPlaylist;
   private boolean active;
 
-  private MusicAssets musicAssets = new MusicAssets();
-  private EffectsAssets effectsAssets = new EffectsAssets();
+  private MusicAssets musicAssets;
+  private EffectsAssets effectsAssets;
 
   public AudioHandler(Settings settings, boolean active) {
     this.settings = settings;
     this.active = active;
+    musicAssets = new MusicAssets(settings);
+    effectsAssets = new EffectsAssets(settings);
   }
 
   /**
