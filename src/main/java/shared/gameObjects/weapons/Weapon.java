@@ -1,6 +1,5 @@
 package shared.gameObjects.weapons;
 
-import client.main.Client;
 import java.util.UUID;
 import javafx.scene.transform.Rotate;
 import shared.gameObjects.GameObject;
@@ -39,7 +38,7 @@ public abstract class Weapon extends GameObject {
   protected double[] holderHandPos;
 
   protected double angleRadian; // angle of gun (hand and mouse vs x-axis) (radian)
-  protected Rotate rotate;
+  protected transient Rotate rotate;
 
   // variables for when the holder is null
   private BoxCollider bcTrig;
@@ -158,7 +157,7 @@ public abstract class Weapon extends GameObject {
   }
 
   public void destroyWeapon() {
-    Client.levelHandler.removeGameObject(this);
+    settings.getLevelHandler().removeGameObject(this);
   }
 
   @Override

@@ -22,9 +22,11 @@ public class ConnectionHandler extends Thread {
   private DatagramSocket clientSocket;
   private Socket socket;
   private PrintWriter out;
+  private int size;
 
   public ConnectionHandler(String address) {
     connected = true;
+    size = 1000;
     port = 4446;
     received = new LinkedBlockingQueue<String>();
     this.address = address;
@@ -48,12 +50,20 @@ public class ConnectionHandler extends Thread {
 
     Client.multiplayer = true;
     while (connected) {
-      buffer = new byte[3200];
+      buffer = new byte[size];
       DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
       try {
         clientSocket.receive(packet);
         String msg = new String(packet.getData(), packet.getOffset(), packet.getLength());
-        received.add(msg.trim());
+        if (msg.startsWith("length:")) {
+          size = Integer.parseInt(msg.split(":")[1]);
+        } else if (msg.startsWith("object")) {
+          packet = new DatagramPacket(buffer, buffer.length);
+          clientSocket.receive(packet);
+          ClientNetworkManager.createGameObjects(packet.getData());
+        } else {
+          received.add(msg.trim());
+        }
       } catch (IOException e) {
         e.printStackTrace();
       }
@@ -73,5 +83,6 @@ public class ConnectionHandler extends Thread {
 
   public void send(String data) {
     out.println(data);
+    System.out.println("SENT" + data);
   }
 }

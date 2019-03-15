@@ -2,6 +2,7 @@ package shared.gameObjects.menu;
 
 import client.handlers.audioHandler.AudioHandler;
 import client.main.Client;
+import client.main.Settings;
 import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
@@ -57,8 +58,8 @@ public abstract class ButtonObject extends GameObject {
   }
 
   @Override
-  public void initialise(Group root) {
-    super.initialise(root);
+  public void initialise(Group root, Settings settings) {
+    super.initialise(root, settings);
     button = new Button(this.text, imageView);
     button.setFont(settings.getFont(30));
     button.setTextFill(Color.WHITE);
@@ -67,11 +68,6 @@ public abstract class ButtonObject extends GameObject {
     root.getChildren().add(button);
     button.setOnMousePressed(event -> doOnClick(event));
     button.setOnMouseReleased(event -> doOnUnClick(event));
-  }
-
-  @Override
-  public void interpolatePosition(float alpha) {
-
   }
 
   @Override
@@ -86,11 +82,6 @@ public abstract class ButtonObject extends GameObject {
   public void initialiseAnimation() {
     this.animation.supplyAnimation("default", "images/buttons/blank_unpressed.png");
     this.animation.supplyAnimation("clicked", "images/buttons/blank_pressed.png");
-  }
-
-  @Override
-  public String getState() {
-    return null;
   }
 
 

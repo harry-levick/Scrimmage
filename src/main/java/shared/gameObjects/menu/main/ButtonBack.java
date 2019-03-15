@@ -1,6 +1,5 @@
 package shared.gameObjects.menu.main;
 
-import client.main.Client;
 import java.util.UUID;
 import javafx.scene.input.MouseEvent;
 import shared.gameObjects.Utils.ObjectType;
@@ -15,6 +14,6 @@ public class ButtonBack extends ButtonObject {
 
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
-    Client.levelHandler.previousMap(false);
+    settings.getLevelHandler().previousMap(false);
   }
 }

@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
 import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.LevelHandler;
@@ -40,7 +39,7 @@ public class Bot extends Player {
    */
   public Bot(double x, double y, UUID playerUUID,
       LevelHandler levelHandler) {
-    super(x, y, playerUUID, levelHandler);
+    super(x, y, playerUUID);
     this.state = FSA.INITIAL_STATE;
     this.levelHandler = levelHandler;
     this.targetPlayer = findTarget();
@@ -58,7 +57,7 @@ public class Bot extends Player {
    * @param that object to be copied
    */
   public Bot(Bot that) {
-    super(that.getX(), that.getY(), UUID.randomUUID(), that.levelHandler);
+    super(that.getX(), that.getY(), UUID.randomUUID());
     this.levelHandler = that.levelHandler;
 
   }

@@ -1,6 +1,9 @@
 package shared.gameObjects.weapons;
 
+import client.main.Settings;
 import java.util.UUID;
+import javafx.scene.Group;
+import javafx.scene.transform.Rotate;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.players.Player;
 import shared.util.maths.Vector2;
@@ -45,16 +48,26 @@ public abstract class Gun extends Weapon {
       boolean singleHanded,
       UUID uuid) {
 
-    super(x, y, sizeX, sizeY, ObjectType.Weapon, weight, name, true, false, ammo, fireRate, holder, uuid);
+    super(x, y, sizeX, sizeY, ObjectType.Weapon, weight, name, true, false, ammo, fireRate, holder,
+        uuid);
 
     this.fullAutoFire = fullAutoFire;
     this.singleHanded = singleHanded;
   }
 
   public abstract double getForeGripX();
+
   public abstract double getForeGripY();
+
   public abstract double getForeGripFlipX();
+
   public abstract double getForeGripFlipY();
+
+  @Override
+  public void initialise(Group root, Settings settings) {
+    super.initialise(root, settings);
+    rotate = new Rotate();
+  }
 
   @Override
   public void update() {
@@ -66,7 +79,9 @@ public abstract class Gun extends Weapon {
   public void render() {
     super.render();
 
-    if (holder == null) return;
+    if (holder == null) {
+      return;
+    }
 
     imageView.getTransforms().clear();
 
