@@ -51,15 +51,16 @@ public class ServerReceiver implements Runnable {
       Platform.runLater(
           () -> {
             player = server.addPlayer(joinPacket, socket.getInetAddress());
-            server.sendObjects(Server.getLevelHandler().getGameObjectsFiltered());
+            server.sendObjects(server.getLevelHandler().getGameObjectsFiltered());
           }
       );
 
-      // socket.setSoTimeout(5000);
-
+      server.getSendAllObjects().set(true);
+      System.out.println("test1");
       /** Main Loop */
       while (true) {
         try {
+          System.out.println("test2");
           message = input.readLine();
           System.out.println("GOT" + message);
         } catch (SocketTimeoutException e) {
@@ -68,6 +69,7 @@ public class ServerReceiver implements Runnable {
           server.levelHandler.getPlayers().remove(player);
           server.levelHandler.getGameObjects().remove(player);
           LOGGER.debug("Removing player");
+          System.out.println("test3");
           break;
         } catch (IOException e) {
           e.printStackTrace();
@@ -79,7 +81,6 @@ public class ServerReceiver implements Runnable {
             PacketInput inputPacket = new PacketInput(message);
             // Change to add to list
             server.getQueue(player).add(inputPacket);
-            // }
             break;
           //Player Ready
           case 5:
@@ -89,6 +90,7 @@ public class ServerReceiver implements Runnable {
                 || server.serverState == ServerState.WAITING_FOR_READYUP) {
               server.readyCount.getAndIncrement();
             }
+            break;
         }
       }
     }

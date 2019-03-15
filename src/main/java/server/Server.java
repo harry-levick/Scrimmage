@@ -59,6 +59,7 @@ public class Server extends Application {
   public final AtomicInteger playerCount = new AtomicInteger(0);
   public final AtomicInteger readyCount = new AtomicInteger(0);
   private final AtomicBoolean running = new AtomicBoolean(false);
+  private final AtomicBoolean sendAllObjects = new AtomicBoolean(false);
   private final AtomicBoolean gameOver = new AtomicBoolean(false);
   private final AtomicInteger counter = new AtomicInteger(0);
   private final int maxPlayers = 4;
@@ -210,7 +211,8 @@ public class Server extends Application {
         gameObjectsFiltered.add(gameObject);
       }
     }
-    PacketGameState gameState = new PacketGameState(gameObjectsFiltered, 0);
+    PacketGameState gameState = new PacketGameState(gameObjectsFiltered, sendAllObjects.get());
+    sendAllObjects.set(false);
 
     if (gameState.isUpdate()) {
       byte[] buffer = gameState.getData();
@@ -337,6 +339,10 @@ public class Server extends Application {
     }
   }
 
+  public AtomicBoolean getSendAllObjects() {
+    return sendAllObjects;
+  }
+
   //Rendering
 
   public Player addPlayer(PacketJoin joinPacket, InetAddress address) {
@@ -347,7 +353,6 @@ public class Server extends Application {
     server.add(player);
     return player;
   }
-
   private void setupRender(Stage primaryStage) {
     root = new Group();
     backgroundRoot = new Group();
