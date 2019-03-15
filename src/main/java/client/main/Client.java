@@ -1,20 +1,17 @@
 package client.main;
 
 import client.handlers.audioHandler.MusicAssets.PLAYLIST;
-import client.handlers.connectionHandler.ConnectionHandler;
 import client.handlers.inputHandler.KeyboardInput;
 import client.handlers.inputHandler.MouseInput;
-import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
-import de.codecentric.centerdevice.javafxsvg.dimension.PrimitiveDimensionProvider;
+import client.handlers.networkHandlers.ClientNetworkManager;
+import client.handlers.networkHandlers.ConnectionHandler;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -35,24 +32,22 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.UI.UI;
 import shared.gameObjects.Utils.ObjectType;
-import shared.gameObjects.Utils.TimePosition;
 import shared.gameObjects.menu.main.ButtonQuit;
 import shared.gameObjects.menu.main.SoundSlider;
 import shared.gameObjects.menu.main.SoundSlider.SOUND_TYPE;
 import shared.gameObjects.objects.ObjectManager;
-import shared.gameObjects.players.Limbs.Arm;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.MachineGun;
 import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.LevelHandler;
 import shared.handlers.levelHandler.Map;
-import shared.packets.PacketGameState;
 import shared.packets.PacketInput;
 import shared.physics.Physics;
 import shared.util.Path;
@@ -74,7 +69,6 @@ public class Client extends Application {
   public static ArrayList<PacketInput> pendingInputs;
   public static TimerTask task;
   public static Group gameRoot;
-  private final float timeStep = 0.0166f;
   private final String gameTitle = "Alone in the Dark";
   private LinkedList<Map> playlist;
   private KeyboardInput keyInput;
@@ -85,25 +79,14 @@ public class Client extends Application {
   private static Group creditsRoot;
   private static Group creditsBackground;
   private Scene scene;
-  private float maximumStep;
-  private long previousTime;
-  private float accumulatedTime;
   private float elapsedSinceFPS = 0f;
   private int framesElapsedSinceFPS = 0;
   private static UI userInterface;
   private static boolean credits = false;
   private static int creditStartDelay = 100;
-  private static double resolutionX;
-  private static double resolutionY;
   private boolean gameOver;
   private static boolean settingsOverlay = false;
   private static ArrayList<GameObject> settingsObjects = new ArrayList<>();
-
-  //Networking
-  private final boolean prediction = false; //Broken
-  private final boolean reconciliation = true;
-  private final boolean setStateSnap = true; //Broken
-  private final boolean entity_interpolation = true;
 
   public static void main(String args[]) {
     launch(args);
@@ -174,7 +157,7 @@ public class Client extends Application {
         settingsObjects.add(quit);
       }
       settingsObjects.forEach(obj -> obj.initialiseAnimation());
-      settingsObjects.forEach(obj -> obj.initialise(creditsRoot));
+      settingsObjects.forEach(obj -> obj.initialise(creditsRoot, settings));
       settingsObjects.forEach(obj -> obj.render());
     } else {
       closeSettingsOverlay();
@@ -273,6 +256,15 @@ public class Client extends Application {
 
   }
 
+  public static void endCredits() {
+    credits = false;
+    creditStartDelay = 100; //todo magic number
+    creditsRoot.getChildren().clear(); // deletes all children, removing all credit texts
+    creditsBackground.getChildren().clear();
+    levelHandler.getMusicAudioHandler()
+        .playMusicPlaylist(PLAYLIST.MENU); //assume always return to menu map from credits
+  }
+
   public void calculateFPS(float secondElapsed, Stage primaryStage) {
     elapsedSinceFPS += secondElapsed;
     framesElapsedSinceFPS++;
@@ -281,23 +273,15 @@ public class Client extends Application {
       primaryStage.setTitle(
           gameTitle
               + "   --    FPS: "
-              + fps
-              + "    Score: "
-              + Client.levelHandler.getClientPlayer().getScore());
+              + fps);
       elapsedSinceFPS = 0;
       framesElapsedSinceFPS = 0;
     }
   }
 
   public void init() {
-    maximumStep = 0.0166f;
-    previousTime = 0;
-    accumulatedTime = 0;
-    settings = new Settings();
+    settings = new Settings(levelHandler, gameRoot);
     multiplayer = false;
-    resolutionX = settings.getMapWidth();
-    resolutionY = settings.getMapHeight();
-    // Start off screen
   }
 
   public void endGame() {
@@ -309,23 +293,13 @@ public class Client extends Application {
     levelHandler.changeMap(
         new Map(
             "Main Menu",
-            Path.convert(settings.getMenuPath() + File.separator + "main_menu.map")),
-        false);
-  }
-
-  public static void endCredits() {
-    credits = false;
-    creditStartDelay = 100; //todo magic number
-    creditsRoot.getChildren().clear(); // deletes all children, removing all credit texts
-    creditsBackground.getChildren().clear();
-    levelHandler.getMusicAudioHandler()
-        .playMusicPlaylist(PLAYLIST.MENU); //assume always return to menu map from credits
+            Path.convert(settings.getMenuPath() + File.separator + "menus/main_menu.map")),
+        false, false);
   }
 
   @Override
   public void start(Stage primaryStage) {
-    gameOver = false;
-    SvgImageLoaderFactory.install(new PrimitiveDimensionProvider());
+
     playlist = new LinkedList<>();
     // Testing code
     for (int i = 1; i < 11; i++) {
@@ -345,13 +319,15 @@ public class Client extends Application {
         };
 
     setupRender(primaryStage);
+    levelHandler = new LevelHandler(settings, backgroundRoot, gameRoot, uiRoot);
+    settings.setLevelHandler(levelHandler);
+    levelHandler.addClientPlayer(gameRoot);
+
+    gameOver = false;
     inputSequenceNumber = 0;
     pendingInputs = new ArrayList<>();
     singleplayerGame = false;
     sendUpdate = false;
-    levelHandler = new LevelHandler(settings, root, backgroundRoot, gameRoot, uiRoot);
-    settings.setLevelHandler(levelHandler);
-    levelHandler.addClientPlayer(gameRoot);
     keyInput = new KeyboardInput();
     mouseInput = new MouseInput();
 
@@ -362,7 +338,6 @@ public class Client extends Application {
     scene.setOnMouseMoved(mouseInput);
     scene.setOnMouseReleased(mouseInput);
     scene.setOnMouseDragged(mouseInput);
-
     //Setup UI
     setUserInterface();
 
@@ -372,7 +347,7 @@ public class Client extends Application {
       public void handle(long now) {
 
         if (multiplayer) {
-          processServerPackets();
+          ClientNetworkManager.processServerPackets();
         }
         levelHandler.createObjects();
 
@@ -380,35 +355,12 @@ public class Client extends Application {
           endGame();
         }
 
-        if (previousTime == 0) {
-          previousTime = now;
-          return;
-        }
-
-        float secondElapsed = (now - previousTime) / 1e9f; // time elapsed in seconds
-        float secondsElapsedCapped = Math.min(secondElapsed, maximumStep);
-        accumulatedTime += secondsElapsedCapped;
-        previousTime = now;
-
-        if (accumulatedTime < timeStep) {
-          float timeSinceInterpolation = timeStep - (accumulatedTime - secondElapsed);
-          float alphaRemaining = secondElapsed / timeSinceInterpolation;
-          levelHandler
-              .getGameObjects()
-              .forEach((key, gameObject) -> gameObject.interpolatePosition(alphaRemaining));
-          return;
-        }
-
-        while (accumulatedTime >= 2 * timeStep) {
-          levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.update());
-          accumulatedTime -= timeStep;
-        }
 
         /** Apply Input */
         levelHandler.getClientPlayer().applyInput();
 
         if (multiplayer && sendUpdate) {
-          sendInput();
+          ClientNetworkManager.sendInput();
           sendUpdate = false;
         }
 
@@ -427,77 +379,47 @@ public class Client extends Application {
           if (alive.size() == 1) {
             alive.forEach(player -> player.increaseScore());
             Map nextMap = playlist.poll();
-            levelHandler.changeMap(nextMap, true);
+            levelHandler.changeMap(nextMap, true, false);
             giveWeapon();
           }
           /** Move bots */
           levelHandler.getBotPlayerList().forEach((key, bot) -> bot.applyInput());
         }
 
-        /** Scale and Render Game Objects */
-        double resolutionXNew = primaryStage.getWidth();
-        double resolutionYNew = primaryStage.getHeight();
-        Vector2 scaleRatio = new Vector2(resolutionXNew / resolutionX,
-            resolutionYNew / resolutionY);
-        resolutionX = resolutionXNew;
-        resolutionY = resolutionYNew;
-
-        //levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.getTransform().scaleScreen(scaleRatio));
-        levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.render());
-        if (levelHandler.getBackground() != null) {
-          levelHandler.getBackground().render();
-        }
         if (settingsOverlay) {
           settingsObjects.forEach(obj -> obj.update());
         }
 
-        /** Check Collisions */
-        Physics.gameObjects = levelHandler.getGameObjects();
-
-        levelHandler
-            .getGameObjects()
-            .forEach((key, gameObject) -> gameObject.updateCollision());
-        Physics.processCollisions();
-
         if (!multiplayer) {
+          /** Check Collisions */
+          Physics.gameObjects = levelHandler.getGameObjects();
+
+          levelHandler
+              .getGameObjects()
+              .forEach((key, gameObject) -> gameObject.updateCollision());
+          Physics.processCollisions();
+
           /** Update Game Objects */
           levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.update());
+        } else {
+          ClientNetworkManager.update();
         }
         //Update Generic Object Timers
         ObjectManager.update();
 
-        if (multiplayer) {
-          if (prediction) {
-            levelHandler.getClientPlayer().update();
-          }
-          levelHandler.getPlayers().forEach((key, player) ->
-              player.getChildren().forEach(child -> {
-                child.update();
-                if (child instanceof Arm) {
-                  child.getChildren().forEach(childChild -> childChild.update());
-                }
-              })
-          );
+        /** Scale and Render Game Objects */
+        scaleRendering(primaryStage);
+
+        levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.render());
+        if (levelHandler.getBackground() != null) {
+          levelHandler.getBackground().render();
         }
-
-        accumulatedTime -= timeStep;
-        float alpha = accumulatedTime / timeStep;
-        levelHandler.getGameObjects()
-            .forEach((key, gameObject) -> gameObject.interpolatePosition(alpha));
-
-        //Interpolate Networked Entities
-        if (multiplayer && entity_interpolation) {
-          interpolateEntities();
-        }
-
 
         /** Draw the UI */
         if (levelHandler.getGameState() == GameState.IN_GAME
             || levelHandler.getGameState() == GameState.MULTIPLAYER) {
           userInterface.render();
         }
-
-        calculateFPS(secondElapsed, primaryStage);
 
         // animate credits scrolling
         if (credits) {
@@ -547,146 +469,11 @@ public class Client extends Application {
     primaryStage.show();
   }
 
-  public void sendInput() {
-    PacketInput input =
-        new PacketInput(
-            levelHandler.getClientPlayer().mouseX,
-            levelHandler.getClientPlayer().mouseY,
-            levelHandler.getClientPlayer().leftKey,
-            levelHandler.getClientPlayer().rightKey,
-            levelHandler.getClientPlayer().jumpKey,
-            levelHandler.getClientPlayer().click,
-            levelHandler.getClientPlayer().getUUID(),
-            inputSequenceNumber);
-    connectionHandler.send(input.getString());
-    input.setInputSequenceNumber(inputSequenceNumber);
-    pendingInputs.add(input);
-    inputSequenceNumber++;
-  }
-
-  private void processServerPackets() {
-    if (connectionHandler.received.size() != 0) {
-      try {
-        String message = (String) connectionHandler.received.take();
-        int messageID = Integer.parseInt(message.substring(0, 1));
-        switch (messageID) {
-          // Ends
-          case 6:
-            Client.connectionHandler.end();
-            Client.connectionHandler = null;
-            // Show score board
-            multiplayer = false;
-            Client.levelHandler.changeMap(
-                new Map(
-                    "main_menu",
-                    Path.convert(settings.getMenuPath() + File.separator + "main_menu.map")),
-                false);
-
-            break;
-          case 7:
-            PacketGameState gameState = new PacketGameState(message);
-            HashMap<UUID, String> data = gameState.getGameObjects();
-            data.forEach((key, value) -> {
-              GameObject gameObject = levelHandler.getGameObjects().get(key);
-              if (gameObject == null) {
-                createGameObject(value);
-              } else {
-                if (!entity_interpolation || gameObject.getUUID() == Client.levelHandler
-                    .getClientPlayer().getUUID()) {
-                  gameObject.setState(value, setStateSnap);
-                } else {
-                  Timestamp now = new Timestamp(System.currentTimeMillis());
-                  String[] unpackedData = value.split(";");
-                  Vector2 statePos = new Vector2(Double.parseDouble(unpackedData[2]),
-                      Double.parseDouble(unpackedData[3]));
-                  gameObject.getPositionBuffer().add(new TimePosition(now, statePos));
-                }
-              }
-            });
-            if (reconciliation) {
-              serverReconciliation(Client.levelHandler.getClientPlayer().getLastInputCount());
-            }
-            break;
-          default:
-            System.out.println("ERROR" + messageID + " " + message);
-        }
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
-    }
-  }
-
-  public void createGameObject(String data) {
-    String[] unpackedData = data.split(";");
-    switch (unpackedData[1]) {
-      case "Player":
-        Player player = new Player(Float.parseFloat(unpackedData[2]),
-            Float.parseFloat(unpackedData[3]), UUID.fromString(unpackedData[0]),
-            Client.levelHandler);
-        Client.levelHandler.addPlayer(player, gameRoot);
-        break;
-      default:
-
-    }
-  }
-
-  public void interpolateEntities() {
-    Timestamp now = new Timestamp(System.currentTimeMillis() - (1000 / 60));
-    //Need to calculate render timestamp
-
-    levelHandler.getGameObjects().forEach((key, gameObject) -> {
-      //Find the two authoritative positions surrounding the rendering timestamp
-      ArrayList<TimePosition> buffer = gameObject.getPositionBuffer();
-
-      if (gameObject.getUUID() != Client.levelHandler.getClientPlayer().getUUID() && buffer != null
-          && buffer.size() > 0) {
-
-        //Drop older positions
-        while (buffer.size() >= 2 && buffer.get(1).getTimestamp().before(now)) {
-          buffer.remove(0);
-        }
-
-        //Interpolate between the two surrounding  authoritative  positions to smooth motion
-        if (buffer.size() >= 2 && buffer.get(0).getTimestamp().before(now) && now
-            .before(buffer.get(1).getTimestamp())) {
-          Vector2 pos0 = buffer.get(0).getPosition();
-          Vector2 pos1 = buffer.get(1).getPosition();
-          Long t0 = buffer.get(0).getTimestamp().getTime();
-          Long t1 = buffer.get(1).getTimestamp().getTime();
-          Long tnow = now.getTime();
-
-          gameObject
-              .setX(pos0.getX() + (pos1.getX() - pos0.getX()) * (tnow - t0) / (t1 - t0));
-          gameObject
-              .setY(pos0.getY() + (pos1.getY() - pos0.getY()) * (tnow - t0) / (t1 - t0));
-        }
-      }
-    });
-  }
-
-  public void serverReconciliation(int lastProcessedInput) {
-    int j = 0;
-    // Server Reconciliation. Re-apply all the inputs not yet processed by
-    // the server.
-    while (j < pendingInputs.size()) {
-      if (inputSequenceNumber - 1 <= lastProcessedInput) {
-        // Already processed. Its effect is already taken into account into the world update
-        // we just got so drop it
-        pendingInputs.remove(j);
-      } else {
-        Player player = levelHandler.getClientPlayer();
-        PacketInput input = pendingInputs.get(j);
-        // Not processed by the server yet. Re-apply it.
-        player.mouseY = input.getY();
-        player.mouseX = input.getX();
-        player.jumpKey = input.isJumpKey();
-        player.leftKey = input.isLeftKey();
-        player.rightKey = input.isRightKey();
-        player.click = false; // Don't want extra bullets
-        player.applyInput();
-        j++;
-      }
-    }
+  public void scaleRendering(Stage primaryStage) {
+    Vector2 scaleRatio = new Vector2(primaryStage.getWidth() / 1920,
+        primaryStage.getHeight() / 1080);
+    Scale scale = new Scale(scaleRatio.getX(), scaleRatio.getY(), 0, 0);
+    scene.getRoot().getTransforms().setAll(scale);
   }
 
   public void giveWeapon() {
@@ -701,6 +488,6 @@ public class Client extends Application {
                 UUID.randomUUID()));
     levelHandler.getGameObjects().put(Client.levelHandler.getClientPlayer().getHolding().getUUID(),
         Client.levelHandler.getClientPlayer().getHolding());
-    levelHandler.getClientPlayer().getHolding().initialise(Client.gameRoot);
+    levelHandler.getClientPlayer().getHolding().initialise(gameRoot, settings);
   }
 }

@@ -10,7 +10,6 @@ import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.menu.ButtonObject;
 import shared.gameObjects.weapons.MachineGun;
-import shared.gameObjects.weapons.Sword;
 import shared.handlers.levelHandler.Map;
 import shared.util.Path;
 
@@ -34,35 +33,30 @@ public class ButtonSingleplayer extends ButtonObject {
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
 
-    Client.levelHandler.changeMap(
+    settings.getLevelHandler().changeMap(
         new Map("map1", Path.convert("src/main/resources/maps/map1.map")),
-        true);
-    int botsToAdd = maxPlayers - Client.levelHandler.getPlayers().size();
+        true, false);
+
+    int botsToAdd = maxPlayers - settings.getLevelHandler().getPlayers().size();
     for (int b = 0; b < botsToAdd; b++) {
       //TODO Change physics to LinkedHashMaps
-      Collection<GameObject> values = Client.levelHandler.getGameObjects().values();
+      Collection<GameObject> values = settings.getLevelHandler().getGameObjects().values();
       ArrayList<GameObject> physicsGameObjects = new ArrayList<>(values);
-      Bot botPlayer = new Bot(500, 500, UUID.randomUUID(), physicsGameObjects, Client.levelHandler);
-      botPlayer.setHolding(new Sword(500, 500, "Sword@ButtonSinglePlayer", botPlayer, UUID.randomUUID()));
-      botPlayer.getHolding().initialise(Client.gameRoot);
-      botPlayer.initialise(Client.gameRoot);
-      Client.levelHandler.getPlayers().put(botPlayer.getUUID(), botPlayer);
-      Client.levelHandler.getBotPlayerList().put(botPlayer.getUUID(), botPlayer);
-      Client.levelHandler.getGameObjects().put(botPlayer.getUUID(), botPlayer);
-      Client.levelHandler.getGameObjects()
+      Bot botPlayer = new Bot(200, 600, UUID.randomUUID(), settings.getLevelHandler());
+      botPlayer.setHolding(/*new Sword(200, 600, "Sword@ButtonSinglePlayer",
+          botPlayer, UUID.randomUUID()) */
+          new MachineGun(500, 600, "MachineGun@ButtonSinglePlayer", botPlayer, UUID.randomUUID()));
+      botPlayer.getHolding().initialise(settings.getGameRoot(), settings);
+      botPlayer.initialise(settings.getGameRoot(), settings);
+      settings.getLevelHandler().getPlayers().put(botPlayer.getUUID(), botPlayer);
+      settings.getLevelHandler().getBotPlayerList().put(botPlayer.getUUID(), botPlayer);
+      settings.getLevelHandler().getGameObjects().put(botPlayer.getUUID(), botPlayer);
+      settings.getLevelHandler().getGameObjects()
           .put(botPlayer.getHolding().getUUID(), botPlayer.getHolding());
+
+      botPlayer.startThread();
     }
 
-    Client.levelHandler
-        .getClientPlayer()
-        .setHolding(
-            new MachineGun(
-                500,
-                500,
-                "MachineGun@ButtonSinglePlayer",
-                Client.levelHandler.getClientPlayer(),
-                UUID.randomUUID()));
-    Client.levelHandler.addGameObject(Client.levelHandler.getClientPlayer().getHolding());
     Client.singleplayerGame = true;
     //Client.timer.schedule(Client.task, 30000L);
 

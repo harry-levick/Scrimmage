@@ -1,8 +1,9 @@
 package server;
 
-import client.main.Client;
 import client.main.Settings;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -18,6 +19,7 @@ import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -29,11 +31,13 @@ import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.MapDataObject;
+import shared.gameObjects.objects.ObjectManager;
 import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.LevelHandler;
 import shared.handlers.levelHandler.Map;
@@ -43,12 +47,11 @@ import shared.packets.PacketJoin;
 import shared.packets.PacketMap;
 import shared.physics.Physics;
 import shared.util.Path;
-
-//import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
+import shared.util.maths.Vector2;
 
 public class Server extends Application {
 
-  private static final Logger LOGGER = LogManager.getLogger(Client.class.getName());
+  private static final Logger LOGGER = LogManager.getLogger(Server.class.getName());
 
   public static LevelHandler levelHandler;
   public static Group gameRoot;
@@ -91,11 +94,11 @@ public class Server extends Application {
   }
 
   public void init() {
-    //SvgImageLoaderFactory.install();
     server = this;
     executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     threadName = "Server";
-    settings = new Settings();
+    settings = new Settings(levelHandler, gameRoot);
+    running.set(true);
     settings.setLevelHandler(levelHandler);
     playlist = new LinkedList();
     inputQueue = new ConcurrentHashMap<>();
@@ -105,6 +108,7 @@ public class Server extends Application {
     } catch (IOException e) {
       e.printStackTrace();
     }
+    serverState = ServerState.WAITING_FOR_PLAYERS;
 
     // Testing code
     playlist.add(
@@ -117,12 +121,24 @@ public class Server extends Application {
     running.set(false);
   }
 
-  public void sendToClients(byte[] buffer) {
+  public void sendToClients(byte[] buffer, boolean object) {
     synchronized (connected) {
       connected.forEach(
           address -> {
             try {
-              DatagramPacket packet = new DatagramPacket(buffer, buffer.length,
+              //Send buffer size to set
+              byte[] lengthBuffer = ("length:" + buffer.length).getBytes();
+              DatagramPacket packet = new DatagramPacket(lengthBuffer, lengthBuffer.length,
+                  (InetAddress) address, serverPort);
+              socket.send(packet);
+
+              if (object) {
+                packet = new DatagramPacket("object".getBytes(), "object".getBytes().length,
+                    (InetAddress) address, serverPort);
+                socket.send(packet);
+              }
+
+              packet = new DatagramPacket(buffer, buffer.length,
                   (InetAddress) address, serverPort);
               socket.send(packet);
               System.out.println("SEND: " + new String(buffer));
@@ -156,8 +172,10 @@ public class Server extends Application {
     levelHandler.getPlayers().forEach((key, player) -> player.applyInput());
 
     levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.updateCollision());
+    Physics.processCollisions();
     /** Update Game Objects */
     levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.update());
+    ObjectManager.update();
   }
 
   public void startMatch() {
@@ -170,10 +188,10 @@ public class Server extends Application {
 
   public void nextMap() {
     Map nextMap = playlist.pop();
-    levelHandler.changeMap(nextMap, true);
+    levelHandler.changeMap(nextMap, true, true);
     // TODO Change to actual UUID
     PacketMap mapPacket = new PacketMap(nextMap.getName(), UUID.randomUUID());
-    sendToClients(mapPacket.getData());
+    sendToClients(mapPacket.getData(), false);
   }
 
   public void add(Player player) {
@@ -196,7 +214,7 @@ public class Server extends Application {
 
     if (gameState.isUpdate()) {
       byte[] buffer = gameState.getData();
-      sendToClients(buffer);
+      sendToClients(buffer, false);
     }
   }
 
@@ -218,14 +236,20 @@ public class Server extends Application {
 
   }
 
+  public void scaleRendering(Stage primaryStage) {
+    Vector2 scaleRatio = new Vector2(primaryStage.getWidth() / 1920,
+        primaryStage.getHeight() / 1080);
+    Scale scale = new Scale(scaleRatio.getX(), scaleRatio.getY(), 0, 0);
+    primaryStage.getScene().getRoot().getTransforms().setAll(scale);
+  }
+
   @Override
   public void start(Stage primaryStage) throws Exception {
     setupRender(primaryStage);
-    levelHandler = new LevelHandler(settings, root, backgroundRoot, gameRoot, true);
+    levelHandler = new LevelHandler(settings, backgroundRoot, gameRoot, this);
     settings.setLevelHandler(levelHandler);
-    running.set(true);
+    settings.setGameRoot(gameRoot);
     LOGGER.debug("Running " + threadName);
-    serverState = ServerState.WAITING_FOR_PLAYERS;
     /** Receiver from clients */
     executor.execute(new ServerReceiver(this, serverSocket, connected));
 
@@ -275,6 +299,8 @@ public class Server extends Application {
         /** Process Update */
         updateSimulation();
 
+        scaleRendering(primaryStage);
+
         /** Render Game Objects */
         levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.render());
         if (levelHandler.getBackground() != null) {
@@ -290,11 +316,31 @@ public class Server extends Application {
     }.start();
   }
 
+  public void sendObjects(ConcurrentSkipListMap<UUID, GameObject> gameobjects) {
+    ByteArrayOutputStream byteArrayOutputStream = null;
+    try {
+      byteArrayOutputStream = new ByteArrayOutputStream();
+      ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+      objectOutputStream.writeObject(gameobjects);
+      objectOutputStream.flush();
+
+      sendToClients(byteArrayOutputStream.toByteArray(), true);
+    } catch (IOException e) {
+      LOGGER.error("Unable to send new objects to clients ");
+      e.printStackTrace();
+    } finally {
+      try {
+        byteArrayOutputStream.close();
+      } catch (IOException e) {
+        LOGGER.error("Can't close Byte Array Output Stream on Server");
+      }
+    }
+  }
+
   //Rendering
 
   public Player addPlayer(PacketJoin joinPacket, InetAddress address) {
-    Player player = new Player(joinPacket.getX(), joinPacket.getY(), joinPacket.getClientID(),
-        levelHandler);
+    Player player = new Player(joinPacket.getX(), joinPacket.getY(), joinPacket.getClientID());
     levelHandler.addPlayer(player, gameRoot);
     playerCount.getAndIncrement();
     connected.add(address);

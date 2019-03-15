@@ -30,11 +30,6 @@ public class TestObject extends GameObject {
   }
 
   @Override
-  public String getState() {
-    return null;
-  }
-
-  @Override
   public void initialiseAnimation() {
     // TODO Auto-generated method stub
 

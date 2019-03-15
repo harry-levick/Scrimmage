@@ -1,11 +1,10 @@
 package shared.gameObjects;
 
-import static client.main.Settings.levelHandler;
-
 import client.main.Settings;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
+import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
 import shared.gameObjects.Utils.ObjectType;
@@ -24,12 +23,15 @@ import shared.physics.data.SimulatedDynamicCollision;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
 
+/**
+ * Base Class for all objects in a scene
+ */
 public abstract class GameObject implements Serializable {
 
   protected UUID objectUUID;
   protected ObjectType id;
 
-  protected transient Settings settings = new Settings();
+  protected transient Settings settings;
 
   protected transient ImageView imageView;
   protected transient Group root;
@@ -67,6 +69,7 @@ public abstract class GameObject implements Serializable {
     this.id = id;
     this.objectUUID = objectUUID;
     this.active = true;
+    this.settings = new Settings(null, root);
     this.transform = new Transform(this, new Vector2((float) x, (float) y),
         new Vector2((float) sizeX, (float) sizeY));
     this.components = new ArrayList<>();
@@ -158,7 +161,7 @@ public abstract class GameObject implements Serializable {
   /**
    * Use to only update the Physics of the object being called
    */
-  public void simulateCollisions() {
+  public void simulateUpdateCollision() {
     ArrayList<Component> cols = getComponents(ComponentType.COLLIDER);
     Rigidbody rb = (Rigidbody) getComponent(ComponentType.RIGIDBODY);
     for (Component comp : cols) {
@@ -245,17 +248,16 @@ public abstract class GameObject implements Serializable {
   public void removeRender() {
     if (imageView != null) {
       imageView.setImage(null);
-      root.getChildren().remove(imageView);
-    }
-  }
+      /*
+       */
 
-  // Interpolate Position Client only
-  public void interpolatePosition(float alpha) {
-    if (!isActive()) {
-      return;
+      Platform.runLater(
+          () -> {
+            root.getChildren().remove(imageView);
+          }
+      );
+      //root.getChildren().remove(imageView);
     }
-    imageView.setTranslateX(alpha * getX() + (1 - alpha) * imageView.getTranslateX());
-    imageView.setTranslateY(alpha * getY() + (1 - alpha) * imageView.getTranslateY());
   }
 
   /**
@@ -287,8 +289,9 @@ public abstract class GameObject implements Serializable {
     }
   }
 
-  // Ignore for now, added due to unSerializable objects
-  public void initialise(Group root) {
+
+  public void initialise(Group root, Settings settings) {
+    this.settings = settings;
     this.positionBuffer = new ArrayList<>();
     this.networkStateUpdate = false;
     animation = new Animator();
@@ -304,15 +307,11 @@ public abstract class GameObject implements Serializable {
     }
     imageView.setFitHeight(transform.getSize().getY());
     imageView.setFitWidth(transform.getSize().getX());
-    children.forEach(child -> {
-      child.initialiseAnimation();
-      child.initialise(root);
-    });
   }
 
   public void addChild(GameObject child) {
     children.add(child);
-    levelHandler.addGameObject(child);
+    settings.getLevelHandler().addGameObject(child);
   }
 
   public void removeChild(GameObject child) {
@@ -520,6 +519,7 @@ public abstract class GameObject implements Serializable {
       active = state;
     }
   }
+
 
   public void setSettings(Settings settings) {
     this.settings = settings;

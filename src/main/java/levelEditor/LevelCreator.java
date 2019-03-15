@@ -5,14 +5,13 @@ import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import de.codecentric.centerdevice.javafxsvg.dimension.PrimitiveDimensionProvider;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentSkipListMap;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.stage.Stage;
 import shared.gameObjects.Blocks.Metal.MetalBlockLargeObject;
-import shared.gameObjects.Blocks.Stone.StoneBlockObject;
 import shared.gameObjects.Blocks.Stone.StoneFloorObject;
 import shared.gameObjects.Blocks.Stone.StoneWallObject;
 import shared.gameObjects.Blocks.Wood.WoodBlockLargeObject;
@@ -45,6 +44,7 @@ import shared.gameObjects.objects.utility.JumpPad;
 import shared.gameObjects.objects.utility.RedBlock;
 import shared.gameObjects.objects.utility.YellowBlock;
 import shared.gameObjects.players.Player;
+import shared.gameObjects.weapons.MachineGun;
 import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.MapLoader;
 
@@ -56,12 +56,12 @@ public class LevelCreator extends Application {
   private static int gridSizeX = stageSizeX / gridSizePX; // 40 px blocks
   private static int gridSizeY = stageSizeY / gridSizePX; // 48 x 27
 
-  private static LinkedHashMap<UUID, GameObject> gameObjects;
+  private static ConcurrentSkipListMap<UUID, GameObject> gameObjects;
   private static ArrayList<Player> playerSpawns;
   private static MapDataObject mapDataObject;
   private UUID uuid = UUID.randomUUID();
 
-  private Settings settings = new Settings();
+  private Settings settings = new Settings(null, null);
 
   private static int getAbs(int gridPos) {
     return gridPos * gridSizePX;
@@ -82,7 +82,7 @@ public class LevelCreator extends Application {
     ////////////////////////////////////////
     System.out.println("Generating Main Menu");
     filename = "main_menu";
-    gameObjects = new LinkedHashMap<>();
+    gameObjects = new ConcurrentSkipListMap<>();
     playerSpawns = new ArrayList<Player>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.MAIN_MENU);
     mapDataObject.setBackground(
@@ -104,6 +104,7 @@ public class LevelCreator extends Application {
     //Laser
     gameObjects.put(uuid, new LaserBeam(getAbs(4), getAbs(7), uuid));
     uuid = UUID.randomUUID();
+
 
     //ColouredBlocks
     gameObjects
@@ -251,7 +252,7 @@ public class LevelCreator extends Application {
     ////////////////////////////////////////
     System.out.println("Generating Single Player Map");
     filename = "menu";
-    gameObjects = new LinkedHashMap<>();
+    gameObjects = new ConcurrentSkipListMap<>();
     playerSpawns = new ArrayList<>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.IN_GAME);
     mapDataObject.setBackground(
@@ -265,27 +266,6 @@ public class LevelCreator extends Application {
       uuid = UUID.randomUUID();
     }
 
-    for (int i = 0; i < 48; i += 4) {
-      //Red Blocks and Lasers
-      gameObjects.put(uuid,
-          new RedBlock(getAbs(i), getAbs(8), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
-      uuid = UUID.randomUUID();
-      gameObjects.put(uuid,
-          new BlueBlock(getAbs(i + 1), getAbs(8), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
-      uuid = UUID.randomUUID();
-      gameObjects.put(uuid,
-          new GreenBlock(getAbs(i + 2), getAbs(8), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
-      uuid = UUID.randomUUID();
-      gameObjects.put(uuid,
-          new YellowBlock(getAbs(i + 3), getAbs(8), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
-      uuid = UUID.randomUUID();
-      gameObjects.put(uuid,
-          new LaserBeam(getAbs(i), getAbs(0), uuid));
-      uuid = UUID.randomUUID();
-      gameObjects.put(uuid,
-          new LaserBeam(getAbs(i + 2), getAbs(0), uuid));
-      uuid = UUID.randomUUID();
-    }
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "map1" + ".map");
     mapDataObject.setBackground(new Background2(UUID.randomUUID()));
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "map2" + ".map");
@@ -311,7 +291,7 @@ public class LevelCreator extends Application {
     ////////////////////////////////////////
     System.out.println("Generating MULTIPLAYER Map");
     filename = "multiplayer";
-    gameObjects = new LinkedHashMap<>();
+    gameObjects = new ConcurrentSkipListMap<>();
     playerSpawns = new ArrayList<Player>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.MULTIPLAYER);
     mapDataObject.setBackground(
@@ -363,7 +343,7 @@ public class LevelCreator extends Application {
     ////////////////////////////////////////
     System.out.println("Generating LOBBY");
     filename = "lobby";
-    gameObjects = new LinkedHashMap<>();
+    gameObjects = new ConcurrentSkipListMap<>();
     playerSpawns = new ArrayList<Player>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.LOBBY);
     uuid = UUID.randomUUID();
@@ -377,13 +357,15 @@ public class LevelCreator extends Application {
               getAbs(i * 4), getAbs(0), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
       uuid = UUID.randomUUID();
     }
-    for (int i = 0; i < 10; i++) {
-      // top row wall
-      gameObjects.put(uuid,
-          new StoneBlockObject(
-              getAbs(i * 4 + 2), getAbs(20), getAbs(2), getAbs(2), ObjectType.Bot, uuid));
-      uuid = UUID.randomUUID();
-    }
+    /**
+     for (int i = 0; i < 10; i++) {
+     // top row wall
+     gameObjects.put(uuid,
+     new StoneBlockObject(
+     getAbs(i * 4 + 2), getAbs(20), getAbs(2), getAbs(2), ObjectType.Bot, uuid));
+     uuid = UUID.randomUUID();
+     }
+     **/
     for (int i = 0; i < 5; i++) {
       // side col walls
       gameObjects.put(uuid,
@@ -412,6 +394,13 @@ public class LevelCreator extends Application {
               getAbs(i * 4), getAbs(26), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
       uuid = UUID.randomUUID();
     }
+
+    //Gun
+    uuid = UUID.randomUUID();
+    gameObjects
+        .put(uuid, new MachineGun(200, 350, "MachineGun.spawnGun@LevelHandler.addClientPlayer",
+            null, uuid));
+
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
         new MetalBlockLargeObject(getAbs(10), getAbs(5), getAbs(2), getAbs(2), ObjectType.Bot,
@@ -424,7 +413,7 @@ public class LevelCreator extends Application {
     ////////////////////////////////////////
     System.out.println("Generating Settings");
     filename = "settings";
-    gameObjects = new LinkedHashMap<>();
+    gameObjects = new ConcurrentSkipListMap<>();
     playerSpawns = new ArrayList<Player>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.SETTINGS);
     uuid = UUID.randomUUID();

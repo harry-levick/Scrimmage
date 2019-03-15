@@ -1,6 +1,6 @@
 package shared.gameObjects.players;
 
-import client.main.Client;
+import client.main.Settings;
 import java.util.UUID;
 import javafx.scene.Group;
 import shared.gameObjects.Destructable;
@@ -15,11 +15,8 @@ import shared.gameObjects.players.Limbs.Body;
 import shared.gameObjects.players.Limbs.Hand;
 import shared.gameObjects.players.Limbs.Head;
 import shared.gameObjects.players.Limbs.Leg;
-import shared.gameObjects.weapons.MachineGun;
 import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.weapons.Weapon;
-import shared.handlers.levelHandler.LevelHandler;
-import shared.physics.data.Collision;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
@@ -35,13 +32,13 @@ public class Player extends GameObject implements Destructable {
   public boolean deattach;
   public double mouseX, mouseY;
   public int score;
-  protected LevelHandler levelHandler;
   protected Behaviour behaviour;
   protected float jumpTime;
   protected boolean jumped;
   protected boolean grounded;
   protected boolean facingLeft;
   protected boolean facingRight;
+  protected boolean aimLeft;
   protected int health;
   protected Weapon holding;
   protected Rigidbody rb;
@@ -64,7 +61,7 @@ public class Player extends GameObject implements Destructable {
   //Networking
   private int lastInputCount;
 
-  public Player(double x, double y, UUID playerUUID, LevelHandler levelHandler) {
+  public Player(double x, double y, UUID playerUUID) {
     super(x, y, 80, 110, ObjectType.Player, playerUUID);
     this.lastInputCount = 0;
     this.score = 0;
@@ -74,9 +71,8 @@ public class Player extends GameObject implements Destructable {
     this.click = false;
     this.health = 100;
     this.holding = null;
-    this.levelHandler = levelHandler;
     this.behaviour = Behaviour.IDLE;
-  //  this.shake = new ObjectShake(this);
+    this.shake = new ObjectShake(this);
     this.bc = new BoxCollider(this, ColliderLayer.PLAYER, false);
     //  this.cc = new CircleCollider(this, ColliderLayer.PLAYER, transform.getSize().magnitude()*0.5f, false);
     this.rb = new Rigidbody(RigidbodyType.DYNAMIC, 90, 11.67f, 0.2f,
@@ -84,7 +80,7 @@ public class Player extends GameObject implements Destructable {
     //  addComponent(cc);
     addComponent(bc);
     addComponent(rb);
-  //  addComponent(shake);
+    //addComponent(shake);
   }
 
   // Initialise the animation
@@ -93,25 +89,26 @@ public class Player extends GameObject implements Destructable {
     this.animation.supplyAnimation("default", "images/player/player_idle.png");
   }
 
-  @Override
   public void addChild(GameObject child) {
     children.add(child);
-    levelHandler.addGameObject(child);
+    settings.getLevelHandler().addGameObject(child);
   }
 
   @Override
-  public void initialise(Group root) {
-    super.initialise(root);
+  public void initialise(Group root, Settings settings) {
+    super.initialise(root, settings);
+    addLimbs();
+  }
 
-    legLeft = new Leg(true, this, levelHandler);
-    legRight = new Leg(false, this, levelHandler);
-    body = new Body(this, levelHandler);
-    head = new Head(this, levelHandler);
-    armLeft = new Arm(true, this, levelHandler);
-    armRight = new Arm(false, this, levelHandler);
-    handLeft = new Hand(true, armLeft, levelHandler);
-    handRight = new Hand(false, armRight, levelHandler);
-
+  private void addLimbs() {
+    legLeft = new Leg(true, this, settings.getLevelHandler());
+    legRight = new Leg(false, this, settings.getLevelHandler());
+    body = new Body(this, settings.getLevelHandler());
+    head = new Head(this, settings.getLevelHandler());
+    armLeft = new Arm(true, this, settings.getLevelHandler());
+    armRight = new Arm(false, this, settings.getLevelHandler());
+    handLeft = new Hand(true, armLeft, settings.getLevelHandler());
+    handRight = new Hand(false, armRight, settings.getLevelHandler());
     addChild(legLeft);
     addChild(legRight);
     addChild(body);
@@ -124,16 +121,10 @@ public class Player extends GameObject implements Destructable {
 
   @Override
   public void update() {
-    /** STRESS TEST
-    for (int i = 0; i < 1000; i++) {
-      Physics.raycast(getTransform().getPos(), Vector2.Up().mult(200));
-    }
-     */
     checkGrounded(); // Checks if the player is grounded
-    // System.out.println(rb.getVelocity());
     badWeapon();
     if (deattach) {
-      for (int i = 0; i < 8; i++) {
+      for (int i = 0; i < 6; i++) {
         Limb test = (Limb) children.get(i);
         test.detachLimb();
       }
@@ -194,16 +185,6 @@ public class Player extends GameObject implements Destructable {
       holding.fire(mouseX, mouseY);
     } // else punch
     // setX(getX() + (vx * 0.0166));
-
-    if (this.getHolding() != null) {
-      if (this.getHolding().isMelee()) {
-        this.getHolding().setX(((Sword) this.getHolding()).getGripX());
-        this.getHolding().setY(((Sword) this.getHolding()).getGripY());
-      } else if (this.getHolding().isGun()) {
-        this.getHolding().setX(((MachineGun) this.getHolding()).getGripX());
-        this.getHolding().setY(((MachineGun) this.getHolding()).getGripY());
-      }
-    }
   }
 
   /**
@@ -218,11 +199,10 @@ public class Player extends GameObject implements Destructable {
     if (this.holding.getAmmo() == 0) {
       this.holding.destroyWeapon();
       this.setHolding(null);
-      Weapon sword =
+      Weapon newSword =
           new Sword(this.getX(), this.getY(), "newSword@Player", this, UUID.randomUUID());
-      sword.initialise(root);
-      Client.levelHandler.addGameObject(sword);
-      this.setHolding(sword);
+      settings.getLevelHandler().addGameObject(newSword);
+      this.setHolding(newSword);
       return true;
     }
     return false;
@@ -252,6 +232,8 @@ public class Player extends GameObject implements Destructable {
       Limb limb = (Limb) child;
       limb.reset();
     });
+    children.clear();
+    addLimbs();
   }
 
   public void increaseScore() {
@@ -278,6 +260,7 @@ public class Player extends GameObject implements Destructable {
     this.holding = holding;
     if (holding != null) {
       holding.setSettings(settings);
+      aimLeft = false;
     }
   }
 
@@ -285,7 +268,12 @@ public class Player extends GameObject implements Destructable {
     return score;
   }
 
-  public double[] getHandPos() {
+  /**
+   * The back hand will be the main hand which holds the gun
+   *
+   * @return A 2 elements array, a[0] = X position of the hand, a[1] = Y position of the hand
+   */
+  public double[] getGunHandPos() {
     // TODO: remove this section and getHand(Left/Right)(X/Y) methods below
     /*
     if (jumped && facingLeft) {
@@ -299,83 +287,49 @@ public class Player extends GameObject implements Destructable {
     }
     return new double[]{this.getHandRightX(), this.getHandRightY()};
     */
-    if (facingLeft) {
+    if (isAimingLeft()) {
+      return new double[]{this.handRight.getX(), this.handRight.getY()};
+    } else {
+      return new double[]{this.handLeft.getX(), this.handLeft.getY()};
+    }
+  }
+
+  /**
+   * The front facing hand will be the main hand which holds the melee
+   *
+   * @return A 2 elements array, a[0] = X position of the hand, a[1] = Y position of the hand
+   */
+  public double[] getMeleeHandPos() {
+    if (isAimingLeft()) {
       return new double[]{this.handLeft.getX(), this.handLeft.getY()};
     } else {
       return new double[]{this.handRight.getX(), this.handRight.getY()};
     }
   }
 
-  /**
-   * Hand position x of the player when facing left
-   *
-   * @return x position of the hand
-   */
-  public double getHandLeftX() {
-    return this.getX() + 13;
+  public boolean containsChild(GameObject child) {
+    for (GameObject c : children) {
+      if (c.getUUID() == child.getUUID()) {
+        return true;
+      }
+    }
+    return false;
   }
 
-  /**
-   * Hand position y of the player when facing left
-   *
-   * @return y position of the hand
-   */
-  public double getHandLeftY() {
-    return this.getY() + 90;
+  public void setHandRightX(double pos) {
+    this.handRight.setX(pos);
   }
 
-  /**
-   * Hand position x of the player when facing right
-   *
-   * @return x position of the hand
-   */
-  public double getHandRightX() {
-    return this.getX() + 60;
+  public void setHandRightY(double pos) {
+    this.handRight.setY(pos);
   }
 
-  /**
-   * Hand position y of the player when facing right
-   *
-   * @return y position of the hand
-   */
-  public double getHandRightY() {
-    return this.getY() + 90;
+  public void setHandLeftX(double pos) {
+    this.handLeft.setX(pos);
   }
 
-  /**
-   * Hand position x of the player when jumping and facing left
-   *
-   * @return x position of the hand
-   */
-  public double getHandLeftJumpX() {
-    return this.getX() + 7;
-  }
-
-  /**
-   * Hand position y of the player when jumping and facing left
-   *
-   * @return y position of the hand
-   */
-  public double getHandLeftJumpY() {
-    return this.getY() + 30;
-  }
-
-  /**
-   * Hand position x of the player when jumping and facing right
-   *
-   * @return x position of the hand
-   */
-  public double getHandRightJumpX() {
-    return this.getX() + 67;
-  }
-
-  /**
-   * Hand position y of the player when jumping and facing right
-   *
-   * @return y position of the hand
-   */
-  public double getHandRightJumpY() {
-    return this.getY() + 30;
+  public void setHandLeftY(double pos) {
+    this.handLeft.setY(pos);
   }
 
   public boolean getJumped() {
@@ -400,31 +354,16 @@ public class Player extends GameObject implements Destructable {
     this.facingRight = b;
   }
 
-  public Behaviour getBehaviour() {
-    return behaviour;
+  public boolean isAimingLeft() {
+    return this.aimLeft;
   }
 
-  public void setBehaviour(Behaviour behaviour) {
-    this.behaviour = behaviour;
+  public void setAimingLeft(boolean b) {
+    this.aimLeft = b;
   }
 
   public boolean isGrounded() {
     return grounded;
-  }
-
-  @Override
-  public void OnCollisionEnter(Collision col) {
-    //  System.out.println("Entered Collision!");
-  }
-
-  @Override
-  public void OnCollisionExit(Collision col) {
-
-  }
-
-  @Override
-  public void OnCollisionStay(Collision col) {
-    //  System.out.println("Stayed in Collision!");
   }
 
   public int getLastInputCount() {

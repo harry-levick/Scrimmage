@@ -1,6 +1,5 @@
 package shared.gameObjects.weapons;
 
-import client.main.Client;
 import java.util.ArrayList;
 import java.util.UUID;
 import shared.gameObjects.Destructable;
@@ -17,14 +16,14 @@ import shared.util.maths.Vector2;
 
 public class ExplosiveBullet extends Bullet {
 
-  private static String imagePath = "images/weapons/explosiveBullet.png";
   private static final int width = 15;          // Width of the bullet
   private static final int damage = 20;         // Damage of the explosion
   private static final int speed = 25;          // Speed of bullet travelling
   private static final float radius = 40f;      // Radius of explosion
   private static final float pushPower = 50f;   // Power of pushing on impact
+  private static String imagePath = "images/weapons/explosiveBullet.png";
 
-  public ExplosiveBullet (
+  public ExplosiveBullet(
       double gunX,
       double gunY,
       double mouseX,
@@ -61,8 +60,7 @@ public class ExplosiveBullet extends Bullet {
       if (gCol.equals(holder)) {
         hitHolder = true;
         remove = false;
-      }
-      else {
+      } else {
         // Player on direct impact takes full hazard (another half dealt in circleCasting down there)
         ((Destructable) gCol).deductHp(damage / 2);
       }
@@ -72,10 +70,14 @@ public class ExplosiveBullet extends Bullet {
       GameObject g = c.getCollidedObject();
 
       // Skip if getCollidedObject gets removed accidentally
-      if (g == null) continue;
+      if (g == null) {
+        continue;
+      }
 
       // Not going to push holder if he is the first collided object (i.e. the impact)
-      if (g.equals(gCol) && hitHolder) { continue; }
+      if (g.equals(gCol) && hitHolder) {
+        continue;
+      }
 
       // Not going to deal hazard to holder
       if (g instanceof Destructable && !g.equals(holder)) {
@@ -93,8 +95,9 @@ public class ExplosiveBullet extends Bullet {
 
     }
 
-    if (remove)
-      Client.levelHandler.removeGameObject(this);
+    if (remove) {
+      settings.getLevelHandler().removeGameObject(this);
+    }
   }
 
 }

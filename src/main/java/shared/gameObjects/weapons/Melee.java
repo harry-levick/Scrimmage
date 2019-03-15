@@ -13,6 +13,8 @@ import shared.util.maths.Vector2;
 
 public abstract class Melee extends Weapon {
 
+  protected int damage;  // damage of the melee
+  protected int ammo;
   protected double range; // radius in pixels
   protected double beginAngle; // swing from beginAngle (relative to arm)
   protected double endAngle; // swing till endAngle (relative to arm)
@@ -38,7 +40,9 @@ public abstract class Melee extends Weapon {
       double endAngle,
       UUID uuid) {
 
-    super(x, y, sizeX, sizeY, id, damage, weight, name, false, true, 10, fireRate, holder, uuid);
+    super(x, y, sizeX, sizeY, id, weight, name, false, true, 10, fireRate, holder, uuid);
+    this.damage = damage;
+    this.ammo = ammo;
     this.range = range;
     this.beginAngle = beginAngle;
     this.endAngle = endAngle;
@@ -65,7 +69,7 @@ public abstract class Melee extends Weapon {
       ArrayList<Collision> collisions =
           Physics.boxcastAll(
               new Vector2((float) (this.getX() + this.range), (float) (this.getY() - this.range)),
-              new Vector2((float) this.range, (float) this.range));
+              new Vector2((float) this.range, (float) this.range), false);
       ArrayList<Destructable> playersBeingHit = new ArrayList<>();
 
       for (Collision c : collisions) {

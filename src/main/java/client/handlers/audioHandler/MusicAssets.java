@@ -1,6 +1,6 @@
 package client.handlers.audioHandler;
 
-import client.main.Client;
+import client.main.Settings;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,9 +11,12 @@ public class MusicAssets {
   private final HashMap<String, String> tracks = new HashMap<String, String>();
   private final ArrayList<String> menuPlaylist = new ArrayList<>();
   private final ArrayList<String> ingamePlaylist = new ArrayList<>();
-  private String filePath = Client.settings.getMusicPath();
+  private String filePath;
+  private Settings settings;
 
-  public MusicAssets() {
+  public MusicAssets(Settings settings) {
+    this.settings = settings;
+    filePath = settings.getMusicPath();
     tracks.put("FUNK_GAME_LOOP", "funk-game-loop-by-kevin-macleod.mp3");
     tracks.put("EDM_DETECTION_MODE", "edm-detection-mode-by-kevin-macleod.mp3");
     tracks.put("GETTING_IT_DONE", "getting-it-done-by-kevin-macleod.mp3");

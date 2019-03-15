@@ -3,6 +3,7 @@ package client.main;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import javafx.scene.Group;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import shared.handlers.levelHandler.LevelHandler;
@@ -12,8 +13,8 @@ import shared.handlers.levelHandler.LevelHandler;
  */
 public class Settings {
 
-  public static LevelHandler levelHandler;
-
+  private transient LevelHandler levelHandler;
+  private transient Group gameRoot;
   private String username;
   private int port;
   private double musicVolume;
@@ -37,7 +38,7 @@ public class Settings {
   /**
    * Default Constructor Music volume set to 100 and sound effects to 75
    */
-  public Settings() {
+  public Settings(LevelHandler levelHandler, Group gameRoot) {
     //settings that are set arbitrarily
     username = "TestAccount";
     port = 4446;
@@ -48,7 +49,8 @@ public class Settings {
     maxPlayers = 4;
     defaultFontSize = 20;
     gridSize = 40;
-
+    this.levelHandler = levelHandler;
+    this.gameRoot = gameRoot;
     resourcesPath = "src" + s + "main" + s + "resources";
     mapsPath = resourcesPath + s + "maps";
     menuPath = resourcesPath + s + "menus";
@@ -178,6 +180,14 @@ public class Settings {
   }
 
   public void setLevelHandler(LevelHandler levelHandler) {
-    Settings.levelHandler = levelHandler;
+    this.levelHandler = levelHandler;
+  }
+
+  public Group getGameRoot() {
+    return gameRoot;
+  }
+
+  public void setGameRoot(Group gameRoot) {
+    this.gameRoot = gameRoot;
   }
 }
