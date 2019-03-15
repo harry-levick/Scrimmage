@@ -5,8 +5,6 @@ import client.handlers.inputHandler.KeyboardInput;
 import client.handlers.inputHandler.MouseInput;
 import client.handlers.networkHandlers.ClientNetworkManager;
 import client.handlers.networkHandlers.ConnectionHandler;
-import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
-import de.codecentric.centerdevice.javafxsvg.dimension.PrimitiveDimensionProvider;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -159,7 +157,7 @@ public class Client extends Application {
         settingsObjects.add(quit);
       }
       settingsObjects.forEach(obj -> obj.initialiseAnimation());
-      settingsObjects.forEach(obj -> obj.initialise(creditsRoot));
+      settingsObjects.forEach(obj -> obj.initialise(creditsRoot, settings));
       settingsObjects.forEach(obj -> obj.render());
     } else {
       closeSettingsOverlay();
@@ -282,7 +280,7 @@ public class Client extends Application {
   }
 
   public void init() {
-    settings = new Settings();
+    settings = new Settings(levelHandler, gameRoot);
     multiplayer = false;
   }
 
@@ -296,13 +294,12 @@ public class Client extends Application {
         new Map(
             "Main Menu",
             Path.convert(settings.getMenuPath() + File.separator + "menus/main_menu.map")),
-        false);
+        false, false);
   }
 
   @Override
   public void start(Stage primaryStage) {
-    gameOver = false;
-    SvgImageLoaderFactory.install(new PrimitiveDimensionProvider());
+
     playlist = new LinkedList<>();
     // Testing code
     for (int i = 1; i < 11; i++) {
@@ -322,13 +319,15 @@ public class Client extends Application {
         };
 
     setupRender(primaryStage);
+    levelHandler = new LevelHandler(settings, backgroundRoot, gameRoot, uiRoot);
+    settings.setLevelHandler(levelHandler);
+    levelHandler.addClientPlayer(gameRoot);
+
+    gameOver = false;
     inputSequenceNumber = 0;
     pendingInputs = new ArrayList<>();
     singleplayerGame = false;
     sendUpdate = false;
-    levelHandler = new LevelHandler(settings, backgroundRoot, gameRoot, uiRoot);
-    settings.setLevelHandler(levelHandler);
-    levelHandler.addClientPlayer(gameRoot);
     keyInput = new KeyboardInput();
     mouseInput = new MouseInput();
 
@@ -339,7 +338,6 @@ public class Client extends Application {
     scene.setOnMouseMoved(mouseInput);
     scene.setOnMouseReleased(mouseInput);
     scene.setOnMouseDragged(mouseInput);
-
     //Setup UI
     setUserInterface();
 
@@ -381,7 +379,7 @@ public class Client extends Application {
           if (alive.size() == 1) {
             alive.forEach(player -> player.increaseScore());
             Map nextMap = playlist.poll();
-            levelHandler.changeMap(nextMap, true);
+            levelHandler.changeMap(nextMap, true, false);
             giveWeapon();
           }
           /** Move bots */
@@ -392,15 +390,15 @@ public class Client extends Application {
           settingsObjects.forEach(obj -> obj.update());
         }
 
-        /** Check Collisions */
-        Physics.gameObjects = levelHandler.getGameObjects();
-
-        levelHandler
-            .getGameObjects()
-            .forEach((key, gameObject) -> gameObject.updateCollision());
-        Physics.processCollisions();
-
         if (!multiplayer) {
+          /** Check Collisions */
+          Physics.gameObjects = levelHandler.getGameObjects();
+
+          levelHandler
+              .getGameObjects()
+              .forEach((key, gameObject) -> gameObject.updateCollision());
+          Physics.processCollisions();
+
           /** Update Game Objects */
           levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.update());
         } else {
@@ -412,7 +410,6 @@ public class Client extends Application {
         /** Scale and Render Game Objects */
         scaleRendering(primaryStage);
 
-        //levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.getTransform().scaleScreen(scaleRatio));
         levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.render());
         if (levelHandler.getBackground() != null) {
           levelHandler.getBackground().render();
@@ -491,6 +488,6 @@ public class Client extends Application {
                 UUID.randomUUID()));
     levelHandler.getGameObjects().put(Client.levelHandler.getClientPlayer().getHolding().getUUID(),
         Client.levelHandler.getClientPlayer().getHolding());
-    levelHandler.getClientPlayer().getHolding().initialise(Client.gameRoot);
+    levelHandler.getClientPlayer().getHolding().initialise(gameRoot, settings);
   }
 }

@@ -1,6 +1,5 @@
 package shared.gameObjects.weapons;
 
-import client.main.Client;
 import java.util.UUID;
 import javafx.scene.transform.Rotate;
 import shared.gameObjects.GameObject;
@@ -225,7 +224,7 @@ public abstract class Weapon extends GameObject {
    * and set active to false
    */
   public void destroyWeapon() {
-    Client.levelHandler.removeGameObject(this);
+    settings.getLevelHandler().removeGameObject(this);
   }
 
   @Override

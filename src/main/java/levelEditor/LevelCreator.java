@@ -12,7 +12,6 @@ import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.stage.Stage;
 import shared.gameObjects.Blocks.Metal.MetalBlockLargeObject;
-import shared.gameObjects.Blocks.Stone.StoneBlockObject;
 import shared.gameObjects.Blocks.Stone.StoneFloorObject;
 import shared.gameObjects.Blocks.Stone.StoneWallObject;
 import shared.gameObjects.Blocks.Wood.WoodBlockLargeObject;
@@ -45,6 +44,7 @@ import shared.gameObjects.objects.utility.JumpPad;
 import shared.gameObjects.objects.utility.RedBlock;
 import shared.gameObjects.objects.utility.YellowBlock;
 import shared.gameObjects.players.Player;
+import shared.gameObjects.weapons.MachineGun;
 import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.MapLoader;
 
@@ -61,7 +61,7 @@ public class LevelCreator extends Application {
   private static MapDataObject mapDataObject;
   private UUID uuid = UUID.randomUUID();
 
-  private Settings settings = new Settings();
+  private Settings settings = new Settings(null, null);
 
   private static int getAbs(int gridPos) {
     return gridPos * gridSizePX;
@@ -104,6 +104,7 @@ public class LevelCreator extends Application {
     //Laser
     gameObjects.put(uuid, new LaserBeam(getAbs(4), getAbs(7), uuid));
     uuid = UUID.randomUUID();
+
 
     //ColouredBlocks
     gameObjects
@@ -356,13 +357,15 @@ public class LevelCreator extends Application {
               getAbs(i * 4), getAbs(0), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
       uuid = UUID.randomUUID();
     }
-    for (int i = 0; i < 10; i++) {
-      // top row wall
-      gameObjects.put(uuid,
-          new StoneBlockObject(
-              getAbs(i * 4 + 2), getAbs(20), getAbs(2), getAbs(2), ObjectType.Bot, uuid));
-      uuid = UUID.randomUUID();
-    }
+    /**
+     for (int i = 0; i < 10; i++) {
+     // top row wall
+     gameObjects.put(uuid,
+     new StoneBlockObject(
+     getAbs(i * 4 + 2), getAbs(20), getAbs(2), getAbs(2), ObjectType.Bot, uuid));
+     uuid = UUID.randomUUID();
+     }
+     **/
     for (int i = 0; i < 5; i++) {
       // side col walls
       gameObjects.put(uuid,
@@ -391,6 +394,13 @@ public class LevelCreator extends Application {
               getAbs(i * 4), getAbs(26), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
       uuid = UUID.randomUUID();
     }
+
+    //Gun
+    uuid = UUID.randomUUID();
+    gameObjects
+        .put(uuid, new MachineGun(200, 350, "MachineGun.spawnGun@LevelHandler.addClientPlayer",
+            null, uuid));
+
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
         new MetalBlockLargeObject(getAbs(10), getAbs(5), getAbs(2), getAbs(2), ObjectType.Bot,

@@ -1,7 +1,6 @@
 package shared.gameObjects.menu.multiplayer;
 
 import client.Menu;
-import client.main.Client;
 import java.util.UUID;
 import javafx.scene.input.MouseEvent;
 import shared.gameObjects.Utils.ObjectType;
@@ -24,7 +23,7 @@ public class ButtonHost extends ButtonObject {
 
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
-    Client.levelHandler.changeMap(
-        new Map("Host", Menu.HOST.getMenuPath()), false);
+    settings.getLevelHandler().changeMap(
+        new Map("Host", Menu.HOST.getMenuPath()), false, false);
   }
 }
