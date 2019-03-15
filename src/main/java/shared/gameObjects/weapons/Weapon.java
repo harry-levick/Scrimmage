@@ -67,7 +67,7 @@ public abstract class Weapon extends GameObject {
    * pivot(x) = 20  TODO: change here after changing pivot of guns
    * pivot(y) = 10
    */
-  protected Rotate rotate;
+  protected transient Rotate rotate;
 
   // variables for when the holder is null
   private BoxCollider bcTrig;
