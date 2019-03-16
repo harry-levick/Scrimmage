@@ -31,13 +31,16 @@ public abstract class Limb extends GameObject {
   protected double yLeft;
   protected double xRight;
   protected double yRight;
-
+  private Player player;
+  
   protected Rigidbody rb;
   protected BoxCollider bc;
 
   protected transient LevelHandler levelHandler;
 
-
+  private int r= 0;
+  
+  
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
    * ensure actions are calculated the same
@@ -45,7 +48,7 @@ public abstract class Limb extends GameObject {
    * @param id Unique Identifier of every game object
    */
   public Limb(double xLeft, double yLeft, double xRight, double yRight, double sizeX, double sizeY,
-      ObjectType id, Boolean isLeft, GameObject parent, double pivotX, double pivotY,
+      ObjectType id, Boolean isLeft, GameObject parent, Player player, double pivotX, double pivotY,
       LevelHandler levelHandler) {
     super(0, 0, sizeX, sizeY, id, UUID.randomUUID());
     this.limbAttached = true;
@@ -56,6 +59,7 @@ public abstract class Limb extends GameObject {
     this.xRight = xRight;
     this.yRight = yRight;
     this.parent = parent;
+    this.player = player;
     this.rotate = new Rotate();
     this.behaviour = Behaviour.IDLE;
     this.actions = new HashMap<>();
@@ -107,6 +111,7 @@ public abstract class Limb extends GameObject {
   @Override
   public void update() {
     super.update();
+    getBehaviour();
     if (limbAttached) {
       setRelativePosition();
       if (!lastAttachedCheck) {
@@ -124,10 +129,19 @@ public abstract class Limb extends GameObject {
   public void reset() {
     removeRender();
   }
+  
+  private void getBehaviour() {
+    this.behaviour = this.player.behaviour;
+  }
 
+  protected abstract void rotateAnimate();
+  
   @Override
   public void render() {
     super.render();
+    
+    //Do all the rotations here.
+    rotateAnimate();
   }
 
   public boolean isLimbAttached() {

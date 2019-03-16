@@ -15,7 +15,7 @@ public class Arm extends Limb {
    * ensure actions are calculated the same
    */
   public Arm(Boolean isLeft, Player parent, LevelHandler levelHandler) {
-    super(13, 62, 53, 62, 17, 33, ObjectType.Limb, isLeft, parent, 0, 0, levelHandler);
+    super(13, 62, 53, 62, 17, 33, ObjectType.Limb, isLeft, parent, parent, 0, 0, levelHandler);
   }
 
   @Override
@@ -37,5 +37,11 @@ public class Arm extends Limb {
   @Override
   public void initialiseAnimation() {
     this.animation.supplyAnimation("default", "images/player/Standard_Male/arm.png");
+  }
+
+  @Override
+  protected void rotateAnimate() {
+    // TODO Auto-generated method stub
+    
   }
 }
