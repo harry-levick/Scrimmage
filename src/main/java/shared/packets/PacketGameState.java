@@ -14,11 +14,11 @@ public class PacketGameState extends Packet {
   private int lastProcessedInput;
   private boolean update = false;
 
-  public PacketGameState(ArrayList<GameObject> gameObjects, int lastProcessedInput) {
+  public PacketGameState(ArrayList<GameObject> gameObjects, boolean sendAll) {
     packetID = PacketID.GAMESTATE.getID();
     data = "" + packetID + "," + lastProcessedInput;
     for (GameObject object : gameObjects) {
-      if (object.getState() != "" && object.isNetworkStateUpdate()) {
+      if (object.getState() != "" && object.isNetworkStateUpdate() || sendAll) {
         update = true;
         data += "," + object.getState();
       }

@@ -163,20 +163,29 @@ public class ClientNetworkManager {
   }
 
   public static void sendInput() {
+    Player player = Client.levelHandler.getClientPlayer();
     PacketInput input =
         new PacketInput(
-            Client.levelHandler.getClientPlayer().mouseX,
-            Client.levelHandler.getClientPlayer().mouseY,
-            Client.levelHandler.getClientPlayer().leftKey,
-            Client.levelHandler.getClientPlayer().rightKey,
-            Client.levelHandler.getClientPlayer().jumpKey,
-            Client.levelHandler.getClientPlayer().click,
-            Client.levelHandler.getClientPlayer().getUUID(),
+            player.mouseX,
+            player.mouseY,
+            player.leftKey,
+            player.rightKey,
+            player.jumpKey,
+            player.click,
+            player.getUUID(),
             Client.inputSequenceNumber);
+    resetInput();
     Client.connectionHandler.send(input.getString());
     input.setInputSequenceNumber(Client.inputSequenceNumber);
     Client.pendingInputs.add(input);
     Client.inputSequenceNumber++;
+  }
+
+  public static void resetInput() {
+    Player player = Client.levelHandler.getClientPlayer();
+    player.leftKey = false;
+    player.rightKey = false;
+    player.jumpKey = false;
   }
 
   public static void update() {

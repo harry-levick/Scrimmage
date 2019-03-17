@@ -3,66 +3,79 @@ package shared.gameObjects.weapons;
 import java.util.UUID;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.players.Player;
+import shared.util.Path;
 
 /**
  * Default holding weapon of a player
  */
 public class Punch extends Melee {
 
+  private static double sizeX = 30, sizeY = 30;
+  private static double range = 30;
+
   /**
    * Constructor for Punch
    *
    * @param x x position of player's hand
    * @param y y position of player's hand
-   * @param id ObjectType
-   * @param damage Damage of a punch
    * @param name Name
-   * @param range Range of punch, measured forward
+   * @param holder Player this punch refers to
    * @param uuid UUID
    */
   public Punch(
       double x,
       double y,
-      double sizeX,
-      double sizeY,
-      ObjectType id,
-      int damage,
       String name,
       Player holder,
-      double range,
       UUID uuid) {
-    super(x, y, sizeX, sizeY, id, damage, 1, name, -1,
-        60, holder, range, 1, 1, uuid);
+    super(x,
+        y,
+        sizeX,
+        sizeY,
+        ObjectType.Weapon,
+        10,
+        1,
+        name,
+        -1,
+        60,
+        holder,
+        range,
+        1,
+        1,
+        uuid);
   }
 
   public Punch(Punch that) {
-    this(that.getX(), that.getY(), that.getTransform().getSize().getX(),
-        that.getTransform().getSize().getY(), that.id, that.damage,
-        that.name, that.holder, that.range, UUID.randomUUID());
+    this(that.getX(), that.getY(), that.name, that.holder, UUID.randomUUID());
+  }
+
+  @Override
+  public void fire(double mouseX, double mouseY) {
+    super.fire(mouseX, mouseY);
   }
 
   @Override
   public void initialiseAnimation() {
-
+    this.animation.supplyAnimation("default", Path.convert("images/weapons/fist.png"));
   }
 
   @Override
   public double getGripX() {
-    return 0;
+    return holder.getMeleeHandPos()[0];
   }
 
   @Override
   public double getGripY() {
-    return 0;
+    return holder.getMeleeHandPos()[1];
   }
 
   @Override
   public double getGripFlipX() {
-    return 0;
+    return holder.getMeleeHandPos()[0];
   }
 
   @Override
   public double getGripFlipY() {
-    return 0;
+    return holder.getMeleeHandPos()[1];
   }
 }
