@@ -53,22 +53,73 @@ import shared.physics.Physics;
 import shared.util.Path;
 import shared.util.maths.Vector2;
 
+/**
+ * Main class of the game: The Game Client
+ */
 public class Client extends Application {
 
+  /**
+   * A temporary implementation for deactivating game music and sound effects
+   */
   public static boolean musicActive = true;
 
   private static final Logger LOGGER = LogManager.getLogger(Client.class.getName());
+
+  /**
+   * Handler for changing levels/maps
+   */
   public static LevelHandler levelHandler;
+
+  /**
+   * Global settings, defines some game settings/configs and paths of resources
+   */
   public static Settings settings;
+
+  /**
+   * Boolean state if a multiplayer game is being played
+   */
   public static boolean multiplayer;
+
+  /**
+   * Boolean state if a singleplayer game is being played
+   */
   public static boolean singleplayerGame;
+
+  /**
+   * Server/Client connection handling
+   */
   public static ConnectionHandler connectionHandler;
+
+  /**
+   * Boolean state if updates are being sent to the server
+   */
   public static boolean sendUpdate;
+
+  /**
+   * Game timer //todo NO USES?
+   */
   public static Timer timer = new Timer("Timer", true);
+
+  /**
+   * Tracking in Client/Server connection
+   */
   public static int inputSequenceNumber;
+
+  /**
+   * Tracking in Client/Server connection
+   */
   public static ArrayList<PacketInput> pendingInputs;
+
+  /**
+   * //todo unknown use case
+   */
   public static TimerTask task;
+
+  /**
+   * JavaFX root for all GameObjects
+   */
   public static Group gameRoot;
+
   private final String gameTitle = "Alone in the Dark";
   private LinkedList<Map> playlist;
   private KeyboardInput keyInput;
@@ -88,14 +139,23 @@ public class Client extends Application {
   private static boolean settingsOverlay = false;
   private static ArrayList<GameObject> settingsObjects = new ArrayList<>();
 
+  /**
+   * Launch game client
+   */
   public static void main(String args[]) {
     launch(args);
   }
 
+  /**
+   * Sets a new user interface in the uiRoot, rendered by the main game loop depending on use
+   */
   public static void setUserInterface() {
     userInterface = new UI(uiRoot, levelHandler.getClientPlayer());
   }
 
+  /**
+   * Toggle display the mini-settings overlay. Shares use of creditsRoot since the ui and credit are not displayed at the same time. Clears all elements in the JavaFX group when toggle off.
+   */
   public static void settingsToggle() {
     // todo check if ingame
     // show/overlay settings
@@ -168,12 +228,18 @@ public class Client extends Application {
     }
   }
 
+  /**
+   * Clear the creditsRoot JavaFX group, hiding the overlay
+   */
   public static void closeSettingsOverlay() {
     settingsOverlay = false;
     creditsRoot.getChildren().clear();
     settingsObjects.clear();
   }
 
+  /**
+   * Shows the game credits in the creditsRoot, uses the CREDITS.MD file, allowing styling by italics or bold text, as well as optional 1st and 2nd size headers. A single <br> in any tag will display the while line as empty.
+   */
   public static void showCredits() {
     credits = true;
     ArrayList<String> lines = new ArrayList<String>();
@@ -256,6 +322,9 @@ public class Client extends Application {
 
   }
 
+  /**
+   * Hides the credits being displayed and resets the animation for the next time the credits are displayed.
+   */
   public static void endCredits() {
     credits = false;
     creditStartDelay = 100; //todo magic number
@@ -265,6 +334,11 @@ public class Client extends Application {
         .playMusicPlaylist(PLAYLIST.MENU); //assume always return to menu map from credits
   }
 
+  /**
+   * Calculates the FPS of the game and sets it in the title of the game window
+   * @param secondElapsed
+   * @param primaryStage
+   */
   public void calculateFPS(float secondElapsed, Stage primaryStage) {
     elapsedSinceFPS += secondElapsed;
     framesElapsedSinceFPS++;
@@ -279,11 +353,17 @@ public class Client extends Application {
     }
   }
 
+  /**
+   * Initialise the settings and sets multiplayer as false
+   */
   public void init() {
     settings = new Settings(levelHandler, gameRoot);
     multiplayer = false;
   }
 
+  /**
+   * The end of the game, resets game back to main menu
+   */
   public void endGame() {
     singleplayerGame = false;
     levelHandler.getPlayers().entrySet().removeAll(levelHandler.getBotPlayerList().entrySet());
@@ -297,6 +377,10 @@ public class Client extends Application {
         false, false);
   }
 
+  /**
+   * Main game setup and game loop
+   * @param primaryStage The JavaFX stage the game is put in
+   */
   @Override
   public void start(Stage primaryStage) {
 
@@ -354,7 +438,6 @@ public class Client extends Application {
         if (gameOver) {
           endGame();
         }
-
 
         /** Apply Input */
         levelHandler.getClientPlayer().applyInput();
@@ -442,6 +525,10 @@ public class Client extends Application {
     }.start();
   }
 
+  /**
+   * Initialises the rendering stage of the game setup
+   * @param primaryStage The JavaFX stage the game elements are to be placed into
+   */
   private void setupRender(Stage primaryStage) {
     root = new Group();
     backgroundRoot = new Group();
@@ -469,6 +556,10 @@ public class Client extends Application {
     primaryStage.show();
   }
 
+  /**
+   * Scaling of the window
+   * @param primaryStage The JavaFX stage to be scaled
+   */
   public void scaleRendering(Stage primaryStage) {
     Vector2 scaleRatio = new Vector2(primaryStage.getWidth() / 1920,
         primaryStage.getHeight() / 1080);
@@ -476,6 +567,9 @@ public class Client extends Application {
     scene.getRoot().getTransforms().setAll(scale);
   }
 
+  /**
+   * Gives a weapon to the client's player
+   */
   public void giveWeapon() {
     levelHandler
         .getClientPlayer()
