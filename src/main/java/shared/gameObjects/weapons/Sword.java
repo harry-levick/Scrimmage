@@ -41,6 +41,7 @@ public class Sword extends Melee {
         50, // range
         50, // beginAngle
         20, // endAngle
+        true, // singleHanded
         uuid);
 
     translate = new Translate();

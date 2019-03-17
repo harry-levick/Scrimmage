@@ -42,6 +42,7 @@ public class Punch extends Melee {
         range,
         1,
         1,
+        true,
         uuid);
   }
 

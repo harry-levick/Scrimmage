@@ -41,6 +41,8 @@ public abstract class Weapon extends GameObject {
   protected int fireRate;
   /** Current cooldown of the weapon, ready to fire when equals 0 */
   protected int currentCooldown;
+  /** True if this gun is held with single hand */
+  protected boolean singleHanded;
 
   /** The player who holds the weapon, null if none */
   protected Player holder;
@@ -114,6 +116,7 @@ public abstract class Weapon extends GameObject {
     setFireRate(fireRate);
     this.holder = holder;
     holderHandPos = new double[]{};
+    this.rotate = new Rotate();
 
     if (holder == null) {
       // add collider and rigidbody
@@ -173,11 +176,10 @@ public abstract class Weapon extends GameObject {
    */
   public double[] getHolderHandPos() {
     if (holder != null) {
-      if (this.isGun) {
-        return holder.getGunHandPos();
-      } else  // isMelee
-      {
+      if (this.singleHanded) {
         return holder.getMeleeHandPos();
+      } else { // use both hands
+        return holder.getGunHandPos();
       }
     }
     return null;

@@ -38,6 +38,7 @@ public abstract class Melee extends Weapon {
       double range,
       double beginAngle,
       double endAngle,
+      boolean singleHanded,
       UUID uuid) {
 
     super(x, y, sizeX, sizeY, id, weight, name, false, true, ammo, fireRate, holder, uuid);
@@ -49,7 +50,7 @@ public abstract class Melee extends Weapon {
     this.angles = generateAngles();
     this.attacking = false;
     this.currentAngleIndex = 0;
-
+    this.singleHanded = singleHanded;
   }
 
   @Override
