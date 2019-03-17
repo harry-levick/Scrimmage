@@ -230,12 +230,14 @@ public abstract class Weapon extends GameObject {
   @Override
   public void OnTriggerEnter(Collision col) {
     GameObject g = col.getCollidedObject();
-    if (g != null && g.getId() == ObjectType.Player && ((Player) g).getHolding() == null) {
+    if (g != null && g.getId() == ObjectType.Player) {
       Player p = (Player) g;
-      setHolder(p);
-      bcCol.setLayer(ColliderLayer.PARTICLE);
-      bcTrig.setLayer(ColliderLayer.PARTICLE);
-      this.removeComponent(rb);
+      if (p.getHolding() == null || p.getHolding() instanceof Punch) {
+        setHolder(p);
+        bcCol.setLayer(ColliderLayer.PARTICLE);
+        bcTrig.setLayer(ColliderLayer.PARTICLE);
+        this.removeComponent(rb);
+      }
     }
   }
 
