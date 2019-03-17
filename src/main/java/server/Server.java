@@ -1,8 +1,9 @@
 package server;
 
-import client.main.Client;
 import client.main.Settings;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -18,6 +19,7 @@ import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -35,6 +37,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.MapDataObject;
+import shared.gameObjects.objects.ObjectManager;
 import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.LevelHandler;
 import shared.handlers.levelHandler.Map;
@@ -46,11 +49,9 @@ import shared.physics.Physics;
 import shared.util.Path;
 import shared.util.maths.Vector2;
 
-//import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
-
 public class Server extends Application {
 
-  private static final Logger LOGGER = LogManager.getLogger(Client.class.getName());
+  private static final Logger LOGGER = LogManager.getLogger(Server.class.getName());
 
   public static LevelHandler levelHandler;
   public static Group gameRoot;
@@ -58,6 +59,7 @@ public class Server extends Application {
   public final AtomicInteger playerCount = new AtomicInteger(0);
   public final AtomicInteger readyCount = new AtomicInteger(0);
   private final AtomicBoolean running = new AtomicBoolean(false);
+  private final AtomicBoolean sendAllObjects = new AtomicBoolean(false);
   private final AtomicBoolean gameOver = new AtomicBoolean(false);
   private final AtomicInteger counter = new AtomicInteger(0);
   private final int maxPlayers = 4;
@@ -93,11 +95,11 @@ public class Server extends Application {
   }
 
   public void init() {
-    //SvgImageLoaderFactory.install();
     server = this;
     executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     threadName = "Server";
-    settings = new Settings();
+    settings = new Settings(levelHandler, gameRoot);
+    running.set(true);
     settings.setLevelHandler(levelHandler);
     playlist = new LinkedList();
     inputQueue = new ConcurrentHashMap<>();
@@ -107,6 +109,7 @@ public class Server extends Application {
     } catch (IOException e) {
       e.printStackTrace();
     }
+    serverState = ServerState.WAITING_FOR_PLAYERS;
 
     // Testing code
     playlist.add(
@@ -119,12 +122,24 @@ public class Server extends Application {
     running.set(false);
   }
 
-  public void sendToClients(byte[] buffer) {
+  public void sendToClients(byte[] buffer, boolean object) {
     synchronized (connected) {
       connected.forEach(
           address -> {
             try {
-              DatagramPacket packet = new DatagramPacket(buffer, buffer.length,
+              //Send buffer size to set
+              byte[] lengthBuffer = ("length:" + buffer.length).getBytes();
+              DatagramPacket packet = new DatagramPacket(lengthBuffer, lengthBuffer.length,
+                  (InetAddress) address, serverPort);
+              socket.send(packet);
+
+              if (object) {
+                packet = new DatagramPacket("object".getBytes(), "object".getBytes().length,
+                    (InetAddress) address, serverPort);
+                socket.send(packet);
+              }
+
+              packet = new DatagramPacket(buffer, buffer.length,
                   (InetAddress) address, serverPort);
               socket.send(packet);
               System.out.println("SEND: " + new String(buffer));
@@ -158,8 +173,10 @@ public class Server extends Application {
     levelHandler.getPlayers().forEach((key, player) -> player.applyInput());
 
     levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.updateCollision());
+    Physics.processCollisions();
     /** Update Game Objects */
     levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.update());
+    ObjectManager.update();
   }
 
   public void startMatch() {
@@ -172,10 +189,10 @@ public class Server extends Application {
 
   public void nextMap() {
     Map nextMap = playlist.pop();
-    levelHandler.changeMap(nextMap, true);
+    levelHandler.changeMap(nextMap, true, true);
     // TODO Change to actual UUID
     PacketMap mapPacket = new PacketMap(nextMap.getName(), UUID.randomUUID());
-    sendToClients(mapPacket.getData());
+    sendToClients(mapPacket.getData(), false);
   }
 
   public void add(Player player) {
@@ -194,11 +211,12 @@ public class Server extends Application {
         gameObjectsFiltered.add(gameObject);
       }
     }
-    PacketGameState gameState = new PacketGameState(gameObjectsFiltered, 0);
+    PacketGameState gameState = new PacketGameState(gameObjectsFiltered, sendAllObjects.get());
+    sendAllObjects.set(false);
 
     if (gameState.isUpdate()) {
       byte[] buffer = gameState.getData();
-      sendToClients(buffer);
+      sendToClients(buffer, false);
     }
   }
 
@@ -232,9 +250,8 @@ public class Server extends Application {
     setupRender(primaryStage);
     levelHandler = new LevelHandler(settings, backgroundRoot, gameRoot, this);
     settings.setLevelHandler(levelHandler);
-    running.set(true);
+    settings.setGameRoot(gameRoot);
     LOGGER.debug("Running " + threadName);
-    serverState = ServerState.WAITING_FOR_PLAYERS;
     /** Receiver from clients */
     executor.execute(new ServerReceiver(this, serverSocket, connected));
 
@@ -301,18 +318,41 @@ public class Server extends Application {
     }.start();
   }
 
+  public void sendObjects(ConcurrentSkipListMap<UUID, GameObject> gameobjects) {
+    ByteArrayOutputStream byteArrayOutputStream = null;
+    try {
+      byteArrayOutputStream = new ByteArrayOutputStream();
+      ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+      objectOutputStream.writeObject(gameobjects);
+      objectOutputStream.flush();
+
+      sendToClients(byteArrayOutputStream.toByteArray(), true);
+    } catch (IOException e) {
+      LOGGER.error("Unable to send new objects to clients ");
+      e.printStackTrace();
+    } finally {
+      try {
+        byteArrayOutputStream.close();
+      } catch (IOException e) {
+        LOGGER.error("Can't close Byte Array Output Stream on Server");
+      }
+    }
+  }
+
+  public AtomicBoolean getSendAllObjects() {
+    return sendAllObjects;
+  }
+
   //Rendering
 
   public Player addPlayer(PacketJoin joinPacket, InetAddress address) {
-    Player player = new Player(joinPacket.getX(), joinPacket.getY(), joinPacket.getClientID(),
-        levelHandler);
+    Player player = new Player(joinPacket.getX(), joinPacket.getY(), joinPacket.getClientID());
     levelHandler.addPlayer(player, gameRoot);
     playerCount.getAndIncrement();
     connected.add(address);
     server.add(player);
     return player;
   }
-
   private void setupRender(Stage primaryStage) {
     root = new Group();
     backgroundRoot = new Group();

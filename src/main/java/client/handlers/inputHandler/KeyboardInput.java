@@ -15,19 +15,17 @@ public class KeyboardInput implements EventHandler<KeyEvent> {
 
   @Override
   public void handle(KeyEvent event) {
+    Client.sendUpdate = true;
     if (event.getEventType() == KeyEvent.KEY_PRESSED) {
       switch (event.getCode()) {
         case A:
           clientPlayer.leftKey = true;
-          Client.sendUpdate = true;
           break;
         case D:
           clientPlayer.rightKey = true;
-          Client.sendUpdate = true;
           break;
         case W:
           clientPlayer.jumpKey = true;
-          Client.sendUpdate = true;
           break;
         case H:
           clientPlayer.deattach = true;
@@ -35,25 +33,24 @@ public class KeyboardInput implements EventHandler<KeyEvent> {
         case ESCAPE:
           Client.settingsToggle();
         default:
+          Client.sendUpdate = false;
       }
     } else if (event.getEventType() == KeyEvent.KEY_RELEASED) {
       switch (event.getCode()) {
         case A:
           clientPlayer.leftKey = false;
-          Client.sendUpdate = true;
           break;
         case D:
           clientPlayer.rightKey = false;
-          Client.sendUpdate = true;
           break;
         case W:
           clientPlayer.jumpKey = false;
-          Client.sendUpdate = true;
           break;
         case H:
           clientPlayer.deattach = false;
           break;
         default:
+          Client.sendUpdate = false;
       }
     }
   }

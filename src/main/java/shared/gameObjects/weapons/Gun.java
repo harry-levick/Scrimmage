@@ -1,35 +1,45 @@
 package shared.gameObjects.weapons;
 
+import client.main.Settings;
 import java.util.UUID;
+import javafx.scene.Group;
+import javafx.scene.transform.Rotate;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.players.Player;
 import shared.util.maths.Vector2;
 
 /**
- * @author hlf764 The abstract class for all guns type weapon.
+ * The abstract class for all guns type weapon.
  */
 public abstract class Gun extends Weapon {
 
-  protected float aimAngleMax = 110f; // Maximum angle of aiming before switching holding hand
+  /** Maximum angle of aiming before switching holding hand */
+  protected float AIM_ANGLE_MAX = 110f;
 
-  protected double bulletSpeed; // pixel per second
-  protected int fireRate; // bullets per minute
-  protected double bulletWidth; // width of bullet ==(pixel?)==
-  protected boolean fullAutoFire; // able to shoot with full-auto or single-shot
-  protected boolean singleHanded; // holding the weapon with one hand or two
-  protected int ammo; // The amount of ammo left
+  /** Fire rate of the gun (less than MAX_COOLDOWN) */
+  protected int fireRate;
+  /** True if this gun is full auto fire */
+  protected boolean fullAutoFire;
+  /** True if this gun is held with single hand */
+  protected boolean singleHanded;
+  /** Ammo of this gun currently has */
+  protected int ammo;
 
   /**
    * Constructor of the Gun class
    *
    * @param x The x position of the gun
    * @param y The y position of the gun
+   * @param sizeX Horizontal size of the image
+   * @param sizeY Vertical size of the image
    * @param weight Weight of the gun
    * @param name Name of the gun
    * @param ammo Total amount of ammo
    * @param fireRate Fire rate of the gun (bullets per minute)
-   * @param fullAutoFire Is it full-automatic fire or single-shot
-   * @param singleHanded Is it be hold with one hand or two hands
+   * @param holder Player that holds this gun
+   * @param fullAutoFire True if this gun is full auto fire
+   * @param singleHanded True if this gun is held with single hand
+   * @param uuid UUID of this gun
    */
   public Gun(
       double x,
@@ -45,16 +55,28 @@ public abstract class Gun extends Weapon {
       boolean singleHanded,
       UUID uuid) {
 
-    super(x, y, sizeX, sizeY, ObjectType.Weapon, weight, name, true, false, ammo, fireRate, holder, uuid);
+    super(x, y, sizeX, sizeY, ObjectType.Weapon, weight, name, true, false, ammo, fireRate, holder,
+        uuid);
 
+    this.fireRate = fireRate;
+    this.ammo = ammo;
     this.fullAutoFire = fullAutoFire;
     this.singleHanded = singleHanded;
   }
 
   public abstract double getForeGripX();
+
   public abstract double getForeGripY();
+
   public abstract double getForeGripFlipX();
+
   public abstract double getForeGripFlipY();
+
+  @Override
+  public void initialise(Group root, Settings settings) {
+    super.initialise(root, settings);
+    rotate = new Rotate();
+  }
 
   @Override
   public void update() {
@@ -66,7 +88,9 @@ public abstract class Gun extends Weapon {
   public void render() {
     super.render();
 
-    if (holder == null) return;
+    if (holder == null) {
+      return;
+    }
 
     imageView.getTransforms().clear();
 
@@ -82,7 +106,7 @@ public abstract class Gun extends Weapon {
     double angleHorizontal;  // degree
     if (holder.isAimingLeft()) {
       angleHorizontal = (mouseSubGrip.angleBetween(Vector2.Left())) * 180 / PI;
-      if (angleHorizontal > aimAngleMax) {
+      if (angleHorizontal > AIM_ANGLE_MAX) {
         holder.setAimingLeft(false);
         angle = angleHorizontal - 180f;
       }
@@ -91,7 +115,7 @@ public abstract class Gun extends Weapon {
       }
     } else { // holder aiming Right
       angleHorizontal = (mouseSubGrip.angleBetween(Vector2.Right())) * 180 / PI;
-      if (angleHorizontal > aimAngleMax) {
+      if (angleHorizontal > AIM_ANGLE_MAX) {
         holder.setAimingLeft(true);
         angle = 180f - angleHorizontal;
       }
@@ -127,34 +151,15 @@ public abstract class Gun extends Weapon {
   // -------START-------
   // Setters and Getters
   // -------------------
-  public double getBulletSpeed() {
-    return this.bulletSpeed;
-  }
-
-  public void setBulletSpeed(double newSpeed) {
-    if (newSpeed > 0 && newSpeed < 50.0) {
-      this.bulletSpeed = newSpeed;
-    }
-  }
-
-  public double getBulletWidth() {
-    return this.bulletWidth;
-  }
-
-  public void setBulletWidth(double newWidth) {
-    if (newWidth > 0) {
-      this.bulletWidth = newWidth;
-    }
-  }
-
+  /** Returns true if this gun is full auto fire */
   public boolean isFullAutoFire() {
     return this.fullAutoFire;
   }
 
+  /** Returns true if this gun is held with one hand */
   public boolean isSingleHanded() {
     return this.singleHanded;
   }
-
   // -------------------
   // Setters and Getters
   // --------END--------

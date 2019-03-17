@@ -1,6 +1,6 @@
 package shared.physics;
 
-import client.main.Client;
+import client.main.Settings;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.UUID;
@@ -29,6 +29,7 @@ public class Physics {
   public static final int RAYCAST_INC = 100;
   public static boolean showColliders = false;
   public static boolean showCasts = true;
+  public static Settings settings;
   /*
    * Order: DEFAULT, PLAYER, OBJECT, PLATFORM, PARTICLE, COLLECTABLE
    */
@@ -46,8 +47,9 @@ public class Physics {
 
   private static ArrayList<DynamicCollision> collisions = new ArrayList<>();
 
-  private Physics() {
+  private Physics(Settings settings) {
     gameObjects = new ConcurrentSkipListMap<>();
+    this.settings = settings;
   }
 
   /**
@@ -188,7 +190,7 @@ public class Physics {
           line.setEndY(yFinish);
 
           line.setStyle(String.format("-fx-stroke-width: 4; -fx-stroke: %s;", colour));
-          Client.gameRoot.getChildren().add(line);
+          settings.getGameRoot().getChildren().add(line);
         }
     );
   }
@@ -201,7 +203,7 @@ public class Physics {
           Rectangle r2 = new Rectangle(sourcePos.getX(), sourcePos.getY(), size.getX(),
               size.getY());
           r2.setStyle("-fx-stroke-width: 4; -fx-stroke: #00ff00;");
-          Client.gameRoot.getChildren().add(r2);
+          settings.getGameRoot().getChildren().add(r2);
         });
   }
 
@@ -228,7 +230,7 @@ public class Physics {
       line.setEndX(castCollider.getNodes().get(castCollider.getNodes().size() - 1).getX());
       line.setEndY(castCollider.getNodes().get(castCollider.getNodes().size() - 1).getY());
       line.setStyle("-fx-stroke-width: 4; -fx-stroke: #324401;");
-      Client.gameRoot.getChildren().add(line);
+      settings.getGameRoot().getChildren().add(line);
     }
     for (GameObject object : gameObjects.values()) {
       if (object.getComponent(ComponentType.COLLIDER) != null) {

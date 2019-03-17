@@ -4,10 +4,6 @@ import client.handlers.audioHandler.AudioHandler;
 import client.handlers.audioHandler.MusicAssets.PLAYLIST;
 import client.main.Client;
 import client.main.Settings;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.UUID;
@@ -50,8 +46,6 @@ public class LevelHandler {
   private ArrayList<GameObject> toCreate;
   private boolean isServer;
   private Server server;
-  private ByteArrayOutputStream byteArrayOutputStream;
-  private ObjectOutput objectOutput;
 
   public LevelHandler(Settings settings, Group backgroundRoot, Group gameRoot,
       Group uiRoot) {
@@ -71,7 +65,7 @@ public class LevelHandler {
     musicPlayer = new AudioHandler(settings, Client.musicActive);
     changeMap(
         new Map("menus/main_menu.map", Path.convert("src/main/resources/menus/main_menu.map")),
-        true);
+        true, false);
     previousMap = null;
   }
 
@@ -80,30 +74,35 @@ public class LevelHandler {
     gameObjects = new ConcurrentSkipListMap<>();
     toRemove = new CopyOnWriteArrayList<>();
     players = new LinkedHashMap<>();
+    toCreate = new ArrayList<>();
     bots = new LinkedHashMap<>();
     maps = MapLoader.getMaps(settings.getMapsPath());
+    this.isServer = true;
     this.backgroundRoot = backgroundRoot;
     this.gameRoot = gameRoot;
     this.server = server;
-    musicPlayer = new AudioHandler(settings, Client.musicActive);
     changeMap(new Map("LOBBY", Path.convert("src/main/resources/menus/lobby.map")),
-        false);
+        false, true);
     previousMap = null;
   }
 
-  public void changeMap(Map map, Boolean moveToSpawns) {
+  public void changeMap(Map map, Boolean moveToSpawns, Boolean isServer) {
     previousMap = this.map;
     this.map = map;
-    Client.closeSettingsOverlay();
-    generateLevel(backgroundRoot, gameRoot, moveToSpawns);
-    uiRoot.getChildren().clear();
-    switch (gameState) {
-      case IN_GAME:
-      case MULTIPLAYER:
-        if (Client.levelHandler != null) {
-          Client.setUserInterface();
-        }
-        break;
+    if (!isServer) {
+      Client.closeSettingsOverlay();
+    }
+    generateLevel(backgroundRoot, gameRoot, moveToSpawns, isServer);
+    if (!isServer) {
+      uiRoot.getChildren().clear();
+      switch (gameState) {
+        case IN_GAME:
+        case MULTIPLAYER:
+          if (Client.levelHandler != null) {
+            Client.setUserInterface();
+          }
+          break;
+      }
     }
   }
 
@@ -112,7 +111,7 @@ public class LevelHandler {
       Map temp = this.map;
       this.map = previousMap;
       previousMap = temp;
-      generateLevel(backgroundRoot, gameRoot, moveToSpawns);
+      generateLevel(backgroundRoot, gameRoot, moveToSpawns, false);
     }
   }
 
@@ -120,7 +119,8 @@ public class LevelHandler {
    * NOTE: This to change the level use change Map Removes current game objects and creates new ones
    * from Map file
    */
-  public void generateLevel(Group backgroundGroup, Group gameGroup, Boolean moveToSpawns) {
+  public void generateLevel(Group backgroundGroup, Group gameGroup, Boolean moveToSpawns,
+      Boolean isServer) {
 
     gameObjects.keySet().removeAll(players.keySet());
     gameObjects.keySet().removeAll(bots.keySet());
@@ -138,7 +138,7 @@ public class LevelHandler {
             ArrayList<Vector2> spawnPoints = ((MapDataObject) gameObject).getSpawnPoints();
             this.map.setGameState(((MapDataObject) gameObject).getGameState());
             if (this.background != null) {
-              background.initialise(backgroundGroup);
+              background.initialise(backgroundGroup, settings);
             }
             if (moveToSpawns && spawnPoints != null && spawnPoints.size() >= players.size()) {
               players.forEach(
@@ -151,10 +151,7 @@ public class LevelHandler {
             }
 
           } else {
-            gameObject.initialise(gameGroup);
-            if (isServer) {
-              sendNewGameObject(gameObject);
-            }
+            gameObject.initialise(gameGroup, settings);
           }
         });
     gameObjects.putAll(players);
@@ -162,43 +159,24 @@ public class LevelHandler {
     gameState = map.getGameState();
     players.forEach((key, player) -> player.reset());
 
-    musicPlayer.stopMusic();
-    switch (gameState) {
-      case IN_GAME:
-        musicPlayer.playMusicPlaylist(PLAYLIST.INGAME);
-        break;
-      case MAIN_MENU:
-      case LOBBY:
-      case START_CONNECTION:
-      case MULTIPLAYER:
-      default:
-        musicPlayer.playMusicPlaylist(PLAYLIST.MENU);
-        break;
-
+    if (!isServer) {
+      musicPlayer.stopMusic();
+      switch (gameState) {
+        case IN_GAME:
+          musicPlayer.playMusicPlaylist(PLAYLIST.INGAME);
+          break;
+        case MAIN_MENU:
+        case LOBBY:
+        case START_CONNECTION:
+        case MULTIPLAYER:
+        default:
+          musicPlayer.playMusicPlaylist(PLAYLIST.MENU);
+          break;
+      }
+    } else {
+      server.sendObjects(gameObjects);
     }
     System.gc();
-  }
-
-  public void sendNewGameObject(GameObject gameObject) {
-    byteArrayOutputStream = new ByteArrayOutputStream();
-    objectOutput = null;
-    try {
-      byte[] packetID = "19,".getBytes();
-      byteArrayOutputStream.write(packetID);
-      objectOutput = new ObjectOutputStream(byteArrayOutputStream);
-      objectOutput.writeObject(gameObject);
-      objectOutput.flush();
-      byte[] objectBytes = byteArrayOutputStream.toByteArray();
-      server.sendToClients(objectBytes);
-    } catch (IOException e) {
-      System.out.println("Error Writing");
-    } finally {
-      try {
-        byteArrayOutputStream.close();
-      } catch (IOException ex) {
-        System.out.println("Error Writing");
-      }
-    }
   }
 
   /**
@@ -211,30 +189,50 @@ public class LevelHandler {
     return gameObjects;
   }
 
+  public ConcurrentSkipListMap<UUID, GameObject> getGameObjectsFiltered() {
+    clearToRemove(); // Remove every gameObjects we no longer need
+    ConcurrentSkipListMap<UUID, GameObject> filtered = gameObjects.clone();
+    players.forEach((key, player) -> filtered.remove(key));
+    return filtered;
+  }
+
   public Background getBackground() {
     return this.background;
   }
 
   /**
-   * Add a new bullet to game object list
+   * Add a gameobject to list to be created next update
    *
    * @param gameObject GameObject to be added
    */
   public void addGameObject(GameObject gameObject) {
-    gameObject.initialise(this.gameRoot);
+    gameObject.initialise(this.gameRoot, settings);
     this.toCreate.add(gameObject);
     if (isServer) {
-      sendNewGameObject(gameObject);
+      ConcurrentSkipListMap<UUID, GameObject> temp = new ConcurrentSkipListMap<>();
+      temp.put(gameObject.getUUID(), gameObject);
+      server.sendObjects(temp);
+      System.out.println("DIDIDIDIIDIDIDIDIDIDIID");
     }
   }
 
-  public void addGameObject(ArrayList<GameObject> gameObjects) {
-    gameObjects.forEach(gameObject -> gameObject.initialise(this.gameRoot));
-    this.toCreate.addAll(gameObjects);
+  public void addGameObjects(ConcurrentSkipListMap<UUID, GameObject> gameObjectsT) {
+    gameObjectsT.forEach(((uuid, gameObject) -> {
+      if (!gameObjects.containsKey(uuid)) {
+        this.toCreate.add(gameObject);
+      }
+    }));
   }
 
   public void createObjects() {
-    toCreate.forEach(gameObject -> gameObjects.put(gameObject.getUUID(), gameObject));
+    toCreate.forEach(gameObject -> {
+      gameObject.initialise(gameRoot, settings);
+      if (gameObject instanceof Player && gameObject.getUUID() != clientPlayer.getUUID()) {
+        addPlayer((Player) gameObject, settings.getGameRoot());
+      } else {
+        gameObjects.put(gameObject.getUUID(), gameObject);
+      }
+    });
     toCreate.clear();
   }
 
@@ -279,41 +277,49 @@ public class LevelHandler {
   }
 
   public void addPlayer(Player newPlayer, Group root) {
-    newPlayer.initialise(root);
+    newPlayer.initialise(root, settings);
     players.put(newPlayer.getUUID(), newPlayer);
     gameObjects.put(newPlayer.getUUID(), newPlayer);
   }
 
   public void addClientPlayer(Group root) {
-    clientPlayer = new Player(500, 200, UUID.randomUUID(), this);
-    clientPlayer.initialise(root);
+    clientPlayer = new Player(500, 200, UUID.randomUUID());
+    clientPlayer.initialise(root, settings);
     players.put(clientPlayer.getUUID(), clientPlayer);
     gameObjects.put(clientPlayer.getUUID(), clientPlayer);
 
     // Add a spawn MachineGun
     Weapon spawnGun = new MachineGun(200, 350, "MachineGun.spawnGun@LevelHandler.addClientPlayer",
         null, UUID.randomUUID());
-    spawnGun.initialise(root);
+    spawnGun.initialise(root, settings);
     gameObjects.put(spawnGun.getUUID(), spawnGun);
 
     // Add a spawn Sword
     Weapon spawnSword = new Sword(1300, 200, "Sword.spawnGun@LevelHandler.addClientPlayer", null,
         UUID.randomUUID());
-    spawnSword.initialise(root);
+    spawnSword.initialise(root, settings);
     gameObjects.put(spawnSword.getUUID(), spawnSword);
 
     // Add a spawn Uzi
-    Weapon spawnUzi = new Uzi(330,350, "Uzi.spawnGun@LevelHandler.addClientPlayer",null,
+    Weapon spawnUzi = new Uzi(330, 350, "Uzi.spawnGun@LevelHandler.addClientPlayer", null,
         UUID.randomUUID());
-    spawnUzi.initialise(root);
+    spawnUzi.initialise(root, settings);
     gameObjects.put(spawnUzi.getUUID(), spawnUzi);
 
+    /*
+    // Add Punch to player
+    UUID punchUUID = UUID.randomUUID();
+    Weapon punch = new Punch(clientPlayer.getX(), clientPlayer.getY(), "Punch@LevelHandler.addClientPlayer", clientPlayer, punchUUID);
+    clientPlayer.setHolding(punch);
+    punch.initialise(root, settings);
+    gameObjects.put(punchUUID, punch);
+    */
     /*
     // Add weapon to player
     UUID gunUUID = UUID.randomUUID();
     Weapon gun = new MachineGun(clientPlayer.getX(), clientPlayer.getY(), "MachineGun@LevelHandler.addClientPlayer", clientPlayer, gunUUID);
     clientPlayer.setHolding(gun);
-    gun.initialise(root);
+    gun.initialise(root, settings);
     gameObjects.put(gunUUID, gun);
     */
   }
