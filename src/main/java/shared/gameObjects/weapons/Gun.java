@@ -75,7 +75,6 @@ public abstract class Gun extends Weapon {
   @Override
   public void initialise(Group root, Settings settings) {
     super.initialise(root, settings);
-    rotate = new Rotate();
   }
 
   @Override
