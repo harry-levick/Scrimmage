@@ -40,9 +40,6 @@ public abstract class Limb extends GameObject {
 
   protected transient LevelHandler levelHandler;
 
-  protected int interval; 
-  protected int segments;
-  protected int localTime;
   protected int resetOffsetX = 0;
   
   

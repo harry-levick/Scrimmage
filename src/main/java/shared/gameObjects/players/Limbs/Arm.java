@@ -4,6 +4,7 @@ import client.main.Settings;
 import javafx.scene.Group;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
+import shared.gameObjects.players.Behaviour;
 import shared.gameObjects.players.Limb;
 import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.LevelHandler;
@@ -38,10 +39,71 @@ public class Arm extends Limb {
   public void initialiseAnimation() {
     this.animation.supplyAnimation("default", "images/player/Standard_Male/arm.png");
   }
+  
+  private void jumpAnimation() {
+    // Control to switch the leg animations depending on movement direction.
+    boolean control = isLeft;
+    int inverse = 1;
+    if(this.behaviour == Behaviour.WALK_LEFT) {
+      control =!control;
+      inverse = -1;
+    }
+    
+    if(!control) {
+      imageView.setRotate(-130*inverse);
+    }
+    
+  }
+  
+  private void walkAnimation() {
+  
+    int interval = 10;
+    int segments = 3;
+    int localTime = this.player.getAnimationTimer() % (interval * segments);
+    
+    boolean control = isLeft;
+    int inverse = 1;
+    if(this.behaviour == Behaviour.WALK_LEFT) {
+      control =!control;
+      inverse = -1;
+    }
+    
+    // Default is for running letft.
+    if(this.behaviour == Behaviour.WALK_LEFT || this.behaviour == Behaviour.WALK_RIGHT) {   
+      
+      if(localTime < interval * 1) {
+        if(control) {
+          imageView.setRotate(60*inverse);
+        }
+        else {
+          imageView.setRotate(-100*inverse);
+        }
+      }
+      
+      else if(localTime < interval * 2) {
+        if(control) {
+          imageView.setRotate(-40*inverse);
+        }
+        else {
+          imageView.setRotate(-50*inverse);
+        }
+      }
+    }
+  }
 
   @Override
   protected void rotateAnimate() {
-    // TODO Auto-generated method stub
+
+    if(this.behaviour == Behaviour.JUMP || this.player.getJumped()) {
+      jumpAnimation();
+    }
+ 
+    else if(this.behaviour == Behaviour.WALK_LEFT || this.behaviour == Behaviour.WALK_RIGHT) {   
+      walkAnimation();
+    }
+
+    
+    
     
   }
 }

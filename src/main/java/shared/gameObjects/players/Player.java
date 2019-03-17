@@ -170,6 +170,9 @@ public class Player extends GameObject implements Destructable {
   }
 
   public void applyInput() {
+    if (grounded) {
+      jumped = false;
+    }
     if (rightKey) {
       rb.moveX(speed);
       behaviour = Behaviour.WALK_RIGHT;
@@ -193,9 +196,6 @@ public class Player extends GameObject implements Destructable {
     }
     if (jumped) {
       behaviour = Behaviour.JUMP;
-    }
-    if (grounded) {
-      jumped = false;
     }
     if (click && holding != null) {
       holding.fire(mouseX, mouseY);

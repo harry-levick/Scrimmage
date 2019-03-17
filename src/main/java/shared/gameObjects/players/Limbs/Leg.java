@@ -21,13 +21,12 @@ public class Leg extends Limb {
     this.animation.supplyAnimation("default", "images/player/Standard_Male/leg.png");
   }
   
-
-  @Override
-  protected void rotateAnimate() {
-   
-    interval = 7;
-    segments = 3;
-    localTime = this.player.getAnimationTimer() % (interval * segments);
+  
+  private void walkAnimation() {
+    
+    int interval = 7;
+    int segments = 3;
+    int localTime = this.player.getAnimationTimer() % (interval * segments);
     
     // Control to switch the leg animations depending on movement direction.
     boolean control = isLeft;
@@ -37,42 +36,56 @@ public class Leg extends Limb {
       inverse = -1;
     }
     
-    if(this.behaviour == Behaviour.WALK_LEFT || this.behaviour == Behaviour.WALK_RIGHT) {     
+    if(localTime < interval*1) {
+      if(control) {
+        imageView.setRotate(45*inverse);
+      }
+      else {
+        imageView.setRotate(-45*inverse);
+      }
+    }
+    else if(localTime < interval*2) {
+      if(control) {
+        imageView.setRotate(-40*inverse);
+      }
+      else {
+        imageView.setRotate(0*inverse);
+        int offset = 5;
+        if(this.behaviour == Behaviour.WALK_RIGHT) {
+          offset = -15;
+        }
+        imageView.setX(imageView.getX()-offset);
+        resetOffsetX = offset;
+      }
+    }
+  }
 
-      if(localTime < interval*1) {
-        if(control) {
-          imageView.setRotate(45*inverse);
-        }
-        else {
-          imageView.setRotate(-45*inverse);
-        }
-      }
-      else if(localTime < interval*2) {
-        if(control) {
-          imageView.setRotate(-40*inverse);
-        }
-        else {
-          imageView.setRotate(0*inverse);
-          int offset = 5;
-          if(this.behaviour == Behaviour.WALK_RIGHT) {
-            offset = -15;
-          }
-          imageView.setX(imageView.getX()-offset);
-          resetOffsetX = offset;
-        }
-      }
-      
-      else if(localTime < interval*3) {
-        if(control) {
-          imageView.setRotate(0);
-        }
-        else {
-          imageView.setRotate(0);
-        }
-      }
-      
+  private void jumpAnimation() {
+   
+    // Control to switch the leg animations depending on movement direction.
+    boolean control = isLeft;
+    int inverse = 1;
+    if(this.behaviour == Behaviour.WALK_LEFT) {
+      control =!control;
+      inverse = -1;
+    }
+    
+    if(control) {
+      imageView.setRotate(45*inverse);
+    }
 
-        
+  }
+  
+  
+  @Override
+  protected void rotateAnimate() {
+    
+    if(this.behaviour == Behaviour.JUMP || this.player.getJumped()) {
+      jumpAnimation();
+    }
+    
+    else if(this.behaviour == Behaviour.WALK_LEFT || this.behaviour == Behaviour.WALK_RIGHT) {    
+      walkAnimation();
     }
   }
   
