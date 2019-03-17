@@ -15,6 +15,7 @@ import shared.gameObjects.players.Limbs.Body;
 import shared.gameObjects.players.Limbs.Hand;
 import shared.gameObjects.players.Limbs.Head;
 import shared.gameObjects.players.Limbs.Leg;
+import shared.gameObjects.weapons.Punch;
 import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.weapons.Weapon;
 import shared.physics.data.MaterialProperty;
@@ -41,6 +42,7 @@ public class Player extends GameObject implements Destructable {
   protected boolean aimLeft;
   protected int health;
   protected Weapon holding;
+  protected Weapon myPunch;
   protected Rigidbody rb;
   protected double vx;
   private BoxCollider bc;
@@ -70,7 +72,6 @@ public class Player extends GameObject implements Destructable {
     this.jumpKey = false;
     this.click = false;
     this.health = 100;
-    this.holding = null;
     this.behaviour = Behaviour.IDLE;
     this.shake = new ObjectShake(this);
     this.bc = new BoxCollider(this, ColliderLayer.PLAYER, false);
@@ -98,6 +99,10 @@ public class Player extends GameObject implements Destructable {
   public void initialise(Group root, Settings settings) {
     super.initialise(root, settings);
     addLimbs();
+
+    myPunch = new Punch(getX(), getY(), "myPunch@Player", this, UUID.randomUUID());
+    settings.getLevelHandler().addGameObject(myPunch);
+    this.holding = myPunch;
   }
 
   private void addLimbs() {
@@ -198,11 +203,7 @@ public class Player extends GameObject implements Destructable {
     }
     if (this.holding.getAmmo() == 0) {
       this.holding.destroyWeapon();
-      this.setHolding(null);
-      Weapon newSword =
-          new Sword(this.getX(), this.getY(), "newSword@Player", this, UUID.randomUUID());
-      settings.getLevelHandler().addGameObject(newSword);
-      this.setHolding(newSword);
+      this.setHolding(myPunch);
       return true;
     }
     return false;
@@ -256,10 +257,11 @@ public class Player extends GameObject implements Destructable {
     return holding;
   }
 
-  public void setHolding(Weapon holding) {
-    this.holding = holding;
-    if (holding != null) {
-      holding.setSettings(settings);
+  public void setHolding(Weapon newHolding) {
+    this.holding = newHolding;
+
+    if (newHolding != null) {
+      newHolding.setSettings(settings);
       aimLeft = false;
     }
   }
