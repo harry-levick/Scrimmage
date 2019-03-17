@@ -10,7 +10,7 @@ import shared.util.maths.Vector2;
 
 public class Uzi extends Gun {
 
-  private static String imagePath = "images/weapons/Test/Asset 8.png";
+  private static String imagePath = "images/weapons/uzi.png";
   private static double sizeX = 84, sizeY = 35;
 
   public Uzi(double x, double y, String name, Player holder, UUID uuid) {
