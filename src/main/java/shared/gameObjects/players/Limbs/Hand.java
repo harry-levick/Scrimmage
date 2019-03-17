@@ -24,7 +24,7 @@ public class Hand extends Limb {
   public void initialise(Group root, Settings settings) {
     super.initialise(root, settings);
     if (isLeft) {
-      imageView.setRotate(11);
+      imageView.setRotate(15);
     } else {
       imageView.setRotate(-15);
     }

@@ -22,9 +22,9 @@ public class Arm extends Limb {
   public void initialise(Group root, Settings settings) {
     super.initialise(root, settings);
     if (isLeft) {
-      imageView.setRotate(6);
+      //imageView.setRotate(6);
     } else {
-      imageView.setRotate(-9);
+      //imageView.setRotate(-9);
     }
   }
 

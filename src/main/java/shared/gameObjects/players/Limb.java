@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.transform.Rotate;
+import javafx.scene.image.ImageView;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
@@ -13,6 +14,7 @@ import shared.gameObjects.components.Rigidbody;
 import shared.handlers.levelHandler.LevelHandler;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.RigidbodyType;
+
 
 public abstract class Limb extends GameObject {
 
@@ -31,14 +33,18 @@ public abstract class Limb extends GameObject {
   protected double yLeft;
   protected double xRight;
   protected double yRight;
-  private Player player;
+  protected Player player;
   
   protected Rigidbody rb;
   protected BoxCollider bc;
 
   protected transient LevelHandler levelHandler;
 
-  private int r= 0;
+  protected int interval; 
+  protected int segments;
+  protected int localTime;
+  protected int resetOffsetX = 0;
+  
   
   
   /**
@@ -123,6 +129,8 @@ public abstract class Limb extends GameObject {
       }
     }
     imageView.getTransforms().remove(rotate);
+    imageView.setX(imageView.getX()+resetOffsetX);
+    resetOffsetX = 0;
     lastAttachedCheck = limbAttached;
   }
 
@@ -132,9 +140,19 @@ public abstract class Limb extends GameObject {
   
   private void getBehaviour() {
     this.behaviour = this.player.behaviour;
+
   }
 
   protected abstract void rotateAnimate();
+  
+  protected void flipImageView(ImageView iv, String direction) {
+    if(direction.equals("WALK_LEFT")) {
+      iv.setScaleX(-1);
+    }
+    else if(direction.equals("WALK_RIGHT")){
+      iv.setScaleX(1);
+    }
+  }
   
   @Override
   public void render() {
@@ -142,6 +160,9 @@ public abstract class Limb extends GameObject {
     
     //Do all the rotations here.
     rotateAnimate();
+    
+    // Flip the imageView depending on the direciton of travel 
+    flipImageView(imageView,this.behaviour.toString());
   }
 
   public boolean isLimbAttached() {

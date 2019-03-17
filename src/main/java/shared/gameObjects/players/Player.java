@@ -55,6 +55,7 @@ public class Player extends GameObject implements Destructable {
   private Limb armRight;
   private Limb handLeft;
   private Limb handRight;
+  private int animationTimer = 0; //This is used to synchronise the animations for each limb.
 
   private CircleCollider cc;
 
@@ -115,14 +116,29 @@ public class Player extends GameObject implements Destructable {
     addChild(head);
     addChild(armLeft);
     addChild(armRight);
-    armRight.addChild(handRight);
-    armLeft.addChild(handLeft);
+    //armRight.addChild(handRight);
+    //armLeft.addChild(handLeft);
+  }
+  
+  private void updateAnimationTimer() {
+    if(this.behaviour != Behaviour.IDLE) {
+      animationTimer++;
+    }
+    else{
+      animationTimer = 0;
+    }
+    
+  }
+  
+  public int getAnimationTimer() {
+    return animationTimer;
   }
 
   @Override
   public void update() {
     checkGrounded(); // Checks if the player is grounded
     badWeapon();
+    updateAnimationTimer();
     if (deattach) {
       for (int i = 0; i < 6; i++) {
         Limb test = (Limb) children.get(i);
