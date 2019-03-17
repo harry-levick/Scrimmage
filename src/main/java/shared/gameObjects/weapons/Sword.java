@@ -1,15 +1,18 @@
 package shared.gameObjects.weapons;
 
 import java.util.UUID;
+import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.players.Player;
 import shared.util.Path;
+import shared.util.maths.Vector2;
 
 public class Sword extends Melee {
 
   // private static String imagePath = "images/weapons/sword.jpg";
   private static String imagePath = "images/weapons/sword1.png";
+  private static float AIM_ANGLE_MAX = 110f;
   private int currentAngleIndex;
   private Translate translate;
   private double attackAngleSign; // -1 if facingLeft, 1 if facingRight
@@ -42,6 +45,10 @@ public class Sword extends Melee {
 
     translate = new Translate();
     attackAngleSign = 1;
+
+    rotate = new Rotate();
+    rotate.setPivotX(17);
+    rotate.setPivotY(40);
   }
 
   public Sword(Sword that) {
@@ -57,28 +64,60 @@ public class Sword extends Melee {
   public void render() {
     super.render();
 
-    /*
-    imageView.getTransforms().remove(translate);
-    translate.transform(this.getX(), this.getY());
-    //imageView.setTranslateX(this.getX());
-    //imageView.setTranslateY(this.getY());
-    imageView.getTransforms().add(translate);
-    System.out.println(imageView.getTranslateX()+" "+imageView.getTranslateY());
-    */
+    if (holder == null) { return; }
 
-    // set rotation of the sword
-    /*
-    if (this.attacking) {
-      this.imageView.setRotate(45 + (-1 * getAngle(currentAngleIndex)));
-      // set incrementation of angles for frames
-      currentAngleIndex += 4;
-      if (currentAngleIndex >= (int) (beginAngle + endAngle + 1)) {
-        attacking = false;
-        currentAngleIndex = 0;
-        this.imageView.setRotate(0);
+    // start here
+    imageView.getTransforms().clear();
+
+    double mouseX = holder.mouseX;
+    double mouseY = holder.mouseY;
+    Vector2 mouseV = new Vector2((float) mouseX, (float) mouseY);
+    Vector2 gripV = new Vector2((float) this.getGripX(), (float) this.getGripY());
+    Vector2 mouseSubGrip = mouseV.sub(gripV);
+    angleRadian = mouseSubGrip.normalize().angleBetween(Vector2.Zero());  // radian
+    double angle = angleRadian * 180 / PI;  // degree
+
+    // Change the facing of the player when aiming the other way and
+    // Set the angle of rotation
+    double angleHorizontal;  // degree
+    if (holder.isAimingLeft()) {
+      angleHorizontal = (mouseSubGrip.angleBetween(Vector2.Left())) * 180 / PI;
+      if (angleHorizontal > AIM_ANGLE_MAX) {
+        holder.setAimingLeft(false);
+        angle = angleHorizontal - 180f;
+      }
+      if (angleHorizontal > 90f) {
+        angle = angleHorizontal * (mouseY > this.getGripY() ? -1 : 1);
+      }
+    } else { // holder aiming Right
+      angleHorizontal = (mouseSubGrip.angleBetween(Vector2.Right())) * 180 / PI;
+      if (angleHorizontal > AIM_ANGLE_MAX) {
+        holder.setAimingLeft(true);
+        angle = 180f - angleHorizontal;
+      }
+      if (angleHorizontal > 90f) {
+        angle = angleHorizontal * (mouseY > this.getGripY() ? 1 : -1);
       }
     }
-    */
+
+    angleRadian = angle * PI / 180;
+
+    // Rotate and translate the image
+    if (holder.isAimingLeft()) {
+      imageView.setScaleX(-1);
+      rotate.setAngle(-angle);
+      imageView.getTransforms().add(rotate);
+      imageView.setTranslateX(this.getGripFlipX());
+      imageView.setTranslateY(this.getGripFlipY());
+    } else {
+      imageView.setScaleX(1);
+      rotate.setAngle(angle);
+      imageView.getTransforms().add(rotate);
+      imageView.setTranslateX(this.getGripX());
+      imageView.setTranslateY(this.getGripY());
+    }
+    // end here
+
     if (this.attacking) {
       this.imageView
           .setRotate((45 * attackAngleSign) + (attackAngleSign * -1 * getAngle(currentAngleIndex)));
