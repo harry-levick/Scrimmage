@@ -27,6 +27,9 @@ public class KeyboardInput implements EventHandler<KeyEvent> {
         case W:
           clientPlayer.jumpKey = true;
           break;
+        case F:
+          clientPlayer.throwHoldingKey = true;
+          break;
         case H:
           clientPlayer.deattach = true;
           break;
@@ -45,6 +48,9 @@ public class KeyboardInput implements EventHandler<KeyEvent> {
           break;
         case W:
           clientPlayer.jumpKey = false;
+          break;
+        case F:
+          clientPlayer.throwHoldingKey = false;
           break;
         case H:
           clientPlayer.deattach = false;

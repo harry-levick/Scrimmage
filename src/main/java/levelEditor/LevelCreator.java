@@ -48,6 +48,9 @@ import shared.gameObjects.weapons.MachineGun;
 import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.MapLoader;
 
+/**
+ * Script class for regenerating the main maps/levels used in the game
+ */
 public class LevelCreator extends Application {
 
   private static int stageSizeX = 1920; // todo autofetch
@@ -67,6 +70,11 @@ public class LevelCreator extends Application {
     return gridPos * gridSizePX;
   }
 
+  /**
+   * Script class for regenerating the main maps/levels used in the game
+   *
+   * @param primaryStage From JavaFX Application, not used in this class
+   */
   @Override
   public void start(Stage primaryStage) {
     SvgImageLoaderFactory.install(new PrimitiveDimensionProvider());
@@ -104,7 +112,6 @@ public class LevelCreator extends Application {
     //Laser
     gameObjects.put(uuid, new LaserBeam(getAbs(4), getAbs(7), uuid));
     uuid = UUID.randomUUID();
-
 
     //ColouredBlocks
     gameObjects

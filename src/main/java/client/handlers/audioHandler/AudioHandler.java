@@ -32,7 +32,7 @@ public class AudioHandler {
   }
 
   /**
-   * Starts game music and continuously plays it
+   * Starts game music and continuously plays it. Stops previous track if a new one is played.
    *
    * @param trackName Music resource to play
    */
@@ -51,6 +51,12 @@ public class AudioHandler {
     }
   }
 
+  /**
+   * Starts playing a specified music playlist (specified in MusicAssets). Loops at the end of the
+   * playlist.
+   *
+   * @param playlistSet The playlist of type PLAYLIST, from MusicAssets, to play
+   */
   public void playMusicPlaylist(PLAYLIST playlistSet) {
     if (active) {
       if ((currentPlaylist != null) && (playlistSet != currentPlaylist)) {
@@ -86,7 +92,7 @@ public class AudioHandler {
   }
 
   /**
-   * Plays in game sound effect
+   * Plays in game sound effect. Sound effects can overlap. Can be stopped with stopSFX()
    *
    * @param trackName sound effect resource
    */
@@ -104,6 +110,9 @@ public class AudioHandler {
     }
   }
 
+  /**
+   * Increment the track index, for use in playlist
+   */
   private void incrementTrack() {
     if (active) {
       trackPos++;
@@ -113,28 +122,45 @@ public class AudioHandler {
     }
   }
 
+  /**
+   * Stops the current sound effect from playing
+   */
   public void stopSFX() {
     if (active && effectPlayer != null) {
       effectPlayer.stop();
     }
   }
 
+  /**
+   * Set the volume of the music to play at the volume defined in settings
+   */
   public void updateMusicVolume() {
     if (active && musicPlayer != null) {
       musicPlayer.setVolume(settings.getMusicVolume());
     }
   }
 
+  /**
+   * Set the volume of the sound effect to play at the volume defined in settings
+   */
   public void updateEffectVolume() {
     if (active && effectPlayer != null) {
       effectPlayer.setVolume(settings.getSoundEffectVolume());
     }
   }
 
+  /**
+   * If this AudioHandler is active
+   * @return The state of this handler. Active is true if it plays sounds
+   */
   public boolean getActive() {
     return this.active;
   }
 
+  /**
+   * Sets the state of the AudioHandler. True if it plays sound
+   * @param active boolean state of the handler
+   */
   public void setActive(boolean active) {
     this.active = active;
   }
