@@ -223,14 +223,14 @@ public class AStar {
    * @return returns true if the SearchNode is in the world.
    */
   private boolean isInWorld(SearchNode neighbour) {
-    int xMax = 1920;
-    int yMax = 1080;
+    int xMax = 1880;
+    int yMax = 1040;
     Vector2 botSize = replicaBot.getTransform().getSize();
 
-    boolean outHorizontal = (neighbour.botX + botSize.getX() <= 0) ||
+    boolean outHorizontal = (neighbour.botX + botSize.getX() <= 30) ||
         (neighbour.botX >= xMax);
 
-    boolean outVertical = (neighbour.botY + botSize.getY() <= 0) ||
+    boolean outVertical = (neighbour.botY + botSize.getY() <= 30) ||
         (neighbour.botY >= yMax);
 
     if (outHorizontal || outVertical) {
@@ -353,6 +353,10 @@ public class AStar {
         openList.add(current);
 
       } else {
+
+        if (!isInWorld(current))
+          break;
+
         currentGood = true;
         closedList.add(current);
         openList.addAll(current.generateChildren());
@@ -579,12 +583,7 @@ public class AStar {
       // than the actual physics in the main game loop, so one acton in path finding ~= two actions
       // in the main game loop.
       actions.add(0, current.action);
-
-
-
-
       current = current.parentNode;
-      //Physics.drawCast(current.botX, current.botY, current.botX, current.botY, "#00ff00");
     }
 
     return actions;
