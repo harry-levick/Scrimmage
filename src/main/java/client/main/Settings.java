@@ -25,8 +25,8 @@ public class Settings {
   private String menuPath;
   private String musicPath;
   private String SFXPath;
-  private int windowWidth = (int) Screen.getPrimary().getBounds().getWidth();
-  private int windowHeight = (int) Screen.getPrimary().getBounds().getHeight();
+  private int windowWidth;// = (int) Screen.getPrimary().getBounds().getWidth();
+  private int windowHeight;// = (int) Screen.getPrimary().getBounds().getHeight();
   private int mapWidth;
   private int mapHeight;
   private int maxPlayers;

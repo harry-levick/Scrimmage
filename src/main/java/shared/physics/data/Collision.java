@@ -69,6 +69,7 @@ public class Collision {
     }
   }
 
+  //Assumes the boxes are not rotated
   private void calculateData(BoxCollider a, BoxCollider b) {
     Vector2 n = b.getCentre().sub(a.getCentre());
     float x_overlap = a.getSize().getX() * 0.5f + b.getSize().getX() * 0.5f - Math.abs(n.getX());

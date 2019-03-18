@@ -12,10 +12,19 @@ import shared.util.maths.Vector2;
  * @author fxa579 Primary components responsible for collider info, such as collision state, size,
  *     shape
  */
-public abstract class Collider extends Component implements Serializable {
+public abstract class Collider extends Component  {
 
+  /**
+   * Determines if a collider is a trigger or not; triggers ignore physics collisions
+   */
   boolean trigger;
+  /**
+   * The type of collider as defaulted by the constructor of (Box, Circle, Edge, etc.)
+   */
   ColliderType colliderType;
+  /**
+   * The collision layer used to determine what sort of collisions are possible
+   */
   ColliderLayer layer;
 
   /**
@@ -138,21 +147,45 @@ public abstract class Collider extends Component implements Serializable {
     }
     return new Vector2(min, max);
   }
+  /**
+   * Projects all points on a 2D Edge Collider shape to a given 1D axis
+   * @param a EdgeCollider to project
+   * @param axis axis to project to
+   * @return the segment the EdgeCollider exists on in the axis
+   */
+  private static Vector2 projectToAxis(EdgeCollider a, Vector2 axis) {
+    // Project the shapes along the axis
+    float min = axis.dot(a.getNodes().get(0)); // Get the first min
+    double max = min;
+    for (int i = 1; i < a.getNodes().size(); i++) {
+      float temp = axis.dot(a.getNodes().get(i)); // Get the dot product between the axis and the node
+      if (temp < min) {
+        min = temp;
+      } else if (temp > max) {
+        max = temp;
+      }
+    }
+    return new Vector2(min, max);
+  }
   //TODO Comments
   private static boolean pointBoxCollision(EdgeCollider edgeA, BoxCollider boxB) {
-    for (Vector2 node : edgeA.getNodes()) {
-      if (node.getX() >= boxB.getCorners()[0].getX()
-          && node.getX() <= boxB.getCorners()[3].getX()
-          && node.getY() >= boxB.getCorners()[0].getY()
-          && node.getY() <= boxB.getCorners()[2].getY()) return true;
+    for (Vector2 axisOfProjection : boxB.getAxes()) {
+      Vector2 pA = projectToAxis(edgeA, axisOfProjection);
+      Vector2 pB = projectToAxis(boxB, axisOfProjection);
+      if (!pA.canOverlap(pB)) {
+        return false;
+      }
     }
-    return false;
+    return true;
   }
 
   private static boolean pointCircleCollision(Vector2 pointA, CircleCollider circB) {
     return circB.getRadius() >= pointA.magnitude(circB.getCentre());
   }
 
+  /**
+   * Tests if two objects can collider given their collision layer
+   */
   public static boolean canCollideWithLayer(ColliderLayer a, ColliderLayer b) {
     return Physics.COLLISION_LAYERS[a.toInt()][b.toInt()]
         && Physics.COLLISION_LAYERS[b.toInt()][a.toInt()];

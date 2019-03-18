@@ -214,7 +214,7 @@ public class Physics {
    * @param lengthAndDirection The length and direction of the ray
    * @return All colliders hit in the path, empty if nothing was hit.
    */
-  public static ArrayList<Collision> raycastAll(Vector2 sourcePos, Vector2 lengthAndDirection) {
+  public static ArrayList<Collision> raycastAll(Vector2 sourcePos, Vector2 lengthAndDirection, boolean showCast) {
     EdgeCollider castCollider = new EdgeCollider(false);
     Collision collision = null;
     ArrayList<Collision> collisions = new ArrayList<>();
@@ -223,15 +223,18 @@ public class Physics {
       castCollider.addNode(sourcePos.add(incrementVal.mult(i)));
     }
 
-    if (showCasts) {
-      Line line = new Line();
-      line.setStartX(castCollider.getNodes().get(0).getX());
-      line.setStartY(castCollider.getNodes().get(0).getY());
-      line.setEndX(castCollider.getNodes().get(castCollider.getNodes().size() - 1).getX());
-      line.setEndY(castCollider.getNodes().get(castCollider.getNodes().size() - 1).getY());
-      line.setStyle("-fx-stroke-width: 4; -fx-stroke: #324401;");
-      settings.getGameRoot().getChildren().add(line);
-    }
+    if (showCast) {
+      Platform.runLater(
+          () -> {
+            drawCast(
+                castCollider.getNodes().get(0).getX(),
+                castCollider.getNodes().get(0).getY(),
+                castCollider.getNodes().get(castCollider.getNodes().size() - 1).getX(),
+                castCollider.getNodes().get(castCollider.getNodes().size() - 1).getY(),
+                "#00ff00");
+          });
+      }
+
     for (GameObject object : gameObjects.values()) {
       if (object.getComponent(ComponentType.COLLIDER) != null) {
         collision =
@@ -363,65 +366,6 @@ public class Physics {
               new Collision(
                   object, castCollider, (Collider) object.getComponent(ComponentType.COLLIDER));
           if (collision.isCollided()) {
-            collisions.add(collision);
-          }
-        }
-      }
-    }
-    return collisions;
-  }
-
-  /**
-   * Creates a semi-circle collider that returns the first collision it hits
-   *
-   * @param sourcePos The centre of the circle
-   * @param radius The radius of the circle stretched from its centre
-   * @param angleOfCentre The amount to rotate the centre Vector (originally pointing right)
-   * @param angleOfArc The angle at how far the arc extends from the centre (+ and -)
-   * @return The first collider hit in the path. null if nothing was hit
-   */
-  public static Collision arccast(
-      Vector2 sourcePos, float radius, float angleOfCentre, float angleOfArc) {
-    Collision collision = null;
-    CircleCollider castCollider = new CircleCollider(sourcePos, radius);
-    for (GameObject object : gameObjects.values()) {
-      if (object.getComponent(ComponentType.COLLIDER) != null) {
-        collision =
-            new Collision(
-                object, castCollider, (Collider) object.getComponent(ComponentType.COLLIDER));
-        if (collision.isCollided()) {
-          float angle = Math.abs(collision.getNormalCollision().angle()) + angleOfCentre;
-          if (angle <= angleOfArc) {
-            return collision;
-          }
-        }
-      }
-    }
-    return null;
-  }
-
-  /**
-   * Creates a semi-circle collider that returns the first collision it hits
-   *
-   * @param sourcePos The centre of the circle
-   * @param radius The radius of the circle stretched from its centre
-   * @param angleOfCentre The amount to rotate the centre Vector (originally pointing right)
-   * @param angleOfArc The angle at how far the arc extends from the centre (+ and -)
-   * @return All colliders hit in the path, empty if nothing was hit
-   */
-  public static ArrayList<Collision> arccastAll(
-      Vector2 sourcePos, float radius, float angleOfCentre, float angleOfArc) {
-    Collision collision = null;
-    ArrayList<Collision> collisions = new ArrayList<>();
-    CircleCollider castCollider = new CircleCollider(sourcePos, radius);
-    for (GameObject object : gameObjects.values()) {
-      if (object.getComponent(ComponentType.COLLIDER) != null) {
-        collision =
-            new Collision(
-                object, castCollider, (Collider) object.getComponent(ComponentType.COLLIDER));
-        if (collision.isCollided()) {
-          float angle = Math.abs(collision.getNormalCollision().angle()) + angleOfCentre;
-          if (angle <= angleOfArc) {
             collisions.add(collision);
           }
         }

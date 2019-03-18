@@ -22,8 +22,8 @@ public class Vector2 implements Serializable {
 
   /**
    * Constructs a 2D Vector of floats
-   * @param x
-   * @param y
+   * @param x X-Value of Vector
+   * @param y Y-Value of Vector
    */
   public Vector2(float x, float y) {
     this.x = x;

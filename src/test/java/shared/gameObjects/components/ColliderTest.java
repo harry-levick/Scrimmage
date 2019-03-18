@@ -1,5 +1,6 @@
 package shared.gameObjects.components;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.UUID;
@@ -33,6 +34,13 @@ public class ColliderTest {
     circleD = new CircleCollider(d, 1, false);
     circleE = new CircleCollider(e, 2, false);
     circleF = new CircleCollider(f, 2, false);
+
+    a.addComponent(boxA);
+    b.addComponent(boxB);
+    c.addComponent(boxC);
+    d.addComponent(circleD);
+    e.addComponent(circleE);
+    f.addComponent(circleF);
 
     ConcurrentSkipListMap<UUID, GameObject> objects = new ConcurrentSkipListMap<>();
     objects.put(UUID.randomUUID(), a);
@@ -80,20 +88,33 @@ public class ColliderTest {
 
   @Test
   public void raycast() {
-    assertTrue(Physics.raycast(c.getTransform().getPos().add(new Vector2(-1, -1)),
-        a.getTransform().getPos().sub(c.getTransform().getPos().add(new Vector2(-1, -1))), false)
+    assertTrue(Physics.raycast(Vector2.Zero(),
+        new Vector2(12, 12), false)
         != null);
   }
 
   @Test
+  public void raycastClosest() {
+    assertTrue(Physics.raycast(Vector2.Zero(),
+        new Vector2(12, 12), false).getCollidedObject().equals(a));
+  }
+
+  @Test
+  public void raycastAll() {
+    assertEquals(4, Physics.raycastAll(Vector2.Zero(),
+        new Vector2(12, 12), false).size(), 0);
+  }
+
+  @Test
   public void boxcast() {
+    assertEquals(2, Physics.boxcastAll(new Vector2(0, 0),
+        new Vector2(4, 4), false).size(), 0);
   }
 
   @Test
   public void circlecast() {
+    assertEquals(2, Physics.circlecastAll(new Vector2(0, 0),
+        4).size(), 0);
   }
 
-  @Test
-  public void arccast() {
-  }
 }
