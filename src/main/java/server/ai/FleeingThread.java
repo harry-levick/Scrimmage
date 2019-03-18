@@ -11,6 +11,7 @@ public class FleeingThread extends Thread {
   Player targetPlayer;
   public List<boolean[]> plan;
   boolean running;
+  int TIME_TO_SLEEP = 300;
 
   public FleeingThread(Bot bot, List<boolean[]> plan) {
     this.bot = bot;
@@ -26,6 +27,12 @@ public class FleeingThread extends Thread {
       List<boolean[]> tempList = pathFinder.optimise(targetPlayer, FSA.FLEEING);
       plan.clear();
       plan.addAll(tempList);
+
+      try {
+        Thread.sleep(TIME_TO_SLEEP);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
 
     }
   }

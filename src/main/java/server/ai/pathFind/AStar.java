@@ -128,6 +128,7 @@ public class AStar {
       replicaBot.simulateApplyInput();
       replicaBot.simulateUpdate();
       replicaBot.simulateUpdateCollision();
+
     }
 
     /**
@@ -216,6 +217,11 @@ public class AStar {
     }
   }
 
+  /**
+   * Boolean method to check if a SearchNode is within the world bounds.
+   * @param neighbour
+   * @return returns true if the SearchNode is in the world.
+   */
   private boolean isInWorld(SearchNode neighbour) {
     int xMax = 1920;
     int yMax = 1080;
@@ -572,9 +578,11 @@ public class AStar {
       // Add the same action twice because the physics simulation in the path finding is less
       // than the actual physics in the main game loop, so one acton in path finding ~= two actions
       // in the main game loop.
-      for (int i = 0; i < 1; i++) {
-        actions.add(0, current.action);
-      }
+      actions.add(0, current.action);
+
+
+
+
       current = current.parentNode;
       //Physics.drawCast(current.botX, current.botY, current.botX, current.botY, "#00ff00");
     }
