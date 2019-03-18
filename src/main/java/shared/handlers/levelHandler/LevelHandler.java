@@ -307,17 +307,9 @@ public class LevelHandler {
     gameObjects.put(spawnUzi.getUUID(), spawnUzi);
 
     /*
-    // Add Punch to player
-    UUID punchUUID = UUID.randomUUID();
-    Weapon punch = new Punch(clientPlayer.getX(), clientPlayer.getY(), "Punch@LevelHandler.addClientPlayer", clientPlayer, punchUUID);
-    clientPlayer.setHolding(punch);
-    punch.initialise(root, settings);
-    gameObjects.put(punchUUID, punch);
-    */
-    /*
     // Add weapon to player
     UUID gunUUID = UUID.randomUUID();
-    Weapon gun = new MachineGun(clientPlayer.getX(), clientPlayer.getY(), "MachineGun@LevelHandler.addClientPlayer", clientPlayer, gunUUID);
+    Weapon gun = new Uzi(clientPlayer.getX(), clientPlayer.getY(), "Uzi@LevelHandler.addClientPlayer", clientPlayer, gunUUID);
     clientPlayer.setHolding(gun);
     gun.initialise(root, settings);
     gameObjects.put(gunUUID, gun);

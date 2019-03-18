@@ -12,6 +12,7 @@ import shared.physics.data.Collision;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
+import shared.util.maths.Vector2;
 
 /**
  * The abstract class of all weapons in the game.
@@ -35,12 +36,18 @@ public abstract class Weapon extends GameObject {
   protected boolean isGun;
   /** True if this is a melee */
   protected boolean isMelee;
+  /** True if started the process to throw this weapon */
+  protected boolean startedThrowing;
   /** Ammo of the weapon, -1 for unlimited ammo */
   protected int ammo;
   /** Fire rate of the weapon, max = MAX_COOLDOWN - 1 */
   protected int fireRate;
   /** Current cooldown of the weapon, ready to fire when equals 0 */
   protected int currentCooldown;
+  /** True if this gun is held with single hand */
+  protected boolean singleHanded;
+  /** Vector2 for throwing the weapon */
+  protected Vector2 throwVector;
 
   /** The player who holds the weapon, null if none */
   protected Player holder;
@@ -71,8 +78,8 @@ public abstract class Weapon extends GameObject {
 
   // variables for when the holder is null
   private BoxCollider bcTrig;
-  private BoxCollider bcCol;
-  private Rigidbody rb;
+  protected BoxCollider bcCol;
+  protected Rigidbody rb;
 
   /**
    * Constructor of the weapon class
@@ -110,10 +117,12 @@ public abstract class Weapon extends GameObject {
     this.isMelee = isMelee;
     setWeight(weight);
     this.name = name;
+    this.startedThrowing = false;
     setAmmo(ammo);
     setFireRate(fireRate);
     this.holder = holder;
     holderHandPos = new double[]{};
+    this.rotate = new Rotate();
 
     if (holder == null) {
       // add collider and rigidbody
@@ -158,11 +167,48 @@ public abstract class Weapon extends GameObject {
   @Override
   public void update() {
     super.update();
-    if (holder != null) {
+    if (startedThrowing) {
+      if (0 < getX() && getX() < 1920 && 0 < getY() && getY() < 1080) {
+        rb.move(throwVector.mult(15f));
+      }
+      else {
+        settings.getLevelHandler().removeGameObject(this);
+      }
+    }
+    else if (holder != null) {
       holderHandPos = getHolderHandPos();
       this.setX(getGripX());
       this.setY(getGripY());
     }
+  }
+
+  /**
+   * After calling this, the holder no longer holds this weapon, and the weapon
+   * will start flying in the path
+   */
+  public void startThrowing() {
+    holder.usePunch();
+    float radius = this.getTransform().getSize().getX() / 2;
+    this.bcCol = new BoxCollider(this, ColliderLayer.DEFAULT, false);
+    this.rb = new Rigidbody(
+        RigidbodyType.DYNAMIC,
+        1f,
+        1f,
+        1f,
+        new MaterialProperty(0.1f, 1, 1),
+        new AngularData(0, 0, 0, 0),
+        this); // TODO FIX
+    addComponent(bcCol);
+    addComponent(rb);
+    this.throwVector = getDeltaThrowVecNorm();
+    this.startedThrowing = true;
+  }
+
+  /**
+   * Returns the vector the weapon goes when started throwing
+   */
+  public Vector2 getDeltaThrowVecNorm() {
+    return new Vector2(holder.mouseX - this.getX(), holder.mouseY - this.getY()).normalize();
   }
 
   /**
@@ -173,11 +219,10 @@ public abstract class Weapon extends GameObject {
    */
   public double[] getHolderHandPos() {
     if (holder != null) {
-      if (this.isGun) {
-        return holder.getGunHandPos();
-      } else  // isMelee
-      {
+      if (this.singleHanded) {
         return holder.getMeleeHandPos();
+      } else { // use both hands
+        return holder.getGunHandPos();
       }
     }
     return null;
@@ -230,12 +275,14 @@ public abstract class Weapon extends GameObject {
   @Override
   public void OnTriggerEnter(Collision col) {
     GameObject g = col.getCollidedObject();
-    if (g != null && g.getId() == ObjectType.Player && ((Player) g).getHolding() == null) {
+    if (g != null && g.getId() == ObjectType.Player) {
       Player p = (Player) g;
-      setHolder(p);
-      bcCol.setLayer(ColliderLayer.PARTICLE);
-      bcTrig.setLayer(ColliderLayer.PARTICLE);
-      this.removeComponent(rb);
+      if (p.getHolding() == null || p.getHolding() instanceof Punch) {
+        setHolder(p);
+        bcCol.setLayer(ColliderLayer.PARTICLE);
+        bcTrig.setLayer(ColliderLayer.PARTICLE);
+        this.removeComponent(rb);
+      }
     }
   }
 
