@@ -70,6 +70,15 @@ public class Bot extends Player {
     fleeingThread.start();
   }
 
+  public void restart() {
+    chasingThread.terminate();
+    fleeingThread.terminate();
+
+    chasingThread = new ChasingThread(this, chasingPlan);
+    fleeingThread = new FleeingThread(this, fleeingPlan);
+    startThread();
+  }
+
   /**
    *
    * @return True if the bot is on the ground (can jump).

@@ -45,9 +45,13 @@ public class ButtonSingleplayer extends ButtonObject {
       settings.getLevelHandler().getGameObjects().put(botPlayer.getUUID(), botPlayer);
       botPlayer.startThread();
     }
+
     settings.getLevelHandler().changeMap(
         new Map("map1", Path.convert("src/main/resources/maps/map1.map")),
         true, false);
+
+    settings.getLevelHandler().getBotPlayerList().forEach((uuid, bot) -> bot.restart());
+
     settings.getLevelHandler().getPlayers().forEach((uuid, player) -> {
       player.setHolding(
           new MachineGun(500, 600, "MachineGun@ButtonSinglePlayer", player, UUID.randomUUID()));

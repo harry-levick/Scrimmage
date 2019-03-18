@@ -228,7 +228,6 @@ public class AStar {
         (neighbour.botY >= yMax);
 
     if (outHorizontal || outVertical) {
-      System.out.println("OUT OF WORLD");
       return false;
     }
     else return true;
