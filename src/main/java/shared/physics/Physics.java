@@ -24,24 +24,44 @@ import shared.util.maths.Vector2;
 /** @author fxa579 The singleton class respomsible for raycasting and physics constants/equations */
 public class Physics {
 
+  /**
+   * The base gravity constant used for speed, collisions and forces
+   */
   public static final float GRAVITY = 90f;
+  /**
+   * The constant difference in time between update frames.
+   */
   public static final float TIMESTEP = 1f / 60;
-  public static final int RAYCAST_INC = 100;
+  /**
+   * The number of increments that exist in a raycast's edge collider.
+   */
+  private static final int RAYCAST_INC = 100;
+  /**
+   * Global setting to show colliders while in game (For Debugging)
+   */
   public static boolean showColliders = false;
-  public static boolean showCasts = true;
+  /**
+   * TODO
+   */
   public static Settings settings;
   /*
-   * Order: DEFAULT, PLAYER, OBJECT, PLATFORM, PARTICLE, COLLECTABLE
+   * Order: DEFAULT, PLAYER, OBJECT, PLATFORM, PARTICLE, COLLECTABLE, LIMBS
    */
-  public static boolean[] DEFAULT = {true, true, true, true, false, false, true};
-  public static boolean[] PLAYER = {true, false, true, true, false, false, false};
-  public static boolean[] OBJECT = {true, true, true, true, false, false, true};
-  public static boolean[] PLATFORM = {true, true, true, true, false, true, true};
-  public static boolean[] PARTICLES = {false, false, false, false, false, false, false};
-  public static boolean[] COLLECTABLE = {false, false, false, true, false, false, false};
-  public static boolean[] LIMBS = {true, false, true, true, false, false, false};
+  private static boolean[] DEFAULT = {true, true, true, true, false, false, true};
+  private static boolean[] PLAYER = {true, false, true, true, false, false, false};
+  private static boolean[] OBJECT = {true, true, true, true, false, false, true};
+  private static boolean[] PLATFORM = {true, true, true, true, false, true, true};
+  private static boolean[] PARTICLES = {false, false, false, false, false, false, false};
+  private static boolean[] COLLECTABLE = {false, false, false, true, false, false, false};
+  private static boolean[] LIMBS = {true, false, true, true, false, false, false};
+  /**
+   * The collision layers ordered as specified by their int value. 2D Matrix format, used by the Collider tests.
+   */
   public static boolean[][] COLLISION_LAYERS = {DEFAULT, PLAYER, OBJECT, PLATFORM, PARTICLES,
       COLLECTABLE, LIMBS};
+  /**
+   * A concurrent map used to synchronize collision updates.
+   */
   public static ConcurrentSkipListMap<UUID, GameObject> gameObjects;
 
 
@@ -387,7 +407,10 @@ public class Physics {
     return true;
   }
 
-  public static void processCollisions() {
+  /**
+   * Method to safely clear the collisions list.
+   */
+  public static void clearCollisions() {
     collisions.clear();
   }
 }

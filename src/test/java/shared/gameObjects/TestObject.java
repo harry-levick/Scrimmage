@@ -2,9 +2,12 @@ package shared.gameObjects;
 
 import java.util.UUID;
 import shared.gameObjects.Utils.ObjectType;
+import shared.physics.data.Collision;
 
 public class TestObject extends GameObject {
 
+  public int test;
+  public int testStay;
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
    * ensure actions are calculated the same
@@ -19,6 +22,7 @@ public class TestObject extends GameObject {
 
   public TestObject(int x, int y, int sizeX, int sizeY, ObjectType id, UUID testUUID) {
     super(x, y, sizeX, sizeY, id, testUUID);
+    test = 0;
   }
 
   @Override
@@ -33,5 +37,21 @@ public class TestObject extends GameObject {
   public void initialiseAnimation() {
     // TODO Auto-generated method stub
 
+  }
+
+  @Override
+  public void OnCollisionEnter(Collision col) {
+    test = 1;
+    System.out.println("Enter");
+  }
+  @Override
+  public void OnCollisionStay(Collision col) {
+    testStay++;
+    System.out.println("Stay");
+  }
+  @Override
+  public void OnCollisionExit(Collision col) {
+    test = 2;
+    System.out.println("Exit");
   }
 }

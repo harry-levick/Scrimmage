@@ -88,33 +88,27 @@ public class ColliderTest {
 
   @Test
   public void raycast() {
-    assertTrue(Physics.raycast(Vector2.Zero(),
-        new Vector2(12, 12), false)
-        != null);
+    assertTrue(Physics.raycast(Vector2.Zero(), new Vector2(12, 12), false) != null);
   }
 
   @Test
   public void raycastClosest() {
-    assertTrue(Physics.raycast(Vector2.Zero(),
-        new Vector2(12, 12), false).getCollidedObject().equals(a));
+    assertTrue(
+        Physics.raycast(Vector2.Zero(), new Vector2(12, 12), false).getCollidedObject().equals(a));
   }
 
   @Test
   public void raycastAll() {
-    assertEquals(4, Physics.raycastAll(Vector2.Zero(),
-        new Vector2(12, 12), false).size(), 0);
+    assertEquals(4, Physics.raycastAll(Vector2.Zero(), new Vector2(12, 12), false).size(), 0);
   }
 
   @Test
   public void boxcast() {
-    assertEquals(2, Physics.boxcastAll(new Vector2(0, 0),
-        new Vector2(4, 4), false).size(), 0);
+    assertEquals(2, Physics.boxcastAll(new Vector2(0, 0), new Vector2(4, 4), false).size(), 0);
   }
 
   @Test
   public void circlecast() {
-    assertEquals(2, Physics.circlecastAll(new Vector2(0, 0),
-        4).size(), 0);
+    assertEquals(2, Physics.circlecastAll(new Vector2(0, 0), 4).size(), 0);
   }
-
 }

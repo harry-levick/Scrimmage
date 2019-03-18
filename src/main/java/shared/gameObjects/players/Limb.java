@@ -16,11 +16,25 @@ import shared.physics.types.RigidbodyType;
 
 public abstract class Limb extends GameObject {
 
+  /**
+   * The X-coordinate pivot for rotating the limb
+   */
   protected final double pivotX;
+  /**
+   * The Y-coordinate pivot for rotating the Limb
+   */
   protected final double pivotY;
+  //TODO idk what this does
   protected boolean isLeft;
+  /**
+   * JavaFX Rotation object used for rotating the limb around a pivot
+   */
   protected transient Rotate rotate;
+  /**
+   * Boolean to determine if the limb is currently attached to an object
+   */
   protected boolean limbAttached;
+  //TODO idk what these does
   protected boolean lastAttachedCheck;
   protected Behaviour behaviour;
   protected Behaviour lastBehaviour;

@@ -173,7 +173,7 @@ public class Server extends Application {
     levelHandler.getPlayers().forEach((key, player) -> player.applyInput());
 
     levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.updateCollision());
-    Physics.processCollisions();
+    Physics.clearCollisions();
     /** Update Game Objects */
     levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.update());
     ObjectManager.update();

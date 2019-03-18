@@ -106,25 +106,6 @@ public class Transform implements Serializable {
     botPos = topPos.add(size);
   }
 
-  /**
-   * Scales an object in accordance with the screen size
-   */
-  public void scaleScreen(Vector2 scaleRatio) {
-    this.topPos = topPos.mult(scaleRatio);
-    this.size = size.mult(scaleRatio);
-    botPos = topPos.add(size);
-  }
-
-  /**
-   * Computes the (approximated) distance between two objects
-   *
-   * @param transform The object comparing to
-   * @return The distance between the two objects
-   */
-  public float distance(Transform transform) {
-    return getPos().magnitude(transform.getPos());
-  }
-
   public float getRot() {
     return rot;
   }
