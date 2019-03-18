@@ -266,7 +266,7 @@ public class Player extends GameObject implements Destructable {
   }
 
   public Weapon getHolding() {
-    return holding;
+    return holding==null? myPunch : holding;
   }
 
   public void setHolding(Weapon newHolding) {
