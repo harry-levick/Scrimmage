@@ -169,8 +169,7 @@ public abstract class Weapon extends GameObject {
     super.update();
     if (startedThrowing) {
       if (0 < getX() && getX() < 1920 && 0 < getY() && getY() < 1080) {
-        rb.move(throwVector.mult(10f));
-        this.imageView.setRotate(this.imageView.getRotate() + 100f);
+        rb.move(throwVector.mult(15f));
       }
       else {
         settings.getLevelHandler().removeGameObject(this);
@@ -181,6 +180,35 @@ public abstract class Weapon extends GameObject {
       this.setX(getGripX());
       this.setY(getGripY());
     }
+  }
+
+  /**
+   * After calling this, the holder no longer holds this weapon, and the weapon
+   * will start flying in the path
+   */
+  public void startThrowing() {
+    holder.usePunch();
+    float radius = this.getTransform().getSize().getX() / 2;
+    this.bcCol = new BoxCollider(this, ColliderLayer.DEFAULT, false);
+    this.rb = new Rigidbody(
+        RigidbodyType.DYNAMIC,
+        1f,
+        1f,
+        1f,
+        new MaterialProperty(0.1f, 1, 1),
+        new AngularData(0, 0, 0, 0),
+        this); // TODO FIX
+    addComponent(bcCol);
+    addComponent(rb);
+    this.throwVector = getDeltaThrowVecNorm();
+    this.startedThrowing = true;
+  }
+
+  /**
+   * Returns the vector the weapon goes when started throwing
+   */
+  public Vector2 getDeltaThrowVecNorm() {
+    return new Vector2(holder.mouseX - this.getX(), holder.mouseY - this.getY()).normalize();
   }
 
   /**

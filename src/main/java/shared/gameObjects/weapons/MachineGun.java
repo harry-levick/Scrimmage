@@ -79,24 +79,6 @@ public class MachineGun extends Gun {
     }
   }
 
-  public void startThrowing() {
-    holder.usePunch();
-    float radius = this.getTransform().getSize().getX() / 2;
-    this.bcCol = new BoxCollider(this, ColliderLayer.DEFAULT, false);
-    this.rb = new Rigidbody(
-        RigidbodyType.DYNAMIC,
-        1f,
-        1f,
-        1f,
-        new MaterialProperty(0.1f, 1, 1),
-        new AngularData(0, 0, 0, 0),
-        this); // TODO FIX
-    addComponent(bcCol);
-    addComponent(rb);
-    this.throwVector = getDeltaThrowVecNorm();
-    this.startedThrowing = true;
-  }
-
   // Only handle collision when throwing weapon
   @Override
   public void OnCollisionEnter(Collision col) {
@@ -193,9 +175,5 @@ public class MachineGun extends Gun {
   @Override
   public double getForeGripFlipY() {
     return getGripY() - 50 * Math.sin(angleRadian);
-  }
-
-  public Vector2 getDeltaThrowVecNorm() {
-    return new Vector2(holder.mouseX - this.getX(), holder.mouseY - this.getY()).normalize();
   }
 }
