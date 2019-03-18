@@ -70,6 +70,8 @@ public abstract class Gun extends Weapon {
 
   public abstract double getForeGripFlipY();
 
+  public abstract boolean firesExplosive();
+
   @Override
   public void initialise(Group root, Settings settings) {
     super.initialise(root, settings);

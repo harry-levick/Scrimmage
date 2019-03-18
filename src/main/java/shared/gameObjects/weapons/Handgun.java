@@ -148,6 +148,11 @@ public class Handgun extends Gun {
   }
 
   @Override
+  public boolean firesExplosive() {
+    return false;
+  }
+
+  @Override
   public double getGripX() {
     if (holder.isAimingLeft()) {
       return getGripFlipX();
