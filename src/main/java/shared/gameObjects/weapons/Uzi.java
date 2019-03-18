@@ -67,7 +67,7 @@ public class Uzi extends Gun {
   }
 
   @Override
-  public boolean isExplosive() {
+  public boolean firesExplosive() {
     return false;
   }
 

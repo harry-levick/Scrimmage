@@ -121,7 +121,7 @@ public class MachineGun extends Gun {
   }
 
   @Override
-  public boolean isExplosive() {
+  public boolean firesExplosive() {
     return false;
   }
 
