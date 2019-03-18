@@ -65,7 +65,7 @@ public class Sword extends Melee {
   public void render() {
     super.render();
 
-    if (holder == null) { return; }
+    if (startedThrowing || holder == null) { return; }
 
     // start here
     imageView.getTransforms().clear();
