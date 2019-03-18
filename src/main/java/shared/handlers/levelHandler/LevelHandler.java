@@ -158,6 +158,7 @@ public class LevelHandler {
     gameObjects.forEach((key, gameObject) -> gameObject.setSettings(settings));
     gameState = map.getGameState();
     players.forEach((key, player) -> player.reset());
+    bots.forEach((key, bot) -> bot.reset());
 
     if (!isServer) {
       musicPlayer.stopMusic();

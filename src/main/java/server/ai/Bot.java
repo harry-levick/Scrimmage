@@ -70,13 +70,15 @@ public class Bot extends Player {
     fleeingThread.start();
   }
 
-  public void restart() {
+  public void reset() {
     chasingThread.terminate();
     fleeingThread.terminate();
 
     chasingThread = new ChasingThread(this, chasingPlan);
     fleeingThread = new FleeingThread(this, fleeingPlan);
     startThread();
+
+    super.reset();
   }
 
   /**

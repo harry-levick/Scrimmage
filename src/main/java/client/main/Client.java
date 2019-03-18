@@ -463,6 +463,7 @@ public class Client extends Application {
             alive.forEach(player -> player.increaseScore());
             Map nextMap = playlist.poll();
             levelHandler.changeMap(nextMap, true, false);
+
             giveWeapon();
           }
           /** Move bots */

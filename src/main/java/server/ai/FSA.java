@@ -1,9 +1,12 @@
 package server.ai;
 
+import shared.gameObjects.Blocks.Wood.WoodBlockLargeObject;
 import shared.gameObjects.Blocks.Wood.WoodBlockSmallObject;
+import shared.gameObjects.Blocks.Wood.WoodFloorObject;
 import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Player;
+import shared.gameObjects.weapons.Gun;
 import shared.gameObjects.weapons.Melee;
 import shared.physics.Physics;
 import shared.physics.data.Collision;
@@ -38,14 +41,15 @@ public enum FSA {
           (Bot) bot,
           false);
 
-      if (bot.getHolding().isGun() && bot.getHolding().firesExplosive()) {
+      if (bot.getHolding().isGun() && ((Gun) bot.getHolding()).firesExplosive()) {
         inSight = ((Rigidbody) rayCast.getCollidedObject()
             .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
       } else {
         inSight = ((Rigidbody) rayCast.getCollidedObject()
             .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC &&
-            !(rayCast.getCollidedObject() instanceof WoodBlockSmallObject) &&
-            !(rayCast.getCollidedObject() instanceof WoodBlockSmallObject);
+            !(rayCast.getCollidedObject() instanceof WoodBlockSmallObject ||
+            rayCast.getCollidedObject() instanceof WoodBlockLargeObject ||
+            rayCast.getCollidedObject() instanceof WoodFloorObject);
       }
 
       if (((targetDistance > weaponRange) || !inSight)
@@ -89,14 +93,15 @@ public enum FSA {
           false);
 
 
-      if (bot.getHolding().isGun() && bot.getHolding().firesExplosive()) {
+      if (bot.getHolding().isGun() && ((Gun) bot.getHolding()).firesExplosive()) {
         inSight = ((Rigidbody) rayCast.getCollidedObject()
             .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
       } else {
         inSight = ((Rigidbody) rayCast.getCollidedObject()
             .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC &&
-            !(rayCast.getCollidedObject() instanceof WoodBlockSmallObject) &&
-            !(rayCast.getCollidedObject() instanceof WoodBlockSmallObject);
+            !(rayCast.getCollidedObject() instanceof WoodBlockSmallObject ||
+                rayCast.getCollidedObject() instanceof WoodBlockLargeObject ||
+                rayCast.getCollidedObject() instanceof WoodFloorObject);
       }
 
       if ((targetDistance <= weaponRange)
@@ -141,14 +146,15 @@ public enum FSA {
           (Bot) bot,
           false);
 
-      if (bot.getHolding().isGun() && bot.getHolding().firesExplosive()) {
+      if (bot.getHolding().isGun() && ((Gun) bot.getHolding()).firesExplosive()) {
         inSight = ((Rigidbody) rayCast.getCollidedObject()
             .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
       } else {
         inSight = ((Rigidbody) rayCast.getCollidedObject()
             .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC &&
-            !(rayCast.getCollidedObject() instanceof WoodBlockSmallObject) &&
-            !(rayCast.getCollidedObject() instanceof WoodBlockSmallObject);
+            !(rayCast.getCollidedObject() instanceof WoodBlockSmallObject ||
+                rayCast.getCollidedObject() instanceof WoodBlockLargeObject ||
+                rayCast.getCollidedObject() instanceof WoodFloorObject);
       }
 
       Melee temp;
@@ -201,14 +207,15 @@ public enum FSA {
           (Bot) bot,
           false);
 
-      if (bot.getHolding().isGun() && bot.getHolding().firesExplosive()) {
+      if (bot.getHolding().isGun() && ((Gun) bot.getHolding()).firesExplosive()) {
         inSight = ((Rigidbody) rayCast.getCollidedObject()
             .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
       } else {
         inSight = ((Rigidbody) rayCast.getCollidedObject()
             .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC &&
-            !(rayCast.getCollidedObject() instanceof WoodBlockSmallObject) &&
-            !(rayCast.getCollidedObject() instanceof WoodBlockSmallObject);
+            !(rayCast.getCollidedObject() instanceof WoodBlockSmallObject ||
+                rayCast.getCollidedObject() instanceof WoodBlockLargeObject ||
+                rayCast.getCollidedObject() instanceof WoodFloorObject);
       }
 
       if (((botHealth >= this.HIGH_HEALTH))
