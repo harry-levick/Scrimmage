@@ -12,6 +12,7 @@ import shared.physics.data.Collision;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
+import shared.util.maths.Vector2;
 
 /**
  * The abstract class of all weapons in the game.
@@ -35,6 +36,8 @@ public abstract class Weapon extends GameObject {
   protected boolean isGun;
   /** True if this is a melee */
   protected boolean isMelee;
+  /** True if started the process to throw this weapon */
+  protected boolean startedThrowing;
   /** Ammo of the weapon, -1 for unlimited ammo */
   protected int ammo;
   /** Fire rate of the weapon, max = MAX_COOLDOWN - 1 */
@@ -43,6 +46,8 @@ public abstract class Weapon extends GameObject {
   protected int currentCooldown;
   /** True if this gun is held with single hand */
   protected boolean singleHanded;
+  /** Vector2 for throwing the weapon */
+  protected Vector2 throwVector;
 
   /** The player who holds the weapon, null if none */
   protected Player holder;
@@ -73,8 +78,8 @@ public abstract class Weapon extends GameObject {
 
   // variables for when the holder is null
   private BoxCollider bcTrig;
-  private BoxCollider bcCol;
-  private Rigidbody rb;
+  protected BoxCollider bcCol;
+  protected Rigidbody rb;
 
   /**
    * Constructor of the weapon class
@@ -112,6 +117,7 @@ public abstract class Weapon extends GameObject {
     this.isMelee = isMelee;
     setWeight(weight);
     this.name = name;
+    this.startedThrowing = false;
     setAmmo(ammo);
     setFireRate(fireRate);
     this.holder = holder;
@@ -161,7 +167,16 @@ public abstract class Weapon extends GameObject {
   @Override
   public void update() {
     super.update();
-    if (holder != null) {
+    if (startedThrowing) {
+      if (0 < getX() && getX() < 1920 && 0 < getY() && getY() < 1080) {
+        rb.move(throwVector.mult(10f));
+        this.imageView.setRotate(this.imageView.getRotate() + 100f);
+      }
+      else {
+        settings.getLevelHandler().removeGameObject(this);
+      }
+    }
+    else if (holder != null) {
       holderHandPos = getHolderHandPos();
       this.setX(getGripX());
       this.setY(getGripY());
