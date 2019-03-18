@@ -15,8 +15,8 @@ import shared.gameObjects.players.Limbs.Body;
 import shared.gameObjects.players.Limbs.Hand;
 import shared.gameObjects.players.Limbs.Head;
 import shared.gameObjects.players.Limbs.Leg;
+import shared.gameObjects.weapons.MachineGun;
 import shared.gameObjects.weapons.Punch;
-import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.weapons.Weapon;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.ColliderLayer;
@@ -31,6 +31,7 @@ public class Player extends GameObject implements Destructable {
   public boolean leftKey, rightKey, jumpKey, click;
   //Testing
   public boolean deattach;
+  public boolean throwHoldingKey;
   public double mouseX, mouseY;
   public int score;
   protected Behaviour behaviour;
@@ -186,9 +187,12 @@ public class Player extends GameObject implements Destructable {
     if (grounded) {
       jumped = false;
     }
+    if (throwHoldingKey) {
+      this.throwHolding();
+    }
     if (click && holding != null) {
       holding.fire(mouseX, mouseY);
-    } // else punch
+    }
     // setX(getX() + (vx * 0.0166));
   }
 
@@ -207,6 +211,14 @@ public class Player extends GameObject implements Destructable {
       return true;
     }
     return false;
+  }
+
+  public void throwHolding() {
+    if (this.holding == null || this.holding instanceof Punch) {
+      return;
+    }
+    MachineGun mg = (MachineGun) this.holding;
+    mg.startThrowing();
   }
 
   public void deductHp(int damage) {
@@ -264,6 +276,10 @@ public class Player extends GameObject implements Destructable {
       newHolding.setSettings(settings);
       aimLeft = false;
     }
+  }
+
+  public void usePunch() {
+    this.setHolding(this.myPunch);
   }
 
   public int getScore() {
