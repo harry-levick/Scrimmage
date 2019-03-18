@@ -13,6 +13,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
@@ -461,10 +462,9 @@ public class Client extends Application {
           }
           if (alive.size() == 1) {
             alive.forEach(player -> player.increaseScore());
-            Map nextMap = playlist.poll();
+            int index = new Random().nextInt(playlist.size() - 1);
+            Map nextMap = playlist.get(index);
             levelHandler.changeMap(nextMap, true, false);
-
-            giveWeapon();
           }
           /** Move bots */
           levelHandler.getBotPlayerList().forEach((key, bot) -> bot.applyInput());

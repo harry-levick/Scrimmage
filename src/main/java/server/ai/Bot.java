@@ -108,20 +108,17 @@ public class Bot extends Player {
 
     switch (state) {
       case IDLE:
-        System.out.println("IDLE");
+
         break;
       case CHASING:
-        System.out.println("CHASING");
         executeAction(FSA.CHASING);
 
         break;
       case FLEEING:
-        System.out.println("FLEEING");
         executeAction(FSA.FLEEING);
 
         break;
       case ATTACKING:
-        System.out.println("ATTACKING");
         Vector2 enemyPosCenter = targetPlayer.getTransform().getPos()
             .add(targetPlayer.getTransform().getSize().mult(0.5f));
         mouseX = enemyPosCenter.getX();

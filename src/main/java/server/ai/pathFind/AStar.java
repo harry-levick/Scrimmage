@@ -229,8 +229,7 @@ public class AStar {
 
     if (outHorizontal || outVertical) {
       return false;
-    }
-    else return true;
+    } else return true;
   }
 
   /**
@@ -352,7 +351,6 @@ public class AStar {
         closedList.add(current);
         openList.addAll(current.generateChildren());
         searchCount++;
-        //Physics.drawCast(current.botX, current.botY, current.botX, current.botY, "#00ff00");
       }
 
       if (currentGood)
