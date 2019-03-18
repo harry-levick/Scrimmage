@@ -85,13 +85,7 @@ public abstract class Gun extends Weapon {
   public void render() {
     super.render();
 
-    if (holder == null) {
-      return;
-    }
-
-    if (startedThrowing) {
-      this.imageView.setTranslateX(imageView.getTranslateX() + getDeltaThrowX());
-      this.imageView.setTranslateY(imageView.getTranslateY() + getDeltaThrowY());
+    if (startedThrowing || holder == null) {
       return;
     }
 
