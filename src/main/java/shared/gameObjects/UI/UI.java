@@ -5,8 +5,7 @@ import shared.gameObjects.players.Player;
 
 public class UI {
 
-  private Health health;
-  private Ammo ammo;
+  private PlayerInfo playerInfo;
   private Score score;
 
 
@@ -15,15 +14,13 @@ public class UI {
     //Load the Kenney font
     //uiFont = Font.loadFont("fonts/kenney1.ttf", 25);
 
-    health = new Health(root, clientPlayer);
-    ammo = new Ammo(root, clientPlayer);
+    playerInfo = new PlayerInfo(root,clientPlayer);
     score = new Score(root, clientPlayer);
   }
 
   public void render() {
-    health.render();
-    ammo.render();
-    score.render();
+    playerInfo.render();
+    //score.render();
   }
 
 

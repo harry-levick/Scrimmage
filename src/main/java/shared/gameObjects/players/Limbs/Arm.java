@@ -57,7 +57,7 @@ public class Arm extends Limb {
   
   private void walkAnimation() {
   
-    int interval = 10;
+    int interval = 7;
     int segments = 3;
     int localTime = this.player.getAnimationTimer() % (interval * segments);
     
