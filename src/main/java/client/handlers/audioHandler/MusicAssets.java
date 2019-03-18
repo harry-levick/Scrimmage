@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
+/**
+ * Defines all of the MUSIC assets used by AudioHandler
+ */
 public class MusicAssets {
 
   private final HashMap<String, String> tracks = new HashMap<String, String>();
@@ -14,6 +17,11 @@ public class MusicAssets {
   private String filePath;
   private Settings settings;
 
+  /**
+   * Constructor:
+   *
+   * @param settings Main game settings, required for getting paths.
+   */
   public MusicAssets(Settings settings) {
     this.settings = settings;
     filePath = settings.getMusicPath();
@@ -36,6 +44,12 @@ public class MusicAssets {
     Collections.shuffle(ingamePlaylist);
   }
 
+  /**
+   * Gets an ArrayList<String> of tracks from the Hashmap which have been added to the playlist set
+   *
+   * @param playlist The ENUM of the playlist wanted
+   * @return An arraylist of Keys to the Hashmap of tracks.
+   */
   protected ArrayList<String> getPlaylist(PLAYLIST playlist) {
     switch (playlist) {
       case MENU:
@@ -46,6 +60,11 @@ public class MusicAssets {
     }
   }
 
+  /**
+   * Gets the full relative path of the of a track
+   * @param trackIndex The key of the track in the hashmap
+   * @return The relative path of the track. If no track in the hashmap then null
+   */
   protected String getTrackPath(String trackIndex) {
     if (tracks.containsKey(trackIndex)) {
       return filePath + File.separator + tracks.get(trackIndex);
@@ -54,5 +73,8 @@ public class MusicAssets {
     }
   }
 
+  /**
+   * Available types of playlist. Associated with an ArrayList<String> where the Sring is the Key of the hashmap, in getPlayList().
+   */
   public enum PLAYLIST {MENU, INGAME}
 }

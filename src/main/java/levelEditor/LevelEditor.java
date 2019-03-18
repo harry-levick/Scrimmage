@@ -244,9 +244,7 @@ public class LevelEditor extends Application {
               new Handgun(
                   getGridX(event.getX()),
                   getGridY(event.getY()),
-                  getScaledSize(objectMap.get(objectTypeSelected).getX()),
-                  getScaledSize(objectMap.get(objectTypeSelected).getY()),
-                  "Handgun",
+                  "Handgun@LevelEditor.scenePrimaryClick",
                   null, // holder
                   uuid);
           break;
