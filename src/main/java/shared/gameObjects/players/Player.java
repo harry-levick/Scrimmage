@@ -217,8 +217,8 @@ public class Player extends GameObject implements Destructable {
     if (this.holding == null || this.holding instanceof Punch) {
       return;
     }
-    MachineGun mg = (MachineGun) this.holding;
-    mg.startThrowing();
+    Weapon w = this.holding;
+    w.startThrowing();
   }
 
   public void deductHp(int damage) {
