@@ -120,6 +120,11 @@ public class MachineGun extends Gun {
     this.animation.supplyAnimation("default", Path.convert(this.imagePath));
   }
 
+  @Override
+  public boolean isExplosive() {
+    return false;
+  }
+
   // =============================
   // Get Grip and Muzzle positions
   // =============================
