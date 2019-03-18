@@ -5,14 +5,20 @@ import client.main.Client;
 import client.main.Settings;
 import java.util.UUID;
 import javafx.scene.Group;
-import javafx.scene.transform.Rotate;
+import shared.gameObjects.components.BoxCollider;
+import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Player;
+import shared.physics.data.AngularData;
+import shared.physics.data.Collision;
+import shared.physics.data.MaterialProperty;
+import shared.physics.types.ColliderLayer;
+import shared.physics.types.RigidbodyType;
 import shared.util.Path;
 import shared.util.maths.Vector2;
 
 public class MachineGun extends Gun {
 
-  private static String imagePath = "images/weapons/Test/Asset 4.png"; // path to Machine Gun image
+  private static String imagePath = "images/weapons/machinegun.png"; // path to Machine Gun image
   private static String audioPath = "audio/sound-effects/laser_gun.wav"; // path to Machine Gun sfx
   private static double sizeX = 84, sizeY = 35;
 
@@ -32,7 +38,6 @@ public class MachineGun extends Gun {
         false, // singleHanded
         uuid);
 
-    rotate = new Rotate();
     // pivot = position of the grip
     // If changing the value of this, change the value in all getGrip() methods
     rotate.setPivotX(20);
@@ -46,15 +51,12 @@ public class MachineGun extends Gun {
   @Override
   public void initialise(Group root, Settings settings) {
     super.initialise(root, settings);
-    rotate.setPivotX(20);
-    rotate.setPivotY(10);
   }
 
   @Override
   public void fire(double mouseX, double mouseY) {
     if (canFire()) {
       UUID uuid = UUID.randomUUID();
-      //Vector2 playerCentre = ((BoxCollider) (holder.getComponent(ComponentType.COLLIDER))).getCentre(); // centre = body.centre
       Vector2 playerCentre = new Vector2(holderHandPos[0], holderHandPos[1]); // centre = main hand
       double playerRadius = 55 + 65; // Player.sizeY / 2 + bias
 
@@ -62,12 +64,6 @@ public class MachineGun extends Gun {
       double bulletY = playerCentre.getY() - playerRadius * Math.sin(-angleRadian);
       double bulletFlipX = playerCentre.getX() - playerRadius * Math.cos(angleRadian);
       double bulletFlipY = playerCentre.getY() - playerRadius * Math.sin(angleRadian);
-      /*
-      double bulletX = getMuzzleX() - 68 + 68 * Math.cos(-angleRadian);
-      double bulletY = getMuzzleY() - 68 * Math.sin(-angleRadian);
-      double bulletFlipX = getMuzzleFlipX() + 68 - 68 * Math.cos(angleRadian);
-      double bulletFlipY = getMuzzleFlipY() - 68 * Math.sin(angleRadian);
-      */
       Bullet bullet =
           new FireBullet(
               (holder.isAimingLeft() ? bulletFlipX : bulletX),
@@ -83,7 +79,59 @@ public class MachineGun extends Gun {
     }
   }
 
+  public void startThrowing() {
+    holder.usePunch();
+    float radius = this.getTransform().getSize().getX() / 2;
+    this.bcCol = new BoxCollider(this, ColliderLayer.DEFAULT, false);
+    this.rb = new Rigidbody(
+        RigidbodyType.DYNAMIC,
+        1f,
+        1f,
+        1f,
+        new MaterialProperty(0.1f, 1, 1),
+        new AngularData(0, 0, 0, 0),
+        this); // TODO FIX
+    addComponent(bcCol);
+    addComponent(rb);
+    this.throwVector = getDeltaThrowVecNorm();
+    this.startedThrowing = true;
+  }
 
+  // Only handle collision when throwing weapon
+  @Override
+  public void OnCollisionEnter(Collision col) {
+    // Leave if this gun is a spawn gun
+    if (this.holder == null) {
+      return;
+    }
+
+/*    boolean remove = true;
+    GameObject g = col.getCollidedObject();
+    BoxCollider holderBC = (BoxCollider) holder.getComponent(ComponentType.COLLIDER);
+
+    if (g.getId() == ObjectType.Player) {
+      Player p = (Player) g;
+      if (p.getUUID() == holder.getUUID()) {
+        holderBC.setLayer(ColliderLayer.COLLECTABLE);
+        remove = false;
+      }
+      else
+        p.deductHp(30);
+    }
+
+    if (remove)
+      settings.getLevelHandler().removeGameObject(this);*/
+  }
+
+  @Override
+  public void OnCollisionExit(Collision col) {
+    // Leave if this gun is a spawn gun
+    if (this.holder == null) {
+      return;
+    }
+
+//    ((BoxCollider) holder.getComponent(ComponentType.COLLIDER)).setLayer(ColliderLayer.DEFAULT);
+  }
 
   @Override
   public void initialiseAnimation() {
@@ -147,19 +195,7 @@ public class MachineGun extends Gun {
     return getGripY() - 50 * Math.sin(angleRadian);
   }
 
-  public double getMuzzleX() {
-    return getGripX() + 68;
-  }
-
-  public double getMuzzleY() {
-    return getGripY() - 4;
-  }
-
-  public double getMuzzleFlipX() {
-    return getGripFlipX() - 12;
-  }
-
-  public double getMuzzleFlipY() {
-    return getGripFlipY() - 8;
+  public Vector2 getDeltaThrowVecNorm() {
+    return new Vector2(holder.mouseX - this.getX(), holder.mouseY - this.getY()).normalize();
   }
 }
