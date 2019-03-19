@@ -7,7 +7,7 @@ import shared.util.Path;
 
 public class HealthPack extends Powerup {
 
-  private static String imagePath = "";
+  private static String imagePath = "images/powerups/healthPack.png";
   private static double sizeX = 30, sizeY = 30;
   private static int VALUE = 30;
 
