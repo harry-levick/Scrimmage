@@ -157,7 +157,7 @@ public class LevelHandler {
         });
     gameObjects.putAll(players);
     gameObjects.forEach((key, gameObject) -> gameObject.setSettings(settings));
-    gameState = map.getGameState();
+    gameState = map.getGameState() != null ? map.getGameState() : GameState.MAIN_MENU;
     players.forEach((key, player) -> {
       player.reset();
       player.setHolding(new MachineGun(player.getX(), player.getY(),

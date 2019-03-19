@@ -15,30 +15,36 @@ import shared.util.maths.Vector2;
  */
 public class Bot extends Player {
 
+  /** The action array index for jump key */
   public static final int KEY_JUMP = 0;
+  /** The action array index for left key */
   public static final int KEY_LEFT = 1;
+  /** The action array index for right key */
   public static final int KEY_RIGHT = 2;
-  public float jumpTime;
-
+  /** The state that the bot is in */
   FSA state;
+  /** The bots target */
   public Player targetPlayer;
+  /** All of the players in the world, players + bots */
   LinkedHashMap<UUID, Player> allPlayers;
-  // Get the LevelHandler through the constructor
+  /** The levelHandler passed in the constructor, used for collecting game objects */
   LevelHandler levelHandler;
+  /** Thread to govern the chasing path to the enemy */
   ChasingThread chasingThread;
+  /** Thread to govern the fleeing path from the enemy */
   FleeingThread fleeingThread;
+  /** The list of actions to take from when the bot is chasing the enemy */
   List<boolean[]> chasingPlan;
+  /** The list of actions to take from when the bot is fleeing the enemy */
   List<boolean[]> fleeingPlan;
 
   /**
-   *
    * @param x x pos of the bot
    * @param y y pos of the bot
    * @param playerUUID
    * @param levelHandler
    */
-  public Bot(double x, double y, UUID playerUUID,
-      LevelHandler levelHandler) {
+  public Bot(double x, double y, UUID playerUUID, LevelHandler levelHandler) {
     super(x, y, playerUUID);
     this.state = FSA.INITIAL_STATE;
     this.levelHandler = levelHandler;
@@ -70,6 +76,9 @@ public class Bot extends Player {
     fleeingThread.start();
   }
 
+  /**
+   * Terminates the bot's threads and creates new ones, used when the map is changed.
+   */
   public void reset() {
     chasingThread.terminate();
     fleeingThread.terminate();
@@ -82,7 +91,7 @@ public class Bot extends Player {
   }
 
   /**
-   *
+   * Check to see if the bot can jump in its current position
    * @return True if the bot is on the ground (can jump).
    */
   public boolean mayJump() {
@@ -132,7 +141,6 @@ public class Bot extends Player {
 
   /**
    * Calculates the distance from the bot to the current target player
-   *
    * @return The distance to the target player
    */
   private double calcDist() {
@@ -225,6 +233,7 @@ public class Bot extends Player {
    */
   public Player findTarget() {
     allPlayers = levelHandler.getPlayers();
+    allPlayers.putAll(levelHandler.getBotPlayerList());
 
     Player target = null;
     double targetDistance = Double.POSITIVE_INFINITY;

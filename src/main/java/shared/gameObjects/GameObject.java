@@ -256,7 +256,6 @@ public abstract class GameObject implements Serializable {
             root.getChildren().remove(imageView);
           }
       );
-      //root.getChildren().remove(imageView);
     }
   }
 

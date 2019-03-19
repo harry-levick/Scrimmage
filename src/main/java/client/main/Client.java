@@ -367,15 +367,15 @@ public class Client extends Application {
    */
   public void endGame() {
     singleplayerGame = false;
+    gameOver = false;
     levelHandler.getPlayers().entrySet().removeAll(levelHandler.getBotPlayerList().entrySet());
     levelHandler.getBotPlayerList().forEach((key, gameObject) -> gameObject.removeRender());
     levelHandler.getBotPlayerList().forEach((key, gameObject) -> gameObject = null);
     levelHandler.getBotPlayerList().clear();
     levelHandler.changeMap(
-        new Map(
-            "Main Menu",
-            Path.convert(settings.getMenuPath() + File.separator + "menus/main_menu.map")),
+        new Map("menus/main_menu.map", Path.convert("src/main/resources/menus/main_menu.map")),
         false, false);
+
   }
 
   /**
@@ -399,9 +399,15 @@ public class Client extends Application {
         new TimerTask() {
           @Override
           public void run() {
+            System.out.println("Timer caused game to stop.");
             gameOver = true;
           }
         };
+
+    Timer timer = new Timer("Game Timer");
+    long delay = 20000l;
+    timer.scheduleAtFixedRate(task, delay, delay);
+
 
     setupRender(primaryStage);
     levelHandler = new LevelHandler(settings, backgroundRoot, gameRoot, uiRoot);
