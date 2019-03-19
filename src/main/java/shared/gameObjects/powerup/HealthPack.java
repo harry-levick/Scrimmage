@@ -1,7 +1,6 @@
 package shared.gameObjects.powerup;
 
 import java.util.UUID;
-import shared.gameObjects.UI.Health;
 import shared.gameObjects.players.Player;
 import shared.util.Path;
 
