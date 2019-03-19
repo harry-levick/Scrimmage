@@ -20,8 +20,6 @@ public abstract class Gun extends Weapon {
   protected int fireRate;
   /** True if this gun is full auto fire */
   protected boolean fullAutoFire;
-  /** True if this gun is held with single hand */
-  protected boolean singleHanded;
   /** Ammo of this gun currently has */
   protected int ammo;
 
@@ -72,10 +70,11 @@ public abstract class Gun extends Weapon {
 
   public abstract double getForeGripFlipY();
 
+  public abstract boolean firesExplosive();
+
   @Override
   public void initialise(Group root, Settings settings) {
     super.initialise(root, settings);
-    rotate = new Rotate();
   }
 
   @Override
@@ -88,7 +87,7 @@ public abstract class Gun extends Weapon {
   public void render() {
     super.render();
 
-    if (holder == null) {
+    if (startedThrowing || holder == null) {
       return;
     }
 
