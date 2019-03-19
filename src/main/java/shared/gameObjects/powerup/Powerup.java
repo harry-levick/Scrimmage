@@ -10,7 +10,6 @@ import shared.physics.data.AngularData;
 import shared.physics.data.Collision;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.ColliderLayer;
-import shared.physics.types.ColliderType;
 import shared.physics.types.RigidbodyType;
 
 public abstract class Powerup extends GameObject {
@@ -18,6 +17,7 @@ public abstract class Powerup extends GameObject {
   private BoxCollider bcCol;
   private BoxCollider bcTrig;
   private Rigidbody rb;
+  private String name;
 
   public Powerup(
       double x,
@@ -28,6 +28,7 @@ public abstract class Powerup extends GameObject {
       UUID uuid) {
     super(x, y, sizeX, sizeY, ObjectType.Powerup, uuid);
 
+    this.name = name;
     bcCol = new BoxCollider(this, ColliderLayer.COLLECTABLE, false);
     bcTrig = new BoxCollider(this, ColliderLayer.DEFAULT, true);
     rb = new Rigidbody(
@@ -35,7 +36,7 @@ public abstract class Powerup extends GameObject {
         1f,
         1f,
         0.1f,
-        new MaterialProperty(0.1f,1,1),
+        new MaterialProperty(0.1f, 1, 1),
         new AngularData(0, 0, 0, 0),
         this);
     addComponent(bcCol);
@@ -49,14 +50,14 @@ public abstract class Powerup extends GameObject {
    * Remove this powerup
    */
   protected void done() {
-    this.removeComponent(bcCol);
-    this.removeComponent(bcTrig);
+    bcCol.setLayer(ColliderLayer.PARTICLE);
+    bcTrig.setLayer(ColliderLayer.PARTICLE);
     this.removeComponent(rb);
     settings.getLevelHandler().removeGameObject(this);
   }
 
   @Override
-  public void OnTriggerEnter (Collision col) {
+  public void OnTriggerEnter(Collision col) {
     GameObject g = col.getCollidedObject();
     if (g != null && g.getId() == ObjectType.Player) {
       Player p = (Player) g;
