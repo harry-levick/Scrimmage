@@ -15,7 +15,6 @@ import shared.gameObjects.players.Limbs.Body;
 import shared.gameObjects.players.Limbs.Hand;
 import shared.gameObjects.players.Limbs.Head;
 import shared.gameObjects.players.Limbs.Leg;
-import shared.gameObjects.weapons.MachineGun;
 import shared.gameObjects.weapons.Punch;
 import shared.gameObjects.weapons.Weapon;
 import shared.physics.data.MaterialProperty;
@@ -61,16 +60,10 @@ public class Player extends GameObject implements Destructable {
    * Boolean to determine if a player is on the ground or in the air
    */
   protected boolean grounded;
-  /**
-   * Boolean to determine if the player is facing left
-   */
-  protected boolean facingLeft;
-  /**
-   * Boolean to determine if the player is facing right
-   */
-  protected boolean facingRight;
-  //TODO idk what this does
+  /** True when the gun is aiming LHS */
   protected boolean aimLeft;
+  /** True when the mouse pointer is on the LHS */
+  protected boolean pointLeft;
   /**
    * The current health of the player; is killed when reaches 0
    */
@@ -163,6 +156,7 @@ public class Player extends GameObject implements Destructable {
     addChild(armRight);
     armRight.addChild(handRight);
     armLeft.addChild(handLeft);
+
   }
   
   private void updateAnimationTimer() {
@@ -183,6 +177,7 @@ public class Player extends GameObject implements Destructable {
   public void update() {
     checkGrounded(); // Checks if the player is grounded
     badWeapon();
+    pointLeft = mouseX < this.getX();
     updateAnimationTimer();
     if (deattach) {
       for (int i = 0; i < 6; i++) {
@@ -192,7 +187,6 @@ public class Player extends GameObject implements Destructable {
     }
     super.update();
   }
-
 
   @Override
   public String getState() {
@@ -224,14 +218,10 @@ public class Player extends GameObject implements Destructable {
     if (rightKey) {
       rb.moveX(speed);
       behaviour = Behaviour.WALK_RIGHT;
-      this.facingLeft = false;
-      this.facingRight = true;
     }
     if (leftKey) {
       rb.moveX(speed * -1);
       behaviour = Behaviour.WALK_LEFT;
-      this.facingRight = false;
-      this.facingLeft = true;
     }
 
     if (!rightKey && !leftKey) {
@@ -368,19 +358,6 @@ public class Player extends GameObject implements Destructable {
    * @return A 2 elements array, a[0] = X position of the hand, a[1] = Y position of the hand
    */
   public double[] getGunHandPos() {
-    // TODO: remove this section and getHand(Left/Right)(X/Y) methods below
-    /*
-    if (jumped && facingLeft) {
-      return new double[]{this.getHandLeftJumpX(), this.getHandLeftJumpY()};
-    } else if (jumped && facingRight) {
-      return new double[]{this.getHandRightJumpX(), this.getHandRightJumpY()};
-    } else if (facingLeft) {
-      return new double[]{this.handLeft.getX(), this.handLeft.getY()};
-    } else if (facingRight) {
-      return new double[]{this.handRight.getX(), this.handRight.getY()};
-    }
-    return new double[]{this.getHandRightX(), this.getHandRightY()};
-    */
     if (isAimingLeft()) {
       return new double[]{this.handRight.getX(), this.handRight.getY()};
     } else {
@@ -430,30 +407,16 @@ public class Player extends GameObject implements Destructable {
     return this.jumped;
   }
 
-  public boolean getFacingLeft() {
-    return this.facingLeft;
-  }
-
-  public void setFacingLeft(boolean b) {
-    this.facingLeft = b;
-    this.facingRight = !b;
-  }
-
-  public boolean getFacingRight() {
-    return this.facingRight;
-  }
-
-  public void setFacingRight(boolean b) {
-    this.facingLeft = !b;
-    this.facingRight = b;
-  }
-
   public boolean isAimingLeft() {
     return this.aimLeft;
   }
 
   public void setAimingLeft(boolean b) {
     this.aimLeft = b;
+  }
+
+  public boolean isPointingLeft() {
+    return this.pointLeft;
   }
 
   public boolean isGrounded() {

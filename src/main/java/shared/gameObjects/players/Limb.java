@@ -55,9 +55,6 @@ public abstract class Limb extends GameObject {
   protected transient LevelHandler levelHandler;
 
   protected int resetOffsetX = 0;
-  
-  
-  
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
    * ensure actions are calculated the same
@@ -186,6 +183,38 @@ public abstract class Limb extends GameObject {
 
   public void reattachLimb() {
     this.limbAttached = true;
+  }
+
+  protected void setXLeft(double x) {
+    this.xLeft = x;
+  }
+
+  protected void setYLeft(double y) {
+    this.yLeft = y;
+  }
+
+  protected void setXRight(double x) {
+    this.xRight = x;
+  }
+
+  protected void setYRight(double y) {
+    this.yRight = y;
+  }
+
+  public double getXLeft() {
+    return xLeft;
+  }
+
+  public double getYLeft() {
+    return yLeft;
+  }
+
+  public double getXRight() {
+    return xRight;
+  }
+
+  public double getYRight() {
+    return yRight;
   }
 }
 
