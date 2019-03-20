@@ -113,7 +113,7 @@ public class ClientNetworkManager {
               if (!value.split(";")[1].equals("Limb")) {
                 GameObject gameObject = Client.levelHandler.getGameObjects().get(key);
                 if (gameObject == null) {
-                  System.out.println("HMMM I've never seen this before" + value);
+                  System.out.println("HMMM I've never seen this before " + value);
                   //createGameObject(value);
                 } else {
                   if (!entity_interpolation || gameObject.getUUID() == Client.levelHandler
@@ -140,6 +140,7 @@ public class ClientNetworkManager {
       }
     }
   }
+
 
   public static void createGameObjects(byte[] data) {
     ObjectInputStream objectInputStream = null;
