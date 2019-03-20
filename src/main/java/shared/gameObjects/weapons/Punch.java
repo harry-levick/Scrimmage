@@ -57,7 +57,7 @@ public class Punch extends Melee {
 
   @Override
   public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", Path.convert("images/weapons/fist.png"));
+    this.animation.supplyAnimation("default", Path.convert("images/player/player_idle.png"));
   }
 
   @Override
