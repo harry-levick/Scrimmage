@@ -62,6 +62,10 @@ public class Server extends Application {
   private final AtomicBoolean sendAllObjects = new AtomicBoolean(false);
   private final AtomicBoolean gameOver = new AtomicBoolean(false);
   private final AtomicInteger counter = new AtomicInteger(0);
+  private boolean startedGame;
+  private int timeRemaining;
+  private int timeLimit = 1;
+  private Timer timer = new Timer("Timer", true);
   private final int maxPlayers = 4;
   private final int serverUpdateRate = 3;
   private final String gameTitle = "SERVER";
@@ -245,6 +249,35 @@ public class Server extends Application {
     primaryStage.getScene().getRoot().getTransforms().setAll(scale);
   }
 
+  /**
+   * Begin the timer
+   */
+  private void beginTimer() {
+    if (!startedGame) {
+      timeRemaining = timeLimit * 60;
+
+      Timer secondsTimer = new Timer();
+      secondsTimer.scheduleAtFixedRate(new TimerTask() {
+        @Override
+        public void run() {
+          System.out.println(String.format("%d:%d", timeRemaining / 60, timeRemaining - ((timeRemaining / 60) * 60)));
+          timeRemaining -= 1;
+        }
+      }, 0, 1000);
+
+      long delay = 1000l * 60l * timeLimit;
+      timer.schedule(new TimerTask() {
+        @Override
+        public void run() {
+          gameOver.set(true);
+          secondsTimer.cancel();
+        }
+      }, delay);
+
+      startedGame = true;
+    }
+  }
+
   @Override
   public void start(Stage primaryStage) throws Exception {
     setupRender(primaryStage);
@@ -254,17 +287,6 @@ public class Server extends Application {
     LOGGER.debug("Running " + threadName);
     /** Receiver from clients */
     executor.execute(new ServerReceiver(this, serverSocket, connected));
-
-    /** Setup Game timer */
-    TimerTask task =
-        new TimerTask() {
-          @Override
-          public void run() {
-            gameOver.set(true);
-          }
-        };
-    Timer timer = new Timer("Timer", true);
-    timer.schedule(task, 300000L);
 
     new AnimationTimer() {
 
@@ -292,6 +314,7 @@ public class Server extends Application {
         }
         if (playerCount.get() > 1 && readyCount.get() == playerCount.get()) {
           startMatch();
+          beginTimer();
         }
 
         if (serverState == ServerState.IN_GAME) {

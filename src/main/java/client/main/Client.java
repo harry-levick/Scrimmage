@@ -459,7 +459,6 @@ public class Client extends Application {
         }
 
         if (multiplayer) {
-          beginTimer();
           ClientNetworkManager.processServerPackets();
         }
         levelHandler.createObjects();
