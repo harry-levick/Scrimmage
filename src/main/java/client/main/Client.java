@@ -137,6 +137,9 @@ public class Client extends Application {
   private static boolean credits = false;
   private static int creditStartDelay = 100;
   private boolean gameOver;
+  private boolean startedGame;
+  private int timeRemaining;
+  private int timeLimit = 3; // Time limit in minutes
   private static boolean settingsOverlay = false;
   private static ArrayList<GameObject> settingsObjects = new ArrayList<>();
 
@@ -379,6 +382,35 @@ public class Client extends Application {
   }
 
   /**
+   * Begin the timer
+   */
+  private void beginTimer() {
+    if (!startedGame) {
+      timeRemaining = timeLimit * 60;
+
+      Timer secondsTimer = new Timer();
+      secondsTimer.scheduleAtFixedRate(new TimerTask() {
+        @Override
+        public void run() {
+          timeRemaining -= 1;
+          System.out.println(String.format("%d:%d", timeRemaining / 60, timeRemaining - ((timeRemaining / 60) * 60)));
+        }
+      }, 0, 1000);
+      
+      long delay = 1000l * 60l * timeLimit;
+      timer.schedule(new TimerTask() {
+        @Override
+        public void run() {
+          gameOver = true;
+          secondsTimer.cancel();
+        }
+      }, delay);
+
+      startedGame = true;
+    }
+  }
+
+  /**
    * Main game setup and game loop
    * @param primaryStage The JavaFX stage the game is put in
    */
@@ -393,21 +425,6 @@ public class Client extends Application {
               "Map" + i,
               Path.convert(settings.getMapsPath() + File.separator + "map" + i + ".map")));
     }
-
-    /** Setup Game timer */
-    task =
-        new TimerTask() {
-          @Override
-          public void run() {
-            System.out.println("Timer caused game to stop.");
-            gameOver = true;
-          }
-        };
-
-    Timer timer = new Timer("Game Timer");
-    long delay = 20000l;
-    timer.scheduleAtFixedRate(task, delay, delay);
-
 
     setupRender(primaryStage);
     levelHandler = new LevelHandler(settings, backgroundRoot, gameRoot, uiRoot);
@@ -437,7 +454,12 @@ public class Client extends Application {
       @Override
       public void handle(long now) {
 
+        if (!singleplayerGame && !multiplayer) {
+          startedGame = false;
+        }
+
         if (multiplayer) {
+          beginTimer();
           ClientNetworkManager.processServerPackets();
         }
         levelHandler.createObjects();
@@ -455,6 +477,7 @@ public class Client extends Application {
         }
 
         if (!multiplayer && singleplayerGame && levelHandler.getPlayers().size() > 1) {
+          beginTimer();
           /** Calculate Score */
           ArrayList<Player> alive = new ArrayList<>();
           for (UUID key : levelHandler.getPlayers().keySet()) {
