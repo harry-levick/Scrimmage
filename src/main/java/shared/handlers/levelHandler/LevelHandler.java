@@ -7,7 +7,6 @@ import client.main.Settings;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javafx.scene.Group;
 import server.Server;
@@ -163,20 +162,24 @@ public class LevelHandler {
     gameState = map.getGameState();
     players.forEach((key, player) -> {
       player.reset();
-      player.setHolding(new MachineGun(player.getX(), player.getY(),
-          "MachineGun@LevelHandler", player, UUID.randomUUID()));
+      /**
+       player.setHolding(new MachineGun(player.getX(), player.getY(),
+       "MachineGun@LevelHandler", player, UUID.randomUUID()));
 
-      gameObjects.put(player.getHolding().getUUID(), player.getHolding());
-      player.getHolding().initialise(gameRoot, settings);
+       gameObjects.put(player.getHolding().getUUID(), player.getHolding());
+       player.getHolding().initialise(gameRoot, settings);
+       **/
     });
 
     bots.forEach((key, bot) -> {
       bot.reset();
-      bot.setHolding(new MachineGun(bot.getX(), bot.getY(), "MachineGun@LevelHandler", bot,
-          UUID.randomUUID()));
+      /**
+       bot.setHolding(new MachineGun(bot.getX(), bot.getY(), "MachineGun@LevelHandler", bot,
+       UUID.randomUUID()));
 
-      gameObjects.put(bot.getHolding().getUUID(), bot.getHolding());
-      bot.getHolding().initialise(gameRoot, settings);
+       gameObjects.put(bot.getHolding().getUUID(), bot.getHolding());
+       bot.getHolding().initialise(gameRoot, settings);
+       **/
     });
 
     if (!isServer) {
@@ -238,7 +241,7 @@ public class LevelHandler {
     }
   }
 
-  public void addGameObjects(ConcurrentSkipListMap<UUID, GameObject> gameObjectsT) {
+  public void addGameObjects(ConcurrentLinkedHashMap<UUID, GameObject> gameObjectsT) {
     gameObjectsT.forEach(((uuid, gameObject) -> {
       if (!gameObjects.containsKey(uuid)) {
         this.toCreate.add(gameObject);

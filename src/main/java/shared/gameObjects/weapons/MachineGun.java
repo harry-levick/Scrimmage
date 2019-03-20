@@ -5,14 +5,8 @@ import client.main.Client;
 import client.main.Settings;
 import java.util.UUID;
 import javafx.scene.Group;
-import shared.gameObjects.components.BoxCollider;
-import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Player;
-import shared.physics.data.AngularData;
 import shared.physics.data.Collision;
-import shared.physics.data.MaterialProperty;
-import shared.physics.types.ColliderLayer;
-import shared.physics.types.RigidbodyType;
 import shared.util.Path;
 import shared.util.maths.Vector2;
 
@@ -51,6 +45,8 @@ public class MachineGun extends Gun {
   @Override
   public void initialise(Group root, Settings settings) {
     super.initialise(root, settings);
+    rotate.setPivotX(20);
+    rotate.setPivotY(10);
   }
 
   @Override
