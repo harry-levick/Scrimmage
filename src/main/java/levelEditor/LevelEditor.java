@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentSkipListMap;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -66,12 +65,13 @@ import shared.gameObjects.objects.utility.YellowBlock;
 import shared.gameObjects.weapons.Handgun;
 import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.MapLoader;
+import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import shared.util.maths.Vector2;
 
 public class LevelEditor extends Application {
 
   private Settings settings = new Settings(null, null);
-  private ConcurrentSkipListMap<UUID, GameObject> gameObjects;
+  private ConcurrentLinkedHashMap<UUID, GameObject> gameObjects;
   private ArrayList<PlayerSpawnpoint> playerSpawns = new ArrayList<>();
   private MapDataObject mapDataObject;
   private boolean snapToGrid = true;
@@ -581,7 +581,8 @@ public class LevelEditor extends Application {
   }
 
   private void initialiseNewMap() {
-    gameObjects = new ConcurrentSkipListMap<>();
+    gameObjects = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
+        .maximumWeightedCapacity(500).build();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.IN_GAME);
   }
 
@@ -636,7 +637,7 @@ public class LevelEditor extends Application {
   }
 
   private void sceneSecondaryClick(Stage primaryStage, Group root, MouseEvent event) {
-    ConcurrentSkipListMap<UUID, GameObject> removeList = gameObjects;
+    ConcurrentLinkedHashMap<UUID, GameObject> removeList = gameObjects;
     ArrayList<PlayerSpawnpoint> removeSpawn = playerSpawns;
     double x = event.getX();
     double y = event.getY();

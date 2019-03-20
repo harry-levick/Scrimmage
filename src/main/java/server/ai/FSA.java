@@ -1,8 +1,12 @@
 package server.ai;
 
+import shared.gameObjects.Blocks.Wood.WoodBlockLargeObject;
+import shared.gameObjects.Blocks.Wood.WoodBlockSmallObject;
+import shared.gameObjects.Blocks.Wood.WoodFloorObject;
 import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Player;
+import shared.gameObjects.weapons.Gun;
 import shared.gameObjects.weapons.Melee;
 import shared.physics.Physics;
 import shared.physics.data.Collision;
@@ -23,6 +27,7 @@ public enum FSA {
       double weaponRange = StateInfo.weaponRange;
       int ammoLeft = StateInfo.ammoLeft;
       int botHealth = StateInfo.botHealth;
+      boolean inSight;
 
       Vector2 botPos = bot.getTransform().getPos();
       Vector2 botPosCenter = botPos.add(bot.getTransform().getSize().mult(0.5f));
@@ -36,8 +41,16 @@ public enum FSA {
           (Bot) bot,
           false);
 
-      boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
-          .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
+      if (bot.getHolding().isGun() && ((Gun) bot.getHolding()).firesExplosive()) {
+        inSight = ((Rigidbody) rayCast.getCollidedObject()
+            .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
+      } else {
+        inSight = ((Rigidbody) rayCast.getCollidedObject()
+            .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC &&
+            !(rayCast.getCollidedObject() instanceof WoodBlockSmallObject ||
+            rayCast.getCollidedObject() instanceof WoodBlockLargeObject ||
+            rayCast.getCollidedObject() instanceof WoodFloorObject);
+      }
 
       if (((targetDistance > weaponRange) || !inSight)
           && (botHealth >= this.HIGH_HEALTH)
@@ -65,6 +78,7 @@ public enum FSA {
       double weaponRange = StateInfo.weaponRange;
       int ammoLeft = StateInfo.ammoLeft;
       int botHealth = StateInfo.botHealth;
+      boolean inSight;
 
       Vector2 botPos = bot.getTransform().getPos();
       Vector2 botPosCenter = botPos.add(bot.getTransform().getSize().mult(0.5f));
@@ -78,8 +92,17 @@ public enum FSA {
           (Bot) bot,
           false);
 
-      boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
-          .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
+
+      if (bot.getHolding().isGun() && ((Gun) bot.getHolding()).firesExplosive()) {
+        inSight = ((Rigidbody) rayCast.getCollidedObject()
+            .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
+      } else {
+        inSight = ((Rigidbody) rayCast.getCollidedObject()
+            .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC &&
+            !(rayCast.getCollidedObject() instanceof WoodBlockSmallObject ||
+                rayCast.getCollidedObject() instanceof WoodBlockLargeObject ||
+                rayCast.getCollidedObject() instanceof WoodFloorObject);
+      }
 
       if ((targetDistance <= weaponRange)
           && inSight
@@ -109,6 +132,7 @@ public enum FSA {
       double weaponRange = StateInfo.weaponRange;
       int ammoLeft = StateInfo.ammoLeft;
       int botHealth = StateInfo.botHealth;
+      boolean inSight;
 
       Vector2 botPos = bot.getTransform().getPos();
       Vector2 botPosCenter = botPos.add(bot.getTransform().getSize().mult(0.5f));
@@ -122,8 +146,16 @@ public enum FSA {
           (Bot) bot,
           false);
 
-      boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
-          .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
+      if (bot.getHolding().isGun() && ((Gun) bot.getHolding()).firesExplosive()) {
+        inSight = ((Rigidbody) rayCast.getCollidedObject()
+            .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
+      } else {
+        inSight = ((Rigidbody) rayCast.getCollidedObject()
+            .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC &&
+            !(rayCast.getCollidedObject() instanceof WoodBlockSmallObject ||
+                rayCast.getCollidedObject() instanceof WoodBlockLargeObject ||
+                rayCast.getCollidedObject() instanceof WoodFloorObject);
+      }
 
       Melee temp;
 
@@ -161,6 +193,7 @@ public enum FSA {
       double weaponRange = StateInfo.weaponRange;
       int ammoLeft = StateInfo.ammoLeft;
       int botHealth = StateInfo.botHealth;
+      boolean inSight;
 
       Vector2 botPos = bot.getTransform().getPos();
       Vector2 botPosCenter = botPos.add(bot.getTransform().getSize().mult(0.5f));
@@ -174,8 +207,16 @@ public enum FSA {
           (Bot) bot,
           false);
 
-      boolean inSight = ((Rigidbody) rayCast.getCollidedObject()
-          .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
+      if (bot.getHolding().isGun() && ((Gun) bot.getHolding()).firesExplosive()) {
+        inSight = ((Rigidbody) rayCast.getCollidedObject()
+            .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
+      } else {
+        inSight = ((Rigidbody) rayCast.getCollidedObject()
+            .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC &&
+            !(rayCast.getCollidedObject() instanceof WoodBlockSmallObject ||
+                rayCast.getCollidedObject() instanceof WoodBlockLargeObject ||
+                rayCast.getCollidedObject() instanceof WoodFloorObject);
+      }
 
       if (((botHealth >= this.HIGH_HEALTH))
           && inSight

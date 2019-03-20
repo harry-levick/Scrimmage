@@ -4,13 +4,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.UUID;
-import java.util.concurrent.ConcurrentSkipListMap;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.TestObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.physics.Physics;
+import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import shared.util.maths.Vector2;
 
 public class ColliderTest {
@@ -35,6 +35,8 @@ public class ColliderTest {
     circleE = new CircleCollider(e, 2, false);
     circleF = new CircleCollider(f, 2, false);
 
+    ConcurrentLinkedHashMap<UUID, GameObject> objects = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
+        .maximumWeightedCapacity(500).build();
     a.addComponent(boxA);
     b.addComponent(boxB);
     c.addComponent(boxC);
@@ -42,7 +44,6 @@ public class ColliderTest {
     e.addComponent(circleE);
     f.addComponent(circleF);
 
-    ConcurrentSkipListMap<UUID, GameObject> objects = new ConcurrentSkipListMap<>();
     objects.put(UUID.randomUUID(), a);
     objects.put(UUID.randomUUID(), b);
     objects.put(UUID.randomUUID(), c);

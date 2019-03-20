@@ -6,7 +6,6 @@ import de.codecentric.centerdevice.javafxsvg.dimension.PrimitiveDimensionProvide
 import java.io.File;
 import java.util.ArrayList;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentSkipListMap;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Group;
@@ -47,6 +46,7 @@ import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.MachineGun;
 import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.MapLoader;
+import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 
 /**
  * Script class for regenerating the main maps/levels used in the game
@@ -59,7 +59,7 @@ public class LevelCreator extends Application {
   private static int gridSizeX = stageSizeX / gridSizePX; // 40 px blocks
   private static int gridSizeY = stageSizeY / gridSizePX; // 48 x 27
 
-  private static ConcurrentSkipListMap<UUID, GameObject> gameObjects;
+  private static ConcurrentLinkedHashMap<UUID, GameObject> gameObjects;
   private static ArrayList<Player> playerSpawns;
   private static MapDataObject mapDataObject;
   private UUID uuid = UUID.randomUUID();
@@ -90,7 +90,8 @@ public class LevelCreator extends Application {
     ////////////////////////////////////////
     System.out.println("Generating Main Menu");
     filename = "main_menu";
-    gameObjects = new ConcurrentSkipListMap<>();
+    gameObjects = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
+        .maximumWeightedCapacity(500).build();
     playerSpawns = new ArrayList<Player>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.MAIN_MENU);
     mapDataObject.setBackground(
@@ -255,7 +256,8 @@ public class LevelCreator extends Application {
     ////////////////////////////////////////
     System.out.println("Generating Single Player Map");
     filename = "menu";
-    gameObjects = new ConcurrentSkipListMap<>();
+    gameObjects = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
+        .maximumWeightedCapacity(500).build();
     playerSpawns = new ArrayList<>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.IN_GAME);
     mapDataObject.setBackground(
@@ -294,7 +296,8 @@ public class LevelCreator extends Application {
     ////////////////////////////////////////
     System.out.println("Generating MULTIPLAYER Map");
     filename = "multiplayer";
-    gameObjects = new ConcurrentSkipListMap<>();
+    gameObjects = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
+        .maximumWeightedCapacity(500).build();
     playerSpawns = new ArrayList<Player>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.MULTIPLAYER);
     mapDataObject.setBackground(
@@ -346,7 +349,8 @@ public class LevelCreator extends Application {
     ////////////////////////////////////////
     System.out.println("Generating LOBBY");
     filename = "lobby";
-    gameObjects = new ConcurrentSkipListMap<>();
+    gameObjects = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
+        .maximumWeightedCapacity(500).build();
     playerSpawns = new ArrayList<Player>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.LOBBY);
     uuid = UUID.randomUUID();
@@ -416,7 +420,8 @@ public class LevelCreator extends Application {
     ////////////////////////////////////////
     System.out.println("Generating Settings");
     filename = "settings";
-    gameObjects = new ConcurrentSkipListMap<>();
+    gameObjects = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
+        .maximumWeightedCapacity(500).build();
     playerSpawns = new ArrayList<Player>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.SETTINGS);
     uuid = UUID.randomUUID();

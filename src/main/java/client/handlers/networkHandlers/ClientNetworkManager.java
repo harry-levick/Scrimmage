@@ -9,7 +9,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentSkipListMap;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.TimePosition;
 import shared.gameObjects.players.Limbs.Arm;
@@ -18,6 +17,7 @@ import shared.handlers.levelHandler.Map;
 import shared.packets.PacketGameState;
 import shared.packets.PacketInput;
 import shared.util.Path;
+import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import shared.util.maths.Vector2;
 
 public class ClientNetworkManager {
@@ -146,7 +146,7 @@ public class ClientNetworkManager {
     try {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(data);
       objectInputStream = new ObjectInputStream(byteArrayInputStream);
-      ConcurrentSkipListMap<UUID, GameObject> gameObjects = (ConcurrentSkipListMap<UUID, GameObject>) objectInputStream
+      ConcurrentLinkedHashMap<UUID, GameObject> gameObjects = (ConcurrentLinkedHashMap<UUID, GameObject>) objectInputStream
           .readObject();
       Client.levelHandler.addGameObjects(gameObjects);
     } catch (IOException e) {
@@ -174,7 +174,7 @@ public class ClientNetworkManager {
             player.click,
             player.getUUID(),
             Client.inputSequenceNumber);
-    resetInput();
+    //resetInput();
     Client.connectionHandler.send(input.getString());
     input.setInputSequenceNumber(Client.inputSequenceNumber);
     Client.pendingInputs.add(input);
