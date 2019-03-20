@@ -3,7 +3,6 @@ package shared.gameObjects.players.Limbs;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
-import shared.gameObjects.players.Behaviour;
 import shared.gameObjects.players.Limb;
 import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.LevelHandler;
@@ -18,17 +17,11 @@ public class Head extends Limb {
    * ensure actions are calculated the same
    */
   public Head(Player parent, LevelHandler levelHandler) {
-    super(0, 0, 17, 13, 48, 58, ObjectType.Limb, false, parent,parent,0, 0, levelHandler);
+    super(0, 0, 17, 13, 48, 58, ObjectType.Limb, false, parent, 0, 0, levelHandler);
   }
 
   @Override
   public void initialiseAnimation() {
     this.animation.supplyAnimation("default", "images/player/Standard_Male/head.png");
-  }
-
-  @Override
-  protected void rotateAnimate() {
-
-    
   }
 }
