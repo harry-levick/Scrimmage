@@ -122,8 +122,8 @@ public class Player extends GameObject implements Destructable {
     addChild(head);
     addChild(armLeft);
     addChild(armRight);
-    //armRight.addChild(handRight);
-    //armLeft.addChild(handLeft);
+    armRight.addChild(handRight);
+    armLeft.addChild(handLeft);
   }
   
   private void updateAnimationTimer() {
