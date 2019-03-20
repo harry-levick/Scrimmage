@@ -49,11 +49,15 @@ public abstract class ButtonObject extends GameObject {
 
 
   public void doOnClick(MouseEvent e) {
-    animation.switchAnimation("clicked");
     new AudioHandler(settings, Client.musicActive).playSFX("CLICK");
   }
 
-  public void doOnUnClick(MouseEvent e) {
+
+  public void doOnEnter(MouseEvent e) {
+    animation.switchAnimation("clicked");
+  }
+
+  public void doOnExit(MouseEvent e) {
     animation.switchDefault();
   }
 
@@ -67,7 +71,8 @@ public abstract class ButtonObject extends GameObject {
     button.setStyle("-fx-border-color: transparent;-fx-background-color: transparent;");
     root.getChildren().add(button);
     button.setOnMousePressed(event -> doOnClick(event));
-    button.setOnMouseReleased(event -> doOnUnClick(event));
+    button.setOnMouseEntered(event -> doOnEnter(event));
+    button.setOnMouseExited(event -> doOnExit(event));
   }
 
   @Override
