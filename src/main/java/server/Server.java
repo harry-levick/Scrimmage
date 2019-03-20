@@ -204,7 +204,13 @@ public class Server extends Application {
   }
 
   public BlockingQueue<PacketInput> getQueue(Player player) {
-    return inputQueue.get(player);
+    BlockingQueue<PacketInput> toRet = new LinkedBlockingQueue<>();
+    try {
+      toRet = inputQueue.get(player);
+    } catch (Exception e) {
+
+    }
+    return toRet;
   }
 
   public void sendWorldState() {
@@ -215,6 +221,7 @@ public class Server extends Application {
         gameObjectsFiltered.add(gameObject);
       }
     }
+
     PacketGameState gameState = new PacketGameState(gameObjectsFiltered, sendAllObjects.get());
     sendAllObjects.set(false);
 
