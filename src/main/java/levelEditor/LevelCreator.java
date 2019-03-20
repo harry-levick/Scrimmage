@@ -110,10 +110,6 @@ public class LevelCreator extends Application {
         getAbs(20), getAbs(17), getAbs(8), getAbs(2), ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
 
-    //Laser
-    gameObjects.put(uuid, new LaserBeam(getAbs(4), getAbs(7), uuid));
-    uuid = UUID.randomUUID();
-
     //ColouredBlocks
     gameObjects
         .put(uuid, new RedBlock(getAbs(4), getAbs(10), getAbs(1), getAbs(1), ObjectType.Bot, uuid));

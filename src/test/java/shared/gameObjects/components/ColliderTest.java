@@ -1,5 +1,6 @@
 package shared.gameObjects.components;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.UUID;
@@ -36,6 +37,13 @@ public class ColliderTest {
 
     ConcurrentLinkedHashMap<UUID, GameObject> objects = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
         .maximumWeightedCapacity(500).build();
+    a.addComponent(boxA);
+    b.addComponent(boxB);
+    c.addComponent(boxC);
+    d.addComponent(circleD);
+    e.addComponent(circleE);
+    f.addComponent(circleF);
+
     objects.put(UUID.randomUUID(), a);
     objects.put(UUID.randomUUID(), b);
     objects.put(UUID.randomUUID(), c);
@@ -81,20 +89,27 @@ public class ColliderTest {
 
   @Test
   public void raycast() {
-    assertTrue(Physics.raycast(c.getTransform().getPos().add(new Vector2(-1, -1)),
-        a.getTransform().getPos().sub(c.getTransform().getPos().add(new Vector2(-1, -1))), false)
-        != null);
+    assertTrue(Physics.raycast(Vector2.Zero(), new Vector2(12, 12), false) != null);
+  }
+
+  @Test
+  public void raycastClosest() {
+    assertTrue(
+        Physics.raycast(Vector2.Zero(), new Vector2(12, 12), false).getCollidedObject().equals(a));
+  }
+
+  @Test
+  public void raycastAll() {
+    assertEquals(4, Physics.raycastAll(Vector2.Zero(), new Vector2(12, 12), false).size(), 0);
   }
 
   @Test
   public void boxcast() {
+    assertEquals(2, Physics.boxcastAll(new Vector2(0, 0), new Vector2(4, 4), false).size(), 0);
   }
 
   @Test
   public void circlecast() {
-  }
-
-  @Test
-  public void arccast() {
+    assertEquals(2, Physics.circlecastAll(new Vector2(0, 0), 4).size(), 0);
   }
 }

@@ -20,17 +20,24 @@ import shared.physics.data.Collision;
 import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
-
+//TODO Networking
 public class LaserBeam extends GameObject {
 
-  final float TIME_BETWEEN_STATES = 1.7f;
-  final float TIME_IN_LASER = 1.1f;
-  boolean laserActive;
-  float timer;
-  BoxCollider bc;
-  Rectangle laser;
-  Colour colour;
 
+  private final float TIME_BETWEEN_STATES = 1.7f;
+  private final float TIME_IN_LASER = 1.1f;
+  private boolean laserActive;
+  private float timer;
+  private BoxCollider bc;
+  private Rectangle laser;
+  private Colour colour;
+
+  /**
+   * Creates a Laser Beam Block object in the world
+   * @param x X-Coordinate of the object
+   * @param y Y-Coordinate of the object
+   * @param uuid The unique identifier of the object
+   */
   public LaserBeam(double x, double y, UUID uuid) {
     super(x, y, 80, 80, ObjectType.Bot, uuid);
     timer = TIME_BETWEEN_STATES;
@@ -91,7 +98,7 @@ public class LaserBeam extends GameObject {
     }
   }
 
-  void initialiseLaser() {
+  private void initialiseLaser() {
     laser = new Rectangle();
     laser.setOpacity(0);
     recalculatePositions();
@@ -99,7 +106,8 @@ public class LaserBeam extends GameObject {
     root.getChildren().add(1, laser);
   }
 
-  void recalculatePositions() {
+  //For lasers that are moving and lasers that hit moving static objects
+  private void recalculatePositions() {
     laser.setX(bc.getCorners()[1].getX() + bc.getSize().getX() * 0.28f);
     laser.setY(bc.getCentre().getY());
     ArrayList<Collision> collisions = Physics.boxcastAll(new Vector2(laser.getX(), laser.getY()),

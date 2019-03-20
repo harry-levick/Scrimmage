@@ -8,7 +8,13 @@ import shared.gameObjects.GameObject;
  */
 public abstract class Component implements Serializable {
 
+  /**
+   * The gameObject the component is attached to
+   */
   protected GameObject parent;
+  /**
+   * The type of component it is; used for searching
+   */
   protected ComponentType componentType;
   private boolean isActive;
 
@@ -24,16 +30,14 @@ public abstract class Component implements Serializable {
   }
 
   /**
-   *
-   * @param state Sets the active state of the component
+   * Sets the active state of the component
    */
   public void setIsActive(boolean state) {
     isActive = state;
   }
 
   /**
-   *
-   * @return If the component is active or not
+   * If the component is active or not; inactive components are not updated
    */
   public boolean isActive() {
     return isActive;

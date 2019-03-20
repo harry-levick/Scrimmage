@@ -5,7 +5,6 @@ import shared.gameObjects.components.CircleCollider;
 import shared.gameObjects.components.Collider;
 import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.Rigidbody;
-import shared.physics.types.CollisionDirection;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
 
@@ -19,7 +18,6 @@ public class DynamicCollision {
   protected Rigidbody bodyB;
   protected Vector2 collisionNormal;
   protected Vector2 penetrationDistance;
-  protected CollisionDirection dir;
   protected float pentrationDepth;
 
   public DynamicCollision(Rigidbody bodyA, Rigidbody bodyB) {
