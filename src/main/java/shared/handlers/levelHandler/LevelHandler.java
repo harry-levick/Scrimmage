@@ -7,7 +7,6 @@ import client.main.Settings;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javafx.scene.Group;
 import server.Server;
@@ -23,11 +22,12 @@ import shared.gameObjects.weapons.Sword;
 import shared.gameObjects.weapons.Uzi;
 import shared.gameObjects.weapons.Weapon;
 import shared.util.Path;
+import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import shared.util.maths.Vector2;
 
 public class LevelHandler {
 
-  private ConcurrentSkipListMap<UUID, GameObject> gameObjects;
+  private ConcurrentLinkedHashMap<UUID, GameObject> gameObjects;
   private CopyOnWriteArrayList<GameObject> toRemove;
   private LinkedHashMap<UUID, Player> players;
   private LinkedHashMap<UUID, Bot> bots;
@@ -50,7 +50,8 @@ public class LevelHandler {
   public LevelHandler(Settings settings, Group backgroundRoot, Group gameRoot,
       Group uiRoot) {
     this.settings = settings;
-    gameObjects = new ConcurrentSkipListMap<>();
+    gameObjects = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
+        .maximumWeightedCapacity(500).build();
     toCreate = new ArrayList<>();
     toRemove = new CopyOnWriteArrayList<>();
     players = new LinkedHashMap<>();
@@ -71,7 +72,8 @@ public class LevelHandler {
 
   public LevelHandler(Settings settings, Group backgroundRoot, Group gameRoot, Server server) {
     this.settings = settings;
-    gameObjects = new ConcurrentSkipListMap<>();
+    gameObjects = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
+        .maximumWeightedCapacity(500).build();
     toRemove = new CopyOnWriteArrayList<>();
     players = new LinkedHashMap<>();
     toCreate = new ArrayList<>();
@@ -160,20 +162,24 @@ public class LevelHandler {
     gameState = map.getGameState() != null ? map.getGameState() : GameState.MAIN_MENU;
     players.forEach((key, player) -> {
       player.reset();
-      player.setHolding(new MachineGun(player.getX(), player.getY(),
-          "MachineGun@LevelHandler", player, UUID.randomUUID()));
+      /**
+       player.setHolding(new MachineGun(player.getX(), player.getY(),
+       "MachineGun@LevelHandler", player, UUID.randomUUID()));
 
-      gameObjects.put(player.getHolding().getUUID(), player.getHolding());
-      player.getHolding().initialise(gameRoot, settings);
+       gameObjects.put(player.getHolding().getUUID(), player.getHolding());
+       player.getHolding().initialise(gameRoot, settings);
+       **/
     });
 
     bots.forEach((key, bot) -> {
       bot.reset();
-      bot.setHolding(new MachineGun(bot.getX(), bot.getY(), "MachineGun@LevelHandler", bot,
-          UUID.randomUUID()));
+      /**
+       bot.setHolding(new MachineGun(bot.getX(), bot.getY(), "MachineGun@LevelHandler", bot,
+       UUID.randomUUID()));
 
-      gameObjects.put(bot.getHolding().getUUID(), bot.getHolding());
-      bot.getHolding().initialise(gameRoot, settings);
+       gameObjects.put(bot.getHolding().getUUID(), bot.getHolding());
+       bot.getHolding().initialise(gameRoot, settings);
+       **/
     });
 
     if (!isServer) {
@@ -201,14 +207,16 @@ public class LevelHandler {
    *
    * @return All Game Objects
    */
-  public ConcurrentSkipListMap<UUID, GameObject> getGameObjects() {
+  public ConcurrentLinkedHashMap<UUID, GameObject> getGameObjects() {
     clearToRemove(); // Remove every gameObjects we no longer need
     return gameObjects;
   }
 
-  public ConcurrentSkipListMap<UUID, GameObject> getGameObjectsFiltered() {
+  public ConcurrentLinkedHashMap<UUID, GameObject> getGameObjectsFiltered() {
     clearToRemove(); // Remove every gameObjects we no longer need
-    ConcurrentSkipListMap<UUID, GameObject> filtered = gameObjects.clone();
+    ConcurrentLinkedHashMap<UUID, GameObject> filtered = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
+        .maximumWeightedCapacity(500).build();
+    filtered.putAll(gameObjects);
     players.forEach((key, player) -> filtered.remove(key));
     return filtered;
   }
@@ -226,14 +234,14 @@ public class LevelHandler {
     gameObject.initialise(this.gameRoot, settings);
     this.toCreate.add(gameObject);
     if (isServer) {
-      ConcurrentSkipListMap<UUID, GameObject> temp = new ConcurrentSkipListMap<>();
+      ConcurrentLinkedHashMap<UUID, GameObject> temp = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
+          .maximumWeightedCapacity(500).build();
       temp.put(gameObject.getUUID(), gameObject);
       server.sendObjects(temp);
-      System.out.println("DIDIDIDIIDIDIDIDIDIDIID");
     }
   }
 
-  public void addGameObjects(ConcurrentSkipListMap<UUID, GameObject> gameObjectsT) {
+  public void addGameObjects(ConcurrentLinkedHashMap<UUID, GameObject> gameObjectsT) {
     gameObjectsT.forEach(((uuid, gameObject) -> {
       if (!gameObjects.containsKey(uuid)) {
         this.toCreate.add(gameObject);

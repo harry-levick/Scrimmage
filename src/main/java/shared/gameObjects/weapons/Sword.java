@@ -15,7 +15,7 @@ public class Sword extends Melee {
   private static float AIM_ANGLE_MAX = 110f;
   private int currentAngleIndex;
   private Translate translate;
-  private double attackAngleSign; // -1 if facingLeft, 1 if facingRight
+  private double attackAngleSign; // -1 if aiming Left, 1 if aiming Right
 
   /**
    * Constructor of the Sword class

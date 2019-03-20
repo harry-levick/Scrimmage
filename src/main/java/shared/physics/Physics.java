@@ -5,7 +5,6 @@ import client.main.Settings;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentSkipListMap;
 import javafx.application.Platform;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -21,41 +20,63 @@ import shared.gameObjects.weapons.Weapon;
 import shared.handlers.levelHandler.LevelHandler;
 import shared.physics.data.Collision;
 import shared.physics.data.DynamicCollision;
+import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import shared.util.maths.Vector2;
 
 /** @author fxa579 The singleton class respomsible for raycasting and physics constants/equations */
 public class Physics {
 
+  /**
+   * The base gravity constant used for speed, collisions and forces
+   */
   public static final float GRAVITY = 90f;
+  /**
+   * The constant difference in time between update frames.
+   */
   public static final float TIMESTEP = 1f / 60;
-  public static final int RAYCAST_INC = 100;
+  /**
+   * The number of increments that exist in a raycast's edge collider.
+   */
+  private static final int RAYCAST_INC = 100;
+  /**
+   * Global setting to show colliders while in game (For Debugging)
+   */
   public static boolean showColliders = false;
-  public static boolean showCasts = true;
+  /**
+   * TODO
+   */
   public static Settings settings;
   /*
-   * Order: DEFAULT, PLAYER, OBJECT, PLATFORM, PARTICLE, COLLECTABLE
+   * Order: DEFAULT, PLAYER, OBJECT, PLATFORM, PARTICLE, COLLECTABLE, LIMBS
    */
-  public static boolean[] DEFAULT = {true, true, true, true, false, false, true};
-  public static boolean[] PLAYER = {true, false, true, true, false, false, false};
-  public static boolean[] OBJECT = {true, true, true, true, false, false, true};
-  public static boolean[] PLATFORM = {true, true, true, true, false, true, true};
-  public static boolean[] PARTICLES = {false, false, false, false, false, false, false};
-  public static boolean[] COLLECTABLE = {false, false, false, true, false, false, false};
-  public static boolean[] LIMBS = {true, false, true, true, false, false, false};
+  private static boolean[] DEFAULT = {true, true, true, true, false, false, true};
+  private static boolean[] PLAYER = {true, false, true, true, false, false, false};
+  private static boolean[] OBJECT = {true, true, true, true, false, false, true};
+  private static boolean[] PLATFORM = {true, true, true, true, false, true, true};
+  private static boolean[] PARTICLES = {false, false, false, false, false, false, false};
+  private static boolean[] COLLECTABLE = {false, false, false, true, false, false, false};
+  private static boolean[] LIMBS = {true, false, true, true, false, false, false};
+  /**
+   * The collision layers ordered as specified by their int value. 2D Matrix format, used by the Collider tests.
+   */
   public static boolean[][] COLLISION_LAYERS = {DEFAULT, PLAYER, OBJECT, PLATFORM, PARTICLES,
       COLLECTABLE, LIMBS};
-  public static ConcurrentSkipListMap<UUID, GameObject> gameObjects;
+  public static ConcurrentLinkedHashMap<UUID, GameObject> gameObjects;
+  /**
+   * A concurrent map used to synchronize collision updates.
+   */
 
 
   private static ArrayList<DynamicCollision> collisions = new ArrayList<>();
 
   private Physics(Settings settings) {
-    gameObjects = new ConcurrentSkipListMap<>();
+    gameObjects = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
+        .maximumWeightedCapacity(500).build();
     this.settings = settings;
   }
 
   /**
-   * Casts a ray that interacts with colliders.
+   * Casts a ray that interacts with colliders, returning the first collider it hits.
    *
    * @param sourcePos The point to start casting the ray
    * @param lengthAndDirection The length and direction of the ray
@@ -108,7 +129,7 @@ public class Physics {
   }
 
   /**
-   * Casts a ray that interacts with colliders.
+   * Casts a ray that interacts with colliders, returning the first collider it hits, ignoring Limbs.
    *
    * @param sourcePos The point to start casting the ray
    * @param lengthAndDirection The length and direction of the ray
@@ -178,7 +199,9 @@ public class Physics {
     }
   }
 
-
+    /**
+     * Draws a raycast for debugging
+     */
   public static void drawCast(double xStart, double yStart, double xFinish, double yFinish,
       String colour) {
     Platform.runLater(
@@ -194,7 +217,9 @@ public class Physics {
         }
     );
   }
-
+    /**
+     * Draws a boxcast for debugging
+     */
   public static void drawBoxCast(Vector2 sourcePos, Vector2 size) {
     Platform.runLater(
         () -> {
@@ -206,13 +231,13 @@ public class Physics {
   }
 
   /**
-   * Casts a ray that interacts with colliders.
+   * Casts a ray that interacts with colliders, returning all colliders hit.
    *
    * @param sourcePos The point to start casting the ray
    * @param lengthAndDirection The length and direction of the ray
    * @return All colliders hit in the path, empty if nothing was hit.
    */
-  public static ArrayList<Collision> raycastAll(Vector2 sourcePos, Vector2 lengthAndDirection) {
+  public static ArrayList<Collision> raycastAll(Vector2 sourcePos, Vector2 lengthAndDirection, boolean showCast) {
     EdgeCollider castCollider = new EdgeCollider(false);
     Collision collision = null;
     ArrayList<Collision> collisions = new ArrayList<>();
@@ -221,15 +246,18 @@ public class Physics {
       castCollider.addNode(sourcePos.add(incrementVal.mult(i)));
     }
 
-    if (showCasts) {
-      Line line = new Line();
-      line.setStartX(castCollider.getNodes().get(0).getX());
-      line.setStartY(castCollider.getNodes().get(0).getY());
-      line.setEndX(castCollider.getNodes().get(castCollider.getNodes().size() - 1).getX());
-      line.setEndY(castCollider.getNodes().get(castCollider.getNodes().size() - 1).getY());
-      line.setStyle("-fx-stroke-width: 4; -fx-stroke: #324401;");
-      settings.getGameRoot().getChildren().add(line);
-    }
+    if (showCast) {
+      Platform.runLater(
+          () -> {
+            drawCast(
+                castCollider.getNodes().get(0).getX(),
+                castCollider.getNodes().get(0).getY(),
+                castCollider.getNodes().get(castCollider.getNodes().size() - 1).getX(),
+                castCollider.getNodes().get(castCollider.getNodes().size() - 1).getY(),
+                "#00ff00");
+          });
+      }
+
     for (GameObject object : gameObjects.values()) {
       if (object.getComponent(ComponentType.COLLIDER) != null) {
         collision =
@@ -369,65 +397,9 @@ public class Physics {
     return collisions;
   }
 
-  /**
-   * Creates a semi-circle collider that returns the first collision it hits
-   *
-   * @param sourcePos The centre of the circle
-   * @param radius The radius of the circle stretched from its centre
-   * @param angleOfCentre The amount to rotate the centre Vector (originally pointing right)
-   * @param angleOfArc The angle at how far the arc extends from the centre (+ and -)
-   * @return The first collider hit in the path. null if nothing was hit
-   */
-  public static Collision arccast(
-      Vector2 sourcePos, float radius, float angleOfCentre, float angleOfArc) {
-    Collision collision = null;
-    CircleCollider castCollider = new CircleCollider(sourcePos, radius);
-    for (GameObject object : gameObjects.values()) {
-      if (object.getComponent(ComponentType.COLLIDER) != null) {
-        collision =
-            new Collision(
-                object, castCollider, (Collider) object.getComponent(ComponentType.COLLIDER));
-        if (collision.isCollided()) {
-          float angle = Math.abs(collision.getNormalCollision().angle()) + angleOfCentre;
-          if (angle <= angleOfArc) {
-            return collision;
-          }
-        }
-      }
-    }
-    return null;
-  }
-
-  /**
-   * Creates a semi-circle collider that returns the first collision it hits
-   *
-   * @param sourcePos The centre of the circle
-   * @param radius The radius of the circle stretched from its centre
-   * @param angleOfCentre The amount to rotate the centre Vector (originally pointing right)
-   * @param angleOfArc The angle at how far the arc extends from the centre (+ and -)
-   * @return All colliders hit in the path, empty if nothing was hit
-   */
-  public static ArrayList<Collision> arccastAll(
-      Vector2 sourcePos, float radius, float angleOfCentre, float angleOfArc) {
-    Collision collision = null;
-    ArrayList<Collision> collisions = new ArrayList<>();
-    CircleCollider castCollider = new CircleCollider(sourcePos, radius);
-    for (GameObject object : gameObjects.values()) {
-      if (object.getComponent(ComponentType.COLLIDER) != null) {
-        collision =
-            new Collision(
-                object, castCollider, (Collider) object.getComponent(ComponentType.COLLIDER));
-        if (collision.isCollided()) {
-          float angle = Math.abs(collision.getNormalCollision().angle()) + angleOfCentre;
-          if (angle <= angleOfArc) {
-            collisions.add(collision);
-          }
-        }
-      }
-    }
-    return collisions;
-  }
-
+    /**
+     * Used by collision system to add a DynamicCollision if no duplicate existss
+     */
   public static boolean addCollision(DynamicCollision dcol) {
     for (DynamicCollision c : collisions) {
       if (c.getBodyA() == dcol.getBodyB() && c.getBodyB() == dcol.getBodyA()) {
@@ -438,7 +410,10 @@ public class Physics {
     return true;
   }
 
-  public static void processCollisions() {
+  /**
+   * Method to safely clear the collisions list.
+   */
+  public static void clearCollisions() {
     collisions.clear();
   }
 }

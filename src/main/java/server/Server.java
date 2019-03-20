@@ -19,7 +19,6 @@ import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -47,6 +46,7 @@ import shared.packets.PacketJoin;
 import shared.packets.PacketMap;
 import shared.physics.Physics;
 import shared.util.Path;
+import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import shared.util.maths.Vector2;
 
 public class Server extends Application {
@@ -173,7 +173,7 @@ public class Server extends Application {
     levelHandler.getPlayers().forEach((key, player) -> player.applyInput());
 
     levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.updateCollision());
-    Physics.processCollisions();
+    Physics.clearCollisions();
     /** Update Game Objects */
     levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.update());
     ObjectManager.update();
@@ -318,7 +318,7 @@ public class Server extends Application {
     }.start();
   }
 
-  public void sendObjects(ConcurrentSkipListMap<UUID, GameObject> gameobjects) {
+  public void sendObjects(ConcurrentLinkedHashMap<UUID, GameObject> gameobjects) {
     ByteArrayOutputStream byteArrayOutputStream = null;
     try {
       byteArrayOutputStream = new ByteArrayOutputStream();

@@ -510,7 +510,7 @@ public class Client extends Application {
           levelHandler
               .getGameObjects()
               .forEach((key, gameObject) -> gameObject.updateCollision());
-          Physics.processCollisions();
+          Physics.clearCollisions();
 
           /** Update Game Objects */
           levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.update());
