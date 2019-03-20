@@ -4,21 +4,20 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentSkipListMap;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.MapDataObject;
+import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 
 public class MapLoader {
 
   public static void saveMap(
-      ConcurrentSkipListMap<UUID, GameObject> gameObjects, MapDataObject mapDataObject,
+      ConcurrentLinkedHashMap<UUID, GameObject> gameObjects, MapDataObject mapDataObject,
       String path) {
     try {
       FileOutputStream fos = new FileOutputStream(path);
@@ -32,17 +31,20 @@ public class MapLoader {
     }
   }
 
-  public static ConcurrentSkipListMap<UUID, GameObject> loadMap(String path) {
+  public static ConcurrentLinkedHashMap<UUID, GameObject> loadMap(String path) {
     try {
       FileInputStream fis = new FileInputStream(path);
       ObjectInputStream ois = new ObjectInputStream(fis);
-      return (ConcurrentSkipListMap<UUID, GameObject>) ois.readObject();
+      return (ConcurrentLinkedHashMap<UUID, GameObject>) ois.readObject();
     } catch (FileNotFoundException e) {
-      return new ConcurrentSkipListMap<>();
+      return new ConcurrentLinkedHashMap.Builder<UUID, GameObject>().maximumWeightedCapacity(500)
+          .build();
     } catch (IOException e) {
-      return new ConcurrentSkipListMap<>();
+      return new ConcurrentLinkedHashMap.Builder<UUID, GameObject>().maximumWeightedCapacity(500)
+          .build();
     } catch (ClassNotFoundException e) {
-      return new ConcurrentSkipListMap<>();
+      return new ConcurrentLinkedHashMap.Builder<UUID, GameObject>().maximumWeightedCapacity(500)
+          .build();
     }
   }
 
@@ -59,24 +61,6 @@ public class MapLoader {
     for (File file : Objects.requireNonNull(list)) {
       Map tempMap = new Map(file.getName(), file.getPath());
       maps.add(tempMap);
-    }
-    return maps;
-  }
-
-  public static ConcurrentSkipListMap<String, Map> getMenuMaps(String path) {
-    File dir = new File(path);
-    File files[] =
-        dir.listFiles(
-            new FilenameFilter() {
-              @Override
-              public boolean accept(File dir, String name) {
-                return name.endsWith(".map");
-              }
-            });
-    ConcurrentSkipListMap<String, Map> maps = new ConcurrentSkipListMap<>();
-    for (File file : Objects.requireNonNull(files)) {
-      Map tempMap = new Map(file.getName(), file.getPath());
-      maps.put(file.getName(), tempMap);
     }
     return maps;
   }

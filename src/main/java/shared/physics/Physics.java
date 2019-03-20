@@ -4,7 +4,6 @@ import client.main.Settings;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentSkipListMap;
 import javafx.application.Platform;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
@@ -19,6 +18,7 @@ import shared.gameObjects.players.Limb;
 import shared.gameObjects.weapons.Weapon;
 import shared.physics.data.Collision;
 import shared.physics.data.DynamicCollision;
+import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import shared.util.maths.Vector2;
 
 /** @author fxa579 The singleton class respomsible for raycasting and physics constants/equations */
@@ -42,13 +42,14 @@ public class Physics {
   public static boolean[] LIMBS = {true, false, true, true, false, false, false};
   public static boolean[][] COLLISION_LAYERS = {DEFAULT, PLAYER, OBJECT, PLATFORM, PARTICLES,
       COLLECTABLE, LIMBS};
-  public static ConcurrentSkipListMap<UUID, GameObject> gameObjects;
+  public static ConcurrentLinkedHashMap<UUID, GameObject> gameObjects;
 
 
   private static ArrayList<DynamicCollision> collisions = new ArrayList<>();
 
   private Physics(Settings settings) {
-    gameObjects = new ConcurrentSkipListMap<>();
+    gameObjects = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
+        .maximumWeightedCapacity(500).build();
     this.settings = settings;
   }
 
