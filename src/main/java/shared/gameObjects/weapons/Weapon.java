@@ -1,6 +1,8 @@
 package shared.gameObjects.weapons;
 
+import client.main.Settings;
 import java.util.UUID;
+import javafx.scene.Group;
 import javafx.scene.transform.Rotate;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
@@ -142,6 +144,11 @@ public abstract class Weapon extends GameObject {
     }
 
     this.currentCooldown = 0;
+  }
+
+  public void initialise(Group root, Settings settings) {
+    super.initialise(root, settings);
+    this.rotate = new Rotate();
   }
 
   /**

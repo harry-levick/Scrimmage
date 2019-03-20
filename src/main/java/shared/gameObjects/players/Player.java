@@ -58,6 +58,7 @@ public class Player extends GameObject implements Destructable {
   private Limb armRight;
   private Limb handLeft;
   private Limb handRight;
+  private int animationTimer = 0; //This is used to synchronise the animations for each limb.
 
   private CircleCollider cc;
 
@@ -113,8 +114,8 @@ public class Player extends GameObject implements Destructable {
     head = new Head(this, settings.getLevelHandler());
     armLeft = new Arm(true, this, settings.getLevelHandler());
     armRight = new Arm(false, this, settings.getLevelHandler());
-    handLeft = new Hand(true, armLeft, settings.getLevelHandler());
-    handRight = new Hand(false, armRight, settings.getLevelHandler());
+    handLeft = new Hand(true, armLeft, this, settings.getLevelHandler());
+    handRight = new Hand(false, armRight,this, settings.getLevelHandler());
     addChild(legLeft);
     addChild(legRight);
     addChild(body);
@@ -125,12 +126,27 @@ public class Player extends GameObject implements Destructable {
     armLeft.addChild(handLeft);
 
   }
+  
+  private void updateAnimationTimer() {
+    if(this.behaviour != Behaviour.IDLE) {
+      animationTimer++;
+    }
+    else{
+      animationTimer = 0;
+    }
+    
+  }
+  
+  public int getAnimationTimer() {
+    return animationTimer;
+  }
 
   @Override
   public void update() {
     checkGrounded(); // Checks if the player is grounded
     badWeapon();
     pointLeft = mouseX < this.getX();
+    updateAnimationTimer();
     if (deattach) {
       for (int i = 0; i < 6; i++) {
         Limb test = (Limb) children.get(i);
@@ -161,6 +177,9 @@ public class Player extends GameObject implements Destructable {
   }
 
   public void applyInput() {
+    if (grounded) {
+      jumped = false;
+    }
     if (rightKey) {
       rb.moveX(speed);
       behaviour = Behaviour.WALK_RIGHT;
@@ -181,12 +200,14 @@ public class Player extends GameObject implements Destructable {
     if (jumped) {
       behaviour = Behaviour.JUMP;
     }
+
     if (grounded) {
       jumped = false;
     }
     if (throwHoldingKey) {
       this.throwHolding();
     }
+
     if (click && holding != null) {
       holding.fire(mouseX, mouseY);
     }
@@ -332,6 +353,10 @@ public class Player extends GameObject implements Destructable {
 
   public void setHandLeftY(double pos) {
     this.handLeft.setY(pos);
+  }
+
+  public boolean getJumped() {
+    return this.jumped;
   }
 
   public boolean isAimingLeft() {

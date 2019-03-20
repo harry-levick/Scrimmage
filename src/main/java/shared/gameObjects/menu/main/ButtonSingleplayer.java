@@ -9,7 +9,9 @@ import server.ai.Bot;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.menu.ButtonObject;
+import shared.gameObjects.weapons.Handgun;
 import shared.gameObjects.weapons.MachineGun;
+import shared.gameObjects.weapons.Uzi;
 import shared.handlers.levelHandler.Map;
 import shared.util.Path;
 
@@ -45,16 +47,11 @@ public class ButtonSingleplayer extends ButtonObject {
       settings.getLevelHandler().getGameObjects().put(botPlayer.getUUID(), botPlayer);
       botPlayer.startThread();
     }
+
     settings.getLevelHandler().changeMap(
         new Map("map1", Path.convert("src/main/resources/maps/map1.map")),
         true, false);
-    settings.getLevelHandler().getPlayers().forEach((uuid, player) -> {
-      player.setHolding(
-          new MachineGun(500, 600, "MachineGun@ButtonSinglePlayer", player, UUID.randomUUID()));
-      player.getHolding().initialise(settings.getGameRoot(), settings);
-      settings.getLevelHandler().getGameObjects()
-          .put(player.getHolding().getUUID(), player.getHolding());
-    });
+
     Client.singleplayerGame = true;
     //Client.timer.schedule(Client.task, 30000L);
 

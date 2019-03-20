@@ -3,17 +3,18 @@ package shared.handlers.levelHandler;
 import static org.junit.Assert.assertEquals;
 
 import java.util.UUID;
-import java.util.concurrent.ConcurrentSkipListMap;
 import org.junit.Before;
 import org.junit.Test;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.MapDataObject;
 import shared.gameObjects.TestObject;
 import shared.gameObjects.Utils.ObjectType;
+import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 
 public class MapLoaderTest {
 
-  ConcurrentSkipListMap<UUID, GameObject> gameObjects = new ConcurrentSkipListMap<>();
+  ConcurrentLinkedHashMap<UUID, GameObject> gameObjects = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
+      .maximumWeightedCapacity(500).build();
   private TestObject g1 = new TestObject(6, 7, ObjectType.Bot, UUID.randomUUID());
   private TestObject g2 = new TestObject(934, 12312, ObjectType.Bot, UUID.randomUUID());
   private TestObject g3 = new TestObject(567560, 12, ObjectType.Player, UUID.randomUUID());
@@ -42,7 +43,7 @@ public class MapLoaderTest {
   @Test
   public void equalAfterLoadAndSave() {
     map.saveMap(gameObjects, mapdata, path);
-    ConcurrentSkipListMap<UUID, GameObject> gameObjectsTest = map.loadMap(path);
+    ConcurrentLinkedHashMap<UUID, GameObject> gameObjectsTest = map.loadMap(path);
     int i = 0;
     while (gameObjectsTest.size() > i) {
       assertEquals(gameObjectsTest.get(i).getX(), gameObjects.get(i).getX(), 0.0001);
