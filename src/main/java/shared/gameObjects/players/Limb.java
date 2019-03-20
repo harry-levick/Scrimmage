@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.transform.Rotate;
+import javafx.scene.image.ImageView;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
@@ -13,6 +14,7 @@ import shared.gameObjects.components.Rigidbody;
 import shared.handlers.levelHandler.LevelHandler;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.RigidbodyType;
+
 
 public abstract class Limb extends GameObject {
 
@@ -31,13 +33,17 @@ public abstract class Limb extends GameObject {
   protected double yLeft;
   protected double xRight;
   protected double yRight;
-
+  protected Player player;
+  
   protected Rigidbody rb;
   protected BoxCollider bc;
 
   protected transient LevelHandler levelHandler;
 
-
+  protected int resetOffsetX = 0;
+  
+  
+  
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
    * ensure actions are calculated the same
@@ -45,7 +51,7 @@ public abstract class Limb extends GameObject {
    * @param id Unique Identifier of every game object
    */
   public Limb(double xLeft, double yLeft, double xRight, double yRight, double sizeX, double sizeY,
-      ObjectType id, Boolean isLeft, GameObject parent, double pivotX, double pivotY,
+      ObjectType id, Boolean isLeft, GameObject parent, Player player, double pivotX, double pivotY,
       LevelHandler levelHandler) {
     super(0, 0, sizeX, sizeY, id, UUID.randomUUID());
     this.limbAttached = true;
@@ -56,6 +62,7 @@ public abstract class Limb extends GameObject {
     this.xRight = xRight;
     this.yRight = yRight;
     this.parent = parent;
+    this.player = player;
     this.rotate = new Rotate();
     this.behaviour = Behaviour.IDLE;
     this.actions = new HashMap<>();
@@ -107,6 +114,7 @@ public abstract class Limb extends GameObject {
   @Override
   public void update() {
     super.update();
+    getBehaviour();
     if (limbAttached) {
       setRelativePosition();
       if (!lastAttachedCheck) {
@@ -118,16 +126,40 @@ public abstract class Limb extends GameObject {
       }
     }
     imageView.getTransforms().remove(rotate);
+    imageView.setX(imageView.getX()+resetOffsetX);
+    resetOffsetX = 0;
     lastAttachedCheck = limbAttached;
   }
 
   public void reset() {
     removeRender();
   }
+  
+  private void getBehaviour() {
+    this.behaviour = this.player.behaviour;
 
+  }
+
+  protected abstract void rotateAnimate();
+  
+  protected void flipImageView(ImageView iv, String direction) {
+    if(direction.equals("WALK_LEFT")) {
+      iv.setScaleX(-1);
+    }
+    else if(direction.equals("WALK_RIGHT")){
+      iv.setScaleX(1);
+    }
+  }
+  
   @Override
   public void render() {
     super.render();
+    
+    //Do all the rotations here.
+    rotateAnimate();
+    
+    // Flip the imageView depending on the direciton of travel 
+    flipImageView(imageView,this.behaviour.toString());
   }
 
   public boolean isLimbAttached() {

@@ -8,5 +8,6 @@ public enum ObjectType {
   Bullet,
   Background,
   Button,
-  Limb
+  Limb,
+  Powerup
 }
