@@ -96,6 +96,7 @@ public class LevelHandler {
       Client.closeSettingsOverlay();
     }
     generateLevel(backgroundRoot, gameRoot, moveToSpawns, isServer);
+
     if (!isServer) {
       uiRoot.getChildren().clear();
       switch (gameState) {
@@ -160,7 +161,23 @@ public class LevelHandler {
     gameObjects.putAll(players);
     gameObjects.forEach((key, gameObject) -> gameObject.setSettings(settings));
     gameState = map.getGameState();
-    players.forEach((key, player) -> player.reset());
+    players.forEach((key, player) -> {
+      player.reset();
+      player.setHolding(new MachineGun(player.getX(), player.getY(),
+          "MachineGun@LevelHandler", player, UUID.randomUUID()));
+
+      gameObjects.put(player.getHolding().getUUID(), player.getHolding());
+      player.getHolding().initialise(gameRoot, settings);
+    });
+
+    bots.forEach((key, bot) -> {
+      bot.reset();
+      bot.setHolding(new MachineGun(bot.getX(), bot.getY(), "MachineGun@LevelHandler", bot,
+          UUID.randomUUID()));
+
+      gameObjects.put(bot.getHolding().getUUID(), bot.getHolding());
+      bot.getHolding().initialise(gameRoot, settings);
+    });
 
     if (!isServer) {
       musicPlayer.stopMusic();

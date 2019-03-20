@@ -1,5 +1,6 @@
 package shared.physics;
 
+import client.main.Client;
 import client.main.Settings;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -16,6 +17,7 @@ import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.EdgeCollider;
 import shared.gameObjects.players.Limb;
 import shared.gameObjects.weapons.Weapon;
+import shared.handlers.levelHandler.LevelHandler;
 import shared.physics.data.Collision;
 import shared.physics.data.DynamicCollision;
 import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
@@ -189,7 +191,7 @@ public class Physics {
           line.setEndY(yFinish);
 
           line.setStyle(String.format("-fx-stroke-width: 4; -fx-stroke: %s;", colour));
-          settings.getGameRoot().getChildren().add(line);
+          Client.levelHandler.getGameRoot().getChildren().add(line);
         }
     );
   }
