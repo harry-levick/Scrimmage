@@ -55,7 +55,6 @@ public class ServerReceiver implements Runnable {
           }
       );
 
-      server.getSendAllObjects().set(true);
       System.out.println("test1");
       /** Main Loop */
       while (true) {
