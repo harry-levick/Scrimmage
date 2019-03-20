@@ -11,6 +11,7 @@ import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
 import shared.physics.Physics;
+import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import shared.util.maths.Vector2;
 
 public class GameObjectTest {
@@ -26,7 +27,8 @@ public class GameObjectTest {
     object1.addComponent(new Rigidbody(0, object1));
     object2.addComponent(new Rigidbody(0, object2));
 
-    ConcurrentSkipListMap<UUID, GameObject> objects = new ConcurrentSkipListMap<>();
+    ConcurrentLinkedHashMap<UUID, GameObject> objects = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
+        .maximumWeightedCapacity(500).build();
     objects.put(UUID.randomUUID(), object2);
     Physics.gameObjects = objects;
   }
