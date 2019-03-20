@@ -146,8 +146,8 @@ public class Player extends GameObject implements Destructable {
     head = new Head(this, settings.getLevelHandler());
     armLeft = new Arm(true, this, settings.getLevelHandler());
     armRight = new Arm(false, this, settings.getLevelHandler());
-    handLeft = new Hand(true, armLeft, settings.getLevelHandler());
-    handRight = new Hand(false, armRight, settings.getLevelHandler());
+    handLeft = new Hand(true, armLeft, this, settings.getLevelHandler());
+    handRight = new Hand(false, armRight,this, settings.getLevelHandler());
     addChild(legLeft);
     addChild(legRight);
     addChild(body);
@@ -158,7 +158,7 @@ public class Player extends GameObject implements Destructable {
     armLeft.addChild(handLeft);
 
   }
-  
+
   private void updateAnimationTimer() {
     if(this.behaviour != Behaviour.IDLE) {
       animationTimer++;
@@ -166,9 +166,9 @@ public class Player extends GameObject implements Destructable {
     else{
       animationTimer = 0;
     }
-    
+
   }
-  
+
   public int getAnimationTimer() {
     return animationTimer;
   }

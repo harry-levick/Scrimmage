@@ -48,7 +48,7 @@ public abstract class Limb extends GameObject {
   protected double xRight;
   protected double yRight;
   protected Player player;
-  
+
   protected Rigidbody rb;
   protected BoxCollider bc;
 
@@ -145,14 +145,14 @@ public abstract class Limb extends GameObject {
   public void reset() {
     removeRender();
   }
-  
+
   private void getBehaviour() {
     this.behaviour = this.player.behaviour;
 
   }
 
   protected abstract void rotateAnimate();
-  
+
   protected void flipImageView(ImageView iv, String direction) {
     if(direction.equals("WALK_LEFT")) {
       iv.setScaleX(-1);
@@ -161,15 +161,15 @@ public abstract class Limb extends GameObject {
       iv.setScaleX(1);
     }
   }
-  
+
   @Override
   public void render() {
     super.render();
-    
+
     //Do all the rotations here.
     rotateAnimate();
-    
-    // Flip the imageView depending on the direciton of travel 
+
+    // Flip the imageView depending on the direciton of travel
     flipImageView(imageView,this.behaviour.toString());
   }
 
@@ -217,4 +217,3 @@ public abstract class Limb extends GameObject {
     return yRight;
   }
 }
-
