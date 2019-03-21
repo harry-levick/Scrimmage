@@ -304,6 +304,23 @@ public class LevelCreator extends Application {
             getAbs(37), getAbs(13), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
     uuid = UUID.randomUUID();
 
+    //weapons
+//    // Add a spawn MachineGun
+//    Weapon spawnGun = new MachineGun(200, 350, "MachineGun.spawnGun@LevelHandler.addClientPlayer",
+//        null, UUID.randomUUID());
+//    gameObjects.put(spawnGun.getUUID(), spawnGun);
+//
+//    // Add a spawn Sword
+//    Weapon spawnSword = new Sword(1300, 200, "Sword.spawnGun@LevelHandler.addClientPlayer", null,
+//        UUID.randomUUID());
+//    gameObjects.put(spawnSword.getUUID(), spawnSword);
+//
+//    // Add a spawn Uzi
+//    Weapon spawnUzi = new Uzi(330, 350, "Uzi.spawnGun@LevelHandler.addClientPlayer", null,
+//        UUID.randomUUID());
+//    gameObjects.put(spawnUzi.getUUID(), spawnUzi);
+
+
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "map1" + ".map");
     mapDataObject.setBackground(new Background2(UUID.randomUUID()));
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "map2" + ".map");
