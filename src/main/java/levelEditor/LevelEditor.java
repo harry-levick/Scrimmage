@@ -63,6 +63,7 @@ import shared.gameObjects.objects.utility.GreenBlock;
 import shared.gameObjects.objects.utility.RedBlock;
 import shared.gameObjects.objects.utility.YellowBlock;
 import shared.gameObjects.weapons.Handgun;
+import shared.gameObjects.weapons.WeaponSpawner;
 import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.MapLoader;
 import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
@@ -128,6 +129,7 @@ public class LevelEditor extends Application {
     objectMap.put(OBJECT_TYPES.GREENB, new GameObjectTuple("Green Block", 1, 1));
     objectMap.put(OBJECT_TYPES.YELLOWB, new GameObjectTuple("Yellow Block", 1, 1));
     objectMap.put(OBJECT_TYPES.LASER, new GameObjectTuple("Laser", 2, 2));
+    objectMap.put(OBJECT_TYPES.W_SPAWNER, new GameObjectTuple("Weapon Spawner", 1, 1));
   }
 
   private void scenePrimaryClick(
@@ -405,6 +407,16 @@ public class LevelEditor extends Application {
               new LaserBeam(
                   getGridX(event.getX()),
                   getGridY(event.getY()),
+                  uuid
+              );
+          break;
+        case W_SPAWNER:
+          temp =
+              new WeaponSpawner(
+                  getGridX(event.getX()),
+                  getGridY(event.getY()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getX()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getY()),
                   uuid
               );
           break;
@@ -797,6 +809,7 @@ public class LevelEditor extends Application {
     GREENB,
     YELLOWB,
     LASER,
+    W_SPAWNER,
   }
 }
 
