@@ -11,7 +11,7 @@ import shared.util.Path;
 import shared.util.maths.Vector2;
 
 /**
- * A gun of type Machine Gun
+ * Class of Machine Gun
  */
 public class MachineGun extends Gun {
 
@@ -19,6 +19,15 @@ public class MachineGun extends Gun {
   private static String audioPath = "audio/sound-effects/laser_gun.wav"; // path to Machine Gun sfx
   private static double sizeX = 84, sizeY = 35;
 
+  /**
+   * Default Constructor of a machine gun
+   *
+   * @param x X position of the gun
+   * @param y Y position of the gun
+   * @param name Name of the gun
+   * @param holder The player holding this gun
+   * @param uuid UUID of this gun
+   */
   public MachineGun(double x, double y, String name, Player holder, UUID uuid) {
 
     super(
@@ -39,6 +48,11 @@ public class MachineGun extends Gun {
 
   }
 
+  /**
+   * Constructor for AI
+   *
+   * @param that A copy of this gun with different UUID
+   */
   public MachineGun(MachineGun that) {
     this(that.getX(), that.getY(), that.name, that.holder, UUID.randomUUID());
   }
