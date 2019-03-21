@@ -34,13 +34,13 @@ public class Handgun extends Gun {
         name,
         30, // ammo
         50, // fireRate
+        15, // pivotX
+        40, // pivotY
         holder,
         false, // fullAutoFire
         true, // singleHanded
         uuid);
 
-    rotate.setPivotX(15);
-    rotate.setPivotY(40);
   }
 
   public Handgun(Handgun that) {

@@ -77,6 +77,10 @@ public abstract class Weapon extends GameObject {
    * pivot(y) = 10
    */
   protected transient Rotate rotate;
+  /** Pivot x */
+  protected transient double pivotX;
+  /** Pivot y */
+  protected transient double pivotY;
 
   // variables for when the holder is null
   private BoxCollider bcTrig;
@@ -97,6 +101,8 @@ public abstract class Weapon extends GameObject {
    * @param isMelee True if this weapon is a melee
    * @param ammo Ammo of this weapon (> 0)
    * @param fireRate FireRate of this weapon
+   * @param pivotX Rotation pivot x
+   * @param pivotY Rotation pivot y
    * @param holder Player who holds this weapon
    * @param uuid UUID of this weapon
    */
@@ -112,6 +118,8 @@ public abstract class Weapon extends GameObject {
       boolean isMelee,
       int ammo,
       int fireRate,
+      double pivotX,
+      double pivotY,
       Player holder,
       UUID uuid) {
     super(x, y, sizeX, sizeY, id, uuid);
@@ -122,9 +130,13 @@ public abstract class Weapon extends GameObject {
     this.startedThrowing = false;
     setAmmo(ammo);
     setFireRate(fireRate);
+    this.pivotX = pivotX;
+    this.pivotY = pivotY;
     this.holder = holder;
     holderHandPos = new double[]{};
     this.rotate = new Rotate();
+    this.rotate.setPivotX(this.pivotX);
+    this.rotate.setPivotY(this.pivotY);
 
     if (holder == null) {
       // add collider and rigidbody
@@ -149,6 +161,9 @@ public abstract class Weapon extends GameObject {
   public void initialise(Group root, Settings settings) {
     super.initialise(root, settings);
     this.rotate = new Rotate();
+    this.rotate.setPivotX(this.pivotX);
+    this.rotate.setPivotY(this.pivotY);
+    imageView.getTransforms().add(rotate);
   }
 
   /**

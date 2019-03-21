@@ -38,6 +38,8 @@ public class Punch extends Melee {
         name,
         -1,
         60,
+        0, // pivotX
+        0, // pivotY
         holder,
         range,
         1,
