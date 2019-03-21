@@ -1,7 +1,6 @@
 package shared.gameObjects.weapons;
 
 import java.util.UUID;
-import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.players.Player;
