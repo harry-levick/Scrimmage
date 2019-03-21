@@ -7,7 +7,12 @@ import java.io.File;
  */
 public class Path {
 
-  private static String parse(String... args) {
+  /**
+   * Parses a string array into a valid filepath for the user's system
+   * @param args String array of folder names
+   * @return String representing valid filepath
+   */
+  public static String parse(String... args) {
     String temp = "";
     for (int i = 0; i < args.length - 1; i++) {
       temp += args[i] + File.separator;

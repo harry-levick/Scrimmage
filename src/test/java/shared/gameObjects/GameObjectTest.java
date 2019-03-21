@@ -9,8 +9,14 @@ import org.junit.Before;
 import org.junit.Test;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
+import shared.gameObjects.components.Collider;
+import shared.gameObjects.components.Component;
+import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.Rigidbody;
+import shared.gameObjects.components.behaviours.ObjectShake;
+import shared.gameObjects.components.behaviours.blockBehaviours.MovingPlatform;
 import shared.physics.Physics;
+import shared.physics.types.ColliderLayer;
 import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import shared.util.maths.Vector2;
 
@@ -54,7 +60,7 @@ public class GameObjectTest {
     object1.update();
     object2.update();
     object1.updateCollision();
-    object1.getTransform().translate(new Vector2(600, 600));
+    ((Collider) object1.getComponent(ComponentType.COLLIDER)).setLayer(ColliderLayer.PARTICLE);
     object1.update();
     object1.update();
     object1.updateCollision();
@@ -63,8 +69,14 @@ public class GameObjectTest {
   }
 
   @Test
-  public void getComponent() {}
+  public void getComponent() {
+    Component comp = new ObjectShake(object1);
+    object1.addComponent(comp);
+    assertTrue(object1.getComponent(ComponentType.BEHAVIOUR).equals(comp));
+  }
 
   @Test
-  public void getComponents() {}
+  public void getComponents() {
+    assertEquals(1, object1.getComponents(ComponentType.COLLIDER).size());
+  }
 }

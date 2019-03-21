@@ -42,16 +42,13 @@ public class TestObject extends GameObject {
   @Override
   public void OnCollisionEnter(Collision col) {
     test = 1;
-    System.out.println("Enter");
   }
   @Override
   public void OnCollisionStay(Collision col) {
     testStay++;
-    System.out.println("Stay");
   }
   @Override
   public void OnCollisionExit(Collision col) {
     test = 2;
-    System.out.println("Exit");
   }
 }

@@ -64,8 +64,14 @@ public class Server extends Application {
    */
   public static Settings settings;
   private static Group gameRoot;
-  private final AtomicInteger playerCount = new AtomicInteger(0);
-  private final AtomicInteger readyCount = new AtomicInteger(0);
+  /**
+   * The number of players connected
+   */
+  public final AtomicInteger playerCount = new AtomicInteger(0);
+  /**
+   * The numbers of players that are ready to play
+   */
+  public final AtomicInteger readyCount = new AtomicInteger(0);
   private final AtomicBoolean running = new AtomicBoolean(false);
   private final AtomicBoolean sendAllObjects = new AtomicBoolean(false);
   private final AtomicBoolean gameOver = new AtomicBoolean(false);
@@ -77,7 +83,10 @@ public class Server extends Application {
   private final int maxPlayers = 4;
   private final int serverUpdateRate = 3;
   private final String gameTitle = "SERVER";
-  private ServerState serverState;
+  /**
+   * Current game state of the server
+   */
+  public ServerState serverState;
   private ArrayList<InetAddress> connectedList = new ArrayList<>();
   private List connected = Collections.synchronizedList(connectedList);
   private String threadName;
@@ -226,7 +235,8 @@ public class Server extends Application {
     inputQueue.put(player, new LinkedBlockingQueue<PacketInput>());
   }
 
-  private BlockingQueue<PacketInput> getQueue(Player player) {
+
+  public BlockingQueue<PacketInput> getQueue(Player player) {
     BlockingQueue<PacketInput> toRet = new LinkedBlockingQueue<>();
     try {
       toRet = inputQueue.get(player);
@@ -402,7 +412,13 @@ public class Server extends Application {
 
   //Rendering; mostly for Debugging
 
-  private Player addPlayer(PacketJoin joinPacket, InetAddress address) {
+  /**
+   * Adds a player to the server and renders them
+   * @param joinPacket Packet of data responsible for join details
+   * @param address IP address of the player
+   * @return The player object
+   */
+  public Player addPlayer(PacketJoin joinPacket, InetAddress address) {
     Player player = new Player(joinPacket.getX(), joinPacket.getY(), joinPacket.getClientID());
     levelHandler.addPlayer(player, gameRoot);
     playerCount.getAndIncrement();
