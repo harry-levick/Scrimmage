@@ -3,7 +3,6 @@ package shared.gameObjects.weapons;
 import client.main.Settings;
 import java.util.UUID;
 import javafx.scene.Group;
-import javafx.scene.transform.Rotate;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.players.Player;
 import shared.util.maths.Vector2;
@@ -18,6 +17,11 @@ public abstract class Gun extends Weapon {
 
   /** True if this gun is full auto fire */
   protected boolean fullAutoFire;
+
+  /**
+   * Rotation angle of the Gun
+   */
+  private double angle;
 
   /**
    * Constructor of the Gun class
@@ -56,6 +60,32 @@ public abstract class Gun extends Weapon {
 
     this.fullAutoFire = fullAutoFire;
     this.singleHanded = singleHanded;
+    this.angle = 0;
+  }
+
+  public void initialise(Group root, Settings settings) {
+    super.initialise(root, settings);
+    this.angle = 0;
+  }
+
+  /**
+   * Contains the state of the object for sending over server Only contains items that need sending
+   * separate by commas
+   *
+   * @return State of object
+   */
+  @Override
+  public String getState() {
+    return objectUUID + ";" + id + ";" + (float) getX() + ";" + (float) getY() + ";"
+        + (float) angle;
+  }
+
+  @Override
+  public void setState(String data, Boolean snap) {
+    String[] unpackedData = data.split(";");
+    setX(Double.parseDouble(unpackedData[2]));
+    setY(Double.parseDouble(unpackedData[3]));
+    this.angle = Double.parseDouble(unpackedData[4]);
   }
 
   public abstract double getForeGripX();
@@ -72,17 +102,9 @@ public abstract class Gun extends Weapon {
   public void update() {
     deductCooldown();
     super.update();
-  }
-
-  @Override
-  public void render() {
-    super.render();
-
     if (startedThrowing || holder == null) {
       return;
     }
-
-    imageView.getTransforms().clear();
 
     double mouseX = holder.mouseX;
     double mouseY = holder.mouseY;
@@ -90,7 +112,7 @@ public abstract class Gun extends Weapon {
     Vector2 gripV = new Vector2((float) this.getGripX(), (float) this.getGripY());
     Vector2 mouseSubGrip = mouseV.sub(gripV);
     angleRadian = mouseSubGrip.normalize().angleBetween(Vector2.Zero());  // radian
-    double angle = angleRadian * 180 / PI;  // degree
+    angle = angleRadian * 180 / PI;  // degree
 
     // Change the facing of the player when aiming the other way
     double angleHorizontal;  // degree
@@ -113,28 +135,35 @@ public abstract class Gun extends Weapon {
         angle = angleHorizontal * (mouseY > this.getGripY() ? 1 : -1);
       }
     }
-
     angleRadian = angle * PI / 180;
+  }
 
-    // Rotate and translate the image
-    if (holder.isAimingLeft()) {
-      imageView.setScaleX(-1);
-      rotate.setAngle(-angle);
-      imageView.getTransforms().add(rotate);
-      imageView.setTranslateX(this.getGripFlipX());
-      imageView.setTranslateY(this.getGripFlipY());
+  @Override
+  public void render() {
+    super.render();
+    if (!(startedThrowing || holder == null)) {
+      imageView.getTransforms().clear();
+      // Rotate and translate the image
+      if (holder.isAimingLeft()) {
+        imageView.setScaleX(-1);
+        rotate.setAngle(-angle);
+        imageView.getTransforms().add(rotate);
+        imageView.setTranslateX(this.getGripFlipX());
+        imageView.setTranslateY(this.getGripFlipY());
 
-      holder.setHandLeftX(this.getForeGripFlipX());
-      holder.setHandLeftY(this.getForeGripFlipY());
-    } else {
-      imageView.setScaleX(1);
-      rotate.setAngle(angle);
-      imageView.getTransforms().add(rotate);
-      imageView.setTranslateX(this.getGripX());
-      imageView.setTranslateY(this.getGripY());
+        //holder.setHandLeftX(this.getForeGripFlipX());
+        //holder.setHandLeftY(this.getForeGripFlipY());
+      } else {
+        imageView.setScaleX(1);
+        rotate.setAngle(angle);
+        imageView.getTransforms().add(rotate);
+        imageView.setTranslateX(this.getGripX());
+        imageView.setTranslateY(this.getGripY());
 
-      holder.setHandRightX(this.getForeGripX());
-      holder.setHandRightY(this.getForeGripY());
+        //holder.setHandRightX(this.getForeGripX());
+        // holder.setHandRightY(this.getForeGripY());
+      }
+
     }
   }
 
