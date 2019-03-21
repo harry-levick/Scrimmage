@@ -7,7 +7,9 @@ import javafx.scene.transform.Rotate;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
+import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.Rigidbody;
+import shared.gameObjects.players.Limb;
 import shared.gameObjects.players.Player;
 import shared.physics.data.AngularData;
 import shared.physics.data.Collision;
@@ -191,7 +193,7 @@ public abstract class Weapon extends GameObject {
     super.update();
     if (startedThrowing) {
       if (0 < getX() && getX() < 1920 && 0 < getY() && getY() < 1080) {
-        rb.move(throwVector.mult(15f));
+        rb.move(throwVector.mult(8f));
       }
       else {
         settings.getLevelHandler().removeGameObject(this);
@@ -210,17 +212,27 @@ public abstract class Weapon extends GameObject {
    */
   public void startThrowing() {
     holder.usePunch();
-    float radius = this.getTransform().getSize().getX() / 2;
-    this.bcCol = new BoxCollider(this, ColliderLayer.DEFAULT, false);
+    double playerRadius = 55 + 65; // Player.sizeY / 2 + bias
+    Vector2 bodyV = ((BoxCollider) holder.getHead().getComponent(ComponentType.COLLIDER)).getCentre();
+
+    double startX     = bodyV.getX() + playerRadius * Math.cos(-angleRadian);
+    double startY     = bodyV.getY() - playerRadius * Math.sin(-angleRadian);
+    double startFlipX = bodyV.getX() - playerRadius * Math.cos(angleRadian);
+    double startFlipY = bodyV.getY() - playerRadius * Math.sin(angleRadian);
+
+    this.setX(holder.isPointingLeft()? startFlipX : startX);
+    this.setY(holder.isPointingLeft()? startFlipY-15 : startY-15);
+
     this.rb = new Rigidbody(
         RigidbodyType.DYNAMIC,
-        1f,
-        1f,
-        1f,
+        0.1f,
+        0.1f,
+        0.1f,
         new MaterialProperty(0.1f, 1, 1),
         new AngularData(0, 0, 0, 0),
         this); // TODO FIX
-    addComponent(bcCol);
+    this.bcCol.setLayer(ColliderLayer.DEFAULT);
+
     addComponent(rb);
     this.throwVector = getDeltaThrowVecNorm();
     this.startedThrowing = true;
@@ -291,7 +303,29 @@ public abstract class Weapon extends GameObject {
    * and set active to false
    */
   public void destroyWeapon() {
+    System.out.println("Destroying");
     settings.getLevelHandler().removeGameObject(this);
+  }
+
+  // Only handle collision when throwing weapon
+  @Override
+  public void OnCollisionEnter(Collision col) {
+    // Leave if this gun is a spawn gun
+    if (!startedThrowing) return;
+
+    GameObject g = col.getCollidedObject();
+    if (g instanceof Limb) {
+      System.out.println("is limb");
+      return;
+    }
+    System.out.println("OnCollisionEnter g="+g);
+
+    if (g.getId() == ObjectType.Player) {
+      Player p = (Player) g;
+      p.deductHp(30);
+    }
+
+    this.destroyWeapon();
   }
 
   @Override
@@ -302,7 +336,9 @@ public abstract class Weapon extends GameObject {
       if (p.getHolding() == null || p.getHolding() instanceof Punch) {
         setHolder(p);
         bcCol.setLayer(ColliderLayer.PARTICLE);
-        bcTrig.setLayer(ColliderLayer.PARTICLE);
+        //bcTrig.setLayer(ColliderLayer.PARTICLE);
+        //this.removeComponent(bcCol);
+        this.removeComponent(bcTrig);
         this.removeComponent(rb);
       }
     }
