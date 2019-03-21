@@ -321,7 +321,14 @@ public abstract class GameObject implements Serializable {
     return objectUUID + ";" + id + ";" + (float) getX() + ";" + (float) getY();
   }
 
-  public void setState(String data, Boolean snap) {
+  // Interpolate Position Client only
+  public void interpolatePosition(float alpha) {
+      imageView.setTranslateX(alpha * getX() + (1 - alpha) * imageView.getTranslateX());
+      imageView.setTranslateY(alpha * getY() + (1 - alpha) * imageView.getTranslateY());
+    }
+
+
+      public void setState(String data, Boolean snap) {
     String[] unpackedData = data.split(";");
     Vector2 statePos = new Vector2(Double.parseDouble(unpackedData[2]),
         Double.parseDouble(unpackedData[3]));

@@ -59,6 +59,11 @@ public class MapDataObject extends GameObject implements Serializable {
   }
 
   @Override
+  public void interpolatePosition(float alpha) {
+
+  }
+
+  @Override
   public void render() {
   }
 
