@@ -109,7 +109,7 @@ public class LevelCreator extends Application {
         getAbs(20), getAbs(17), getAbs(8), getAbs(2), ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
 
-    //ColouredBlocks
+    //ColouredBlocks todo remove form mm
     gameObjects
         .put(uuid, new RedBlock(getAbs(4), getAbs(10), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
     uuid = UUID.randomUUID();
@@ -126,7 +126,7 @@ public class LevelCreator extends Application {
         new YellowBlock(getAbs(7), getAbs(10), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
     uuid = UUID.randomUUID();
 
-    //JumpPad
+    //JumpPad todo remove form mm
     gameObjects.put(uuid, new JumpPad(getAbs(2), getAbs(25), uuid));
     uuid = UUID.randomUUID();
 
