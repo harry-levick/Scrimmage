@@ -60,7 +60,6 @@ public class PlayerInfo {
 
   private Rectangle2D getHealthViewport() {
     float scale = (float) player.getHealth() / (float) 100;
-    scale = 0.44f;
     if (scale > 0) { //Used so that the viewport doesn't reset to full when width = 0.
       int w = Math.round(scale * (float) healthW);
 
