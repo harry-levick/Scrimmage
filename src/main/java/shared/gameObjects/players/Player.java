@@ -430,4 +430,36 @@ public class Player extends GameObject implements Destructable {
   public void setLastInputCount(int lastInputCount) {
     this.lastInputCount = lastInputCount;
   }
+
+  public Limb getHead() {
+    return head;
+  }
+
+  public Limb getBody() {
+    return body;
+  }
+
+  public Limb getLegLeft() {
+    return legLeft;
+  }
+
+  public Limb getLegRight() {
+    return legRight;
+  }
+
+  public Limb getArmLeft() {
+    return armLeft;
+  }
+
+  public Limb getArmRight() {
+    return armRight;
+  }
+
+  public Limb getHandLeft() {
+    return handLeft;
+  }
+
+  public Limb getHandRight() {
+    return handRight;
+  }
 }
