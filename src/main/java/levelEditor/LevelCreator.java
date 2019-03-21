@@ -36,7 +36,6 @@ import shared.gameObjects.menu.main.ButtonSingleplayer;
 import shared.gameObjects.menu.main.SoundSlider;
 import shared.gameObjects.menu.main.SoundSlider.SOUND_TYPE;
 import shared.gameObjects.menu.multiplayer.ButtonJoin;
-import shared.gameObjects.objects.hazard.LaserBeam;
 import shared.gameObjects.objects.utility.BlueBlock;
 import shared.gameObjects.objects.utility.GreenBlock;
 import shared.gameObjects.objects.utility.JumpPad;
@@ -270,6 +269,40 @@ public class LevelCreator extends Application {
               getAbs(i * 4), getAbs(26), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
       uuid = UUID.randomUUID();
     }
+
+    //Middle platforms
+    gameObjects.put(uuid,
+        new StoneFloorObject(
+            getAbs(4), getAbs(6), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new StoneFloorObject(
+            getAbs(8), getAbs(6), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new StoneFloorObject(
+            getAbs(14), getAbs(12), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new StoneFloorObject(
+            getAbs(4), getAbs(20), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new StoneFloorObject(
+            getAbs(12), getAbs(20), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new StoneFloorObject(
+            getAbs(31), getAbs(18), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new StoneFloorObject(
+            getAbs(35), getAbs(5), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new StoneFloorObject(
+            getAbs(37), getAbs(13), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
 
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "map1" + ".map");
     mapDataObject.setBackground(new Background2(UUID.randomUUID()));
