@@ -324,7 +324,12 @@ public class LevelCreator extends Application {
 //    Weapon spawnUzi = new Uzi(330, 350, "Uzi.spawnGun@LevelHandler.addClientPlayer", null,
 //        UUID.randomUUID());
 //    gameObjects.put(spawnUzi.getUUID(), spawnUzi);
-
+    gameObjects.put(uuid, //todo make relatvie
+        new WeaponSpawner(200, 350, 40, 40, uuid));
+    gameObjects.put(uuid,
+        new WeaponSpawner(1300, 200, 40, 40, uuid));
+    gameObjects.put(uuid,
+        new WeaponSpawner(350, 350, 40, 40, uuid));
 
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "map1" + ".map");
     mapDataObject.setBackground(new Background2(UUID.randomUUID()));
