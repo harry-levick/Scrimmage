@@ -24,6 +24,9 @@ public class TestObject extends GameObject {
     super(x, y, sizeX, sizeY, id, testUUID);
     test = 0;
   }
+  public TestObject() {
+    super(0, 0, 10, 10, ObjectType.Bot, UUID.randomUUID());
+  }
 
   @Override
   public void update() {
