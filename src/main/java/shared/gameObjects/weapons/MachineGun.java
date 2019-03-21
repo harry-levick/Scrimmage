@@ -69,42 +69,6 @@ public class MachineGun extends Gun {
     }
   }
 
-  // Only handle collision when throwing weapon
-  @Override
-  public void OnCollisionEnter(Collision col) {
-    // Leave if this gun is a spawn gun
-    if (this.holder == null) {
-      return;
-    }
-
-/*    boolean remove = true;
-    GameObject g = col.getCollidedObject();
-    BoxCollider holderBC = (BoxCollider) holder.getComponent(ComponentType.COLLIDER);
-
-    if (g.getId() == ObjectType.Player) {
-      Player p = (Player) g;
-      if (p.getUUID() == holder.getUUID()) {
-        holderBC.setLayer(ColliderLayer.COLLECTABLE);
-        remove = false;
-      }
-      else
-        p.deductHp(30);
-    }
-
-    if (remove)
-      settings.getLevelHandler().removeGameObject(this);*/
-  }
-
-  @Override
-  public void OnCollisionExit(Collision col) {
-    // Leave if this gun is a spawn gun
-    if (this.holder == null) {
-      return;
-    }
-
-//    ((BoxCollider) holder.getComponent(ComponentType.COLLIDER)).setLayer(ColliderLayer.DEFAULT);
-  }
-
   @Override
   public void initialiseAnimation() {
     this.animation.supplyAnimation("default", Path.convert(this.imagePath));
