@@ -295,6 +295,14 @@ public abstract class Weapon extends GameObject {
   }
 
   @Override
+  public void removeRender() {
+    if (holder != null) {
+      holder.throwHolding();
+    }
+    super.removeRender();
+  }
+
+  @Override
   public void OnTriggerEnter(Collision col) {
     GameObject g = col.getCollidedObject();
     if (g != null && g.getId() == ObjectType.Player) {
