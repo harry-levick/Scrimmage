@@ -102,19 +102,19 @@ public class Client extends Application {
   public static Timer timer = new Timer("Timer", true);
 
   /**
-   * Tracking in Client/Server connection
+   * Tracking current input number
    */
   public static int inputSequenceNumber;
 
   /**
-   * Tracking in Client/Server connection
+   * Tracking all inputs sent to server
    */
   public static ArrayList<PacketInput> pendingInputs;
 
   /**
-   * //todo unknown use case
+   * Screen rendering scale ratio
    */
-  public static TimerTask task;
+  public static Vector2 scaleRatio;
 
   /**
    * JavaFX root for all GameObjects
@@ -590,7 +590,7 @@ public class Client extends Application {
    * @param primaryStage The JavaFX stage to be scaled
    */
   public void scaleRendering(Stage primaryStage) {
-    Vector2 scaleRatio = new Vector2(primaryStage.getWidth() / 1920,
+    scaleRatio = new Vector2(primaryStage.getWidth() / 1920,
         primaryStage.getHeight() / 1080);
     Scale scale = new Scale(scaleRatio.getX(), scaleRatio.getY(), 0, 0);
     scene.getRoot().getTransforms().setAll(scale);

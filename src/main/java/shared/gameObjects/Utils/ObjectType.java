@@ -12,5 +12,6 @@ public enum ObjectType {
   Background,
   Button,
   Limb,
-  Powerup
+  Powerup,
+  Fist
 }

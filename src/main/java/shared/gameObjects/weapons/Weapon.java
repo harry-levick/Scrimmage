@@ -78,9 +78,9 @@ public abstract class Weapon extends GameObject {
    */
   protected transient Rotate rotate;
   /** Pivot x */
-  protected transient double pivotX;
+  protected double pivotX;
   /** Pivot y */
-  protected transient double pivotY;
+  protected double pivotY;
 
   // variables for when the holder is null
   private BoxCollider bcTrig;
