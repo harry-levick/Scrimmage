@@ -14,8 +14,17 @@ import shared.gameObjects.GameObject;
 import shared.gameObjects.MapDataObject;
 import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 
+/**
+ * Saves and Loads the Game Objects stored in a map as a new level
+ */
 public class MapLoader {
 
+  /**
+   * Saves the contents of a map to a file to be loaded later
+   * @param gameObjects List of gameObjects to save
+   * @param mapDataObject List of Map Data Objects to save
+   * @param path The filepath to save the file to
+   */
   public static void saveMap(
       ConcurrentLinkedHashMap<UUID, GameObject> gameObjects, MapDataObject mapDataObject,
       String path) {
@@ -30,7 +39,10 @@ public class MapLoader {
       e.printStackTrace();
     }
   }
-
+  /**
+   * Loads the contents of a map to a file to be loaded later
+   * @param path The filepath to save the file to
+   */
   public static ConcurrentLinkedHashMap<UUID, GameObject> loadMap(String path) {
     try {
       FileInputStream fis = new FileInputStream(path);
@@ -50,6 +62,10 @@ public class MapLoader {
 
   // TODO Replace with lambda
   // TODO Add map image and playlist
+
+  /**
+   * Obtains all the maps in a string directory
+   */
   public static ArrayList<Map> getMaps(String path) {
     /**
      * File dir = new File(path); File files[] = dir.listFiles( new FilenameFilter() { @Override

@@ -5,10 +5,16 @@ import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
 import shared.gameObjects.players.Player;
 
+/**
+ * Records Keyboard input for the client
+ */
 public class KeyboardInput implements EventHandler<KeyEvent> {
 
   private Player clientPlayer;
 
+  /**
+   * Default constructor
+   */
   public KeyboardInput() {
     this.clientPlayer = Client.levelHandler.getClientPlayer();
   }

@@ -8,6 +8,9 @@ import shared.gameObjects.players.Player;
 import shared.util.Path;
 import shared.util.maths.Vector2;
 
+/**
+ * Gun of type Uzi
+ */
 public class Uzi extends Gun {
 
   private static String imagePath = "images/weapons/uzi.png";

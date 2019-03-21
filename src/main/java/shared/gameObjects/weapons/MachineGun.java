@@ -10,6 +10,9 @@ import shared.physics.data.Collision;
 import shared.util.Path;
 import shared.util.maths.Vector2;
 
+/**
+ * A gun of type Machine Gun
+ */
 public class MachineGun extends Gun {
 
   private static String imagePath = "images/weapons/machinegun.png"; // path to Machine Gun image

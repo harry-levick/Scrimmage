@@ -9,22 +9,40 @@ import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
 
 /**
- * @author fxa579 Base class to process and manage collisions happening with Dynamic Objects on
- *     other Rigidbodies. Used in the backend.
+ * @author fxa579 Processes and manages collisions happening with two Dynamic Rigidbodies. Used in the backend.
  */
 public class DynamicCollision {
 
+  /**
+   * The first body involved in the collision
+   */
   protected Rigidbody bodyA;
+  /**
+   * The second body involved in the collision
+   */
   protected Rigidbody bodyB;
+  /**
+   * The normal vector of the collision
+   */
   protected Vector2 collisionNormal;
+  /**
+   * Penetration depth separated into the X and Y axis
+   */
   protected Vector2 penetrationDistance;
-  protected float pentrationDepth;
+  /**
+   * Penetration depth as a float
+   */
+  protected float penetrationDepth;
 
+  /**
+   * Constructs and processes a Dynamic Collision
+   * @param bodyA First body involved in Collision
+   * @param bodyB Second body involved in Collision
+   */
   public DynamicCollision(Rigidbody bodyA, Rigidbody bodyB) {
     this.bodyA = bodyA;
     this.bodyB = bodyB;
     calculateCollisionValues();
-    // collisionNormal = collisionNormal.normalize();
     process();
   }
 
@@ -73,7 +91,7 @@ public class DynamicCollision {
         collisionNormal =
             bodyB.getBodyType() == RigidbodyType.STATIC ? Vector2.Right() : Vector2.Zero();
       }
-      pentrationDepth = x_overlap;
+      penetrationDepth = x_overlap;
     } else {
       if (n.getY() < 0) {
         collisionNormal = Vector2.Up();
@@ -82,7 +100,7 @@ public class DynamicCollision {
         collisionNormal = Vector2.Down();
         bodyA.setGrounded(true);
       }
-      pentrationDepth = y_overlap;
+      penetrationDepth = y_overlap;
     }
   }
 
@@ -112,10 +130,10 @@ public class DynamicCollision {
     float d = normal.magnitude();
     if (inside) {
       collisionNormal = n.mult(-1);
-      pentrationDepth = circB.getRadius() - d;
+      penetrationDepth = circB.getRadius() - d;
     } else {
       collisionNormal = n;
-      pentrationDepth = circB.getRadius() - d;
+      penetrationDepth = circB.getRadius() - d;
     }
   }
 
@@ -147,14 +165,17 @@ public class DynamicCollision {
     float d = normal.magnitude();
     if (inside) {
       collisionNormal = n.mult(-1);
-      pentrationDepth = circB.getRadius() - d;
+      penetrationDepth = circB.getRadius() - d;
     } else {
       collisionNormal = n;
-      pentrationDepth = circB.getRadius() - d;
+      penetrationDepth = circB.getRadius() - d;
     }
   }
 
-  public void process() {
+  /**
+   * Processes the collision, adjusting the velocities and positions
+   */
+  protected void process() {
     Vector2 velocityCol = bodyB.getVelocity().sub(bodyA.getVelocity());
     float vOnNormal = velocityCol.dot(collisionNormal);
     if (vOnNormal > 0) {
@@ -174,13 +195,16 @@ public class DynamicCollision {
     bodyB.correctPosition(positionCorrection.mult(bodyB.getInv_mass()));
   }
 
+  /**
+   * Calculates the distance needed to translate the objects as a Vector2
+   */
   protected Vector2 positionCorrection() {
     float percent = 0.8f;
     float slop = 0.08f;
 
     Vector2 correction =
         collisionNormal.mult(
-            Math.max(pentrationDepth - slop, 0.0f)
+            Math.max(penetrationDepth - slop, 0.0f)
                 / (bodyA.getInv_mass() + bodyB.getInv_mass())
                 * percent);
 
@@ -196,8 +220,8 @@ public class DynamicCollision {
     return bodyB;
   }
 
-  public float getPentrationDepth() {
-    return pentrationDepth;
+  public float getPenetrationDepth() {
+    return penetrationDepth;
   }
 
   public Vector2 getCollisionNormal() {

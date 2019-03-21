@@ -3,7 +3,7 @@ package shared.physics.data;
 import java.io.Serializable;
 
 /**
- * @author fxa579 Contains data affect
+ * @author fxa579 Contains friction data affecting collisions
  */
 public class MaterialProperty implements Serializable {
 

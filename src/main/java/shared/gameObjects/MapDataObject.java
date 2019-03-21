@@ -8,6 +8,9 @@ import shared.gameObjects.background.Background;
 import shared.handlers.levelHandler.GameState;
 import shared.util.maths.Vector2;
 
+/**
+ * Game object that stores the back end data of a map
+ */
 public class MapDataObject extends GameObject implements Serializable {
 
   private UUID mapUUID;
@@ -15,6 +18,11 @@ public class MapDataObject extends GameObject implements Serializable {
   private ArrayList<Vector2> spawnPoints;
   private Background background;
 
+  /**
+   * Constructs a Map Data container
+   * @param mapUUID UUID of object
+   * @param gameState Current game state
+   */
   public MapDataObject(UUID mapUUID, GameState gameState) {
     super(0, 0, 100, 100, ObjectType.MapDataObject, mapUUID);
     this.mapUUID = mapUUID;

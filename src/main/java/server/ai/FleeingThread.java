@@ -4,6 +4,9 @@ import java.util.List;
 import server.ai.pathFind.AStar;
 import shared.gameObjects.players.Player;
 
+/**
+ * Thread to handle Bot fleeing behaviour
+ */
 public class FleeingThread extends Thread {
 
   /** The respecive bot */

@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
+/**
+ * Handles the audio (SFX and Music) for the game
+ */
 public class AudioHandler {
 
   private MediaPlayer musicPlayer;

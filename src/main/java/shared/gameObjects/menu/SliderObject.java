@@ -9,6 +9,9 @@ import javafx.scene.text.Text;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 
+/**
+ * Abstraction of slider object
+ */
 public abstract class SliderObject extends GameObject {
 
   private final float yOffset = 20;

@@ -7,6 +7,9 @@ import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.Rigidbody;
 import shared.util.maths.Vector2;
 
+/**
+ * Position, scaling and rotation data container
+ */
 public class Transform implements Serializable {
 
   private Vector2 topPos;

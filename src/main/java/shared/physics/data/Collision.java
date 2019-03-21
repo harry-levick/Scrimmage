@@ -7,6 +7,9 @@ import shared.gameObjects.components.Collider;
 import shared.gameObjects.components.EdgeCollider;
 import shared.util.maths.Vector2;
 
+/**
+ * Contains data on a collision with another object
+ */
 public class Collision {
 
   private GameObject collidedObject;
@@ -154,10 +157,6 @@ public class Collision {
 
   public Vector2 getPointOfCollision() {
     return pointOfCollision;
-  }
-
-  public float getPenetrationDepth() {
-    return penDepth;
   }
 
   public boolean isCollided() {

@@ -6,6 +6,9 @@ import shared.gameObjects.players.Player;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
 
+/**
+ * UI container for the player data
+ */
 public class PlayerInfo {
 
   private Group root;
@@ -24,6 +27,10 @@ public class PlayerInfo {
   private double ammoW;
   private double ammoH;
 
+  /**
+   * Constructs UI pertaining to player
+   * @param root UI root to render to
+   */
   public PlayerInfo(Group root, Player clientPlayer) {
     root = root;
     player = clientPlayer;
@@ -74,7 +81,9 @@ public class PlayerInfo {
     }
   }
 
-
+  /**
+   * Renders the UI
+   */
   public void render() {
     boardImageView.setImage(board.getImage());
 

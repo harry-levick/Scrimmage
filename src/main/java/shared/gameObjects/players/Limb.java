@@ -15,7 +15,9 @@ import shared.handlers.levelHandler.LevelHandler;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.RigidbodyType;
 
-
+/**
+ * General class for player Limbs
+ */
 public abstract class Limb extends GameObject {
 
   /**

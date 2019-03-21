@@ -43,7 +43,7 @@ public class Physics {
    */
   public static boolean showColliders = false;
   /**
-   * TODO
+   * Settings objects of client (For Debugging)
    */
   public static Settings settings;
   /*

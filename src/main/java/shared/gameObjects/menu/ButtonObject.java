@@ -17,18 +17,25 @@ import shared.physics.data.AngularData;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.RigidbodyType;
 
+/**
+ * Abstraction of Button Game Objects
+ */
 public abstract class ButtonObject extends GameObject {
 
   protected transient Button button;
   protected String text;
 
   /**
-   * Base class used to create an object in game. This is used on both the client and server side to
-   * ensure actions are calculated the same
+   * Base class used to create a Button in game. This is used on both the client and server side
+   * to ensure actions are calculated the same
    *
-   * @param x X coordinate of object in game world
-   * @param y Y coordinate of object in game world
-   * @param id Unique Identifier of every game object
+   * @param x X Position of object
+   * @param y Y position of object
+   * @param sizeX width of object
+   * @param sizeY height of object
+   * @param text Text found on the button
+   * @param id Object type
+   * @param objectUUID Object UUID
    */
   public ButtonObject(
       double x, double y, double sizeX, double sizeY, String text, ObjectType id, UUID objectUUID) {

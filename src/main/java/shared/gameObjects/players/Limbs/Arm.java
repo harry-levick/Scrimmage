@@ -12,6 +12,9 @@ import shared.gameObjects.weapons.Punch;
 import shared.handlers.levelHandler.LevelHandler;
 import shared.util.maths.Vector2;
 
+/**
+ * The Arm object of a player
+ */
 public class Arm extends Limb {
 
   private static double AIM_ANGLE_MAX = 110;

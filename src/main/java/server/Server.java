@@ -49,15 +49,23 @@ import shared.util.Path;
 import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import shared.util.maths.Vector2;
 
+/**
+ * The Server Application
+ */
 public class Server extends Application {
 
   private static final Logger LOGGER = LogManager.getLogger(Server.class.getName());
-
+  /**
+   * The level handler attached to the application
+   */
   public static LevelHandler levelHandler;
-  public static Group gameRoot;
+  /**
+   * The settings container attached to the application
+   */
   public static Settings settings;
-  public final AtomicInteger playerCount = new AtomicInteger(0);
-  public final AtomicInteger readyCount = new AtomicInteger(0);
+  private static Group gameRoot;
+  private final AtomicInteger playerCount = new AtomicInteger(0);
+  private final AtomicInteger readyCount = new AtomicInteger(0);
   private final AtomicBoolean running = new AtomicBoolean(false);
   private final AtomicBoolean sendAllObjects = new AtomicBoolean(false);
   private final AtomicBoolean gameOver = new AtomicBoolean(false);
@@ -69,7 +77,7 @@ public class Server extends Application {
   private final int maxPlayers = 4;
   private final int serverUpdateRate = 3;
   private final String gameTitle = "SERVER";
-  public ServerState serverState;
+  private ServerState serverState;
   private ArrayList<InetAddress> connectedList = new ArrayList<>();
   private List connected = Collections.synchronizedList(connectedList);
   private String threadName;
@@ -98,6 +106,9 @@ public class Server extends Application {
     return gameRoot;
   }
 
+  /**
+   * Initializes the Server data
+   */
   public void init() {
     server = this;
     executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
@@ -122,10 +133,18 @@ public class Server extends Application {
         new Map("Map2", Path.convert("src/main/resources/maps/map2.map")));
   }
 
+  /**
+   * Stops the server
+   */
   public void stop() {
     running.set(false);
   }
 
+  /**
+   * Send data to clients
+   * @param buffer Data as a byte array
+   * @param object If true, server is sending objects
+   */
   public void sendToClients(byte[] buffer, boolean object) {
     synchronized (connected) {
       connected.forEach(
@@ -155,8 +174,8 @@ public class Server extends Application {
           });
     }
   }
-
-  public void updateSimulation() {
+  //Updates the Physics of the objects on the Server
+  private void updateSimulation() {
     levelHandler.createObjects();
     /** Check Collisions */
     Physics.gameObjects = levelHandler.getGameObjects();
@@ -183,7 +202,7 @@ public class Server extends Application {
     ObjectManager.update();
   }
 
-  public void startMatch() {
+  private void startMatch() {
     if (serverState == ServerState.WAITING_FOR_READYUP) {
       // Add bots
     }
@@ -191,7 +210,7 @@ public class Server extends Application {
     nextMap();
   }
 
-  public void nextMap() {
+  private void nextMap() {
     Map nextMap = playlist.pop();
     levelHandler.changeMap(nextMap, true, true);
     // TODO Change to actual UUID
@@ -199,11 +218,15 @@ public class Server extends Application {
     sendToClients(mapPacket.getData(), false);
   }
 
+  /**
+   * Adds new player to input list
+   * @param player Player to add
+   */
   public void add(Player player) {
     inputQueue.put(player, new LinkedBlockingQueue<PacketInput>());
   }
 
-  public BlockingQueue<PacketInput> getQueue(Player player) {
+  private BlockingQueue<PacketInput> getQueue(Player player) {
     BlockingQueue<PacketInput> toRet = new LinkedBlockingQueue<>();
     try {
       toRet = inputQueue.get(player);
@@ -213,7 +236,7 @@ public class Server extends Application {
     return toRet;
   }
 
-  public void sendWorldState() {
+  private void sendWorldState() {
     ArrayList<GameObject> gameObjectsFiltered = new ArrayList<>();
     for (UUID key : levelHandler.getGameObjects().keySet()) {
       GameObject gameObject = levelHandler.getGameObjects().get(key);
@@ -231,7 +254,7 @@ public class Server extends Application {
     }
   }
 
-  public void checkConditions() {
+  private void checkConditions() {
     if (gameOver.get()) {
 
     } else {
@@ -249,7 +272,7 @@ public class Server extends Application {
 
   }
 
-  public void scaleRendering(Stage primaryStage) {
+  private void scaleRendering(Stage primaryStage) {
     Vector2 scaleRatio = new Vector2(primaryStage.getWidth() / 1920,
         primaryStage.getHeight() / 1080);
     Scale scale = new Scale(scaleRatio.getX(), scaleRatio.getY(), 0, 0);
@@ -348,6 +371,10 @@ public class Server extends Application {
     }.start();
   }
 
+  /**
+   * Sends a list of updated objects to all the clients
+   * @param gameobjects List of objects to send
+   */
   public void sendObjects(ConcurrentLinkedHashMap<UUID, GameObject> gameobjects) {
     ByteArrayOutputStream byteArrayOutputStream = null;
     try {
@@ -373,9 +400,9 @@ public class Server extends Application {
     return sendAllObjects;
   }
 
-  //Rendering
+  //Rendering; mostly for Debugging
 
-  public Player addPlayer(PacketJoin joinPacket, InetAddress address) {
+  private Player addPlayer(PacketJoin joinPacket, InetAddress address) {
     Player player = new Player(joinPacket.getX(), joinPacket.getY(), joinPacket.getClientID());
     levelHandler.addPlayer(player, gameRoot);
     playerCount.getAndIncrement();

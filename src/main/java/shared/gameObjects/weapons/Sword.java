@@ -8,6 +8,9 @@ import shared.gameObjects.players.Player;
 import shared.util.Path;
 import shared.util.maths.Vector2;
 
+/**
+ * Melee weapon of type Sword
+ */
 public class Sword extends Melee {
 
   // private static String imagePath = "images/weapons/sword.jpg";

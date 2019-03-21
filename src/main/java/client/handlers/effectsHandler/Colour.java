@@ -2,10 +2,19 @@ package client.handlers.effectsHandler;
 
 import java.io.Serializable;
 
+/**
+ * Data container for RGB colour
+ */
 public class Colour implements Serializable {
 
-  int r, g, b;
+  private int r, g, b;
 
+  /**
+   * Constructor
+   * @param r Red value (0-255)
+   * @param g Green value (0-255)
+   * @param b Blue value (0-255)
+   */
   public Colour(int r, int g, int b) {
     this.r = r;
     this.g = g;
@@ -54,6 +63,10 @@ public class Colour implements Serializable {
     this.b = b;
   }
 
+  /**
+   * Converts the current colour values to hex form
+   * @return String of colours in hex form
+   */
   public String toHex() {
     return "#" + toHex(r) + toHex(g) + toHex(b);
   }
