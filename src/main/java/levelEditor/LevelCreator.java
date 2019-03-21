@@ -36,7 +36,6 @@ import shared.gameObjects.menu.main.ButtonSingleplayer;
 import shared.gameObjects.menu.main.SoundSlider;
 import shared.gameObjects.menu.main.SoundSlider.SOUND_TYPE;
 import shared.gameObjects.menu.multiplayer.ButtonJoin;
-import shared.gameObjects.objects.hazard.LaserBeam;
 import shared.gameObjects.objects.utility.BlueBlock;
 import shared.gameObjects.objects.utility.GreenBlock;
 import shared.gameObjects.objects.utility.JumpPad;
@@ -44,6 +43,7 @@ import shared.gameObjects.objects.utility.RedBlock;
 import shared.gameObjects.objects.utility.YellowBlock;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.MachineGun;
+import shared.gameObjects.weapons.WeaponSpawner;
 import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.MapLoader;
 import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
@@ -110,7 +110,7 @@ public class LevelCreator extends Application {
         getAbs(20), getAbs(17), getAbs(8), getAbs(2), ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
 
-    //ColouredBlocks
+    //ColouredBlocks todo remove form mm
     gameObjects
         .put(uuid, new RedBlock(getAbs(4), getAbs(10), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
     uuid = UUID.randomUUID();
@@ -127,7 +127,7 @@ public class LevelCreator extends Application {
         new YellowBlock(getAbs(7), getAbs(10), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
     uuid = UUID.randomUUID();
 
-    //JumpPad
+    //JumpPad todo remove form mm
     gameObjects.put(uuid, new JumpPad(getAbs(2), getAbs(25), uuid));
     uuid = UUID.randomUUID();
 
@@ -175,6 +175,10 @@ public class LevelCreator extends Application {
         new WoodBlockSmallObject(
             getAbs(6), getAbs(3), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
     uuid = UUID.randomUUID();
+        gameObjects.put(uuid, new WeaponSpawner(
+            getAbs(8), getAbs(4), getAbs(1), getAbs(1), uuid
+        ));
+        uuid = UUID.randomUUID();
 
     // right side blocks
     gameObjects.put(uuid,
@@ -270,6 +274,62 @@ public class LevelCreator extends Application {
               getAbs(i * 4), getAbs(26), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
       uuid = UUID.randomUUID();
     }
+
+    //Middle platforms
+    gameObjects.put(uuid,
+        new StoneFloorObject(
+            getAbs(4), getAbs(6), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new StoneFloorObject(
+            getAbs(8), getAbs(6), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new StoneFloorObject(
+            getAbs(14), getAbs(12), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new StoneFloorObject(
+            getAbs(4), getAbs(20), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new StoneFloorObject(
+            getAbs(12), getAbs(20), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new StoneFloorObject(
+            getAbs(31), getAbs(18), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new StoneFloorObject(
+            getAbs(35), getAbs(5), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new StoneFloorObject(
+            getAbs(37), getAbs(13), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+
+    //weapons
+//    // Add a spawn MachineGun
+//    Weapon spawnGun = new MachineGun(200, 350, "MachineGun.spawnGun@LevelHandler.addClientPlayer",
+//        null, UUID.randomUUID());
+//    gameObjects.put(spawnGun.getUUID(), spawnGun);
+//
+//    // Add a spawn Sword
+//    Weapon spawnSword = new Sword(1300, 200, "Sword.spawnGun@LevelHandler.addClientPlayer", null,
+//        UUID.randomUUID());
+//    gameObjects.put(spawnSword.getUUID(), spawnSword);
+//
+//    // Add a spawn Uzi
+//    Weapon spawnUzi = new Uzi(330, 350, "Uzi.spawnGun@LevelHandler.addClientPlayer", null,
+//        UUID.randomUUID());
+//    gameObjects.put(spawnUzi.getUUID(), spawnUzi);
+    gameObjects.put(uuid, //todo make relatvie
+        new WeaponSpawner(200, 350, 40, 40, uuid));
+    gameObjects.put(uuid,
+        new WeaponSpawner(1300, 200, 40, 40, uuid));
+    gameObjects.put(uuid,
+        new WeaponSpawner(350, 350, 40, 40, uuid));
 
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "map1" + ".map");
     mapDataObject.setBackground(new Background2(UUID.randomUUID()));

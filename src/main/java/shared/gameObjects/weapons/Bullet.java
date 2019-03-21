@@ -32,7 +32,6 @@ public abstract class Bullet extends GameObject {
   private Vector2 vector; // Vector of the force of bullet fire
   private int damage; // Damage of this bullet
   protected Player holder; // Holder of the gun that fired this bullet
-  protected transient Rotate rotate;
   protected Component holderBoxCollider;  // the BoxCollider of the holder
   protected boolean hitHolder;    // true if it hit the holder (For OnCollisionExit)
   private double angleDegree;
@@ -72,7 +71,6 @@ public abstract class Bullet extends GameObject {
     addComponent(rb);
 
     // Rotate property of the image
-    rotate = new Rotate();
     Vector2 mouseV = new Vector2((float) mouseX, (float) mouseY);
     Vector2 gunV = new Vector2((float) gunX, (float) gunY);
     Double bulletAngle = (double) mouseV.sub(gunV).angle(); // radian
@@ -80,7 +78,6 @@ public abstract class Bullet extends GameObject {
     if (mouseX < gunX) {
       angleDegree = angleDegree + 180;
     }
-    rotate.setAngle(angleDegree);
 
     // Get the BoxCollider of the holder
     holderBoxCollider = holder.getComponent(ComponentType.COLLIDER);
@@ -91,15 +88,13 @@ public abstract class Bullet extends GameObject {
   public void initialise(Group root, Settings settings) {
     super.initialise(root, settings);
     // Rotate property of the image
-    rotate = new Rotate();
-    rotate.setAngle(angleDegree);
-    imageView.getTransforms().add(rotate);
+    imageView.setRotate(angleDegree);
   }
 
   @Override
   public void update() {
     super.update();
-
+    imageView.setRotate(angleDegree);
     if ((0 < getX() && getX() < 1920) && (0 < getY() && getY() < 1080))
       rb.move(vector.mult((float) speed));
     else {

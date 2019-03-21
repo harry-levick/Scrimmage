@@ -163,7 +163,9 @@ public class Client extends Application {
   public static void settingsToggle() {
     // todo check if ingame
     // show/overlay settings
-    if (settingsOverlay == false && levelHandler.getMap().getGameState() != GameState.SETTINGS) {
+    if (settingsOverlay == false &&
+        levelHandler.getMap().getGameState() != GameState.SETTINGS &&
+        levelHandler.getMap().getGameState() != GameState.MAIN_MENU) {
       settingsOverlay = true;
 
       int quitButtonExtraPadding = 0;
@@ -528,8 +530,7 @@ public class Client extends Application {
         }
 
         /** Draw the UI */
-        if (levelHandler.getGameState() == GameState.IN_GAME
-            || levelHandler.getGameState() == GameState.MULTIPLAYER) {
+        if (levelHandler.getGameState() == GameState.IN_GAME) {
           userInterface.render();
         }
 
