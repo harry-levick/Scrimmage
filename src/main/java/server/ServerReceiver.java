@@ -15,6 +15,9 @@ import shared.packets.PacketInput;
 import shared.packets.PacketJoin;
 import shared.packets.PacketReady;
 
+/**
+ * Thread that reads Client sent data for the Server
+ */
 public class ServerReceiver implements Runnable {
 
   private static final Logger LOGGER = LogManager.getLogger(ServerReceiver.class.getName());
@@ -24,6 +27,12 @@ public class ServerReceiver implements Runnable {
   private ServerSocket serverSocket;
   private List connected;
 
+  /**
+   * Constructor:
+   * @param server Current active server
+   * @param serverSocket Socket to listen from
+   * @param connected List of connected players
+   */
   public ServerReceiver(Server server, ServerSocket serverSocket, List connected) {
     this.server = server;
     this.serverSocket = serverSocket;
@@ -55,7 +64,6 @@ public class ServerReceiver implements Runnable {
           }
       );
 
-      server.getSendAllObjects().set(true);
       System.out.println("test1");
       /** Main Loop */
       while (true) {

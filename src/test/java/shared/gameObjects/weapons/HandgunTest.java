@@ -1,4 +1,4 @@
-package shared.gameObjects;
+package shared.gameObjects.weapons;
 
 import static org.junit.Assert.assertTrue;
 

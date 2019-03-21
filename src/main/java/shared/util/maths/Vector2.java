@@ -12,8 +12,8 @@ public class Vector2 implements Serializable {
 
   /**
    * Constructs a 2D Vector of floats
-   * @param x
-   * @param y
+   * @param x X-Value of Vector
+   * @param y Y-Value of Vector
    */
   public Vector2(int x, int y) {
     this.x = x;
@@ -31,8 +31,8 @@ public class Vector2 implements Serializable {
   }
   /**
    * Constructs a 2D Vector of floats
-   * @param x
-   * @param y
+   * @param x  Y-Value of Vector
+   * @param y  Y-Value of Vector
    */
   public Vector2(double x, double y) {
     this.x = (float) x;
@@ -93,16 +93,22 @@ public class Vector2 implements Serializable {
     return new Vector2(0, -1);
   }
 
+  /**
+   * Returns the Vector2 with the higher magnitude
+   */
   public static Vector2 max(Vector2 a, Vector2 b) {
     return a.magnitude() > b.magnitude() ? a : b;
   }
 
+  /**
+   * Returns the Vector2 with the lower magnitude
+   */
   public static Vector2 min(Vector2 a, Vector2 b) {
     return a.magnitude() > b.magnitude() ? b : a;
   }
 
   /**
-   * Multiply both elements in the vector with a scalar
+   * Multiplies both elements in the vector with a scalar
    *
    * @return The new product vector
    */
@@ -114,7 +120,7 @@ public class Vector2 implements Serializable {
   }
 
   /**
-   * Multiply the corresponding elements in the vectors
+   * Multiplies the corresponding elements in the vectors
    *
    * @param vector
    * @return The new product vector
@@ -127,7 +133,7 @@ public class Vector2 implements Serializable {
   }
 
   /**
-   * Add both elements in the vector with a scalar
+   * Adds both elements in the vector with a scalar
    *
    * @param scalar
    * @return The new summed vector
@@ -140,7 +146,7 @@ public class Vector2 implements Serializable {
   }
 
   /**
-   * Add the corresponding elements in the vectors
+   * Adds the corresponding elements in the vectors
    *
    * @param vector
    * @return The new summed vector
@@ -153,7 +159,7 @@ public class Vector2 implements Serializable {
   }
 
   /**
-   * Subtract both elements in the vector with a scalar
+   * Subtracts both elements in the vector with a scalar
    *
    * @param scalar
    * @return The new subtracted vector
@@ -166,7 +172,7 @@ public class Vector2 implements Serializable {
   }
 
   /**
-   * Subtract the corresponding elements in the vectors
+   * Subtracts the corresponding elements in the vectors
    *
    * @param vector
    * @return The new subtracted vector
@@ -179,7 +185,7 @@ public class Vector2 implements Serializable {
   }
 
   /**
-   * Divide both elements in the vector with a scalar
+   * Divides both elements in the vector with a scalar
    *
    * @param scalar
    * @return The new quotient vector
@@ -192,7 +198,7 @@ public class Vector2 implements Serializable {
   }
 
   /**
-   * Divide the corresponding elements in the vectors
+   * Divides the corresponding elements in the vectors
    *
    * @param vector
    * @return The new quotient vector
@@ -205,7 +211,7 @@ public class Vector2 implements Serializable {
   }
 
   /**
-   * Compute the dot product of two vectors
+   * Computes the dot product of two vectors
    *
    * @return The dot product of two vectors
    */

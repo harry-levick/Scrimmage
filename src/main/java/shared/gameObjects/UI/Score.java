@@ -8,6 +8,9 @@ import javafx.scene.text.Text;
 import shared.gameObjects.animator.Animator;
 import shared.gameObjects.players.Player;
 
+/**
+ * UI container for the score of the player
+ */
 public class Score {
 
   private final int xPos = (1920 / 2) - (149 / 2); //Center it on the screen.
@@ -18,6 +21,10 @@ public class Score {
   private Player player;
   private Text score;
 
+  /**
+   * Constructs a score UI pertaining to a player
+   * @param root UI root to render to
+   */
   public Score(Group root, Player clientPlayer) {
     animation = new Animator();
     animation.supplyAnimation("default", "images/ui/score.png");
@@ -34,6 +41,9 @@ public class Score {
   }
 
 
+  /**
+   * Renders the UI
+   */
   public void render() {
     score.setText(Integer.toString(player.getScore()));
     imageView.setImage(animation.getImage());

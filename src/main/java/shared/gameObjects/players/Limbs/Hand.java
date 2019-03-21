@@ -8,6 +8,9 @@ import shared.gameObjects.players.Limb;
 import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.LevelHandler;
 
+/**
+ * Hand limb of a player
+ */
 public class Hand extends Limb {
 
   /**

@@ -4,6 +4,9 @@ import java.util.List;
 import server.ai.pathFind.AStar;
 import shared.gameObjects.players.Player;
 
+/**
+ * Thread to handle Bot chasing behaviour
+ */
 public class ChasingThread extends Thread {
 
   /** The bot that the thread is path-finding for */

@@ -8,12 +8,20 @@ import java.util.List;
 import java.util.UUID;
 import shared.gameObjects.GameObject;
 
+/**
+ * Base packet for sending the game state from Server to Client
+ */
 public class PacketGameState extends Packet {
 
   private HashMap<UUID, String> gameObjects;
   private int lastProcessedInput;
   private boolean update = false;
 
+  /**
+   * Constructs a packet that can be sent to the client to update all the game objects in a map
+   * @param gameObjects The list of game objects available
+   * @param sendAll Whether to send all data (true) or to only send data that has been updated in the last frame (false)
+   */
   public PacketGameState(ArrayList<GameObject> gameObjects, boolean sendAll) {
     packetID = PacketID.GAMESTATE.getID();
     data = "" + packetID + "," + lastProcessedInput;
@@ -25,6 +33,10 @@ public class PacketGameState extends Packet {
     }
   }
 
+  /**
+   * Constructs a packet from received data to update a client's game objects
+   * @param data Packet data received from sender
+   */
   public PacketGameState(String data) {
     gameObjects = new HashMap<>();
     List<String> dataFilter = new ArrayList<>(Arrays.asList(data.split(",")));

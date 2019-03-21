@@ -20,7 +20,7 @@ public class PacketTest {
   @Test
   public void InputPacketTest() {
     PacketInput input = new PacketInput(x, y, leftKey, rightKey, jumpKey, click, uuid, 0);
-    PacketInput output = new PacketInput(input.getData().toString());
+    PacketInput output = new PacketInput(input.getString());
     assertEquals(output.getX(), x);
     assertEquals(output.getY(), y);
     assertEquals(output.isLeftKey(), leftKey);
@@ -33,7 +33,7 @@ public class PacketTest {
   public void JoinPacketTest() {
     PacketJoin join = new PacketJoin(uuid, username, x, y);
     byte[] simulateNetwork = join.getData();
-    PacketJoin output = new PacketJoin(Arrays.toString(simulateNetwork));
+    PacketJoin output = new PacketJoin(new String(simulateNetwork));
     assertEquals(output.getClientID(), uuid);
     assertEquals(output.getUsername(), username);
   }

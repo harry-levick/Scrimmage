@@ -21,7 +21,11 @@ import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
 //TODO Networking
-public class LaserBeam extends GameObject {
+
+/**
+ * Laser Beam hazard object
+ */
+public class LaserBeam extends GameObject implements Hazard {
 
 
   private final float TIME_BETWEEN_STATES = 1.7f;
