@@ -7,6 +7,9 @@ import shared.gameObjects.components.Collider;
 import shared.gameObjects.components.EdgeCollider;
 import shared.util.maths.Vector2;
 
+/**
+ * Contains data on a collision with another object
+ */
 public class Collision {
 
   private GameObject collidedObject;
@@ -69,6 +72,7 @@ public class Collision {
     }
   }
 
+  //Assumes the boxes are not rotated
   private void calculateData(BoxCollider a, BoxCollider b) {
     Vector2 n = b.getCentre().sub(a.getCentre());
     float x_overlap = a.getSize().getX() * 0.5f + b.getSize().getX() * 0.5f - Math.abs(n.getX());
@@ -153,10 +157,6 @@ public class Collision {
 
   public Vector2 getPointOfCollision() {
     return pointOfCollision;
-  }
-
-  public float getPenetrationDepth() {
-    return penDepth;
   }
 
   public boolean isCollided() {

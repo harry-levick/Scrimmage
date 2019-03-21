@@ -7,6 +7,9 @@ import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.menu.ButtonObject;
 import shared.handlers.levelHandler.Map;
 
+/**
+ * Button to take the client to the host menu
+ */
 public class ButtonHost extends ButtonObject {
 
   /**

@@ -38,6 +38,8 @@ public class Punch extends Melee {
         name,
         -1,
         60,
+        0, // pivotX
+        0, // pivotY
         holder,
         range,
         1,
@@ -57,7 +59,7 @@ public class Punch extends Melee {
 
   @Override
   public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", Path.convert("images/weapons/fist.png"));
+    this.animation.supplyAnimation("default", Path.convert("images/player/player_idle.png"));
   }
 
   @Override

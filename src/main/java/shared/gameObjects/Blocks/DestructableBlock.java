@@ -5,7 +5,10 @@ import shared.gameObjects.Destructable;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 
-public class DestructableBlock extends GameObject implements Destructable {
+/**
+ * General class for a Block that can explore into smaller dynamic objects
+ */
+public abstract class DestructableBlock extends GameObject implements Destructable {
 
   int hp;
 

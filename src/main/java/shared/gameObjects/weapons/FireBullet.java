@@ -4,6 +4,9 @@ import java.util.UUID;
 import shared.gameObjects.players.Player;
 import shared.util.Path;
 
+/**
+ * A bullet that is on fire
+ */
 public class FireBullet extends Bullet {
 
   private static String imagePath = "images/weapons/fireBullet.png";

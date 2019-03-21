@@ -8,6 +8,9 @@ import shared.gameObjects.players.Limb;
 import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.LevelHandler;
 
+/**
+ * Head limb of a player
+ */
 public class Head extends Limb {
 
   protected Rigidbody rb;
@@ -29,6 +32,6 @@ public class Head extends Limb {
   @Override
   protected void rotateAnimate() {
 
-    
+
   }
 }

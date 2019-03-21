@@ -14,6 +14,9 @@ import shared.physics.types.RigidbodyType;
 import shared.util.Path;
 import shared.util.maths.Vector2;
 
+/**
+ * Bullet that deals explosion damage on contact
+ */
 public class ExplosiveBullet extends Bullet {
 
   private static final int width = 15;          // Width of the bullet

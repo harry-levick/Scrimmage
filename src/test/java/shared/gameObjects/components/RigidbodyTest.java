@@ -54,7 +54,7 @@ public class RigidbodyTest {
     for (int i = 0; i < 60; i++) {
       rbA.update();
     }
-    assertEquals(52, a.getY(), 0.1);
+    assertEquals(47, a.getY(), 0.1);
   }
 
   @Test
@@ -65,16 +65,6 @@ public class RigidbodyTest {
       rbA.update();
     }
     assertEquals(2, a.getY(), 0);
-  }
-
-  @Test
-  public void dragForceGravity() {
-    assertEquals(a.getTransform().getPos().getY(), 2, 0);
-    rbA.setAirDrag(1);
-    for (int i = 0; i < 60; i++) {
-      rbA.update();
-    }
-    assertTrue(a.getY() < 51 && a.getY() > 45);
   }
 
   @Test
@@ -112,6 +102,6 @@ public class RigidbodyTest {
     for (int i = 0; i < 60; i++) {
       rbA.update();
     }
-    assertEquals(57, a.getY(), 0.1);
+    assertEquals(52, a.getY(), 0.1);
   }
 }

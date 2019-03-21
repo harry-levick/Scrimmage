@@ -10,61 +10,105 @@ public class Vector2 implements Serializable {
   private float x;
   private float y;
 
+  /**
+   * Constructs a 2D Vector of floats
+   * @param x X-Value of Vector
+   * @param y Y-Value of Vector
+   */
   public Vector2(int x, int y) {
     this.x = x;
     this.y = y;
   }
 
+  /**
+   * Constructs a 2D Vector of floats
+   * @param x X-Value of Vector
+   * @param y Y-Value of Vector
+   */
   public Vector2(float x, float y) {
     this.x = x;
     this.y = y;
   }
-
+  /**
+   * Constructs a 2D Vector of floats
+   * @param x  Y-Value of Vector
+   * @param y  Y-Value of Vector
+   */
   public Vector2(double x, double y) {
     this.x = (float) x;
     this.y = (float) y;
   }
-
+  /**
+   * Constructs a 2D Vector of floats from a class-generated string
+   * @param vector the string obtains from toString
+   */
   public Vector2(String vector) {
     Vector2 vector2 = fromString(vector);
     this.x = vector2.getX();
     this.y = vector2.getY();
   }
 
+  /**
+   * Constructs a zero vector.
+   * @return (0,0)
+   */
   public static Vector2 Zero() {
     return new Vector2(0, 0);
   }
 
+  /**
+   * Constructs a unit vector.
+   * @return (1,1)
+   */
   public static Vector2 Unit() {
     return new Vector2(1, 1);
   }
-
+  /**
+   * Constructs a unit vector pointing right.
+   * @return (1,0)
+   */
   public static Vector2 Right() {
     return new Vector2(1, 0);
   }
-
+  /**
+   * Constructs a unit vector pointing left.
+   * @return (-1,0)
+   */
   public static Vector2 Left() {
     return new Vector2(-1, 0);
   }
-
+  /**
+   * Constructs a unit vector pointing down.
+   * @return (0,1)
+   */
   public static Vector2 Down() {
     return new Vector2(0, 1);
   }
-
-  public static Vector2 max(Vector2 a, Vector2 b) {
-    return a.magnitude() > b.magnitude() ? a : b;
-  }
-
-  public static Vector2 min(Vector2 a, Vector2 b) {
-    return a.magnitude() > b.magnitude() ? b : a;
-  }
+  /**
+   * Constructs a unit vector pointing up.
+   * @return (0,-1)
+   */
 
   public static Vector2 Up() {
     return new Vector2(0, -1);
   }
 
   /**
-   * Multiply both elements in the vector with a scalar
+   * Returns the Vector2 with the higher magnitude
+   */
+  public static Vector2 max(Vector2 a, Vector2 b) {
+    return a.magnitude() > b.magnitude() ? a : b;
+  }
+
+  /**
+   * Returns the Vector2 with the lower magnitude
+   */
+  public static Vector2 min(Vector2 a, Vector2 b) {
+    return a.magnitude() > b.magnitude() ? b : a;
+  }
+
+  /**
+   * Multiplies both elements in the vector with a scalar
    *
    * @return The new product vector
    */
@@ -76,7 +120,7 @@ public class Vector2 implements Serializable {
   }
 
   /**
-   * Multiply the corresponding elements in the vectors
+   * Multiplies the corresponding elements in the vectors
    *
    * @param vector
    * @return The new product vector
@@ -89,7 +133,7 @@ public class Vector2 implements Serializable {
   }
 
   /**
-   * Add both elements in the vector with a scalar
+   * Adds both elements in the vector with a scalar
    *
    * @param scalar
    * @return The new summed vector
@@ -102,7 +146,7 @@ public class Vector2 implements Serializable {
   }
 
   /**
-   * Add the corresponding elements in the vectors
+   * Adds the corresponding elements in the vectors
    *
    * @param vector
    * @return The new summed vector
@@ -115,7 +159,7 @@ public class Vector2 implements Serializable {
   }
 
   /**
-   * Subtract both elements in the vector with a scalar
+   * Subtracts both elements in the vector with a scalar
    *
    * @param scalar
    * @return The new subtracted vector
@@ -128,7 +172,7 @@ public class Vector2 implements Serializable {
   }
 
   /**
-   * Subtract the corresponding elements in the vectors
+   * Subtracts the corresponding elements in the vectors
    *
    * @param vector
    * @return The new subtracted vector
@@ -141,7 +185,7 @@ public class Vector2 implements Serializable {
   }
 
   /**
-   * Divide both elements in the vector with a scalar
+   * Divides both elements in the vector with a scalar
    *
    * @param scalar
    * @return The new quotient vector
@@ -154,7 +198,7 @@ public class Vector2 implements Serializable {
   }
 
   /**
-   * Divide the corresponding elements in the vectors
+   * Divides the corresponding elements in the vectors
    *
    * @param vector
    * @return The new quotient vector
@@ -167,7 +211,7 @@ public class Vector2 implements Serializable {
   }
 
   /**
-   * Compute the dot product of two vectors
+   * Computes the dot product of two vectors
    *
    * @return The dot product of two vectors
    */
@@ -282,7 +326,7 @@ public class Vector2 implements Serializable {
   }
 
   /**
-   *
+   * Measures the overlap distance assuming both vectors are in a 1D space
    */
   public float overlap(Vector2 projection) {
     return (y - projection.getX());

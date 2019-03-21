@@ -6,10 +6,16 @@ import javafx.event.EventType;
 import javafx.scene.input.MouseEvent;
 import shared.gameObjects.players.Player;
 
+/**
+ * Records mouse input of the player
+ */
 public class MouseInput implements EventHandler<MouseEvent> {
 
   private Player clientPlayer;
 
+  /**
+   * Default constructor
+   */
   public MouseInput() {
     this.clientPlayer = Client.levelHandler.getClientPlayer();
   }

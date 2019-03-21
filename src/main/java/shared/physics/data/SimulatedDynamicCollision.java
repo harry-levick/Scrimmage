@@ -3,8 +3,15 @@ package shared.physics.data;
 import shared.gameObjects.components.Rigidbody;
 import shared.util.maths.Vector2;
 
+/**
+ * Processes and manages collisions happening with two Dynamic Rigidbodies, but only alters the Physics data on the first body. Used for simulating an object.
+ */
 public class SimulatedDynamicCollision extends DynamicCollision {
-
+  /**
+   * Constructs and processes a Dynamic Collision
+   * @param bodyA First body involved in Collision; affected by the collision
+   * @param bodyB Second body involved in Collision; will not be affected by the collision
+   */
   public SimulatedDynamicCollision(Rigidbody bodyA, Rigidbody bodyB) {
     super(bodyA, bodyB);
   }

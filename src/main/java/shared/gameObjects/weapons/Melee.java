@@ -34,6 +34,8 @@ public abstract class Melee extends Weapon {
       String name,
       int ammo,
       int fireRate,
+      double pivotX,
+      double pivotY,
       Player holder,
       double range,
       double beginAngle,
@@ -41,7 +43,22 @@ public abstract class Melee extends Weapon {
       boolean singleHanded,
       UUID uuid) {
 
-    super(x, y, sizeX, sizeY, id, weight, name, false, true, ammo, fireRate, holder, uuid);
+    super(
+        x,
+        y,
+        sizeX,
+        sizeY,
+        id,
+        weight,
+        name,
+        false,
+        true,
+        ammo,
+        fireRate,
+        pivotX,
+        pivotY,
+        holder,
+        uuid);
     this.damage = damage;
     this.ammo = ammo;
     this.range = range;

@@ -137,6 +137,9 @@ public class Client extends Application {
   private static boolean credits = false;
   private static int creditStartDelay = 100;
   private boolean gameOver;
+  private boolean startedGame;
+  private int timeRemaining;
+  private int timeLimit = 1; // Time limit in minutes
   private static boolean settingsOverlay = false;
   private static ArrayList<GameObject> settingsObjects = new ArrayList<>();
 
@@ -367,15 +370,44 @@ public class Client extends Application {
    */
   public void endGame() {
     singleplayerGame = false;
+    gameOver = false;
     levelHandler.getPlayers().entrySet().removeAll(levelHandler.getBotPlayerList().entrySet());
     levelHandler.getBotPlayerList().forEach((key, gameObject) -> gameObject.removeRender());
     levelHandler.getBotPlayerList().forEach((key, gameObject) -> gameObject = null);
     levelHandler.getBotPlayerList().clear();
     levelHandler.changeMap(
-        new Map(
-            "Main Menu",
-            Path.convert(settings.getMenuPath() + File.separator + "menus/main_menu.map")),
+        new Map("menus/main_menu.map", Path.convert("src/main/resources/menus/main_menu.map")),
         false, false);
+
+  }
+
+  /**
+   * Begin the timer
+   */
+  private void beginTimer() {
+    if (!startedGame) {
+      timeRemaining = timeLimit * 60;
+
+      Timer secondsTimer = new Timer();
+      secondsTimer.scheduleAtFixedRate(new TimerTask() {
+        @Override
+        public void run() {
+          System.out.println(String.format("%d:%d", timeRemaining / 60, timeRemaining - ((timeRemaining / 60) * 60)));
+          timeRemaining -= 1;
+        }
+      }, 0, 1000);
+
+      long delay = 1000l * 60l * timeLimit;
+      timer.schedule(new TimerTask() {
+        @Override
+        public void run() {
+          gameOver = true;
+          secondsTimer.cancel();
+        }
+      }, delay);
+
+      startedGame = true;
+    }
   }
 
   /**
@@ -393,15 +425,6 @@ public class Client extends Application {
               "Map" + i,
               Path.convert(settings.getMapsPath() + File.separator + "map" + i + ".map")));
     }
-
-    /** Setup Game timer */
-    task =
-        new TimerTask() {
-          @Override
-          public void run() {
-            gameOver = true;
-          }
-        };
 
     setupRender(primaryStage);
     levelHandler = new LevelHandler(settings, backgroundRoot, gameRoot, uiRoot);
@@ -431,6 +454,10 @@ public class Client extends Application {
       @Override
       public void handle(long now) {
 
+        if (!singleplayerGame && !multiplayer) {
+          startedGame = false;
+        }
+
         if (multiplayer) {
           ClientNetworkManager.processServerPackets();
         }
@@ -449,6 +476,7 @@ public class Client extends Application {
         }
 
         if (!multiplayer && singleplayerGame && levelHandler.getPlayers().size() > 1) {
+          beginTimer();
           /** Calculate Score */
           ArrayList<Player> alive = new ArrayList<>();
           for (UUID key : levelHandler.getPlayers().keySet()) {
@@ -481,7 +509,7 @@ public class Client extends Application {
           levelHandler
               .getGameObjects()
               .forEach((key, gameObject) -> gameObject.updateCollision());
-          Physics.processCollisions();
+          Physics.clearCollisions();
 
           /** Update Game Objects */
           levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.update());

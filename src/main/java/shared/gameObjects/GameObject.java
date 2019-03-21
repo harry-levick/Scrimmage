@@ -28,32 +28,68 @@ import shared.util.maths.Vector2;
  */
 public abstract class GameObject implements Serializable {
 
+  /**
+   * UUID to determine identity of object
+   */
   protected UUID objectUUID;
+  /**
+   * The type of object used for server/client purposes
+   */
   protected ObjectType id;
 
+  /**
+   * The client/server settings this object is attached to
+   */
   protected transient Settings settings;
 
+  /**
+   * The JavaFX rendering component for images
+   */
   protected transient ImageView imageView;
+  /**
+   * The JavaFX group rendered to
+   */
   protected transient Group root;
+  /**
+   * The animation controller for animating still images
+   */
   protected transient Animator animation;
-  protected double rotation;
 
+  /**
+   * The gameObject this object is attached to; null if no parent exists
+   */
   protected GameObject parent;
+  /**
+   * The gameObjects this object is a parent to
+   */
   protected ArrayList<GameObject> children;
+  /**
+   * The components attached to this gameObject
+   */
   protected ArrayList<Component> components;
+  /**
+   * The transform component responsible for scaling, position and rotation
+   */
   protected Transform transform;
 
+  /**
+   * Boolean to determine whether or not a gameObject is active
+   */
   protected boolean active;
+  /**
+   * Boolean to determine if an object is destroyed; once set to true it cannot be set back to false
+   */
   protected boolean destroyed;
 
   //Networking
+  //TODO: Networking comments
   protected boolean networkStateUpdate;
   protected Vector2 lastPos;
   protected ArrayList<TimePosition> positionBuffer;
 
-  protected ArrayList<GameObject> collidedObjects;
-  protected ArrayList<GameObject> collidedThisFrame;
-  protected ArrayList<GameObject> collidedToRemove;
+  private ArrayList<GameObject> collidedObjects;
+  private ArrayList<GameObject> collidedThisFrame;
+  private ArrayList<GameObject> collidedToRemove;
 
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
@@ -84,9 +120,17 @@ public abstract class GameObject implements Serializable {
   }
 
   // Initialise the animation
+
+  /**
+   * Allows the setting of a sprite and animator
+   */
   public abstract void initialiseAnimation();
 
   // Server and Client side
+
+  /**
+   * Update loops update all components and updates server with new positions
+   */
   public void update() {
     networkStateUpdate = false;
     animation.update();
@@ -117,6 +161,10 @@ public abstract class GameObject implements Serializable {
   }
 
   // Client Side only
+
+  /**
+   * Renders the game object in the client view with all changes applied
+   */
   public void render() {
     imageView.setImage(animation.getImage());
     imageView.setRotate(getTransform().getRot());
@@ -127,6 +175,10 @@ public abstract class GameObject implements Serializable {
   }
 
   // Collision engine
+
+  /**
+   * Method used by collision engine to check for collisions each frame
+   */
   public void updateCollision() {
     ArrayList<Component> cols = getComponents(ComponentType.COLLIDER);
     Rigidbody rb = (Rigidbody) getComponent(ComponentType.RIGIDBODY);
@@ -159,7 +211,7 @@ public abstract class GameObject implements Serializable {
   }
 
   /**
-   * Use to only update the Physics of the object being called
+   * Use to only update the Physics of the object being called; used primarily by AI
    */
   public void simulateUpdateCollision() {
     ArrayList<Component> cols = getComponents(ComponentType.COLLIDER);
@@ -256,7 +308,6 @@ public abstract class GameObject implements Serializable {
             root.getChildren().remove(imageView);
           }
       );
-      //root.getChildren().remove(imageView);
     }
   }
 
@@ -297,7 +348,7 @@ public abstract class GameObject implements Serializable {
     animation = new Animator();
     initialiseAnimation();
     imageView = new ImageView();
-    imageView.setRotate(rotation);
+    imageView.setRotate(transform.getRot());
     if (root != null) {
       this.root = root;
       root.getChildren().add(this.imageView);
@@ -309,23 +360,43 @@ public abstract class GameObject implements Serializable {
     imageView.setFitWidth(transform.getSize().getX());
   }
 
+  /**
+   * Sets this gameObject as the parent to a defined gameObject
+   * @param child The object to make a child to this object
+   */
   public void addChild(GameObject child) {
     children.add(child);
+    child.setParent(this);
     settings.getLevelHandler().addGameObject(child);
   }
 
+  /**
+   * Removes this gameObject as the parent to a defined gameObject
+   * @param child The object to no longer make a child to this object
+   */
   public void removeChild(GameObject child) {
-    children.remove(child);
+    if(children.remove(child)) child.setParent(null);
   }
 
+  /**
+   * Checks if this object is a parent to a passed gameObject
+   */
   public boolean isChild(GameObject child) {
-    return children.contains(child);
+    return child.parent.equals(this);
   }
 
+  /**
+   * Adds a new component to this object
+   * @param component Component to add
+   */
   public void addComponent(Component component) {
     components.add(component);
   }
 
+  /**
+   * Removes a component from this object
+   * @param component Component to remove
+   */
   public void removeComponent(Component component) {
     components.remove(component);
   }
@@ -530,11 +601,7 @@ public abstract class GameObject implements Serializable {
   }
 
   public double getRotation() {
-    return rotation;
-  }
-
-  public void rotateImage(double rotation) {
-    imageView.setRotate(imageView.getRotate() + rotation);
+    return transform.getRot();
   }
 
   public ArrayList<TimePosition> getPositionBuffer() {

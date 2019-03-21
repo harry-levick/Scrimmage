@@ -3,12 +3,14 @@ package shared.gameObjects;
 import java.util.UUID;
 import shared.gameObjects.Utils.ObjectType;
 
+/**
+ * Container class for the position of a Player's Spawn
+ */
 public class PlayerSpawnpoint extends GameObject {
 
 
   /**
-   * Base class used to create an object in game. This is used on both the client and server side to
-   * ensure actions are calculated the same
+   * Constructs player spawnpoint
    *
    * @param x X coordinate of object in game world
    * @param y Y coordinate of object in game world

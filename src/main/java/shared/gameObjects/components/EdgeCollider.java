@@ -8,7 +8,7 @@ import shared.physics.types.ColliderType;
 import shared.util.maths.Vector2;
 
 /** An edge collider; used only for Raycasts */
-public class EdgeCollider extends Collider implements Serializable {
+public class EdgeCollider extends Collider {
 
   ArrayList<Vector2> nodes;
 
@@ -44,7 +44,13 @@ public class EdgeCollider extends Collider implements Serializable {
     return nodes;
   }
 
+  /**
+   * Find the node on the edge collider that is closest to a point passed in
+   * @param point
+   * @return
+   */
   public Vector2 findClosestPoint(Vector2 point) {
+
     Vector2 toRet = nodes.get(0);
     for (Vector2 vec : nodes) {
       toRet = vec.magnitude(point) <= toRet.magnitude(point) ? vec : toRet;

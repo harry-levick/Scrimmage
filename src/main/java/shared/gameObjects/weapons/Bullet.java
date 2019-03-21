@@ -18,7 +18,7 @@ import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
 /**
- * @author hlf764
+ * @author hlf764 Abstraction of Bullet objects
  */
 public abstract class Bullet extends GameObject {
 

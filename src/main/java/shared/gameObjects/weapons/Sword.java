@@ -8,6 +8,9 @@ import shared.gameObjects.players.Player;
 import shared.util.Path;
 import shared.util.maths.Vector2;
 
+/**
+ * Melee weapon of type Sword
+ */
 public class Sword extends Melee {
 
   // private static String imagePath = "images/weapons/sword.jpg";
@@ -15,7 +18,7 @@ public class Sword extends Melee {
   private static float AIM_ANGLE_MAX = 110f;
   private int currentAngleIndex;
   private Translate translate;
-  private double attackAngleSign; // -1 if facingLeft, 1 if facingRight
+  private double attackAngleSign; // -1 if aiming Left, 1 if aiming Right
 
   /**
    * Constructor of the Sword class
@@ -37,6 +40,8 @@ public class Sword extends Melee {
         name,
         30, // ammo
         60, // fireRate
+        17, // pivotX
+        40, //pivotY
         holder,
         50, // range
         50, // beginAngle
@@ -46,10 +51,6 @@ public class Sword extends Melee {
 
     translate = new Translate();
     attackAngleSign = 1;
-
-    rotate = new Rotate();
-    rotate.setPivotX(17);
-    rotate.setPivotY(40);
   }
 
   public Sword(Sword that) {

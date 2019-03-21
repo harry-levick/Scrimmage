@@ -15,14 +15,30 @@ import shared.handlers.levelHandler.LevelHandler;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.RigidbodyType;
 
-
+/**
+ * General class for player Limbs
+ */
 public abstract class Limb extends GameObject {
 
+  /**
+   * The X-coordinate pivot for rotating the limb
+   */
   protected final double pivotX;
+  /**
+   * The Y-coordinate pivot for rotating the Limb
+   */
   protected final double pivotY;
+  //TODO idk what this does
   protected boolean isLeft;
+  /**
+   * JavaFX Rotation object used for rotating the limb around a pivot
+   */
   protected transient Rotate rotate;
+  /**
+   * Boolean to determine if the limb is currently attached to an object
+   */
   protected boolean limbAttached;
+  //TODO idk what these does
   protected boolean lastAttachedCheck;
   protected Behaviour behaviour;
   protected Behaviour lastBehaviour;
@@ -34,16 +50,13 @@ public abstract class Limb extends GameObject {
   protected double xRight;
   protected double yRight;
   protected Player player;
-  
+
   protected Rigidbody rb;
   protected BoxCollider bc;
 
   protected transient LevelHandler levelHandler;
 
   protected int resetOffsetX = 0;
-  
-  
-  
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
    * ensure actions are calculated the same
@@ -134,14 +147,14 @@ public abstract class Limb extends GameObject {
   public void reset() {
     removeRender();
   }
-  
+
   private void getBehaviour() {
     this.behaviour = this.player.behaviour;
 
   }
 
   protected abstract void rotateAnimate();
-  
+
   protected void flipImageView(ImageView iv, String direction) {
     if(direction.equals("WALK_LEFT")) {
       iv.setScaleX(-1);
@@ -150,15 +163,15 @@ public abstract class Limb extends GameObject {
       iv.setScaleX(1);
     }
   }
-  
+
   @Override
   public void render() {
     super.render();
-    
+
     //Do all the rotations here.
     rotateAnimate();
-    
-    // Flip the imageView depending on the direciton of travel 
+
+    // Flip the imageView depending on the direciton of travel
     flipImageView(imageView,this.behaviour.toString());
   }
 
@@ -173,5 +186,36 @@ public abstract class Limb extends GameObject {
   public void reattachLimb() {
     this.limbAttached = true;
   }
-}
 
+  protected void setXLeft(double x) {
+    this.xLeft = x;
+  }
+
+  protected void setYLeft(double y) {
+    this.yLeft = y;
+  }
+
+  protected void setXRight(double x) {
+    this.xRight = x;
+  }
+
+  protected void setYRight(double y) {
+    this.yRight = y;
+  }
+
+  public double getXLeft() {
+    return xLeft;
+  }
+
+  public double getYLeft() {
+    return yLeft;
+  }
+
+  public double getXRight() {
+    return xRight;
+  }
+
+  public double getYRight() {
+    return yRight;
+  }
+}

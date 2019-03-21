@@ -12,7 +12,10 @@ import shared.physics.data.MaterialProperty;
 import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
 
-public class Spikes extends GameObject {
+/**
+ * Spikes hazard object
+ */
+public class Spikes extends GameObject implements Hazard {
 
   public Spikes(double x, double y, double sizeX, double sizeY, ObjectType id, UUID exampleUUID) {
     super(x, y, sizeX, sizeY, id, exampleUUID);

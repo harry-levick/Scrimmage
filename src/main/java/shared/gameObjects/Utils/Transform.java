@@ -7,6 +7,9 @@ import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.Rigidbody;
 import shared.util.maths.Vector2;
 
+/**
+ * Position, scaling and rotation data container
+ */
 public class Transform implements Serializable {
 
   private Vector2 topPos;
@@ -104,25 +107,6 @@ public class Transform implements Serializable {
   public void scale(Vector2 scaleFactor) {
     this.size = size.mult(scaleFactor);
     botPos = topPos.add(size);
-  }
-
-  /**
-   * Scales an object in accordance with the screen size
-   */
-  public void scaleScreen(Vector2 scaleRatio) {
-    this.topPos = topPos.mult(scaleRatio);
-    this.size = size.mult(scaleRatio);
-    botPos = topPos.add(size);
-  }
-
-  /**
-   * Computes the (approximated) distance between two objects
-   *
-   * @param transform The object comparing to
-   * @return The distance between the two objects
-   */
-  public float distance(Transform transform) {
-    return getPos().magnitude(transform.getPos());
   }
 
   public float getRot() {

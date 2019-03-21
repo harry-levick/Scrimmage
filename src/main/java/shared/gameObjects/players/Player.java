@@ -15,7 +15,6 @@ import shared.gameObjects.players.Limbs.Body;
 import shared.gameObjects.players.Limbs.Hand;
 import shared.gameObjects.players.Limbs.Head;
 import shared.gameObjects.players.Limbs.Leg;
-import shared.gameObjects.weapons.MachineGun;
 import shared.gameObjects.weapons.Punch;
 import shared.gameObjects.weapons.Weapon;
 import shared.physics.data.MaterialProperty;
@@ -25,29 +24,65 @@ import shared.util.maths.Vector2;
 
 public class Player extends GameObject implements Destructable {
 
+  /**
+   * The speed of the player in pixels per update frame
+   */
   protected final float speed = 9;
+  /**
+   * The jump force of the player in Newtons
+   */
   protected final float jumpForce = -300;
-  protected final float JUMP_LIMIT = 2.0f;
+  /**
+   * Control Booleans determined by the Input Manager
+   */
   public boolean leftKey, rightKey, jumpKey, click;
   //Testing
   public boolean deattach;
+  /**
+   * Boolean to determine when the "Throw Weapon" key is pressed down
+   */
   public boolean throwHoldingKey;
+  /**
+   * Saves the current position of the cursor (X) and (Y)
+   */
   public double mouseX, mouseY;
+  /**
+   * The score of the player used to determine win conditions
+   */
   public int score;
+  //TODO idk what this does
   protected Behaviour behaviour;
-  protected float jumpTime;
+  /**
+   * Boolean to determine if a player has jumped or not
+   */
   protected boolean jumped;
+  /**
+   * Boolean to determine if a player is on the ground or in the air
+   */
   protected boolean grounded;
-  protected boolean facingLeft;
-  protected boolean facingRight;
+  /** True when the gun is aiming LHS */
   protected boolean aimLeft;
+  /** True when the mouse pointer is on the LHS */
+  protected boolean pointLeft;
+  /**
+   * The current health of the player; is killed when reaches 0
+   */
   protected int health;
+  /**
+   * The current weapon the player is using
+   */
   protected Weapon holding;
+  /**
+   * When not holding a weapon, it defaults to the "Punch" weapon
+   */
   protected Weapon myPunch;
+  /**
+   * The Physics Rigidbody component attached to the player
+   */
   protected Rigidbody rb;
+  //TODO idk what this does
   protected double vx;
   private BoxCollider bc;
-  private ObjectShake shake;
 
   // Limbs
   private Limb head;
@@ -60,11 +95,17 @@ public class Player extends GameObject implements Destructable {
   private Limb handRight;
   private int animationTimer = 0; //This is used to synchronise the animations for each limb.
 
-  private CircleCollider cc;
 
   //Networking
   private int lastInputCount;
 
+  /**
+   *
+   * Constructs a player object in the scene
+   * @param x The X-Coordinate of the object
+   * @param y The Y-Coordinate of the object
+   * @param playerUUID The uuid of the object
+   */
   public Player(double x, double y, UUID playerUUID) {
     super(x, y, 80, 110, ObjectType.Player, playerUUID);
     this.lastInputCount = 0;
@@ -75,26 +116,17 @@ public class Player extends GameObject implements Destructable {
     this.click = false;
     this.health = 100;
     this.behaviour = Behaviour.IDLE;
-    this.shake = new ObjectShake(this);
     this.bc = new BoxCollider(this, ColliderLayer.PLAYER, false);
-    //  this.cc = new CircleCollider(this, ColliderLayer.PLAYER, transform.getSize().magnitude()*0.5f, false);
     this.rb = new Rigidbody(RigidbodyType.DYNAMIC, 90, 11.67f, 0.2f,
         new MaterialProperty(0f, 0.1f, 0.05f), null, this);
-    //  addComponent(cc);
     addComponent(bc);
     addComponent(rb);
-    //addComponent(shake);
   }
 
   // Initialise the animation
   @Override
   public void initialiseAnimation() {
     this.animation.supplyAnimation("default", "images/player/player_idle.png");
-  }
-
-  public void addChild(GameObject child) {
-    children.add(child);
-    settings.getLevelHandler().addGameObject(child);
   }
 
   @Override
@@ -124,8 +156,9 @@ public class Player extends GameObject implements Destructable {
     addChild(armRight);
     armRight.addChild(handRight);
     armLeft.addChild(handLeft);
+
   }
-  
+
   private void updateAnimationTimer() {
     if(this.behaviour != Behaviour.IDLE) {
       animationTimer++;
@@ -133,9 +166,9 @@ public class Player extends GameObject implements Destructable {
     else{
       animationTimer = 0;
     }
-    
+
   }
-  
+
   public int getAnimationTimer() {
     return animationTimer;
   }
@@ -144,6 +177,7 @@ public class Player extends GameObject implements Destructable {
   public void update() {
     checkGrounded(); // Checks if the player is grounded
     badWeapon();
+    pointLeft = mouseX < this.getX();
     updateAnimationTimer();
     if (deattach) {
       for (int i = 0; i < 6; i++) {
@@ -153,7 +187,6 @@ public class Player extends GameObject implements Destructable {
     }
     super.update();
   }
-
 
   @Override
   public String getState() {
@@ -175,6 +208,9 @@ public class Player extends GameObject implements Destructable {
     grounded = rb.isGrounded();
   }
 
+  /**
+   * Applies the inputs at the beginning of the frame
+   */
   public void applyInput() {
     if (grounded) {
       jumped = false;
@@ -182,14 +218,10 @@ public class Player extends GameObject implements Destructable {
     if (rightKey) {
       rb.moveX(speed);
       behaviour = Behaviour.WALK_RIGHT;
-      this.facingLeft = false;
-      this.facingRight = true;
     }
     if (leftKey) {
       rb.moveX(speed * -1);
       behaviour = Behaviour.WALK_LEFT;
-      this.facingRight = false;
-      this.facingLeft = true;
     }
 
     if (!rightKey && !leftKey) {
@@ -234,6 +266,9 @@ public class Player extends GameObject implements Destructable {
     return false;
   }
 
+  /**
+   * Throws the weapon currently held with a velocity
+   */
   public void throwHolding() {
     if (this.holding == null || this.holding instanceof Punch) {
       return;
@@ -242,6 +277,7 @@ public class Player extends GameObject implements Destructable {
     w.startThrowing();
   }
 
+  @Override
   public void deductHp(int damage) {
     this.health -= damage;
     if (this.health <= 0) {
@@ -254,6 +290,9 @@ public class Player extends GameObject implements Destructable {
     }
   }
 
+  /**
+   * Resets the player's values, a "respawn"
+   */
   public void reset() {
     health = 100;
     if (this.active == false) {
@@ -270,10 +309,16 @@ public class Player extends GameObject implements Destructable {
     addLimbs();
   }
 
+  /**
+   * Increases the player score by one unit
+   */
   public void increaseScore() {
     score++;
   }
 
+  /**
+   * Increases the player score as per the game condition
+   */
   public void increaseScore(int amount) {
     score += amount;
   }
@@ -313,19 +358,6 @@ public class Player extends GameObject implements Destructable {
    * @return A 2 elements array, a[0] = X position of the hand, a[1] = Y position of the hand
    */
   public double[] getGunHandPos() {
-    // TODO: remove this section and getHand(Left/Right)(X/Y) methods below
-    /*
-    if (jumped && facingLeft) {
-      return new double[]{this.getHandLeftJumpX(), this.getHandLeftJumpY()};
-    } else if (jumped && facingRight) {
-      return new double[]{this.getHandRightJumpX(), this.getHandRightJumpY()};
-    } else if (facingLeft) {
-      return new double[]{this.handLeft.getX(), this.handLeft.getY()};
-    } else if (facingRight) {
-      return new double[]{this.handRight.getX(), this.handRight.getY()};
-    }
-    return new double[]{this.getHandRightX(), this.getHandRightY()};
-    */
     if (isAimingLeft()) {
       return new double[]{this.handRight.getX(), this.handRight.getY()};
     } else {
@@ -375,30 +407,16 @@ public class Player extends GameObject implements Destructable {
     return this.jumped;
   }
 
-  public boolean getFacingLeft() {
-    return this.facingLeft;
-  }
-
-  public void setFacingLeft(boolean b) {
-    this.facingLeft = b;
-    this.facingRight = !b;
-  }
-
-  public boolean getFacingRight() {
-    return this.facingRight;
-  }
-
-  public void setFacingRight(boolean b) {
-    this.facingLeft = !b;
-    this.facingRight = b;
-  }
-
   public boolean isAimingLeft() {
     return this.aimLeft;
   }
 
   public void setAimingLeft(boolean b) {
     this.aimLeft = b;
+  }
+
+  public boolean isPointingLeft() {
+    return this.pointLeft;
   }
 
   public boolean isGrounded() {

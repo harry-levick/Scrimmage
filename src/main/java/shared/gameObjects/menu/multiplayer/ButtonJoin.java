@@ -12,6 +12,9 @@ import shared.gameObjects.menu.ButtonObject;
 import shared.handlers.levelHandler.Map;
 import shared.util.Path;
 
+/**
+ * Button to take the client to the join menu
+ */
 public class ButtonJoin extends ButtonObject {
 
   private transient TextField addressInput;

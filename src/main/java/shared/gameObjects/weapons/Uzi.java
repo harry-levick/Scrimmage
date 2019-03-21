@@ -8,6 +8,9 @@ import shared.gameObjects.players.Player;
 import shared.util.Path;
 import shared.util.maths.Vector2;
 
+/**
+ * Gun of type Uzi
+ */
 public class Uzi extends Gun {
 
   private static String imagePath = "images/weapons/uzi.png";
@@ -23,15 +26,18 @@ public class Uzi extends Gun {
         name,
         50, // ammo
         70, // fireRate
+        20, // pivotX
+        25, // pivotY
         holder,
         true, // fullAutoFire
         false, // singleHanded
         uuid
     );
 
-    rotate = new Rotate();
-    rotate.setPivotX(20);
-    rotate.setPivotY(25);
+  }
+
+  public Uzi(Uzi that) {
+    this(that.getX(), that.getY(), that.getName(), that.getHolder(), UUID.randomUUID());
   }
 
   @Override

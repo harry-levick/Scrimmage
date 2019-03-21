@@ -9,6 +9,7 @@ public class PacketPlayerJoin extends Packet {
   private UUID uuid;
   private String username;
 
+  //TODO: JavaDoc this boi
   public PacketPlayerJoin(double x, double y, UUID uuid, String username) {
     packetID = PacketID.PLAYERJOIN.getID();
     this.x = x;
@@ -17,7 +18,10 @@ public class PacketPlayerJoin extends Packet {
     this.username = username;
     data = packetID + "," + x + "," + y + "," + uuid + "," + username;
   }
-
+  /**
+   * Constructs a packet from a string of data
+   * @param data Packet data received from sender
+   */
   public PacketPlayerJoin(String data) {
     String[] unpackedData = data.split(",");
     this.packetID = Integer.parseInt(unpackedData[0]);

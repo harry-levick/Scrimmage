@@ -4,6 +4,9 @@ import java.util.UUID;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.menu.ButtonObject;
 
+/**
+ * Button to load the Level Editor to the client
+ */
 public class ButtonLeveleditor extends ButtonObject {
 
   /**

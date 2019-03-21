@@ -7,6 +7,9 @@ import shared.gameObjects.menu.ButtonObject;
 import shared.handlers.levelHandler.Map;
 import shared.util.Path;
 
+/**
+ * Button to the Load the general Multiplayer menu
+ */
 public class ButtonMultiplayer extends ButtonObject {
 
   /**

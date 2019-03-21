@@ -17,7 +17,17 @@ import shared.util.maths.Vector2;
  * @author Harry Levick (hxl799)
  */
 public enum FSA {
+  /**
+   * The attacking state
+   */
   ATTACKING() {
+    /**
+     * Finds the next state based on the current scenario in the world
+     * @param targetPlayer The bots target.
+     * @param bot The bot that this FSA is associated with.
+     * @param targetDistance The distance to the target.
+     * @return The next state
+     */
     public FSA next(Player targetPlayer, Player bot, double targetDistance) {
       if (targetPlayer == null)
         return IDLE;
@@ -53,11 +63,11 @@ public enum FSA {
       }
 
       if (((targetDistance > weaponRange) || !inSight)
-          && (botHealth >= this.HIGH_HEALTH)
+          && (botHealth >= this.HIGH_HEALTH || botHealth < this.MEDIUM_HEALTH)
           && ((ammoLeft > 0) && bot.getHolding().isGun() || bot.getHolding().isMelee())) {
         return CHASING;
 
-      } else if ((botHealth <= this.MEDIUM_HEALTH)
+      } else if ((botHealth <= this.HIGH_HEALTH)
           || ((ammoLeft == 0) && bot.getHolding().isGun())) {
         return FLEEING;
 
@@ -68,7 +78,17 @@ public enum FSA {
         return IDLE;
     }
   },
+  /**
+   * The chasing state
+   */
   CHASING() {
+    /**
+     * Finds the next state based on the current scenario in the world
+     * @param targetPlayer The bots target.
+     * @param bot The bot that this FSA is associated with.
+     * @param targetDistance The distance to the target.
+     * @return The next state
+     */
     public FSA next(Player targetPlayer, Player bot, double targetDistance) {
       if (targetPlayer == null)
         return IDLE;
@@ -92,7 +112,6 @@ public enum FSA {
           (Bot) bot,
           false);
 
-
       if (bot.getHolding().isGun() && ((Gun) bot.getHolding()).firesExplosive()) {
         inSight = ((Rigidbody) rayCast.getCollidedObject()
             .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC;
@@ -107,7 +126,7 @@ public enum FSA {
       if ((targetDistance <= weaponRange)
           && inSight
           && ((ammoLeft > 0) && bot.getHolding().isGun() || bot.getHolding().isMelee())
-          && (botHealth >= this.HIGH_HEALTH)) {
+          && (botHealth >= this.HIGH_HEALTH || botHealth < this.MEDIUM_HEALTH)) {
         return ATTACKING;
 
       } else if ((botHealth <= this.MEDIUM_HEALTH)
@@ -122,7 +141,17 @@ public enum FSA {
       }
     }
   },
+  /**
+   * The fleeing state
+   */
   FLEEING() {
+    /**
+     * Finds the next state based on the current scenario in the world
+     * @param targetPlayer The bots target.
+     * @param bot The bot that this FSA is associated with.
+     * @param targetDistance The distance to the target.
+     * @return The next state
+     */
     public FSA next(Player targetPlayer, Player bot, double targetDistance) {
       if (targetPlayer == null)
         return IDLE;
@@ -166,7 +195,7 @@ public enum FSA {
 
       if ((targetDistance <= weaponRange)
           && inSight
-          && (botHealth >= this.HIGH_HEALTH)
+          && (botHealth >= this.HIGH_HEALTH || botHealth < this.MEDIUM_HEALTH)
           && ((ammoLeft > 0) && bot.getHolding().isGun() || bot.getHolding().isMelee())) {
         return ATTACKING;
 
@@ -183,7 +212,17 @@ public enum FSA {
       }
     }
   },
+  /**
+   * The idle state
+   */
   IDLE() {
+    /**
+     * Finds the next state based on the current scenario in the world
+     * @param targetPlayer The bots target.
+     * @param bot The bot that this FSA is associated with.
+     * @param targetDistance The distance to the target.
+     * @return the next state
+     */
     public FSA next(Player targetPlayer, Player bot, double targetDistance) {
       if (targetPlayer == null)
         return IDLE;
@@ -218,7 +257,7 @@ public enum FSA {
                 rayCast.getCollidedObject() instanceof WoodFloorObject);
       }
 
-      if (((botHealth >= this.HIGH_HEALTH))
+      if ((botHealth >= this.HIGH_HEALTH || botHealth < this.MEDIUM_HEALTH)
           && inSight
           && (targetDistance <= weaponRange)
           && ((ammoLeft > 0) && bot.getHolding().isGun() || bot.getHolding().isMelee())) {
@@ -235,18 +274,27 @@ public enum FSA {
       }
     }
   },
+  /**
+   * The initial state
+   */
   INITIAL_STATE() {
-    // The initial state just acts as an entry point, and so directs straight to the IDLE state.
+    /**
+     * Finds the next state based on the current scenario in the world
+     * @param targetPlayer The bots target.
+     * @param bot The bot that this FSA is associated with.
+     * @param targetDistance The distance to the target.
+     * @return The next state
+     */
     public FSA next(Player targetPlayer, Player bot, double targetDistance) {
+      // The initial state just acts as an entry point, and so directs straight to the IDLE state.
       return FSA.IDLE;
     }
   };
 
+  /** The border between medium - high health */
   final int HIGH_HEALTH = 66;
+  /** The border between low - medium health */
   final int MEDIUM_HEALTH = 33;
-
-  FSA() {
-  }
 
   /**
    * Determines the state to update to.

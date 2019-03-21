@@ -25,6 +25,9 @@ import shared.util.Path;
 import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import shared.util.maths.Vector2;
 
+/**
+ * Manager class for handling map changes and dynamically adding and removing GameObjects
+ */
 public class LevelHandler {
 
   private ConcurrentLinkedHashMap<UUID, GameObject> gameObjects;
@@ -47,6 +50,13 @@ public class LevelHandler {
   private boolean isServer;
   private Server server;
 
+  /**
+   * Constructs level handler for client
+   * @param settings Settings attached to client
+   * @param backgroundRoot root containing background images
+   * @param gameRoot main game root containing all the objects
+   * @param uiRoot root containing the foreground and UI images
+   */
   public LevelHandler(Settings settings, Group backgroundRoot, Group gameRoot,
       Group uiRoot) {
     this.settings = settings;
@@ -69,7 +79,13 @@ public class LevelHandler {
         true, false);
     previousMap = null;
   }
-
+  /**
+   * Constructs level handler for server
+   * @param settings Settings attached to server
+   * @param backgroundRoot root containing background images
+   * @param gameRoot main game root containing all the objects
+   * @param server The server the handler is attached to
+   */
   public LevelHandler(Settings settings, Group backgroundRoot, Group gameRoot, Server server) {
     this.settings = settings;
     gameObjects = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
@@ -88,6 +104,12 @@ public class LevelHandler {
     previousMap = null;
   }
 
+  /**
+   * Changes the current active map
+   * @param map Map object containing details for the new map to load
+   * @param moveToSpawns If true, moves the players to the spawnpoints found on the map
+   * @param isServer If false, it is a client changing their map
+   */
   public void changeMap(Map map, Boolean moveToSpawns, Boolean isServer) {
     previousMap = this.map;
     this.map = map;
@@ -109,6 +131,10 @@ public class LevelHandler {
     }
   }
 
+  /**
+   * Loads the previous map instead of the current one
+   * @param moveToSpawns
+   */
   public void previousMap(Boolean moveToSpawns) {
     if (previousMap != null) {
       Map temp = this.map;
@@ -119,8 +145,7 @@ public class LevelHandler {
   }
 
   /**
-   * NOTE: This to change the level use change Map Removes current game objects and creates new ones
-   * from Map file
+   * Recreates the level from the data found in the current map object
    */
   public void generateLevel(Group backgroundGroup, Group gameGroup, Boolean moveToSpawns,
       Boolean isServer) {
@@ -159,7 +184,7 @@ public class LevelHandler {
         });
     gameObjects.putAll(players);
     gameObjects.forEach((key, gameObject) -> gameObject.setSettings(settings));
-    gameState = map.getGameState();
+    gameState = map.getGameState() != null ? map.getGameState() : GameState.MAIN_MENU;
     players.forEach((key, player) -> {
       player.reset();
       /**
@@ -212,6 +237,10 @@ public class LevelHandler {
     return gameObjects;
   }
 
+  /**
+   * List of all gameObjects excluding players
+   * @return All non-player Game Objects
+   */
   public ConcurrentLinkedHashMap<UUID, GameObject> getGameObjectsFiltered() {
     clearToRemove(); // Remove every gameObjects we no longer need
     ConcurrentLinkedHashMap<UUID, GameObject> filtered = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
@@ -249,6 +278,9 @@ public class LevelHandler {
     }));
   }
 
+  /**
+   * Creates game objects that are meant to be created from the previous loop
+   */
   public void createObjects() {
     toCreate.forEach(gameObject -> {
       gameObject.initialise(gameRoot, settings);

@@ -10,6 +10,9 @@ import shared.physics.data.Collision;
 import shared.util.Path;
 import shared.util.maths.Vector2;
 
+/**
+ * A gun of type Machine Gun
+ */
 public class MachineGun extends Gun {
 
   private static String imagePath = "images/weapons/machinegun.png"; // path to Machine Gun image
@@ -27,26 +30,17 @@ public class MachineGun extends Gun {
         name,
         50, // ammo
         70, // fireRate
+        20, // pivotX
+        10, // pivotY
         holder,
         true, // fullAutoFire
         false, // singleHanded
         uuid);
 
-    // pivot = position of the grip
-    // If changing the value of this, change the value in all getGrip() methods
-    rotate.setPivotX(20);
-    rotate.setPivotY(10);
   }
 
   public MachineGun(MachineGun that) {
     this(that.getX(), that.getY(), that.name, that.holder, UUID.randomUUID());
-  }
-
-  @Override
-  public void initialise(Group root, Settings settings) {
-    super.initialise(root, settings);
-    rotate.setPivotX(20);
-    rotate.setPivotY(10);
   }
 
   @Override
