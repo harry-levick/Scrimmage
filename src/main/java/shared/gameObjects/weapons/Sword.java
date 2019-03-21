@@ -37,6 +37,8 @@ public class Sword extends Melee {
         name,
         30, // ammo
         60, // fireRate
+        17, // pivotX
+        40, //pivotY
         holder,
         50, // range
         50, // beginAngle
@@ -46,10 +48,6 @@ public class Sword extends Melee {
 
     translate = new Translate();
     attackAngleSign = 1;
-
-    rotate = new Rotate();
-    rotate.setPivotX(17);
-    rotate.setPivotY(40);
   }
 
   public Sword(Sword that) {

@@ -16,12 +16,8 @@ public abstract class Gun extends Weapon {
   /** Maximum angle of aiming before switching holding hand */
   protected float AIM_ANGLE_MAX = 110f;
 
-  /** Fire rate of the gun (less than MAX_COOLDOWN) */
-  protected int fireRate;
   /** True if this gun is full auto fire */
   protected boolean fullAutoFire;
-  /** Ammo of this gun currently has */
-  protected int ammo;
 
   /**
    * Constructor of the Gun class
@@ -48,16 +44,16 @@ public abstract class Gun extends Weapon {
       String name,
       int ammo,
       int fireRate,
+      double pivotX,
+      double pivotY,
       Player holder,
       boolean fullAutoFire,
       boolean singleHanded,
       UUID uuid) {
 
-    super(x, y, sizeX, sizeY, ObjectType.Weapon, weight, name, true, false, ammo, fireRate, holder,
-        uuid);
+    super(x, y, sizeX, sizeY, ObjectType.Weapon, weight, name, true, false, ammo, fireRate,
+        pivotX, pivotY, holder, uuid);
 
-    this.fireRate = fireRate;
-    this.ammo = ammo;
     this.fullAutoFire = fullAutoFire;
     this.singleHanded = singleHanded;
   }
@@ -71,11 +67,6 @@ public abstract class Gun extends Weapon {
   public abstract double getForeGripFlipY();
 
   public abstract boolean firesExplosive();
-
-  @Override
-  public void initialise(Group root, Settings settings) {
-    super.initialise(root, settings);
-  }
 
   @Override
   public void update() {
