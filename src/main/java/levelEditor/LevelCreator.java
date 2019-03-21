@@ -44,6 +44,7 @@ import shared.gameObjects.objects.utility.RedBlock;
 import shared.gameObjects.objects.utility.YellowBlock;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.MachineGun;
+import shared.gameObjects.weapons.WeaponSpawner;
 import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.MapLoader;
 import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
@@ -175,6 +176,10 @@ public class LevelCreator extends Application {
         new WoodBlockSmallObject(
             getAbs(6), getAbs(3), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
     uuid = UUID.randomUUID();
+        gameObjects.put(uuid, new WeaponSpawner(
+            getAbs(8), getAbs(4), getAbs(1), getAbs(1), uuid
+        ));
+        uuid = UUID.randomUUID();
 
     // right side blocks
     gameObjects.put(uuid,
