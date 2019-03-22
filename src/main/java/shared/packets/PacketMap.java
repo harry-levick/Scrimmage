@@ -12,7 +12,7 @@ public class PacketMap extends Packet {
     packetID = PacketID.MAP.getID();
     this.name = name;
     this.uuid = uuid;
-    data = packetID + "," + name;
+    data = packetID + "," + name + "," + uuid;
   }
   /**
    * Constructs a packet from a string of data
@@ -22,6 +22,7 @@ public class PacketMap extends Packet {
     String[] unpackedData = data.split(",");
     this.packetID = Integer.parseInt(unpackedData[0]);
     this.name = unpackedData[1];
+    this.uuid = UUID.fromString(unpackedData[2]);
   }
 
   public UUID getUuid() {

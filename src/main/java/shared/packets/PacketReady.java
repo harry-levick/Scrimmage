@@ -15,7 +15,7 @@ public class PacketReady extends Packet {
    * @param username Player username
    */
   public PacketReady(UUID uuid, String username) {
-    packetID = PacketID.PLAYERJOIN.getID();
+    packetID = PacketID.READY.getID();
     this.uuid = uuid;
     data = packetID + "," + uuid;
   }
