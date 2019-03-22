@@ -154,13 +154,14 @@ public class AStar {
       Vector2 enemyPos = new Vector2((float) enemyX, (float) enemyY);
       double totalH = botPos.exactMagnitude(enemyPos);
 
-      if (!allItems.isEmpty()) {
-        GameObject closestItem = findClosestItem(allItems);
-        Vector2 itemPos = new Vector2((float) closestItem.getX(), (float) closestItem.getY());
+      GameObject weaponToCollect = findClosestItem(allItems);
+      if (weaponToCollect != null) {
+        Vector2 itemPos = new Vector2((float) weaponToCollect.getX(),
+            (float) weaponToCollect.getY());
         double distanceToItem = botPos.exactMagnitude(itemPos);
         // The heuristic value is the combined distance of the bot->enemy + bot->item
         // The heuristic value for the item is weighted to add preference to pick the items up.
-        totalH += (distanceToItem * 2);
+        totalH += (distanceToItem * 5);
       }
 
       return totalH;
@@ -208,22 +209,25 @@ public class AStar {
      * @param allItems A list of all the items in the world.
      * @return The item that is the closest to the bot
      */
-    private GameObject findClosestItem(List<Weapon> allItems) {
-      GameObject closestItem = null;
+    public Weapon findClosestItem(List<Weapon> allItems) {
+      Weapon closestWeap = null;
       Vector2 botPos = new Vector2((float) bot.getX(), (float) bot.getY());
       double targetDistance = Double.POSITIVE_INFINITY;
 
-      for (GameObject item : allItems) {
-        Vector2 itemPos = new Vector2((float) item.getX(), (float) item.getY());
+      for (Weapon weap : allItems) {
+        Vector2 itemPos = new Vector2((float) weap.getX(), (float) weap.getY());
         double distance = botPos.exactMagnitude(itemPos);
-        // Update the target if another player is closer
-        if (distance < targetDistance) {
+
+        boolean betterWeap = weap.getWeaponRank() > replicaBot.getHolding().getWeaponRank();
+
+        if (distance < targetDistance &&
+            (weap.getWeaponRank() > replicaBot.getHolding().getWeaponRank())) {
           targetDistance = distance;
-          closestItem = item;
+          closestWeap = weap;
         }
       }
 
-      return closestItem;
+      return closestWeap;
     }
   }
 
