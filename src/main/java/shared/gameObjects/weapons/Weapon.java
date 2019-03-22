@@ -298,7 +298,7 @@ public abstract class Weapon extends GameObject {
   @Override
   public void removeRender() {
     if (holder != null) {
-      //holder.throwHolding();
+      holder.throwHolding();
     }
     super.removeRender();
   }
