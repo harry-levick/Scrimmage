@@ -97,7 +97,7 @@ public class DynamicCollision {
       if (n.getY() < 0) {
         collisionNormal = Vector2.Up();
         bodyB.setGrounded(!(bodyA.getParent() instanceof Bullet));
-      } else if (!(bodyA.getParent() instanceof Bullet)) {
+      } else {
         collisionNormal = Vector2.Down();
         bodyA.setGrounded(!(bodyB.getParent() instanceof Bullet));
       }
