@@ -30,7 +30,7 @@ public class UI {
    */
   public void render() {
     playerInfo.render();
-    //score.render();
+    score.render();
   }
 
 

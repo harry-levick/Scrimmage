@@ -48,6 +48,8 @@ public abstract class Weapon extends GameObject {
   protected int currentCooldown;
   /** True if this gun is held with single hand */
   protected boolean singleHanded;
+  /** Max ammo amount for the player */
+   protected int maxAmmo;
   /** Vector2 for throwing the weapon */
   protected Vector2 throwVector;
   /**
@@ -133,6 +135,7 @@ public abstract class Weapon extends GameObject {
     this.name = name;
     this.startedThrowing = false;
     setAmmo(ammo);
+    this.maxAmmo = ammo;
     setFireRate(fireRate);
     this.pivotX = pivotX;
     this.pivotY = pivotY;
@@ -337,6 +340,11 @@ public abstract class Weapon extends GameObject {
   /** Get the weight */
   public double getWeight() {
     return this.weight;
+  }
+  
+  /** Get the max ammo amount */
+  public int getMaxAmmo() {
+    return this.maxAmmo;
   }
 
   /** Set a new weight, with value between 0 to 1000f exclusive */
