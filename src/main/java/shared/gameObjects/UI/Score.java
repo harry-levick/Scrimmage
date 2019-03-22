@@ -34,9 +34,8 @@ public class Score {
     boardImageView.setY(yPos);
 
     player = clientPlayer;
-    scoreText = new Text(xPos + 55, yPos + 102, "");
-    scoreText.setFont(new Font(72));
-    
+    scoreText = new Text(xPos + 20, yPos + 40,"");
+    scoreText.setFont(new Font(48));
     root.getChildren().addAll(this.boardImageView,this.scoreText);
   }
 
@@ -45,7 +44,7 @@ public class Score {
    * Renders the UI
    */
   public void render() {
-    scoreText.setText(Integer.toString(player.getScore()));
+    scoreText.setText("Score:"+Integer.toString(player.getScore()));
     boardImageView.setImage(board.getImage());
   }
 
