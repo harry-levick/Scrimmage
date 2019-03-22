@@ -6,7 +6,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import server.ai.pathFind.AStar.SearchNode;
+import shared.gameObjects.GameObject;
 import shared.gameObjects.players.Player;
+import shared.gameObjects.weapons.Weapon;
 import shared.handlers.levelHandler.LevelHandler;
 import shared.util.maths.Vector2;
 
@@ -109,9 +113,21 @@ public class Bot extends Player {
 
     double distanceToTarget = 0;
     targetPlayer = findTarget();
-    // Calculate the distance to the updated target
+
     if (targetPlayer != null)
       distanceToTarget = calcDist();
+
+    Weapon nearbyWeapon = findClosestItem(levelHandler.getGameObjects().values().stream()
+        .filter(w -> w instanceof Weapon && (((Weapon) w).getHolder() == null))
+        .map(Weapon.class::cast)
+        .collect(Collectors.toList()));
+
+    if (nearbyWeapon != null) {
+      double distanceToWeap = (nearbyWeapon.getTransform().getPos()).magnitude(this.getTransform().getPos());
+      if (distanceToWeap < 80) {
+        this.throwHoldingKey = true;
+      }
+    }
 
     state = state.next(targetPlayer, this, distanceToTarget);
 
@@ -260,6 +276,30 @@ public class Bot extends Player {
   }
 
   /**
+   * Finds the closest pick-upable item
+   * @param allItems A list of all the items in the world.
+   * @return The item that is the closest to the bot
+   */
+  public Weapon findClosestItem(List<Weapon> allItems) {
+    Weapon closestWeap = null;
+    Vector2 botPos = new Vector2((float) this.getX(), (float) this.getY());
+    double targetDistance = Double.POSITIVE_INFINITY;
+
+    for (Weapon weap : allItems) {
+      Vector2 itemPos = new Vector2((float) weap.getX(), (float) weap.getY());
+      double distance = botPos.exactMagnitude(itemPos);
+
+      if (distance < targetDistance &&
+          (weap.getWeaponRank() > this.getHolding().getWeaponRank())) {
+        targetDistance = distance;
+        closestWeap = weap;
+      }
+    }
+
+    return closestWeap;
+  }
+
+  /**
    * Set all of the movement booleans false.
    */
   private void setFalse() {
@@ -267,6 +307,7 @@ public class Bot extends Player {
     leftKey = false;
     rightKey = false;
     click = false;
+    throwHoldingKey = false;
   }
 
   /**
