@@ -40,7 +40,7 @@ public class Handgun extends Gun {
         false, // fullAutoFire
         true, // singleHanded
         uuid);
-
+    this.weaponRank = 2;
   }
 
   public Handgun(Handgun that) {

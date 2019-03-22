@@ -50,6 +50,7 @@ public abstract class Weapon extends GameObject {
   protected boolean singleHanded;
   /** Vector2 for throwing the weapon */
   protected Vector2 throwVector;
+  protected int weaponRank;
 
   /** The player who holds the weapon, null if none */
   protected Player holder;
@@ -297,7 +298,7 @@ public abstract class Weapon extends GameObject {
   @Override
   public void removeRender() {
     if (holder != null) {
-      holder.throwHolding();
+      //holder.throwHolding();
     }
     super.removeRender();
   }
@@ -393,6 +394,12 @@ public abstract class Weapon extends GameObject {
   public Player getHolder() {
     return this.holder;
   }
+
+  /**
+   * Get the rank of the weapon
+   * @return the rank of the weapon
+   */
+  public int getWeaponRank() { return this.weaponRank; }
 
   /**
    * Set holder of this weapon

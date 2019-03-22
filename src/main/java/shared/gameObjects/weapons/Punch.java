@@ -46,6 +46,7 @@ public class Punch extends Melee {
         1,
         true,
         uuid);
+    this.weaponRank = 0;
   }
 
   public Punch(Punch that) {
