@@ -1,9 +1,15 @@
 package shared.gameObjects.weapons;
 
+import java.util.ArrayList;
 import java.util.UUID;
+import shared.gameObjects.Destructable;
+import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.players.Player;
+import shared.physics.Physics;
+import shared.physics.data.Collision;
 import shared.util.Path;
+import shared.util.maths.Vector2;
 
 /**
  * Default holding weapon of a player
@@ -62,7 +68,26 @@ public class Punch extends Melee {
 
   @Override
   public void fire(double mouseX, double mouseY) {
-    super.fire(mouseX, mouseY);
+    if (canFire()) {
+      this.collidedSet.clear();
+
+      ArrayList<Collision> collisions =
+          Physics.boxcastAll(
+              new Vector2((float) (this.getGripX()), (float) (this.getGripY())),
+              new Vector2(10f, 10f),
+              true
+          );
+
+      for (Collision c : collisions) {
+        GameObject g = c.getCollidedObject();
+        if (g instanceof Destructable && !g.equals(holder)) {
+          ((Destructable) g).deductHp(this.damage);
+        }
+      }
+
+      this.currentCooldown = getDefaultCoolDown();
+
+    }
   }
 
   @Override
@@ -72,21 +97,25 @@ public class Punch extends Melee {
 
   @Override
   public double getGripX() {
-    return holder.getMeleeHandPos()[0];
+    if (holder.isPointingLeft())
+      return getGripFlipX();
+    return holder.getHandRight().getX();
   }
 
   @Override
   public double getGripY() {
-    return holder.getMeleeHandPos()[1];
+    if (holder.isPointingLeft())
+      return getGripFlipY();
+    return holder.getHandRight().getY();
   }
 
   @Override
   public double getGripFlipX() {
-    return holder.getMeleeHandPos()[0];
+    return holder.getHandLeft().getX();
   }
 
   @Override
   public double getGripFlipY() {
-    return holder.getMeleeHandPos()[1];
+    return holder.getHandLeft().getY();
   }
 }
