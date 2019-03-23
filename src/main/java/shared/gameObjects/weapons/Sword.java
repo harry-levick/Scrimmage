@@ -13,11 +13,16 @@ import shared.util.maths.Vector2;
 public class Sword extends Melee {
 
   // private static String imagePath = "images/weapons/sword.jpg";
+  /** Path to image */
   private static String imagePath = "images/weapons/sword1.png";
+  /** Maximum angle to aim before switching holding hand */
   private static float AIM_ANGLE_MAX = 110f;
+  /** Index indicating current angle when attacking */
   private int currentAngleIndex;
+  /** Translation to image */
   private Translate translate;
-  private double attackAngleSign; // -1 if aiming Left, 1 if aiming Right
+  /** -1 if aiming Left, 1 if aiming Right */
+  private double attackAngleSign;
 
   /**
    * Constructor of the Sword class
@@ -53,6 +58,11 @@ public class Sword extends Melee {
     this.weaponRank = 1;
   }
 
+  /**
+   * Constructor that duplicate a Sword with different UUID
+   *
+   * @param that Source of duplication
+   */
   public Sword(Sword that) {
     this(that.getX(), that.getY(), that.name, that.holder, UUID.randomUUID());
   }

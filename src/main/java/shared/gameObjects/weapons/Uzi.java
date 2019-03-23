@@ -13,9 +13,20 @@ import shared.util.maths.Vector2;
  */
 public class Uzi extends Gun {
 
+  /** Path to image */
   private static String imagePath = "images/weapons/uzi.png";
+  /** Size of image */
   private static double sizeX = 84, sizeY = 35;
 
+  /**
+   * Default constructor
+   *
+   * @param x X position of this Uzi
+   * @param y Y position of this Uzi
+   * @param name Name of this Uzi
+   * @param holder Player who holds this Uzi
+   * @param uuid UUID of this Uzi
+   */
   public Uzi(double x, double y, String name, Player holder, UUID uuid) {
     super(
         x,
@@ -36,6 +47,11 @@ public class Uzi extends Gun {
     this.weaponRank = 3;
   }
 
+  /**
+   * Constructor that duplicate a Uzi with different UUID
+   *
+   * @param that Source of duplication
+   */
   public Uzi(Uzi that) {
     this(that.getX(), that.getY(), that.getName(), that.getHolder(), UUID.randomUUID());
   }
