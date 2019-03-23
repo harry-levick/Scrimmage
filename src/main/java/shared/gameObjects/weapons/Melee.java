@@ -1,6 +1,7 @@
 package shared.gameObjects.weapons;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.UUID;
 import shared.gameObjects.Destructable;
 import shared.gameObjects.GameObject;
@@ -34,6 +35,9 @@ public abstract class Melee extends Weapon {
   protected double[] angles;
   /** Index indicating which part the swing is in now during attack */
   protected int currentAngleIndex;
+  /** Hash set to record collided object in 1 attack */
+  protected HashSet<Destructable> collidedSet;
+
 
   /**
    * Default constructor of all Melee weapon
@@ -102,6 +106,7 @@ public abstract class Melee extends Weapon {
     this.attacking = false;
     this.currentAngleIndex = 0;
     this.singleHanded = singleHanded;
+    this.collidedSet = new HashSet<>();
   }
 
   @Override
@@ -114,27 +119,38 @@ public abstract class Melee extends Weapon {
   public void fire(double mouseX, double mouseY) {
     if (canFire()) {
       this.attacking = true;
-      UUID uuid = UUID.randomUUID();
-      // TODO: add circle cast
-      // maybe use box cast?
-      // ArrayList<Collision> collisions = Physics.circlecastAll(sourcePos, distance);
+      this.collidedSet.clear();
+
+      // Box cast on beginning of swing
       ArrayList<Collision> collisions =
           Physics.boxcastAll(
-              new Vector2((float) (this.getX() + this.range), (float) (this.getY() - this.range)),
-              new Vector2((float) this.range, (float) this.range), false);
-      ArrayList<Destructable> playersBeingHit = new ArrayList<>();
+              new Vector2((float) (this.getGripX()), (float) (this.getGripY())),
+              new Vector2((float) this.range, (float) this.range),
+              true
+          );
+      // Box cast at end of swing
+      collisions.addAll(
+          Physics.boxcastAll(
+              new Vector2((float) (this.getGripX()), (float) (this.getGripY())),
+              new Vector2((float) this.range, (float) this.range),
+              true
+          )
+      );
+      ArrayList<Destructable> objectsBeingHit = new ArrayList<>();
 
       for (Collision c : collisions) {
-        GameObject g = c.getCollidedObject().getParent();
-        if (g instanceof Destructable && !g.equals(holder)) {
-          playersBeingHit.add((Destructable) g);
+        GameObject g = c.getCollidedObject();
+
+        if (g instanceof Destructable && !g.equals(holder) && !collidedSet.contains(g)) {
+          objectsBeingHit.add((Destructable) g);
+          collidedSet.add((Destructable) g);
         }
       }
 
       this.currentCooldown = getDefaultCoolDown();
 
-      for (Destructable p : playersBeingHit) {
-        p.deductHp(this.damage);
+      for (Destructable obj : objectsBeingHit) {
+        obj.deductHp(this.damage);
       }
 
       deductAmmo();
