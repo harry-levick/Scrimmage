@@ -130,6 +130,9 @@ public class LevelCreator extends Application {
     //JumpPad todo remove form mm
     gameObjects.put(uuid, new JumpPad(getAbs(2), getAbs(25), uuid));
     uuid = UUID.randomUUID();
+   // gameObjects.put(uuid, new ParticleEmitter(new Vector2(getAbs(2), getAbs(25)), new Vector2(0, -400), new Vector2(0, -42), new Vector2(getAbs(1), getAbs(1)), 5, 1, 8, 2,
+  //      ParticleType.LINE, "images/platforms/Debris/debrisWood_1.png"));
+    uuid = UUID.randomUUID();
 
     //Middle platforms
     gameObjects.put(uuid,

@@ -228,8 +228,12 @@ public class Physics {
           Rectangle r2 = new Rectangle(sourcePos.getX(), sourcePos.getY(), size.getX(),
               size.getY());
           r2.setStyle("-fx-stroke-width: 4; -fx-stroke: #00ff00;");
-          settings.getGameRoot().getChildren().add(r2);
+          Client.levelHandler.getGameRoot().getChildren().add(r2);
         });
+  }
+
+  public static void drawCircleCast(Vector2 centre, float radius) {
+
   }
 
   /**

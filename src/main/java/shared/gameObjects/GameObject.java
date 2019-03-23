@@ -132,6 +132,7 @@ public abstract class GameObject implements Serializable {
    * Update loops update all components and updates server with new positions
    */
   public void update() {
+    if(destroyed) return;
     networkStateUpdate = false;
     animation.update();
 

@@ -20,13 +20,10 @@ import shared.physics.data.Collision;
 import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
-//TODO Networking
+// TODO Networking
 
-/**
- * Laser Beam hazard object
- */
+/** Laser Beam hazard object */
 public class LaserBeam extends GameObject implements Hazard {
-
 
   private final float TIME_BETWEEN_STATES = 1.7f;
   private final float TIME_IN_LASER = 1.1f;
@@ -38,6 +35,7 @@ public class LaserBeam extends GameObject implements Hazard {
 
   /**
    * Creates a Laser Beam Block object in the world
+   *
    * @param x X-Coordinate of the object
    * @param y Y-Coordinate of the object
    * @param uuid The unique identifier of the object
@@ -50,7 +48,7 @@ public class LaserBeam extends GameObject implements Hazard {
     addComponent(bc);
     addComponent(new Rigidbody(0, this));
     colour = new Colour(255, 0, 0);
-    //addComponent(new MovingPlatform(this));
+    // addComponent(new MovingPlatform(this));
   }
 
   @Override
@@ -69,8 +67,11 @@ public class LaserBeam extends GameObject implements Hazard {
     }
 
     if (laserActive) {
-      ArrayList<Collision> collisions = Physics.boxcastAll(new Vector2(laser.getX(), laser.getY()),
-          new Vector2(laser.getWidth(), laser.getHeight()), false);
+      ArrayList<Collision> collisions =
+          Physics.boxcastAll(
+              new Vector2(laser.getX(), laser.getY()),
+              new Vector2(laser.getWidth(), laser.getHeight()),
+              false);
       for (Collision c : collisions) {
         if (c.getCollidedObject() instanceof Destructable) {
           ((Destructable) c.getCollidedObject()).deductHp(9999);
@@ -110,19 +111,24 @@ public class LaserBeam extends GameObject implements Hazard {
     root.getChildren().add(1, laser);
   }
 
-  //For lasers that are moving and lasers that hit moving static objects
+  // For lasers that are moving and lasers that hit moving static objects
   private void recalculatePositions() {
     laser.setX(bc.getCorners()[1].getX() + bc.getSize().getX() * 0.28f);
     laser.setY(bc.getCentre().getY());
-    ArrayList<Collision> collisions = Physics.boxcastAll(new Vector2(laser.getX(), laser.getY()),
-        new Vector2(transform.getSize().getX() * 0.44f, 1080), false);
+    ArrayList<Collision> collisions =
+        Physics.boxcastAll(
+            new Vector2(laser.getX(), laser.getY()),
+            new Vector2(transform.getSize().getX() * 0.44f, 1080),
+            false);
     float closestPoint = 1100;
     for (Collision c : collisions) {
       if (c.getCollidedObject().getComponent(ComponentType.RIGIDBODY) != null) {
         if (((Rigidbody) c.getCollidedObject().getComponent(ComponentType.RIGIDBODY)).getBodyType()
-            == RigidbodyType.STATIC && c.getCollidedObject() != this) {
+                == RigidbodyType.STATIC
+            && c.getCollidedObject() != this) {
           closestPoint =
-              c.getPointOfCollision().getY() < closestPoint ? c.getPointOfCollision().getY()
+              c.getPointOfCollision().getY() < closestPoint
+                  ? c.getPointOfCollision().getY()
                   : closestPoint;
         }
       }
