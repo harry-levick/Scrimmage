@@ -199,6 +199,7 @@ public class Server extends Application {
             player.mouseX = temp.getX();
             player.mouseY = temp.getY();
             player.jumpKey = temp.isJumpKey();
+            player.throwHoldingKey = temp.isThrowKey();
             player.setLastInputCount(temp.getInputSequenceNumber());
           }
         }));

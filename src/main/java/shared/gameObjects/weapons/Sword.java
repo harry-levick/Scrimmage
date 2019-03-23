@@ -1,7 +1,6 @@
 package shared.gameObjects.weapons;
 
 import java.util.UUID;
-import javafx.scene.transform.Translate;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.players.Player;
 import shared.util.Path;
@@ -16,7 +15,6 @@ public class Sword extends Melee {
   private static String imagePath = "images/weapons/sword1.png";
   private static float AIM_ANGLE_MAX = 110f;
   private int currentAngleIndex;
-  private Translate translate;
   private double attackAngleSign; // -1 if aiming Left, 1 if aiming Right
 
   /**
@@ -48,7 +46,6 @@ public class Sword extends Melee {
         true, // singleHanded
         uuid);
 
-    translate = new Translate();
     attackAngleSign = 1;
     this.weaponRank = 1;
   }

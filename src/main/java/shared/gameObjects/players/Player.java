@@ -190,7 +190,8 @@ public class Player extends GameObject implements Destructable {
   public String getState() {
     return objectUUID + ";" + id + ";" + getX() + ";" + getY() + ";" + animation.getName() + ";"
         + health + ";"
-        + lastInputCount;
+        + lastInputCount + ";"
+        + throwHoldingKey;
   }
 
   @Override
@@ -200,6 +201,7 @@ public class Player extends GameObject implements Destructable {
     //this.animation.switchAnimation(unpackedData[4]);
     this.health = Integer.parseInt(unpackedData[5]);
     this.lastInputCount = Integer.parseInt(unpackedData[6]);
+    this.throwHoldingKey = Boolean.parseBoolean(unpackedData[7]);
   }
 
   private void checkGrounded() {

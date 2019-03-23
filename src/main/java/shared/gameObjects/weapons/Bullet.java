@@ -3,7 +3,6 @@ package shared.gameObjects.weapons;
 import client.main.Settings;
 import java.util.UUID;
 import javafx.scene.Group;
-import javafx.scene.transform.Rotate;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
@@ -94,7 +93,6 @@ public abstract class Bullet extends GameObject {
   @Override
   public void update() {
     super.update();
-    imageView.setRotate(angleDegree);
     if ((0 < getX() && getX() < 1920) && (0 < getY() && getY() < 1080))
       rb.move(vector.mult((float) speed));
     else {
@@ -104,6 +102,7 @@ public abstract class Bullet extends GameObject {
 
   @Override
   public void render() {
+    imageView.setRotate(angleDegree);
     super.render();
   }
 

@@ -173,20 +173,13 @@ public class ClientNetworkManager {
             player.rightKey,
             player.jumpKey,
             player.click,
+            player.throwHoldingKey,
             player.getUUID(),
             Client.inputSequenceNumber);
-    //resetInput();
     Client.connectionHandler.send(input.getString());
     input.setInputSequenceNumber(Client.inputSequenceNumber);
     Client.pendingInputs.add(input);
     Client.inputSequenceNumber++;
-  }
-
-  public static void resetInput() {
-    Player player = Client.levelHandler.getClientPlayer();
-    player.leftKey = false;
-    player.rightKey = false;
-    player.jumpKey = false;
   }
 
   public static void update() {
