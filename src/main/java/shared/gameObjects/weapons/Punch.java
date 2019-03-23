@@ -1,6 +1,7 @@
 package shared.gameObjects.weapons;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.UUID;
 import shared.gameObjects.Destructable;
 import shared.gameObjects.GameObject;
@@ -69,16 +70,29 @@ public class Punch extends Melee {
   @Override
   public void fire(double mouseX, double mouseY) {
     if (canFire()) {
-      this.collidedSet.clear();
+      Vector2 boxCastSize = new Vector2(10f, 10f);
+      HashSet<Collision> collisionSet = new HashSet<>();
 
-      ArrayList<Collision> collisions =
-          Physics.boxcastAll(
-              new Vector2((float) (this.getGripX()), (float) (this.getGripY())),
-              new Vector2(10f, 10f),
-              true
-          );
+      // Get the angle of punching
+      Vector2 vPunch = new Vector2(mouseX-getGripX(), mouseY-getGripY());
+      vPunch = vPunch.normalize().mult((float) range);
 
-      for (Collision c : collisions) {
+      int numCast = (int) Math.abs(vPunch.getX()) / 10 + 1;
+      double deltaX = vPunch.getX() / numCast;
+      double deltaY = vPunch.getY() / numCast;
+
+      for (int i = 0; i < numCast; i++)
+        collisionSet.addAll(
+            new HashSet<>(
+              Physics.boxcastAll(
+                new Vector2((float) (this.getGripX()+(i*deltaX)), (float) (this.getGripY()+(i*deltaY))),
+                boxCastSize,
+                true
+              )
+            )
+        );
+
+      for (Collision c : collisionSet) {
         GameObject g = c.getCollidedObject();
         if (g instanceof Destructable && !g.equals(holder)) {
           ((Destructable) g).deductHp(this.damage);
@@ -86,7 +100,6 @@ public class Punch extends Melee {
       }
 
       this.currentCooldown = getDefaultCoolDown();
-
     }
   }
 
