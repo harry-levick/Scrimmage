@@ -17,6 +17,7 @@ import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.background.Background;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.rendering.ColorFilters;
+import shared.packets.PacketDelete;
 import shared.util.Path;
 import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import shared.util.maths.Vector2;
@@ -296,6 +297,10 @@ public class LevelHandler {
    */
   public void removeGameObject(GameObject g) {
     toRemove.add(g); // Will be removed on next frame
+    if (isServer) {
+      PacketDelete delete = new PacketDelete(g.getUUID());
+      server.sendToClients(delete.getData(), false);
+    }
   }
 
   /**

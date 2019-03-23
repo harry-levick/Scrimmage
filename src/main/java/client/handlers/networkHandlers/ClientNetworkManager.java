@@ -14,6 +14,7 @@ import shared.gameObjects.Utils.TimePosition;
 import shared.gameObjects.players.Limbs.Arm;
 import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.Map;
+import shared.packets.PacketDelete;
 import shared.packets.PacketGameState;
 import shared.packets.PacketInput;
 import shared.util.Path;
@@ -106,6 +107,16 @@ public class ClientNetworkManager {
                 false, false);
 
             break;
+          case 8:
+            PacketDelete delete = new PacketDelete(message);
+            GameObject deleteObject = Client.levelHandler.getGameObjects()
+                .get(delete.getGameobject());
+            if (deleteObject == null) {
+              System.out.println("Can't delete " + delete.getGameobject());
+            } else {
+              Client.levelHandler.removeGameObject(deleteObject);
+            }
+            break;
           case 7:
             PacketGameState gameState = new PacketGameState(message);
             HashMap<UUID, String> data = gameState.getGameObjects();
@@ -114,7 +125,6 @@ public class ClientNetworkManager {
                 GameObject gameObject = Client.levelHandler.getGameObjects().get(key);
                 if (gameObject == null) {
                   System.out.println("HMMM I've never seen this before " + value);
-                  //createGameObject(value);
                 } else {
                   if (!entity_interpolation || gameObject.getUUID() == Client.levelHandler
                       .getClientPlayer().getUUID()) {
