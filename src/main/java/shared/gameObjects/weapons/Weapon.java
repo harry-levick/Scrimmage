@@ -29,9 +29,9 @@ public abstract class Weapon extends GameObject {
    * If cooldown == 0, the weapon can be fired. Otherwise, nothing will happen when mouse is
    * left-clicked
    */
-  protected int MAX_COOLDOWN = 81;
+  protected final int MAX_COOLDOWN = 81;
   /** Constant value PI */
-  protected float PI = 3.141592654f;
+  protected final float PI = 3.141592654f;
   /** Weight of the weapon */
   protected double weight; // grams
   /** Name of the weapon */
@@ -50,8 +50,14 @@ public abstract class Weapon extends GameObject {
   protected int currentCooldown;
   /** True if this gun is held with single hand */
   protected boolean singleHanded;
+  /** Max ammo amount for the player */
+   protected int maxAmmo;
   /** Vector2 for throwing the weapon */
   protected Vector2 throwVector;
+  /**
+   * Weapon ranking to allow Bot to decide what weapon is best
+   */
+  protected int weaponRank;
 
   /** The player who holds the weapon, null if none */
   protected Player holder;
@@ -131,6 +137,7 @@ public abstract class Weapon extends GameObject {
     this.name = name;
     this.startedThrowing = false;
     setAmmo(ammo);
+    this.maxAmmo = ammo;
     setFireRate(fireRate);
     this.pivotX = pivotX;
     this.pivotY = pivotY;
@@ -160,6 +167,12 @@ public abstract class Weapon extends GameObject {
     this.currentCooldown = 0;
   }
 
+  /**
+   * Used to reconstruct object after serialization
+   *
+   * @param root Javafx root node
+   * @param settings Settings for game
+   */
   public void initialise(Group root, Settings settings) {
     super.initialise(root, settings);
     this.rotate = new Rotate();
@@ -364,6 +377,11 @@ public abstract class Weapon extends GameObject {
   public double getWeight() {
     return this.weight;
   }
+  
+  /** Get the max ammo amount */
+  public int getMaxAmmo() {
+    return this.maxAmmo;
+  }
 
   /** Set a new weight, with value between 0 to 1000f exclusive */
   public void setWeight(double newWeight) {
@@ -429,6 +447,12 @@ public abstract class Weapon extends GameObject {
   public Player getHolder() {
     return this.holder;
   }
+
+  /**
+   * Get the rank of the weapon
+   * @return the rank of the weapon
+   */
+  public int getWeaponRank() { return this.weaponRank; }
 
   /**
    * Set holder of this weapon

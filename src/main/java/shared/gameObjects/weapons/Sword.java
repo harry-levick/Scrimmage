@@ -50,6 +50,7 @@ public class Sword extends Melee {
 
     translate = new Translate();
     attackAngleSign = 1;
+    this.weaponRank = 1;
   }
 
   public Sword(Sword that) {

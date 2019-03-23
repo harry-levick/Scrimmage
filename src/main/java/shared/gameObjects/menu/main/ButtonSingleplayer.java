@@ -9,15 +9,12 @@ import server.ai.Bot;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.menu.ButtonObject;
-import shared.gameObjects.weapons.Handgun;
-import shared.gameObjects.weapons.MachineGun;
-import shared.gameObjects.weapons.Uzi;
 import shared.handlers.levelHandler.Map;
 import shared.util.Path;
 
 public class ButtonSingleplayer extends ButtonObject {
 
-  private final int maxPlayers = 2;
+  private final int maxPlayers = 4;
 
   /**
    * Base class used to create an object in game. This is used on both the client and server side to

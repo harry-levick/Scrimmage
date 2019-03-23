@@ -139,9 +139,14 @@ public class Client extends Application {
   private boolean gameOver;
   private boolean startedGame;
   private int timeRemaining;
-  private int timeLimit = 1; // Time limit in minutes
+  private int timeLimit = 3; // Time limit in minutes
   private static boolean settingsOverlay = false;
   private static ArrayList<GameObject> settingsObjects = new ArrayList<>();
+  private final float timeStep = 0.0166f;
+  private float maximumStep;
+  private long previousTime;
+  private float accumulatedTime;
+
 
   /**
    * Launch game client
@@ -363,6 +368,9 @@ public class Client extends Application {
    * Initialise the settings and sets multiplayer as false
    */
   public void init() {
+    maximumStep = 0.0166f;
+    previousTime = 0;
+    accumulatedTime = 0;
     settings = new Settings(levelHandler, gameRoot);
     multiplayer = false;
   }
@@ -469,6 +477,31 @@ public class Client extends Application {
           endGame();
         }
 
+        if (previousTime == 0) {
+          previousTime = now;
+          return;
+        }
+
+        float secondElapsed = (now - previousTime) / 1e9f; // time elapsed in seconds
+        float secondsElapsedCapped = Math.min(secondElapsed, maximumStep);
+        accumulatedTime += secondsElapsedCapped;
+        previousTime = now;
+
+        if (accumulatedTime < timeStep) {
+          float timeSinceInterpolation = timeStep - (accumulatedTime - secondElapsed);
+          float alphaRemaining = secondElapsed / timeSinceInterpolation;
+          levelHandler
+              .getGameObjects()
+              .forEach((key, gameObject) -> gameObject.interpolatePosition(alphaRemaining));
+          return;
+        }
+
+        while (accumulatedTime >= 2 * timeStep) {
+          levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.update());
+          accumulatedTime -= timeStep;
+        }
+
+
         /** Apply Input */
         levelHandler.getClientPlayer().applyInput();
 
@@ -521,6 +554,12 @@ public class Client extends Application {
         //Update Generic Object Timers
         ObjectManager.update();
 
+        accumulatedTime -= timeStep;
+        float alpha = accumulatedTime / timeStep;
+        levelHandler.getGameObjects()
+            .forEach((key, gameObject) -> gameObject.interpolatePosition(alpha));
+
+
         /** Scale and Render Game Objects */
         scaleRendering(primaryStage);
 
@@ -528,6 +567,8 @@ public class Client extends Application {
         if (levelHandler.getBackground() != null) {
           levelHandler.getBackground().render();
         }
+        calculateFPS(secondElapsed, primaryStage);
+
 
         /** Draw the UI */
         if (levelHandler.getGameState() == GameState.IN_GAME) {

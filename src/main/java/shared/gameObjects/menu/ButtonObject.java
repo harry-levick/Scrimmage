@@ -59,6 +59,11 @@ public abstract class ButtonObject extends GameObject {
     new AudioHandler(settings, Client.musicActive).playSFX("CLICK");
   }
 
+  @Override
+  public void interpolatePosition(float alpha) {
+  }
+
+
 
   public void doOnEnter(MouseEvent e) {
     animation.switchAnimation("clicked");

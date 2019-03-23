@@ -45,7 +45,7 @@ public class MachineGun extends Gun {
         true, // fullAutoFire
         false, // singleHanded
         uuid);
-
+    this.weaponRank = 3;
   }
 
   /**

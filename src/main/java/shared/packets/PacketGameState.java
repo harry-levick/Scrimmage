@@ -43,6 +43,7 @@ public class PacketGameState extends Packet {
     dataFilter.removeAll(Collections.singleton("null"));
     dataFilter.removeAll(Collections.singleton(""));
     String[] unpackedData = dataFilter.toArray(new String[0]);
+    this.packetID = Integer.parseInt(unpackedData[0]);
     lastProcessedInput = Integer.parseInt(unpackedData[1]);
     for (int i = 2; i < unpackedData.length; i++) {
       String[] unpackedData2 = unpackedData[i].split(";");

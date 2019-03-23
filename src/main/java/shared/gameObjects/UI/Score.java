@@ -13,31 +13,30 @@ import shared.gameObjects.players.Player;
  */
 public class Score {
 
-  private final int xPos = (1920 / 2) - (149 / 2); //Center it on the screen.
-  private final int yPos = 5;
-  private Animator animation;
-  private Group root;
-  private ImageView imageView;
+  private final int xPos = 1920 - 247; //Center it on the screen.
+  private final int yPos = 0;
+  private Animator board;
   private Player player;
-  private Text score;
+  private ImageView boardImageView;
+  private Text scoreText;
 
   /**
    * Constructs a score UI pertaining to a player
    * @param root UI root to render to
    */
   public Score(Group root, Player clientPlayer) {
-    animation = new Animator();
-    animation.supplyAnimation("default", "images/ui/score.png");
-    imageView = new ImageView();
-    root.getChildren().add(this.imageView);
+    board = new Animator();
+    board.supplyAnimation("default", "images/ui/score.png");
+    boardImageView = new ImageView();
 
-    imageView.setX(xPos);
-    imageView.setY(yPos);
+
+    boardImageView.setX(xPos);
+    boardImageView.setY(yPos);
 
     player = clientPlayer;
-    score = new Text(xPos + 55, yPos + 102, "");
-    score.setFont(new Font(72));
-    root.getChildren().add(this.score);
+    scoreText = new Text(xPos + 20, yPos + 40,"");
+    scoreText.setFont(new Font(48));
+    root.getChildren().addAll(this.boardImageView,this.scoreText);
   }
 
 
@@ -45,8 +44,8 @@ public class Score {
    * Renders the UI
    */
   public void render() {
-    score.setText(Integer.toString(player.getScore()));
-    imageView.setImage(animation.getImage());
+    scoreText.setText("Score:"+Integer.toString(player.getScore()));
+    boardImageView.setImage(board.getImage());
   }
 
 }

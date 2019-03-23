@@ -5,6 +5,7 @@ import shared.gameObjects.components.CircleCollider;
 import shared.gameObjects.components.Collider;
 import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.Rigidbody;
+import shared.gameObjects.weapons.Bullet;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
 
@@ -95,10 +96,10 @@ public class DynamicCollision {
     } else {
       if (n.getY() < 0) {
         collisionNormal = Vector2.Up();
-        bodyB.setGrounded(true);
+        bodyB.setGrounded(!(bodyA.getParent() instanceof Bullet));
       } else {
         collisionNormal = Vector2.Down();
-        bodyA.setGrounded(true);
+        bodyA.setGrounded(!(bodyB.getParent() instanceof Bullet));
       }
       penetrationDepth = y_overlap;
     }

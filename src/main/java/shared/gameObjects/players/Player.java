@@ -270,11 +270,11 @@ public class Player extends GameObject implements Destructable {
    * Throws the weapon currently held with a velocity
    */
   public void throwHolding() {
-    if (this.holding == null || this.holding instanceof Punch) {
-      return;
+    if (!(this.holding == null || this.holding instanceof Punch)) {
+      Weapon w = this.holding;
+      w.startThrowing();
+      throwHoldingKey = false;
     }
-    Weapon w = this.holding;
-    w.startThrowing();
   }
 
   @Override

@@ -16,6 +16,7 @@ import shared.gameObjects.components.Collider;
 import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.EdgeCollider;
 import shared.gameObjects.players.Limb;
+import shared.gameObjects.weapons.Bullet;
 import shared.gameObjects.weapons.Weapon;
 import shared.handlers.levelHandler.LevelHandler;
 import shared.physics.data.Collision;
@@ -106,6 +107,7 @@ public class Physics {
     Iterator<GameObject> iter = gameObjects.values().iterator();
     while (iter.hasNext()) {
       GameObject object = iter.next();
+      if(object instanceof Bullet) continue;
 
       if (object.getComponent(ComponentType.COLLIDER) != null) {
         collision =
@@ -167,7 +169,7 @@ public class Physics {
     while (iter.hasNext()) {
       GameObject object = iter.next();
 
-      if (object instanceof Limb) {
+      if (object instanceof Limb || object instanceof Bullet) {
         continue;
       }
 

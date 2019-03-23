@@ -33,7 +33,7 @@ public class Uzi extends Gun {
         false, // singleHanded
         uuid
     );
-
+    this.weaponRank = 3;
   }
 
   public Uzi(Uzi that) {
