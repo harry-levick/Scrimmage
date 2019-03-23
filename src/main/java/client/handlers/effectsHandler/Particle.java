@@ -6,6 +6,9 @@ import shared.gameObjects.Utils.ObjectType;
 import shared.physics.Physics;
 import shared.util.maths.Vector2;
 
+/**
+ * Visual Effect from an image
+ */
 public class Particle extends GameObject {
 
   private Vector2 velocity;
@@ -31,6 +34,7 @@ public class Particle extends GameObject {
     this.acceleration = acceleration;
     this.imageSource = imageSource;
     this.lifetime = lifetime;
+    networkStateUpdate = true;
     initialiseAnimation();
   }
 
@@ -42,7 +46,6 @@ public class Particle extends GameObject {
 
   @Override
   public void update() {
-    super.update();
     if (lifetime <= 0) {
       settings.getLevelHandler().removeGameObject(this);
     } else {
@@ -51,4 +54,5 @@ public class Particle extends GameObject {
       lifetime -= Physics.TIMESTEP;
     }
   }
+
 }

@@ -12,19 +12,38 @@ import shared.util.maths.Vector2;
 /** @author fxa579 Base class of ParticleEmitter Effects */
 public abstract class ParticleEmitter extends GameObject {
 
-  private Vector2 velocity;
-  private Vector2 acceleration;
-  private Vector2 particleSize;
-  private float radius;
+  protected Vector2 velocity;
+  protected Vector2 acceleration;
+  protected Vector2 particleSize;
+  protected float radius;
   private float particleEmitterLifetime;
-  private float lifetime;
+  protected float lifetime;
   private ParticleType type;
   private int particleAmount;
-  private String imageSource;
+  protected String imageSource;
 
+  /**
+   * Position the last particle was spawned at
+   */
   protected Vector2 previousPosition;
+  /**
+   * RNG for particle spawning
+   */
   protected Random random;
 
+  /**
+   * Constructor:
+   * @param sourcePosition Centre position of the emitter
+   * @param initialVelocity Maximum initial velocity particles will be spawned it
+   * @param acceleration Constant acceleration of particles in their lifetime
+   * @param size Max size of particles
+   * @param spawnRadius Distance to spawn particles from the source position
+   * @param lifetime Lifetime of the particles emitted
+   * @param particleEmitterLifetime Lifetime of the emitter
+   * @param particleAmount Number of particles spawned on each update frame
+   * @param type The type of particle emitter (Line, Scatter, etc.)
+   * @param imageSource The filepath of the image to use for the particle
+   */
   public ParticleEmitter(
       Vector2 sourcePosition,
       Vector2 initialVelocity,
@@ -71,7 +90,7 @@ public abstract class ParticleEmitter extends GameObject {
 
   /**
    * Generates a new particle, calculating its position and velocity based off of the emitter
-   * @return
+   * @return Particle Game Object to instantiate
    */
   protected abstract Particle newParticle();
 

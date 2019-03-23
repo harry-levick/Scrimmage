@@ -1,6 +1,8 @@
 package shared.gameObjects.weapons;
 
+import client.handlers.effectsHandler.Particle;
 import client.main.Settings;
+import java.util.Random;
 import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.transform.Rotate;
@@ -11,6 +13,7 @@ import shared.gameObjects.components.Component;
 import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Player;
+import shared.physics.Physics;
 import shared.physics.data.AngularData;
 import shared.physics.data.Collision;
 import shared.physics.data.MaterialProperty;
@@ -70,6 +73,7 @@ public abstract class Bullet extends GameObject {
     addComponent(bc);
     addComponent(rb);
 
+
     // Rotate property of the image
     Vector2 mouseV = new Vector2((float) mouseX, (float) mouseY);
     Vector2 gunV = new Vector2((float) gunX, (float) gunY);
@@ -94,10 +98,12 @@ public abstract class Bullet extends GameObject {
   @Override
   public void update() {
     super.update();
+    Random random = new Random();
     imageView.setRotate(angleDegree);
-    if ((0 < getX() && getX() < 1920) && (0 < getY() && getY() < 1080))
+    if ((0 < getX() && getX() < 1920) && (0 < getY() && getY() < 1080)) {
       rb.move(vector.mult((float) speed));
-    else {
+      settings.getLevelHandler().addGameObject(new Particle(transform.getPos(), vector.mult((float)(-1f*speed*random.nextDouble() - 2)), Vector2.Zero(), new Vector2(random.nextDouble()*8 + 4, random.nextDouble()*8 + 4), "images/weapons/explosiveBullet.png", 0.2f));
+    } else {
       settings.getLevelHandler().removeGameObject(this);
     }
   }
