@@ -131,10 +131,7 @@ public class Player extends GameObject implements Destructable {
   public void initialise(Group root, Settings settings) {
     super.initialise(root, settings);
     addLimbs();
-
-    myPunch = new Punch(getX(), getY(), "myPunch@Player", this, UUID.randomUUID());
-    settings.getLevelHandler().addGameObject(myPunch);
-    this.holding = myPunch;
+    addPunch();
   }
 
   private void addLimbs() {
@@ -154,7 +151,12 @@ public class Player extends GameObject implements Destructable {
     addChild(armRight);
     armRight.addChild(handRight);
     armLeft.addChild(handLeft);
+  }
 
+  private void addPunch() {
+    myPunch = new Punch(getX(), getY(), "myPunch@Player", this, UUID.randomUUID());
+    settings.getLevelHandler().addGameObject(myPunch);
+    this.holding = myPunch;
   }
 
   private void updateAnimationTimer() {
@@ -310,6 +312,7 @@ public class Player extends GameObject implements Destructable {
     });
     children.clear();
     addLimbs();
+    addPunch();
   }
 
   /**
