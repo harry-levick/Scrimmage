@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.UUID;
 import javafx.application.Platform;
+import javafx.scene.shape.Arc;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import server.ai.Bot;
@@ -201,9 +202,9 @@ public class Physics {
     }
   }
 
-    /**
-     * Draws a raycast for debugging
-     */
+  /**
+   * Draws a raycast for debugging
+   */
   public static void drawCast(double xStart, double yStart, double xFinish, double yFinish,
       String colour) {
     Platform.runLater(
@@ -219,16 +220,17 @@ public class Physics {
         }
     );
   }
-    /**
-     * Draws a boxcast for debugging
-     */
+
+  /**
+   * Draws a boxcast for debugging
+   */
   public static void drawBoxCast(Vector2 sourcePos, Vector2 size) {
     Platform.runLater(
         () -> {
           Rectangle r2 = new Rectangle(sourcePos.getX(), sourcePos.getY(), size.getX(),
               size.getY());
           r2.setStyle("-fx-stroke-width: 4; -fx-stroke: #00ff00;");
-          settings.getGameRoot().getChildren().add(r2);
+          Client.levelHandler.getGameRoot().getChildren().add(r2);
         });
   }
 
@@ -321,12 +323,12 @@ public class Physics {
    * @param size The extents of the box
    * @return All colliders hit in the path, empty if nothing was hit
    */
-  public static ArrayList<Collision> boxcastAll(Vector2 sourcePos, Vector2 size, boolean cast) {
+  public static ArrayList<Collision> boxcastAll(Vector2 sourcePos, Vector2 size, boolean showCast) {
     BoxCollider castCollider = new BoxCollider(sourcePos, size);
     Collision collision;
     ArrayList<Collision> collisions = new ArrayList<>();
 
-    if (cast) {
+    if (showCast) {
       drawBoxCast(sourcePos, size);
     }
 
