@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 import javafx.scene.Group;
-import javafx.scene.transform.Rotate;
 import javafx.scene.image.ImageView;
+import javafx.scene.transform.Rotate;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
@@ -98,6 +98,11 @@ public abstract class Limb extends GameObject {
   }
 
   public abstract void initialiseAnimation();
+
+  @Override
+  public void interpolatePosition(float alpha) {
+
+  }
 
   public void setRelativePosition() {
     if (isLeft) {
