@@ -111,7 +111,6 @@ public abstract class Melee extends Weapon {
 
   @Override
   public void update() {
-    deductCooldown();
     super.update();
   }
 
