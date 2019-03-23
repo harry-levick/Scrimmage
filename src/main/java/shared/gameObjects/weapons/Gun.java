@@ -63,6 +63,7 @@ public abstract class Gun extends Weapon {
     this.angle = 0;
   }
 
+  @Override
   public void initialise(Group root, Settings settings) {
     super.initialise(root, settings);
     this.angle = 0;
@@ -88,14 +89,39 @@ public abstract class Gun extends Weapon {
     this.angle = Double.parseDouble(unpackedData[4]);
   }
 
+  /**
+   * Get the X position of the fore grip
+   *
+   * @return X position of the fore grip
+   */
   public abstract double getForeGripX();
 
+  /**
+   * Get the Y position of the fore grip
+   *
+   * @return Y position of the fore grip
+   */
   public abstract double getForeGripY();
 
+  /**
+   * Get the X position of the fore grip when the image is flipped
+   *
+   * @return X position of the flipped fore grip
+   */
   public abstract double getForeGripFlipX();
 
+  /**
+   * Get the Y position of the fore grip when the image is flipped
+   *
+   * @return Y position of the flipped fore grip
+   */
   public abstract double getForeGripFlipY();
 
+  /**
+   * Check if the gun fires explosive bullets
+   *
+   * @return True if the gun fires explosive bullets
+   */
   public abstract boolean firesExplosive();
 
   @Override

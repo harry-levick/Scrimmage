@@ -10,7 +10,9 @@ import shared.util.Path;
  */
 public class Punch extends Melee {
 
+  /** Size of the image (default image = blank) */
   private static double sizeX = 30, sizeY = 30;
+  /** Range of punch */
   private static double range = 30;
 
   /**
@@ -49,6 +51,11 @@ public class Punch extends Melee {
     this.weaponRank = 0;
   }
 
+  /**
+   * Duplicate a Punch with different UUID
+   *
+   * @param that Source of duplication
+   */
   public Punch(Punch that) {
     this(that.getX(), that.getY(), that.name, that.holder, UUID.randomUUID());
   }
