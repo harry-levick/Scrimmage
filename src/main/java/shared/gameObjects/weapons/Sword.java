@@ -19,8 +19,6 @@ public class Sword extends Melee {
   private static float AIM_ANGLE_MAX = 110f;
   /** Index indicating current angle when attacking */
   private int currentAngleIndex;
-  /** Translation to image */
-  private Translate translate;
   /** -1 if aiming Left, 1 if aiming Right */
   private double attackAngleSign;
 
@@ -53,7 +51,6 @@ public class Sword extends Melee {
         true, // singleHanded
         uuid);
 
-    translate = new Translate();
     attackAngleSign = 1;
     this.weaponRank = 1;
   }
