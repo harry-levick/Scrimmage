@@ -7,9 +7,7 @@ import shared.gameObjects.Destructable;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
-import shared.gameObjects.components.CircleCollider;
 import shared.gameObjects.components.Rigidbody;
-import shared.gameObjects.components.behaviours.ObjectShake;
 import shared.gameObjects.players.Limbs.Arm;
 import shared.gameObjects.players.Limbs.Body;
 import shared.gameObjects.players.Limbs.Hand;
@@ -275,6 +273,11 @@ public class Player extends GameObject implements Destructable {
       w.startThrowing();
       throwHoldingKey = false;
     }
+  }
+
+  @Override
+  public void interpolatePosition(float alpha) {
+
   }
 
   @Override
