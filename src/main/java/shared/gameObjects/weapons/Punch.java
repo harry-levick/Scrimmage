@@ -20,7 +20,7 @@ public class Punch extends Melee {
   /** Size of the image (default image = blank) */
   private static double sizeX = 30, sizeY = 30;
   /** Range of punch */
-  private static double range = 30;
+  private static double range = 50;
 
   /**
    * Constructor for Punch
@@ -87,7 +87,7 @@ public class Punch extends Melee {
               Physics.boxcastAll(
                 new Vector2((float) (this.getGripX()+(i*deltaX)), (float) (this.getGripY()+(i*deltaY))),
                 boxCastSize,
-                true
+                true // TODO: set to false
               )
             )
         );
