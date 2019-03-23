@@ -126,7 +126,6 @@ public abstract class Gun extends Weapon {
 
   @Override
   public void update() {
-    deductCooldown();
     super.update();
     if (startedThrowing || holder == null) {
       return;
