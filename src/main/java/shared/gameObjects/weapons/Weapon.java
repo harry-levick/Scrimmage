@@ -89,11 +89,10 @@ public abstract class Weapon extends GameObject {
   protected double pivotX;
   /** Pivot y */
   protected double pivotY;
-
-  // variables for when the holder is null
-  private BoxCollider bcTrig;
   protected BoxCollider bcCol;
   protected Rigidbody rb;
+  // variables for when the holder is null
+  private BoxCollider bcTrig;
 
   /**
    * Constructor of the weapon class
@@ -204,6 +203,7 @@ public abstract class Weapon extends GameObject {
   @Override
   public void update() {
     super.update();
+    deductCooldown();
     if (startedThrowing) {
       if (0 < getX() && getX() < 1920 && 0 < getY() && getY() < 1080) {
         rb.move(throwVector.mult(8f));
@@ -378,16 +378,16 @@ public abstract class Weapon extends GameObject {
     return this.weight;
   }
   
-  /** Get the max ammo amount */
-  public int getMaxAmmo() {
-    return this.maxAmmo;
-  }
-
   /** Set a new weight, with value between 0 to 1000f exclusive */
   public void setWeight(double newWeight) {
     if (newWeight > 0 && newWeight < 1000.0f) {
       this.weight = newWeight;
     }
+  }
+
+  /** Get the max ammo amount */
+  public int getMaxAmmo() {
+    return this.maxAmmo;
   }
 
   /**
@@ -449,12 +449,6 @@ public abstract class Weapon extends GameObject {
   }
 
   /**
-   * Get the rank of the weapon
-   * @return the rank of the weapon
-   */
-  public int getWeaponRank() { return this.weaponRank; }
-
-  /**
    * Set holder of this weapon
    *
    * @param p New holder of the weapon, null not accepted
@@ -465,6 +459,12 @@ public abstract class Weapon extends GameObject {
       p.setHolding(this);
     }
   }
+
+  /**
+   * Get the rank of the weapon
+   * @return the rank of the weapon
+   */
+  public int getWeaponRank() { return this.weaponRank; }
   // -------------------
   // Setters and Getters
   // --------END--------
