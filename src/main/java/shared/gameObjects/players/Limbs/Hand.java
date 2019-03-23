@@ -35,8 +35,7 @@ public class Hand extends Limb {
 
   @Override
   public void initialiseAnimation() {
-    //this.animation.supplyAnimation("default", "images/player/Standard_Male/hand.png");
-    this.animation.supplyAnimation("default", "images/blank.png");
+    this.animation.supplyAnimation("default", "images/player/Standard_Male/hand.png");
   }
 
 

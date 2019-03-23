@@ -1,7 +1,6 @@
 package shared.gameObjects.weapons;
 
 import java.util.UUID;
-import javafx.scene.transform.Translate;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.players.Player;
 import shared.util.Path;
@@ -12,12 +11,14 @@ import shared.util.maths.Vector2;
  */
 public class Sword extends Melee {
 
-  // private static String imagePath = "images/weapons/sword.jpg";
+  /** Path to image */
   private static String imagePath = "images/weapons/sword1.png";
+  /** Maximum angle to aim before switching holding hand */
   private static float AIM_ANGLE_MAX = 110f;
+  /** Index indicating current angle when attacking */
   private int currentAngleIndex;
-  private Translate translate;
-  private double attackAngleSign; // -1 if aiming Left, 1 if aiming Right
+  /** -1 if aiming Left, 1 if aiming Right */
+  private double attackAngleSign;
 
   /**
    * Constructor of the Sword class
@@ -25,6 +26,7 @@ public class Sword extends Melee {
    * @param x The x position of the sword
    * @param y The y position of the sword
    * @param name Name of the sword
+   * @param holder Player who holds this sword
    * @param uuid The UUID of the sword
    */
   public Sword(double x, double y, String name, Player holder, UUID uuid) {
@@ -48,11 +50,15 @@ public class Sword extends Melee {
         true, // singleHanded
         uuid);
 
-    translate = new Translate();
     attackAngleSign = 1;
     this.weaponRank = 1;
   }
 
+  /**
+   * Constructor that duplicate a Sword with different UUID
+   *
+   * @param that Source of duplication
+   */
   public Sword(Sword that) {
     this(that.getX(), that.getY(), that.name, that.holder, UUID.randomUUID());
   }
@@ -132,7 +138,6 @@ public class Sword extends Melee {
       }
     }
   }
-
 
   @Override
   public void initialiseAnimation() {

@@ -19,13 +19,29 @@ import shared.util.maths.Vector2;
  */
 public class ExplosiveBullet extends Bullet {
 
-  private static final int width = 15;          // Width of the bullet
-  private static final int damage = 20;         // Damage of the explosion
-  private static final int speed = 25;          // Speed of bullet travelling
-  private static final float radius = 40f;      // Radius of explosion
-  private static final float pushPower = 50f;   // Power of pushing on impact
+  /** Width of the bullet */
+  private static final int width = 15;
+  /** Damage of the explosion */
+  private static final int damage = 20;
+  /** Speed of travel of the bullet */
+  private static final int speed = 25;
+  /** Radius of explosion on impact */
+  private static final float radius = 40f;
+  /** Power of pushing on Objects in explosion */
+  private static final float pushPower = 50f;
+  /** Path to image */
   private static String imagePath = "images/weapons/explosiveBullet.png";
 
+  /**
+   * Constructor of Explosive Bullet
+   *
+   * @param gunX X position of the gun when fired
+   * @param gunY Y position of the gun when fired
+   * @param mouseX X position of the mouse when fired
+   * @param mouseY Y poistion of the mouse when fired
+   * @param holder The player who fired this bullet
+   * @param uuid UUID of this bullet
+   */
   public ExplosiveBullet(
       double gunX,
       double gunY,
