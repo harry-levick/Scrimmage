@@ -1,7 +1,6 @@
 package shared.gameObjects.weapons;
 
 import java.util.UUID;
-import javafx.scene.transform.Translate;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.players.Player;
 import shared.util.Path;
@@ -12,7 +11,6 @@ import shared.util.maths.Vector2;
  */
 public class Sword extends Melee {
 
-  // private static String imagePath = "images/weapons/sword.jpg";
   /** Path to image */
   private static String imagePath = "images/weapons/sword1.png";
   /** Maximum angle to aim before switching holding hand */
@@ -28,6 +26,7 @@ public class Sword extends Melee {
    * @param x The x position of the sword
    * @param y The y position of the sword
    * @param name Name of the sword
+   * @param holder Player who holds this sword
    * @param uuid The UUID of the sword
    */
   public Sword(double x, double y, String name, Player holder, UUID uuid) {
