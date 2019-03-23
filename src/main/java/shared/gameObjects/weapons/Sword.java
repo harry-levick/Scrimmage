@@ -143,7 +143,6 @@ public class Sword extends Melee {
     }
   }
 
-
   @Override
   public void initialiseAnimation() {
     this.animation.supplyAnimationWithSize(
