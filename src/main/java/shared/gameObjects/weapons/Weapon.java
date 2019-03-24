@@ -203,9 +203,13 @@ public abstract class Weapon extends GameObject {
       }
     }
     else if (holder != null) {
-      holderHandPos = getHolderHandPos();
-      this.setX(getGripX());
-      this.setY(getGripY());
+      if (holder.getHandLeft().isDeattached() || holder.getHandRight().isDeattached() || holder.getHealth() <= 0)
+        setCollectable();
+      else {
+        holderHandPos = getHolderHandPos();
+        this.setX(getGripX());
+        this.setY(getGripY());
+      }
     }
   }
 
@@ -214,6 +218,11 @@ public abstract class Weapon extends GameObject {
    * will start flying in the path
    */
   public void startThrowing() {
+    if (holder == null) {
+      setCollectable();
+      return;
+    }
+    
     double playerRadius = 55 + 65; // Player.sizeY / 2 + bias
     Vector2 bodyV = ((BoxCollider) holder.getHead().getComponent(ComponentType.COLLIDER))
         .getCentre();
