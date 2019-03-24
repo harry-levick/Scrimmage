@@ -7,18 +7,22 @@ import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
 import javafx.scene.transform.Rotate;
+import shared.gameObjects.Destructable;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
+import shared.gameObjects.players.Limbs.Arm;
 import shared.handlers.levelHandler.LevelHandler;
 import shared.physics.data.MaterialProperty;
+import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
+import shared.util.maths.Vector2;
 
 /**
  * General class for player Limbs
  */
-public abstract class Limb extends GameObject {
+public abstract class Limb extends GameObject implements Destructable {
 
   /**
    * The X-coordinate pivot for rotating the limb
@@ -38,6 +42,10 @@ public abstract class Limb extends GameObject {
    * Boolean to determine if the limb is currently attached to an object
    */
   protected boolean limbAttached;
+  /**
+   * Health value of a limb
+   */
+  protected int limbHealth;
   //TODO idk what these does
   protected boolean lastAttachedCheck;
   protected Behaviour behaviour;
@@ -55,6 +63,9 @@ public abstract class Limb extends GameObject {
   protected BoxCollider bc;
 
   protected transient LevelHandler levelHandler;
+
+  protected int resetOffsetX = 0;
+  protected boolean damagedThisFrame;
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
    * ensure actions are calculated the same
@@ -84,7 +95,7 @@ public abstract class Limb extends GameObject {
     this.levelHandler = levelHandler;
 
     //Physics
-    bc = new BoxCollider(this, false);
+    bc = new BoxCollider(this, ColliderLayer.LIMBS, false);
     addComponent(bc);
 
     rb =
@@ -99,6 +110,19 @@ public abstract class Limb extends GameObject {
 
   @Override
   public void interpolatePosition(float alpha) {
+
+  }
+
+  @Override
+  public void deductHp(int damage) {
+    if(!damagedThisFrame) {
+      damagedThisFrame = true;
+      ((Player) parent).deductHp(damage);
+      this.limbHealth -= damage;
+      if(limbHealth <= 0) {
+        destroy();
+      }
+    }
 
   }
 
@@ -145,8 +169,14 @@ public abstract class Limb extends GameObject {
     }
     imageView.getTransforms().remove(rotate);
     lastAttachedCheck = limbAttached;
+    damagedThisFrame = false;
   }
 
+  @Override
+  public void destroy() {
+    detachLimb();
+    bc.setLayer(ColliderLayer.PARTICLE);
+  }
   public void reset() {
     removeRender();
   }
@@ -184,6 +214,7 @@ public abstract class Limb extends GameObject {
 
   public void detachLimb() {
     this.limbAttached = false;
+    rb.setVelocity(new Vector2(0, -1000));
   }
 
   public void reattachLimb() {

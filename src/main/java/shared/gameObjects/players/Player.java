@@ -1,5 +1,6 @@
 package shared.gameObjects.players;
 
+import client.handlers.effectsHandler.Particle;
 import client.main.Settings;
 import java.util.UUID;
 import javafx.scene.Group;
@@ -20,7 +21,7 @@ import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
 
-public class Player extends GameObject implements Destructable {
+public class Player extends GameObject {
 
   /**
    * The speed of the player in pixels per update frame
@@ -75,6 +76,10 @@ public class Player extends GameObject implements Destructable {
    */
   protected Weapon myPunch;
   /**
+   *
+   */
+  protected boolean damagedThisFrame;
+  /**
    * The Physics Rigidbody component attached to the player
    */
   protected Rigidbody rb;
@@ -112,7 +117,7 @@ public class Player extends GameObject implements Destructable {
     this.rightKey = false;
     this.jumpKey = false;
     this.click = false;
-    this.health = 100;
+    this.health = 200;
     this.behaviour = Behaviour.IDLE;
     this.bc = new BoxCollider(this, ColliderLayer.PLAYER, false);
     this.rb = new Rigidbody(RigidbodyType.DYNAMIC, 90, 11.67f, 0.2f,
@@ -185,6 +190,7 @@ public class Player extends GameObject implements Destructable {
         test.detachLimb();
       }
     }
+    damagedThisFrame = false;
     super.update();
   }
 
@@ -219,10 +225,12 @@ public class Player extends GameObject implements Destructable {
     }
     if (rightKey) {
       rb.moveX(speed);
+      createWalkParticle();
       behaviour = Behaviour.WALK_RIGHT;
     }
     if (leftKey) {
       rb.moveX(speed * -1);
+      createWalkParticle();
       behaviour = Behaviour.WALK_LEFT;
     }
 
@@ -231,7 +239,7 @@ public class Player extends GameObject implements Destructable {
       behaviour = Behaviour.IDLE;
     }
     if (jumpKey && !jumped && grounded) {
-      rb.moveY(jumpForce, 0.33333f);
+      rb.moveY(jumpForce * (legLeft.limbAttached && legRight.limbAttached ? 1f : 0.7f), 0.33333f);
       jumped = true;
     }
     if (jumped) {
@@ -245,10 +253,16 @@ public class Player extends GameObject implements Destructable {
       this.throwHolding();
     }
 
-    if (click && holding != null) {
+    if (click && holding != null && !(!armLeft.limbAttached || !armRight.limbAttached)) {
       holding.fire(mouseX, mouseY);
     }
     // setX(getX() + (vx * 0.0166));
+  }
+
+  private void createWalkParticle() {
+    if(!grounded) return;
+      settings.getLevelHandler().addGameObject(new Particle(transform.getBotPos().sub(transform.getSize().mult(new Vector2(0.5, 0))), new Vector2(0, -35), new Vector2(0, 100), new Vector2(8,8),
+          "images/platforms/stone/elementStone001.png", 0.34f));
   }
 
   /**
@@ -264,6 +278,13 @@ public class Player extends GameObject implements Destructable {
       this.holding.destroyWeapon();
       this.setHolding(myPunch);
       return true;
+    }
+    try {
+      if (!armLeft.limbAttached || !armRight.limbAttached) {
+        this.throwHolding();
+      }
+    } catch (Exception e) {
+
     }
     return false;
   }
@@ -284,18 +305,21 @@ public class Player extends GameObject implements Destructable {
 
   }
 
-  @Override
   public void deductHp(int damage) {
-    this.health -= damage;
-    if (this.health <= 0) {
-      // For testing
-      transform.translate(new Vector2(0, -80));
-      this.setActive(false);
-      bc.setLayer(ColliderLayer.PARTICLE);
-      transform.rotate(90);
-      this.imageView.setOpacity(0.5);
+    if(!damagedThisFrame) {
+      damagedThisFrame = true;
+      this.health -= damage;
+      if (this.health <= 0) {
+        // For testing
+        transform.translate(new Vector2(0, -80));
+        this.setActive(false);
+        bc.setLayer(ColliderLayer.PARTICLE);
+        transform.rotate(90);
+        this.imageView.setOpacity(0.5);
+      }
     }
   }
+
 
   /**
    * Resets the player's values, a "respawn"
@@ -344,6 +368,11 @@ public class Player extends GameObject implements Destructable {
   }
 
   public void setHolding(Weapon newHolding) {
+    try {
+      if (!armLeft.limbAttached || !armRight.limbAttached) return;
+    } catch (Exception e) {
+
+    }
     this.holding = newHolding;
 
     if (newHolding != null) {

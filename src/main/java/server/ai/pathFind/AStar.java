@@ -458,7 +458,7 @@ public class AStar {
       ArrayList<Collision> viscinityLeft = Physics.boxcastAll(
           botPosition.add(Vector2.Left().mult(botSize.mult(new Vector2(0.6, 0.9))))
               .add(Vector2.Down().mult(3)),
-          botSize.mult(new Vector2(0.6, 0.85)), false);
+          botSize.mult(new Vector2(0.6, 0.85)), false, true);
 
       if (viscinityLeft.size() == 0 ||
           (viscinityLeft.stream().allMatch(o -> ((Rigidbody) o.getCollidedObject()
@@ -478,7 +478,7 @@ public class AStar {
 
       ArrayList<Collision> viscinityRight = Physics.boxcastAll(
           botPosition.add(Vector2.Right().mult(botSize)).add(Vector2.Down().mult(3)),
-          botSize.mult(new Vector2(0.6, 0.85)), false);
+          botSize.mult(new Vector2(0.6, 0.85)), false, true);
 
       if (viscinityRight.size() == 0 ||
           (viscinityRight.stream().allMatch(o -> ((Rigidbody) o.getCollidedObject()
@@ -498,7 +498,7 @@ public class AStar {
 
       ArrayList<Collision> viscinityUp = Physics.boxcastAll(
           botPosition.add(Vector2.Up().mult(botSize.mult(new Vector2(1, 0.5)))),
-          botSize.mult(new Vector2(1, 0.5)), false);
+          botSize.mult(new Vector2(1, 0.5)), false, true);
 
       // If no collision
       if (viscinityUp.size() == 0 ||
@@ -509,12 +509,12 @@ public class AStar {
         ArrayList<Collision> viscinityUpLeft = Physics.boxcastAll(
             botPosition.add(Vector2.Up().mult(botSize)).add(Vector2.Left()
                 .mult(new Vector2(0.5, 1))),
-            botSize.mult(new Vector2(0.5, 1)), false);
+            botSize.mult(new Vector2(0.5, 1)), false, true);
 
         ArrayList<Collision> viscinityUpRight = Physics.boxcastAll(
             botPosition.add(Vector2.Up().mult(botSize)).add(Vector2.Right()
                 .mult(botSize.mult(new Vector2(0.5, 1)))),
-            botSize.mult(new Vector2(0.5, 1)), false);
+            botSize.mult(new Vector2(0.5, 1)), false, true);
 
         // Just jump
         possibleActions.add(createAction(true, false, false));

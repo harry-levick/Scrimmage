@@ -2,11 +2,13 @@ package shared.gameObjects.players.Limbs;
 
 import client.main.Settings;
 import javafx.scene.Group;
+import shared.gameObjects.Destructable;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.players.Limb;
 import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.LevelHandler;
+import sun.security.krb5.internal.crypto.Des;
 
 /**
  * Hand limb of a player
@@ -37,6 +39,11 @@ public class Hand extends Limb {
   public void initialiseAnimation() {
     //this.animation.supplyAnimation("default", "images/player/Standard_Male/hand.png");
     this.animation.supplyAnimation("default", "images/blank.png");
+  }
+
+  @Override
+  public void deductHp(int damage) {
+    ((Destructable) parent).deductHp(damage);
   }
 
 

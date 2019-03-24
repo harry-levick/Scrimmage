@@ -49,18 +49,19 @@ public class Physics {
   /*
    * Order: DEFAULT, PLAYER, OBJECT, PLATFORM, PARTICLE, COLLECTABLE, LIMBS
    */
-  private static boolean[] DEFAULT = {true, true, true, true, false, false, true};
-  private static boolean[] PLAYER = {true, false, true, true, false, false, false};
-  private static boolean[] OBJECT = {true, true, true, true, false, false, true};
-  private static boolean[] PLATFORM = {true, true, true, true, false, true, true};
-  private static boolean[] PARTICLES = {false, false, false, false, false, false, false};
-  private static boolean[] COLLECTABLE = {false, false, false, true, false, false, false};
-  private static boolean[] LIMBS = {true, false, true, true, false, false, false};
+  private static boolean[] DEFAULT = {true, true, true, true, false, false, true, true};
+  private static boolean[] PLAYER = {true, false, true, true, false, false, false, false};
+  private static boolean[] OBJECT = {true, true, true, true, false, false, true, true};
+  private static boolean[] PLATFORM = {true, true, true, true, false, true, true, true};
+  private static boolean[] PARTICLES = {false, false, false, false, false, false, false, false};
+  private static boolean[] COLLECTABLE = {false, false, false, true, false, false, false, false};
+  private static boolean[] LIMBS = {true, false, true, true, false, false, false, true};
+  private static boolean[] PROJECTILE = {true, false, true, true, false, false, true, false};
   /**
    * The collision layers ordered as specified by their int value. 2D Matrix format, used by the Collider tests.
    */
   public static boolean[][] COLLISION_LAYERS = {DEFAULT, PLAYER, OBJECT, PLATFORM, PARTICLES,
-      COLLECTABLE, LIMBS};
+      COLLECTABLE, LIMBS, PROJECTILE};
   public static ConcurrentLinkedHashMap<UUID, GameObject> gameObjects;
   /**
    * A concurrent map used to synchronize collision updates.
@@ -232,6 +233,10 @@ public class Physics {
         });
   }
 
+  public static void drawCircleCast(Vector2 centre, float radius) {
+
+  }
+
   /**
    * Casts a ray that interacts with colliders, returning all colliders hit.
    *
@@ -321,7 +326,7 @@ public class Physics {
    * @param size The extents of the box
    * @return All colliders hit in the path, empty if nothing was hit
    */
-  public static ArrayList<Collision> boxcastAll(Vector2 sourcePos, Vector2 size, boolean showCast) {
+  public static ArrayList<Collision> boxcastAll(Vector2 sourcePos, Vector2 size, boolean showCast, boolean ignoreLimbs) {
     BoxCollider castCollider = new BoxCollider(sourcePos, size);
     Collision collision;
     ArrayList<Collision> collisions = new ArrayList<>();
@@ -334,7 +339,7 @@ public class Physics {
     while (iter.hasNext()) {
       GameObject object = iter.next();
 
-      if (object instanceof Limb) {
+      if (object instanceof Limb && ignoreLimbs) {
         continue;
       }
 

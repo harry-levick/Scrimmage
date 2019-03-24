@@ -35,6 +35,7 @@ public class Arm extends Limb {
     rotate = new Rotate();
     rotate.setPivotX(10);
     rotate.setPivotY(10);
+    limbHealth = player.getHealth()/2;
   }
 
   @Override
@@ -43,6 +44,12 @@ public class Arm extends Limb {
     rotate = new Rotate();
     rotate.setPivotX(10);
     rotate.setPivotY(10);
+  }
+
+  @Override
+  public void destroy() {
+    super.destroy();
+    children.forEach(object -> object.destroy());
   }
 
   public void renderabc() {

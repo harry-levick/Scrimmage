@@ -105,7 +105,7 @@ public class ColliderTest {
 
   @Test
   public void boxcast() {
-    assertEquals(2, Physics.boxcastAll(new Vector2(0, 0), new Vector2(4, 4), false).size(), 0);
+    assertEquals(2, Physics.boxcastAll(new Vector2(0, 0), new Vector2(4, 4), false, false).size(), 0);
   }
 
   @Test

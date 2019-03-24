@@ -16,13 +16,9 @@ import shared.util.maths.Vector2;
  */
 public class Punch extends Melee {
 
-  /**
-   * Size of the image (default image = blank)
-   */
+  /** Size of the image (default image = blank) */
   private static double sizeX = 30, sizeY = 30;
-  /**
-   * Range of punch
-   */
+  /** Range of punch */
   private static double range = 50;
 
   /**
@@ -87,19 +83,19 @@ public class Punch extends Melee {
       for (int i = 0; i < numCast; i++) {
         collisionSet.addAll(
             new HashSet<>(
-                Physics.boxcastAll(
-                    new Vector2((float) (this.getGripX() + (i * deltaX)),
-                        (float) (this.getGripY() + (i * deltaY))),
-                    boxCastSize,
-                    true // TODO: set to false
-                )
+              Physics.boxcastAll(
+                new Vector2((float) (this.getGripX()+(i*deltaX)), (float) (this.getGripY()+(i*deltaY))),
+                boxCastSize,
+                false, // TODO: set to false
+              false
+              )
             )
         );
       }
 
       for (Collision c : collisionSet) {
         GameObject g = c.getCollidedObject();
-        if (g instanceof Destructable && !g.equals(holder)) {
+        if (g instanceof Destructable && !isHolder(g)) {
           ((Destructable) g).deductHp(this.damage);
         }
       }

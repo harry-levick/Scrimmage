@@ -16,6 +16,7 @@ import shared.gameObjects.components.Collider;
 import shared.gameObjects.components.Component;
 import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.Rigidbody;
+import shared.gameObjects.players.Limb;
 import shared.physics.Physics;
 import shared.physics.data.Collision;
 import shared.physics.data.DynamicCollision;
@@ -133,6 +134,7 @@ public abstract class GameObject implements Serializable {
    */
   public void update() {
     networkStateUpdate = false;
+    if(destroyed) return;
     animation.update();
 
     for (Component comp : getComponents(ComponentType.RIGIDBODY)) {
@@ -360,7 +362,7 @@ public abstract class GameObject implements Serializable {
       this.root = root;
       root.getChildren().add(this.imageView);
     }
-    if (getComponent(ComponentType.COLLIDER) != null && Physics.showColliders) {
+    if (getComponent(ComponentType.COLLIDER) != null && Physics.showColliders && this instanceof Limb) {
       ((Collider) getComponent(ComponentType.COLLIDER)).initialise(root);
     }
     imageView.setFitHeight(transform.getSize().getY());
@@ -522,7 +524,9 @@ public abstract class GameObject implements Serializable {
   }
 
   public void destroy() {
-    destroyed = active = false;
+    destroyed = true;
+    active = false;
+    removeRender();
   }
 
   /**

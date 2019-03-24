@@ -1,5 +1,6 @@
 package levelEditor;
 
+import client.handlers.effectsHandler.emitters.LineEmitter;
 import client.main.Settings;
 import java.io.File;
 import java.util.ArrayList;
@@ -48,6 +49,7 @@ import shared.gameObjects.weapons.WeaponSpawner;
 import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.MapLoader;
 import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
+import shared.util.maths.Vector2;
 
 /**
  * Script class for regenerating the main maps/levels used in the game
@@ -129,6 +131,9 @@ public class LevelCreator extends Application {
 
     //JumpPad todo remove form mm
     gameObjects.put(uuid, new JumpPad(getAbs(2), getAbs(25), uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid, new LineEmitter(new Vector2(getAbs(2), getAbs(25)), new Vector2(0, -400), new Vector2(0, 42), new Vector2(12,12), 100, 1, 8, 2,
+         "images/platforms/Debris/debrisWood_1.png"));
     uuid = UUID.randomUUID();
 
     //Middle platforms

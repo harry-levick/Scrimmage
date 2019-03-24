@@ -6,29 +6,16 @@ import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
-import shared.physics.data.AngularData;
 import shared.physics.data.Collision;
-import shared.physics.data.MaterialProperty;
 import shared.physics.types.ColliderLayer;
-import shared.physics.types.RigidbodyType;
 
-/**
- * Spikes hazard object
- */
+/** Spikes hazard object */
 public class Spikes extends GameObject implements Hazard {
 
   public Spikes(double x, double y, double sizeX, double sizeY, ObjectType id, UUID exampleUUID) {
     super(x, y, sizeX, sizeY, id, exampleUUID);
     addComponent(new BoxCollider(this, ColliderLayer.OBJECT, false));
-    addComponent(
-        new Rigidbody(
-            RigidbodyType.STATIC,
-            0,
-            0,
-            0,
-            new MaterialProperty(0.2f, 0.2f, 0.1f),
-            new AngularData(0, 0, 0, 0),
-            this));
+    addComponent(new Rigidbody(0.2f, this));
   }
 
   public void initialiseAnimation() {
@@ -41,12 +28,5 @@ public class Spikes extends GameObject implements Hazard {
       Destructable player = (Destructable) col.getCollidedObject();
       player.deductHp(10);
     }
-  }
-
-  @Override
-  public void render() {
-    super.render();
-    imageView.setTranslateX(getX());
-    imageView.setTranslateY(getY());
   }
 }

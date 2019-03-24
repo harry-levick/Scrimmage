@@ -17,29 +17,17 @@ import shared.util.maths.Vector2;
  */
 public abstract class Melee extends Weapon {
 
-  /**
-   * Damage of the melee
-   */
+  /** Damage of the melee */
   protected int damage;
-  /**
-   * Limit of attack allowed
-   */
+  /** Limit of attack allowed */
   protected int ammo;
-  /**
-   * Range of the melee (radius)
-   */
+  /** Range of the melee (radius) */
   protected double range;
-  /**
-   * Origin position of swing when attacking (relative to arm)
-   */
+  /** Origin position of swing when attacking (relative to arm) */
   protected double beginAngle;
-  /**
-   * Destination position of swing when attacking (relative to arm)
-   */
+  /** Destination position of swing when attacking (relative to arm) */
   protected double endAngle;
-  /**
-   * Rigidbody of this melee
-   */
+  /** Rigidbody of this melee */
   protected Rigidbody rb;
   /** True if this melee is attacking (in the process of swing) */
   protected boolean attacking;
@@ -47,9 +35,7 @@ public abstract class Melee extends Weapon {
   protected double[] angles;
   /** Index indicating which part the swing is in now during attack */
   protected int currentAngleIndex;
-  /**
-   * Hash set to record collided object in 1 attack
-   */
+  /** Hash set to record collided object in 1 attack */
   protected HashSet<Destructable> collidedSet;
 
 
@@ -137,16 +123,16 @@ public abstract class Melee extends Weapon {
       // Box cast on beginning of swing
       ArrayList<Collision> collisions =
           Physics.boxcastAll(
-              new Vector2((float) (this.getGripX()), (float) (this.getGripY() - 20)),
-              new Vector2((float) this.range / 2, (float) this.range / 2),
-              true
+              new Vector2((float) (this.getGripX()), (float) (this.getGripY()-20)),
+              new Vector2((float) this.range/2, (float) this.range/2),
+              false, false
           );
       // Box cast at end of swing
       collisions.addAll(
           Physics.boxcastAll(
-              new Vector2((float) (this.getGripX()), (float) (this.getGripY() + 20)),
-              new Vector2((float) this.range / 2, (float) this.range / 2),
-              true
+              new Vector2((float) (this.getGripX()), (float) (this.getGripY()+20)),
+              new Vector2((float) this.range/2, (float) this.range/2),
+              false, false
           )
       );
       ArrayList<Destructable> objectsBeingHit = new ArrayList<>();
@@ -154,7 +140,7 @@ public abstract class Melee extends Weapon {
       for (Collision c : collisions) {
         GameObject g = c.getCollidedObject();
 
-        if (g instanceof Destructable && !g.equals(holder) && !collidedSet.contains(g)) {
+        if (g instanceof Destructable && !isHolder(g) && !collidedSet.contains(g)) {
           objectsBeingHit.add((Destructable) g);
           collidedSet.add((Destructable) g);
         }
