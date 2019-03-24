@@ -1,5 +1,6 @@
 package client.main;
 
+import client.handlers.userData.ClientData;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,6 +17,7 @@ public class Settings {
   private transient LevelHandler levelHandler;
   private transient Group gameRoot;
   private String username;
+  private ClientData data;
   private int port;
   private double musicVolume;
   private double soundEffectVolume;
