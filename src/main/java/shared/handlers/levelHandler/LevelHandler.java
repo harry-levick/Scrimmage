@@ -2,6 +2,8 @@ package shared.handlers.levelHandler;
 
 import client.handlers.audioHandler.AudioHandler;
 import client.handlers.audioHandler.MusicAssets.PLAYLIST;
+import client.handlers.effectsHandler.Particle;
+import client.handlers.effectsHandler.emitters.ParticleEmitter;
 import client.main.Client;
 import client.main.Settings;
 import java.util.ArrayList;
@@ -256,6 +258,7 @@ public class LevelHandler {
    * @param gameObject GameObject to be added
    */
   public void addGameObject(GameObject gameObject) {
+    if((gameObject instanceof Particle || gameObject instanceof ParticleEmitter) && isServer) return;
     try {
       gameObject.initialise(this.gameRoot, settings);
       this.toCreate.add(gameObject);
@@ -273,7 +276,7 @@ public class LevelHandler {
 
   public void addGameObjects(ConcurrentLinkedHashMap<UUID, GameObject> gameObjectsT) {
     gameObjectsT.forEach(((uuid, gameObject) -> {
-      if (!gameObjects.containsKey(uuid)) {
+      if (!(gameObjects.containsKey(uuid) && (gameObject instanceof Particle || gameObject instanceof ParticleEmitter))) {
         this.toCreate.add(gameObject);
       }
     }));
