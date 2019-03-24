@@ -4,6 +4,7 @@ import client.handlers.userData.ClientData;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
@@ -59,6 +60,7 @@ public class Settings {
     musicPath = resourcesPath + s + "audio" + s + "music";
     SFXPath = resourcesPath + s + "audio" + s + "sound-effects";
     fontPath = resourcesPath + s + "Kenney Future.ttf";
+    data = new ClientData(UUID.randomUUID().toString(), "newuser", new boolean[30], new boolean[30], 0, 0);
   }
 
   /**
