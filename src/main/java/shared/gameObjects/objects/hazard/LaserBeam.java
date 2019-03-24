@@ -71,7 +71,7 @@ public class LaserBeam extends GameObject implements Hazard {
           Physics.boxcastAll(
               new Vector2(laser.getX(), laser.getY()),
               new Vector2(laser.getWidth(), laser.getHeight()),
-              false);
+              false, false);
       for (Collision c : collisions) {
         if (c.getCollidedObject() instanceof Destructable) {
           ((Destructable) c.getCollidedObject()).deductHp(9999);
@@ -119,7 +119,7 @@ public class LaserBeam extends GameObject implements Hazard {
         Physics.boxcastAll(
             new Vector2(laser.getX(), laser.getY()),
             new Vector2(transform.getSize().getX() * 0.44f, 1080),
-            false);
+            false, false);
     float closestPoint = 1100;
     for (Collision c : collisions) {
       if (c.getCollidedObject().getComponent(ComponentType.RIGIDBODY) != null) {

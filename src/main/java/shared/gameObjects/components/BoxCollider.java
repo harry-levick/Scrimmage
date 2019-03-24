@@ -85,7 +85,6 @@ public class BoxCollider extends Collider implements Serializable {
   @Override
   public void initialise(Group root) {
     polygon = new Polygon();
-    polygon.getPoints().addAll(polygonCoordinates);
     polygon.setOpacity(0.5);
     root.getChildren().add(polygon);
   }

@@ -10,6 +10,7 @@ import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Limb;
+import shared.gameObjects.players.Limbs.Hand;
 import shared.gameObjects.players.Player;
 import shared.physics.data.AngularData;
 import shared.physics.data.Collision;
@@ -309,6 +310,13 @@ public abstract class Weapon extends GameObject {
    */
   public boolean canFire() {
     return this.currentCooldown <= 0;
+  }
+
+  public boolean isHolder(GameObject g) {
+    if(g instanceof Player) return g.equals(holder);
+    if(!(g instanceof Limb)) return false;
+    if(g instanceof Hand) g = g.getParent();
+    return (g.getParent()).equals(holder);
   }
 
   /**

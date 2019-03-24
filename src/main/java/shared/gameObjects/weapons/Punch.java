@@ -87,14 +87,16 @@ public class Punch extends Melee {
               Physics.boxcastAll(
                 new Vector2((float) (this.getGripX()+(i*deltaX)), (float) (this.getGripY()+(i*deltaY))),
                 boxCastSize,
-                true // TODO: set to false
+                true, // TODO: set to false
+              false
               )
             )
         );
 
       for (Collision c : collisionSet) {
         GameObject g = c.getCollidedObject();
-        if (g instanceof Destructable && !g.equals(holder)) {
+        System.out.println(g.getState());
+        if (g instanceof Destructable && !isHolder(g)) {
           ((Destructable) g).deductHp(this.damage);
         }
       }

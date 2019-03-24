@@ -328,7 +328,7 @@ public class Physics {
    * @param size The extents of the box
    * @return All colliders hit in the path, empty if nothing was hit
    */
-  public static ArrayList<Collision> boxcastAll(Vector2 sourcePos, Vector2 size, boolean showCast) {
+  public static ArrayList<Collision> boxcastAll(Vector2 sourcePos, Vector2 size, boolean showCast, boolean ignoreLimbs) {
     BoxCollider castCollider = new BoxCollider(sourcePos, size);
     Collision collision;
     ArrayList<Collision> collisions = new ArrayList<>();
@@ -341,7 +341,7 @@ public class Physics {
     while (iter.hasNext()) {
       GameObject object = iter.next();
 
-      if (object instanceof Limb) {
+      if (object instanceof Limb && ignoreLimbs) {
         continue;
       }
 

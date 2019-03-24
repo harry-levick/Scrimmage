@@ -76,6 +76,10 @@ public class Player extends GameObject {
    */
   protected Weapon myPunch;
   /**
+   *
+   */
+  protected boolean damagedThisFrame;
+  /**
    * The Physics Rigidbody component attached to the player
    */
   protected Rigidbody rb;
@@ -186,6 +190,7 @@ public class Player extends GameObject {
         test.detachLimb();
       }
     }
+    damagedThisFrame = false;
     super.update();
   }
 
@@ -292,14 +297,17 @@ public class Player extends GameObject {
   }
 
   public void deductHp(int damage) {
-    this.health -= damage;
-    if (this.health <= 0) {
-      // For testing
-      transform.translate(new Vector2(0, -80));
-      this.setActive(false);
-      bc.setLayer(ColliderLayer.PARTICLE);
-      transform.rotate(90);
-      this.imageView.setOpacity(0.5);
+    if(!damagedThisFrame) {
+      damagedThisFrame = true;
+      this.health -= damage;
+      if (this.health <= 0) {
+        // For testing
+        transform.translate(new Vector2(0, -80));
+        this.setActive(false);
+        bc.setLayer(ColliderLayer.PARTICLE);
+        transform.rotate(90);
+        this.imageView.setOpacity(0.5);
+      }
     }
   }
 
@@ -351,7 +359,11 @@ public class Player extends GameObject {
   }
 
   public void setHolding(Weapon newHolding) {
-    if (armLeft.isDestroyed() || armRight.isDestroyed()) return;
+    try {
+      if (armLeft.isDestroyed() || armRight.isDestroyed()) return;
+    } catch (Exception e) {
+
+    }
     this.holding = newHolding;
 
     if (newHolding != null) {
