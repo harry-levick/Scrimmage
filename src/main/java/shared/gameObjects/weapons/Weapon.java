@@ -214,7 +214,6 @@ public abstract class Weapon extends GameObject {
    * will start flying in the path
    */
   public void startThrowing() {
-    holder.usePunch();
     double playerRadius = 55 + 65; // Player.sizeY / 2 + bias
     Vector2 bodyV = ((BoxCollider) holder.getHead().getComponent(ComponentType.COLLIDER))
         .getCentre();
