@@ -2,10 +2,7 @@ package shared.packets;
 
 import static junit.framework.TestCase.assertEquals;
 
-import com.sun.xml.internal.bind.v2.runtime.reflect.Lister.Pack;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.UUID;
 import org.junit.Test;
 import shared.gameObjects.GameObject;
@@ -19,6 +16,7 @@ public class PacketTest {
   private boolean rightKey = true;
   private boolean jumpKey = true;
   private boolean click = false;
+  private boolean throwHolding = true;
   private String username = "TheBigMJ";
   private UUID uuid = UUID.randomUUID();
 
@@ -44,7 +42,8 @@ public class PacketTest {
 
   @Test
   public void InputPacketTest() {
-    PacketInput input = new PacketInput(x, y, leftKey, rightKey, jumpKey, click, uuid, 0);
+    PacketInput input = new PacketInput(x, y, leftKey, rightKey, jumpKey, click, throwHolding, uuid,
+        0);
     PacketInput output = new PacketInput(input.getString());
     assertEquals(PacketID.INPUT.getID(), output.packetID);
     assertEquals(output.getX(), x);
@@ -53,6 +52,7 @@ public class PacketTest {
     assertEquals(output.isRightKey(), rightKey);
     assertEquals(output.isJumpKey(), jumpKey);
     assertEquals(output.isClick(), click);
+    assertEquals(output.isThrowKey(), throwHolding);
   }
 
   @Test

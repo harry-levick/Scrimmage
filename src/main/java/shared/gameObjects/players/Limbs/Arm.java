@@ -24,7 +24,6 @@ public class Arm extends Limb {
   private double angleRadian;
   private Limb hand;
   private Player playerParent;
-  private Rotate rotate;
 
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
@@ -41,11 +40,9 @@ public class Arm extends Limb {
   @Override
   public void initialise(Group root, Settings settings) {
     super.initialise(root, settings);
-    if (isLeft) {
-      //imageView.setRotate(6);
-    } else {
-      //imageView.setRotate(-9);
-    }
+    rotate = new Rotate();
+    rotate.setPivotX(10);
+    rotate.setPivotY(10);
   }
 
   public void renderabc() {

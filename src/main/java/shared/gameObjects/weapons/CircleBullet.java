@@ -9,9 +9,13 @@ import shared.util.Path;
  */
 public class CircleBullet extends Bullet {
 
-  /** Width of the bullet */
+  /**
+   * Width of the bullet
+   */
   private static final int width = 15;
-  /** Damage of the bullet */
+  /**
+   * Damage of the bullet
+   */
   private static final int damage = 5;
   /** Speed of the bullet */
   private static final int speed = 50;

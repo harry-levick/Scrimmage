@@ -1,6 +1,5 @@
 package shared.gameObjects.weapons;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.UUID;
 import shared.gameObjects.Destructable;
@@ -17,9 +16,13 @@ import shared.util.maths.Vector2;
  */
 public class Punch extends Melee {
 
-  /** Size of the image (default image = blank) */
+  /**
+   * Size of the image (default image = blank)
+   */
   private static double sizeX = 30, sizeY = 30;
-  /** Range of punch */
+  /**
+   * Range of punch
+   */
   private static double range = 50;
 
   /**
@@ -74,23 +77,25 @@ public class Punch extends Melee {
       HashSet<Collision> collisionSet = new HashSet<>();
 
       // Get the angle of punching
-      Vector2 vPunch = new Vector2(mouseX-getGripX(), mouseY-getGripY());
+      Vector2 vPunch = new Vector2(mouseX - getGripX(), mouseY - getGripY());
       vPunch = vPunch.normalize().mult((float) range);
 
       int numCast = (int) Math.abs(vPunch.getX()) / 10 + 1;
       double deltaX = vPunch.getX() / numCast;
       double deltaY = vPunch.getY() / numCast;
 
-      for (int i = 0; i < numCast; i++)
+      for (int i = 0; i < numCast; i++) {
         collisionSet.addAll(
             new HashSet<>(
-              Physics.boxcastAll(
-                new Vector2((float) (this.getGripX()+(i*deltaX)), (float) (this.getGripY()+(i*deltaY))),
-                boxCastSize,
-                true // TODO: set to false
-              )
+                Physics.boxcastAll(
+                    new Vector2((float) (this.getGripX() + (i * deltaX)),
+                        (float) (this.getGripY() + (i * deltaY))),
+                    boxCastSize,
+                    true // TODO: set to false
+                )
             )
         );
+      }
 
       for (Collision c : collisionSet) {
         GameObject g = c.getCollidedObject();
@@ -110,15 +115,17 @@ public class Punch extends Melee {
 
   @Override
   public double getGripX() {
-    if (holder.isPointingLeft())
+    if (holder.isPointingLeft()) {
       return getGripFlipX();
+    }
     return holder.getHandRight().getX();
   }
 
   @Override
   public double getGripY() {
-    if (holder.isPointingLeft())
+    if (holder.isPointingLeft()) {
       return getGripFlipY();
+    }
     return holder.getHandRight().getY();
   }
 

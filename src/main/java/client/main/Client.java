@@ -459,6 +459,8 @@ public class Client extends Application {
     //Setup UI
     setUserInterface();
 
+    Physics.settings = settings;
+
     // Main Game Loop
     new AnimationTimer() {
       @Override

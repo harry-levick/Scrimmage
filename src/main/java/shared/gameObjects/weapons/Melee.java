@@ -17,17 +17,29 @@ import shared.util.maths.Vector2;
  */
 public abstract class Melee extends Weapon {
 
-  /** Damage of the melee */
+  /**
+   * Damage of the melee
+   */
   protected int damage;
-  /** Limit of attack allowed */
+  /**
+   * Limit of attack allowed
+   */
   protected int ammo;
-  /** Range of the melee (radius) */
+  /**
+   * Range of the melee (radius)
+   */
   protected double range;
-  /** Origin position of swing when attacking (relative to arm) */
+  /**
+   * Origin position of swing when attacking (relative to arm)
+   */
   protected double beginAngle;
-  /** Destination position of swing when attacking (relative to arm) */
+  /**
+   * Destination position of swing when attacking (relative to arm)
+   */
   protected double endAngle;
-  /** Rigidbody of this melee */
+  /**
+   * Rigidbody of this melee
+   */
   protected Rigidbody rb;
   /** True if this melee is attacking (in the process of swing) */
   protected boolean attacking;
@@ -35,7 +47,9 @@ public abstract class Melee extends Weapon {
   protected double[] angles;
   /** Index indicating which part the swing is in now during attack */
   protected int currentAngleIndex;
-  /** Hash set to record collided object in 1 attack */
+  /**
+   * Hash set to record collided object in 1 attack
+   */
   protected HashSet<Destructable> collidedSet;
 
 
@@ -123,15 +137,15 @@ public abstract class Melee extends Weapon {
       // Box cast on beginning of swing
       ArrayList<Collision> collisions =
           Physics.boxcastAll(
-              new Vector2((float) (this.getGripX()), (float) (this.getGripY()-20)),
-              new Vector2((float) this.range/2, (float) this.range/2),
+              new Vector2((float) (this.getGripX()), (float) (this.getGripY() - 20)),
+              new Vector2((float) this.range / 2, (float) this.range / 2),
               true
           );
       // Box cast at end of swing
       collisions.addAll(
           Physics.boxcastAll(
-              new Vector2((float) (this.getGripX()), (float) (this.getGripY()+20)),
-              new Vector2((float) this.range/2, (float) this.range/2),
+              new Vector2((float) (this.getGripX()), (float) (this.getGripY() + 20)),
+              new Vector2((float) this.range / 2, (float) this.range / 2),
               true
           )
       );
@@ -175,6 +189,7 @@ public abstract class Melee extends Weapon {
   // -------------------
   // Setters and Getters
   // -------------------
+
   /** Get the current angle of attack */
   public double getAngle(int index) {
     if (index < (int) (beginAngle + endAngle + 1)) {

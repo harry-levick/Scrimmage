@@ -4,7 +4,7 @@ import java.util.UUID;
 
 public class Background5 extends Background {
 
-  private final String imagePath = "images/backgrounds/background5.png";
+  private static final String imagePath = "images/backgrounds/background5.png";
 
   public Background5(UUID objectUUID) {
     super(objectUUID);

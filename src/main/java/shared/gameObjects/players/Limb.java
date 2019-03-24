@@ -55,8 +55,6 @@ public abstract class Limb extends GameObject {
   protected BoxCollider bc;
 
   protected transient LevelHandler levelHandler;
-
-  protected int resetOffsetX = 0;
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
    * ensure actions are calculated the same
@@ -117,6 +115,8 @@ public abstract class Limb extends GameObject {
   @Override
   public void initialise(Group root, Settings settings) {
     super.initialise(root, settings);
+    rotate.setPivotX(pivotX);
+    rotate.setPivotY(pivotY);
     if (isLeft) {
       imageView.setScaleX(-1);
     }
@@ -144,8 +144,6 @@ public abstract class Limb extends GameObject {
       }
     }
     imageView.getTransforms().remove(rotate);
-    imageView.setX(imageView.getX()+resetOffsetX);
-    resetOffsetX = 0;
     lastAttachedCheck = limbAttached;
   }
 

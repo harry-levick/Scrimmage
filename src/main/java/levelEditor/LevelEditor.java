@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 import javafx.animation.AnimationTimer;
@@ -622,8 +623,8 @@ public class LevelEditor extends Application {
 
   private boolean isInObject(double x, double y, int newObjX, int newObjY) {
     boolean conflict = false;
-    for (UUID key : gameObjects.keySet()) {
-      GameObject object = gameObjects.get(key);
+    for (Map.Entry<UUID, GameObject> entry : gameObjects.entrySet()) {
+      GameObject object = entry.getValue();
       double ulX = object.getX();
       double ulY = object.getY();
       double lrX = ulX + object.getTransform().getSize().getX();

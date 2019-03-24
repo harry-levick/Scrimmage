@@ -83,6 +83,5 @@ public class ConnectionHandler extends Thread {
 
   public void send(String data) {
     out.println(data);
-    System.out.println("SENT" + data);
   }
 }

@@ -174,7 +174,7 @@ public class Server extends Application {
               packet = new DatagramPacket(buffer, buffer.length,
                   (InetAddress) address, serverPort);
               socket.send(packet);
-              System.out.println("SEND: " + new String(buffer));
+              LOGGER.debug("SEND: " + new String(buffer));
             } catch (UnknownHostException e) {
               e.printStackTrace();
             } catch (IOException e) {
@@ -192,13 +192,14 @@ public class Server extends Application {
         ((player, packetInputs) -> {
           PacketInput temp = packetInputs.poll();
           if (temp != null) {
-            System.out.println("Input-:" + temp.getString());
+            LOGGER.debug("Input-:" + temp.getString());
             player.click = temp.isClick();
             player.rightKey = temp.isRightKey();
             player.leftKey = temp.isLeftKey();
             player.mouseX = temp.getX();
             player.mouseY = temp.getY();
             player.jumpKey = temp.isJumpKey();
+            player.throwHoldingKey = temp.isThrowKey();
             player.setLastInputCount(temp.getInputSequenceNumber());
           }
         }));
@@ -300,7 +301,8 @@ public class Server extends Application {
       secondsTimer.scheduleAtFixedRate(new TimerTask() {
         @Override
         public void run() {
-          System.out.println(String.format("%d:%d", timeRemaining / 60, timeRemaining - ((timeRemaining / 60) * 60)));
+          LOGGER.debug(String
+              .format("%d:%d", timeRemaining / 60, timeRemaining - ((timeRemaining / 60) * 60)));
           timeRemaining -= 1;
         }
       }, 0, 1000);
@@ -327,6 +329,8 @@ public class Server extends Application {
     LOGGER.debug("Running " + threadName);
     /** Receiver from clients */
     executor.execute(new ServerReceiver(this, serverSocket, connected));
+
+    Physics.settings = settings;
 
     new AnimationTimer() {
 

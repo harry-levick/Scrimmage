@@ -2,11 +2,8 @@ package shared.gameObjects.weapons;
 
 import client.handlers.audioHandler.AudioHandler;
 import client.main.Client;
-import client.main.Settings;
 import java.util.UUID;
-import javafx.scene.Group;
 import shared.gameObjects.players.Player;
-import shared.physics.data.Collision;
 import shared.util.Path;
 import shared.util.maths.Vector2;
 

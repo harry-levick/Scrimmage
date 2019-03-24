@@ -47,17 +47,29 @@ public abstract class Bullet extends GameObject {
    */
   protected boolean hitHolder;
 
-  /** Constant value PI */
+  /**
+   * Constant value PI
+   */
   private double PI = 3.141592654;
-  /** Width of the bullet */
+  /**
+   * Width of the bullet
+   */
   private double width;
-  /** Speed of travel of the bullet */
+  /**
+   * Speed of travel of the bullet
+   */
   private double speed;
-  /** Vector of the force of bullet fire */
+  /**
+   * Vector of the force of bullet fire
+   */
   private Vector2 vector;
-  /** Damage of the bullet */
+  /**
+   * Damage of the bullet
+   */
   private int damage;
-  /** Angle of firing in degree */
+  /**
+   * Angle of firing in degree
+   */
   private double angleDegree;
 
   /**
@@ -131,7 +143,6 @@ public abstract class Bullet extends GameObject {
   @Override
   public void update() {
     super.update();
-    imageView.setRotate(angleDegree);
     if ((0 < getX() && getX() < 1920) && (0 < getY() && getY() < 1080)) {
       rb.move(vector.mult((float) speed));
     } else {
@@ -142,6 +153,7 @@ public abstract class Bullet extends GameObject {
   @Override
   public void render() {
     super.render();
+    imageView.setRotate(angleDegree);
   }
 
   @Override
