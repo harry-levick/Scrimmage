@@ -196,9 +196,9 @@ public class Client extends Application {
                 + File.separator + "panel.png"));
         ImageView iv = new ImageView(popupBackground);
         iv.setFitWidth(settings.getGrisPos(12));
-        iv.setFitHeight(settings.getGrisPos(7) + quitButtonExtraPadding);
+        iv.setFitHeight(settings.getGrisPos(10) + quitButtonExtraPadding);
         iv.setX(settings.getGrisPos(18));
-        iv.setY(settings.getGrisPos(5));
+        iv.setY(settings.getGrisPos(3));
         creditsRoot.getChildren().add(iv);
       } catch (FileNotFoundException e) {
         Rectangle rect = new Rectangle();
@@ -210,7 +210,7 @@ public class Client extends Application {
       }
       //add controls
       settingsObjects.add(
-          new SoundSlider(settings.getGrisPos(20), settings.getGrisPos(7), settings.getGrisPos(8),
+          new SoundSlider(settings.getGrisPos(20), settings.getGrisPos(5), settings.getGrisPos(8),
               settings.getGrisPos(1), SOUND_TYPE.MUSIC,
               "Music", ObjectType.Button, UUID.randomUUID()));
       settingsObjects.add(
@@ -219,8 +219,8 @@ public class Client extends Application {
               "Sound Effects", ObjectType.Button, UUID.randomUUID()));
       if (quitButtonExtraPadding != 0) {
         ButtonQuit quit = new ButtonQuit(
-            settings.getGrisPos(20),
-            settings.getGrisPos(11),
+            settings.getGrisPos(20) - 20,
+            settings.getGrisPos(12),
             settings.getGrisPos(8),
             settings.getGrisPos(2),
             ObjectType.Button,
@@ -623,6 +623,7 @@ public class Client extends Application {
 
     scene = new Scene(root, settings.getWindowWidth(), settings.getWindowHeight());
     scene.setCursor(Cursor.CROSSHAIR);
+    scene.getStylesheets().add("style.css");
 
     primaryStage.setScene(scene);
     primaryStage.setFullScreen(false);
