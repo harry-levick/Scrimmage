@@ -86,7 +86,7 @@ public class Punch extends Melee {
               Physics.boxcastAll(
                 new Vector2((float) (this.getGripX()+(i*deltaX)), (float) (this.getGripY()+(i*deltaY))),
                 boxCastSize,
-                true, // TODO: set to false
+                false, // TODO: set to false
               false
               )
             )

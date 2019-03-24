@@ -64,7 +64,7 @@ public abstract class Limb extends GameObject implements Destructable {
   protected transient LevelHandler levelHandler;
 
   protected int resetOffsetX = 0;
-  private boolean damagedThisFrame;
+  protected boolean damagedThisFrame;
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
    * ensure actions are calculated the same
@@ -173,7 +173,9 @@ public abstract class Limb extends GameObject implements Destructable {
 
   @Override
   public void destroy() {
+    super.destroy();
     detachLimb();
+    bc.setLayer(ColliderLayer.PARTICLE);
   }
   public void reset() {
     removeRender();

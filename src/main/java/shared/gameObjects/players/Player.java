@@ -253,7 +253,7 @@ public class Player extends GameObject {
       this.throwHolding();
     }
 
-    if (click && holding != null) {
+    if (click && holding != null && !(armLeft.isDestroyed() || armRight.isDestroyed())) {
       holding.fire(mouseX, mouseY);
     }
     // setX(getX() + (vx * 0.0166));
@@ -278,6 +278,13 @@ public class Player extends GameObject {
       this.holding.destroyWeapon();
       this.setHolding(myPunch);
       return true;
+    }
+    try {
+      if (armLeft.isDestroyed() || armRight.isDestroyed()) {
+        this.throwHolding();
+      }
+    } catch (Exception e) {
+
     }
     return false;
   }
