@@ -12,9 +12,13 @@ import shared.util.maths.Vector2;
  */
 public class Handgun extends Gun {
 
-  /** Path to image */
+  /**
+   * Path to image
+   */
   private static String imagePath = "images/weapons/handgun.png";
-  /** Size of image */
+  /**
+   * Size of image
+   */
   private static double sizeX = 50, sizeY = 35;
 
   /**

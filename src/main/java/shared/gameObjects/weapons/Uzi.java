@@ -3,7 +3,6 @@ package shared.gameObjects.weapons;
 import client.handlers.audioHandler.AudioHandler;
 import client.main.Client;
 import java.util.UUID;
-import javafx.scene.transform.Rotate;
 import shared.gameObjects.players.Player;
 import shared.util.Path;
 import shared.util.maths.Vector2;
@@ -13,9 +12,13 @@ import shared.util.maths.Vector2;
  */
 public class Uzi extends Gun {
 
-  /** Path to image */
+  /**
+   * Path to image
+   */
   private static String imagePath = "images/weapons/uzi.png";
-  /** Size of image */
+  /**
+   * Size of image
+   */
   private static double sizeX = 84, sizeY = 35;
 
   /**

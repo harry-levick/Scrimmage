@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.UUID;
 import javafx.application.Platform;
-import javafx.scene.shape.Arc;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import server.ai.Bot;
@@ -19,7 +18,6 @@ import shared.gameObjects.components.EdgeCollider;
 import shared.gameObjects.players.Limb;
 import shared.gameObjects.weapons.Bullet;
 import shared.gameObjects.weapons.Weapon;
-import shared.handlers.levelHandler.LevelHandler;
 import shared.physics.data.Collision;
 import shared.physics.data.DynamicCollision;
 import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
@@ -231,7 +229,7 @@ public class Physics {
           Rectangle r2 = new Rectangle(sourcePos.getX(), sourcePos.getY(), size.getX(),
               size.getY());
           r2.setStyle("-fx-stroke-width: 4; -fx-stroke: #00ff00;");
-          Client.levelHandler.getGameRoot().getChildren().add(r2);
+          settings.getLevelHandler().getGameRoot().getChildren().add(r2);
         });
   }
 
@@ -425,4 +423,5 @@ public class Physics {
   public static void clearCollisions() {
     collisions.clear();
   }
+
 }

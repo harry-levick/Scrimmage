@@ -362,6 +362,11 @@ public class Vector2 implements Serializable {
     return (vector.getX() == this.x && vector.getY() == this.y);
   }
 
+  public int hashCode() {
+    assert false : "hashCode not designed";
+    return 42; // any arbitrary constant will do
+  }
+
   public float getX() {
     return x;
   }

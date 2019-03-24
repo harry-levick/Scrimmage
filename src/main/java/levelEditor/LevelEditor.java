@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 import javafx.animation.AnimationTimer;
@@ -62,6 +63,7 @@ import shared.gameObjects.objects.utility.BlueBlock;
 import shared.gameObjects.objects.utility.GreenBlock;
 import shared.gameObjects.objects.utility.RedBlock;
 import shared.gameObjects.objects.utility.YellowBlock;
+import shared.gameObjects.score.Podium1;
 import shared.gameObjects.weapons.Handgun;
 import shared.gameObjects.weapons.WeaponSpawner;
 import shared.handlers.levelHandler.GameState;
@@ -132,6 +134,7 @@ public class LevelEditor extends Application {
     objectMap.put(OBJECT_TYPES.YELLOWB, new GameObjectTuple("Yellow Block", 1, 1));
     objectMap.put(OBJECT_TYPES.LASER, new GameObjectTuple("Laser", 2, 2));
     objectMap.put(OBJECT_TYPES.W_SPAWNER, new GameObjectTuple("Weapon Spawner", 1, 1));
+    objectMap.put(OBJECT_TYPES.PODIUM1, new GameObjectTuple("Podium 1", 1, 1));
   }
 
   private void scenePrimaryClick(
@@ -360,6 +363,12 @@ public class LevelEditor extends Application {
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
                   ObjectType.Bot,
+                  uuid);
+          break;
+        case PODIUM1:
+          temp =
+              new Podium1(getGridX((event.getX() / scaleRatio.getX())),
+                  getGridY((event.getY() / scaleRatio.getY())), getScaledSize(4), getScaledSize(8),
                   uuid);
           break;
         case REDB:
@@ -622,8 +631,8 @@ public class LevelEditor extends Application {
 
   private boolean isInObject(double x, double y, int newObjX, int newObjY) {
     boolean conflict = false;
-    for (UUID key : gameObjects.keySet()) {
-      GameObject object = gameObjects.get(key);
+    for (Map.Entry<UUID, GameObject> entry : gameObjects.entrySet()) {
+      GameObject object = entry.getValue();
       double ulX = object.getX();
       double ulY = object.getY();
       double lrX = ulX + object.getTransform().getSize().getX();
@@ -816,6 +825,7 @@ public class LevelEditor extends Application {
     YELLOWB,
     LASER,
     W_SPAWNER,
+    PODIUM1
   }
 }
 

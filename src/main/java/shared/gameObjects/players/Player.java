@@ -26,11 +26,11 @@ public class Player extends GameObject {
   /**
    * The speed of the player in pixels per update frame
    */
-  protected final float speed = 9;
+  protected static final float speed = 9;
   /**
    * The jump force of the player in Newtons
    */
-  protected final float jumpForce = -300;
+  protected static final float jumpForce = -300;
   /**
    * Control Booleans determined by the Input Manager
    */
@@ -198,7 +198,8 @@ public class Player extends GameObject {
   public String getState() {
     return objectUUID + ";" + id + ";" + getX() + ";" + getY() + ";" + animation.getName() + ";"
         + health + ";"
-        + lastInputCount;
+        + lastInputCount + ";"
+        + throwHoldingKey;
   }
 
   @Override
@@ -208,6 +209,7 @@ public class Player extends GameObject {
     //this.animation.switchAnimation(unpackedData[4]);
     this.health = Integer.parseInt(unpackedData[5]);
     this.lastInputCount = Integer.parseInt(unpackedData[6]);
+    this.throwHoldingKey = Boolean.parseBoolean(unpackedData[7]);
   }
 
   private void checkGrounded() {
@@ -237,7 +239,7 @@ public class Player extends GameObject {
       behaviour = Behaviour.IDLE;
     }
     if (jumpKey && !jumped && grounded) {
-      rb.moveY(jumpForce * ((legLeft.isDestroyed() || legRight.isDestroyed()) ? 0.5f : 1), 0.33333f);
+      rb.moveY(jumpForce * (legLeft.limbAttached && legRight.limbAttached ? 1f : 0.7f), 0.33333f);
       jumped = true;
     }
     if (jumped) {
@@ -251,7 +253,7 @@ public class Player extends GameObject {
       this.throwHolding();
     }
 
-    if (click && holding != null) {
+    if (click && holding != null && !(!armLeft.limbAttached || !armRight.limbAttached)) {
       holding.fire(mouseX, mouseY);
     }
     // setX(getX() + (vx * 0.0166));
@@ -276,6 +278,13 @@ public class Player extends GameObject {
       this.holding.destroyWeapon();
       this.setHolding(myPunch);
       return true;
+    }
+    try {
+      if (!armLeft.limbAttached || !armRight.limbAttached) {
+        this.throwHolding();
+      }
+    } catch (Exception e) {
+
     }
     return false;
   }
@@ -360,7 +369,7 @@ public class Player extends GameObject {
 
   public void setHolding(Weapon newHolding) {
     try {
-      if (armLeft.isDestroyed() || armRight.isDestroyed()) return;
+      if (!armLeft.limbAttached || !armRight.limbAttached) return;
     } catch (Exception e) {
 
     }

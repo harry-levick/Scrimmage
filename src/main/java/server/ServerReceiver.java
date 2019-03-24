@@ -51,7 +51,7 @@ public class ServerReceiver implements Runnable {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    System.out.println("Receivered" + message);
+    LOGGER.debug("Recieved" + message);
     int packetID = Integer.parseInt(message.split(",")[0]);
     if (packetID == 0
         && server.playerCount.get() < 4
@@ -64,20 +64,17 @@ public class ServerReceiver implements Runnable {
           }
       );
 
-      System.out.println("test1");
       /** Main Loop */
       while (true) {
         try {
-          System.out.println("test2");
           message = input.readLine();
-          System.out.println("GOT" + message);
+          LOGGER.debug("GOT" + message);
         } catch (SocketTimeoutException e) {
           server.playerCount.decrementAndGet();
           connected.remove(socket.getInetAddress());
           server.levelHandler.getPlayers().remove(player);
           server.levelHandler.getGameObjects().remove(player);
           LOGGER.debug("Removing player");
-          System.out.println("test3");
           break;
         } catch (IOException e) {
           e.printStackTrace();

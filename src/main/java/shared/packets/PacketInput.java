@@ -7,7 +7,7 @@ import java.util.UUID;
  */
 public class PacketInput extends Packet {
 
-  private boolean leftKey, rightKey, jumpKey, click;
+  private boolean leftKey, rightKey, jumpKey, click, throwKey;
   private double x, y;
   private UUID uuid;
 
@@ -30,6 +30,7 @@ public class PacketInput extends Packet {
       boolean rightKey,
       boolean jumpKey,
       boolean click,
+      boolean throwKey,
       UUID uuid,
       int inputCount) {
     packetID = PacketID.INPUT.getID();
@@ -38,6 +39,7 @@ public class PacketInput extends Packet {
     this.leftKey = leftKey;
     this.rightKey = rightKey;
     this.jumpKey = jumpKey;
+    this.throwKey = throwKey;
     this.x = x;
     this.y = y;
     this.inputSequenceNumber = inputSequenceNumber;
@@ -59,6 +61,8 @@ public class PacketInput extends Packet {
             + ","
             + click
             + ","
+            + throwKey
+            + ","
             + inputCount;
   }
 
@@ -76,7 +80,8 @@ public class PacketInput extends Packet {
     this.rightKey = Boolean.parseBoolean(unpackedData[5]);
     this.jumpKey = Boolean.parseBoolean(unpackedData[6]);
     this.click = Boolean.parseBoolean(unpackedData[7]);
-    this.inputSequenceNumber = Integer.parseInt(unpackedData[8]);
+    this.throwKey = Boolean.parseBoolean(unpackedData[8]);
+    this.inputSequenceNumber = Integer.parseInt(unpackedData[9]);
     this.data =
         packetID
             + ","
@@ -93,6 +98,8 @@ public class PacketInput extends Packet {
             + jumpKey
             + ","
             + click
+            + ","
+            + throwKey
             + ","
             + inputSequenceNumber;
   }
@@ -125,6 +132,9 @@ public class PacketInput extends Packet {
     return uuid;
   }
 
+  public boolean isThrowKey() {
+    return throwKey;
+  }
 
   public int getInputSequenceNumber() {
     return inputSequenceNumber;

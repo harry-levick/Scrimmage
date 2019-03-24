@@ -13,5 +13,6 @@ public enum ObjectType {
   Button,
   Limb,
   Powerup,
-  Fist
+  Fist,
+  Podium
 }

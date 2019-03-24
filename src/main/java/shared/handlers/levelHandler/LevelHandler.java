@@ -17,6 +17,7 @@ import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.background.Background;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.rendering.ColorFilters;
+import shared.packets.PacketDelete;
 import shared.util.Path;
 import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import shared.util.maths.Vector2;
@@ -220,7 +221,6 @@ public class LevelHandler {
     } else {
       server.sendObjects(gameObjects);
     }
-    System.gc();
   }
 
   /**
@@ -256,14 +256,19 @@ public class LevelHandler {
    * @param gameObject GameObject to be added
    */
   public void addGameObject(GameObject gameObject) {
-    gameObject.initialise(this.gameRoot, settings);
-    this.toCreate.add(gameObject);
-    if (isServer) {
-      ConcurrentLinkedHashMap<UUID, GameObject> temp = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
-          .maximumWeightedCapacity(500).build();
-      temp.put(gameObject.getUUID(), gameObject);
-      server.sendObjects(temp);
+    try {
+      gameObject.initialise(this.gameRoot, settings);
+      this.toCreate.add(gameObject);
+      if (isServer) {
+        ConcurrentLinkedHashMap<UUID, GameObject> temp = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
+            .maximumWeightedCapacity(500).build();
+        temp.put(gameObject.getUUID(), gameObject);
+        server.sendObjects(temp);
+      }
+    } catch (IllegalStateException e) {
+      System.out.println("AI - avoiding placement of object");
     }
+
   }
 
   public void addGameObjects(ConcurrentLinkedHashMap<UUID, GameObject> gameObjectsT) {
@@ -296,6 +301,10 @@ public class LevelHandler {
    */
   public void removeGameObject(GameObject g) {
     toRemove.add(g); // Will be removed on next frame
+    if (isServer) {
+      PacketDelete delete = new PacketDelete(g.getUUID());
+      server.sendToClients(delete.getData(), false);
+    }
   }
 
   /**

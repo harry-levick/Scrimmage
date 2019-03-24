@@ -13,8 +13,8 @@ import shared.gameObjects.players.Player;
  */
 public class Score {
 
-  private final int xPos = 1920 - 247; //Center it on the screen.
-  private final int yPos = 0;
+  private static final int xPos = 1920 - 247; //Center it on the screen.
+  private static final int yPos = 0;
   private Animator board;
   private Player player;
   private ImageView boardImageView;

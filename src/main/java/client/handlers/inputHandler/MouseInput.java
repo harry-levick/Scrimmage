@@ -25,8 +25,10 @@ public class MouseInput implements EventHandler<MouseEvent> {
     EventType<MouseEvent> type = (EventType<MouseEvent>) event.getEventType();
 
     if (type == MouseEvent.MOUSE_MOVED || type == MouseEvent.MOUSE_DRAGGED) {
-      clientPlayer.mouseX = (event.getX() / Client.scaleRatio.getX());
-      clientPlayer.mouseY = (event.getY() / Client.scaleRatio.getY());
+      clientPlayer.mouseX = (event.getX() / (Client.scaleRatio != null ? Client.scaleRatio.getX()
+          : 1));
+      clientPlayer.mouseY = (event.getY() / (Client.scaleRatio != null ? Client.scaleRatio.getY()
+          : 1));
       Client.sendUpdate = true;
     }
     if (type == MouseEvent.MOUSE_PRESSED) {

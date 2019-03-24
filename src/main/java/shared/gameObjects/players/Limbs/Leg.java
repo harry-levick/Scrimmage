@@ -1,10 +1,10 @@
 package shared.gameObjects.players.Limbs;
 
 import shared.gameObjects.Utils.ObjectType;
+import shared.gameObjects.players.Behaviour;
 import shared.gameObjects.players.Limb;
 import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.LevelHandler;
-import shared.gameObjects.players.Behaviour;
 
 /**
  * Leg limb of a player
@@ -17,7 +17,7 @@ public class Leg extends Limb {
    */
   public Leg(Boolean isLeft, Player parent, LevelHandler levelHandler) {
     super(19, 87, 43, 87, 21, 23, ObjectType.Limb, isLeft, parent, parent, 0, 0, levelHandler);
-    limbHealth = player.getHealth()/8;
+    limbHealth = player.getHealth()/4;
   }
 
   @Override
@@ -54,12 +54,6 @@ public class Leg extends Limb {
       }
       else {
         imageView.setRotate(0*inverse);
-        int offset = 5;
-        if(this.behaviour == Behaviour.WALK_RIGHT) {
-          offset = -15;
-        }
-        imageView.setX(imageView.getX()-offset);
-        resetOffsetX = offset;
       }
     }
   }

@@ -17,6 +17,7 @@ import shared.handlers.levelHandler.LevelHandler;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
+import shared.util.maths.Vector2;
 
 /**
  * General class for player Limbs
@@ -64,7 +65,7 @@ public abstract class Limb extends GameObject implements Destructable {
   protected transient LevelHandler levelHandler;
 
   protected int resetOffsetX = 0;
-  private boolean damagedThisFrame;
+  protected boolean damagedThisFrame;
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
    * ensure actions are calculated the same
@@ -138,6 +139,8 @@ public abstract class Limb extends GameObject implements Destructable {
   @Override
   public void initialise(Group root, Settings settings) {
     super.initialise(root, settings);
+    rotate.setPivotX(pivotX);
+    rotate.setPivotY(pivotY);
     if (isLeft) {
       imageView.setScaleX(-1);
     }
@@ -165,8 +168,6 @@ public abstract class Limb extends GameObject implements Destructable {
       }
     }
     imageView.getTransforms().remove(rotate);
-    imageView.setX(imageView.getX()+resetOffsetX);
-    resetOffsetX = 0;
     lastAttachedCheck = limbAttached;
     damagedThisFrame = false;
   }
@@ -174,6 +175,7 @@ public abstract class Limb extends GameObject implements Destructable {
   @Override
   public void destroy() {
     detachLimb();
+    bc.setLayer(ColliderLayer.PARTICLE);
   }
   public void reset() {
     removeRender();
@@ -212,6 +214,7 @@ public abstract class Limb extends GameObject implements Destructable {
 
   public void detachLimb() {
     this.limbAttached = false;
+    rb.setVelocity(new Vector2(0, -1000));
   }
 
   public void reattachLimb() {

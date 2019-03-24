@@ -9,14 +9,20 @@ import shared.util.Path;
  */
 public class FireBullet extends Bullet {
 
-  /** Path to the image */
-  private static String imagePath = "images/weapons/fireBullet.png";
-  /** Width of the bullet */
+  /**
+   * Width of the bullet
+   */
   private static final int width = 15;
-  /** Damage of the bullet */
+  /**
+   * Damage of the bullet
+   */
   private static final int damage = 5;
   /** Speed of travel of the bullet */
   private static final int speed = 50;
+  /**
+   * Path to the image
+   */
+  private static String imagePath = "images/weapons/fireBullet.png";
 
   /**
    * Constructor of Fire Bullet

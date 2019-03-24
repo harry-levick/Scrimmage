@@ -1,6 +1,5 @@
 package shared.gameObjects.weapons;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.UUID;
 import shared.gameObjects.Destructable;
@@ -74,28 +73,28 @@ public class Punch extends Melee {
       HashSet<Collision> collisionSet = new HashSet<>();
 
       // Get the angle of punching
-      Vector2 vPunch = new Vector2(mouseX-getGripX(), mouseY-getGripY());
+      Vector2 vPunch = new Vector2(mouseX - getGripX(), mouseY - getGripY());
       vPunch = vPunch.normalize().mult((float) range);
 
       int numCast = (int) Math.abs(vPunch.getX()) / 10 + 1;
       double deltaX = vPunch.getX() / numCast;
       double deltaY = vPunch.getY() / numCast;
 
-      for (int i = 0; i < numCast; i++)
+      for (int i = 0; i < numCast; i++) {
         collisionSet.addAll(
             new HashSet<>(
               Physics.boxcastAll(
                 new Vector2((float) (this.getGripX()+(i*deltaX)), (float) (this.getGripY()+(i*deltaY))),
                 boxCastSize,
-                true, // TODO: set to false
+                false, // TODO: set to false
               false
               )
             )
         );
+      }
 
       for (Collision c : collisionSet) {
         GameObject g = c.getCollidedObject();
-        System.out.println(g.getState());
         if (g instanceof Destructable && !isHolder(g)) {
           ((Destructable) g).deductHp(this.damage);
         }
@@ -112,15 +111,17 @@ public class Punch extends Melee {
 
   @Override
   public double getGripX() {
-    if (holder.isPointingLeft())
+    if (holder.isPointingLeft()) {
       return getGripFlipX();
+    }
     return holder.getHandRight().getX();
   }
 
   @Override
   public double getGripY() {
-    if (holder.isPointingLeft())
+    if (holder.isPointingLeft()) {
       return getGripFlipY();
+    }
     return holder.getHandRight().getY();
   }
 

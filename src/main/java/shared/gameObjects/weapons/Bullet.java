@@ -142,7 +142,7 @@ public abstract class Bullet extends GameObject {
     super.update();
     Random random = new Random();
     imageView.setRotate(angleDegree);
-    if ((-200 < getX() && getX() < 1920) && (0 < getY() && getY() < 1080)) {
+    if ((0 < getX() && getX() < 1920) && (0 < getY() && getY() < 1080)) {
       rb.move(vector.mult((float) speed));
       settings
           .getLevelHandler()
@@ -162,6 +162,7 @@ public abstract class Bullet extends GameObject {
   @Override
   public void render() {
     super.render();
+    imageView.setRotate(angleDegree);
   }
 
   @Override
