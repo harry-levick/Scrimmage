@@ -25,11 +25,11 @@ public class Player extends GameObject implements Destructable {
   /**
    * The speed of the player in pixels per update frame
    */
-  protected final float speed = 9;
+  protected static final float speed = 9;
   /**
    * The jump force of the player in Newtons
    */
-  protected final float jumpForce = -300;
+  protected static final float jumpForce = -300;
   /**
    * Control Booleans determined by the Input Manager
    */

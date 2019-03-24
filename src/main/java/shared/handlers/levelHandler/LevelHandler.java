@@ -221,7 +221,6 @@ public class LevelHandler {
     } else {
       server.sendObjects(gameObjects);
     }
-    System.gc();
   }
 
   /**

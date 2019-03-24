@@ -624,4 +624,10 @@ public abstract class GameObject implements Serializable {
       return false;
     }
   }
+
+  @Override
+  public int hashCode() {
+    assert false : "hashCode not designed";
+    return 99; // any arbitrary constant will do
+  }
 }
