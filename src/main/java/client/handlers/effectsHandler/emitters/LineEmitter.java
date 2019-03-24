@@ -2,13 +2,14 @@ package client.handlers.effectsHandler.emitters;
 
 import client.handlers.effectsHandler.Particle;
 import client.handlers.effectsHandler.ParticleType;
+import java.util.Random;
 import shared.util.maths.Vector2;
 
 /**
- * Class to handle emission of Line-based particles
+ * Class to handle emission of Line-based particles.
  */
 public class LineEmitter extends ParticleEmitter {
-  private float angle;
+  private Vector2 leftPos;
 
   /**
    * Constructor:
@@ -20,7 +21,6 @@ public class LineEmitter extends ParticleEmitter {
    * @param lifetime Lifetime of the particles emitted
    * @param particleEmitterLifetime Lifetime of the emitter
    * @param particleAmount Number of particles spawned on each update frame
-   * @param angle The angle of the line with respect to the bottom left of the grid
    * @param imageSource The filepath of the image to use for the particle
    */
   public LineEmitter(
@@ -32,7 +32,6 @@ public class LineEmitter extends ParticleEmitter {
       float lifetime,
       float particleEmitterLifetime,
       int particleAmount,
-      float angle,
       String imageSource) {
     super(
         sourcePosition,
@@ -43,18 +42,15 @@ public class LineEmitter extends ParticleEmitter {
         lifetime,
         particleEmitterLifetime,
         particleAmount,
-        ParticleType.SCATTER,
+        ParticleType.LINE,
         imageSource);
-    this.angle = angle;
+    this.leftPos = sourcePosition.sub(new Vector2(radius/2, 0));
   }
 
-  @Override
-  public void update() {
-
-  }
   @Override
   protected Particle newParticle() {
-
-    return new Particle(transform.getPos(), velocity, acceleration, particleSize, imageSource, 0.2f);
+    Random random = new Random();
+    Vector2 newPos = leftPos.add(new Vector2(random.nextDouble()*radius, 0));
+    return new Particle(newPos, velocity.mult(random.nextFloat()), acceleration, particleSize, imageSource, 0.2f);
   }
 }

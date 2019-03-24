@@ -16,6 +16,15 @@ public class Particle extends GameObject {
   private String imageSource;
   private float lifetime;
 
+  /**
+   * Constructs a particle
+   * @param sourcePosition Spawn position of the particle
+   * @param initialVelocity Particle's initial velocity
+   * @param acceleration Acceleration applied on every update
+   * @param size Size of particle
+   * @param imageSource Source filepath of particle image
+   * @param lifetime How long the particle lives for
+   */
   public Particle(
       Vector2 sourcePosition,
       Vector2 initialVelocity,
@@ -47,6 +56,7 @@ public class Particle extends GameObject {
   @Override
   public void update() {
     imageView.setOpacity(0.85);
+    imageView.setRotate(velocity.angle());
     if (lifetime <= 0) {
       settings.getLevelHandler().removeGameObject(this);
     } else {
