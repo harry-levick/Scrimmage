@@ -9,11 +9,31 @@ import shared.util.Path;
  */
 public class FireBullet extends Bullet {
 
-  private static String imagePath = "images/weapons/fireBullet.png";
+  /**
+   * Width of the bullet
+   */
   private static final int width = 15;
+  /**
+   * Damage of the bullet
+   */
   private static final int damage = 5;
+  /** Speed of travel of the bullet */
   private static final int speed = 50;
+  /**
+   * Path to the image
+   */
+  private static String imagePath = "images/weapons/fireBullet.png";
 
+  /**
+   * Constructor of Fire Bullet
+   *
+   * @param gunX X position of the gun when fired
+   * @param gunY Y position of the gun when fired
+   * @param mouseX X position of the mouse when fired
+   * @param mouseY Y poistion of the mouse when fired
+   * @param holder The player who fired this bullet
+   * @param uuid UUID of this bullet
+   */
   public FireBullet(
       double gunX,
       double gunY,

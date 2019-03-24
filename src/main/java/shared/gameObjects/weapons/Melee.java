@@ -1,6 +1,7 @@
 package shared.gameObjects.weapons;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.UUID;
 import shared.gameObjects.Destructable;
 import shared.gameObjects.GameObject;
@@ -11,18 +12,69 @@ import shared.physics.Physics;
 import shared.physics.data.Collision;
 import shared.util.maths.Vector2;
 
+/**
+ * Abstract class of all Melee weapons
+ */
 public abstract class Melee extends Weapon {
 
-  protected int damage;  // damage of the melee
+  /**
+   * Damage of the melee
+   */
+  protected int damage;
+  /**
+   * Limit of attack allowed
+   */
   protected int ammo;
-  protected double range; // radius in pixels
-  protected double beginAngle; // swing from beginAngle (relative to arm)
-  protected double endAngle; // swing till endAngle (relative to arm)
+  /**
+   * Range of the melee (radius)
+   */
+  protected double range;
+  /**
+   * Origin position of swing when attacking (relative to arm)
+   */
+  protected double beginAngle;
+  /**
+   * Destination position of swing when attacking (relative to arm)
+   */
+  protected double endAngle;
+  /**
+   * Rigidbody of this melee
+   */
   protected Rigidbody rb;
+  /** True if this melee is attacking (in the process of swing) */
   protected boolean attacking;
+  /** Angles to travel when attacking */
   protected double[] angles;
+  /** Index indicating which part the swing is in now during attack */
   protected int currentAngleIndex;
+  /**
+   * Hash set to record collided object in 1 attack
+   */
+  protected HashSet<Destructable> collidedSet;
 
+
+  /**
+   * Default constructor of all Melee weapon
+   *
+   * @param x X position of this melee
+   * @param y Y position of this melee
+   * @param sizeX Width of this image
+   * @param sizeY Height of this image
+   * @param id Object type of this melee (default: Weapon)
+   * @param damage Damage of this melee
+   * @param weight Weight of this melee
+   * @param name Name of the melee
+   * @param ammo Limit of attack allowed of this melee
+   * @param fireRate Fire rate of this melee
+   * @param pivotX X pivot of image rotation
+   * @param pivotY Y pivot of image rotation
+   * @param holder Player who holds this melee
+   * @param range Range of this melee
+   * @param beginAngle Begin position of the attack
+   * @param endAngle End position of the attack
+   * @param singleHanded True if this melee is hold with one hand only
+   * @param uuid UUID of this melee
+   */
   public Melee(
       double x,
       double y,
@@ -68,11 +120,11 @@ public abstract class Melee extends Weapon {
     this.attacking = false;
     this.currentAngleIndex = 0;
     this.singleHanded = singleHanded;
+    this.collidedSet = new HashSet<>();
   }
 
   @Override
   public void update() {
-    deductCooldown();
     super.update();
   }
 
@@ -80,33 +132,49 @@ public abstract class Melee extends Weapon {
   public void fire(double mouseX, double mouseY) {
     if (canFire()) {
       this.attacking = true;
-      UUID uuid = UUID.randomUUID();
-      // TODO: add circle cast
-      // maybe use box cast?
-      // ArrayList<Collision> collisions = Physics.circlecastAll(sourcePos, distance);
+      this.collidedSet.clear();
+
+      // Box cast on beginning of swing
       ArrayList<Collision> collisions =
           Physics.boxcastAll(
-              new Vector2((float) (this.getX() + this.range), (float) (this.getY() - this.range)),
-              new Vector2((float) this.range, (float) this.range), false);
-      ArrayList<Destructable> playersBeingHit = new ArrayList<>();
+              new Vector2((float) (this.getGripX()), (float) (this.getGripY() - 20)),
+              new Vector2((float) this.range / 2, (float) this.range / 2),
+              true
+          );
+      // Box cast at end of swing
+      collisions.addAll(
+          Physics.boxcastAll(
+              new Vector2((float) (this.getGripX()), (float) (this.getGripY() + 20)),
+              new Vector2((float) this.range / 2, (float) this.range / 2),
+              true
+          )
+      );
+      ArrayList<Destructable> objectsBeingHit = new ArrayList<>();
 
       for (Collision c : collisions) {
-        GameObject g = c.getCollidedObject().getParent();
-        if (g instanceof Destructable && !g.equals(holder)) {
-          playersBeingHit.add((Destructable) g);
+        GameObject g = c.getCollidedObject();
+
+        if (g instanceof Destructable && !g.equals(holder) && !collidedSet.contains(g)) {
+          objectsBeingHit.add((Destructable) g);
+          collidedSet.add((Destructable) g);
         }
       }
 
       this.currentCooldown = getDefaultCoolDown();
 
-      for (Destructable p : playersBeingHit) {
-        p.deductHp(this.damage);
+      for (Destructable obj : objectsBeingHit) {
+        obj.deductHp(this.damage);
       }
 
       deductAmmo();
     }
   }
 
+  /**
+   * Generate an array of angle for attacking
+   *
+   * @return An array of angles, difference by 1
+   */
   private double[] generateAngles() {
     double[] angle = new double[(int) (beginAngle + endAngle) + 1];
     int k = 0;
@@ -121,6 +189,8 @@ public abstract class Melee extends Weapon {
   // -------------------
   // Setters and Getters
   // -------------------
+
+  /** Get the current angle of attack */
   public double getAngle(int index) {
     if (index < (int) (beginAngle + endAngle + 1)) {
       return angles[index];
@@ -128,30 +198,36 @@ public abstract class Melee extends Weapon {
     return 0;
   }
 
+  /** Get the range of this melee */
   public double getRange() {
     return this.range;
   }
 
+  /** Set a new range to this melee */
   public void setRange(double newRange) {
     if (newRange > 0 && newRange < 100.0) {
       this.range = newRange;
     }
   }
 
+  /** Get the begin angle of attack */
   public double getBeginAngle() {
     return this.beginAngle;
   }
 
+  /** Set a new begin angle of attack */
   public void setBeginAngle(double newBeginAngle) {
     if (newBeginAngle > 0 && newBeginAngle < 90.0) {
       this.beginAngle = newBeginAngle;
     }
   }
 
+  /** Get the end angle of attack */
   public double getEndAngle() {
     return this.endAngle;
   }
 
+  /** Set a new end angle of attack */
   public void setEndAngle(double newEndAngle) {
     if (newEndAngle > 0 && newEndAngle < 90.0) {
       this.endAngle = newEndAngle;

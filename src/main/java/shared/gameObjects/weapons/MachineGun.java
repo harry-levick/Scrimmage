@@ -2,16 +2,13 @@ package shared.gameObjects.weapons;
 
 import client.handlers.audioHandler.AudioHandler;
 import client.main.Client;
-import client.main.Settings;
 import java.util.UUID;
-import javafx.scene.Group;
 import shared.gameObjects.players.Player;
-import shared.physics.data.Collision;
 import shared.util.Path;
 import shared.util.maths.Vector2;
 
 /**
- * A gun of type Machine Gun
+ * Class of Machine Gun
  */
 public class MachineGun extends Gun {
 
@@ -19,6 +16,15 @@ public class MachineGun extends Gun {
   private static String audioPath = "audio/sound-effects/laser_gun.wav"; // path to Machine Gun sfx
   private static double sizeX = 84, sizeY = 35;
 
+  /**
+   * Default Constructor of a machine gun
+   *
+   * @param x X position of the gun
+   * @param y Y position of the gun
+   * @param name Name of the gun
+   * @param holder The player holding this gun
+   * @param uuid UUID of this gun
+   */
   public MachineGun(double x, double y, String name, Player holder, UUID uuid) {
 
     super(
@@ -39,6 +45,11 @@ public class MachineGun extends Gun {
     this.weaponRank = 3;
   }
 
+  /**
+   * Constructor for AI
+   *
+   * @param that A copy of this gun with different UUID
+   */
   public MachineGun(MachineGun that) {
     this(that.getX(), that.getY(), that.name, that.holder, UUID.randomUUID());
   }
@@ -67,42 +78,6 @@ public class MachineGun extends Gun {
       new AudioHandler(settings, Client.musicActive).playSFX("MACHINEGUN");
       deductAmmo();
     }
-  }
-
-  // Only handle collision when throwing weapon
-  @Override
-  public void OnCollisionEnter(Collision col) {
-    // Leave if this gun is a spawn gun
-    if (this.holder == null) {
-      return;
-    }
-
-/*    boolean remove = true;
-    GameObject g = col.getCollidedObject();
-    BoxCollider holderBC = (BoxCollider) holder.getComponent(ComponentType.COLLIDER);
-
-    if (g.getId() == ObjectType.Player) {
-      Player p = (Player) g;
-      if (p.getUUID() == holder.getUUID()) {
-        holderBC.setLayer(ColliderLayer.COLLECTABLE);
-        remove = false;
-      }
-      else
-        p.deductHp(30);
-    }
-
-    if (remove)
-      settings.getLevelHandler().removeGameObject(this);*/
-  }
-
-  @Override
-  public void OnCollisionExit(Collision col) {
-    // Leave if this gun is a spawn gun
-    if (this.holder == null) {
-      return;
-    }
-
-//    ((BoxCollider) holder.getComponent(ComponentType.COLLIDER)).setLayer(ColliderLayer.DEFAULT);
   }
 
   @Override

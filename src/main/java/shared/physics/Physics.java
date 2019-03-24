@@ -18,7 +18,6 @@ import shared.gameObjects.components.EdgeCollider;
 import shared.gameObjects.players.Limb;
 import shared.gameObjects.weapons.Bullet;
 import shared.gameObjects.weapons.Weapon;
-import shared.handlers.levelHandler.LevelHandler;
 import shared.physics.data.Collision;
 import shared.physics.data.DynamicCollision;
 import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
@@ -201,9 +200,9 @@ public class Physics {
     }
   }
 
-    /**
-     * Draws a raycast for debugging
-     */
+  /**
+   * Draws a raycast for debugging
+   */
   public static void drawCast(double xStart, double yStart, double xFinish, double yFinish,
       String colour) {
     Platform.runLater(
@@ -219,16 +218,17 @@ public class Physics {
         }
     );
   }
-    /**
-     * Draws a boxcast for debugging
-     */
+
+  /**
+   * Draws a boxcast for debugging
+   */
   public static void drawBoxCast(Vector2 sourcePos, Vector2 size) {
     Platform.runLater(
         () -> {
           Rectangle r2 = new Rectangle(sourcePos.getX(), sourcePos.getY(), size.getX(),
               size.getY());
           r2.setStyle("-fx-stroke-width: 4; -fx-stroke: #00ff00;");
-          settings.getGameRoot().getChildren().add(r2);
+          settings.getLevelHandler().getGameRoot().getChildren().add(r2);
         });
   }
 
@@ -321,12 +321,12 @@ public class Physics {
    * @param size The extents of the box
    * @return All colliders hit in the path, empty if nothing was hit
    */
-  public static ArrayList<Collision> boxcastAll(Vector2 sourcePos, Vector2 size, boolean cast) {
+  public static ArrayList<Collision> boxcastAll(Vector2 sourcePos, Vector2 size, boolean showCast) {
     BoxCollider castCollider = new BoxCollider(sourcePos, size);
     Collision collision;
     ArrayList<Collision> collisions = new ArrayList<>();
 
-    if (cast) {
+    if (showCast) {
       drawBoxCast(sourcePos, size);
     }
 
@@ -418,4 +418,5 @@ public class Physics {
   public static void clearCollisions() {
     collisions.clear();
   }
+
 }

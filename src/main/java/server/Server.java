@@ -330,6 +330,8 @@ public class Server extends Application {
     /** Receiver from clients */
     executor.execute(new ServerReceiver(this, serverSocket, connected));
 
+    Physics.settings = settings;
+
     new AnimationTimer() {
 
       @Override
