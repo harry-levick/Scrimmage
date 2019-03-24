@@ -623,6 +623,7 @@ public class Client extends Application {
 
     scene = new Scene(root, settings.getWindowWidth(), settings.getWindowHeight());
     scene.setCursor(Cursor.CROSSHAIR);
+    scene.getStylesheets().add("style.css");
 
     primaryStage.setScene(scene);
     primaryStage.setFullScreen(false);

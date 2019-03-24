@@ -2,9 +2,11 @@ package shared.gameObjects.menu;
 
 import client.main.Client;
 import client.main.Settings;
+import com.jfoenix.controls.JFXSlider;
 import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.control.Slider;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
@@ -15,7 +17,7 @@ import shared.gameObjects.Utils.ObjectType;
 public abstract class SliderObject extends GameObject {
 
   private static final float yOffset = 20;
-  protected transient Slider slider;
+  protected transient JFXSlider slider;
   protected transient Text text;
   protected String label;
 
@@ -23,39 +25,26 @@ public abstract class SliderObject extends GameObject {
       double x, double y, double sizeX, double sizeY, String label, ObjectType id,
       UUID objectUUID) {
     super(x, y, sizeX, sizeY, id, objectUUID);
-    slider = new Slider();
+    slider = new JFXSlider();
     this.label = label;
   }
 
 
   @Override
   public void initialise(Group root, Settings settings) {
-    slider = new Slider();
+    slider = new JFXSlider();
     super.initialise(root, settings);
-    //   slider.setStyle( todo fix this
-    //  ".slider {-fx-border-color: red;-fx-background-color: transparent;}" +
-    // ".thumb {-fx-background-image: url(\"images/buttons/slider_thumb.png\");}} " +
-    // ".track {-fx-background-color: red;}");
-    // + "-fx-background-color: transparent;}");
-    //   + ".slider .track {-fx-background-image: url(\"images/buttons/slider_bar.png\");}"
-    //  + "-fx-background-color: transparent;");
     slider.setLayoutX(getX());
     slider.setLayoutY(getY() + yOffset);
-    slider.setMinSize(transform.getSize().getX(), transform.getSize().getY());
-    slider.setMaxSize(transform.getSize().getX(), transform.getSize().getY());
-    slider.setMin(0);
-    slider.setMax(100);
-    slider.setShowTickLabels(true);
-    slider.setShowTickMarks(true);
-    slider.setMajorTickUnit(20);
-    slider.setMinorTickCount(5);
-    slider.setBlockIncrement(10);
+    slider.setMinSize(transform.getSize().getX(), transform.getSize().getY() + 30);
+    slider.setMaxSize(transform.getSize().getX(), transform.getSize().getY() + 30);
     root.getChildren().add(slider);
     text = new Text(label);
     text.setLayoutX(getX());
     text.setLayoutY(getY());
-    text.setFont(Client.settings.getFont(20));
+    text.setFont(Client.settings.getFont(32));
     root.getChildren().add(text);
+    text.setFill(Color.WHITE);
   }
 
   public void initialiseAnimation() {

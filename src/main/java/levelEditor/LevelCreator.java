@@ -1,8 +1,6 @@
 package levelEditor;
 
 import client.main.Settings;
-import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
-import de.codecentric.centerdevice.javafxsvg.dimension.PrimitiveDimensionProvider;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -76,7 +74,6 @@ public class LevelCreator extends Application {
    */
   @Override
   public void start(Stage primaryStage) {
-    SvgImageLoaderFactory.install(new PrimitiveDimensionProvider());
     Group root = new Group();
     // CLASS TO AUTO RECREATE MAPS
     String filename = "";
@@ -486,7 +483,7 @@ public class LevelCreator extends Application {
         new Background1(UUID.randomUUID()));
     uuid = UUID.randomUUID();
     gameObjects
-        .put(uuid, new SoundSlider(getAbs(20), getAbs(7), getAbs(8), getAbs(1), SOUND_TYPE.MUSIC,
+        .put(uuid, new SoundSlider(getAbs(20), getAbs(5), getAbs(8), getAbs(1), SOUND_TYPE.MUSIC,
             "Music", ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
     gameObjects
@@ -495,11 +492,11 @@ public class LevelCreator extends Application {
     uuid = UUID.randomUUID();
     gameObjects
         .put(uuid,
-            new ButtonCredits(getAbs(20), getAbs(12), getAbs(8), getAbs(2), ObjectType.Button,
+            new ButtonCredits(getAbs(20), getAbs(13), getAbs(8), getAbs(2), ObjectType.Button,
                 uuid));
     uuid = UUID.randomUUID();
     gameObjects
-        .put(uuid, new ButtonBack(getAbs(20), getAbs(15), getAbs(8), getAbs(2), ObjectType.Button,
+        .put(uuid, new ButtonBack(getAbs(20), getAbs(16), getAbs(8), getAbs(2), ObjectType.Button,
             uuid));
     uuid = UUID.randomUUID();
     for (int i = 0; i < 12; i++) {
