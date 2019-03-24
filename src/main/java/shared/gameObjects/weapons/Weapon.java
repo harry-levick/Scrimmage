@@ -31,6 +31,8 @@ public abstract class Weapon extends GameObject {
    * left-clicked
    */
   protected final int MAX_COOLDOWN = 81;
+  /** Speed of throwing weapon */
+  protected final int THROW_SPEED = 14;
   /** Constant value PI */
   protected final float PI = 3.141592654f;
   /** Weight of the weapon */
@@ -148,20 +150,7 @@ public abstract class Weapon extends GameObject {
     this.rotate.setPivotY(this.pivotY);
 
     if (holder == null) {
-      // add collider and rigidbody
-      bcTrig = new BoxCollider(this, ColliderLayer.DEFAULT, true);
-      bcCol = new BoxCollider(this, ColliderLayer.COLLECTABLE, false);
-      rb = new Rigidbody(
-          RigidbodyType.DYNAMIC,
-          1f, // mass
-          1f, // gravity scale
-          0.1f, // air drag
-          new MaterialProperty(0.1f, 1, 1),
-          new AngularData(0, 0, 0, 0),
-          this); // TODO FIX
-      addComponent(bcCol);
-      addComponent(bcTrig);
-      addComponent(rb);
+      setCollectable();
     }
 
     this.currentCooldown = 0;
@@ -207,16 +196,20 @@ public abstract class Weapon extends GameObject {
     deductCooldown();
     if (startedThrowing) {
       if (0 < getX() && getX() < 1920 && 0 < getY() && getY() < 1080) {
-        rb.move(throwVector.mult(8f));
+        rb.move(throwVector.mult(THROW_SPEED));
       }
       else {
         settings.getLevelHandler().removeGameObject(this);
       }
     }
     else if (holder != null) {
-      holderHandPos = getHolderHandPos();
-      this.setX(getGripX());
-      this.setY(getGripY());
+      if (holder.getHandLeft().isDeattached() || holder.getHandRight().isDeattached() || holder.getHealth() <= 0)
+        setCollectable();
+      else {
+        holderHandPos = getHolderHandPos();
+        this.setX(getGripX());
+        this.setY(getGripY());
+      }
     }
   }
 
@@ -225,7 +218,11 @@ public abstract class Weapon extends GameObject {
    * will start flying in the path
    */
   public void startThrowing() {
-    holder.usePunch();
+    if (holder == null) {
+      setCollectable();
+      return;
+    }
+    
     double playerRadius = 55 + 65; // Player.sizeY / 2 + bias
     Vector2 bodyV = ((BoxCollider) holder.getHead().getComponent(ComponentType.COLLIDER))
         .getCentre();
@@ -240,8 +237,8 @@ public abstract class Weapon extends GameObject {
 
     this.rb = new Rigidbody(
         RigidbodyType.DYNAMIC,
-        0.1f,
-        0.1f,
+        1f,
+        1.5f,
         0.1f,
         new MaterialProperty(0.1f, 1, 1),
         new AngularData(0, 0, 0, 0),
@@ -251,6 +248,7 @@ public abstract class Weapon extends GameObject {
     addComponent(rb);
     this.throwVector = getDeltaThrowVecNorm();
     this.startedThrowing = true;
+    this.holder = null;
   }
 
   /**
@@ -328,7 +326,11 @@ public abstract class Weapon extends GameObject {
     settings.getLevelHandler().removeGameObject(this);
   }
 
-  // Only handle collision when throwing weapon
+  /**
+   * Only handle collision when throwing weapon
+   *
+   * Set to Collectable when the weapon collided with some objects
+   */
   @Override
   public void OnCollisionEnter(Collision col) {
     // Leave if this gun is a spawn gun
@@ -340,14 +342,14 @@ public abstract class Weapon extends GameObject {
     if (g instanceof Limb) {
       return;
     }
-    System.out.println("OnCollisionEnter g=" + g);
 
     if (g.getId() == ObjectType.Player) {
       Player p = (Player) g;
       p.deductHp(30);
     }
 
-    this.destroyWeapon();
+    setCollectable();
+    this.startedThrowing = false;
   }
 
   @Override
@@ -372,6 +374,25 @@ public abstract class Weapon extends GameObject {
         this.removeComponent(rb);
       }
     }
+  }
+
+  protected void setCollectable() {
+    removeComponent(bcCol);
+    removeComponent(bcTrig);
+    removeComponent(rb);
+    bcTrig = new BoxCollider(this, ColliderLayer.DEFAULT, true);
+    bcCol = new BoxCollider(this, ColliderLayer.COLLECTABLE, false);
+    rb = new Rigidbody(
+        RigidbodyType.DYNAMIC,
+        1f, // mass
+        1f, // gravity scale
+        0.1f, // air drag
+        new MaterialProperty(0.1f, 1, 1),
+        new AngularData(0, 0, 0, 0),
+        this); // TODO FIX
+    addComponent(bcCol);
+    addComponent(bcTrig);
+    addComponent(rb);
   }
 
   // -------START-------

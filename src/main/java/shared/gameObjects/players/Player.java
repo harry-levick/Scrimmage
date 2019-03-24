@@ -297,6 +297,7 @@ public class Player extends GameObject {
       Weapon w = this.holding;
       w.startThrowing();
       throwHoldingKey = false;
+      this.usePunch();
     }
   }
 
