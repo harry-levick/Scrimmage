@@ -368,7 +368,7 @@ public class LevelEditor extends Application {
         case PODIUM1:
           temp =
               new Podium1(getGridX((event.getX() / scaleRatio.getX())),
-                  getGridY((event.getY() / scaleRatio.getY())),
+                  getGridY((event.getY() / scaleRatio.getY())), getScaledSize(4), getScaledSize(8),
                   uuid);
           break;
         case REDB:
