@@ -523,7 +523,8 @@ public abstract class GameObject implements Serializable {
   }
 
   public void destroy() {
-    destroyed = active = false;
+    destroyed = true;
+    active = false;
   }
 
   /**

@@ -1,5 +1,6 @@
 package shared.gameObjects.players;
 
+import client.handlers.effectsHandler.Particle;
 import client.main.Settings;
 import java.util.UUID;
 import javafx.scene.Group;
@@ -215,10 +216,12 @@ public class Player extends GameObject implements Destructable {
     }
     if (rightKey) {
       rb.moveX(speed);
+      createWalkParticle();
       behaviour = Behaviour.WALK_RIGHT;
     }
     if (leftKey) {
       rb.moveX(speed * -1);
+      createWalkParticle();
       behaviour = Behaviour.WALK_LEFT;
     }
 
@@ -245,6 +248,12 @@ public class Player extends GameObject implements Destructable {
       holding.fire(mouseX, mouseY);
     }
     // setX(getX() + (vx * 0.0166));
+  }
+
+  private void createWalkParticle() {
+    if(!grounded) return;
+      settings.getLevelHandler().addGameObject(new Particle(transform.getBotPos().sub(transform.getSize().mult(new Vector2(0.5, 0))), new Vector2(0, -35), new Vector2(0, 100), new Vector2(8,8),
+          "images/platforms/stone/elementStone001.png", 0.34f));
   }
 
   /**

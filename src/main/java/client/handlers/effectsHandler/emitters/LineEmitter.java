@@ -49,6 +49,10 @@ public class LineEmitter extends ParticleEmitter {
   }
 
   @Override
+  public void update() {
+
+  }
+  @Override
   protected Particle newParticle() {
 
     return new Particle(transform.getPos(), velocity, acceleration, particleSize, imageSource, 0.2f);

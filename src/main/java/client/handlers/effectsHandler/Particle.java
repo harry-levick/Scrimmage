@@ -46,6 +46,7 @@ public class Particle extends GameObject {
 
   @Override
   public void update() {
+    imageView.setOpacity(0.85);
     if (lifetime <= 0) {
       settings.getLevelHandler().removeGameObject(this);
     } else {

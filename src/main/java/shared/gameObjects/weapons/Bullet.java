@@ -1,11 +1,11 @@
 package shared.gameObjects.weapons;
 
 import client.handlers.effectsHandler.Particle;
+import client.handlers.effectsHandler.emitters.CircleEmitter;
 import client.main.Settings;
 import java.util.Random;
 import java.util.UUID;
 import javafx.scene.Group;
-import javafx.scene.transform.Rotate;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
@@ -20,23 +20,20 @@ import shared.physics.data.MaterialProperty;
 import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
-/**
- * @author hlf764 Abstraction of Bullet objects
- */
+/** @author hlf764 Abstraction of Bullet objects */
 public abstract class Bullet extends GameObject {
-
-  private double PI = 3.141592654;
 
   public boolean isHit; // true if there is an object at that position
   protected BoxCollider bc;
   protected Rigidbody rb;
+  protected Player holder; // Holder of the gun that fired this bullet
+  protected Component holderBoxCollider; // the BoxCollider of the holder
+  protected boolean hitHolder; // true if it hit the holder (For OnCollisionExit)
+  private double PI = 3.141592654;
   private double width; // width of bullet
   private double speed; // speed of bullet
   private Vector2 vector; // Vector of the force of bullet fire
   private int damage; // Damage of this bullet
-  protected Player holder; // Holder of the gun that fired this bullet
-  protected Component holderBoxCollider;  // the BoxCollider of the holder
-  protected boolean hitHolder;    // true if it hit the holder (For OnCollisionExit)
   private double angleDegree;
 
   public Bullet(
@@ -73,7 +70,6 @@ public abstract class Bullet extends GameObject {
     addComponent(bc);
     addComponent(rb);
 
-
     // Rotate property of the image
     Vector2 mouseV = new Vector2((float) mouseX, (float) mouseY);
     Vector2 gunV = new Vector2((float) gunX, (float) gunY);
@@ -102,7 +98,16 @@ public abstract class Bullet extends GameObject {
     imageView.setRotate(angleDegree);
     if ((0 < getX() && getX() < 1920) && (0 < getY() && getY() < 1080)) {
       rb.move(vector.mult((float) speed));
-      settings.getLevelHandler().addGameObject(new Particle(transform.getPos(), vector.mult((float)(-1f*speed*random.nextDouble() - 2)), Vector2.Zero(), new Vector2(random.nextDouble()*8 + 4, random.nextDouble()*8 + 4), "images/weapons/explosiveBullet.png", 0.2f));
+      settings
+          .getLevelHandler()
+          .addGameObject(
+              new Particle(
+                  transform.getPos(),
+                  vector.mult((float) (-1f * speed * random.nextDouble() - 2)),
+                  Vector2.Zero(),
+                  new Vector2(12, 12).mult((float) random.nextDouble()),
+                  "images/particle/BulletParticle.png",
+                  0.2f));
     } else {
       settings.getLevelHandler().removeGameObject(this);
     }
@@ -115,7 +120,7 @@ public abstract class Bullet extends GameObject {
 
   @Override
   public void OnCollisionEnter(Collision col) {
-    boolean remove = true;    // true: will remove this object at the end
+    boolean remove = true; // true: will remove this object at the end
     GameObject g = col.getCollidedObject();
 
     // collision = player
@@ -126,10 +131,25 @@ public abstract class Bullet extends GameObject {
         hitHolder = true;
       } else {
         p.deductHp(this.damage);
+        settings
+            .getLevelHandler()
+            .addGameObject(
+                new CircleEmitter(
+                    col.getPointOfCollision(),
+                    new Vector2(speed * 2, speed * 2),
+                    new Vector2(0, Physics.GRAVITY*40),
+                    new Vector2(8, 11),
+                    bc.getSize().magnitude(),
+                    0.34f,
+                    Physics.TIMESTEP*2,
+                    2,
+                    false,
+                    "images/particle/bloodParticle.png"));
       }
     }
 
     if (remove) {
+      destroy();
       settings.getLevelHandler().removeGameObject(this);
     }
   }
@@ -147,6 +167,26 @@ public abstract class Bullet extends GameObject {
       addComponent(holderBoxCollider);
       hitHolder = false;
     }
+  }
+
+  @Override
+  public void destroy() {
+    if (!destroyed)
+      settings
+          .getLevelHandler()
+          .addGameObject(
+              new CircleEmitter(
+                  bc.getCentre(),
+                  new Vector2(speed * 5, speed * 5),
+                  Vector2.Zero(),
+                  new Vector2(12, 12),
+                  bc.getSize().magnitude(),
+                  0.34f,
+                  Physics.TIMESTEP*2,
+                  1,
+                  false,
+                  "images/particle/BulletParticle.png"));
+    super.destroy();
   }
 
   // -------START-------

@@ -2,6 +2,7 @@ package client.handlers.effectsHandler.emitters;
 
 import client.handlers.effectsHandler.Particle;
 import client.handlers.effectsHandler.ParticleType;
+import java.util.Random;
 import shared.util.maths.Vector2;
 
 /**
@@ -43,13 +44,18 @@ public class CircleEmitter extends ParticleEmitter{
         lifetime,
         particleEmitterLifetime,
         particleAmount,
-        ParticleType.SCATTER,
+        inwards ? ParticleType.INWARDS : ParticleType.OUTWARDS,
         imageSource);
     direction = inwards ? -1 : 1;
   }
 
   @Override
   protected Particle newParticle() {
-    return null;
+    Random random = new Random();
+    double angle = random.nextDouble() * 2*Math.PI;
+    double tempRadius = random.nextDouble()*radius;
+    Vector2 newPos = new Vector2(radius* Math.cos(angle), radius*Math.sin(angle));
+
+    return new Particle(transform.getPos().add(newPos), velocity.mult(newPos.normalize()).mult(direction), acceleration, particleSize, imageSource, lifetime);
   }
 }

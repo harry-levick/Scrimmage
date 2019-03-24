@@ -14,7 +14,7 @@ public class WeaponSpawner extends GameObject {
 
   private float timer;
   private final float TIMER = 6.432f;
-  private final double WEAPON_PROBABILITY = 0.26;
+  private final double WEAPON_PROBABILITY = 1;
   private ArrayList<Weapons> weapons;
   private Random random;
 
@@ -25,7 +25,7 @@ public class WeaponSpawner extends GameObject {
     /**
      * Debugging
      */
-    addWeaponToSpawner(Weapons.SWORD, Weapons.MACHINEGUN);
+    addWeaponToSpawner(Weapons.MACHINEGUN);
   }
 
   @Override

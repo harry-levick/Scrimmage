@@ -26,10 +26,6 @@ public abstract class ParticleEmitter extends GameObject {
    * Position the last particle was spawned at
    */
   protected Vector2 previousPosition;
-  /**
-   * RNG for particle spawning
-   */
-  protected Random random;
 
   /**
    * Constructor:
@@ -72,7 +68,6 @@ public abstract class ParticleEmitter extends GameObject {
     this.type = type;
     this.imageSource = imageSource;
     previousPosition = Vector2.Zero();
-    random = new Random();
   }
 
   @Override
@@ -83,6 +78,7 @@ public abstract class ParticleEmitter extends GameObject {
     } else {
       for(int i = 0; i < particleAmount; i++) {
         settings.getLevelHandler().addGameObject(newParticle());
+        System.out.println("EMITTED BULLET");
       }
       particleEmitterLifetime -= Physics.TIMESTEP;
     }
