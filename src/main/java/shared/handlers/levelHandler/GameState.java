@@ -14,6 +14,10 @@ public enum GameState {
    */
   SETTINGS,
   /**
+   * Customization page
+   */
+  CHARACTER,
+  /**
    * In Active Game
    */
   IN_GAME,
