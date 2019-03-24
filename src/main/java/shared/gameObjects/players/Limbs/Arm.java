@@ -35,7 +35,7 @@ public class Arm extends Limb {
     rotate = new Rotate();
     rotate.setPivotX(10);
     rotate.setPivotY(10);
-    limbHealth = player.getHealth()/4;
+    limbHealth = player.getHealth()/2;
   }
 
   @Override

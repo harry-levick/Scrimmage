@@ -17,6 +17,7 @@ import shared.handlers.levelHandler.LevelHandler;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
+import shared.util.maths.Vector2;
 
 /**
  * General class for player Limbs
@@ -173,7 +174,6 @@ public abstract class Limb extends GameObject implements Destructable {
 
   @Override
   public void destroy() {
-    super.destroy();
     detachLimb();
     bc.setLayer(ColliderLayer.PARTICLE);
   }
@@ -214,6 +214,7 @@ public abstract class Limb extends GameObject implements Destructable {
 
   public void detachLimb() {
     this.limbAttached = false;
+    rb.setVelocity(new Vector2(0, -1000));
   }
 
   public void reattachLimb() {

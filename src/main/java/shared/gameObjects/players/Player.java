@@ -239,7 +239,7 @@ public class Player extends GameObject {
       behaviour = Behaviour.IDLE;
     }
     if (jumpKey && !jumped && grounded) {
-      rb.moveY(jumpForce * ((legLeft.isDestroyed() || legRight.isDestroyed()) ? 0.5f : 1), 0.33333f);
+      rb.moveY(jumpForce * (legLeft.limbAttached && legRight.limbAttached ? 1f : 0.7f), 0.33333f);
       jumped = true;
     }
     if (jumped) {
@@ -253,7 +253,7 @@ public class Player extends GameObject {
       this.throwHolding();
     }
 
-    if (click && holding != null && !(armLeft.isDestroyed() || armRight.isDestroyed())) {
+    if (click && holding != null && !(!armLeft.limbAttached || !armRight.limbAttached)) {
       holding.fire(mouseX, mouseY);
     }
     // setX(getX() + (vx * 0.0166));
@@ -280,7 +280,7 @@ public class Player extends GameObject {
       return true;
     }
     try {
-      if (armLeft.isDestroyed() || armRight.isDestroyed()) {
+      if (!armLeft.limbAttached || !armRight.limbAttached) {
         this.throwHolding();
       }
     } catch (Exception e) {
@@ -369,7 +369,7 @@ public class Player extends GameObject {
 
   public void setHolding(Weapon newHolding) {
     try {
-      if (armLeft.isDestroyed() || armRight.isDestroyed()) return;
+      if (!armLeft.limbAttached || !armRight.limbAttached) return;
     } catch (Exception e) {
 
     }

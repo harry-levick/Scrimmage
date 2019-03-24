@@ -125,14 +125,14 @@ public abstract class Melee extends Weapon {
           Physics.boxcastAll(
               new Vector2((float) (this.getGripX()), (float) (this.getGripY()-20)),
               new Vector2((float) this.range/2, (float) this.range/2),
-              true, false
+              false, false
           );
       // Box cast at end of swing
       collisions.addAll(
           Physics.boxcastAll(
               new Vector2((float) (this.getGripX()), (float) (this.getGripY()+20)),
               new Vector2((float) this.range/2, (float) this.range/2),
-              true, false
+              false, false
           )
       );
       ArrayList<Destructable> objectsBeingHit = new ArrayList<>();
