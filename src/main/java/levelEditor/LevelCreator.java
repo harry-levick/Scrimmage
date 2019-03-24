@@ -27,6 +27,7 @@ import shared.gameObjects.background.Background7;
 import shared.gameObjects.background.Background8;
 import shared.gameObjects.components.behaviours.blockBehaviours.Crushing;
 import shared.gameObjects.menu.main.ButtonBack;
+import shared.gameObjects.menu.main.ButtonCharacterCustomisation;
 import shared.gameObjects.menu.main.ButtonCredits;
 import shared.gameObjects.menu.main.ButtonMultiplayer;
 import shared.gameObjects.menu.main.ButtonQuit;
@@ -106,10 +107,14 @@ public class LevelCreator extends Application {
         getAbs(20), getAbs(9), getAbs(8), getAbs(2), ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid, new ButtonSettings(
-        getAbs(20), getAbs(14), getAbs(8), getAbs(2), ObjectType.Button, uuid));
+        getAbs(20), getAbs(12), getAbs(8), getAbs(2), ObjectType.Button, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new ButtonCharacterCustomisation(
+            getAbs(20), getAbs(15), getAbs(8), getAbs(2), ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid, new ButtonQuit(
-        getAbs(20), getAbs(17), getAbs(8), getAbs(2), ObjectType.Button, uuid));
+        getAbs(20), getAbs(18), getAbs(8), getAbs(2), ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
 
     //ColouredBlocks todo remove form mm
@@ -567,6 +572,58 @@ public class LevelCreator extends Application {
     gameObjects
         .put(uuid, new ButtonBack(getAbs(20), getAbs(16), getAbs(8), getAbs(2), ObjectType.Button,
             uuid));
+    uuid = UUID.randomUUID();
+    for (int i = 0; i < 12; i++) {
+      // top row wall
+      gameObjects.put(uuid,
+          new StoneFloorObject(
+              getAbs(i * 4), getAbs(0), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
+      uuid = UUID.randomUUID();
+    }
+    for (int i = 0; i < 5; i++) {
+      // side col walls
+      gameObjects.put(uuid,
+          new StoneWallObject(
+              getAbs(0),
+              getAbs((i * 5) + 1),
+              getAbs(1),
+              getAbs(5),
+              ObjectType.Bot,
+              uuid));
+      uuid = UUID.randomUUID();
+      gameObjects.put(uuid,
+          new StoneWallObject(
+              getAbs(47),
+              getAbs((i * 5) + 1),
+              getAbs(1),
+              getAbs(5),
+              ObjectType.Bot,
+              uuid));
+      uuid = UUID.randomUUID();
+    }
+    for (int i = 0; i < 12; i++) {
+      // bottom row floor
+      gameObjects.put(uuid,
+          new StoneFloorObject(
+              getAbs(i * 4), getAbs(26), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
+      uuid = UUID.randomUUID();
+    }
+    MapLoader.saveMap(gameObjects, mapDataObject, filepath + filename + ".map");
+    ////////////////////////////////////////
+    // CHARACTER CUSTOMISATION
+    ////////////////////////////////////////
+    System.out.println("Generating CUSTOMIZATION Map");
+    filename = "character";
+    gameObjects = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
+        .maximumWeightedCapacity(500).build();
+    playerSpawns = new ArrayList<Player>();
+    mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.CHARACTER);
+    mapDataObject.setBackground(
+        new Background1(UUID.randomUUID()));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new ButtonCharacterCustomisation(
+            getAbs(20), getAbs(7), getAbs(8), getAbs(2), ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
     for (int i = 0; i < 12; i++) {
       // top row wall

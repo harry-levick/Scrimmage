@@ -52,4 +52,10 @@ public class ButtonJoin extends ButtonObject {
         new Map("LOBBY", Path.convert("src/main/resources/menus/lobby.map")),
         false, false);
   }
+
+  @Override
+  public void removeRender() {
+    super.removeRender();
+    root.getChildren().remove(addressInput);
+  }
 }
