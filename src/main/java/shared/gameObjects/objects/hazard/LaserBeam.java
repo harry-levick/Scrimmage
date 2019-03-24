@@ -25,8 +25,9 @@ import shared.util.maths.Vector2;
 /** Laser Beam hazard object */
 public class LaserBeam extends GameObject implements Hazard {
 
-  private final float TIME_BETWEEN_STATES = 1.7f;
-  private final float TIME_IN_LASER = 1.1f;
+
+  private static final float TIME_BETWEEN_STATES = 1.7f;
+  private static final float TIME_IN_LASER = 1.1f;
   private boolean laserActive;
   private float timer;
   private BoxCollider bc;

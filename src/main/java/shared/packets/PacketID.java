@@ -35,7 +35,11 @@ public enum PacketID {
   /**
    * PacketGameState ID
    */
-  GAMESTATE(7);
+  GAMESTATE(7),
+  /**
+   * Gameobject deleted
+   */
+  DELETE(8);
 
   private int packetID;
 

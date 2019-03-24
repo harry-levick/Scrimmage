@@ -13,12 +13,12 @@ public class Path {
    * @return String representing valid filepath
    */
   public static String parse(String... args) {
-    String temp = "";
+    StringBuilder buffer = new StringBuilder();
     for (int i = 0; i < args.length - 1; i++) {
-      temp += args[i] + File.separator;
+      buffer.append(args[i] + File.separator);
     }
-    temp += args[args.length - 1];
-    return temp;
+    buffer.append(args[args.length - 1]);
+    return buffer.toString();
   }
 
   /**

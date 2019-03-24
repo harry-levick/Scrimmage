@@ -19,17 +19,29 @@ import shared.util.maths.Vector2;
  */
 public class ExplosiveBullet extends Bullet {
 
-  /** Width of the bullet */
+  /**
+   * Width of the bullet
+   */
   private static final int width = 15;
-  /** Damage of the explosion */
+  /**
+   * Damage of the explosion
+   */
   private static final int damage = 20;
-  /** Speed of travel of the bullet */
+  /**
+   * Speed of travel of the bullet
+   */
   private static final int speed = 25;
-  /** Radius of explosion on impact */
+  /**
+   * Radius of explosion on impact
+   */
   private static final float radius = 40f;
-  /** Power of pushing on Objects in explosion */
+  /**
+   * Power of pushing on Objects in explosion
+   */
   private static final float pushPower = 50f;
-  /** Path to image */
+  /**
+   * Path to image
+   */
   private static String imagePath = "images/weapons/explosiveBullet.png";
 
   /**

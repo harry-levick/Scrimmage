@@ -14,7 +14,7 @@ import shared.gameObjects.Utils.ObjectType;
  */
 public abstract class SliderObject extends GameObject {
 
-  private final float yOffset = 20;
+  private static final float yOffset = 20;
   protected transient Slider slider;
   protected transient Text text;
   protected String label;

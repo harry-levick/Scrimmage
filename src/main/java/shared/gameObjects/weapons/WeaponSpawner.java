@@ -13,8 +13,8 @@ import shared.physics.Physics;
 public class WeaponSpawner extends GameObject {
 
   private float timer;
-  private final float TIMER = 6.432f;
-  private final double WEAPON_PROBABILITY = 1;
+  private static final float TIMER = 6.432f;
+  private static final double WEAPON_PROBABILITY = 0.26;
   private ArrayList<Weapons> weapons;
   private Random random;
 
@@ -25,7 +25,7 @@ public class WeaponSpawner extends GameObject {
     /**
      * Debugging
      */
-    addWeaponToSpawner(Weapons.MACHINEGUN);
+    addWeaponToSpawner(Weapons.SWORD, Weapons.MACHINEGUN);
   }
 
   @Override

@@ -43,7 +43,6 @@ import shared.gameObjects.objects.utility.JumpPad;
 import shared.gameObjects.objects.utility.RedBlock;
 import shared.gameObjects.objects.utility.YellowBlock;
 import shared.gameObjects.players.Player;
-import shared.gameObjects.weapons.MachineGun;
 import shared.gameObjects.weapons.WeaponSpawner;
 import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.MapLoader;
@@ -467,11 +466,9 @@ public class LevelCreator extends Application {
       uuid = UUID.randomUUID();
     }
 
-    //Gun
     uuid = UUID.randomUUID();
-    gameObjects
-        .put(uuid, new MachineGun(200, 350, "MachineGun.spawnGun@LevelHandler.addClientPlayer",
-            null, uuid));
+    gameObjects.put(uuid,
+        new WeaponSpawner(200, 350, 40, 40, uuid));
 
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,

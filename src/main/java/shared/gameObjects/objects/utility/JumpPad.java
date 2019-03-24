@@ -18,9 +18,9 @@ import shared.util.maths.Vector2;
  */
 public class JumpPad extends GameObject {
 
-  final float TIME_TO_JUMP = 0.5f;
-  final float SPRING_FORCE = -450f / 0.33333f;
-  final float SQUISH_FACTOR = 0.05f;
+  final static float TIME_TO_JUMP = 0.5f;
+  final static float SPRING_FORCE = -450f / 0.33333f;
+  final static float SQUISH_FACTOR = 0.05f;
   private boolean spring, cooldown;
   private float timer;
   private Vector2 originalPosition;

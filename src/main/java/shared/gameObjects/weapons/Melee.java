@@ -175,6 +175,7 @@ public abstract class Melee extends Weapon {
   // -------------------
   // Setters and Getters
   // -------------------
+
   /** Get the current angle of attack */
   public double getAngle(int index) {
     if (index < (int) (beginAngle + endAngle + 1)) {

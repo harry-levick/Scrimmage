@@ -227,15 +227,16 @@ public abstract class Weapon extends GameObject {
   public void startThrowing() {
     holder.usePunch();
     double playerRadius = 55 + 65; // Player.sizeY / 2 + bias
-    Vector2 bodyV = ((BoxCollider) holder.getHead().getComponent(ComponentType.COLLIDER)).getCentre();
+    Vector2 bodyV = ((BoxCollider) holder.getHead().getComponent(ComponentType.COLLIDER))
+        .getCentre();
 
-    double startX     = bodyV.getX() + playerRadius * Math.cos(-angleRadian);
-    double startY     = bodyV.getY() - playerRadius * Math.sin(-angleRadian);
+    double startX = bodyV.getX() + playerRadius * Math.cos(-angleRadian);
+    double startY = bodyV.getY() - playerRadius * Math.sin(-angleRadian);
     double startFlipX = bodyV.getX() - playerRadius * Math.cos(angleRadian);
     double startFlipY = bodyV.getY() - playerRadius * Math.sin(angleRadian);
 
-    this.setX(holder.isPointingLeft()? startFlipX : startX);
-    this.setY(holder.isPointingLeft()? startFlipY-15 : startY-15);
+    this.setX(holder.isPointingLeft() ? startFlipX : startX);
+    this.setY(holder.isPointingLeft() ? startFlipY - 15 : startY - 15);
 
     this.rb = new Rigidbody(
         RigidbodyType.DYNAMIC,
@@ -324,7 +325,6 @@ public abstract class Weapon extends GameObject {
    * and set active to false
    */
   public void destroyWeapon() {
-    System.out.println("Destroying");
     settings.getLevelHandler().removeGameObject(this);
   }
 
@@ -332,14 +332,15 @@ public abstract class Weapon extends GameObject {
   @Override
   public void OnCollisionEnter(Collision col) {
     // Leave if this gun is a spawn gun
-    if (!startedThrowing) return;
+    if (!startedThrowing) {
+      return;
+    }
 
     GameObject g = col.getCollidedObject();
     if (g instanceof Limb) {
-      System.out.println("is limb");
       return;
     }
-    System.out.println("OnCollisionEnter g="+g);
+    System.out.println("OnCollisionEnter g=" + g);
 
     if (g.getId() == ObjectType.Player) {
       Player p = (Player) g;
@@ -393,7 +394,9 @@ public abstract class Weapon extends GameObject {
     }
   }
 
-  /** Get the max ammo amount */
+  /**
+   * Get the max ammo amount
+   */
   public int getMaxAmmo() {
     return this.maxAmmo;
   }
@@ -470,9 +473,12 @@ public abstract class Weapon extends GameObject {
 
   /**
    * Get the rank of the weapon
+   *
    * @return the rank of the weapon
    */
-  public int getWeaponRank() { return this.weaponRank; }
+  public int getWeaponRank() {
+    return this.weaponRank;
+  }
   // -------------------
   // Setters and Getters
   // --------END--------

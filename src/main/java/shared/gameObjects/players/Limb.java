@@ -138,6 +138,8 @@ public abstract class Limb extends GameObject implements Destructable {
   @Override
   public void initialise(Group root, Settings settings) {
     super.initialise(root, settings);
+    rotate.setPivotX(pivotX);
+    rotate.setPivotY(pivotY);
     if (isLeft) {
       imageView.setScaleX(-1);
     }
@@ -165,8 +167,6 @@ public abstract class Limb extends GameObject implements Destructable {
       }
     }
     imageView.getTransforms().remove(rotate);
-    imageView.setX(imageView.getX()+resetOffsetX);
-    resetOffsetX = 0;
     lastAttachedCheck = limbAttached;
     damagedThisFrame = false;
   }
