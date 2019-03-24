@@ -525,11 +525,11 @@ public class LevelCreator extends Application {
     uuid = UUID.randomUUID();
     gameObjects.put(uuid, new Podium4(getAbs(33), getAbs(23), getAbs(6), getAbs(3), uuid));
     uuid = UUID.randomUUID();
-    gameObjects.put(uuid, new Podium3(getAbs(9), getAbs(21), getAbs(6), getAbs(5), uuid));
+    gameObjects.put(uuid, new Podium3(getAbs(9), getAbs(20), getAbs(6), getAbs(6), uuid));
     uuid = UUID.randomUUID();
-    gameObjects.put(uuid, new Podium2(getAbs(25), getAbs(19), getAbs(6), getAbs(7), uuid));
+    gameObjects.put(uuid, new Podium2(getAbs(25), getAbs(18), getAbs(6), getAbs(8), uuid));
     uuid = UUID.randomUUID();
-    gameObjects.put(uuid, new Podium1(getAbs(17), getAbs(17), getAbs(6), getAbs(9), uuid));
+    gameObjects.put(uuid, new Podium1(getAbs(17), getAbs(15), getAbs(6), getAbs(12), uuid));
 
     MapLoader.saveMap(gameObjects, mapDataObject, filepath + filename + ".map");
 
