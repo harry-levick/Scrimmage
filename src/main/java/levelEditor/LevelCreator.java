@@ -40,6 +40,10 @@ import shared.gameObjects.objects.utility.JumpPad;
 import shared.gameObjects.objects.utility.RedBlock;
 import shared.gameObjects.objects.utility.YellowBlock;
 import shared.gameObjects.players.Player;
+import shared.gameObjects.score.Podium1;
+import shared.gameObjects.score.Podium2;
+import shared.gameObjects.score.Podium3;
+import shared.gameObjects.score.Podium4;
 import shared.gameObjects.weapons.WeaponSpawner;
 import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.MapLoader;
@@ -466,6 +470,66 @@ public class LevelCreator extends Application {
     gameObjects.put(uuid,
         new MetalBlockLargeObject(getAbs(10), getAbs(5), getAbs(2), getAbs(2), ObjectType.Bot,
             uuid));
+
+    MapLoader.saveMap(gameObjects, mapDataObject, filepath + filename + ".map");
+
+    ////////////////////////////////////////
+    // SCORE SCREEN
+    ////////////////////////////////////////
+    System.out.println("Generating Score Screen");
+    filename = "score";
+    gameObjects = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
+        .maximumWeightedCapacity(500).build();
+    playerSpawns = new ArrayList<Player>();
+    mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.LOBBY);
+    uuid = UUID.randomUUID();
+    mapDataObject.setBackground(
+        new Background5(uuid));
+    uuid = UUID.randomUUID();
+    for (int i = 0; i < 12; i++) {
+      // top row wall
+      gameObjects.put(uuid,
+          new StoneFloorObject(
+              getAbs(i * 4), getAbs(0), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
+      uuid = UUID.randomUUID();
+    }
+    for (int i = 0; i < 5; i++) {
+      // side col walls
+      gameObjects.put(uuid,
+          new StoneWallObject(
+              getAbs(0),
+              getAbs((i * 5) + 1),
+              getAbs(1),
+              getAbs(5),
+              ObjectType.Bot,
+              uuid));
+      uuid = UUID.randomUUID();
+      gameObjects.put(uuid,
+          new StoneWallObject(
+              getAbs(47),
+              getAbs((i * 5) + 1),
+              getAbs(1),
+              getAbs(5),
+              ObjectType.Bot,
+              uuid));
+      uuid = UUID.randomUUID();
+    }
+    for (int i = 0; i < 12; i++) {
+      // bottom row floor
+      gameObjects.put(uuid,
+          new StoneFloorObject(
+              getAbs(i * 4), getAbs(26), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
+      uuid = UUID.randomUUID();
+    }
+
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid, new Podium4(getAbs(33), getAbs(23) - 30, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid, new Podium3(getAbs(9), getAbs(19), uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid, new Podium2(getAbs(25), getAbs(16), uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid, new Podium1(getAbs(17), getAbs(13), uuid));
 
     MapLoader.saveMap(gameObjects, mapDataObject, filepath + filename + ".map");
 
