@@ -20,22 +20,63 @@ import shared.physics.data.MaterialProperty;
 import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
-/** @author hlf764 Abstraction of Bullet objects */
+
+/**
+ * Abstract class of Bullet objects
+ */
 public abstract class Bullet extends GameObject {
 
-  public boolean isHit; // true if there is an object at that position
+  /**
+   * True if this bullet collided with some other objects
+   */
+  public boolean isHit;
+  /**
+   * Box Collider of this bullet
+   */
   protected BoxCollider bc;
+  /**
+   * Rigidbody of this bullet
+   */
   protected Rigidbody rb;
-  protected Player holder; // Holder of the gun that fired this bullet
-  protected Component holderBoxCollider; // the BoxCollider of the holder
-  protected boolean hitHolder; // true if it hit the holder (For OnCollisionExit)
+  /**
+   * Holder of the gun that fired this bullet
+   */
+  protected Player holder;
+  /**
+   * The BoxCollider of the holder
+   */
+  protected Component holderBoxCollider;
+  /**
+   * true if it hit the holder (For OnCollisionExit)
+   */
+  protected boolean hitHolder;
+
+  /** Constant value PI */
   private double PI = 3.141592654;
-  private double width; // width of bullet
-  private double speed; // speed of bullet
-  private Vector2 vector; // Vector of the force of bullet fire
-  private int damage; // Damage of this bullet
+  /** Width of the bullet */
+  private double width;
+  /** Speed of travel of the bullet */
+  private double speed;
+  /** Vector of the force of bullet fire */
+  private Vector2 vector;
+  /** Damage of the bullet */
+  private int damage;
+  /** Angle of firing in degree */
   private double angleDegree;
 
+  /**
+   * Constructor of Bullet
+   *
+   * @param gunX X position of the gun
+   * @param gunY Y position of the gun
+   * @param mouseX X position of the mouse when this bullet is created
+   * @param mouseY Y position of the mouse when this bullet is created
+   * @param width Width of this bullet
+   * @param speed Speed of travel of this bullet
+   * @param damage Damage of this bullet
+   * @param holder Player who fired this bullet
+   * @param uuid UUID of this bullet
+   */
   public Bullet(
       double gunX, // gun initial x position
       double gunY, // gun initial y position
@@ -192,10 +233,19 @@ public abstract class Bullet extends GameObject {
   // -------START-------
   // Setters and Getters
   // -------------------
+
+  /**
+   * Returns the width of this bullet
+   */
   public double getWidth() {
     return this.width;
   }
 
+  /**
+   * Set a new width
+   *
+   * @param newWidth New width to set (positive double)
+   */
   public void setWidth(double newWidth) {
     if (newWidth > 0) {
       this.width = newWidth;
@@ -204,20 +254,34 @@ public abstract class Bullet extends GameObject {
         .scale(new Vector2((float) newWidth / (float) width, (float) newWidth / (float) width));
   }
 
+  /**
+   * Returns the speed of travel of this bullet
+   */
   public double getSpeed() {
     return this.speed;
   }
 
+  /**
+   * Set a new speed of travel
+   *
+   * @param newSpeed New speed (positive double)
+   */
   public void setSpeed(double newSpeed) {
     if (newSpeed > 0) {
       this.speed = newSpeed;
     }
   }
 
+  /**
+   * True if this bullet hit something
+   */
   public boolean getIsHit() {
     return this.isHit;
   }
 
+  /**
+   * Set the status of hitting something
+   */
   public void setIsHit(boolean hit) {
     this.isHit = hit;
   }

@@ -7,7 +7,9 @@ import javafx.scene.transform.Rotate;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
+import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.Rigidbody;
+import shared.gameObjects.players.Limb;
 import shared.gameObjects.players.Player;
 import shared.physics.data.AngularData;
 import shared.physics.data.Collision;
@@ -87,11 +89,10 @@ public abstract class Weapon extends GameObject {
   protected double pivotX;
   /** Pivot y */
   protected double pivotY;
-
-  // variables for when the holder is null
-  private BoxCollider bcTrig;
   protected BoxCollider bcCol;
   protected Rigidbody rb;
+  // variables for when the holder is null
+  private BoxCollider bcTrig;
 
   /**
    * Constructor of the weapon class
@@ -202,9 +203,10 @@ public abstract class Weapon extends GameObject {
   @Override
   public void update() {
     super.update();
+    deductCooldown();
     if (startedThrowing) {
       if (0 < getX() && getX() < 1920 && 0 < getY() && getY() < 1080) {
-        rb.move(throwVector.mult(15f));
+        rb.move(throwVector.mult(8f));
       }
       else {
         settings.getLevelHandler().removeGameObject(this);
@@ -223,17 +225,27 @@ public abstract class Weapon extends GameObject {
    */
   public void startThrowing() {
     holder.usePunch();
-    float radius = this.getTransform().getSize().getX() / 2;
-    this.bcCol = new BoxCollider(this, ColliderLayer.DEFAULT, false);
+    double playerRadius = 55 + 65; // Player.sizeY / 2 + bias
+    Vector2 bodyV = ((BoxCollider) holder.getHead().getComponent(ComponentType.COLLIDER)).getCentre();
+
+    double startX     = bodyV.getX() + playerRadius * Math.cos(-angleRadian);
+    double startY     = bodyV.getY() - playerRadius * Math.sin(-angleRadian);
+    double startFlipX = bodyV.getX() - playerRadius * Math.cos(angleRadian);
+    double startFlipY = bodyV.getY() - playerRadius * Math.sin(angleRadian);
+
+    this.setX(holder.isPointingLeft()? startFlipX : startX);
+    this.setY(holder.isPointingLeft()? startFlipY-15 : startY-15);
+
     this.rb = new Rigidbody(
         RigidbodyType.DYNAMIC,
-        1f,
-        1f,
-        1f,
+        0.1f,
+        0.1f,
+        0.1f,
         new MaterialProperty(0.1f, 1, 1),
         new AngularData(0, 0, 0, 0),
         this); // TODO FIX
-    addComponent(bcCol);
+    this.bcCol.setLayer(ColliderLayer.DEFAULT);
+
     addComponent(rb);
     this.throwVector = getDeltaThrowVecNorm();
     this.startedThrowing = true;
@@ -304,7 +316,29 @@ public abstract class Weapon extends GameObject {
    * and set active to false
    */
   public void destroyWeapon() {
+    System.out.println("Destroying");
     settings.getLevelHandler().removeGameObject(this);
+  }
+
+  // Only handle collision when throwing weapon
+  @Override
+  public void OnCollisionEnter(Collision col) {
+    // Leave if this gun is a spawn gun
+    if (!startedThrowing) return;
+
+    GameObject g = col.getCollidedObject();
+    if (g instanceof Limb) {
+      System.out.println("is limb");
+      return;
+    }
+    System.out.println("OnCollisionEnter g="+g);
+
+    if (g.getId() == ObjectType.Player) {
+      Player p = (Player) g;
+      p.deductHp(30);
+    }
+
+    this.destroyWeapon();
   }
 
   @Override
@@ -323,7 +357,9 @@ public abstract class Weapon extends GameObject {
       if (p.getHolding() == null || p.getHolding() instanceof Punch) {
         setHolder(p);
         bcCol.setLayer(ColliderLayer.PARTICLE);
-        bcTrig.setLayer(ColliderLayer.PARTICLE);
+        //bcTrig.setLayer(ColliderLayer.PARTICLE);
+        //this.removeComponent(bcCol);
+        this.removeComponent(bcTrig);
         this.removeComponent(rb);
       }
     }
@@ -342,16 +378,16 @@ public abstract class Weapon extends GameObject {
     return this.weight;
   }
   
-  /** Get the max ammo amount */
-  public int getMaxAmmo() {
-    return this.maxAmmo;
-  }
-
   /** Set a new weight, with value between 0 to 1000f exclusive */
   public void setWeight(double newWeight) {
     if (newWeight > 0 && newWeight < 1000.0f) {
       this.weight = newWeight;
     }
+  }
+
+  /** Get the max ammo amount */
+  public int getMaxAmmo() {
+    return this.maxAmmo;
   }
 
   /**
@@ -413,12 +449,6 @@ public abstract class Weapon extends GameObject {
   }
 
   /**
-   * Get the rank of the weapon
-   * @return the rank of the weapon
-   */
-  public int getWeaponRank() { return this.weaponRank; }
-
-  /**
    * Set holder of this weapon
    *
    * @param p New holder of the weapon, null not accepted
@@ -429,6 +459,12 @@ public abstract class Weapon extends GameObject {
       p.setHolding(this);
     }
   }
+
+  /**
+   * Get the rank of the weapon
+   * @return the rank of the weapon
+   */
+  public int getWeaponRank() { return this.weaponRank; }
   // -------------------
   // Setters and Getters
   // --------END--------

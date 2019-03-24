@@ -132,10 +132,7 @@ public class Player extends GameObject implements Destructable {
   public void initialise(Group root, Settings settings) {
     super.initialise(root, settings);
     addLimbs();
-
-    myPunch = new Punch(getX(), getY(), "myPunch@Player", this, UUID.randomUUID());
-    settings.getLevelHandler().addGameObject(myPunch);
-    this.holding = myPunch;
+    addPunch();
   }
 
   private void addLimbs() {
@@ -155,7 +152,12 @@ public class Player extends GameObject implements Destructable {
     addChild(armRight);
     armRight.addChild(handRight);
     armLeft.addChild(handLeft);
+  }
 
+  private void addPunch() {
+    myPunch = new Punch(getX(), getY(), "myPunch@Player", this, UUID.randomUUID());
+    settings.getLevelHandler().addGameObject(myPunch);
+    this.holding = myPunch;
   }
 
   private void updateAnimationTimer() {
@@ -319,6 +321,7 @@ public class Player extends GameObject implements Destructable {
     });
     children.clear();
     addLimbs();
+    addPunch();
   }
 
   /**
@@ -441,5 +444,37 @@ public class Player extends GameObject implements Destructable {
 
   public void setLastInputCount(int lastInputCount) {
     this.lastInputCount = lastInputCount;
+  }
+
+  public Limb getHead() {
+    return head;
+  }
+
+  public Limb getBody() {
+    return body;
+  }
+
+  public Limb getLegLeft() {
+    return legLeft;
+  }
+
+  public Limb getLegRight() {
+    return legRight;
+  }
+
+  public Limb getArmLeft() {
+    return armLeft;
+  }
+
+  public Limb getArmRight() {
+    return armRight;
+  }
+
+  public Limb getHandLeft() {
+    return handLeft;
+  }
+
+  public Limb getHandRight() {
+    return handRight;
   }
 }

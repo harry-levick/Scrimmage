@@ -12,7 +12,9 @@ import shared.util.maths.Vector2;
  */
 public class Handgun extends Gun {
 
+  /** Path to image */
   private static String imagePath = "images/weapons/handgun.png";
+  /** Size of image */
   private static double sizeX = 50, sizeY = 35;
 
   /**
@@ -21,6 +23,7 @@ public class Handgun extends Gun {
    * @param x The x position of the gun
    * @param y The y position of the gun
    * @param name Name of the gun
+   * @param holder Player who holds this Handgun
    * @param uuid UUID of the gun
    */
   public Handgun(
@@ -43,6 +46,11 @@ public class Handgun extends Gun {
     this.weaponRank = 2;
   }
 
+  /**
+   * Constructor to duplicate a handgun with new UUID
+   *
+   * @param that Source of Handgun to duplicate
+   */
   public Handgun(Handgun that) {
     this(that.getX(), that.getY(), that.name, that.holder, UUID.randomUUID());
   }
