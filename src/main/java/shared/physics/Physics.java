@@ -51,18 +51,19 @@ public class Physics {
   /*
    * Order: DEFAULT, PLAYER, OBJECT, PLATFORM, PARTICLE, COLLECTABLE, LIMBS
    */
-  private static boolean[] DEFAULT = {true, true, true, true, false, false, true};
-  private static boolean[] PLAYER = {true, false, true, true, false, false, false};
-  private static boolean[] OBJECT = {true, true, true, true, false, false, true};
-  private static boolean[] PLATFORM = {true, true, true, true, false, true, true};
-  private static boolean[] PARTICLES = {false, false, false, false, false, false, false};
-  private static boolean[] COLLECTABLE = {false, false, false, true, false, false, false};
-  private static boolean[] LIMBS = {true, false, true, true, false, false, false};
+  private static boolean[] DEFAULT = {true, true, true, true, false, false, true, true};
+  private static boolean[] PLAYER = {true, false, true, true, false, false, false, false};
+  private static boolean[] OBJECT = {true, true, true, true, false, false, true, true};
+  private static boolean[] PLATFORM = {true, true, true, true, false, true, true, true};
+  private static boolean[] PARTICLES = {false, false, false, false, false, false, false, false};
+  private static boolean[] COLLECTABLE = {false, false, false, true, false, false, false, false};
+  private static boolean[] LIMBS = {true, false, true, true, false, false, false, true};
+  private static boolean[] PROJECTILE = {true, false, true, true, false, false, true, false};
   /**
    * The collision layers ordered as specified by their int value. 2D Matrix format, used by the Collider tests.
    */
   public static boolean[][] COLLISION_LAYERS = {DEFAULT, PLAYER, OBJECT, PLATFORM, PARTICLES,
-      COLLECTABLE, LIMBS};
+      COLLECTABLE, LIMBS, PROJECTILE};
   public static ConcurrentLinkedHashMap<UUID, GameObject> gameObjects;
   /**
    * A concurrent map used to synchronize collision updates.

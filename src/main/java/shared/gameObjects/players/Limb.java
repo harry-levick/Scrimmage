@@ -7,18 +7,21 @@ import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
 import javafx.scene.transform.Rotate;
+import shared.gameObjects.Destructable;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
+import shared.gameObjects.players.Limbs.Arm;
 import shared.handlers.levelHandler.LevelHandler;
 import shared.physics.data.MaterialProperty;
+import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
 
 /**
  * General class for player Limbs
  */
-public abstract class Limb extends GameObject {
+public abstract class Limb extends GameObject implements Destructable {
 
   /**
    * The X-coordinate pivot for rotating the limb
@@ -38,6 +41,10 @@ public abstract class Limb extends GameObject {
    * Boolean to determine if the limb is currently attached to an object
    */
   protected boolean limbAttached;
+  /**
+   * Health value of a limb
+   */
+  protected int limbHealth;
   //TODO idk what these does
   protected boolean lastAttachedCheck;
   protected Behaviour behaviour;
@@ -86,7 +93,7 @@ public abstract class Limb extends GameObject {
     this.levelHandler = levelHandler;
 
     //Physics
-    bc = new BoxCollider(this, false);
+    bc = new BoxCollider(this, ColliderLayer.LIMBS, false);
     addComponent(bc);
 
     rb =
@@ -102,6 +109,16 @@ public abstract class Limb extends GameObject {
   @Override
   public void interpolatePosition(float alpha) {
 
+  }
+
+  @Override
+  public void deductHp(int damage) {
+    System.out.println("Damaged: " + this.getClass());
+    ((Player) parent).deductHp(damage);
+      this.limbHealth -= damage;
+      if(limbHealth <= 0) {
+          destroy();
+      }
   }
 
   public void setRelativePosition() {
@@ -149,6 +166,10 @@ public abstract class Limb extends GameObject {
     lastAttachedCheck = limbAttached;
   }
 
+  @Override
+  public void destroy() {
+    detachLimb();
+  }
   public void reset() {
     removeRender();
   }

@@ -78,7 +78,6 @@ public abstract class ParticleEmitter extends GameObject {
     } else {
       for(int i = 0; i < particleAmount; i++) {
         settings.getLevelHandler().addGameObject(newParticle());
-        System.out.println("EMITTED BULLET");
       }
       particleEmitterLifetime -= Physics.TIMESTEP;
     }

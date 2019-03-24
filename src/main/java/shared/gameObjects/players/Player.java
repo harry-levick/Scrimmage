@@ -21,7 +21,7 @@ import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
 
-public class Player extends GameObject implements Destructable {
+public class Player extends GameObject {
 
   /**
    * The speed of the player in pixels per update frame
@@ -113,7 +113,7 @@ public class Player extends GameObject implements Destructable {
     this.rightKey = false;
     this.jumpKey = false;
     this.click = false;
-    this.health = 100;
+    this.health = 200;
     this.behaviour = Behaviour.IDLE;
     this.bc = new BoxCollider(this, ColliderLayer.PLAYER, false);
     this.rb = new Rigidbody(RigidbodyType.DYNAMIC, 90, 11.67f, 0.2f,
@@ -232,7 +232,7 @@ public class Player extends GameObject implements Destructable {
       behaviour = Behaviour.IDLE;
     }
     if (jumpKey && !jumped && grounded) {
-      rb.moveY(jumpForce, 0.33333f);
+      rb.moveY(jumpForce * ((legLeft.isDestroyed() || legRight.isDestroyed()) ? 0.5f : 1), 0.33333f);
       jumped = true;
     }
     if (jumped) {
@@ -291,7 +291,6 @@ public class Player extends GameObject implements Destructable {
 
   }
 
-  @Override
   public void deductHp(int damage) {
     this.health -= damage;
     if (this.health <= 0) {
@@ -303,6 +302,7 @@ public class Player extends GameObject implements Destructable {
       this.imageView.setOpacity(0.5);
     }
   }
+
 
   /**
    * Resets the player's values, a "respawn"
@@ -351,6 +351,7 @@ public class Player extends GameObject implements Destructable {
   }
 
   public void setHolding(Weapon newHolding) {
+    if (armLeft.isDestroyed() || armRight.isDestroyed()) return;
     this.holding = newHolding;
 
     if (newHolding != null) {

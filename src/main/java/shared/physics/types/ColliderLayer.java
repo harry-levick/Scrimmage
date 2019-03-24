@@ -32,7 +32,11 @@ public enum ColliderLayer {
   /**
    * Limbs
    */
-  LIMBS(6);
+  LIMBS(6),
+  /**
+   * Projectiles such as bullets and grenades that affect gameplay should be on this layer
+   */
+  PROJECTILE(7);
   int id;
 
   ColliderLayer(int i) {
