@@ -7,12 +7,25 @@ import shared.gameObjects.players.Player;
 import shared.util.Path;
 import shared.util.maths.Vector2;
 
+/**
+ * Explosive launcher class
+ */
 public class ExplosiveLauncher extends Gun {
 
+  /** Path to image */
   private static String imagePath = "images/weapons/explosiveLauncher.png";
-  private static String audioPath = "audio/sound-effects/laser_gun.wav";
-  private static double sizeX = 50, sizeY = 50;
+  /** Size of image */
+  private static double sizeX = 117, sizeY = 29;
 
+  /**
+   * Constructor
+   *
+   * @param x X position of the explosive launcher
+   * @param y Y position of the explosive launcher
+   * @param name Name of the explosive launcher
+   * @param holder Player who holds this explosive launcher
+   * @param uuid UUID of this explosive launcher
+   */
   public ExplosiveLauncher(double x, double y, String name, Player holder, UUID uuid) {
     super (
         x,
@@ -22,8 +35,8 @@ public class ExplosiveLauncher extends Gun {
         10, // weight
         name,
         10, // ammo
-        40, // fireRate
-        20, // pivotX
+        20, // fireRate
+        25, // pivotX
         10, // pivotY
         holder,
         false, // fullAutoFire
@@ -31,6 +44,15 @@ public class ExplosiveLauncher extends Gun {
         uuid);
 
     this.weaponRank = 10;
+  }
+
+  /**
+   * Constructor for AI
+   *
+   * @param that A copy of this explosive launcher with different UUID
+   */
+  public ExplosiveLauncher(ExplosiveLauncher that) {
+    this(that.getX(), that.getY(), that.name, that.holder, UUID.randomUUID());
   }
 
   @Override
@@ -66,42 +88,56 @@ public class ExplosiveLauncher extends Gun {
 
   @Override
   public double getGripX() {
-    return 0;
+    if (holder.isAimingLeft()) {
+      return getGripFlipX();
+    } else {
+      return holderHandPos == null ? 0 : holderHandPos[0] - 15;
+    }
   }
 
   @Override
   public double getGripY() {
-    return 0;
+    if (holder.isAimingLeft()) {
+      return getGripFlipY();
+    } else {
+      return holderHandPos == null ? 0 : holderHandPos[1] - 20;
+    }
   }
 
   @Override
   public double getGripFlipX() {
-    return 0;
+    return holderHandPos[0] - 85;
   }
 
   @Override
   public double getGripFlipY() {
-    return 0;
+    return holderHandPos[1] - 20;
   }
 
   @Override
   public double getForeGripX() {
-    return 0;
+    if (holder.isAimingLeft()) {
+      return getForeGripFlipX();
+    }
+    return getGripX() + 50 * Math.cos(-angleRadian);
   }
 
   @Override
   public double getForeGripY() {
-    return 0;
+    if (holder.isAimingLeft()) {
+      return getForeGripFlipY();
+    }
+    return getGripY() + 50 * Math.sin(angleRadian);
   }
 
   @Override
   public double getForeGripFlipX() {
-    return 0;
+    return getGripX() + 50 - 30 * Math.cos(angleRadian);
   }
 
   @Override
   public double getForeGripFlipY() {
-    return 0;
+    return getGripY() - 50 * Math.sin(angleRadian);
   }
 
   @Override
