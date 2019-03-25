@@ -41,7 +41,7 @@ public class Punch extends Melee {
         sizeX,
         sizeY,
         ObjectType.Fist,
-        10,
+        5,
         1,
         name,
         -1,
