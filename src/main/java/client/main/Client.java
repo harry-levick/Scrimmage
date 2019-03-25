@@ -136,7 +136,7 @@ public class Client extends Application {
   private static UI userInterface;
   private static boolean credits = false;
   private static int creditStartDelay = 100;
-  private boolean gameOver;
+  private static boolean gameOver;
   private boolean startedGame;
   private int timeRemaining;
   private int timeLimit = 3; // Time limit in minutes
@@ -377,7 +377,7 @@ public class Client extends Application {
   /**
    * The end of the game, resets game back to main menu
    */
-  public void endGame() {
+  public static void endGame() {
     singleplayerGame = false;
     gameOver = false;
     levelHandler.getPlayers().entrySet().removeAll(levelHandler.getBotPlayerList().entrySet());

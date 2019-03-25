@@ -1,5 +1,6 @@
 package shared.gameObjects.menu.main;
 
+import client.main.Client;
 import java.util.UUID;
 import javafx.scene.input.MouseEvent;
 import shared.gameObjects.Utils.ObjectType;
@@ -23,6 +24,8 @@ public class ButtonQuit extends ButtonObject {
     // MAIN MENU -> CLOSE
     switch (settings.getLevelHandler().getMap().getGameState()) {
       case IN_GAME:
+        // clear bots
+        Client.endGame();
       case LOBBY:
       case START_CONNECTION:
       case MULTIPLAYER:
