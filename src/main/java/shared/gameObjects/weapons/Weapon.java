@@ -243,7 +243,12 @@ public abstract class Weapon extends GameObject {
         new MaterialProperty(0.1f, 1, 1),
         new AngularData(0, 0, 0, 0),
         this); // TODO FIX
-    this.bcCol.setLayer(ColliderLayer.DEFAULT);
+    if (this.bcCol != null)
+      this.bcCol.setLayer(ColliderLayer.DEFAULT);
+    else {
+      this.bcCol = new BoxCollider(this, ColliderLayer.DEFAULT, false);
+      addComponent(bcCol);
+    }
 
     addComponent(rb);
     this.throwVector = getDeltaThrowVecNorm();
@@ -499,6 +504,11 @@ public abstract class Weapon extends GameObject {
    */
   public int getWeaponRank() {
     return this.weaponRank;
+  }
+
+  /** Get angle of gun when aiming in radian */
+  public double getAngleRadian() {
+    return this.angleRadian;
   }
   // -------------------
   // Setters and Getters
