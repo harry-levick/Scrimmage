@@ -351,6 +351,7 @@ public class Player extends GameObject {
         this.setActive(false);
         bc.setLayer(ColliderLayer.PARTICLE);
         transform.rotate(90);
+        if(imageView != null)
         this.imageView.setOpacity(0.5);
       }
     }
