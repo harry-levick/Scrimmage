@@ -1,5 +1,8 @@
 package client.handlers.userData;
 
+/**
+ * Container class for the save data of the Client
+ */
 public class AccountData {
 
   private String username;
@@ -10,6 +13,15 @@ public class AccountData {
   private int lootboxCount;
   private int moneyCount;
 
+  /**
+   * Constructs a client data with the given unlocks
+   * @param uuid UUID of the user, as can be found on the SQL Database
+   * @param username Name of the user, shown to other players and as found on the SQL Database
+   * @param achievements Boolean array representing unlock state of achievements
+   * @param skins Boolean array representing unlock state of player skins
+   * @param lootboxCount The number of unopened lootboxes left to open
+   * @param moneyCount The amount of in-game currency currently held by the user
+   */
   public AccountData(String uuid, String username, boolean[] achievements, boolean[] skins, int lootboxCount, int moneyCount) {
     this.username = username;
     this.achievements = achievements;
@@ -20,6 +32,11 @@ public class AccountData {
     activeSkin = new int[4];
   }
 
+  /**
+   * Constructs ClientData from a formatted string usually obtained by the database
+   * @param data Data representing content of player
+   * @return ClientData processed from String data
+   */
   public static AccountData fromString(String data) {
     String[] splitData = data.split("//x/s");
     boolean[] achievements = new boolean[30];
@@ -33,6 +50,10 @@ public class AccountData {
     return new AccountData(splitData[0], splitData[1], achievements, skins, Integer.parseInt(splitData[4]), Integer.parseInt(splitData[5]));
   }
 
+  /**
+   * Generates the String array used to query the server for saving the state of the user
+   * @return String array used by SQL Save Query
+   */
   public String[] saveQuery() {
     int packedAchievements = 0;
     for (int i = 0; i < achievements.length; i++)
@@ -44,18 +65,23 @@ public class AccountData {
     return ret;
   }
 
+  /**
+   * Generates the String array used to query the server for registering a new user
+   * @return String array used by SQL Register Query
+   */
   public String[] registerAccountQuery(String password) {
     String[] save = saveQuery();
     String[] ret = {uuid, username, password, save[2], save[3], save[4], save[5]};
     return ret;
   }
 
-  //TODO queue change to sql
+
   public boolean[] getAchievements() {
     return achievements;
   }
 
-  public void getAchievement(int id) {
+
+  public void awardAchievement(int id) {
     achievements[id] = true;
   }
 
@@ -63,7 +89,7 @@ public class AccountData {
     return skins;
   }
 
-  public void getSkin(int id) {
+  public void awardSkin(int id) {
    skins[id] = true;
   }
 

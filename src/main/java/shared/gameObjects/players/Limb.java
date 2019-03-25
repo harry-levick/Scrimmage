@@ -217,6 +217,10 @@ public abstract class Limb extends GameObject implements Destructable {
     rb.setVelocity(new Vector2(0, -1000));
   }
 
+  public boolean isDeattached() {
+    return !this.limbAttached;
+  }
+
   public void reattachLimb() {
     this.limbAttached = true;
   }
