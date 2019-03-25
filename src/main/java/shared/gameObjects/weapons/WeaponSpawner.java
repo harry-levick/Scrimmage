@@ -25,7 +25,11 @@ public class WeaponSpawner extends GameObject {
     /**
      * Debugging
      */
-    addWeaponToSpawner(Weapons.SWORD, Weapons.MACHINEGUN);
+    addWeaponToSpawner(
+        Weapons.SWORD,
+        Weapons.MACHINEGUN,
+        Weapons.EXPLOSIVE_LAUNCHER,
+        Weapons.UZI);
   }
 
   @Override
@@ -52,7 +56,8 @@ public class WeaponSpawner extends GameObject {
    */
   public void addWeaponToSpawner(Weapons... weapon) {
     for (Weapons w : weapon) {
-      if(!weapons.contains(w)) weapons.add(w);
+      if(!weapons.contains(w))
+        weapons.add(w);
     }
   }
 
@@ -71,6 +76,9 @@ public class WeaponSpawner extends GameObject {
         break;
       case UZI:
         settings.getLevelHandler().addGameObject(new Uzi(getX(), getY(), "UziFromSpawner", null, UUID.randomUUID()));
+        break;
+      case EXPLOSIVE_LAUNCHER:
+        settings.getLevelHandler().addGameObject(new ExplosiveLauncher(getX(), getY(), "ExplosiveLauncherFromSpawner", null, UUID.randomUUID()));
         break;
     }
   }

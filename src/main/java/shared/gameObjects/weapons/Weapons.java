@@ -5,4 +5,5 @@ public enum Weapons {
   MACHINEGUN,
   HANDGUN,
   UZI,
+  EXPLOSIVE_LAUNCHER
 }
