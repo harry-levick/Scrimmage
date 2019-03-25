@@ -14,7 +14,7 @@ public class Sword extends Melee {
   /**
    * Path to image
    */
-  private static String imagePath = "images/weapons/sword1.png";
+  private static String imagePath = "images/weapons/sword.png";
   /**
    * Maximum angle to aim before switching holding hand
    */
@@ -39,8 +39,8 @@ public class Sword extends Melee {
     super(
         x,
         y,
-        50,
-        50,
+        19,
+        121,
         ObjectType.Weapon,
         20, // hazard
         10, // weight
@@ -147,8 +147,8 @@ public class Sword extends Melee {
 
   @Override
   public void initialiseAnimation() {
-    this.animation.supplyAnimationWithSize(
-        "default", this.range, this.range, true, Path.convert(this.imagePath));
+    this.animation.supplyAnimation(
+        "default", Path.convert(this.imagePath));
   }
 
   @Override
