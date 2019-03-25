@@ -198,6 +198,7 @@ public abstract class Collider extends Component  {
    * @return True if the colliders intersect
    */
   public static boolean haveCollided(Collider colA, Collider colB) {
+    if(colA == null || colB == null) return false;
     if (colA == colB
         || !(canCollideWithLayer(colA.getLayer(), colB.getLayer()))
         || colB.isTrigger()) {
