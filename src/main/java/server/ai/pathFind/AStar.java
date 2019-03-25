@@ -161,7 +161,7 @@ public class AStar {
         double distanceToItem = botPos.exactMagnitude(itemPos);
         // The heuristic value is the combined distance of the bot->enemy + bot->item
         // The heuristic value for the item is weighted to add preference to pick the items up.
-        totalH += (distanceToItem * 5);
+        totalH += (distanceToItem * 20);
       }
 
       return totalH;
