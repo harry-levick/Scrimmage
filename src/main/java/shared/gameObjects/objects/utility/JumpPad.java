@@ -54,8 +54,10 @@ public class JumpPad extends GameObject {
                 false, false);
         for (Collision c : collisions) {
           Rigidbody rb = (Rigidbody) c.getCollidedObject().getComponent(ComponentType.RIGIDBODY);
-          if (rb.getBodyType() == RigidbodyType.DYNAMIC) {
-            rb.setVelocity(new Vector2(rb.getVelocity().getX(), SPRING_FORCE));
+          if(rb != null) {
+            if (rb.getBodyType() == RigidbodyType.DYNAMIC) {
+              rb.setVelocity(new Vector2(rb.getVelocity().getX(), SPRING_FORCE));
+            }
           }
         }
       }

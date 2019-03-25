@@ -422,6 +422,14 @@ public class Player extends GameObject {
     }
   }
 
+  /**
+   * Determines if the player can hold a weapon or not
+   * @return
+   */
+  public boolean canHold() {
+    return !(!armLeft.limbAttached || !armRight.limbAttached);
+  }
+
   public void usePunch() {
     this.setHolding(this.myPunch);
   }

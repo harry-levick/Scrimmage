@@ -31,6 +31,8 @@ public class AccountData {
     this.uuid = uuid;
     activeSkin = new int[4];
     activeSkin[0] = 2;
+    activeSkin[1] = 4;
+    activeSkin[2] = 3;
   }
 
   /**

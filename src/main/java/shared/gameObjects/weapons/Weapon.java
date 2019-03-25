@@ -365,7 +365,7 @@ public abstract class Weapon extends GameObject {
     GameObject g = col.getCollidedObject();
     if (g != null && g.getId() == ObjectType.Player) {
       Player p = (Player) g;
-      if (p.getHolding() == null || p.getHolding() instanceof Punch) {
+      if (p.getHolding() == null || p.getHolding() instanceof Punch && p.canHold()) {
         setHolder(p);
         bcCol.setLayer(ColliderLayer.PARTICLE);
         //bcTrig.setLayer(ColliderLayer.PARTICLE);
