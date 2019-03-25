@@ -35,6 +35,8 @@ public abstract class Melee extends Weapon {
   protected double[] angles;
   /** Index indicating which part the swing is in now during attack */
   protected int currentAngleIndex;
+  /** -1 if aiming Left, 1 if aiming Right */
+  protected double attackAngleSign;
   /** Hash set to record collided object in 1 attack */
   protected HashSet<Destructable> collidedSet;
 
@@ -114,6 +116,16 @@ public abstract class Melee extends Weapon {
     super.update();
   }
 
+  /**
+   * Returns the width of image
+   */
+  public abstract double getSizeX();
+
+  /**
+   * Returns the height of image
+   */
+  public abstract double getSizeY();
+
   @Override
   public void fire(double mouseX, double mouseY) {
     if (canFire()) {
@@ -123,18 +135,19 @@ public abstract class Melee extends Weapon {
       // Box cast on beginning of swing
       ArrayList<Collision> collisions =
           Physics.boxcastAll(
-              new Vector2((float) (this.getGripX()), (float) (this.getGripY()-20)),
-              new Vector2((float) this.range/2, (float) this.range/2),
-              false, false
+              new Vector2((float) (holderHandPos[0] + (range * attackAngleSign)), (float) (holderHandPos[1]-(getSizeY()/2))),
+              new Vector2((float) getSizeY()/2, (float) getSizeY()/2),
+              false,
+              false
           );
       // Box cast at end of swing
-      collisions.addAll(
+      /*collisions.addAll(
           Physics.boxcastAll(
-              new Vector2((float) (this.getGripX()), (float) (this.getGripY()+20)),
-              new Vector2((float) this.range/2, (float) this.range/2),
-              false, false
+              new Vector2((float) (holderHandPos[0] + (range * attackAngleSign)), (float) (holderHandPos[1]+(getSizeY()/2))),
+              new Vector2((float) getSizeY()/2, (float) getSizeY()/2),
+              true, false
           )
-      );
+      );*/
       ArrayList<Destructable> objectsBeingHit = new ArrayList<>();
 
       for (Collision c : collisions) {
