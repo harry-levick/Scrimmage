@@ -1,5 +1,7 @@
 package shared.gameObjects.weapons;
 
+import client.handlers.audioHandler.AudioHandler;
+import client.main.Client;
 import java.util.HashSet;
 import java.util.UUID;
 import shared.gameObjects.Destructable;
@@ -99,6 +101,8 @@ public class Punch extends Melee {
           ((Destructable) g).deductHp(this.damage);
         }
       }
+
+      new AudioHandler(settings, Client.musicActive).playSFX("PUNCH");
 
       this.currentCooldown = getDefaultCoolDown();
     }

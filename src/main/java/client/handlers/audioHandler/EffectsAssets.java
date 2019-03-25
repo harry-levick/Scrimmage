@@ -27,6 +27,8 @@ public class EffectsAssets {
     tracks.put("MACHINEGUN", "machinegun.mp3");
     tracks.put("CLICK", "click.mp3");
     tracks.put("LASER", "laser_gun.wav");
+    tracks.put("PUNCH", "punch.wav");
+    tracks.put("FART", "fart.wav");
   }
 
   /**
