@@ -288,4 +288,12 @@ public class Settings {
   public void setGameRoot(Group gameRoot) {
     this.gameRoot = gameRoot;
   }
+
+  public AccountData getData() {
+    return data;
+  }
+
+  public void setData(AccountData data) {
+    this.data = data;
+  }
 }

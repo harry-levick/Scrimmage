@@ -1,5 +1,4 @@
 package shared.handlers.levelHandler;
-
 /**
  * @author Brett Saunders
  * Enum to determine the current state of the application
@@ -14,9 +13,9 @@ public enum GameState {
    */
   SETTINGS,
   /**
-   * Customization page
+   * Account Management Pages
    */
-  CHARACTER,
+  ACCOUNT,
   /**
    * In Active Game
    */

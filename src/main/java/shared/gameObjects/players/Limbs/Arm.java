@@ -130,9 +130,14 @@ public class Arm extends Limb {
 
   @Override
   public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", "images/player/Standard_Male/arm.png");
+    this.animation.supplyAnimation("default", "images/player/skin" + settings.getData().getActiveSkin()[2] + "/arm.png");
   }
-  
+
+  @Override
+  public void updateSkinRender(int id) {
+    this.animation.supplyAnimation("default", "images/player/skin" + id + "/arm.png");
+  }
+
   private void jumpAnimation() {
     // Control to switch the leg animations depending on movement direction.
     boolean control = isLeft;

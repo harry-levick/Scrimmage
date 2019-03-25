@@ -21,7 +21,12 @@ public class Body extends Limb {
 
   @Override
   public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", "images/player/Standard_Male/body_front.png");
+    this.animation.supplyAnimation("default", "images/player/skin" + settings.getData().getActiveSkin()[1] + "/body.png");
+  }
+
+  @Override
+  public void updateSkinRender(int id) {
+    this.animation.supplyAnimation("default", "images/player/skin" + id + "/body.png");
   }
 
   @Override

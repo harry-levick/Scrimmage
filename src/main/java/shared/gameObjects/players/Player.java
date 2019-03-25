@@ -352,6 +352,15 @@ public class Player extends GameObject {
     }
   }
 
+  public void updateSkinRender(int[] skinRender) {
+    children.forEach(child -> {
+      if (child instanceof Arm) ((Limb) child).updateSkinRender(skinRender[2]);
+      if (child instanceof Leg) ((Limb) child).updateSkinRender(skinRender[3]);
+      if (child instanceof Head) ((Limb) child).updateSkinRender(skinRender[0]);
+      if (child instanceof Body) ((Limb) child).updateSkinRender(skinRender[1]);
+    });
+  }
+
 
   /**
    * Resets the player's values, a "respawn"

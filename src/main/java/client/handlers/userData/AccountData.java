@@ -30,6 +30,7 @@ public class AccountData {
     this.moneyCount = moneyCount;
     this.uuid = uuid;
     activeSkin = new int[4];
+    activeSkin[0] = 2;
   }
 
   /**
@@ -130,5 +131,9 @@ public class AccountData {
     activeSkin[1] = body;
     activeSkin[2] = legs;
     activeSkin[3] = arms;
+  }
+
+  public int[] getActiveSkin() {
+    return activeSkin;
   }
 }

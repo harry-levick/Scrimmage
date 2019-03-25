@@ -1,4 +1,4 @@
-package shared.gameObjects.menu.main;
+package shared.gameObjects.menu.main.account;
 
 import java.util.UUID;
 import javafx.scene.input.MouseEvent;
@@ -7,6 +7,9 @@ import shared.gameObjects.menu.ButtonObject;
 import shared.handlers.levelHandler.Map;
 import shared.util.Path;
 
+/**
+ * Clickable Button to enter Account management screen
+ */
 public class ButtonAccount extends ButtonObject {
 
   public ButtonAccount(
@@ -18,8 +21,8 @@ public class ButtonAccount extends ButtonObject {
     super.doOnClick(e);
     settings.getLevelHandler().changeMap(
         new Map(
-            "CHARACTER",
-            Path.convert("src/main/resources/menus/character.map")),
+            "ACCOUNT",
+            Path.convert("src/main/resources/menus/account.map")),
         false, false);
   }
 }
