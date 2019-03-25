@@ -203,6 +203,7 @@ public abstract class Collider extends Component  {
         || colB.isTrigger()) {
       return false;
     }
+
     boolean toRet = false;
     switch (colA.getColliderType()) {
       case BOX:
