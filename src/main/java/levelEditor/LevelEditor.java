@@ -31,6 +31,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import levelEditor.LevelEditor.OBJECT_TYPES;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import shared.gameObjects.Blocks.Metal.MetalBlockLargeObject;
 import shared.gameObjects.Blocks.Metal.MetalBlockSmallObject;
 import shared.gameObjects.Blocks.Metal.MetalFloorObject;
@@ -73,6 +75,7 @@ import shared.util.maths.Vector2;
 
 public class LevelEditor extends Application {
 
+  private static final Logger LOGGER = LogManager.getLogger(LevelEditor.class.getName());
   private Settings settings = new Settings(null, null);
   private ConcurrentLinkedHashMap<UUID, GameObject> gameObjects;
   private ArrayList<PlayerSpawnpoint> playerSpawns = new ArrayList<>();

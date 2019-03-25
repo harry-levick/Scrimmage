@@ -4,7 +4,6 @@ import client.handlers.effectsHandler.Particle;
 import client.main.Settings;
 import java.util.UUID;
 import javafx.scene.Group;
-import shared.gameObjects.Destructable;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
@@ -180,6 +179,11 @@ public class Player extends GameObject {
 
   @Override
   public void update() {
+    // checks if outside the world, kills if fallen off the map
+    if (getY() > 1200) {
+      deductHp(999);
+    }
+
     checkGrounded(); // Checks if the player is grounded
     badWeapon();
     pointLeft = mouseX < this.getX();
