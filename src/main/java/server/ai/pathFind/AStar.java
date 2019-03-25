@@ -218,8 +218,6 @@ public class AStar {
         Vector2 itemPos = new Vector2((float) weap.getX(), (float) weap.getY());
         double distance = botPos.exactMagnitude(itemPos);
 
-        boolean betterWeap = weap.getWeaponRank() > replicaBot.getHolding().getWeaponRank();
-
         if (distance < targetDistance &&
             (weap.getWeaponRank() > replicaBot.getHolding().getWeaponRank())) {
           targetDistance = distance;
@@ -244,54 +242,13 @@ public class AStar {
     boolean outHorizontal = (neighbour.botX + botSize.getX() <= 30) ||
         (neighbour.botX >= xMax);
 
-    boolean outVertical = (neighbour.botY + botSize.getY() <= 30) ||
-        (neighbour.botY >= yMax);
+    boolean outVertical = (neighbour.botY >= yMax);
 
     if (outHorizontal || outVertical) {
       return false;
     } else return true;
   }
 
-  /**
-   * The main search function
-   */
-  private void search() {
-    int searchCount = 0, seachCutoff = 1300;
-    SearchNode current = bestPosition;
-    closedList.add(current);
-    boolean currentGood = false;
-
-    while (openList.size() != 0 && !atEnemy(current.botX, current.botY, replicaBot)) {
-      current = pickBestNode(openList);
-      currentGood = false;
-
-      if (!current.visited && isInClosed(current)) {
-        /**
-         * Closed List -> Nodes too close to a node in the closed list are considered visited, even
-         * though they are a bit different.
-         */
-        current.fValue += visitedListPenalty;
-        current.visited = true;
-        openList.add(current);
-
-      } else {
-        currentGood = true;
-        closedList.add(current);
-        openList.addAll(current.generateChildren());
-        searchCount++;
-        //Physics.drawCast(current.botX, current.botY, current.botX, current.botY, "#00ff00");
-      }
-
-      if (currentGood) {
-        bestPosition = current;
-      }
-      if (searchCount >= seachCutoff) {
-        break;
-      }
-
-    }
-
-  }
 
   /**
    * Create new AStar
@@ -346,11 +303,52 @@ public class AStar {
   }
 
   /**
+   * The main search function
+   */
+  private void search() {
+    int searchCount = 0, seachCutoff = 1300;
+    SearchNode current = bestPosition;
+    closedList.add(current);
+    boolean currentGood = false;
+
+    while (openList.size() != 0 && !atEnemy(current.botX, current.botY, replicaBot)) {
+      current = pickBestNode(openList);
+      currentGood = false;
+
+      if (!current.visited && isInClosed(current)) {
+        /**
+         * Closed List -> Nodes too close to a node in the closed list are considered visited, even
+         * though they are a bit different.
+         */
+        current.fValue += visitedListPenalty;
+        current.visited = true;
+        openList.add(current);
+
+      } else {
+        currentGood = true;
+        closedList.add(current);
+        openList.addAll(current.generateChildren());
+        searchCount++;
+        //Physics.drawCast(current.botX, current.botY, current.botX, current.botY, "#00ff00");
+      }
+
+      if (currentGood) {
+        bestPosition = current;
+      }
+      if (searchCount >= seachCutoff) {
+        break;
+      }
+
+    }
+
+  }
+
+  /**
    * The main fleeing function
    * @param enemy the enemy we are fleeing from
    */
   private void flee(Player enemy) {
-    int searchCount = 0, seachCutoff = 200;
+    int searchCount = 0, seachCutoff = 1300;
     SearchNode current = bestPosition;
     closedList.add(current);
     boolean currentGood = false;
@@ -376,6 +374,7 @@ public class AStar {
         currentGood = true;
         closedList.add(current);
         openList.addAll(current.generateChildren());
+        Physics.drawCast(current.botX, current.botY, current.botX, current.botY, "#00ff00");
         searchCount++;
       }
 
