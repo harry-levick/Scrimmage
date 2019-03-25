@@ -136,7 +136,7 @@ public class Client extends Application {
   private static UI userInterface;
   private static boolean credits = false;
   private static int creditStartDelay = 100;
-  private boolean gameOver;
+  private static boolean gameOver;
   private boolean startedGame;
   private int timeRemaining;
   private int timeLimit = 3; // Time limit in minutes
@@ -256,7 +256,7 @@ public class Client extends Application {
     ArrayList<String> lines = new ArrayList<String>();
     levelHandler.getMusicAudioHandler().playMusic(
         "LOCAL_FORECAST"); // not using playlist since assumed length of credits is less than the length of song
-    Rectangle bg = new Rectangle(0, 0, settings.getWindowWidth(), settings.getWindowHeight());
+    Rectangle bg = new Rectangle(0, 0, settings.getMapWidth(), settings.getMapHeight());
     creditsBackground.getChildren().add(bg);
     try {
       BufferedReader reader = new BufferedReader(
@@ -272,9 +272,8 @@ public class Client extends Application {
       // todo io exception
     }
     int yOffset = 0;
-    int x = settings.getWindowWidth() / 2; // todo auto fetch
+    int x = settings.getMapWidth() / 2; // todo auto fetch
     int y = 200;
-    ArrayList<Text> textList = new ArrayList<>();
     for (String line : lines) {
       if (!line.equals("")) {
         int extraBufferSpace = 0;
@@ -378,7 +377,7 @@ public class Client extends Application {
   /**
    * The end of the game, resets game back to main menu
    */
-  public void endGame() {
+  public static void endGame() {
     singleplayerGame = false;
     gameOver = false;
     levelHandler.getPlayers().entrySet().removeAll(levelHandler.getBotPlayerList().entrySet());
@@ -635,8 +634,8 @@ public class Client extends Application {
    * @param primaryStage The JavaFX stage to be scaled
    */
   public void scaleRendering(Stage primaryStage) {
-    scaleRatio = new Vector2(primaryStage.getWidth() / 1920,
-        primaryStage.getHeight() / 1080);
+    scaleRatio = new Vector2(primaryStage.getWidth() / settings.getMapWidth(),
+        primaryStage.getHeight() / settings.getMapHeight());
     Scale scale = new Scale(scaleRatio.getX(), scaleRatio.getY(), 0, 0);
     scene.getRoot().getTransforms().setAll(scale);
   }
