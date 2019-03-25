@@ -27,7 +27,7 @@ import shared.gameObjects.background.Background7;
 import shared.gameObjects.background.Background8;
 import shared.gameObjects.components.behaviours.blockBehaviours.Crushing;
 import shared.gameObjects.menu.main.ButtonBack;
-import shared.gameObjects.menu.main.ButtonCharacterCustomisation;
+import shared.gameObjects.menu.main.ButtonAccount;
 import shared.gameObjects.menu.main.ButtonCredits;
 import shared.gameObjects.menu.main.ButtonMultiplayer;
 import shared.gameObjects.menu.main.ButtonQuit;
@@ -110,7 +110,7 @@ public class LevelCreator extends Application {
         getAbs(20), getAbs(12), getAbs(8), getAbs(2), ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
-        new ButtonCharacterCustomisation(
+        new ButtonAccount(
             getAbs(20), getAbs(15), getAbs(8), getAbs(2), ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid, new ButtonQuit(
@@ -622,7 +622,7 @@ public class LevelCreator extends Application {
         new Background1(UUID.randomUUID()));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
-        new ButtonCharacterCustomisation(
+        new ButtonAccount(
             getAbs(20), getAbs(7), getAbs(8), getAbs(2), ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
     for (int i = 0; i < 12; i++) {

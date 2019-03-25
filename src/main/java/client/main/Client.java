@@ -505,7 +505,8 @@ public class Client extends Application {
 
 
         /** Apply Input */
-        levelHandler.getClientPlayer().applyInput();
+        if(multiplayer) levelHandler.getClientPlayer().applyMultiplayerInput();
+        else levelHandler.getClientPlayer().applyInput();
 
         if (multiplayer && sendUpdate) {
           ClientNetworkManager.sendInput();

@@ -7,11 +7,11 @@ import shared.gameObjects.menu.ButtonObject;
 import shared.handlers.levelHandler.Map;
 import shared.util.Path;
 
-public class ButtonCharacterCustomisation extends ButtonObject {
+public class ButtonAccount extends ButtonObject {
 
-  public ButtonCharacterCustomisation(
+  public ButtonAccount(
       double x, double y, double sizeX, double sizeY, ObjectType id, UUID objectUUID) {
-    super(x, y, sizeX, sizeY, "USER DATA", id, objectUUID);
+    super(x, y, sizeX, sizeY, "ACCOUNT", id, objectUUID);
   }
 
   public void doOnClick(MouseEvent e) {

@@ -259,6 +259,37 @@ public class Player extends GameObject {
     // setX(getX() + (vx * 0.0166));
   }
 
+  public void applyMultiplayerInput() {
+    if (grounded) {
+      jumped = false;
+    }
+    if (rightKey) {
+      rb.moveX(speed);
+      behaviour = Behaviour.WALK_RIGHT;
+    }
+    if (leftKey) {
+      rb.moveX(speed * -1);
+      behaviour = Behaviour.WALK_LEFT;
+    }
+
+    if (!rightKey && !leftKey) {
+      vx = 0;
+      behaviour = Behaviour.IDLE;
+    }
+    if (jumpKey && !jumped && grounded) {
+      rb.moveY(jumpForce * (legLeft.limbAttached && legRight.limbAttached ? 1f : 0.7f), 0.33333f);
+      jumped = true;
+    }
+    if (jumped) {
+      behaviour = Behaviour.JUMP;
+    }
+
+    if (grounded) {
+      jumped = false;
+    }
+
+  }
+
   private void createWalkParticle() {
     if(!grounded) return;
       settings.getLevelHandler().addGameObject(new Particle(transform.getBotPos().sub(transform.getSize().mult(new Vector2(0.5, 0))), new Vector2(0, -35), new Vector2(0, 100), new Vector2(8,8),

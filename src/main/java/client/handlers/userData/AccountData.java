@@ -1,6 +1,6 @@
 package client.handlers.userData;
 
-public class ClientData {
+public class AccountData {
 
   private String username;
   private String uuid;
@@ -10,7 +10,7 @@ public class ClientData {
   private int lootboxCount;
   private int moneyCount;
 
-  public ClientData(String uuid, String username, boolean[] achievements, boolean[] skins, int lootboxCount, int moneyCount) {
+  public AccountData(String uuid, String username, boolean[] achievements, boolean[] skins, int lootboxCount, int moneyCount) {
     this.username = username;
     this.achievements = achievements;
     this.skins = skins;
@@ -20,7 +20,7 @@ public class ClientData {
     activeSkin = new int[4];
   }
 
-  public static ClientData fromString(String data) {
+  public static AccountData fromString(String data) {
     String[] splitData = data.split("//x/s");
     boolean[] achievements = new boolean[30];
     int packedAchievements = Integer.parseInt(splitData[2]);
@@ -30,7 +30,7 @@ public class ClientData {
     int packedSkins = Integer.parseInt(splitData[3]);
     for (int i = 29; i >= 0; i--)
       achievements[29 - i] = (packedAchievements & (1 << i)) != 0;
-    return new ClientData(splitData[0], splitData[1], achievements, skins, Integer.parseInt(splitData[4]), Integer.parseInt(splitData[5]));
+    return new AccountData(splitData[0], splitData[1], achievements, skins, Integer.parseInt(splitData[4]), Integer.parseInt(splitData[5]));
   }
 
   public String[] saveQuery() {
