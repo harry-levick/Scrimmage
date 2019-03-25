@@ -1,6 +1,7 @@
 package shared.gameObjects.weapons;
 
 import java.util.UUID;
+import javafx.scene.transform.Rotate;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.players.Player;
 import shared.util.Path;
@@ -14,17 +15,23 @@ public class Sword extends Melee {
   /**
    * Path to image
    */
-  private static String imagePath = "images/weapons/sword1.png";
+  private static String imagePath = "images/weapons/sword.png";
+  /**
+   * Size of image
+   */
+  private static double sizeX = 19, sizeY = 121;
+  private static float AIM_ANGLE_MAX = 110f;
   /**
    * Maximum angle to aim before switching holding hand
    */
-  private static float AIM_ANGLE_MAX = 110f;
-  /** Index indicating current angle when attacking */
+  /**
+   * Index indicating current angle when attacking
+   */
   private int currentAngleIndex;
   /**
-   * -1 if aiming Left, 1 if aiming Right
+   * Rotate for swinging the sword on attack
    */
-  private double attackAngleSign;
+  private Rotate rotateAttack;
 
   /**
    * Constructor of the Sword class
@@ -39,25 +46,26 @@ public class Sword extends Melee {
     super(
         x,
         y,
-        50,
-        50,
+        sizeX,
+        sizeY,
         ObjectType.Weapon,
         20, // hazard
         10, // weight
         name,
         30, // ammo
         60, // fireRate
-        17, // pivotX
-        40, //pivotY
+        18, // pivotX
+        100, //pivotY
         holder,
         50, // range
         50, // beginAngle
-        20, // endAngle
+        50, // endAngle
         true, // singleHanded
         uuid);
 
     attackAngleSign = 1;
     this.weaponRank = 1;
+    rotateAttack = new Rotate();
   }
 
   /**
@@ -78,7 +86,9 @@ public class Sword extends Melee {
   public void render() {
     super.render();
 
-    if (startedThrowing || holder == null) { return; }
+    if (startedThrowing || holder == null) {
+      return;
+    }
 
     // start here
     imageView.getTransforms().clear();
@@ -119,36 +129,43 @@ public class Sword extends Melee {
     // Rotate and translate the image
     if (holder.isAimingLeft()) {
       imageView.setScaleX(-1);
+      imageView.setRotate(-20);
       rotate.setAngle(-angle);
       imageView.getTransforms().add(rotate);
+      imageView.getTransforms().add(rotateAttack);
       imageView.setTranslateX(this.getGripFlipX());
       imageView.setTranslateY(this.getGripFlipY());
+      rotateAttack.setPivotX(10);
+      rotateAttack.setPivotY(100);
     } else {
       imageView.setScaleX(1);
+      imageView.setRotate(10);
       rotate.setAngle(angle);
       imageView.getTransforms().add(rotate);
+      imageView.getTransforms().add(rotateAttack);
       imageView.setTranslateX(this.getGripX());
       imageView.setTranslateY(this.getGripY());
+      rotateAttack.setPivotX(10);
+      rotateAttack.setPivotY(100);
     }
     // end here
 
     if (this.attacking) {
-      this.imageView
-          .setRotate((45 * attackAngleSign) + (attackAngleSign * -1 * getAngle(currentAngleIndex)));
+      this.rotateAttack.setAngle(45 + (attackAngleSign * -1 * getAngle(currentAngleIndex)));
       // set incrementation of angles for frames
-      currentAngleIndex += 4;
+      currentAngleIndex += 5;
       if (currentAngleIndex >= (int) (beginAngle + endAngle + 1)) {
         attacking = false;
         currentAngleIndex = 0;
-        this.imageView.setRotate(0);
+        this.rotateAttack.setAngle(0);
       }
     }
   }
 
   @Override
   public void initialiseAnimation() {
-    this.animation.supplyAnimationWithSize(
-        "default", this.range, this.range, true, Path.convert(this.imagePath));
+    this.animation.supplyAnimation(
+        "default", Path.convert(this.imagePath));
   }
 
   @Override
@@ -157,11 +174,10 @@ public class Sword extends Melee {
       return getGripFlipX();
     }
 
-    this.imageView.setScaleX(1);
     if (!attacking) {
       attackAngleSign = 1;
     }
-    return holderHandPos[0] - 6;
+    return holderHandPos[0] + 6;
   }
 
   @Override
@@ -170,28 +186,35 @@ public class Sword extends Melee {
       return getGripFlipY();
     }
 
-    this.imageView.setScaleX(1);
     if (!attacking) {
       attackAngleSign = 1;
     }
-    return holderHandPos[1] - 34;
+    return holderHandPos[1] - 100;
   }
 
   @Override
   public double getGripFlipX() {
-    this.imageView.setScaleX(-1);
     if (!attacking) {
       attackAngleSign = -1;
     }
-    return holderHandPos[0] - 34;
+    return holderHandPos[0] - 15;
   }
 
   @Override
   public double getGripFlipY() {
-    this.imageView.setScaleX(-1);
     if (!attacking) {
       attackAngleSign = -1;
     }
-    return holderHandPos[1] - 38;
+    return holderHandPos[1] - 105;
+  }
+
+  @Override
+  public double getSizeX() {
+    return sizeX;
+  }
+
+  @Override
+  public double getSizeY() {
+    return sizeY;
   }
 }
