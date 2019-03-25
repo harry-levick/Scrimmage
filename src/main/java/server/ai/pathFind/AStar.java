@@ -311,7 +311,7 @@ public class AStar {
     closedList.add(current);
     boolean currentGood = false;
 
-    while (openList.size() != 0 && !atEnemy(current.botX, current.botY, replicaBot)) {
+    while (openList.size() != 0 && !atEnemy(current.botX, current.botY, replicaBot, true)) {
       current = pickBestNode(openList);
       currentGood = false;
 
@@ -353,7 +353,7 @@ public class AStar {
     closedList.add(current);
     boolean currentGood = false;
 
-    while (openList.size() != 0 && atEnemy(current.botX, current.botY, enemy)) {
+    while (openList.size() != 0 && atEnemy(current.botX, current.botY, enemy, false)) {
       current = pickWorstNode(openList);
       currentGood = false;
 
@@ -396,7 +396,7 @@ public class AStar {
    * if we are chasing)
    * @return true if the bot is close enough to the enemy.
    */
-  private boolean atEnemy(double botX, double botY, Player weaponHolder) {
+  private boolean atEnemy(double botX, double botY, Player weaponHolder, boolean chasing) {
     Vector2 botPos = new Vector2(botX, botY);
     Vector2 botPosCenter = botPos.add(bot.getTransform().getSize().mult(0.5f));
     Vector2 enemyPos = new Vector2(enemyX, enemyY);
@@ -416,13 +416,12 @@ public class AStar {
     boolean inSight = rayCast == null || (((Rigidbody) rayCast.getCollidedObject()
         .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC);
 
-    if (weaponHolder.getHolding().isGun()) {
+    if (weaponHolder.getHolding().isGun() || !chasing) {
 
       if (inSight)
         return true;
-      else {
+      else
         return false;
-      }
 
     } else { // melee weapon
       tempMelee = (Melee) weaponHolder.getHolding();

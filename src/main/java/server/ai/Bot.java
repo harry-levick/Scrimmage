@@ -129,8 +129,7 @@ public class Bot extends Player {
       }
     }
 
-    //state = state.next(targetPlayer, this, distanceToTarget);
-    state = FSA.FLEEING;
+    state = state.next(targetPlayer, this, distanceToTarget);
 
     switch (state) {
       case IDLE:

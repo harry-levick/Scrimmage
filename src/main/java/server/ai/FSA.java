@@ -153,6 +153,9 @@ public enum FSA {
      * @return The next state
      */
     public FSA next(Player targetPlayer, Player bot, double targetDistance) {
+      if (cooldown == 0)
+        cooldown = 20;
+      
       if (targetPlayer == null)
         return IDLE;
 
@@ -224,6 +227,8 @@ public enum FSA {
      * @return the next state
      */
     public FSA next(Player targetPlayer, Player bot, double targetDistance) {
+      if (cooldown == 0)
+        cooldown = 20;
       if (targetPlayer == null)
         return IDLE;
 
@@ -295,6 +300,8 @@ public enum FSA {
   final int HIGH_HEALTH = 66;
   /** The border between low - medium health */
   final int MEDIUM_HEALTH = 33;
+
+  int cooldown = 20;
 
   /**
    * Determines the state to update to.
