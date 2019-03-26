@@ -12,7 +12,6 @@ import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
-import shared.gameObjects.players.Limbs.Arm;
 import shared.handlers.levelHandler.LevelHandler;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.ColliderLayer;
@@ -46,6 +45,10 @@ public abstract class Limb extends GameObject implements Destructable {
    * Health value of a limb
    */
   protected int limbHealth;
+  /**
+   * Limb Max Health
+   */
+  protected int limbMaxHealth;
   //TODO idk what these does
   protected boolean lastAttachedCheck;
   protected Behaviour behaviour;
@@ -146,13 +149,6 @@ public abstract class Limb extends GameObject implements Destructable {
     }
   }
 
-  public void addChild(GameObject child, boolean init) {
-    if (init) {
-      children.add(child);
-    }
-    levelHandler.addGameObject(child);
-  }
-
   @Override
   public void update() {
     super.update();
@@ -178,7 +174,8 @@ public abstract class Limb extends GameObject implements Destructable {
     bc.setLayer(ColliderLayer.PARTICLE);
   }
   public void reset() {
-    removeRender();
+    attachedLimb();
+    limbHealth = limbMaxHealth;
   }
 
   private void getBehaviour() {
@@ -215,6 +212,10 @@ public abstract class Limb extends GameObject implements Destructable {
   public void detachLimb() {
     this.limbAttached = false;
     rb.setVelocity(new Vector2(0, -1000));
+  }
+
+  public void attachedLimb() {
+    this.limbAttached = true;
   }
 
   public boolean isDeattached() {

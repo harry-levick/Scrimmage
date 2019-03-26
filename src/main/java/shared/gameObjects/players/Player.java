@@ -4,7 +4,6 @@ import client.handlers.effectsHandler.Particle;
 import client.main.Settings;
 import java.util.UUID;
 import javafx.scene.Group;
-import shared.gameObjects.Destructable;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
@@ -68,6 +67,10 @@ public class Player extends GameObject {
    */
   protected int health;
   /**
+   * Max health
+   */
+  protected final int maxHealth = 200;
+  /**
    * The current weapon the player is using
    */
   protected Weapon holding;
@@ -117,7 +120,7 @@ public class Player extends GameObject {
     this.rightKey = false;
     this.jumpKey = false;
     this.click = false;
-    this.health = 200;
+    this.health = maxHealth;
     this.behaviour = Behaviour.IDLE;
     this.bc = new BoxCollider(this, ColliderLayer.PLAYER, false);
     this.rb = new Rigidbody(RigidbodyType.DYNAMIC, 90, 11.67f, 0.2f,
@@ -162,6 +165,12 @@ public class Player extends GameObject {
     myPunch = new Punch(getX(), getY(), "myPunch@Player", this, UUID.randomUUID());
     settings.getLevelHandler().addGameObject(myPunch);
     this.holding = myPunch;
+  }
+
+  @Override
+  public void addChild(GameObject child) {
+    super.addChild(child);
+    settings.getLevelHandler().getLimbs().put(child.getUUID(), (Limb) child);
   }
 
   private void updateAnimationTimer() {
@@ -326,20 +335,13 @@ public class Player extends GameObject {
    * Resets the player's values, a "respawn"
    */
   public void reset() {
-    health = 100;
+    health = maxHealth;
     if (this.active == false) {
       this.imageView.setRotate(0);
       this.imageView.setTranslateY(getY() - 70);
       this.setActive(true);
       this.bc.setLayer(ColliderLayer.PLAYER);
     }
-    children.forEach(child -> {
-      Limb limb = (Limb) child;
-      limb.reset();
-    });
-    children.clear();
-    addLimbs();
-    addPunch();
   }
 
   /**

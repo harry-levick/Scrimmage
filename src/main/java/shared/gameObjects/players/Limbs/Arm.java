@@ -35,7 +35,8 @@ public class Arm extends Limb {
     rotate = new Rotate();
     rotate.setPivotX(10);
     rotate.setPivotY(10);
-    limbHealth = player.getHealth()/2;
+    limbMaxHealth = player.getHealth() / 2;
+    limbHealth = limbMaxHealth;
   }
 
   @Override
@@ -121,11 +122,8 @@ public class Arm extends Limb {
 
   @Override
   public void addChild(GameObject child) {
-    children.add(child);
-    levelHandler.addGameObject(child);
-    if (hand == null && child instanceof Hand) {
-      this.hand = (Hand) child;
-    }
+    super.addChild(child);
+    settings.getLevelHandler().getLimbs().put(child.getUUID(), (Limb) child);
   }
 
   @Override
