@@ -16,12 +16,18 @@ public class Body extends Limb {
    */
   public Body(Player parent, LevelHandler levelHandler) {
     super(0, 0, 22, 64, 39, 31, ObjectType.Limb, false, parent, parent, 0, 0, levelHandler);
-    limbHealth = 99999;
+    limbMaxHealth = 99999;
+    limbHealth = limbMaxHealth;
   }
 
   @Override
   public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", "images/player/Standard_Male/body_front.png");
+    this.animation.supplyAnimation("default", "images/player/skin" + settings.getData().getActiveSkin()[1] + "/body.png");
+  }
+
+  @Override
+  public void updateSkinRender(int id) {
+    this.animation.supplyAnimation("default", "images/player/skin" + id + "/body.png");
   }
 
   @Override

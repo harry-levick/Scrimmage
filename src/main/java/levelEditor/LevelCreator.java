@@ -10,6 +10,7 @@ import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.stage.Stage;
 import shared.gameObjects.Blocks.Metal.MetalBlockLargeObject;
+import shared.gameObjects.Blocks.Metal.MetalFloorObject;
 import shared.gameObjects.Blocks.Stone.StoneFloorObject;
 import shared.gameObjects.Blocks.Stone.StoneWallObject;
 import shared.gameObjects.Blocks.Wood.WoodBlockLargeObject;
@@ -27,7 +28,8 @@ import shared.gameObjects.background.Background7;
 import shared.gameObjects.background.Background8;
 import shared.gameObjects.components.behaviours.blockBehaviours.Crushing;
 import shared.gameObjects.menu.main.ButtonBack;
-import shared.gameObjects.menu.main.ButtonCharacterCustomisation;
+import shared.gameObjects.menu.main.account.AccountDataDisplay;
+import shared.gameObjects.menu.main.account.ButtonAccount;
 import shared.gameObjects.menu.main.ButtonCredits;
 import shared.gameObjects.menu.main.ButtonMultiplayer;
 import shared.gameObjects.menu.main.ButtonQuit;
@@ -35,6 +37,16 @@ import shared.gameObjects.menu.main.ButtonSettings;
 import shared.gameObjects.menu.main.ButtonSingleplayer;
 import shared.gameObjects.menu.main.SoundSlider;
 import shared.gameObjects.menu.main.SoundSlider.SOUND_TYPE;
+import shared.gameObjects.menu.main.account.ButtonAchievements;
+import shared.gameObjects.menu.main.account.lootbox.Lootbox;
+import shared.gameObjects.menu.main.account.registration.ButtonLogin;
+import shared.gameObjects.menu.main.account.ButtonLootbox;
+import shared.gameObjects.menu.main.account.ButtonShop;
+import shared.gameObjects.menu.main.account.ButtonSkin;
+import shared.gameObjects.menu.main.account.registration.ButtonAccountLogin;
+import shared.gameObjects.menu.main.account.registration.ButtonRegisterAccount;
+import shared.gameObjects.menu.main.account.skins.SkinSelector;
+import shared.gameObjects.menu.main.account.skins.SkinViewer;
 import shared.gameObjects.menu.multiplayer.ButtonJoin;
 import shared.gameObjects.objects.utility.BlueBlock;
 import shared.gameObjects.objects.utility.GreenBlock;
@@ -110,7 +122,7 @@ public class LevelCreator extends Application {
         getAbs(20), getAbs(12), getAbs(8), getAbs(2), ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
-        new ButtonCharacterCustomisation(
+        new ButtonAccount(
             getAbs(20), getAbs(15), getAbs(8), getAbs(2), ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid, new ButtonQuit(
@@ -360,6 +372,25 @@ public class LevelCreator extends Application {
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "map9" + ".map");
     mapDataObject.setBackground(new Background2(UUID.randomUUID()));
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "map10" + ".map");
+    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map1" + ".map");
+    mapDataObject.setBackground(new Background2(UUID.randomUUID()));
+    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map2" + ".map");
+    mapDataObject.setBackground(new Background3(UUID.randomUUID()));
+    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map3" + ".map");
+    mapDataObject.setBackground(new Background4(UUID.randomUUID()));
+    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map4" + ".map");
+    mapDataObject.setBackground(new Background5(UUID.randomUUID()));
+    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map5" + ".map");
+    mapDataObject.setBackground(new Background6(UUID.randomUUID()));
+    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map6" + ".map");
+    mapDataObject.setBackground(new Background7(UUID.randomUUID()));
+    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map7" + ".map");
+    mapDataObject.setBackground(new Background8(UUID.randomUUID()));
+    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map8" + ".map");
+    mapDataObject.setBackground(new Background1(UUID.randomUUID()));
+    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map9" + ".map");
+    mapDataObject.setBackground(new Background2(UUID.randomUUID()));
+    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map10" + ".map");
 
     ////////////////////////////////////////
     // MULTIPLAYER
@@ -610,21 +641,111 @@ public class LevelCreator extends Application {
     }
     MapLoader.saveMap(gameObjects, mapDataObject, filepath + filename + ".map");
     ////////////////////////////////////////
-    // CHARACTER CUSTOMISATION
+    // Account Map
     ////////////////////////////////////////
-    System.out.println("Generating CUSTOMIZATION Map");
-    filename = "character";
+    System.out.println("Generating Account Map");
+    filename = "account";
     gameObjects = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
         .maximumWeightedCapacity(500).build();
     playerSpawns = new ArrayList<Player>();
-    mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.CHARACTER);
+    mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.ACCOUNT);
     mapDataObject.setBackground(
         new Background1(UUID.randomUUID()));
     uuid = UUID.randomUUID();
-    gameObjects.put(uuid,
-        new ButtonCharacterCustomisation(
-            getAbs(20), getAbs(7), getAbs(8), getAbs(2), ObjectType.Button, uuid));
+    gameObjects.put(uuid, new AccountDataDisplay(getAbs(20), getAbs(5), 1, 1, uuid));
     uuid = UUID.randomUUID();
+    //Six Buttons
+    gameObjects.put(uuid,
+        new ButtonLogin(
+            getAbs(8), getAbs(14), getAbs(8), getAbs(2), ObjectType.Button, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new ButtonQuit(
+            getAbs(8), getAbs(18), getAbs(8), getAbs(2), ObjectType.Button, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new ButtonSkin(
+            getAbs(17), getAbs(14), getAbs(8), getAbs(2), ObjectType.Button, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new ButtonAchievements(
+            getAbs(17), getAbs(18), getAbs(8), getAbs(2), ObjectType.Button, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+    new ButtonLootbox(
+        getAbs(26), getAbs(14), getAbs(8), getAbs(2), ObjectType.Button, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+    new ButtonShop(
+        getAbs(26), getAbs(18), getAbs(8), getAbs(2), ObjectType.Button, uuid));
+    uuid = UUID.randomUUID();
+    for (int i = 0; i < 12; i++) {
+      // top row wall
+      gameObjects.put(uuid,
+          new StoneFloorObject(
+              getAbs(i * 4), getAbs(0), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
+      uuid = UUID.randomUUID();
+    }
+    for (int i = 0; i < 5; i++) {
+      // side col walls
+      gameObjects.put(uuid,
+          new StoneWallObject(
+              getAbs(0),
+              getAbs((i * 5) + 1),
+              getAbs(1),
+              getAbs(5),
+              ObjectType.Bot,
+              uuid));
+      uuid = UUID.randomUUID();
+      gameObjects.put(uuid,
+          new StoneWallObject(
+              getAbs(47),
+              getAbs((i * 5) + 1),
+              getAbs(1),
+              getAbs(5),
+              ObjectType.Bot,
+              uuid));
+      uuid = UUID.randomUUID();
+    }
+    for (int i = 0; i < 12; i++) {
+      // bottom row floor
+      gameObjects.put(uuid,
+          new StoneFloorObject(
+              getAbs(i * 4), getAbs(26), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
+      uuid = UUID.randomUUID();
+    }
+    MapLoader.saveMap(gameObjects, mapDataObject, filepath + filename + ".map");
+    ////////////////////////////////////////
+    // ACCOUNT SKIN CHANGE
+    ////////////////////////////////////////
+    System.out.println("Generating Skin Map");
+    filename = "skin";
+    gameObjects = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
+        .maximumWeightedCapacity(500).build();
+    playerSpawns = new ArrayList<Player>();
+    mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.ACCOUNT);
+    mapDataObject.setBackground(
+        new Background1(UUID.randomUUID()));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid, new SkinViewer(
+        getAbs(34), getAbs(6), getAbs(1), getAbs(1), ObjectType.Button, uuid
+    ));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid, new SkinSelector(
+        getAbs(20), getAbs(6), getAbs(1), getAbs(1), ObjectType.Button, uuid
+    ));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new ButtonAccount(
+            getAbs(8), getAbs(7), getAbs(8), getAbs(2), ObjectType.Button, uuid));
+    uuid = UUID.randomUUID();
+    for (int i = 0; i < 3; i++) {
+      // bottom row floor
+      gameObjects.put(uuid,
+          new MetalFloorObject(
+              getAbs((i * 4) + 4), getAbs(20), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
+      uuid = UUID.randomUUID();
+    }
     for (int i = 0; i < 12; i++) {
       // top row wall
       gameObjects.put(uuid,
@@ -664,6 +785,118 @@ public class LevelCreator extends Application {
 
     System.out.println("RECREATED MAP FILES");
 
+    ////////////////////////////////////////
+    // ACCOUNT LOGIN/REGISTER
+    ////////////////////////////////////////
+    System.out.println("Generating Login Map");
+    filename = "login";
+    gameObjects = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
+        .maximumWeightedCapacity(500).build();
+    playerSpawns = new ArrayList<Player>();
+    mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.ACCOUNT);
+    mapDataObject.setBackground(
+        new Background1(UUID.randomUUID()));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new ButtonAccount(
+            getAbs(8), getAbs(7), getAbs(8), getAbs(2), ObjectType.Button, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new ButtonAccountLogin(
+            getAbs(19), getAbs(7), getAbs(8), getAbs(2), ObjectType.Button, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new ButtonRegisterAccount(
+            getAbs(30), getAbs(7), getAbs(8), getAbs(2), ObjectType.Button, uuid));
+    uuid = UUID.randomUUID();
+    for (int i = 0; i < 12; i++) {
+      // top row wall
+      gameObjects.put(uuid,
+          new StoneFloorObject(
+              getAbs(i * 4), getAbs(0), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
+      uuid = UUID.randomUUID();
+    }
+    for (int i = 0; i < 5; i++) {
+      // side col walls
+      gameObjects.put(uuid,
+          new StoneWallObject(
+              getAbs(0),
+              getAbs((i * 5) + 1),
+              getAbs(1),
+              getAbs(5),
+              ObjectType.Bot,
+              uuid));
+      uuid = UUID.randomUUID();
+      gameObjects.put(uuid,
+          new StoneWallObject(
+              getAbs(47),
+              getAbs((i * 5) + 1),
+              getAbs(1),
+              getAbs(5),
+              ObjectType.Bot,
+              uuid));
+      uuid = UUID.randomUUID();
+    }
+    for (int i = 0; i < 12; i++) {
+      // bottom row floor
+      gameObjects.put(uuid,
+          new StoneFloorObject(
+              getAbs(i * 4), getAbs(26), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
+      uuid = UUID.randomUUID();
+    }
+    MapLoader.saveMap(gameObjects, mapDataObject, filepath + filename + ".map");
+    ////////////////////////////////////////
+    // ACCOUNT LOOTBOX
+    ////////////////////////////////////////
+    System.out.println("Generating Lootbox Map");
+    filename = "lootbox";
+    gameObjects = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
+        .maximumWeightedCapacity(500).build();
+    playerSpawns = new ArrayList<Player>();
+    mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.ACCOUNT);
+    mapDataObject.setBackground(
+        new Background1(UUID.randomUUID()));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid, new Lootbox(getAbs(20), getAbs(10), 1, 1, uuid));
+    uuid = UUID.randomUUID();
+    for (int i = 0; i < 12; i++) {
+      // top row wall
+      gameObjects.put(uuid,
+          new StoneFloorObject(
+              getAbs(i * 4), getAbs(0), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
+      uuid = UUID.randomUUID();
+    }
+    for (int i = 0; i < 5; i++) {
+      // side col walls
+      gameObjects.put(uuid,
+          new StoneWallObject(
+              getAbs(0),
+              getAbs((i * 5) + 1),
+              getAbs(1),
+              getAbs(5),
+              ObjectType.Bot,
+              uuid));
+      uuid = UUID.randomUUID();
+      gameObjects.put(uuid,
+          new StoneWallObject(
+              getAbs(47),
+              getAbs((i * 5) + 1),
+              getAbs(1),
+              getAbs(5),
+              ObjectType.Bot,
+              uuid));
+      uuid = UUID.randomUUID();
+    }
+    for (int i = 0; i < 12; i++) {
+      // bottom row floor
+      gameObjects.put(uuid,
+          new StoneFloorObject(
+              getAbs(i * 4), getAbs(26), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
+      uuid = UUID.randomUUID();
+    }
+    MapLoader.saveMap(gameObjects, mapDataObject, filepath + filename + ".map");
+
+    System.out.println("RECREATED MAP FILES");
     Platform.exit();
   }
 }

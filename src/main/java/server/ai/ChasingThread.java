@@ -37,7 +37,7 @@ public class ChasingThread extends Thread {
   @Override
   public void run() {
     while (running) {
-      targetPlayer = bot.findTarget();
+      targetPlayer = bot.getTargetPlayer();
 
       List<boolean[]> tempList = pathFinder.optimise(targetPlayer, FSA.CHASING);
       plan.clear();

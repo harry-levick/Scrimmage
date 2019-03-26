@@ -35,7 +35,8 @@ public class Arm extends Limb {
     rotate = new Rotate();
     rotate.setPivotX(10);
     rotate.setPivotY(10);
-    limbHealth = player.getHealth()/2;
+    limbMaxHealth = player.getHealth() / 2;
+    limbHealth = limbMaxHealth;
   }
 
   @Override
@@ -121,18 +122,20 @@ public class Arm extends Limb {
 
   @Override
   public void addChild(GameObject child) {
-    children.add(child);
-    levelHandler.addGameObject(child);
-    if (hand == null && child instanceof Hand) {
-      this.hand = (Hand) child;
-    }
+    super.addChild(child);
+    settings.getLevelHandler().getLimbs().put(child.getUUID(), (Limb) child);
   }
 
   @Override
   public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", "images/player/Standard_Male/arm.png");
+    this.animation.supplyAnimation("default", "images/player/skin" + settings.getData().getActiveSkin()[2] + "/arm.png");
   }
-  
+
+  @Override
+  public void updateSkinRender(int id) {
+    this.animation.supplyAnimation("default", "images/player/skin" + id + "/arm.png");
+  }
+
   private void jumpAnimation() {
     // Control to switch the leg animations depending on movement direction.
     boolean control = isLeft;

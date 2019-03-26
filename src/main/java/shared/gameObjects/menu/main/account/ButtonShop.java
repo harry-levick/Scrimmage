@@ -1,4 +1,4 @@
-package shared.gameObjects.menu.main;
+package shared.gameObjects.menu.main.account;
 
 import java.util.UUID;
 import javafx.scene.input.MouseEvent;
@@ -7,19 +7,18 @@ import shared.gameObjects.menu.ButtonObject;
 import shared.handlers.levelHandler.Map;
 import shared.util.Path;
 
-public class ButtonCharacterCustomisation extends ButtonObject {
+public class ButtonShop extends ButtonObject {
 
-  public ButtonCharacterCustomisation(
+  public ButtonShop(
       double x, double y, double sizeX, double sizeY, ObjectType id, UUID objectUUID) {
-    super(x, y, sizeX, sizeY, "USER DATA", id, objectUUID);
+    super(x, y, sizeX, sizeY, "SHOP", id, objectUUID);
   }
 
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
-    settings.getLevelHandler().changeMap(
-        new Map(
-            "CHARACTER",
-            Path.convert("src/main/resources/menus/character.map")),
-        false, false);
+    settings
+        .getLevelHandler()
+        .changeMap(
+            new Map("shop", Path.convert("src/main/resources/menus/shop.map")), false, false);
   }
 }

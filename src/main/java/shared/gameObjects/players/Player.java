@@ -67,6 +67,10 @@ public class Player extends GameObject {
    */
   protected int health;
   /**
+   * Max health
+   */
+  protected final int maxHealth = 200;
+  /**
    * The current weapon the player is using
    */
   protected Weapon holding;
@@ -116,7 +120,7 @@ public class Player extends GameObject {
     this.rightKey = false;
     this.jumpKey = false;
     this.click = false;
-    this.health = 200;
+    this.health = maxHealth;
     this.behaviour = Behaviour.IDLE;
     this.bc = new BoxCollider(this, ColliderLayer.PLAYER, false);
     this.rb = new Rigidbody(RigidbodyType.DYNAMIC, 90, 11.67f, 0.2f,
@@ -161,6 +165,12 @@ public class Player extends GameObject {
     myPunch = new Punch(getX(), getY(), "myPunch@Player", this, UUID.randomUUID());
     settings.getLevelHandler().addGameObject(myPunch);
     this.holding = myPunch;
+  }
+
+  @Override
+  public void addChild(GameObject child) {
+    super.addChild(child);
+    settings.getLevelHandler().getLimbs().put(child.getUUID(), (Limb) child);
   }
 
   private void updateAnimationTimer() {
@@ -263,6 +273,37 @@ public class Player extends GameObject {
     // setX(getX() + (vx * 0.0166));
   }
 
+  public void applyMultiplayerInput() {
+    if (grounded) {
+      jumped = false;
+    }
+    if (rightKey) {
+      rb.moveX(speed);
+      behaviour = Behaviour.WALK_RIGHT;
+    }
+    if (leftKey) {
+      rb.moveX(speed * -1);
+      behaviour = Behaviour.WALK_LEFT;
+    }
+
+    if (!rightKey && !leftKey) {
+      vx = 0;
+      behaviour = Behaviour.IDLE;
+    }
+    if (jumpKey && !jumped && grounded) {
+      rb.moveY(jumpForce * (legLeft.limbAttached && legRight.limbAttached ? 1f : 0.7f), 0.33333f);
+      jumped = true;
+    }
+    if (jumped) {
+      behaviour = Behaviour.JUMP;
+    }
+
+    if (grounded) {
+      jumped = false;
+    }
+
+  }
+
   private void createWalkParticle() {
     if(!grounded) return;
       settings.getLevelHandler().addGameObject(new Particle(transform.getBotPos().sub(transform.getSize().mult(new Vector2(0.5, 0))), new Vector2(0, -35), new Vector2(0, 100), new Vector2(8,8),
@@ -320,9 +361,19 @@ public class Player extends GameObject {
         this.setActive(false);
         bc.setLayer(ColliderLayer.PARTICLE);
         transform.rotate(90);
+        if(imageView != null)
         this.imageView.setOpacity(0.5);
       }
     }
+  }
+
+  public void updateSkinRender(int[] skinRender) {
+    children.forEach(child -> {
+      if (child instanceof Arm) ((Limb) child).updateSkinRender(skinRender[2]);
+      if (child instanceof Leg) ((Limb) child).updateSkinRender(skinRender[3]);
+      if (child instanceof Head) ((Limb) child).updateSkinRender(skinRender[0]);
+      if (child instanceof Body) ((Limb) child).updateSkinRender(skinRender[1]);
+    });
   }
 
 
@@ -330,19 +381,13 @@ public class Player extends GameObject {
    * Resets the player's values, a "respawn"
    */
   public void reset() {
-    health = 100;
+    health = maxHealth;
     if (this.active == false) {
       this.imageView.setRotate(0);
       this.imageView.setTranslateY(getY() - 70);
       this.setActive(true);
       this.bc.setLayer(ColliderLayer.PLAYER);
     }
-    children.forEach(child -> {
-      Limb limb = (Limb) child;
-      limb.reset();
-    });
-    children.clear();
-    addLimbs();
     addPunch();
   }
 
@@ -362,6 +407,14 @@ public class Player extends GameObject {
 
   public int getHealth() {
     return health;
+  }
+
+  public int getMaxHealth() {
+    return maxHealth;
+  }
+
+  public float getHealthPercentage() {
+    return (float)health/(float)maxHealth;
   }
 
   public void setHealth(int hp) {
@@ -384,6 +437,14 @@ public class Player extends GameObject {
       newHolding.setSettings(settings);
       aimLeft = false;
     }
+  }
+
+  /**
+   * Determines if the player can hold a weapon or not
+   * @return
+   */
+  public boolean canHold() {
+    return !(!armLeft.limbAttached || !armRight.limbAttached);
   }
 
   public void usePunch() {

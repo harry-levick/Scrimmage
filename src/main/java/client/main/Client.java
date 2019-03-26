@@ -122,7 +122,6 @@ public class Client extends Application {
   public static Group gameRoot;
 
   private final String gameTitle = "Alone in the Dark";
-  private LinkedList<Map> playlist;
   private KeyboardInput keyInput;
   private MouseInput mouseInput;
   private Group root;
@@ -418,23 +417,13 @@ public class Client extends Application {
       startedGame = true;
     }
   }
-
+  // TODO change this to get the chosen playlist and all of its maps
   /**
    * Main game setup and game loop
    * @param primaryStage The JavaFX stage the game is put in
    */
   @Override
   public void start(Stage primaryStage) {
-
-    playlist = new LinkedList<>();
-    // Testing code
-    for (int i = 1; i < 11; i++) {
-      playlist.add(
-          new Map(
-              "Map" + i,
-              Path.convert(settings.getMapsPath() + File.separator + "map" + i + ".map")));
-    }
-
     setupRender(primaryStage);
     levelHandler = new LevelHandler(settings, backgroundRoot, gameRoot, uiRoot);
     settings.setLevelHandler(levelHandler);
@@ -504,7 +493,8 @@ public class Client extends Application {
 
 
         /** Apply Input */
-        levelHandler.getClientPlayer().applyInput();
+        if(multiplayer) levelHandler.getClientPlayer().applyMultiplayerInput();
+        else levelHandler.getClientPlayer().applyInput();
 
         if (multiplayer && sendUpdate) {
           ClientNetworkManager.sendInput();
@@ -526,8 +516,8 @@ public class Client extends Application {
           }
           if (alive.size() == 1) {
             alive.forEach(player -> player.increaseScore());
-            int index = new Random().nextInt(playlist.size() - 1);
-            Map nextMap = playlist.get(index);
+            int index = new Random().nextInt(levelHandler.getPlaylist().size() - 1);
+            Map nextMap = levelHandler.pollPlayList();
             levelHandler.changeMap(nextMap, true, false);
           }
           /** Move bots */
@@ -596,6 +586,7 @@ public class Client extends Application {
       }
     }.start();
   }
+
 
   /**
    * Initialises the rendering stage of the game setup

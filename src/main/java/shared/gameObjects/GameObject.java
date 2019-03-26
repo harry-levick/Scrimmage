@@ -4,6 +4,7 @@ import client.main.Settings;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
@@ -67,7 +68,7 @@ public abstract class GameObject implements Serializable {
   /**
    * The components attached to this gameObject
    */
-  protected ArrayList<Component> components;
+  protected CopyOnWriteArrayList<Component> components;
   /**
    * The transform component responsible for scaling, position and rotation
    */
@@ -109,7 +110,7 @@ public abstract class GameObject implements Serializable {
     this.settings = new Settings(null, root);
     this.transform = new Transform(this, new Vector2((float) x, (float) y),
         new Vector2((float) sizeX, (float) sizeY));
-    this.components = new ArrayList<>();
+    this.components = new CopyOnWriteArrayList<>();
     //So update sent by server on first frame
     this.lastPos = new Vector2((float) x + 1, (float) y + 1);
     this.children = new ArrayList<>();
@@ -125,7 +126,9 @@ public abstract class GameObject implements Serializable {
   /**
    * Allows the setting of a sprite and animator
    */
-  public abstract void initialiseAnimation();
+  public void initialiseAnimation() {
+
+  }
 
   // Server and Client side
 
@@ -576,7 +579,7 @@ public abstract class GameObject implements Serializable {
     return children;
   }
 
-  public ArrayList<Component> getComponents() {
+  public CopyOnWriteArrayList<Component> getComponents() {
     return components;
   }
 

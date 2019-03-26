@@ -17,12 +17,18 @@ public class Leg extends Limb {
    */
   public Leg(Boolean isLeft, Player parent, LevelHandler levelHandler) {
     super(19, 87, 43, 87, 21, 23, ObjectType.Limb, isLeft, parent, parent, 0, 0, levelHandler);
-    limbHealth = player.getHealth()/4;
+    limbMaxHealth = player.getHealth() / 4;
+    limbHealth = limbMaxHealth;
   }
 
   @Override
   public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", "images/player/Standard_Male/leg.png");
+    this.animation.supplyAnimation("default", "images/player/skin" + settings.getData().getActiveSkin()[3] + "/leg.png");
+  }
+
+  @Override
+  public void updateSkinRender(int id) {
+    this.animation.supplyAnimation("default", "images/player/skin" + id + "/leg.png");
   }
 
 
