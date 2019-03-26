@@ -3,6 +3,7 @@ package shared.gameObjects.players;
 import client.handlers.effectsHandler.Particle;
 import client.main.Settings;
 import java.util.UUID;
+import javafx.application.Platform;
 import javafx.scene.Group;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
@@ -352,12 +353,28 @@ public class Player extends GameObject {
 
   }
 
+  /**
+   * Remove the image from the imageView by setting the image to null
+   */
+  @Override
+  public void removeRender() {
+    if (imageView != null) {
+      imageView.setImage(null);
+      Platform.runLater(
+          () -> {
+            root.getChildren().remove(imageView);
+          }
+      );
+    }
+    children.forEach(child -> child.removeRender());
+  }
+
   public void deductHp(int damage) {
     if(!damagedThisFrame) {
       damagedThisFrame = true;
       this.health -= damage;
       if (this.health <= 0) {
-        // For testing
+        settings.playerDied();
         transform.translate(new Vector2(0, -80));
         this.setActive(false);
         bc.setLayer(ColliderLayer.PARTICLE);
