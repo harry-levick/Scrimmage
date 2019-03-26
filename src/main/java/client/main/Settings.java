@@ -306,4 +306,8 @@ public class Settings {
   public void resetDeaths() {
     this.playersDead = 0;
   }
+
+  public int getPlayersDead() {
+    return playersDead;
+  }
 }

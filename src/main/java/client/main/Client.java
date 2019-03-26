@@ -12,7 +12,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
@@ -516,7 +515,6 @@ public class Client extends Application {
           }
           if (alive.size() == 1) {
             alive.forEach(player -> player.increaseScore());
-            int index = new Random().nextInt(levelHandler.getPlaylist().size() - 1);
             Map nextMap = levelHandler.pollPlayList();
             levelHandler.changeMap(nextMap, true, false);
           }

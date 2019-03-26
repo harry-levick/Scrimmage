@@ -214,7 +214,8 @@ public class Player extends GameObject {
     return objectUUID + ";" + id + ";" + getX() + ";" + getY() + ";" + animation.getName() + ";"
         + health + ";"
         + lastInputCount + ";"
-        + throwHoldingKey;
+        + throwHoldingKey + ";"
+        + behaviour.name();
   }
 
   @Override
@@ -225,6 +226,7 @@ public class Player extends GameObject {
     this.health = Integer.parseInt(unpackedData[5]);
     this.lastInputCount = Integer.parseInt(unpackedData[6]);
     this.throwHoldingKey = Boolean.parseBoolean(unpackedData[7]);
+    this.behaviour = Behaviour.valueOf(unpackedData[8]);
   }
 
   private void checkGrounded() {
@@ -374,12 +376,9 @@ public class Player extends GameObject {
       this.health -= damage;
       if (this.health <= 0) {
         settings.playerDied();
-        transform.translate(new Vector2(0, -80));
         this.setActive(false);
         bc.setLayer(ColliderLayer.PARTICLE);
-        transform.rotate(90);
-        if(imageView != null)
-        this.imageView.setOpacity(0.5);
+        children.forEach(child -> child.destroy());
       }
     }
   }

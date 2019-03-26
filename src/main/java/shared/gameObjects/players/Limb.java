@@ -49,7 +49,6 @@ public abstract class Limb extends GameObject implements Destructable {
    * Limb Max Health
    */
   protected int limbMaxHealth;
-  //TODO idk what these does
   protected boolean lastAttachedCheck;
   protected Behaviour behaviour;
   protected Behaviour lastBehaviour;
@@ -67,7 +66,6 @@ public abstract class Limb extends GameObject implements Destructable {
 
   protected transient LevelHandler levelHandler;
 
-  protected int resetOffsetX = 0;
   protected boolean damagedThisFrame;
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
@@ -103,7 +101,8 @@ public abstract class Limb extends GameObject implements Destructable {
 
     rb =
         new Rigidbody(
-            RigidbodyType.DYNAMIC, 80, 8, 0.2f, new MaterialProperty(0.005f, 0.1f, 0.05f), null,
+            RigidbodyType.DYNAMIC, 90, 11.67f, 0.2f, new MaterialProperty(0.005f, 0.1f, 0.05f),
+            null,
             this);
     rotate.setPivotX(pivotX);
     rotate.setPivotY(pivotY);
@@ -154,7 +153,6 @@ public abstract class Limb extends GameObject implements Destructable {
     super.update();
     getBehaviour();
     if (limbAttached) {
-      setRelativePosition();
       if (!lastAttachedCheck) {
         removeComponent(rb);
       }
@@ -171,7 +169,7 @@ public abstract class Limb extends GameObject implements Destructable {
   @Override
   public void destroy() {
     detachLimb();
-    bc.setLayer(ColliderLayer.PARTICLE);
+    // bc.setLayer(ColliderLayer.PARTICLE);
   }
   public void reset() {
     attachedLimb();
@@ -205,6 +203,10 @@ public abstract class Limb extends GameObject implements Destructable {
     //Do all the rotations here.
     rotateAnimate();
 
+    if (limbAttached) {
+      setRelativePosition();
+    }
+
     // Flip the imageView depending on the direciton of travel
     flipImageView(imageView,this.behaviour.toString());
   }
@@ -215,7 +217,7 @@ public abstract class Limb extends GameObject implements Destructable {
 
   public void detachLimb() {
     this.limbAttached = false;
-    rb.setVelocity(new Vector2(0, -1000));
+    rb.setVelocity(new Vector2(0, -100));
   }
 
   public void attachedLimb() {
@@ -228,37 +230,5 @@ public abstract class Limb extends GameObject implements Destructable {
 
   public void reattachLimb() {
     this.limbAttached = true;
-  }
-
-  protected void setXLeft(double x) {
-    this.xLeft = x;
-  }
-
-  protected void setYLeft(double y) {
-    this.yLeft = y;
-  }
-
-  protected void setXRight(double x) {
-    this.xRight = x;
-  }
-
-  protected void setYRight(double y) {
-    this.yRight = y;
-  }
-
-  public double getXLeft() {
-    return xLeft;
-  }
-
-  public double getYLeft() {
-    return yLeft;
-  }
-
-  public double getXRight() {
-    return xRight;
-  }
-
-  public double getYRight() {
-    return yRight;
   }
 }

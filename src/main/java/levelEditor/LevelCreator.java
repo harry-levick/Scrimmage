@@ -28,8 +28,6 @@ import shared.gameObjects.background.Background7;
 import shared.gameObjects.background.Background8;
 import shared.gameObjects.components.behaviours.blockBehaviours.Crushing;
 import shared.gameObjects.menu.main.ButtonBack;
-import shared.gameObjects.menu.main.account.AccountDataDisplay;
-import shared.gameObjects.menu.main.account.ButtonAccount;
 import shared.gameObjects.menu.main.ButtonCredits;
 import shared.gameObjects.menu.main.ButtonMultiplayer;
 import shared.gameObjects.menu.main.ButtonQuit;
@@ -37,13 +35,15 @@ import shared.gameObjects.menu.main.ButtonSettings;
 import shared.gameObjects.menu.main.ButtonSingleplayer;
 import shared.gameObjects.menu.main.SoundSlider;
 import shared.gameObjects.menu.main.SoundSlider.SOUND_TYPE;
+import shared.gameObjects.menu.main.account.AccountDataDisplay;
+import shared.gameObjects.menu.main.account.ButtonAccount;
 import shared.gameObjects.menu.main.account.ButtonAchievements;
-import shared.gameObjects.menu.main.account.lootbox.Lootbox;
-import shared.gameObjects.menu.main.account.registration.ButtonLogin;
 import shared.gameObjects.menu.main.account.ButtonLootbox;
 import shared.gameObjects.menu.main.account.ButtonShop;
 import shared.gameObjects.menu.main.account.ButtonSkin;
+import shared.gameObjects.menu.main.account.lootbox.Lootbox;
 import shared.gameObjects.menu.main.account.registration.ButtonAccountLogin;
+import shared.gameObjects.menu.main.account.registration.ButtonLogin;
 import shared.gameObjects.menu.main.account.registration.ButtonRegisterAccount;
 import shared.gameObjects.menu.main.account.skins.SkinSelector;
 import shared.gameObjects.menu.main.account.skins.SkinViewer;
@@ -74,6 +74,7 @@ public class LevelCreator extends Application {
   private static int gridSizePX = 40;
   private static int gridSizeX = stageSizeX / gridSizePX; // 40 px blocks
   private static int gridSizeY = stageSizeY / gridSizePX; // 48 x 27
+  private ArrayList<Vector2> spawnPoints;
 
   private static ConcurrentLinkedHashMap<UUID, GameObject> gameObjects;
   private static ArrayList<Player> playerSpawns;
@@ -100,6 +101,13 @@ public class LevelCreator extends Application {
 
     String filepathMaps = settings.getMapsPath() + File.separator;
 
+    spawnPoints = new ArrayList<>();
+    spawnPoints.add(new Vector2(360, 150));
+    spawnPoints.add(new Vector2(600, 150));
+    spawnPoints.add(new Vector2(1200, 150));
+    spawnPoints.add(new Vector2(1700, 150));
+
+
     ////////////////////////////////////////
     // MAIN MENU
     ////////////////////////////////////////
@@ -109,6 +117,7 @@ public class LevelCreator extends Application {
         .maximumWeightedCapacity(500).build();
     playerSpawns = new ArrayList<Player>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.MAIN_MENU);
+    mapDataObject.setSpawnPoints(spawnPoints);
     mapDataObject.setBackground(
         new Background1(uuid));
     uuid = UUID.randomUUID();
@@ -286,6 +295,7 @@ public class LevelCreator extends Application {
         .maximumWeightedCapacity(500).build();
     playerSpawns = new ArrayList<>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.IN_GAME);
+    mapDataObject.setSpawnPoints(spawnPoints);
     mapDataObject.setBackground(
         new Background1(UUID.randomUUID()));
     uuid = UUID.randomUUID();
@@ -401,6 +411,7 @@ public class LevelCreator extends Application {
         .maximumWeightedCapacity(500).build();
     playerSpawns = new ArrayList<Player>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.MULTIPLAYER);
+    mapDataObject.setSpawnPoints(spawnPoints);
     mapDataObject.setBackground(
         new Background1(UUID.randomUUID()));
     uuid = UUID.randomUUID();
@@ -454,6 +465,7 @@ public class LevelCreator extends Application {
         .maximumWeightedCapacity(500).build();
     playerSpawns = new ArrayList<Player>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.LOBBY);
+    mapDataObject.setSpawnPoints(spawnPoints);
     uuid = UUID.randomUUID();
     mapDataObject.setBackground(
         new Background1(uuid));
@@ -523,6 +535,7 @@ public class LevelCreator extends Application {
         .maximumWeightedCapacity(500).build();
     playerSpawns = new ArrayList<Player>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.LOBBY);
+    mapDataObject.setSpawnPoints(spawnPoints);
     uuid = UUID.randomUUID();
     mapDataObject.setBackground(
         new Background5(uuid));
@@ -583,6 +596,7 @@ public class LevelCreator extends Application {
         .maximumWeightedCapacity(500).build();
     playerSpawns = new ArrayList<Player>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.SETTINGS);
+    mapDataObject.setSpawnPoints(spawnPoints);
     uuid = UUID.randomUUID();
     mapDataObject.setBackground(
         new Background1(UUID.randomUUID()));
@@ -649,6 +663,7 @@ public class LevelCreator extends Application {
         .maximumWeightedCapacity(500).build();
     playerSpawns = new ArrayList<Player>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.ACCOUNT);
+    mapDataObject.setSpawnPoints(spawnPoints);
     mapDataObject.setBackground(
         new Background1(UUID.randomUUID()));
     uuid = UUID.randomUUID();
@@ -724,6 +739,7 @@ public class LevelCreator extends Application {
         .maximumWeightedCapacity(500).build();
     playerSpawns = new ArrayList<Player>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.ACCOUNT);
+    mapDataObject.setSpawnPoints(spawnPoints);
     mapDataObject.setBackground(
         new Background1(UUID.randomUUID()));
     uuid = UUID.randomUUID();
@@ -794,6 +810,7 @@ public class LevelCreator extends Application {
         .maximumWeightedCapacity(500).build();
     playerSpawns = new ArrayList<Player>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.ACCOUNT);
+    mapDataObject.setSpawnPoints(spawnPoints);
     mapDataObject.setBackground(
         new Background1(UUID.randomUUID()));
     uuid = UUID.randomUUID();
@@ -854,6 +871,7 @@ public class LevelCreator extends Application {
         .maximumWeightedCapacity(500).build();
     playerSpawns = new ArrayList<Player>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.ACCOUNT);
+    mapDataObject.setSpawnPoints(spawnPoints);
     mapDataObject.setBackground(
         new Background1(UUID.randomUUID()));
     uuid = UUID.randomUUID();
