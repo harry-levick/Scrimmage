@@ -11,16 +11,20 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.TextAlignment;
 import shared.util.Path;
 
 public class Achievement {
 
   private String name, description;
   private boolean status;
+  private int id;
 
-  public Achievement(String name, String description) {
+  public Achievement(int id, String name, String description, boolean status) {
+    this.id = id;
     this.name = name;
     this.description = description;
+    this.status = status;
   }
 
 
@@ -33,19 +37,14 @@ public class Achievement {
     holder.setAlignment(Pos.CENTER);
 
     //Name
-    Label nameLabel = new Label(getName());
-    nameLabel.setStyle("-fx-font-size:30px; -fx-text-fill: white;");
+    Label nameLabel = new Label(name);
+    nameLabel.setStyle("-fx-font-size:20px; -fx-text-fill: white;");
+    nameLabel.setMaxWidth(160);
+    nameLabel.setWrapText(true);
+    nameLabel.setTextAlignment(TextAlignment.CENTER);
     holder.getChildren().add(nameLabel);
 
     StackPane stackPane = new StackPane();
-
-    //Grey Icon
-    ImageView iconGrey = new ImageView(
-        new Image(Path.convert("images/Achivements/golden_trophy_greyed.png")));
-    iconGrey.setFitWidth(120);
-    iconGrey.setFitHeight(145);
-    iconGrey.setOpacity(0.8);
-    stackPane.getChildren().add(iconGrey);
 
     //Icon
     ImageView icon = new ImageView(getImage());
@@ -58,6 +57,9 @@ public class Achievement {
     //Progress
     Label descriptionLabel = new Label(description);
     descriptionLabel.setStyle("-fx-font-size:15px; -fx-text-fill: white;");
+    descriptionLabel.setMaxWidth(160);
+    descriptionLabel.setWrapText(true);
+    descriptionLabel.setTextAlignment(TextAlignment.CENTER);
     holder.getChildren().add(descriptionLabel);
 
     return holder;
@@ -69,5 +71,9 @@ public class Achievement {
 
   public void setStatus(boolean status) {
     this.status = status;
+  }
+
+  public boolean isStatus() {
+    return status;
   }
 }

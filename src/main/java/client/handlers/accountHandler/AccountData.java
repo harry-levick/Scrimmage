@@ -36,6 +36,7 @@ public class AccountData {
     activeSkin[1] = 6;
     activeSkin[2] = 6;
     activeSkin[3] = 6;
+    achievements[2] = true;
   }
 
   /**

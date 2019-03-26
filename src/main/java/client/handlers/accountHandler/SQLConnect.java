@@ -28,10 +28,10 @@ public class SQLConnect {
 //  private static final String USERNAME = "REDACTED";
   private static final String PASSWD = "lU7*jV5%";
   // private static final String PASSWD = "REDACTED";
-  private static final String GET_DATA_STATEMENT = "SELECT uuid, achievements, skins, lootbox, money FROM sql2284965.accountHandler WHERE name = ? AND password = ?";
-  private static final String CHECK_USERNAME = "SELECT name FROM sql2284965.accountHandler WHERE name = ?";
-  private static final String REGISTER_USER = "INSERT INTO sql2284965.accountHandler (uuid, name, password, achievements, skins, lootbox, money) VALUES (?,?,?,?,?,?,?)";
-  private static final String SAVE_DATA = "UPDATE sql2284965.accountHandler SET name = ?, achievements = ?, skins = ?, lootbox = ?, money = ? WHERE uuid = ?";
+  private static final String GET_DATA_STATEMENT = "SELECT uuid, achievements, skins, lootbox, money FROM sql2284965.userData WHERE name = ? AND password = ?";
+  private static final String CHECK_USERNAME = "SELECT name FROM sql2284965.userData WHERE name = ?";
+  private static final String REGISTER_USER = "INSERT INTO sql2284965.userData (uuid, name, password, achievements, skins, lootbox, money) VALUES (?,?,?,?,?,?,?)";
+  private static final String SAVE_DATA = "UPDATE sql2284965.userData SET name = ?, achievements = ?, skins = ?, lootbox = ?, money = ? WHERE uuid = ?";
 
   /**
    * Obtains user data in String format when given a username and a password
@@ -120,14 +120,14 @@ public class SQLConnect {
       PreparedStatement pst = conn.prepareStatement(SAVE_DATA);
       String[] args = data.saveQuery();
 
-      pst.setString(1, args[0]);
-      pst.setInt(2, Integer.parseInt(args[1]));
-      pst.setInt(3, Integer.parseInt(args[2]));
-      pst.setInt(4, Integer.parseInt(args[3]));
-      pst.setInt(5, Integer.parseInt(args[4]));
+      pst.setString(1, args[1]);
+      pst.setInt(2, Integer.parseInt(args[2]));
+      pst.setInt(3, Integer.parseInt(args[3]));
+      pst.setInt(4, Integer.parseInt(args[4]));
+      pst.setInt(5, Integer.parseInt(args[5]));
+      pst.setString(6, args[0]);
 
-
-      pst.executeQuery();
+      pst.executeUpdate();
       toRet = "success";
     } catch (SQLException e) {
       toRet = "failed error: " + e;

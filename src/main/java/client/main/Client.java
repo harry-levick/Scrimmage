@@ -1,5 +1,6 @@
 package client.main;
 
+import client.handlers.accountHandler.AchivementHandler.KonamiCodeHandler;
 import client.handlers.audioHandler.MusicAssets.PLAYLIST;
 import client.handlers.inputHandler.KeyboardInput;
 import client.handlers.inputHandler.MouseInput;

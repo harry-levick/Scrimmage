@@ -114,7 +114,7 @@ public class LevelCreator extends Application {
     mapDataObject.setBackground(
         new Background1(uuid));
     uuid = UUID.randomUUID();
-    gameObjects.put(uuid, new AchivementHandler(uuid));
+    //gameObjects.put(uuid, new AchivementHandler(uuid));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid, new ButtonSingleplayer(
         getAbs(20), getAbs(6), getAbs(8), getAbs(2), ObjectType.Button, uuid));
@@ -901,7 +901,60 @@ public class LevelCreator extends Application {
       uuid = UUID.randomUUID();
     }
     MapLoader.saveMap(gameObjects, mapDataObject, filepath + filename + ".map");
-
+    ////////////////////////////////////////
+    // ACCOUNT ACHIEVEMENTS
+    ////////////////////////////////////////
+    System.out.println("Generating Achievement Map");
+    filename = "achievements";
+    gameObjects = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
+        .maximumWeightedCapacity(500).build();
+    playerSpawns = new ArrayList<Player>();
+    mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.ACCOUNT);
+    mapDataObject.setBackground(
+        new Background1(UUID.randomUUID()));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new ButtonQuit(
+            getAbs(18), getAbs(23), getAbs(8), getAbs(2), ObjectType.Button, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid, new AchivementHandler(uuid));
+    uuid = UUID.randomUUID();
+    for (int i = 0; i < 12; i++) {
+      // top row wall
+      gameObjects.put(uuid,
+          new StoneFloorObject(
+              getAbs(i * 4), getAbs(0), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
+      uuid = UUID.randomUUID();
+    }
+    for (int i = 0; i < 5; i++) {
+      // side col walls
+      gameObjects.put(uuid,
+          new StoneWallObject(
+              getAbs(0),
+              getAbs((i * 5) + 1),
+              getAbs(1),
+              getAbs(5),
+              ObjectType.Bot,
+              uuid));
+      uuid = UUID.randomUUID();
+      gameObjects.put(uuid,
+          new StoneWallObject(
+              getAbs(47),
+              getAbs((i * 5) + 1),
+              getAbs(1),
+              getAbs(5),
+              ObjectType.Bot,
+              uuid));
+      uuid = UUID.randomUUID();
+    }
+    for (int i = 0; i < 12; i++) {
+      // bottom row floor
+      gameObjects.put(uuid,
+          new StoneFloorObject(
+              getAbs(i * 4), getAbs(26), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
+      uuid = UUID.randomUUID();
+    }
+    MapLoader.saveMap(gameObjects, mapDataObject, filepath + filename + ".map");
     System.out.println("RECREATED MAP FILES");
     Platform.exit();
   }
