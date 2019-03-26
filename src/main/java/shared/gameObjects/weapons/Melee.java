@@ -1,8 +1,11 @@
 package shared.gameObjects.weapons;
 
+import client.main.Settings;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.UUID;
+import javafx.scene.Group;
+import javafx.scene.transform.Rotate;
 import shared.gameObjects.Destructable;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
@@ -39,6 +42,10 @@ public abstract class Melee extends Weapon {
   protected double attackAngleSign;
   /** Hash set to record collided object in 1 attack */
   protected HashSet<Destructable> collidedSet;
+  /**
+   * Rotate for swinging the sword on attack
+   */
+  protected transient Rotate rotateAttack;
 
 
   /**
@@ -109,6 +116,7 @@ public abstract class Melee extends Weapon {
     this.currentAngleIndex = 0;
     this.singleHanded = singleHanded;
     this.collidedSet = new HashSet<>();
+    rotateAttack = new Rotate();
   }
 
   @Override
@@ -125,6 +133,17 @@ public abstract class Melee extends Weapon {
    * Returns the height of image
    */
   public abstract double getSizeY();
+
+  /**
+   * Used to reconstruct object after serialization
+   *
+   * @param root Javafx root node
+   * @param settings Settings for game
+   */
+  public void initialise(Group root, Settings settings) {
+    super.initialise(root, settings);
+    rotateAttack = new Rotate();
+  }
 
   @Override
   public void fire(double mouseX, double mouseY) {

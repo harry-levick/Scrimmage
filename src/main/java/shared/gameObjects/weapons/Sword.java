@@ -1,7 +1,6 @@
 package shared.gameObjects.weapons;
 
 import java.util.UUID;
-import javafx.scene.transform.Rotate;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.players.Player;
 import shared.util.Path;
@@ -28,10 +27,6 @@ public class Sword extends Melee {
    * Index indicating current angle when attacking
    */
   private int currentAngleIndex;
-  /**
-   * Rotate for swinging the sword on attack
-   */
-  private Rotate rotateAttack;
 
   /**
    * Constructor of the Sword class
@@ -65,7 +60,6 @@ public class Sword extends Melee {
 
     attackAngleSign = 1;
     this.weaponRank = 1;
-    rotateAttack = new Rotate();
   }
 
   /**
