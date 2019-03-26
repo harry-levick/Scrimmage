@@ -93,13 +93,14 @@ public class SQLConnect {
         pst.setInt(6, Integer.parseInt(args[5]));
         pst.setInt(7, Integer.parseInt(args[6]));
 
-        results = pst.executeQuery();
-        if(results.isBeforeFirst()) toRet = "success";
+        int result = pst.executeUpdate();
+        if(result == 1) toRet = "success";
         else toRet = "fail";
       }
 
     } catch (SQLException e) {
       toRet = "failed error: " + e;
+      System.out.println(e);
     }
     finally{
       return toRet;

@@ -12,6 +12,7 @@ public class AccountData {
   private int activeSkin[];
   private int lootboxCount;
   private int moneyCount;
+  public static final int SKIN_COUNT = 7;
 
   /**
    * Constructs a client data with the given unlocks
@@ -30,9 +31,10 @@ public class AccountData {
     this.moneyCount = moneyCount;
     this.uuid = uuid;
     activeSkin = new int[4];
-    activeSkin[0] = 2;
-    activeSkin[1] = 4;
-    activeSkin[2] = 3;
+    activeSkin[0] = 6;
+    activeSkin[1] = 6;
+    activeSkin[2] = 6;
+    activeSkin[3] = 6;
   }
 
   /**
@@ -83,7 +85,10 @@ public class AccountData {
     return achievements;
   }
 
-
+  /**
+   * Sets the achievement with the passed ID to true
+   * @param id Achievement ID to award to user
+   */
   public void awardAchievement(int id) {
     achievements[id] = true;
   }
@@ -92,6 +97,10 @@ public class AccountData {
     return skins;
   }
 
+  /**
+   * Allows the user to now use the skin of the given ID
+   * @param id Skin ID to award to user
+   */
   public void awardSkin(int id) {
    skins[id] = true;
   }
@@ -137,5 +146,25 @@ public class AccountData {
 
   public int[] getActiveSkin() {
     return activeSkin;
+  }
+
+  public String getUUID() {
+    return uuid;
+  }
+
+  public int getSkinCount() {
+    int ret = 0;
+    for (boolean skin : skins) {
+        if(skin) ret++;
+    }
+    return ret;
+  }
+
+  public int getAchievementCount() {
+    int ret = 0;
+    for (boolean skin : achievements) {
+      if(skin) ret++;
+    }
+    return ret;
   }
 }

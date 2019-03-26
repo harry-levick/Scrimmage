@@ -10,6 +10,7 @@ import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.stage.Stage;
 import shared.gameObjects.Blocks.Metal.MetalBlockLargeObject;
+import shared.gameObjects.Blocks.Metal.MetalFloorObject;
 import shared.gameObjects.Blocks.Stone.StoneFloorObject;
 import shared.gameObjects.Blocks.Stone.StoneWallObject;
 import shared.gameObjects.Blocks.Wood.WoodBlockLargeObject;
@@ -27,6 +28,7 @@ import shared.gameObjects.background.Background7;
 import shared.gameObjects.background.Background8;
 import shared.gameObjects.components.behaviours.blockBehaviours.Crushing;
 import shared.gameObjects.menu.main.ButtonBack;
+import shared.gameObjects.menu.main.account.AccountDataDisplay;
 import shared.gameObjects.menu.main.account.ButtonAccount;
 import shared.gameObjects.menu.main.ButtonCredits;
 import shared.gameObjects.menu.main.ButtonMultiplayer;
@@ -36,13 +38,14 @@ import shared.gameObjects.menu.main.ButtonSingleplayer;
 import shared.gameObjects.menu.main.SoundSlider;
 import shared.gameObjects.menu.main.SoundSlider.SOUND_TYPE;
 import shared.gameObjects.menu.main.account.ButtonAchievements;
-import shared.gameObjects.menu.main.account.nameChange.ButtonChangeName;
 import shared.gameObjects.menu.main.account.registration.ButtonLogin;
 import shared.gameObjects.menu.main.account.ButtonLootbox;
 import shared.gameObjects.menu.main.account.ButtonShop;
 import shared.gameObjects.menu.main.account.ButtonSkin;
 import shared.gameObjects.menu.main.account.registration.ButtonAccountLogin;
 import shared.gameObjects.menu.main.account.registration.ButtonRegisterAccount;
+import shared.gameObjects.menu.main.account.skins.SkinSelector;
+import shared.gameObjects.menu.main.account.skins.SkinViewer;
 import shared.gameObjects.menu.multiplayer.ButtonJoin;
 import shared.gameObjects.objects.utility.BlueBlock;
 import shared.gameObjects.objects.utility.GreenBlock;
@@ -629,13 +632,15 @@ public class LevelCreator extends Application {
     mapDataObject.setBackground(
         new Background1(UUID.randomUUID()));
     uuid = UUID.randomUUID();
+    gameObjects.put(uuid, new AccountDataDisplay(getAbs(20), getAbs(5), 1, 1, uuid));
+    uuid = UUID.randomUUID();
     //Six Buttons
     gameObjects.put(uuid,
         new ButtonLogin(
             getAbs(8), getAbs(14), getAbs(8), getAbs(2), ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
-        new ButtonChangeName(
+        new ButtonQuit(
             getAbs(8), getAbs(18), getAbs(8), getAbs(2), ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
@@ -691,10 +696,10 @@ public class LevelCreator extends Application {
     }
     MapLoader.saveMap(gameObjects, mapDataObject, filepath + filename + ".map");
     ////////////////////////////////////////
-    // ACCOUNT CHANGE NAME
+    // ACCOUNT SKIN CHANGE
     ////////////////////////////////////////
     System.out.println("Generating Login Map");
-    filename = "login";
+    filename = "skin";
     gameObjects = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
         .maximumWeightedCapacity(500).build();
     playerSpawns = new ArrayList<Player>();
@@ -702,18 +707,25 @@ public class LevelCreator extends Application {
     mapDataObject.setBackground(
         new Background1(UUID.randomUUID()));
     uuid = UUID.randomUUID();
+    gameObjects.put(uuid, new SkinViewer(
+        getAbs(34), getAbs(6), getAbs(1), getAbs(1), ObjectType.Button, uuid
+    ));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid, new SkinSelector(
+        getAbs(20), getAbs(6), getAbs(1), getAbs(1), ObjectType.Button, uuid
+    ));
+    uuid = UUID.randomUUID();
     gameObjects.put(uuid,
         new ButtonAccount(
             getAbs(8), getAbs(7), getAbs(8), getAbs(2), ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
-    gameObjects.put(uuid,
-        new ButtonAccountLogin(
-            getAbs(19), getAbs(7), getAbs(8), getAbs(2), ObjectType.Button, uuid));
-    uuid = UUID.randomUUID();
-    gameObjects.put(uuid,
-        new ButtonRegisterAccount(
-            getAbs(30), getAbs(7), getAbs(8), getAbs(2), ObjectType.Button, uuid));
-    uuid = UUID.randomUUID();
+    for (int i = 0; i < 3; i++) {
+      // bottom row floor
+      gameObjects.put(uuid,
+          new MetalFloorObject(
+              getAbs((i * 4) + 4), getAbs(20), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
+      uuid = UUID.randomUUID();
+    }
     for (int i = 0; i < 12; i++) {
       // top row wall
       gameObjects.put(uuid,

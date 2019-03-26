@@ -125,7 +125,9 @@ public abstract class GameObject implements Serializable {
   /**
    * Allows the setting of a sprite and animator
    */
-  public abstract void initialiseAnimation();
+  public void initialiseAnimation() {
+
+  }
 
   // Server and Client side
 
