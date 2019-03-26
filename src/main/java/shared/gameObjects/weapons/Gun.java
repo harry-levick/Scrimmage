@@ -12,11 +12,15 @@ import shared.util.maths.Vector2;
  */
 public abstract class Gun extends Weapon {
 
+  /** Segment of package name of blocks, to check if an object is instance of Blocks */
+  protected static String blocksPackageName = ".Blocks.";
+
   /** Maximum angle of aiming before switching holding hand */
   protected float AIM_ANGLE_MAX = 110f;
 
   /** True if this gun is full auto fire */
   protected boolean fullAutoFire;
+
 
   /**
    * Rotation angle of the Gun

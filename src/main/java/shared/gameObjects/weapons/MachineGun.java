@@ -4,6 +4,8 @@ import client.handlers.audioHandler.AudioHandler;
 import client.main.Client;
 import java.util.UUID;
 import shared.gameObjects.players.Player;
+import shared.physics.Physics;
+import shared.physics.data.Collision;
 import shared.util.Path;
 import shared.util.maths.Vector2;
 
@@ -65,14 +67,33 @@ public class MachineGun extends Gun {
       double bulletY = playerCentre.getY() - playerRadius * Math.sin(-angleRadian);
       double bulletFlipX = playerCentre.getX() - playerRadius * Math.cos(angleRadian);
       double bulletFlipY = playerCentre.getY() - playerRadius * Math.sin(angleRadian);
-      Bullet bullet =
-          new FireBullet(
-              (holder.isAimingLeft() ? bulletFlipX : bulletX),
-              (holder.isAimingLeft() ? bulletFlipY : bulletY),
-              mouseX,
-              mouseY,
-              this.holder,
-              uuid);
+
+      Collision raycast = Physics.raycastBullet(
+          playerCentre,
+          new Vector2(mouseX - bulletX, mouseY - bulletY).normalize().mult(55),
+          this.holder,
+          false);
+      Bullet bullet;
+
+      if (raycast != null && raycast.getCollidedObject().getClass().getPackage().getName()
+          .contains(blocksPackageName)) {
+        bullet = new FireBullet(
+            holderHandPos[0],
+            holderHandPos[1] + 20,
+            mouseX,
+            mouseY,
+            this.holder,
+            uuid
+        );
+      } else {
+        bullet = new FireBullet(
+            (holder.isAimingLeft() ? bulletFlipX : bulletX),
+            (holder.isAimingLeft() ? bulletFlipY : bulletY),
+            mouseX,
+            mouseY,
+            this.holder,
+            uuid);
+      }
       settings.getLevelHandler().addGameObject(bullet);
       this.currentCooldown = getDefaultCoolDown();
       new AudioHandler(settings, Client.musicActive).playSFX("MACHINEGUN");

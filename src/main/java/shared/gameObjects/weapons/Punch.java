@@ -70,7 +70,7 @@ public class Punch extends Melee {
 
   @Override
   public void fire(double mouseX, double mouseY) {
-    if (canFire()) {
+    if (this.canFire()) {
       Vector2 boxCastSize = new Vector2(10f, 10f);
       HashSet<Collision> collisionSet = new HashSet<>();
 
@@ -108,6 +108,23 @@ public class Punch extends Melee {
     }
   }
 
+  /**
+   * Checks if the hand punching is deattached from the holder
+   * For example, if player punch the RHS and the right hand is deattached,
+   * return false as it is not possible to punch the RHS
+   *
+   * @return True if it is ok to punch at that direction
+   */
+  @Override
+  public boolean canFire() {
+    if (this.currentCooldown > 0)
+      return false;
+
+    if (holder.isAimingLeft())
+      return !holder.getHandLeft().isDeattached();
+    return !holder.getHandRight().isDeattached();
+  }
+
   @Override
   public void initialiseAnimation() {
     this.animation.supplyAnimation("default", Path.convert("images/player/player_idle.png"));
@@ -115,16 +132,32 @@ public class Punch extends Melee {
 
   @Override
   public double getGripX() {
+    // pointing left
     if (holder.isPointingLeft()) {
+      if (holder.getHandLeft() == null || holder.getHandLeft().isDeattached()) {
+        return -1;
+      }
       return getGripFlipX();
+    }
+    // pointing right
+    if (holder.getHandRight() == null || holder.getHandRight().isDeattached()) {
+      return -1;
     }
     return holder.getHandRight().getX();
   }
 
   @Override
   public double getGripY() {
+    // pointing left
     if (holder.isPointingLeft()) {
+      if (holder.getHandLeft() == null || holder.getHandLeft().isDeattached()) {
+        return -1;
+      }
       return getGripFlipY();
+    }
+    // pointing right
+    if (holder.getHandRight() == null || holder.getHandRight().isDeattached()) {
+      return -1;
     }
     return holder.getHandRight().getY();
   }
