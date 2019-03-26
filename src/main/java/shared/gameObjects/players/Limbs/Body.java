@@ -32,7 +32,6 @@ public class Body extends Limb {
 
   @Override
   protected void rotateAnimate() {
-    // TODO Auto-generated method stub
 
   }
 }

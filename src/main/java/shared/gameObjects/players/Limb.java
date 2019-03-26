@@ -3,6 +3,7 @@ package shared.gameObjects.players;
 import client.main.Settings;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
@@ -169,10 +170,12 @@ public abstract class Limb extends GameObject implements Destructable {
   @Override
   public void destroy() {
     detachLimb();
-    // bc.setLayer(ColliderLayer.PARTICLE);
+    Random random = new Random();
+    rb.setVelocity(new Vector2(1000 * (random.nextDouble() + 0.2) * (random.nextInt(3) - 1),
+        1000 * (random.nextDouble() + 0.2) * (random.nextInt(3) - 1)));
   }
   public void reset() {
-    attachedLimb();
+    reattachedLimb();
     limbHealth = limbMaxHealth;
   }
 
@@ -199,36 +202,24 @@ public abstract class Limb extends GameObject implements Destructable {
   @Override
   public void render() {
     super.render();
-
-    //Do all the rotations here.
-    rotateAnimate();
-
     if (limbAttached) {
       setRelativePosition();
+      //Do all the rotations here.
+      rotateAnimate();
+      // Flip the imageView depending on the direciton of travel
+      flipImageView(imageView, this.behaviour.toString());
     }
-
-    // Flip the imageView depending on the direciton of travel
-    flipImageView(imageView,this.behaviour.toString());
-  }
-
-  public boolean isLimbAttached() {
-    return limbAttached;
   }
 
   public void detachLimb() {
     this.limbAttached = false;
-    rb.setVelocity(new Vector2(0, -100));
   }
 
-  public void attachedLimb() {
+  public void reattachedLimb() {
     this.limbAttached = true;
   }
 
   public boolean isDeattached() {
     return !this.limbAttached;
-  }
-
-  public void reattachLimb() {
-    this.limbAttached = true;
   }
 }

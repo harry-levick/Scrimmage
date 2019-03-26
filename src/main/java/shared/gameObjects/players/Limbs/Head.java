@@ -38,7 +38,6 @@ public class Head extends Limb {
   @Override
   protected void rotateAnimate() {
 
-
   }
   @Override
   public void deductHp(int damage) {

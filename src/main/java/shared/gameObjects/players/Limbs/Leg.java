@@ -83,7 +83,6 @@ public class Leg extends Limb {
 
   @Override
   protected void rotateAnimate() {
-
     if(this.behaviour == Behaviour.JUMP || this.player.getJumped()) {
       jumpAnimation();
     }
