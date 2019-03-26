@@ -1,5 +1,8 @@
 package shared.gameObjects.Utils;
 
+/**
+ * Enum container for the general type of GameObject
+ */
 public enum ObjectType {
   Player,
   Bot,
@@ -8,5 +11,8 @@ public enum ObjectType {
   Bullet,
   Background,
   Button,
-  Limb
+  Limb,
+  Powerup,
+  Fist,
+  Podium
 }

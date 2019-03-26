@@ -1,11 +1,10 @@
 package shared.gameObjects;
 
-import static client.main.Settings.levelHandler;
-
 import client.main.Settings;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
@@ -18,6 +17,7 @@ import shared.gameObjects.components.Collider;
 import shared.gameObjects.components.Component;
 import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.Rigidbody;
+import shared.gameObjects.players.Limb;
 import shared.physics.Physics;
 import shared.physics.data.Collision;
 import shared.physics.data.DynamicCollision;
@@ -25,34 +25,73 @@ import shared.physics.data.SimulatedDynamicCollision;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
 
+/**
+ * Base Class for all objects in a scene
+ */
 public abstract class GameObject implements Serializable {
 
+  /**
+   * UUID to determine identity of object
+   */
   protected UUID objectUUID;
+  /**
+   * The type of object used for server/client purposes
+   */
   protected ObjectType id;
 
-  protected transient Settings settings = new Settings();
+  /**
+   * The client/server settings this object is attached to
+   */
+  protected transient Settings settings;
 
+  /**
+   * The JavaFX rendering component for images
+   */
   protected transient ImageView imageView;
+  /**
+   * The JavaFX group rendered to
+   */
   protected transient Group root;
+  /**
+   * The animation controller for animating still images
+   */
   protected transient Animator animation;
-  protected double rotation;
 
+  /**
+   * The gameObject this object is attached to; null if no parent exists
+   */
   protected GameObject parent;
+  /**
+   * The gameObjects this object is a parent to
+   */
   protected ArrayList<GameObject> children;
-  protected ArrayList<Component> components;
+  /**
+   * The components attached to this gameObject
+   */
+  protected CopyOnWriteArrayList<Component> components;
+  /**
+   * The transform component responsible for scaling, position and rotation
+   */
   protected Transform transform;
 
+  /**
+   * Boolean to determine whether or not a gameObject is active
+   */
   protected boolean active;
+  /**
+   * Boolean to determine if an object is destroyed; once set to true it cannot be set back to false
+   */
   protected boolean destroyed;
 
   //Networking
+  //TODO: Networking comments
   protected boolean networkStateUpdate;
   protected Vector2 lastPos;
   protected ArrayList<TimePosition> positionBuffer;
 
-  protected ArrayList<GameObject> collidedObjects;
-  protected ArrayList<GameObject> collidedThisFrame;
-  protected ArrayList<GameObject> collidedToRemove;
+  private ArrayList<GameObject> collidedObjects;
+  private ArrayList<GameObject> collidedThisFrame;
+  private ArrayList<GameObject> collidedToRemove;
 
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
@@ -68,9 +107,10 @@ public abstract class GameObject implements Serializable {
     this.id = id;
     this.objectUUID = objectUUID;
     this.active = true;
+    this.settings = new Settings(null, root);
     this.transform = new Transform(this, new Vector2((float) x, (float) y),
         new Vector2((float) sizeX, (float) sizeY));
-    this.components = new ArrayList<>();
+    this.components = new CopyOnWriteArrayList<>();
     //So update sent by server on first frame
     this.lastPos = new Vector2((float) x + 1, (float) y + 1);
     this.children = new ArrayList<>();
@@ -82,11 +122,22 @@ public abstract class GameObject implements Serializable {
   }
 
   // Initialise the animation
-  public abstract void initialiseAnimation();
+
+  /**
+   * Allows the setting of a sprite and animator
+   */
+  public void initialiseAnimation() {
+
+  }
 
   // Server and Client side
+
+  /**
+   * Update loops update all components and updates server with new positions
+   */
   public void update() {
     networkStateUpdate = false;
+    if(destroyed) return;
     animation.update();
 
     for (Component comp : getComponents(ComponentType.RIGIDBODY)) {
@@ -115,6 +166,10 @@ public abstract class GameObject implements Serializable {
   }
 
   // Client Side only
+
+  /**
+   * Renders the game object in the client view with all changes applied
+   */
   public void render() {
     imageView.setImage(animation.getImage());
     imageView.setRotate(getTransform().getRot());
@@ -125,6 +180,10 @@ public abstract class GameObject implements Serializable {
   }
 
   // Collision engine
+
+  /**
+   * Method used by collision engine to check for collisions each frame
+   */
   public void updateCollision() {
     ArrayList<Component> cols = getComponents(ComponentType.COLLIDER);
     Rigidbody rb = (Rigidbody) getComponent(ComponentType.RIGIDBODY);
@@ -157,7 +216,7 @@ public abstract class GameObject implements Serializable {
   }
 
   /**
-   * Use to only update the Physics of the object being called
+   * Use to only update the Physics of the object being called; used primarily by AI
    */
   public void simulateUpdateCollision() {
     ArrayList<Component> cols = getComponents(ComponentType.COLLIDER);
@@ -254,17 +313,7 @@ public abstract class GameObject implements Serializable {
             root.getChildren().remove(imageView);
           }
       );
-      //root.getChildren().remove(imageView);
     }
-  }
-
-  // Interpolate Position Client only
-  public void interpolatePosition(float alpha) {
-    if (!isActive()) {
-      return;
-    }
-    imageView.setTranslateX(alpha * getX() + (1 - alpha) * imageView.getTranslateX());
-    imageView.setTranslateY(alpha * getY() + (1 - alpha) * imageView.getTranslateY());
   }
 
   /**
@@ -277,7 +326,14 @@ public abstract class GameObject implements Serializable {
     return objectUUID + ";" + id + ";" + (float) getX() + ";" + (float) getY();
   }
 
-  public void setState(String data, Boolean snap) {
+  // Interpolate Position Client only
+  public void interpolatePosition(float alpha) {
+      imageView.setTranslateX(alpha * getX() + (1 - alpha) * imageView.getTranslateX());
+      imageView.setTranslateY(alpha * getY() + (1 - alpha) * imageView.getTranslateY());
+    }
+
+
+      public void setState(String data, Boolean snap) {
     String[] unpackedData = data.split(";");
     Vector2 statePos = new Vector2(Double.parseDouble(unpackedData[2]),
         Double.parseDouble(unpackedData[3]));
@@ -296,42 +352,63 @@ public abstract class GameObject implements Serializable {
     }
   }
 
-  // Ignore for now, added due to unSerializable objects
-  public void initialise(Group root) {
+
+  public void initialise(Group root, Settings settings) {
+    this.settings = settings;
     this.positionBuffer = new ArrayList<>();
     this.networkStateUpdate = false;
     animation = new Animator();
     initialiseAnimation();
     imageView = new ImageView();
-    imageView.setRotate(rotation);
+    imageView.setRotate(transform.getRot());
     if (root != null) {
       this.root = root;
       root.getChildren().add(this.imageView);
     }
-    if (getComponent(ComponentType.COLLIDER) != null && Physics.showColliders) {
+    if (getComponent(ComponentType.COLLIDER) != null && Physics.showColliders && this instanceof Limb) {
       ((Collider) getComponent(ComponentType.COLLIDER)).initialise(root);
     }
     imageView.setFitHeight(transform.getSize().getY());
     imageView.setFitWidth(transform.getSize().getX());
   }
 
+  /**
+   * Sets this gameObject as the parent to a defined gameObject
+   * @param child The object to make a child to this object
+   */
   public void addChild(GameObject child) {
     children.add(child);
-    levelHandler.addGameObject(child);
+    child.setParent(this);
+    settings.getLevelHandler().addGameObject(child);
   }
 
+  /**
+   * Removes this gameObject as the parent to a defined gameObject
+   * @param child The object to no longer make a child to this object
+   */
   public void removeChild(GameObject child) {
-    children.remove(child);
+    if(children.remove(child)) child.setParent(null);
   }
 
+  /**
+   * Checks if this object is a parent to a passed gameObject
+   */
   public boolean isChild(GameObject child) {
-    return children.contains(child);
+    return child.parent.equals(this);
   }
 
+  /**
+   * Adds a new component to this object
+   * @param component Component to add
+   */
   public void addComponent(Component component) {
     components.add(component);
   }
 
+  /**
+   * Removes a component from this object
+   * @param component Component to remove
+   */
   public void removeComponent(Component component) {
     components.remove(component);
   }
@@ -450,7 +527,9 @@ public abstract class GameObject implements Serializable {
   }
 
   public void destroy() {
-    destroyed = active = false;
+    destroyed = true;
+    active = false;
+    removeRender();
   }
 
   /**
@@ -500,7 +579,7 @@ public abstract class GameObject implements Serializable {
     return children;
   }
 
-  public ArrayList<Component> getComponents() {
+  public CopyOnWriteArrayList<Component> getComponents() {
     return components;
   }
 
@@ -526,6 +605,7 @@ public abstract class GameObject implements Serializable {
     }
   }
 
+
   public void setSettings(Settings settings) {
     this.settings = settings;
   }
@@ -535,11 +615,7 @@ public abstract class GameObject implements Serializable {
   }
 
   public double getRotation() {
-    return rotation;
-  }
-
-  public void rotateImage(double rotation) {
-    imageView.setRotate(imageView.getRotate() + rotation);
+    return transform.getRot();
   }
 
   public ArrayList<TimePosition> getPositionBuffer() {
@@ -554,5 +630,11 @@ public abstract class GameObject implements Serializable {
     } catch (Exception e) {
       return false;
     }
+  }
+
+  @Override
+  public int hashCode() {
+    assert false : "hashCode not designed";
+    return 99; // any arbitrary constant will do
   }
 }

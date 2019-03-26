@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration monitorInterval="30" status="WARN">
+
+  <!-- Logging Properties -->
+  <Properties>
+    <Property name="LOG_PATTERN">%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ} %p %m%n</Property>
+    <Property name="APP_LOG_ROOT">c:/temp</Property>
+  </Properties>
+
+  <Appenders>
+
+    <!-- Console Appender -->
+    <Console follow="true" name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="${LOG_PATTERN}"/>
+    </Console>
+
+    <!-- File Appenders on need basis -->
+    <RollingFile fileName="${APP_LOG_ROOT}/app-framework.log"
+      filePattern="${APP_LOG_ROOT}/app-framework-%d{yyyy-MM-dd}-%i.log"
+      name="frameworkLog">
+      <LevelRangeFilter maxLevel="ERROR" minLevel="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+      <PatternLayout pattern="${LOG_PATTERN}"/>
+      <Policies>
+        <SizeBasedTriggeringPolicy size="19500KB"/>
+      </Policies>
+      <DefaultRolloverStrategy max="10"/>
+    </RollingFile>
+
+    <RollingFile fileName="${APP_LOG_ROOT}/app-debug.log"
+      filePattern="${APP_LOG_ROOT}/app-debug-%d{yyyy-MM-dd}-%i.log"
+      name="debugLog">
+      <LevelRangeFilter maxLevel="DEBUG" minLevel="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
+      <PatternLayout pattern="${LOG_PATTERN}"/>
+      <Policies>
+        <SizeBasedTriggeringPolicy size="19500KB"/>
+      </Policies>
+      <DefaultRolloverStrategy max="10"/>
+    </RollingFile>
+
+    <RollingFile fileName="${APP_LOG_ROOT}/app-info.log"
+      filePattern="${APP_LOG_ROOT}/app-info-%d{yyyy-MM-dd}-%i.log"
+      name="infoLog">
+      <LevelRangeFilter maxLevel="INFO" minLevel="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+      <PatternLayout pattern="${LOG_PATTERN}"/>
+      <Policies>
+        <SizeBasedTriggeringPolicy size="19500KB"/>
+      </Policies>
+      <DefaultRolloverStrategy max="10"/>
+    </RollingFile>
+
+    <RollingFile fileName="${APP_LOG_ROOT}/app-error.log"
+      filePattern="${APP_LOG_ROOT}/app-error-%d{yyyy-MM-dd}-%i.log"
+      name="errorLog">
+      <LevelRangeFilter maxLevel="ERROR" minLevel="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+      <PatternLayout pattern="${LOG_PATTERN}"/>
+      <Policies>
+        <SizeBasedTriggeringPolicy size="19500KB"/>
+      </Policies>
+      <DefaultRolloverStrategy max="10"/>
+    </RollingFile>
+
+    <RollingFile fileName="${APP_LOG_ROOT}/app-perf.log"
+      filePattern="${APP_LOG_ROOT}/app-perf-%d{yyyy-MM-dd}-%i.log"
+      name="perfLog">
+      <PatternLayout pattern="${LOG_PATTERN}"/>
+      <Policies>
+        <SizeBasedTriggeringPolicy size="19500KB"/>
+      </Policies>
+      <DefaultRolloverStrategy max="1"/>
+    </RollingFile>
+
+    <RollingFile fileName="${APP_LOG_ROOT}/app-trace.log"
+      filePattern="${APP_LOG_ROOT}/app-trace-%d{yyyy-MM-dd}-%i.log"
+      name="traceLog">
+      <PatternLayout pattern="${LOG_PATTERN}"/>
+      <Policies>
+        <SizeBasedTriggeringPolicy size="19500KB"/>
+      </Policies>
+      <DefaultRolloverStrategy max="1"/>
+    </RollingFile>
+
+  </Appenders>
+
+  <Loggers>
+
+    <Logger additivity="false" level="trace" name="com.howtodoinjava.app.somePackage">
+      <AppenderRef ref="traceLog"/>
+      <AppenderRef ref="Console"/>
+    </Logger>
+
+    <Logger additivity="false" level="debug" name="com.howtodoinjava.app">
+      <AppenderRef ref="debugLog"/>
+      <AppenderRef ref="infoLog"/>
+      <AppenderRef ref="errorLog"/>
+      <AppenderRef ref="Console"/>
+    </Logger>
+
+    <Logger additivity="false" level="info" name="org.framework.package">
+      <AppenderRef ref="perfLog"/>
+      <AppenderRef ref="Console"/>
+    </Logger>
+
+    <Root level="warn">
+      <AppenderRef ref="Console"/>
+    </Root>
+
+  </Loggers>
+
+</Configuration>

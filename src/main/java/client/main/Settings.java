@@ -1,23 +1,23 @@
 package client.main;
 
+import client.handlers.userData.AccountData;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.UUID;
+import javafx.scene.Group;
 import javafx.scene.text.Font;
-import javafx.stage.Screen;
-import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.LevelHandler;
-import shared.handlers.levelHandler.Map;
-import shared.util.Path;
 
 /**
- * @author Brett Saunders
+ * Global settings config of the game. Defines game settings and resource paths.
  */
 public class Settings {
 
-  public static LevelHandler levelHandler;
-
+  private transient LevelHandler levelHandler;
+  private transient Group gameRoot;
   private String username;
+  private AccountData data;
   private int port;
   private double musicVolume;
   private double soundEffectVolume;
@@ -26,10 +26,9 @@ public class Settings {
   private String mapsPath;
   private String menuPath;
   private String musicPath;
-  private String achivementPath;
   private String SFXPath;
-  private int windowWidth = (int) Screen.getPrimary().getBounds().getWidth();
-  private int windowHeight = (int) Screen.getPrimary().getBounds().getHeight();
+  private int windowWidth;// = (int) Screen.getPrimary().getBounds().getWidth();
+  private int windowHeight;// = (int) Screen.getPrimary().getBounds().getHeight();
   private int mapWidth;
   private int mapHeight;
   private int maxPlayers;
@@ -37,16 +36,11 @@ public class Settings {
   private int defaultFontSize;
   private Font font;
   private int gridSize;
-  private Map mainMenu;
-  private Map multiplayerLobby;
-  private Map multiplayerJoin;
-  private Map settingsMenu;
-  private Map achivementsMenu;
 
   /**
    * Default Constructor Music volume set to 100 and sound effects to 75
    */
-  public Settings() {
+  public Settings(LevelHandler levelHandler, Group gameRoot) {
     //settings that are set arbitrarily
     username = "TestAccount";
     port = 4446;
@@ -57,92 +51,136 @@ public class Settings {
     maxPlayers = 4;
     defaultFontSize = 20;
     gridSize = 40;
-
+    this.levelHandler = levelHandler;
+    this.gameRoot = gameRoot;
     resourcesPath = "src" + s + "main" + s + "resources";
     mapsPath = resourcesPath + s + "maps";
     menuPath = resourcesPath + s + "menus";
     musicPath = resourcesPath + s + "audio" + s + "music";
     SFXPath = resourcesPath + s + "audio" + s + "sound-effects";
     fontPath = resourcesPath + s + "Kenney Future.ttf";
-    achivementPath = resourcesPath + s + "achivements.txt";
-
-    mainMenu = new Map("main_menu.map", Path.convert("src/main/resources/menus/main_menu.map"), GameState.MAIN_MENU);
-    multiplayerLobby = new Map("lobby.map", Path.convert("src/main/resources/menus/lobby.map"), GameState.Lobby);
-    settingsMenu = new Map("settings.map", Path.convert("src/main/resources/menu/settings.map"), GameState.SETTINGS);
-    multiplayerJoin = new Map("multiplayer.map", Path.convert("src/main/resources/menu/multiplayer.map"), GameState.Multiplayer);
-
+    data = new AccountData(UUID.randomUUID().toString(), "newuser", new boolean[30], new boolean[30], 1, 0);
   }
 
+  /**
+   * The path without an ending file separator to the resources
+   *
+   * @return The path containing File.Separator
+   */
   public String getResourcesPath() {
     return resourcesPath;
   }
 
+  /**
+   * Scales a grid position to its pixel position (top left)
+   * @param gridPos The grid square count
+   * @return Scales grid squares to the pixels
+   */
   public int getGrisPos(int gridPos) {
     return gridPos * gridSize;
   }
 
+  /**
+   * The path of the maps without an ending file separator to the resources
+   * @return The relative path containing File.Separator
+   */
   public String getMapsPath() {
     return mapsPath;
   }
 
-  public String getAchivementPath() {
-    return achivementPath;
-  }
-
+  /**
+   * Sets the full relative path of the maps directory
+   * @param mapsPath The new directory of the maps
+   */
   public void setMapsPath(String mapsPath) {
     this.mapsPath = mapsPath;
   }
 
+  /**
+   * The path of the menus without an ending file separator to the resources
+   * @return The relative path containing File.Separator
+   */
   public String getMenuPath() {
     return menuPath;
   }
 
+  /**
+   * Sets the full relative path of the menu directory
+   * @param menuPath The new directory of the menus
+   */
   public void setMenuPath(String menuPath) {
     this.menuPath = menuPath;
   }
 
+  /**
+   * Gets the width of the size of the map
+   * @return The number of units the map is wide
+   */
   public int getMapWidth() {
     return mapWidth;
   }
 
+  /**
+   * Gets the height of the size of the map
+   * @return The number of units the map is high
+   */
   public int getMapHeight() {
     return mapHeight;
   }
 
+  /**
+   * Gets the number of pixels of the client window
+   * @return The number of pixels the window is wide
+   */
   public int getWindowWidth() {
     return windowWidth;
   }
 
+  /**
+   * Gets the number of pixels of the client window
+   * @return The number of pixels the window is high
+   */
   public int getWindowHeight() {
     return windowHeight;
   }
 
+  /**
+   * The path of the music without an ending file separator
+   * @return The relative path containing File.Separator
+   */
   public String getMusicPath() {
     return musicPath;
   }
 
+  /**
+   * The path of the sound effects without an ending file separator
+   * @return The relative path containing File.Separator
+   */
   public String getSFXPath() {
     return SFXPath;
   }
 
+  /**
+   * The maximum number of players allowed in the game
+   * @return The maximum number of players allowed in the game
+   */
   public int getMaxPlayers() {
     return maxPlayers;
   }
 
-  public Map getMainMenu() { return mainMenu; }
-
-  public Map getMultiplayerLobby() { return multiplayerLobby; }
-
-  public Map getMultiplayerJoin() { return multiplayerJoin; }
-
-  public Map getSettingsMenu() { return settingsMenu; }
-
-  public Map getAchivementsMenu() { return achivementsMenu; }
-
+  /**
+   * The global font
+   * @return The global font at the default size
+   */
   public Font getFont() {
     return getFont(defaultFontSize);
   }
 
+  /**
+   * The global font
+   * @param size The size of the font returned
+   * @return The global font at the specified size
+   */
   public Font getFont(int size) {
     try {
       font = Font
@@ -187,27 +225,75 @@ public class Settings {
     this.soundEffectVolume = soundEffectVolume < 0 ? 0 : soundEffectVolume;
   }
 
+  /**
+   * Gets the username of the client's player
+   * @return The name chosen by the client
+   */
   public String getUsername() {
     return username;
   }
 
+  /**
+   * Sets the username of the client's player
+   * @param username The new name chosen by the player
+   */
   public void setUsername(String username) {
     this.username = username;
   }
 
+  /**
+   * The port of the client/server connection
+   * @return The port of the client/server connection
+   */
   public int getPort() {
     return port;
   }
 
+  /**
+   * The port of the clinet/server connection
+   * @param port The port of the client/server conneciton
+   */
   public void setPort(int port) {
     this.port = port;
   }
 
+  /**
+   * The global levelhandler controlling map/level changes
+   * @return Instance of LevelHandler
+   */
   public LevelHandler getLevelHandler() {
     return levelHandler;
   }
 
+  /**
+   *  The global levelhandler controlling map/level changes
+   * @param levelHandler Instance of LevelHandler
+   */
   public void setLevelHandler(LevelHandler levelHandler) {
-    Settings.levelHandler = levelHandler;
+    this.levelHandler = levelHandler;
+  }
+
+  /**
+   * The JavaFX Group which all elements are added to
+   * @return The group root
+   */
+  public Group getGameRoot() {
+    return gameRoot;
+  }
+
+  /**
+   * The JavaFX Group which all elements are added to
+   * @param gameRoot The group root
+   */
+  public void setGameRoot(Group gameRoot) {
+    this.gameRoot = gameRoot;
+  }
+
+  public AccountData getData() {
+    return data;
+  }
+
+  public void setData(AccountData data) {
+    this.data = data;
   }
 }

@@ -1,6 +1,5 @@
 package shared.gameObjects.menu.main;
 
-import client.main.Client;
 import java.util.UUID;
 import javafx.scene.input.MouseEvent;
 import shared.gameObjects.Utils.ObjectType;
@@ -26,9 +25,9 @@ public class ButtonSettings extends ButtonObject {
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
 
-    Client.levelHandler.changeMap(
+    settings.getLevelHandler().changeMap(
         new Map(
             "Settings", Path.convert("src/main/resources/menus/settings.map")),
-        false);
+        false, false);
   }
 }

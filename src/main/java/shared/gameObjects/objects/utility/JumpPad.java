@@ -13,15 +13,24 @@ import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
 
+/**
+ * A static jump pad that bounces dynamic objects that step on it
+ */
 public class JumpPad extends GameObject {
 
-  final float TIME_TO_JUMP = 0.5f;
-  final float SPRING_FORCE = -450f / 0.33333f;
-  final float SQUISH_FACTOR = 0.05f;
-  protected boolean spring, cooldown;
-  protected float timer;
-  protected Vector2 originalPosition;
+  final static float TIME_TO_JUMP = 0.5f;
+  final static float SPRING_FORCE = -450f / 0.33333f;
+  final static float SQUISH_FACTOR = 0.05f;
+  private boolean spring, cooldown;
+  private float timer;
+  private Vector2 originalPosition;
 
+  /**
+   * Constructs Jump Pad object
+   * @param x X Position of object
+   * @param y Y position of object
+   * @param uuid UUID of object
+   */
   public JumpPad(double x, double y, UUID uuid) {
     super(x, y, 50, 40, ObjectType.Bot, uuid);
     addComponent(new BoxCollider(this, ColliderLayer.PLATFORM, false));
@@ -42,11 +51,13 @@ public class JumpPad extends GameObject {
         timer = TIME_TO_JUMP;
         ArrayList<Collision> collisions =
             Physics.boxcastAll(transform.getPos().add(Vector2.Up().mult(30)), transform.getSize(),
-                false);
+                false, false);
         for (Collision c : collisions) {
           Rigidbody rb = (Rigidbody) c.getCollidedObject().getComponent(ComponentType.RIGIDBODY);
-          if (rb.getBodyType() == RigidbodyType.DYNAMIC) {
-            rb.setVelocity(new Vector2(rb.getVelocity().getX(), SPRING_FORCE));
+          if(rb != null) {
+            if (rb.getBodyType() == RigidbodyType.DYNAMIC) {
+              rb.setVelocity(new Vector2(rb.getVelocity().getX(), SPRING_FORCE));
+            }
           }
         }
       }
@@ -71,7 +82,6 @@ public class JumpPad extends GameObject {
   public void OnCollisionStay(Collision col) {
     super.OnCollisionEnter(col);
     if (!cooldown && col.getNormalCollision().equals(Vector2.Up())) {
-      System.out.println("Entered");
       spring = true;
     }
   }

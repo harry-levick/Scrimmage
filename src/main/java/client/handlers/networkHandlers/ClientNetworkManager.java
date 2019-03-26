@@ -1,7 +1,10 @@
 package client.handlers.networkHandlers;
 
 import client.main.Client;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,9 +14,11 @@ import shared.gameObjects.Utils.TimePosition;
 import shared.gameObjects.players.Limbs.Arm;
 import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.Map;
+import shared.packets.PacketDelete;
 import shared.packets.PacketGameState;
 import shared.packets.PacketInput;
 import shared.util.Path;
+import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import shared.util.maths.Vector2;
 
 public class ClientNetworkManager {
@@ -99,26 +104,38 @@ public class ClientNetworkManager {
                     "main_menu",
                     Path.convert(
                         Client.settings.getMenuPath() + File.separator + "menus/main_menu.map")),
-                false);
+                false, false);
 
+            break;
+          case 8:
+            PacketDelete delete = new PacketDelete(message);
+            GameObject deleteObject = Client.levelHandler.getGameObjects()
+                .get(delete.getGameobject());
+            if (deleteObject == null) {
+              System.out.println("Can't delete " + delete.getGameobject());
+            } else {
+              Client.levelHandler.removeGameObject(deleteObject);
+            }
             break;
           case 7:
             PacketGameState gameState = new PacketGameState(message);
             HashMap<UUID, String> data = gameState.getGameObjects();
             data.forEach((key, value) -> {
-              GameObject gameObject = Client.levelHandler.getGameObjects().get(key);
-              if (gameObject == null) {
-                createGameObject(value);
-              } else {
-                if (!entity_interpolation || gameObject.getUUID() == Client.levelHandler
-                    .getClientPlayer().getUUID()) {
-                  gameObject.setState(value, setStateSnap);
+              if (!value.split(";")[1].equals("Limb") && !value.split(";")[1].equals("Fist")) {
+                GameObject gameObject = Client.levelHandler.getGameObjects().get(key);
+                if (gameObject == null) {
+                  System.out.println("HMMM I've never seen this before " + value);
                 } else {
-                  Timestamp now = new Timestamp(System.currentTimeMillis());
-                  String[] unpackedData = value.split(";");
-                  Vector2 statePos = new Vector2(Double.parseDouble(unpackedData[2]),
-                      Double.parseDouble(unpackedData[3]));
-                  gameObject.getPositionBuffer().add(new TimePosition(now, statePos));
+                  if (!entity_interpolation || gameObject.getUUID() == Client.levelHandler
+                      .getClientPlayer().getUUID()) {
+                    gameObject.setState(value, setStateSnap);
+                  } else {
+                    Timestamp now = new Timestamp(System.currentTimeMillis());
+                    String[] unpackedData = value.split(";");
+                    Vector2 statePos = new Vector2(Double.parseDouble(unpackedData[2]),
+                        Double.parseDouble(unpackedData[3]));
+                    gameObject.getPositionBuffer().add(new TimePosition(now, statePos));
+                  }
                 }
               }
             });
@@ -127,7 +144,6 @@ public class ClientNetworkManager {
             }
             break;
           default:
-            System.out.println("ERROR" + messageID + " " + message);
         }
       } catch (InterruptedException e) {
         e.printStackTrace();
@@ -135,30 +151,40 @@ public class ClientNetworkManager {
     }
   }
 
-  public static void createGameObject(String data) {
-    String[] unpackedData = data.split(";");
-    switch (unpackedData[1]) {
-      case "Player":
-        Player player = new Player(Float.parseFloat(unpackedData[2]),
-            Float.parseFloat(unpackedData[3]), UUID.fromString(unpackedData[0]),
-            Client.levelHandler);
-        Client.levelHandler.addPlayer(player, Client.gameRoot);
-        break;
-      default:
 
+  public static void createGameObjects(byte[] data) {
+    ObjectInputStream objectInputStream = null;
+    try {
+      ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(data);
+      objectInputStream = new ObjectInputStream(byteArrayInputStream);
+      ConcurrentLinkedHashMap<UUID, GameObject> gameObjects = (ConcurrentLinkedHashMap<UUID, GameObject>) objectInputStream
+          .readObject();
+      Client.levelHandler.addGameObjects(gameObjects);
+    } catch (IOException e) {
+      e.printStackTrace();
+    } catch (ClassNotFoundException e) {
+      e.printStackTrace();
+    } finally {
+      try {
+        objectInputStream.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
   }
 
   public static void sendInput() {
+    Player player = Client.levelHandler.getClientPlayer();
     PacketInput input =
         new PacketInput(
-            Client.levelHandler.getClientPlayer().mouseX,
-            Client.levelHandler.getClientPlayer().mouseY,
-            Client.levelHandler.getClientPlayer().leftKey,
-            Client.levelHandler.getClientPlayer().rightKey,
-            Client.levelHandler.getClientPlayer().jumpKey,
-            Client.levelHandler.getClientPlayer().click,
-            Client.levelHandler.getClientPlayer().getUUID(),
+            player.mouseX,
+            player.mouseY,
+            player.leftKey,
+            player.rightKey,
+            player.jumpKey,
+            player.click,
+            player.throwHoldingKey,
+            player.getUUID(),
             Client.inputSequenceNumber);
     Client.connectionHandler.send(input.getString());
     input.setInputSequenceNumber(Client.inputSequenceNumber);

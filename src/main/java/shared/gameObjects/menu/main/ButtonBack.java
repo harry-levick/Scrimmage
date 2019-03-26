@@ -1,11 +1,11 @@
 package shared.gameObjects.menu.main;
 
-import client.main.Client;
 import java.util.UUID;
 import javafx.scene.input.MouseEvent;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.menu.ButtonObject;
 
+/** Button to return the client to the previous menu */
 public class ButtonBack extends ButtonObject {
 
   public ButtonBack(
@@ -15,6 +15,6 @@ public class ButtonBack extends ButtonObject {
 
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
-    Client.levelHandler.previousMap(false);
+    settings.getLevelHandler().previousMap(false);
   }
 }

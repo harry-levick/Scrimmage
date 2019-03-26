@@ -2,6 +2,7 @@ package shared.gameObjects.menu;
 
 import client.handlers.audioHandler.AudioHandler;
 import client.main.Client;
+import client.main.Settings;
 import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
@@ -16,18 +17,25 @@ import shared.physics.data.AngularData;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.RigidbodyType;
 
+/**
+ * Abstraction of Button Game Objects
+ */
 public abstract class ButtonObject extends GameObject {
 
   protected transient Button button;
   protected String text;
 
   /**
-   * Base class used to create an object in game. This is used on both the client and server side to
-   * ensure actions are calculated the same
+   * Base class used to create a Button in game. This is used on both the client and server side
+   * to ensure actions are calculated the same
    *
-   * @param x X coordinate of object in game world
-   * @param y Y coordinate of object in game world
-   * @param id Unique Identifier of every game object
+   * @param x X Position of object
+   * @param y Y position of object
+   * @param sizeX width of object
+   * @param sizeY height of object
+   * @param text Text found on the button
+   * @param id Object type
+   * @param objectUUID Object UUID
    */
   public ButtonObject(
       double x, double y, double sizeX, double sizeY, String text, ObjectType id, UUID objectUUID) {
@@ -48,17 +56,26 @@ public abstract class ButtonObject extends GameObject {
 
 
   public void doOnClick(MouseEvent e) {
-    animation.switchAnimation("clicked");
     new AudioHandler(settings, Client.musicActive).playSFX("CLICK");
   }
 
-  public void doOnUnClick(MouseEvent e) {
+  @Override
+  public void interpolatePosition(float alpha) {
+  }
+
+
+
+  public void doOnEnter(MouseEvent e) {
+    animation.switchAnimation("clicked");
+  }
+
+  public void doOnExit(MouseEvent e) {
     animation.switchDefault();
   }
 
   @Override
-  public void initialise(Group root) {
-    super.initialise(root);
+  public void initialise(Group root, Settings settings) {
+    super.initialise(root, settings);
     button = new Button(this.text, imageView);
     button.setFont(settings.getFont(30));
     button.setTextFill(Color.WHITE);
@@ -66,12 +83,8 @@ public abstract class ButtonObject extends GameObject {
     button.setStyle("-fx-border-color: transparent;-fx-background-color: transparent;");
     root.getChildren().add(button);
     button.setOnMousePressed(event -> doOnClick(event));
-    button.setOnMouseReleased(event -> doOnUnClick(event));
-  }
-
-  @Override
-  public void interpolatePosition(float alpha) {
-
+    button.setOnMouseEntered(event -> doOnEnter(event));
+    button.setOnMouseExited(event -> doOnExit(event));
   }
 
   @Override
@@ -86,11 +99,6 @@ public abstract class ButtonObject extends GameObject {
   public void initialiseAnimation() {
     this.animation.supplyAnimation("default", "images/buttons/blank_unpressed.png");
     this.animation.supplyAnimation("clicked", "images/buttons/blank_pressed.png");
-  }
-
-  @Override
-  public String getState() {
-    return null;
   }
 
 

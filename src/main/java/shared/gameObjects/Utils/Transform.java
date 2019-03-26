@@ -7,6 +7,9 @@ import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.Rigidbody;
 import shared.util.maths.Vector2;
 
+/**
+ * Position, scaling and rotation data container
+ */
 public class Transform implements Serializable {
 
   private Vector2 topPos;
@@ -17,6 +20,10 @@ public class Transform implements Serializable {
   private float rot;
   private GameObject gameObject;
 
+  /**
+   *  Base Constructor for positon (0,0) and size (1,1)
+   * @param parent The object the transform is attached to
+   */
   public Transform(GameObject parent) {
     this.topPos = this.size = Vector2.Zero();
     this.botPos = this.topPos.add(this.size);
@@ -26,6 +33,11 @@ public class Transform implements Serializable {
     gameObject = parent;
   }
 
+  /**
+   * Base constructor for size (1,1)
+   * @param parent The object the transform is attached to
+   * @param topPos The top-left position of the object in the world space
+   */
   public Transform(GameObject parent, Vector2 topPos) {
     this.topPos = topPos;
     this.size = Vector2.Unit();
@@ -36,6 +48,12 @@ public class Transform implements Serializable {
     gameObject = parent;
   }
 
+  /**
+   * Base constructor for Transform
+   * @param parent The object the transform is attached to
+   * @param topPos The top-left position of the object in the world space
+   * @param size The size (in pixels) of the object
+   */
   public Transform(GameObject parent, Vector2 topPos, Vector2 size) {
     this.topPos = topPos;
     this.size = size;
@@ -47,7 +65,8 @@ public class Transform implements Serializable {
   }
 
   /**
-   * Moves the attached gameObject to the desired position.
+   * Translates the object via the given factor
+   * @param translateFactor The distance by which to translate
    */
   public void translate(Vector2 translateFactor) {
     topPos = topPos.add(translateFactor);
@@ -55,7 +74,8 @@ public class Transform implements Serializable {
   }
 
   /**
-   * [Does not do anything currently]
+   * Rotates the objects by a given rotation
+   * @param rotation in degrees
    */
   public void rotate(float rotation) {
     rot += rotation;
@@ -89,25 +109,6 @@ public class Transform implements Serializable {
     botPos = topPos.add(size);
   }
 
-  /**
-   * Scales an object in accordance with the screen size
-   */
-  public void scaleScreen(Vector2 scaleRatio) {
-    this.topPos = topPos.mult(scaleRatio);
-    this.size = size.mult(scaleRatio);
-    botPos = topPos.add(size);
-  }
-
-  /**
-   * Computes the (approximated) distance between two objects
-   *
-   * @param transform The object comparing to
-   * @return The distance between the two objects
-   */
-  public float distance(Transform transform) {
-    return getPos().magnitude(transform.getPos());
-  }
-
   public float getRot() {
     return rot;
   }
@@ -121,10 +122,18 @@ public class Transform implements Serializable {
     }
   }
 
+  /**
+   *
+   * @return The top-left position of the transform
+   */
   public Vector2 getPos() {
     return topPos;
   }
 
+  /**
+   *
+   * @return Manually sets the object to this position
+   */
   public void setPos(Vector2 pos) {
     this.topPos = pos;
   }

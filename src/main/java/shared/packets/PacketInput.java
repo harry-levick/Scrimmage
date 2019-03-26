@@ -2,14 +2,27 @@ package shared.packets;
 
 import java.util.UUID;
 
+/**
+ * Packet that contains the data on the player input to allow the server to process client control
+ */
 public class PacketInput extends Packet {
 
-  private boolean leftKey, rightKey, jumpKey, click;
+  private boolean leftKey, rightKey, jumpKey, click, throwKey;
   private double x, y;
   private UUID uuid;
 
   private int inputSequenceNumber;
 
+  /**
+   * Constructs a packet that holds all the data regarding the player
+   * @param x X Position of the player
+   * @param y Y Position of the player
+   * @param leftKey The player's leftKey boolean
+   * @param rightKey The player's rightKey boolean
+   * @param jumpKey The player's jumpKey boolean
+   * @param click If the player has clicked or not in the last update
+   * @param uuid Player UUID
+   */
   public PacketInput(
       double x,
       double y,
@@ -17,6 +30,7 @@ public class PacketInput extends Packet {
       boolean rightKey,
       boolean jumpKey,
       boolean click,
+      boolean throwKey,
       UUID uuid,
       int inputCount) {
     packetID = PacketID.INPUT.getID();
@@ -25,6 +39,7 @@ public class PacketInput extends Packet {
     this.leftKey = leftKey;
     this.rightKey = rightKey;
     this.jumpKey = jumpKey;
+    this.throwKey = throwKey;
     this.x = x;
     this.y = y;
     this.inputSequenceNumber = inputSequenceNumber;
@@ -46,11 +61,17 @@ public class PacketInput extends Packet {
             + ","
             + click
             + ","
+            + throwKey
+            + ","
             + inputCount;
   }
 
-  public PacketInput(String info) {
-    String[] unpackedData = info.split(",");
+  /**
+   * Constructs a packet from a string of data
+   * @param data Packet data received from sender
+   */
+  public PacketInput(String data) {
+    String[] unpackedData = data.split(",");
     this.packetID = Integer.parseInt(unpackedData[0]);
     this.uuid = UUID.fromString(unpackedData[1]);
     this.x = Double.parseDouble(unpackedData[2]);
@@ -59,7 +80,8 @@ public class PacketInput extends Packet {
     this.rightKey = Boolean.parseBoolean(unpackedData[5]);
     this.jumpKey = Boolean.parseBoolean(unpackedData[6]);
     this.click = Boolean.parseBoolean(unpackedData[7]);
-    this.inputSequenceNumber = Integer.parseInt(unpackedData[8]);
+    this.throwKey = Boolean.parseBoolean(unpackedData[8]);
+    this.inputSequenceNumber = Integer.parseInt(unpackedData[9]);
     this.data =
         packetID
             + ","
@@ -76,6 +98,8 @@ public class PacketInput extends Packet {
             + jumpKey
             + ","
             + click
+            + ","
+            + throwKey
             + ","
             + inputSequenceNumber;
   }
@@ -108,6 +132,9 @@ public class PacketInput extends Packet {
     return uuid;
   }
 
+  public boolean isThrowKey() {
+    return throwKey;
+  }
 
   public int getInputSequenceNumber() {
     return inputSequenceNumber;

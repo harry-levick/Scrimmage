@@ -1,52 +1,94 @@
 package shared.gameObjects.players;
 
-import client.main.Client;
+import client.handlers.effectsHandler.Particle;
+import client.main.Settings;
 import java.util.UUID;
 import javafx.scene.Group;
-import shared.gameObjects.Destructable;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
-import shared.gameObjects.components.CircleCollider;
 import shared.gameObjects.components.Rigidbody;
-import shared.gameObjects.components.behaviours.ObjectShake;
 import shared.gameObjects.players.Limbs.Arm;
 import shared.gameObjects.players.Limbs.Body;
 import shared.gameObjects.players.Limbs.Hand;
 import shared.gameObjects.players.Limbs.Head;
 import shared.gameObjects.players.Limbs.Leg;
-import shared.gameObjects.weapons.MachineGun;
-import shared.gameObjects.weapons.Sword;
+import shared.gameObjects.weapons.Punch;
 import shared.gameObjects.weapons.Weapon;
-import shared.handlers.levelHandler.LevelHandler;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
 
-public class Player extends GameObject implements Destructable {
+public class Player extends GameObject {
 
-  protected final float speed = 9;
-  protected final float jumpForce = -300;
-  protected final float JUMP_LIMIT = 2.0f;
+  /**
+   * The speed of the player in pixels per update frame
+   */
+  protected static final float speed = 9;
+  /**
+   * The jump force of the player in Newtons
+   */
+  protected static final float jumpForce = -300;
+  /**
+   * Control Booleans determined by the Input Manager
+   */
   public boolean leftKey, rightKey, jumpKey, click;
   //Testing
   public boolean deattach;
+  /**
+   * Boolean to determine when the "Throw Weapon" key is pressed down
+   */
+  public boolean throwHoldingKey;
+  /**
+   * Saves the current position of the cursor (X) and (Y)
+   */
   public double mouseX, mouseY;
+  /**
+   * The score of the player used to determine win conditions
+   */
   public int score;
-  protected LevelHandler levelHandler;
+  //TODO idk what this does
   protected Behaviour behaviour;
-  protected float jumpTime;
+  /**
+   * Boolean to determine if a player has jumped or not
+   */
   protected boolean jumped;
+  /**
+   * Boolean to determine if a player is on the ground or in the air
+   */
   protected boolean grounded;
-  protected boolean facingLeft;
-  protected boolean facingRight;
+  /** True when the gun is aiming LHS */
+  protected boolean aimLeft;
+  /** True when the mouse pointer is on the LHS */
+  protected boolean pointLeft;
+  /**
+   * The current health of the player; is killed when reaches 0
+   */
   protected int health;
+  /**
+   * The maximum health of the player
+   */
+  protected int maxHealth;
+  /**
+   * The current weapon the player is using
+   */
   protected Weapon holding;
+  /**
+   * When not holding a weapon, it defaults to the "Punch" weapon
+   */
+  protected Weapon myPunch;
+  /**
+   *
+   */
+  protected boolean damagedThisFrame;
+  /**
+   * The Physics Rigidbody component attached to the player
+   */
   protected Rigidbody rb;
+  //TODO idk what this does
   protected double vx;
   private BoxCollider bc;
-  private ObjectShake shake;
 
   // Limbs
   private Limb head;
@@ -57,13 +99,20 @@ public class Player extends GameObject implements Destructable {
   private Limb armRight;
   private Limb handLeft;
   private Limb handRight;
+  private int animationTimer = 0; //This is used to synchronise the animations for each limb.
 
-  private CircleCollider cc;
 
   //Networking
   private int lastInputCount;
 
-  public Player(double x, double y, UUID playerUUID, LevelHandler levelHandler) {
+  /**
+   *
+   * Constructs a player object in the scene
+   * @param x The X-Coordinate of the object
+   * @param y The Y-Coordinate of the object
+   * @param playerUUID The uuid of the object
+   */
+  public Player(double x, double y, UUID playerUUID) {
     super(x, y, 80, 110, ObjectType.Player, playerUUID);
     this.lastInputCount = 0;
     this.score = 0;
@@ -71,19 +120,14 @@ public class Player extends GameObject implements Destructable {
     this.rightKey = false;
     this.jumpKey = false;
     this.click = false;
-    this.health = 100;
-    this.holding = null;
-    this.levelHandler = levelHandler;
+    this.health = 200;
+    this.maxHealth = this.health;
     this.behaviour = Behaviour.IDLE;
-    this.shake = new ObjectShake(this);
     this.bc = new BoxCollider(this, ColliderLayer.PLAYER, false);
-    //  this.cc = new CircleCollider(this, ColliderLayer.PLAYER, transform.getSize().magnitude()*0.5f, false);
     this.rb = new Rigidbody(RigidbodyType.DYNAMIC, 90, 11.67f, 0.2f,
         new MaterialProperty(0f, 0.1f, 0.05f), null, this);
-    //  addComponent(cc);
     addComponent(bc);
     addComponent(rb);
-    //addComponent(shake);
   }
 
   // Initialise the animation
@@ -92,26 +136,22 @@ public class Player extends GameObject implements Destructable {
     this.animation.supplyAnimation("default", "images/player/player_idle.png");
   }
 
-  public void addChild(GameObject child) {
-    children.add(child);
-    levelHandler.addGameObject(child);
-  }
-
   @Override
-  public void initialise(Group root) {
-    super.initialise(root);
+  public void initialise(Group root, Settings settings) {
+    super.initialise(root, settings);
     addLimbs();
+    addPunch();
   }
 
   private void addLimbs() {
-    legLeft = new Leg(true, this, levelHandler);
-    legRight = new Leg(false, this, levelHandler);
-    body = new Body(this, levelHandler);
-    head = new Head(this, levelHandler);
-    armLeft = new Arm(true, this, levelHandler);
-    armRight = new Arm(false, this, levelHandler);
-    handLeft = new Hand(true, armLeft, levelHandler);
-    handRight = new Hand(false, armRight, levelHandler);
+    legLeft = new Leg(true, this, settings.getLevelHandler());
+    legRight = new Leg(false, this, settings.getLevelHandler());
+    body = new Body(this, settings.getLevelHandler());
+    head = new Head(this, settings.getLevelHandler());
+    armLeft = new Arm(true, this, settings.getLevelHandler());
+    armRight = new Arm(false, this, settings.getLevelHandler());
+    handLeft = new Hand(true, armLeft, this, settings.getLevelHandler());
+    handRight = new Hand(false, armRight,this, settings.getLevelHandler());
     addChild(legLeft);
     addChild(legRight);
     addChild(body);
@@ -122,25 +162,53 @@ public class Player extends GameObject implements Destructable {
     armLeft.addChild(handLeft);
   }
 
+  private void addPunch() {
+    myPunch = new Punch(getX(), getY(), "myPunch@Player", this, UUID.randomUUID());
+    settings.getLevelHandler().addGameObject(myPunch);
+    this.holding = myPunch;
+  }
+
+  private void updateAnimationTimer() {
+    if(this.behaviour != Behaviour.IDLE) {
+      animationTimer++;
+    }
+    else{
+      animationTimer = 0;
+    }
+
+  }
+
+  public int getAnimationTimer() {
+    return animationTimer;
+  }
+
   @Override
   public void update() {
+    // checks if outside the world, kills if fallen off the map
+    if (getY() > 1200) {
+      deductHp(999);
+    }
+
     checkGrounded(); // Checks if the player is grounded
     badWeapon();
+    pointLeft = mouseX < this.getX();
+    updateAnimationTimer();
     if (deattach) {
-      for (int i = 0; i < 8; i++) {
+      for (int i = 0; i < 6; i++) {
         Limb test = (Limb) children.get(i);
         test.detachLimb();
       }
     }
+    damagedThisFrame = false;
     super.update();
   }
-
 
   @Override
   public String getState() {
     return objectUUID + ";" + id + ";" + getX() + ";" + getY() + ";" + animation.getName() + ";"
         + health + ";"
-        + lastInputCount;
+        + lastInputCount + ";"
+        + throwHoldingKey;
   }
 
   @Override
@@ -150,24 +218,29 @@ public class Player extends GameObject implements Destructable {
     //this.animation.switchAnimation(unpackedData[4]);
     this.health = Integer.parseInt(unpackedData[5]);
     this.lastInputCount = Integer.parseInt(unpackedData[6]);
+    this.throwHoldingKey = Boolean.parseBoolean(unpackedData[7]);
   }
 
   private void checkGrounded() {
     grounded = rb.isGrounded();
   }
 
+  /**
+   * Applies the inputs at the beginning of the frame
+   */
   public void applyInput() {
+    if (grounded) {
+      jumped = false;
+    }
     if (rightKey) {
       rb.moveX(speed);
+      createWalkParticle();
       behaviour = Behaviour.WALK_RIGHT;
-      this.facingLeft = false;
-      this.facingRight = true;
     }
     if (leftKey) {
       rb.moveX(speed * -1);
+      createWalkParticle();
       behaviour = Behaviour.WALK_LEFT;
-      this.facingRight = false;
-      this.facingLeft = true;
     }
 
     if (!rightKey && !leftKey) {
@@ -175,29 +248,64 @@ public class Player extends GameObject implements Destructable {
       behaviour = Behaviour.IDLE;
     }
     if (jumpKey && !jumped && grounded) {
-      rb.moveY(jumpForce, 0.33333f);
+      rb.moveY(jumpForce * (legLeft.limbAttached && legRight.limbAttached ? 1f : 0.7f), 0.33333f);
       jumped = true;
     }
     if (jumped) {
       behaviour = Behaviour.JUMP;
     }
+
     if (grounded) {
       jumped = false;
     }
-    if (click && holding != null) {
-      holding.fire(mouseX, mouseY);
-    } // else punch
-    // setX(getX() + (vx * 0.0166));
-
-    if (this.getHolding() != null) {
-      if (this.getHolding().isMelee()) {
-        this.getHolding().setX(((Sword) this.getHolding()).getGripX());
-        this.getHolding().setY(((Sword) this.getHolding()).getGripY());
-      } else if (this.getHolding().isGun()) {
-        this.getHolding().setX(((MachineGun) this.getHolding()).getGripX());
-        this.getHolding().setY(((MachineGun) this.getHolding()).getGripY());
-      }
+    if (throwHoldingKey) {
+      this.throwHolding();
     }
+
+    if (click && holding != null && !(!armLeft.limbAttached || !armRight.limbAttached)) {
+      holding.fire(mouseX, mouseY);
+    }
+    // setX(getX() + (vx * 0.0166));
+  }
+
+  /**
+   * Applies delayed input without creating unnecessary particles or objects
+   */
+  public void applyMultiplayerInput() {
+    if (grounded) {
+      jumped = false;
+    }
+    if (rightKey) {
+      rb.moveX(speed);
+      behaviour = Behaviour.WALK_RIGHT;
+    }
+    if (leftKey) {
+      rb.moveX(speed * -1);
+      behaviour = Behaviour.WALK_LEFT;
+    }
+
+    if (!rightKey && !leftKey) {
+      vx = 0;
+      behaviour = Behaviour.IDLE;
+    }
+    if (jumpKey && !jumped && grounded) {
+      rb.moveY(jumpForce * (legLeft.limbAttached && legRight.limbAttached ? 1f : 0.7f), 0.33333f);
+      jumped = true;
+    }
+    if (jumped) {
+      behaviour = Behaviour.JUMP;
+    }
+
+    if (grounded) {
+      jumped = false;
+    }
+
+  }
+
+  private void createWalkParticle() {
+    if(!grounded) return;
+      settings.getLevelHandler().addGameObject(new Particle(transform.getBotPos().sub(transform.getSize().mult(new Vector2(0.5, 0))), new Vector2(0, -35), new Vector2(0, 100), new Vector2(8,8),
+          "images/platforms/stone/elementStone001.png", 0.34f));
   }
 
   /**
@@ -211,31 +319,67 @@ public class Player extends GameObject implements Destructable {
     }
     if (this.holding.getAmmo() == 0) {
       this.holding.destroyWeapon();
-      this.setHolding(null);
-      Weapon sword =
-          new Sword(this.getX(), this.getY(), "newSword@Player", this, UUID.randomUUID());
-      sword.initialise(root);
-      Client.levelHandler.addGameObject(sword);
-      this.setHolding(sword);
+      this.setHolding(myPunch);
       return true;
+    }
+    try {
+      if (!armLeft.limbAttached || !armRight.limbAttached) {
+        this.throwHolding();
+      }
+    } catch (Exception e) {
+
     }
     return false;
   }
 
-  public void deductHp(int damage) {
-    this.health -= damage;
-    if (this.health <= 0) {
-      // For testing
-      transform.translate(new Vector2(0, -80));
-      this.setActive(false);
-      bc.setLayer(ColliderLayer.PARTICLE);
-      transform.rotate(90);
-      this.imageView.setOpacity(0.5);
+  /**
+   * Throws the weapon currently held with a velocity
+   */
+  public void throwHolding() {
+    if (!(this.holding == null || this.holding instanceof Punch)) {
+      Weapon w = this.holding;
+      w.startThrowing();
+      throwHoldingKey = false;
+      this.usePunch();
     }
   }
 
+  @Override
+  public void interpolatePosition(float alpha) {
+
+  }
+
+  public void deductHp(int damage) {
+    if(!damagedThisFrame) {
+      damagedThisFrame = true;
+      this.health -= damage;
+      if (this.health <= 0) {
+        // For testing
+        transform.translate(new Vector2(0, -80));
+        this.setActive(false);
+        bc.setLayer(ColliderLayer.PARTICLE);
+        transform.rotate(90);
+        if(imageView != null)
+        this.imageView.setOpacity(0.5);
+      }
+    }
+  }
+
+  public void updateSkinRender(int[] skinRender) {
+    children.forEach(child -> {
+      if (child instanceof Arm) ((Limb) child).updateSkinRender(skinRender[2]);
+      if (child instanceof Leg) ((Limb) child).updateSkinRender(skinRender[3]);
+      if (child instanceof Head) ((Limb) child).updateSkinRender(skinRender[0]);
+      if (child instanceof Body) ((Limb) child).updateSkinRender(skinRender[1]);
+    });
+  }
+
+
+  /**
+   * Resets the player's values, a "respawn"
+   */
   public void reset() {
-    health = 100;
+    health = maxHealth;
     if (this.active == false) {
       this.imageView.setRotate(0);
       this.imageView.setTranslateY(getY() - 70);
@@ -248,12 +392,19 @@ public class Player extends GameObject implements Destructable {
     });
     children.clear();
     addLimbs();
+    addPunch();
   }
 
+  /**
+   * Increases the player score by one unit
+   */
   public void increaseScore() {
     score++;
   }
 
+  /**
+   * Increases the player score as per the game condition
+   */
   public void increaseScore(int amount) {
     score += amount;
   }
@@ -261,20 +412,51 @@ public class Player extends GameObject implements Destructable {
   public int getHealth() {
     return health;
   }
+  
+  public int getMaxHealth() {
+    return maxHealth;
+  }
+  
+  public void setMaxHealth(int hp) {
+    this.maxHealth = hp;
+  }
+  
+  public float getHealthPercentage() {
+    return (float)health/(float)maxHealth;
+  }
 
   public void setHealth(int hp) {
     this.health = hp;
   }
 
   public Weapon getHolding() {
-    return holding;
+    return holding==null? myPunch : holding;
   }
 
-  public void setHolding(Weapon holding) {
-    this.holding = holding;
-    if (holding != null) {
-      holding.setSettings(settings);
+  public void setHolding(Weapon newHolding) {
+    try {
+      if (!armLeft.limbAttached || !armRight.limbAttached) return;
+    } catch (Exception e) {
+
     }
+    this.holding = newHolding;
+
+    if (newHolding != null) {
+      newHolding.setSettings(settings);
+      aimLeft = false;
+    }
+  }
+
+  /**
+   * Determines if the player can hold a weapon or not
+   * @return
+   */
+  public boolean canHold() {
+    return !(!armLeft.limbAttached || !armRight.limbAttached);
+  }
+
+  public void usePunch() {
+    this.setHolding(this.myPunch);
   }
 
   public int getScore() {
@@ -287,20 +469,7 @@ public class Player extends GameObject implements Destructable {
    * @return A 2 elements array, a[0] = X position of the hand, a[1] = Y position of the hand
    */
   public double[] getGunHandPos() {
-    // TODO: remove this section and getHand(Left/Right)(X/Y) methods below
-    /*
-    if (jumped && facingLeft) {
-      return new double[]{this.getHandLeftJumpX(), this.getHandLeftJumpY()};
-    } else if (jumped && facingRight) {
-      return new double[]{this.getHandRightJumpX(), this.getHandRightJumpY()};
-    } else if (facingLeft) {
-      return new double[]{this.handLeft.getX(), this.handLeft.getY()};
-    } else if (facingRight) {
-      return new double[]{this.handRight.getX(), this.handRight.getY()};
-    }
-    return new double[]{this.getHandRightX(), this.getHandRightY()};
-    */
-    if (facingLeft) {
+    if (isAimingLeft()) {
       return new double[]{this.handRight.getX(), this.handRight.getY()};
     } else {
       return new double[]{this.handLeft.getX(), this.handLeft.getY()};
@@ -313,11 +482,20 @@ public class Player extends GameObject implements Destructable {
    * @return A 2 elements array, a[0] = X position of the hand, a[1] = Y position of the hand
    */
   public double[] getMeleeHandPos() {
-    if (facingLeft) {
+    if (isAimingLeft()) {
       return new double[]{this.handLeft.getX(), this.handLeft.getY()};
     } else {
       return new double[]{this.handRight.getX(), this.handRight.getY()};
     }
+  }
+
+  public boolean containsChild(GameObject child) {
+    for (GameObject c : children) {
+      if (c.getUUID() == child.getUUID()) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public void setHandRightX(double pos) {
@@ -340,22 +518,16 @@ public class Player extends GameObject implements Destructable {
     return this.jumped;
   }
 
-  public boolean getFacingLeft() {
-    return this.facingLeft;
+  public boolean isAimingLeft() {
+    return this.aimLeft;
   }
 
-  public void setFacingLeft(boolean b) {
-    this.facingLeft = b;
-    this.facingRight = !b;
+  public void setAimingLeft(boolean b) {
+    this.aimLeft = b;
   }
 
-  public boolean getFacingRight() {
-    return this.facingRight;
-  }
-
-  public void setFacingRight(boolean b) {
-    this.facingLeft = !b;
-    this.facingRight = b;
+  public boolean isPointingLeft() {
+    return this.pointLeft;
   }
 
   public boolean isGrounded() {
@@ -368,5 +540,37 @@ public class Player extends GameObject implements Destructable {
 
   public void setLastInputCount(int lastInputCount) {
     this.lastInputCount = lastInputCount;
+  }
+
+  public Limb getHead() {
+    return head;
+  }
+
+  public Limb getBody() {
+    return body;
+  }
+
+  public Limb getLegLeft() {
+    return legLeft;
+  }
+
+  public Limb getLegRight() {
+    return legRight;
+  }
+
+  public Limb getArmLeft() {
+    return armLeft;
+  }
+
+  public Limb getArmRight() {
+    return armRight;
+  }
+
+  public Limb getHandLeft() {
+    return handLeft;
+  }
+
+  public Limb getHandRight() {
+    return handRight;
   }
 }

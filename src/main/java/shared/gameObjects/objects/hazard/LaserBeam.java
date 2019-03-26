@@ -20,17 +20,27 @@ import shared.physics.data.Collision;
 import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
+// TODO Networking
 
-public class LaserBeam extends GameObject {
+/** Laser Beam hazard object */
+public class LaserBeam extends GameObject implements Hazard {
 
-  final float TIME_BETWEEN_STATES = 1.7f;
-  final float TIME_IN_LASER = 1.1f;
-  boolean laserActive;
-  float timer;
-  BoxCollider bc;
-  Rectangle laser;
-  Colour colour;
 
+  private static final float TIME_BETWEEN_STATES = 1.7f;
+  private static final float TIME_IN_LASER = 1.1f;
+  private boolean laserActive;
+  private float timer;
+  private BoxCollider bc;
+  private Rectangle laser;
+  private Colour colour;
+
+  /**
+   * Creates a Laser Beam Block object in the world
+   *
+   * @param x X-Coordinate of the object
+   * @param y Y-Coordinate of the object
+   * @param uuid The unique identifier of the object
+   */
   public LaserBeam(double x, double y, UUID uuid) {
     super(x, y, 80, 80, ObjectType.Bot, uuid);
     timer = TIME_BETWEEN_STATES;
@@ -39,7 +49,7 @@ public class LaserBeam extends GameObject {
     addComponent(bc);
     addComponent(new Rigidbody(0, this));
     colour = new Colour(255, 0, 0);
-    //addComponent(new MovingPlatform(this));
+    // addComponent(new MovingPlatform(this));
   }
 
   @Override
@@ -52,14 +62,17 @@ public class LaserBeam extends GameObject {
     super.update();
     imageView.setEffect(new DropShadow(BlurType.TWO_PASS_BOX, Color.BLACK, 1, 1, 1, 1));
     if (laser == null) {
-      intialiseLaser();
+      initialiseLaser();
     } else {
       recalculatePositions();
     }
 
     if (laserActive) {
-      ArrayList<Collision> collisions = Physics.boxcastAll(new Vector2(laser.getX(), laser.getY()),
-          new Vector2(laser.getWidth(), laser.getHeight()), false);
+      ArrayList<Collision> collisions =
+          Physics.boxcastAll(
+              new Vector2(laser.getX(), laser.getY()),
+              new Vector2(laser.getWidth(), laser.getHeight()),
+              false, false);
       for (Collision c : collisions) {
         if (c.getCollidedObject() instanceof Destructable) {
           ((Destructable) c.getCollidedObject()).deductHp(9999);
@@ -91,42 +104,32 @@ public class LaserBeam extends GameObject {
     }
   }
 
-  void intialiseLaser() {
+  private void initialiseLaser() {
     laser = new Rectangle();
     laser.setOpacity(0);
-    laser.setX(bc.getCorners()[1].getX() + bc.getSize().getX() * 0.28f);
-    laser.setY(bc.getCentre().getY());
-    ArrayList<Collision> collisions = Physics.boxcastAll(new Vector2(laser.getX(), laser.getY()),
-        new Vector2(transform.getSize().getX() * 0.44f, 1080), false);
-    float closestPoint = 1100;
-    for (Collision c : collisions) {
-      if (c.getCollidedObject().getComponent(ComponentType.RIGIDBODY) != null) {
-        if (((Rigidbody) c.getCollidedObject().getComponent(ComponentType.RIGIDBODY)).getBodyType()
-            == RigidbodyType.STATIC && c.getCollidedObject() != this) {
-          closestPoint =
-              c.getPointOfCollision().getY() < closestPoint ? c.getPointOfCollision().getY()
-                  : closestPoint;
-        }
-      }
-    }
-    laser.setWidth(transform.getSize().getX() * 0.44f);
-    laser.setHeight(closestPoint - laser.getY());
+    recalculatePositions();
     laser.setStyle("-fx-fill: " + colour.toHex() + ";");
     root.getChildren().add(1, laser);
   }
 
-  void recalculatePositions() {
+  // For lasers that are moving and lasers that hit moving static objects
+  private void recalculatePositions() {
     laser.setX(bc.getCorners()[1].getX() + bc.getSize().getX() * 0.28f);
     laser.setY(bc.getCentre().getY());
-    ArrayList<Collision> collisions = Physics.boxcastAll(new Vector2(laser.getX(), laser.getY()),
-        new Vector2(transform.getSize().getX() * 0.44f, 1080), false);
+    ArrayList<Collision> collisions =
+        Physics.boxcastAll(
+            new Vector2(laser.getX(), laser.getY()),
+            new Vector2(transform.getSize().getX() * 0.44f, 1080),
+            false, false);
     float closestPoint = 1100;
     for (Collision c : collisions) {
       if (c.getCollidedObject().getComponent(ComponentType.RIGIDBODY) != null) {
         if (((Rigidbody) c.getCollidedObject().getComponent(ComponentType.RIGIDBODY)).getBodyType()
-            == RigidbodyType.STATIC && c.getCollidedObject() != this) {
+                == RigidbodyType.STATIC
+            && c.getCollidedObject() != this) {
           closestPoint =
-              c.getPointOfCollision().getY() < closestPoint ? c.getPointOfCollision().getY()
+              c.getPointOfCollision().getY() < closestPoint
+                  ? c.getPointOfCollision().getY()
                   : closestPoint;
         }
       }

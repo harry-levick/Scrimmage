@@ -1,25 +1,52 @@
 package shared.gameObjects.players;
 
+import client.main.Settings;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 import javafx.scene.Group;
+import javafx.scene.image.ImageView;
 import javafx.scene.transform.Rotate;
+import shared.gameObjects.Destructable;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
+import shared.gameObjects.players.Limbs.Arm;
 import shared.handlers.levelHandler.LevelHandler;
 import shared.physics.data.MaterialProperty;
+import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
+import shared.util.maths.Vector2;
 
-public abstract class Limb extends GameObject {
+/**
+ * General class for player Limbs
+ */
+public abstract class Limb extends GameObject implements Destructable {
 
+  /**
+   * The X-coordinate pivot for rotating the limb
+   */
   protected final double pivotX;
+  /**
+   * The Y-coordinate pivot for rotating the Limb
+   */
   protected final double pivotY;
+  //TODO idk what this does
   protected boolean isLeft;
-  protected Rotate rotate;
+  /**
+   * JavaFX Rotation object used for rotating the limb around a pivot
+   */
+  protected transient Rotate rotate;
+  /**
+   * Boolean to determine if the limb is currently attached to an object
+   */
   protected boolean limbAttached;
+  /**
+   * Health value of a limb
+   */
+  protected int limbHealth;
+  //TODO idk what these does
   protected boolean lastAttachedCheck;
   protected Behaviour behaviour;
   protected Behaviour lastBehaviour;
@@ -30,13 +57,15 @@ public abstract class Limb extends GameObject {
   protected double yLeft;
   protected double xRight;
   protected double yRight;
+  protected Player player;
 
   protected Rigidbody rb;
   protected BoxCollider bc;
 
-  protected LevelHandler levelHandler;
+  protected transient LevelHandler levelHandler;
 
-
+  protected int resetOffsetX = 0;
+  protected boolean damagedThisFrame;
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
    * ensure actions are calculated the same
@@ -44,7 +73,7 @@ public abstract class Limb extends GameObject {
    * @param id Unique Identifier of every game object
    */
   public Limb(double xLeft, double yLeft, double xRight, double yRight, double sizeX, double sizeY,
-      ObjectType id, Boolean isLeft, GameObject parent, double pivotX, double pivotY,
+      ObjectType id, Boolean isLeft, GameObject parent, Player player, double pivotX, double pivotY,
       LevelHandler levelHandler) {
     super(0, 0, sizeX, sizeY, id, UUID.randomUUID());
     this.limbAttached = true;
@@ -55,6 +84,7 @@ public abstract class Limb extends GameObject {
     this.xRight = xRight;
     this.yRight = yRight;
     this.parent = parent;
+    this.player = player;
     this.rotate = new Rotate();
     this.behaviour = Behaviour.IDLE;
     this.actions = new HashMap<>();
@@ -65,7 +95,7 @@ public abstract class Limb extends GameObject {
     this.levelHandler = levelHandler;
 
     //Physics
-    bc = new BoxCollider(this, false);
+    bc = new BoxCollider(this, ColliderLayer.LIMBS, false);
     addComponent(bc);
 
     rb =
@@ -78,6 +108,24 @@ public abstract class Limb extends GameObject {
 
   public abstract void initialiseAnimation();
 
+  @Override
+  public void interpolatePosition(float alpha) {
+
+  }
+
+  @Override
+  public void deductHp(int damage) {
+    if(!damagedThisFrame) {
+      damagedThisFrame = true;
+      ((Player) parent).deductHp(damage);
+      this.limbHealth -= damage;
+      if(limbHealth <= 0) {
+        destroy();
+      }
+    }
+
+  }
+
   public void setRelativePosition() {
     if (isLeft) {
       setX(parent.getX() + xLeft);
@@ -89,8 +137,10 @@ public abstract class Limb extends GameObject {
   }
 
   @Override
-  public void initialise(Group root) {
-    super.initialise(root);
+  public void initialise(Group root, Settings settings) {
+    super.initialise(root, settings);
+    rotate.setPivotX(pivotX);
+    rotate.setPivotY(pivotY);
     if (isLeft) {
       imageView.setScaleX(-1);
     }
@@ -106,6 +156,7 @@ public abstract class Limb extends GameObject {
   @Override
   public void update() {
     super.update();
+    getBehaviour();
     if (limbAttached) {
       setRelativePosition();
       if (!lastAttachedCheck) {
@@ -118,15 +169,47 @@ public abstract class Limb extends GameObject {
     }
     imageView.getTransforms().remove(rotate);
     lastAttachedCheck = limbAttached;
+    damagedThisFrame = false;
   }
 
+  @Override
+  public void destroy() {
+    detachLimb();
+    bc.setLayer(ColliderLayer.PARTICLE);
+  }
   public void reset() {
     removeRender();
+  }
+
+  private void getBehaviour() {
+    this.behaviour = this.player.behaviour;
+
+  }
+
+  protected abstract void rotateAnimate();
+
+  protected void flipImageView(ImageView iv, String direction) {
+    if(direction.equals("WALK_LEFT")) {
+      iv.setScaleX(-1);
+    }
+    else if(direction.equals("WALK_RIGHT")){
+      iv.setScaleX(1);
+    }
+  }
+
+  public void updateSkinRender(int id) {
+      animation.switchDefault();
   }
 
   @Override
   public void render() {
     super.render();
+
+    //Do all the rotations here.
+    rotateAnimate();
+
+    // Flip the imageView depending on the direciton of travel
+    flipImageView(imageView,this.behaviour.toString());
   }
 
   public boolean isLimbAttached() {
@@ -135,10 +218,46 @@ public abstract class Limb extends GameObject {
 
   public void detachLimb() {
     this.limbAttached = false;
+    rb.setVelocity(new Vector2(0, -1000));
+  }
+
+  public boolean isDeattached() {
+    return !this.limbAttached;
   }
 
   public void reattachLimb() {
     this.limbAttached = true;
   }
-}
 
+  protected void setXLeft(double x) {
+    this.xLeft = x;
+  }
+
+  protected void setYLeft(double y) {
+    this.yLeft = y;
+  }
+
+  protected void setXRight(double x) {
+    this.xRight = x;
+  }
+
+  protected void setYRight(double y) {
+    this.yRight = y;
+  }
+
+  public double getXLeft() {
+    return xLeft;
+  }
+
+  public double getYLeft() {
+    return yLeft;
+  }
+
+  public double getXRight() {
+    return xRight;
+  }
+
+  public double getYRight() {
+    return yRight;
+  }
+}

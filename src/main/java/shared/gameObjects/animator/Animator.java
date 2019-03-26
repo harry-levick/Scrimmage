@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import javafx.scene.image.Image;
 
+/**
+ * Handles multi-frame sprite animations
+ */
 public class Animator {
 
   // Helpful variables
@@ -17,17 +20,26 @@ public class Animator {
   private int currentAnimationCounter;
   private int currentAnimationSize;
 
+  /**
+   * Constructs animator
+   */
   public Animator() {
     animations = new HashMap<>();
     intervalSpeed = 10;
     tickCounter = this.intervalSpeed;
     currentAnimationCounter = 0;
+    supplyAnimation("default", "images/blank.png");
   }
 
   public void setSpeed(int s) {
     intervalSpeed = s;
   }
 
+  /**
+   * Adds an animation composed of frames from a list of files
+   * @param animationName Name of the animation to switch into
+   * @param args List of files
+   */
   public void supplyAnimation(String animationName, String... args) {
     ArrayList<Image> images = new ArrayList<>();
 
@@ -72,6 +84,10 @@ public class Animator {
     }
   }
 
+  /**
+   * Changes the current animation state to a new one
+   * @param animationName New animationt state to switch into
+   */
   public void switchAnimation(String animationName) {
     try {
       ArrayList<Image> getAnimation = this.animations.get(animationName);
@@ -87,6 +103,9 @@ public class Animator {
     }
   }
 
+  /**
+   * Switches to default animation state
+   */
   public void switchDefault() {
     switchAnimation("default");
   }

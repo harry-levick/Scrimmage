@@ -12,12 +12,27 @@ import shared.util.maths.Vector2;
  * @author fxa579 Primary components responsible for collider info, such as collision state, size,
  *     shape
  */
-public abstract class Collider extends Component implements Serializable {
+public abstract class Collider extends Component  {
 
+  /**
+   * Determines if a collider is a trigger or not; triggers ignore physics collisions
+   */
   boolean trigger;
+  /**
+   * The type of collider as defaulted by the constructor of (Box, Circle, Edge, etc.)
+   */
   ColliderType colliderType;
+  /**
+   * The collision layer used to determine what sort of collisions are possible
+   */
   ColliderLayer layer;
 
+  /**
+   * Collider constructor with DEFAULT Layer
+   * @param parent The object the collider is attached to
+   * @param colliderType The type of collider
+   * @param trigger Whether this collider is a trigger or a collider
+   */
   Collider(GameObject parent, ColliderType colliderType, boolean trigger) {
     super(parent, ComponentType.COLLIDER);
     this.colliderType = colliderType;
@@ -25,6 +40,13 @@ public abstract class Collider extends Component implements Serializable {
     this.layer = ColliderLayer.DEFAULT;
   }
 
+  /**
+   * Collider Contructor
+   * @param parent The object the collider is attached to
+   * @param colliderType The type of collider
+   * @param layer The collision layer the collider is a part of
+   * @param trigger Whether this collider is a trigger or a collider
+   */
   Collider(GameObject parent, ColliderType colliderType, ColliderLayer layer, boolean trigger) {
     super(parent, ComponentType.COLLIDER);
     this.colliderType = colliderType;
@@ -33,6 +55,13 @@ public abstract class Collider extends Component implements Serializable {
   }
 
   // Static Collision Methods
+
+  /**
+   * Tests for a collision between a BoxCollider and a CircleCollider
+   * @param box BoxCollider to test
+   * @param circle CircleCollider to test
+   * @return True if the colliders intersect
+   */
   private static boolean boxCircleCollision(BoxCollider box, CircleCollider circle) {
     Vector2 n = box.getCentre().sub(circle.getCentre());
     Vector2 closestPoint = n.add(0);
@@ -60,6 +89,12 @@ public abstract class Collider extends Component implements Serializable {
     return !(d > circle.getRadius() && !inside);
   }
 
+  /**
+   * Tests for a collision between a CircleCollider and a CircleCollider
+   * @param circleA CircleCollider to test
+   * @param circleB CircleCollider to test
+   * @return True if the colliders intersect
+   */
   private static boolean circleCircleCollision(CircleCollider circleA, CircleCollider circleB) {
     if (circleA.getCentre().magnitude(circleB.getCentre())
         < circleA.getRadius() + circleB.getRadius()) {
@@ -68,16 +103,11 @@ public abstract class Collider extends Component implements Serializable {
     return false;
   }
 
-  /*
-    private static boolean boxBoxCollision(BoxCollider boxA, BoxCollider boxB) {
-    if (boxA.getCorners()[0].getX() <= boxB.getCorners()[3].getX()
-        && (boxA.getCorners()[3].getX() >= boxB.getCorners()[0].getX()
-        && (boxA.getCorners()[0].getY() <= boxB.getCorners()[1].getY()
-        && (boxA.getCorners()[1].getY() >= boxB.getCorners()[0].getY())))) {
-      return true;
-    }
-    return false;
-  }
+  /**
+   * Tests for a collision between a BoxCollider and a BoxCollider
+   * @param boxA BoxCollider to test
+   * @param boxB BoxCollider to test
+   * @return True if the colliders intersect
    */
   private static boolean boxBoxCollision(BoxCollider boxA, BoxCollider boxB) {
     for (Vector2 axisOfProjection : boxA.getAxes()) {
@@ -97,6 +127,12 @@ public abstract class Collider extends Component implements Serializable {
     return true;
   }
 
+  /**
+   * Projects a BoxCollider 2D shape to a given 1D axis
+   * @param a BoxCollider to project
+   * @param axis axis to project to
+   * @return the segment the BoxCollider exists on in the axis
+   */
   private static Vector2 projectToAxis(BoxCollider a, Vector2 axis) {
     // Project the shapes along the axis
     float min = axis.dot(a.getCorners()[0]); // Get the first min
@@ -111,30 +147,64 @@ public abstract class Collider extends Component implements Serializable {
     }
     return new Vector2(min, max);
   }
-
-  private static boolean pointBoxCollision(Vector2 pointA, BoxCollider boxB) {
-
-    return pointA.getX() >= boxB.getCorners()[0].getX()
-        && pointA.getX() <= boxB.getCorners()[3].getX()
-        && pointA.getY() >= boxB.getCorners()[0].getY()
-        && pointA.getY() <= boxB.getCorners()[2].getY();
+  /**
+   * Projects all points on a 2D Edge Collider shape to a given 1D axis
+   * @param a EdgeCollider to project
+   * @param axis axis to project to
+   * @return the segment the EdgeCollider exists on in the axis
+   */
+  private static Vector2 projectToAxis(EdgeCollider a, Vector2 axis) {
+    // Project the shapes along the axis
+    float min = axis.dot(a.getNodes().get(0)); // Get the first min
+    double max = min;
+    for (int i = 1; i < a.getNodes().size(); i++) {
+      float temp = axis.dot(a.getNodes().get(i)); // Get the dot product between the axis and the node
+      if (temp < min) {
+        min = temp;
+      } else if (temp > max) {
+        max = temp;
+      }
+    }
+    return new Vector2(min, max);
+  }
+  //TODO Comments
+  private static boolean pointBoxCollision(EdgeCollider edgeA, BoxCollider boxB) {
+    for (Vector2 axisOfProjection : boxB.getAxes()) {
+      Vector2 pA = projectToAxis(edgeA, axisOfProjection);
+      Vector2 pB = projectToAxis(boxB, axisOfProjection);
+      if (!pA.canOverlap(pB)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   private static boolean pointCircleCollision(Vector2 pointA, CircleCollider circB) {
     return circB.getRadius() >= pointA.magnitude(circB.getCentre());
   }
 
+  /**
+   * Tests if two objects can collider given their collision layer
+   */
   public static boolean canCollideWithLayer(ColliderLayer a, ColliderLayer b) {
     return Physics.COLLISION_LAYERS[a.toInt()][b.toInt()]
         && Physics.COLLISION_LAYERS[b.toInt()][a.toInt()];
   }
 
+  /**
+   * Tests for a collision between two colliders
+   * @param colA Collider to test
+   * @param colB Collider to test
+   * @return True if the colliders intersect
+   */
   public static boolean haveCollided(Collider colA, Collider colB) {
+    if(colA == null || colB == null) return false;
     if (colA == colB
         || !(canCollideWithLayer(colA.getLayer(), colB.getLayer()))
         || colB.isTrigger()) {
       return false;
     }
+
     boolean toRet = false;
     switch (colA.getColliderType()) {
       case BOX:
@@ -162,7 +232,7 @@ public abstract class Collider extends Component implements Serializable {
           case BOX:
             toRet =
                 pointBoxCollision(
-                    ((EdgeCollider) colA).findClosestPoint(((BoxCollider) colB).getCentre()),
+                    (EdgeCollider) colA,
                     (BoxCollider) colB);
             break;
           case CIRCLE:
@@ -182,7 +252,7 @@ public abstract class Collider extends Component implements Serializable {
   }
 
   public void initialise(Group root) {}
-
+  public abstract Vector2 getCentre();
   // Getters
 
   public ColliderLayer getLayer() {

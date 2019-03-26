@@ -1,5 +1,7 @@
 package server.ai;
 
+import client.handlers.userData.AccountData;
+import client.main.Settings;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -7,7 +9,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import javafx.scene.Group;
+import server.ai.pathFind.AStar.SearchNode;
+import shared.gameObjects.GameObject;
 import shared.gameObjects.players.Player;
+import shared.gameObjects.weapons.Weapon;
 import shared.handlers.levelHandler.LevelHandler;
 import shared.util.maths.Vector2;
 
@@ -16,31 +23,40 @@ import shared.util.maths.Vector2;
  */
 public class Bot extends Player {
 
+  /** The action array index for jump key */
   public static final int KEY_JUMP = 0;
+  /** The action array index for left key */
   public static final int KEY_LEFT = 1;
+  /** The action array index for right key */
   public static final int KEY_RIGHT = 2;
-  public float jumpTime;
-
+  /** The state that the bot is in */
   FSA state;
+  /** The bots target */
   public Player targetPlayer;
+  /** All of the players in the world, players + bots */
   LinkedHashMap<UUID, Player> allPlayers;
-  // Get the LevelHandler through the constructor
+  /** The levelHandler passed in the constructor, used for collecting game objects */
   LevelHandler levelHandler;
+  /** Thread to govern the chasing path to the enemy */
   ChasingThread chasingThread;
+  /** Thread to govern the fleeing path from the enemy */
   FleeingThread fleeingThread;
+  /** The list of actions to take from when the bot is chasing the enemy */
   List<boolean[]> chasingPlan;
+  /** The list of actions to take from when the bot is fleeing the enemy */
   List<boolean[]> fleeingPlan;
 
+  int prevHealth;
+
   /**
-   *
    * @param x x pos of the bot
    * @param y y pos of the bot
    * @param playerUUID
    * @param levelHandler
    */
-  public Bot(double x, double y, UUID playerUUID,
-      LevelHandler levelHandler) {
-    super(x, y, playerUUID, levelHandler);
+  public Bot(double x, double y, UUID playerUUID, LevelHandler levelHandler) {
+    super(x, y, playerUUID);
+    this.prevHealth = this.health;
     this.state = FSA.INITIAL_STATE;
     this.levelHandler = levelHandler;
     this.targetPlayer = findTarget();
@@ -50,24 +66,44 @@ public class Bot extends Player {
     this.chasingThread = new ChasingThread(this, chasingPlan);
     chasingThread.setName("Bot chasingThread");
     this.fleeingThread = new FleeingThread(this, fleeingPlan);
-
   }
 
   /**
-   * Copy constructor
+   * Constructor to copy an object of Bot.
    * @param that object to be copied
    */
   public Bot(Bot that) {
-    super(that.getX(), that.getY(), UUID.randomUUID(), that.levelHandler);
+    super(that.getX(), that.getY(), UUID.randomUUID());
     this.levelHandler = that.levelHandler;
 
   }
 
+  /**
+   * Begins the loops of both the chasing path-finder thread and the fleeing path-finder thread.
+   */
   public void startThread() {
     chasingThread.start();
     fleeingThread.start();
   }
 
+  /**
+   * Terminates the bot's threads and creates new ones, used when the map is changed.
+   */
+  public void reset() {
+    chasingThread.terminate();
+    fleeingThread.terminate();
+
+    chasingThread = new ChasingThread(this, chasingPlan);
+    fleeingThread = new FleeingThread(this, fleeingPlan);
+    startThread();
+
+    super.reset();
+  }
+
+  /**
+   * Check to see if the bot can jump in its current position
+   * @return True if the bot is on the ground (can jump).
+   */
   public boolean mayJump() {
     return grounded;
   }
@@ -79,18 +115,32 @@ public class Bot extends Player {
       chasingThread.terminate();
       fleeingThread.terminate();
     }
-    click = false;
+    setFalse();
 
-    double newDist;
+    double distanceToTarget = 0;
     targetPlayer = findTarget();
-    // Calculate the distance to the updated target
-    newDist = calcDist();
 
-    state = state.next(targetPlayer, this, newDist);
+    if (targetPlayer != null)
+      distanceToTarget = calcDist();
+
+    Weapon nearbyWeapon = findClosestItem(levelHandler.getGameObjects().values().stream()
+        .filter(w -> w instanceof Weapon && (((Weapon) w).getHolder() == null))
+        .map(Weapon.class::cast)
+        .collect(Collectors.toList()));
+
+    if (nearbyWeapon != null) {
+      double distanceToWeap = (nearbyWeapon.getTransform().getPos()).magnitude(this.getTransform().getPos());
+      if (distanceToWeap < 80) {
+        this.throwHoldingKey = true;
+      }
+    }
+
+    state = state.next(targetPlayer, this, distanceToTarget, prevHealth);
 
     switch (state) {
       case IDLE:
         System.out.println("IDLE");
+
         break;
       case CHASING:
         System.out.println("CHASING");
@@ -112,12 +162,20 @@ public class Bot extends Player {
 
         break;
     }
+    prevHealth = this.health;
     super.update();
+  }
+
+  @Override
+  public void initialise(Group root, Settings settings) {
+    super.initialise(root, settings);
+    Random random = new Random();
+    int[] newSkin = {random.nextInt(AccountData.SKIN_COUNT), random.nextInt(AccountData.SKIN_COUNT),random.nextInt(AccountData.SKIN_COUNT),random.nextInt(AccountData.SKIN_COUNT)};
+    updateSkinRender(newSkin);
   }
 
   /**
    * Calculates the distance from the bot to the current target player
-   *
    * @return The distance to the target player
    */
   private double calcDist() {
@@ -128,6 +186,10 @@ public class Bot extends Player {
     return botPos.exactMagnitude(targetPos);
   }
 
+  /**
+   * Executes the action given the state the bot is in (Fleeing or Attacking)
+   * @param state The state the bot is in when this method is called.
+   */
   private void executeAction(FSA state) {
     boolean[] action = new boolean[]{false, false, false};
 
@@ -149,46 +211,30 @@ public class Bot extends Player {
       this.rightKey = action[Bot.KEY_RIGHT];
     }
 
-
   }
 
   /**
-   * Invert a persuing action so that it can be used as a un-intelligente fleeing action
-   * @param action
-   * @return
+   * Updates the bot, used only by the path-finder when simulating in the world.
    */
-  private boolean[] invertAction(boolean[] action) {
-    Random r = new Random();
-    boolean move = r.nextDouble() <= 0.50;
-
-    if (action[Bot.KEY_LEFT]) {
-      action[Bot.KEY_LEFT] = false;
-      action[Bot.KEY_RIGHT] = true;
-      if (move) {
-        action[Bot.KEY_JUMP] = true;
-      }
-
-    } else if (action[Bot.KEY_RIGHT]) {
-      action[Bot.KEY_RIGHT] = false;
-      action[Bot.KEY_LEFT] = true;
-      if (move) {
-        action[Bot.KEY_JUMP] = true;
-      }
-    }
-
-    return action;
-  }
-
   public void simulateUpdate() {
     super.update();
   }
 
+  /**
+   * Used by the path-finder to simulate the action of the bot, setting the movement booleans based
+   * on the action given.
+   * @param action The action the bot is to take.
+   */
   public void simulateAction(boolean[] action) {
     this.jumpKey = action[Bot.KEY_JUMP];
     this.leftKey = action[Bot.KEY_LEFT];
     this.rightKey = action[Bot.KEY_RIGHT];
   }
 
+  /**
+   * Used by the path-finder to simulate the bots position, doesnt have the same visual
+   * effects as the applyInput() method.
+   */
   public void simulateApplyInput() {
     if (rightKey) {
       rb.moveX(speed);
@@ -217,11 +263,12 @@ public class Bot extends Player {
   }
 
   /**
-   * Finds the closest player
-   * @return The player who is the closest to the bot
+   * Finds the closest player to the bot.
+   * @return The target player
    */
   public Player findTarget() {
     allPlayers = levelHandler.getPlayers();
+    allPlayers.putAll(levelHandler.getBotPlayerList());
 
     Player target = null;
     double targetDistance = Double.POSITIVE_INFINITY;
@@ -247,7 +294,52 @@ public class Bot extends Player {
     return target;
   }
 
+  /**
+   * Finds the closest pick-upable item
+   * @param allItems A list of all the items in the world.
+   * @return The item that is the closest to the bot
+   */
+  public Weapon findClosestItem(List<Weapon> allItems) {
+    Weapon closestWeap = null;
+    Vector2 botPos = new Vector2((float) this.getX(), (float) this.getY());
+    double targetDistance = Double.POSITIVE_INFINITY;
+
+    for (Weapon weap : allItems) {
+      Vector2 itemPos = new Vector2((float) weap.getX(), (float) weap.getY());
+      double distance = botPos.exactMagnitude(itemPos);
+
+      if (distance < targetDistance &&
+          (weap.getWeaponRank() > this.getHolding().getWeaponRank())) {
+        targetDistance = distance;
+        closestWeap = weap;
+      }
+    }
+
+    return closestWeap;
+  }
+
+  /**
+   * Set all of the movement booleans false.
+   */
+  private void setFalse() {
+    jumpKey = false;
+    leftKey = false;
+    rightKey = false;
+    click = false;
+    throwHoldingKey = false;
+  }
+
+  /**
+   * Returns the LevelHandler that was given to the bot on creation.
+   * @return LevelHandler
+   */
   public LevelHandler getLevelHandler() {
     return levelHandler;
   }
+
+  /**
+   * Get the bots target player
+   */
+  public Player getTargetPlayer() { return targetPlayer; }
+
 }

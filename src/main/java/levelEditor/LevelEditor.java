@@ -5,9 +5,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentSkipListMap;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -26,10 +26,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
+import javafx.scene.transform.Scale;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import levelEditor.LevelEditor.OBJECT_TYPES;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import shared.gameObjects.Blocks.Metal.MetalBlockLargeObject;
 import shared.gameObjects.Blocks.Metal.MetalBlockSmallObject;
 import shared.gameObjects.Blocks.Metal.MetalFloorObject;
@@ -62,15 +65,19 @@ import shared.gameObjects.objects.utility.BlueBlock;
 import shared.gameObjects.objects.utility.GreenBlock;
 import shared.gameObjects.objects.utility.RedBlock;
 import shared.gameObjects.objects.utility.YellowBlock;
+import shared.gameObjects.score.Podium1;
 import shared.gameObjects.weapons.Handgun;
+import shared.gameObjects.weapons.WeaponSpawner;
 import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.MapLoader;
+import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import shared.util.maths.Vector2;
 
 public class LevelEditor extends Application {
 
-  private Settings settings = new Settings(); //todo needs to be chnaged into Client settings since currently detached
-  private ConcurrentSkipListMap<UUID, GameObject> gameObjects;
+  private static final Logger LOGGER = LogManager.getLogger(LevelEditor.class.getName());
+  private Settings settings = new Settings(null, null);
+  private ConcurrentLinkedHashMap<UUID, GameObject> gameObjects;
   private ArrayList<PlayerSpawnpoint> playerSpawns = new ArrayList<>();
   private MapDataObject mapDataObject;
   private boolean snapToGrid = true;
@@ -88,6 +95,8 @@ public class LevelEditor extends Application {
 
   private String filename = "";
   private String filepath = settings.getMapsPath() + File.separator;
+
+  private Vector2 scaleRatio;
 
   /**
    * ADDING NEW OBJECTS TO THE MAP CREATOR: 1. add a new object name in the enum OBJECT_TYPES 2. in
@@ -127,13 +136,15 @@ public class LevelEditor extends Application {
     objectMap.put(OBJECT_TYPES.GREENB, new GameObjectTuple("Green Block", 1, 1));
     objectMap.put(OBJECT_TYPES.YELLOWB, new GameObjectTuple("Yellow Block", 1, 1));
     objectMap.put(OBJECT_TYPES.LASER, new GameObjectTuple("Laser", 2, 2));
+    objectMap.put(OBJECT_TYPES.W_SPAWNER, new GameObjectTuple("Weapon Spawner", 1, 1));
+    objectMap.put(OBJECT_TYPES.PODIUM1, new GameObjectTuple("Podium 1", 1, 1));
   }
 
   private void scenePrimaryClick(
       Stage primaryStage, Group root, Group objects, Group background, MouseEvent event) {
     if (!isInObject(
-        event.getX(),
-        event.getY(),
+        (event.getX() / scaleRatio.getX()),
+        (event.getY() / scaleRatio.getY()),
         objectMap.get(objectTypeSelected).getX(),
         objectMap.get(objectTypeSelected).getY())) {
       GameObject temp = null;
@@ -141,8 +152,10 @@ public class LevelEditor extends Application {
       switch (objectTypeSelected) {
         case PLAYER:
           if (mapDataObject.getSpawnPoints().size() < spawnPointLimit) {
-            temp = new PlayerSpawnpoint(getGridX(event.getX()), getGridY(event.getY()), uuid);
-            mapDataObject.addSpawnPoint(getGridX(event.getX()), getGridY(event.getY()));
+            temp = new PlayerSpawnpoint(getGridX((event.getX() / scaleRatio.getX())),
+                getGridY((event.getY() / scaleRatio.getY())), uuid);
+            mapDataObject.addSpawnPoint(getGridX((event.getX() / scaleRatio.getX())),
+                getGridY((event.getY() / scaleRatio.getY())));
           } else {
             popup(
                 primaryStage,
@@ -186,8 +199,8 @@ public class LevelEditor extends Application {
         case BTN_SP:
           temp =
               new ButtonSingleplayer(
-                  getGridX(event.getX()),
-                  getGridY(event.getY()),
+                  getGridX((event.getX() / scaleRatio.getX())),
+                  getGridY((event.getY() / scaleRatio.getY())),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
                   ObjectType.Bot,
@@ -197,8 +210,8 @@ public class LevelEditor extends Application {
         case BTN_JOIN:
           temp =
               new ButtonJoin(
-                  getGridX(event.getX()),
-                  getGridY(event.getY()),
+                  getGridX((event.getX() / scaleRatio.getX())),
+                  getGridY((event.getY() / scaleRatio.getY())),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
                   ObjectType.Bot,
@@ -208,8 +221,8 @@ public class LevelEditor extends Application {
         case BTN_MP:
           temp =
               new ButtonMultiplayer(
-                  getGridX(event.getX()),
-                  getGridY(event.getY()),
+                  getGridX((event.getX() / scaleRatio.getX())),
+                  getGridY((event.getY() / scaleRatio.getY())),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
                   ObjectType.Bot,
@@ -219,8 +232,8 @@ public class LevelEditor extends Application {
         case BTN_ST:
           temp =
               new ButtonSettings(
-                  getGridX(event.getX()),
-                  getGridY(event.getY()),
+                  getGridX((event.getX() / scaleRatio.getX())),
+                  getGridY((event.getY() / scaleRatio.getY())),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
                   ObjectType.Bot,
@@ -230,8 +243,8 @@ public class LevelEditor extends Application {
         case BTN_LE:
           temp =
               new ButtonLeveleditor(
-                  getGridX(event.getX()),
-                  getGridY(event.getY()),
+                  getGridX((event.getX() / scaleRatio.getX())),
+                  getGridY((event.getY() / scaleRatio.getY())),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
                   ObjectType.Bot,
@@ -241,11 +254,9 @@ public class LevelEditor extends Application {
         case WPN_HG:
           temp =
               new Handgun(
-                  getGridX(event.getX()),
-                  getGridY(event.getY()),
-                  getScaledSize(objectMap.get(objectTypeSelected).getX()),
-                  getScaledSize(objectMap.get(objectTypeSelected).getY()),
-                  "Handgun",
+                  getGridX((event.getX() / scaleRatio.getX())),
+                  getGridY((event.getY() / scaleRatio.getY())),
+                  "Handgun@LevelEditor.scenePrimaryClick",
                   null, // holder
                   uuid);
           break;
@@ -253,8 +264,8 @@ public class LevelEditor extends Application {
         case BLOCK_METAL_LARGE:
           temp =
               new MetalBlockLargeObject(
-                  getGridX(event.getX()),
-                  getGridY(event.getY()),
+                  getGridX((event.getX() / scaleRatio.getX())),
+                  getGridY((event.getY() / scaleRatio.getY())),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
                   ObjectType.Bot,
@@ -264,8 +275,8 @@ public class LevelEditor extends Application {
         case BLOCK_METAL_SMALL:
           temp =
               new MetalBlockSmallObject(
-                  getGridX(event.getX()),
-                  getGridY(event.getY()),
+                  getGridX((event.getX() / scaleRatio.getX())),
+                  getGridY((event.getY() / scaleRatio.getY())),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
                   ObjectType.Bot,
@@ -275,8 +286,8 @@ public class LevelEditor extends Application {
         case FLOOR_METAL:
           temp =
               new MetalFloorObject(
-                  getGridX(event.getX()),
-                  getGridY(event.getY()),
+                  getGridX((event.getX() / scaleRatio.getX())),
+                  getGridY((event.getY() / scaleRatio.getY())),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
                   ObjectType.Bot,
@@ -286,8 +297,8 @@ public class LevelEditor extends Application {
         case BLOCK_STONE:
           temp =
               new StoneBlockObject(
-                  getGridX(event.getX()),
-                  getGridY(event.getY()),
+                  getGridX((event.getX() / scaleRatio.getX())),
+                  getGridY((event.getY() / scaleRatio.getY())),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
                   ObjectType.Bot,
@@ -297,8 +308,8 @@ public class LevelEditor extends Application {
         case FLOOR_STONE:
           temp =
               new StoneFloorObject(
-                  getGridX(event.getX()),
-                  getGridY(event.getY()),
+                  getGridX((event.getX() / scaleRatio.getX())),
+                  getGridY((event.getY() / scaleRatio.getY())),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
                   ObjectType.Bot,
@@ -308,8 +319,8 @@ public class LevelEditor extends Application {
         case WALL_STONE:
           temp =
               new StoneWallObject(
-                  getGridX(event.getX()),
-                  getGridY(event.getY()),
+                  getGridX((event.getX() / scaleRatio.getX())),
+                  getGridY((event.getY() / scaleRatio.getY())),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
                   ObjectType.Bot,
@@ -319,8 +330,8 @@ public class LevelEditor extends Application {
         case BLOCK_WOOD_LARGE:
           temp =
               new WoodBlockLargeObject(
-                  getGridX(event.getX()),
-                  getGridY(event.getY()),
+                  getGridX((event.getX() / scaleRatio.getX())),
+                  getGridY((event.getY() / scaleRatio.getY())),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
                   ObjectType.Bot,
@@ -330,8 +341,8 @@ public class LevelEditor extends Application {
         case BLOCK_WOOD_SMALL:
           temp =
               new WoodBlockSmallObject(
-                  getGridX(event.getX()),
-                  getGridY(event.getY()),
+                  getGridX((event.getX() / scaleRatio.getX())),
+                  getGridY((event.getY() / scaleRatio.getY())),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
                   ObjectType.Bot,
@@ -341,8 +352,8 @@ public class LevelEditor extends Application {
         case FLOOR_WOOD:
           temp =
               new WoodFloorObject(
-                  getGridX(event.getX()),
-                  getGridY(event.getY()),
+                  getGridX((event.getX() / scaleRatio.getX())),
+                  getGridY((event.getY() / scaleRatio.getY())),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
                   ObjectType.Bot,
@@ -350,18 +361,24 @@ public class LevelEditor extends Application {
           break;
         case SPIKES:
           temp =
-              new Spikes(getGridX(event.getX()),
-                  getGridY(event.getY()),
+              new Spikes(getGridX((event.getX() / scaleRatio.getX())),
+                  getGridY((event.getY() / scaleRatio.getY())),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
                   ObjectType.Bot,
                   uuid);
           break;
+        case PODIUM1:
+          temp =
+              new Podium1(getGridX((event.getX() / scaleRatio.getX())),
+                  getGridY((event.getY() / scaleRatio.getY())), getScaledSize(4), getScaledSize(8),
+                  uuid);
+          break;
         case REDB:
           temp =
               new RedBlock(
-                  getGridX(event.getX()),
-                  getGridY(event.getY()),
+                  getGridX((event.getX() / scaleRatio.getX())),
+                  getGridY((event.getY() / scaleRatio.getY())),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
                   ObjectType.Bot,
@@ -371,8 +388,8 @@ public class LevelEditor extends Application {
         case BLUEB:
           temp =
               new BlueBlock(
-                  getGridX(event.getX()),
-                  getGridY(event.getY()),
+                  getGridX((event.getX() / scaleRatio.getX())),
+                  getGridY((event.getY() / scaleRatio.getY())),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
                   ObjectType.Bot,
@@ -382,8 +399,8 @@ public class LevelEditor extends Application {
         case GREENB:
           temp =
               new GreenBlock(
-                  getGridX(event.getX()),
-                  getGridY(event.getY()),
+                  getGridX((event.getX() / scaleRatio.getX())),
+                  getGridY((event.getY() / scaleRatio.getY())),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
                   ObjectType.Bot,
@@ -393,8 +410,8 @@ public class LevelEditor extends Application {
         case YELLOWB:
           temp =
               new YellowBlock(
-                  getGridX(event.getX()),
-                  getGridY(event.getY()),
+                  getGridX((event.getX() / scaleRatio.getX())),
+                  getGridY((event.getY() / scaleRatio.getY())),
                   getScaledSize(objectMap.get(objectTypeSelected).getX()),
                   getScaledSize(objectMap.get(objectTypeSelected).getY()),
                   ObjectType.Bot,
@@ -404,8 +421,18 @@ public class LevelEditor extends Application {
         case LASER:
           temp =
               new LaserBeam(
-                  getGridX(event.getX()),
-                  getGridY(event.getY()),
+                  getGridX((event.getX() / scaleRatio.getX())),
+                  getGridY((event.getY() / scaleRatio.getY())),
+                  uuid
+              );
+          break;
+        case W_SPAWNER:
+          temp =
+              new WeaponSpawner(
+                  getGridX((event.getX() / scaleRatio.getX())),
+                  getGridY((event.getY() / scaleRatio.getY())),
+                  getScaledSize(objectMap.get(objectTypeSelected).getX()),
+                  getScaledSize(objectMap.get(objectTypeSelected).getY()),
                   uuid
               );
           break;
@@ -413,9 +440,9 @@ public class LevelEditor extends Application {
 
       if (temp != null) {
         if (temp.getId() == ObjectType.Background) {
-          temp.initialise(background);
+          temp.initialise(background, settings);
         } else {
-          temp.initialise(objects);
+          temp.initialise(objects, settings);
         }
         if (objectTypeSelected == OBJECT_TYPES.PLAYER && temp.getId() != ObjectType.Background) {
           playerSpawns.add((PlayerSpawnpoint) temp);
@@ -547,11 +574,14 @@ public class LevelEditor extends Application {
     new AnimationTimer() {
       @Override
       public void handle(long now) {
+        scaleRendering(primaryStage);
         gameObjects.forEach((key, gameObject) -> gameObject.render());
         playerSpawns.forEach(player -> player.render());
         if (mapDataObject.getBackground() != null) {
           mapDataObject.getBackground().render();
         }
+        scaleRatio = new Vector2(primaryStage.getWidth() / 1920,
+            primaryStage.getHeight() / 1080);
       }
     }.start();
   }
@@ -581,7 +611,8 @@ public class LevelEditor extends Application {
   }
 
   private void initialiseNewMap() {
-    gameObjects = new ConcurrentSkipListMap<>();
+    gameObjects = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
+        .maximumWeightedCapacity(500).build();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.IN_GAME);
   }
 
@@ -603,8 +634,8 @@ public class LevelEditor extends Application {
 
   private boolean isInObject(double x, double y, int newObjX, int newObjY) {
     boolean conflict = false;
-    for (UUID key : gameObjects.keySet()) {
-      GameObject object = gameObjects.get(key);
+    for (Map.Entry<UUID, GameObject> entry : gameObjects.entrySet()) {
+      GameObject object = entry.getValue();
       double ulX = object.getX();
       double ulY = object.getY();
       double lrX = ulX + object.getTransform().getSize().getX();
@@ -636,10 +667,10 @@ public class LevelEditor extends Application {
   }
 
   private void sceneSecondaryClick(Stage primaryStage, Group root, MouseEvent event) {
-    ConcurrentSkipListMap<UUID, GameObject> removeList = gameObjects;
+    ConcurrentLinkedHashMap<UUID, GameObject> removeList = gameObjects;
     ArrayList<PlayerSpawnpoint> removeSpawn = playerSpawns;
-    double x = event.getX();
-    double y = event.getY();
+    double x = (event.getX() / scaleRatio.getX());
+    double y = (event.getY() / scaleRatio.getY());
     gameObjects.forEach((key2, object) -> {
       double ulX = object.getX();
       double ulY = object.getY();
@@ -757,6 +788,13 @@ public class LevelEditor extends Application {
     dialog.show();
   }
 
+  public void scaleRendering(Stage primaryStage) {
+    Vector2 scaleRatio = new Vector2(primaryStage.getWidth() / 1920,
+        primaryStage.getHeight() / 1080);
+    Scale scale = new Scale(scaleRatio.getX(), scaleRatio.getY(), 0, 0);
+    primaryStage.getScene().getRoot().getTransforms().setAll(scale);
+  }
+
   protected enum OBJECT_TYPES {
     PLAYER,
     BTN_SP,
@@ -789,6 +827,8 @@ public class LevelEditor extends Application {
     GREENB,
     YELLOWB,
     LASER,
+    W_SPAWNER,
+    PODIUM1
   }
 }
 

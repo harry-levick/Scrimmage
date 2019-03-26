@@ -1,13 +1,10 @@
 package client.main;
 
-import client.handlers.AchivementHandler.AchivementHandler;
 import client.handlers.audioHandler.MusicAssets.PLAYLIST;
 import client.handlers.inputHandler.KeyboardInput;
 import client.handlers.inputHandler.MouseInput;
 import client.handlers.networkHandlers.ClientNetworkManager;
 import client.handlers.networkHandlers.ConnectionHandler;
-import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
-import de.codecentric.centerdevice.javafxsvg.dimension.PrimitiveDimensionProvider;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,6 +13,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
@@ -35,6 +33,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -55,25 +54,74 @@ import shared.physics.Physics;
 import shared.util.Path;
 import shared.util.maths.Vector2;
 
+/**
+ * Main class of the game: The Game Client
+ */
 public class Client extends Application {
 
+  /**
+   * A temporary implementation for deactivating game music and sound effects
+   */
   public static boolean musicActive = true;
 
   private static final Logger LOGGER = LogManager.getLogger(Client.class.getName());
+
+  /**
+   * Handler for changing levels/maps
+   */
   public static LevelHandler levelHandler;
+
+  /**
+   * Global settings, defines some game settings/configs and paths of resources
+   */
   public static Settings settings;
+
+  /**
+   * Boolean state if a multiplayer game is being played
+   */
   public static boolean multiplayer;
+
+  /**
+   * Boolean state if a singleplayer game is being played
+   */
   public static boolean singleplayerGame;
+
+  /**
+   * Server/Client connection handling
+   */
   public static ConnectionHandler connectionHandler;
+
+  /**
+   * Boolean state if updates are being sent to the server
+   */
   public static boolean sendUpdate;
+
+  /**
+   * Game timer //todo NO USES?
+   */
   public static Timer timer = new Timer("Timer", true);
+
+  /**
+   * Tracking current input number
+   */
   public static int inputSequenceNumber;
+
+  /**
+   * Tracking all inputs sent to server
+   */
   public static ArrayList<PacketInput> pendingInputs;
-  public static TimerTask task;
+
+  /**
+   * Screen rendering scale ratio
+   */
+  public static Vector2 scaleRatio;
+
+  /**
+   * JavaFX root for all GameObjects
+   */
   public static Group gameRoot;
-  private final float timeStep = 0.0166f;
+
   private final String gameTitle = "Alone in the Dark";
-  private LinkedList<Map> playlist;
   private KeyboardInput keyInput;
   private MouseInput mouseInput;
   private Group root;
@@ -82,33 +130,46 @@ public class Client extends Application {
   private static Group creditsRoot;
   private static Group creditsBackground;
   private Scene scene;
-  private float maximumStep;
-  private long previousTime;
-  private float accumulatedTime;
   private float elapsedSinceFPS = 0f;
   private int framesElapsedSinceFPS = 0;
   private static UI userInterface;
   private static boolean credits = false;
   private static int creditStartDelay = 100;
-  private static double resolutionX;
-  private static double resolutionY;
-  private boolean gameOver;
+  private static boolean gameOver;
+  private boolean startedGame;
+  private int timeRemaining;
+  private int timeLimit = 3; // Time limit in minutes
   private static boolean settingsOverlay = false;
   private static ArrayList<GameObject> settingsObjects = new ArrayList<>();
-  private static ClientNetworkManager networkManager;
+  private final float timeStep = 0.0166f;
+  private float maximumStep;
+  private long previousTime;
+  private float accumulatedTime;
 
+
+  /**
+   * Launch game client
+   */
   public static void main(String args[]) {
     launch(args);
   }
 
+  /**
+   * Sets a new user interface in the uiRoot, rendered by the main game loop depending on use
+   */
   public static void setUserInterface() {
     userInterface = new UI(uiRoot, levelHandler.getClientPlayer());
   }
 
+  /**
+   * Toggle display the mini-settings overlay. Shares use of creditsRoot since the ui and credit are not displayed at the same time. Clears all elements in the JavaFX group when toggle off.
+   */
   public static void settingsToggle() {
     // todo check if ingame
     // show/overlay settings
-    if (settingsOverlay == false && levelHandler.getMap().getGameState() != GameState.SETTINGS) {
+    if (settingsOverlay == false &&
+        levelHandler.getMap().getGameState() != GameState.SETTINGS &&
+        levelHandler.getMap().getGameState() != GameState.MAIN_MENU) {
       settingsOverlay = true;
 
       int quitButtonExtraPadding = 0;
@@ -134,9 +195,9 @@ public class Client extends Application {
                 + File.separator + "panel.png"));
         ImageView iv = new ImageView(popupBackground);
         iv.setFitWidth(settings.getGrisPos(12));
-        iv.setFitHeight(settings.getGrisPos(7) + quitButtonExtraPadding);
+        iv.setFitHeight(settings.getGrisPos(10) + quitButtonExtraPadding);
         iv.setX(settings.getGrisPos(18));
-        iv.setY(settings.getGrisPos(5));
+        iv.setY(settings.getGrisPos(3));
         creditsRoot.getChildren().add(iv);
       } catch (FileNotFoundException e) {
         Rectangle rect = new Rectangle();
@@ -148,7 +209,7 @@ public class Client extends Application {
       }
       //add controls
       settingsObjects.add(
-          new SoundSlider(settings.getGrisPos(20), settings.getGrisPos(7), settings.getGrisPos(8),
+          new SoundSlider(settings.getGrisPos(20), settings.getGrisPos(5), settings.getGrisPos(8),
               settings.getGrisPos(1), SOUND_TYPE.MUSIC,
               "Music", ObjectType.Button, UUID.randomUUID()));
       settingsObjects.add(
@@ -157,8 +218,8 @@ public class Client extends Application {
               "Sound Effects", ObjectType.Button, UUID.randomUUID()));
       if (quitButtonExtraPadding != 0) {
         ButtonQuit quit = new ButtonQuit(
-            settings.getGrisPos(20),
-            settings.getGrisPos(11),
+            settings.getGrisPos(20) - 20,
+            settings.getGrisPos(12),
             settings.getGrisPos(8),
             settings.getGrisPos(2),
             ObjectType.Button,
@@ -166,7 +227,7 @@ public class Client extends Application {
         settingsObjects.add(quit);
       }
       settingsObjects.forEach(obj -> obj.initialiseAnimation());
-      settingsObjects.forEach(obj -> obj.initialise(creditsRoot));
+      settingsObjects.forEach(obj -> obj.initialise(creditsRoot, settings));
       settingsObjects.forEach(obj -> obj.render());
     } else {
       closeSettingsOverlay();
@@ -177,18 +238,24 @@ public class Client extends Application {
     }
   }
 
+  /**
+   * Clear the creditsRoot JavaFX group, hiding the overlay
+   */
   public static void closeSettingsOverlay() {
     settingsOverlay = false;
     creditsRoot.getChildren().clear();
     settingsObjects.clear();
   }
 
+  /**
+   * Shows the game credits in the creditsRoot, uses the CREDITS.MD file, allowing styling by italics or bold text, as well as optional 1st and 2nd size headers. A single <br> in any tag will display the while line as empty.
+   */
   public static void showCredits() {
     credits = true;
     ArrayList<String> lines = new ArrayList<String>();
     levelHandler.getMusicAudioHandler().playMusic(
         "LOCAL_FORECAST"); // not using playlist since assumed length of credits is less than the length of song
-    Rectangle bg = new Rectangle(0, 0, settings.getWindowWidth(), settings.getWindowHeight());
+    Rectangle bg = new Rectangle(0, 0, settings.getMapWidth(), settings.getMapHeight());
     creditsBackground.getChildren().add(bg);
     try {
       BufferedReader reader = new BufferedReader(
@@ -204,9 +271,8 @@ public class Client extends Application {
       // todo io exception
     }
     int yOffset = 0;
-    int x = settings.getWindowWidth() / 2; // todo auto fetch
+    int x = settings.getMapWidth() / 2; // todo auto fetch
     int y = 200;
-    ArrayList<Text> textList = new ArrayList<>();
     for (String line : lines) {
       if (!line.equals("")) {
         int extraBufferSpace = 0;
@@ -265,6 +331,9 @@ public class Client extends Application {
 
   }
 
+  /**
+   * Hides the credits being displayed and resets the animation for the next time the credits are displayed.
+   */
   public static void endCredits() {
     credits = false;
     creditStartDelay = 100; //todo magic number
@@ -274,6 +343,11 @@ public class Client extends Application {
         .playMusicPlaylist(PLAYLIST.MENU); //assume always return to menu map from credits
   }
 
+  /**
+   * Calculates the FPS of the game and sets it in the title of the game window
+   * @param secondElapsed
+   * @param primaryStage
+   */
   public void calculateFPS(float secondElapsed, Stage primaryStage) {
     elapsedSinceFPS += secondElapsed;
     framesElapsedSinceFPS++;
@@ -288,61 +362,78 @@ public class Client extends Application {
     }
   }
 
+  /**
+   * Initialise the settings and sets multiplayer as false
+   */
   public void init() {
     maximumStep = 0.0166f;
     previousTime = 0;
     accumulatedTime = 0;
-    settings = new Settings();
+    settings = new Settings(levelHandler, gameRoot);
     multiplayer = false;
-    resolutionX = settings.getMapWidth();
-    resolutionY = settings.getMapHeight();
-    networkManager = new ClientNetworkManager();
-    // Start off screen
   }
 
-  public void endGame() {
+  /**
+   * The end of the game, resets game back to main menu
+   */
+  public static void endGame() {
     singleplayerGame = false;
+    gameOver = false;
     levelHandler.getPlayers().entrySet().removeAll(levelHandler.getBotPlayerList().entrySet());
     levelHandler.getBotPlayerList().forEach((key, gameObject) -> gameObject.removeRender());
     levelHandler.getBotPlayerList().forEach((key, gameObject) -> gameObject = null);
     levelHandler.getBotPlayerList().clear();
     levelHandler.changeMap(
-        new Map(
-            "Main Menu",
-            Path.convert(settings.getMenuPath() + File.separator + "menus/main_menu.map")),
-        false);
+        new Map("menus/main_menu.map", Path.convert("src/main/resources/menus/main_menu.map")),
+        false, false);
+
   }
 
+  /**
+   * Begin the timer
+   */
+  private void beginTimer() {
+    if (!startedGame) {
+      timeRemaining = timeLimit * 60;
+
+      Timer secondsTimer = new Timer();
+      secondsTimer.scheduleAtFixedRate(new TimerTask() {
+        @Override
+        public void run() {
+          System.out.println(String.format("%d:%d", timeRemaining / 60, timeRemaining - ((timeRemaining / 60) * 60)));
+          timeRemaining -= 1;
+        }
+      }, 0, 1000);
+
+      long delay = 1000l * 60l * timeLimit;
+      timer.schedule(new TimerTask() {
+        @Override
+        public void run() {
+          gameOver = true;
+          secondsTimer.cancel();
+        }
+      }, delay);
+
+      startedGame = true;
+    }
+  }
+  // TODO change this to get the chosen playlist and all of its maps
+  /**
+   * Main game setup and game loop
+   * @param primaryStage The JavaFX stage the game is put in
+   */
   @Override
   public void start(Stage primaryStage) {
-    gameOver = false;
-    SvgImageLoaderFactory.install(new PrimitiveDimensionProvider());
-    playlist = new LinkedList<>();
-    // Testing code
-    for (int i = 1; i < 11; i++) {
-      playlist.add(
-          new Map(
-              "Map" + i,
-              Path.convert(settings.getMapsPath() + File.separator + "map" + i + ".map")));
-    }
-
-    /** Setup Game timer */
-    task =
-        new TimerTask() {
-          @Override
-          public void run() {
-            gameOver = true;
-          }
-        };
-
     setupRender(primaryStage);
+    levelHandler = new LevelHandler(settings, backgroundRoot, gameRoot, uiRoot);
+    settings.setLevelHandler(levelHandler);
+    levelHandler.addClientPlayer(gameRoot);
+
+    gameOver = false;
     inputSequenceNumber = 0;
     pendingInputs = new ArrayList<>();
     singleplayerGame = false;
     sendUpdate = false;
-    levelHandler = new LevelHandler(settings, backgroundRoot, gameRoot, uiRoot);
-    settings.setLevelHandler(levelHandler);
-    levelHandler.addClientPlayer(gameRoot);
     keyInput = new KeyboardInput();
     mouseInput = new MouseInput();
 
@@ -353,17 +444,19 @@ public class Client extends Application {
     scene.setOnMouseMoved(mouseInput);
     scene.setOnMouseReleased(mouseInput);
     scene.setOnMouseDragged(mouseInput);
-
     //Setup UI
     setUserInterface();
 
-    AchivementHandler handler = new AchivementHandler(settings);
-    handler.showAchivements(creditsRoot);
+    Physics.settings = settings;
 
     // Main Game Loop
     new AnimationTimer() {
       @Override
       public void handle(long now) {
+
+        if (!singleplayerGame && !multiplayer) {
+          startedGame = false;
+        }
 
         if (multiplayer) {
           ClientNetworkManager.processServerPackets();
@@ -374,9 +467,34 @@ public class Client extends Application {
           endGame();
         }
 
+        if (previousTime == 0) {
+          previousTime = now;
+          return;
+        }
+
+        float secondElapsed = (now - previousTime) / 1e9f; // time elapsed in seconds
+        float secondsElapsedCapped = Math.min(secondElapsed, maximumStep);
+        accumulatedTime += secondsElapsedCapped;
+        previousTime = now;
+
+        if (accumulatedTime < timeStep) {
+          float timeSinceInterpolation = timeStep - (accumulatedTime - secondElapsed);
+          float alphaRemaining = secondElapsed / timeSinceInterpolation;
+          levelHandler
+              .getGameObjects()
+              .forEach((key, gameObject) -> gameObject.interpolatePosition(alphaRemaining));
+          return;
+        }
+
+        while (accumulatedTime >= 2 * timeStep) {
+          levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.update());
+          accumulatedTime -= timeStep;
+        }
+
 
         /** Apply Input */
-        levelHandler.getClientPlayer().applyInput();
+        if(multiplayer) levelHandler.getClientPlayer().applyMultiplayerInput();
+        else levelHandler.getClientPlayer().applyInput();
 
         if (multiplayer && sendUpdate) {
           ClientNetworkManager.sendInput();
@@ -384,6 +502,7 @@ public class Client extends Application {
         }
 
         if (!multiplayer && singleplayerGame && levelHandler.getPlayers().size() > 1) {
+          beginTimer();
           /** Calculate Score */
           ArrayList<Player> alive = new ArrayList<>();
           for (UUID key : levelHandler.getPlayers().keySet()) {
@@ -397,9 +516,9 @@ public class Client extends Application {
           }
           if (alive.size() == 1) {
             alive.forEach(player -> player.increaseScore());
-            Map nextMap = playlist.poll();
-            levelHandler.changeMap(nextMap, true);
-            giveWeapon();
+            int index = new Random().nextInt(levelHandler.getPlaylist().size() - 1);
+            Map nextMap = levelHandler.pollPlayList();
+            levelHandler.changeMap(nextMap, true, false);
           }
           /** Move bots */
           levelHandler.getBotPlayerList().forEach((key, bot) -> bot.applyInput());
@@ -409,15 +528,15 @@ public class Client extends Application {
           settingsObjects.forEach(obj -> obj.update());
         }
 
-        /** Check Collisions */
-        Physics.gameObjects = levelHandler.getGameObjects();
-
-        levelHandler
-            .getGameObjects()
-            .forEach((key, gameObject) -> gameObject.updateCollision());
-        Physics.processCollisions();
-
         if (!multiplayer) {
+          /** Check Collisions */
+          Physics.gameObjects = levelHandler.getGameObjects();
+
+          levelHandler
+              .getGameObjects()
+              .forEach((key, gameObject) -> gameObject.updateCollision());
+          Physics.clearCollisions();
+
           /** Update Game Objects */
           levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.update());
         } else {
@@ -426,23 +545,24 @@ public class Client extends Application {
         //Update Generic Object Timers
         ObjectManager.update();
 
-        /** Scale and Render Game Objects */
-        double resolutionXNew = primaryStage.getWidth();
-        double resolutionYNew = primaryStage.getHeight();
-        Vector2 scaleRatio = new Vector2(resolutionXNew / resolutionX,
-            resolutionYNew / resolutionY);
-        resolutionX = resolutionXNew;
-        resolutionY = resolutionYNew;
+        accumulatedTime -= timeStep;
+        float alpha = accumulatedTime / timeStep;
+        levelHandler.getGameObjects()
+            .forEach((key, gameObject) -> gameObject.interpolatePosition(alpha));
 
-        //levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.getTransform().scaleScreen(scaleRatio));
+
+        /** Scale and Render Game Objects */
+        scaleRendering(primaryStage);
+
         levelHandler.getGameObjects().forEach((key, gameObject) -> gameObject.render());
         if (levelHandler.getBackground() != null) {
           levelHandler.getBackground().render();
         }
+        calculateFPS(secondElapsed, primaryStage);
+
 
         /** Draw the UI */
-        if (levelHandler.getGameState() == GameState.IN_GAME
-            || levelHandler.getGameState() == GameState.MULTIPLAYER) {
+        if (levelHandler.getGameState() == GameState.IN_GAME) {
           userInterface.render();
         }
 
@@ -467,6 +587,11 @@ public class Client extends Application {
     }.start();
   }
 
+
+  /**
+   * Initialises the rendering stage of the game setup
+   * @param primaryStage The JavaFX stage the game elements are to be placed into
+   */
   private void setupRender(Stage primaryStage) {
     root = new Group();
     backgroundRoot = new Group();
@@ -488,20 +613,27 @@ public class Client extends Application {
 
     scene = new Scene(root, settings.getWindowWidth(), settings.getWindowHeight());
     scene.setCursor(Cursor.CROSSHAIR);
+    scene.getStylesheets().add("style.css");
 
     primaryStage.setScene(scene);
     primaryStage.setFullScreen(false);
     primaryStage.show();
   }
 
+  /**
+   * Scaling of the window
+   * @param primaryStage The JavaFX stage to be scaled
+   */
+  public void scaleRendering(Stage primaryStage) {
+    scaleRatio = new Vector2(primaryStage.getWidth() / settings.getMapWidth(),
+        primaryStage.getHeight() / settings.getMapHeight());
+    Scale scale = new Scale(scaleRatio.getX(), scaleRatio.getY(), 0, 0);
+    scene.getRoot().getTransforms().setAll(scale);
+  }
 
-
-
-
-
-
-
-
+  /**
+   * Gives a weapon to the client's player
+   */
   public void giveWeapon() {
     levelHandler
         .getClientPlayer()
@@ -514,6 +646,6 @@ public class Client extends Application {
                 UUID.randomUUID()));
     levelHandler.getGameObjects().put(Client.levelHandler.getClientPlayer().getHolding().getUUID(),
         Client.levelHandler.getClientPlayer().getHolding());
-    levelHandler.getClientPlayer().getHolding().initialise(Client.gameRoot);
+    levelHandler.getClientPlayer().getHolding().initialise(gameRoot, settings);
   }
 }

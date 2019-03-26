@@ -2,6 +2,7 @@ package shared.gameObjects.menu.multiplayer;
 
 import client.handlers.networkHandlers.ConnectionHandler;
 import client.main.Client;
+import client.main.Settings;
 import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.control.TextField;
@@ -11,6 +12,9 @@ import shared.gameObjects.menu.ButtonObject;
 import shared.handlers.levelHandler.Map;
 import shared.util.Path;
 
+/**
+ * Button to take the client to the join menu
+ */
 public class ButtonJoin extends ButtonObject {
 
   private transient TextField addressInput;
@@ -28,8 +32,8 @@ public class ButtonJoin extends ButtonObject {
     super(x, y, sizeX, sizeY, "Join", id, objectUUID);
   }
 
-  public void initialise(Group root) {
-    super.initialise(root);
+  public void initialise(Group root, Settings settings) {
+    super.initialise(root, settings);
     addressInput = new TextField();
     addressInput.setTranslateX(getX() + 90);
     addressInput.setTranslateY(getY() + 120);
@@ -44,8 +48,14 @@ public class ButtonJoin extends ButtonObject {
     Client.connectionHandler.start();
     button.disarm();
     root.getChildren().remove(addressInput);
-    Client.levelHandler.changeMap(
+    settings.getLevelHandler().changeMap(
         new Map("LOBBY", Path.convert("src/main/resources/menus/lobby.map")),
-        false);
+        false, false);
+  }
+
+  @Override
+  public void removeRender() {
+    super.removeRender();
+    root.getChildren().remove(addressInput);
   }
 }

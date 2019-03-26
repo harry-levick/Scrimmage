@@ -7,6 +7,9 @@ import shared.gameObjects.players.Limb;
 import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.LevelHandler;
 
+/**
+ * Head limb of a player
+ */
 public class Head extends Limb {
 
   protected Rigidbody rb;
@@ -17,11 +20,27 @@ public class Head extends Limb {
    * ensure actions are calculated the same
    */
   public Head(Player parent, LevelHandler levelHandler) {
-    super(0, 0, 17, 13, 48, 58, ObjectType.Limb, false, parent, 0, 0, levelHandler);
+    super(0, 0, 17, 13, 48, 58, ObjectType.Limb, false, parent,parent,0, 0, levelHandler);
+    limbHealth = 99999;
   }
 
   @Override
   public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", "images/player/Standard_Male/head.png");
+    this.animation.supplyAnimation("default", "images/player/skin" + settings.getData().getActiveSkin()[0] + "/head.png");
+  }
+
+  @Override
+  public void updateSkinRender(int id) {
+    this.animation.supplyAnimation("default", "images/player/skin" + id + "/head.png");
+  }
+
+  @Override
+  protected void rotateAnimate() {
+
+
+  }
+  @Override
+  public void deductHp(int damage) {
+    super.deductHp(damage*2);
   }
 }

@@ -6,6 +6,9 @@ import javafx.scene.input.MouseEvent;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.menu.ButtonObject;
 
+/**
+ * Button to load the credit sequence to the client
+ */
 public class ButtonCredits extends ButtonObject {
 
   public ButtonCredits(
