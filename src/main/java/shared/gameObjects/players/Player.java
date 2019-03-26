@@ -335,7 +335,7 @@ public class Player extends GameObject {
    * Resets the player's values, a "respawn"
    */
   public void reset() {
-    health = 100;
+    health = maxHealth;
     if (this.active == false) {
       this.imageView.setRotate(0);
       this.imageView.setTranslateY(getY() - 70);
