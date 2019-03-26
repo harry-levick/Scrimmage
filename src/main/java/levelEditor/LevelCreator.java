@@ -631,6 +631,8 @@ public class LevelCreator extends Application {
     gameObjects.put(uuid, new LabelObject(getAbs(26), getAbs(5), "Controls:", ObjectType.Button, uuid)); //todo Button type?
     uuid = UUID.randomUUID();
 
+
+
     for (int i = 0; i < 12; i++) {
       // top row wall
       gameObjects.put(uuid,
