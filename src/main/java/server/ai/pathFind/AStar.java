@@ -13,17 +13,20 @@ import shared.gameObjects.GameObject;
 import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Player;
+import shared.gameObjects.weapons.ExplosiveLauncher;
 import shared.gameObjects.weapons.Handgun;
 import shared.gameObjects.weapons.MachineGun;
 import shared.gameObjects.weapons.Melee;
 import shared.gameObjects.weapons.Punch;
 import shared.gameObjects.weapons.Sword;
+import shared.gameObjects.weapons.Uzi;
 import shared.gameObjects.weapons.Weapon;
 import shared.handlers.levelHandler.LevelHandler;
 import shared.physics.Physics;
 import shared.physics.data.Collision;
 import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
+
 /**
  * The main file for the A* planner. - search(): This function is the core search algorithm,
  * searching for an optimal path. - optimise(): Function controlling the search and extracting plans
@@ -123,7 +126,12 @@ public class AStar {
           cloneWeapon = new Punch((Punch) botWeapon);
         } else if (botWeapon instanceof Sword) {
           cloneWeapon = new Sword((Sword) botWeapon);
+        } else if (botWeapon instanceof ExplosiveLauncher) {
+          cloneWeapon = new ExplosiveLauncher((ExplosiveLauncher) botWeapon);
+        } else if (botWeapon instanceof Uzi) {
+          cloneWeapon = new Uzi((Uzi) botWeapon);
         }
+
         replicaBot.setHolding(cloneWeapon);
 
         // Calculate the heuristic value of the node.
@@ -223,6 +231,7 @@ public class AStar {
           targetDistance = distance;
           closestWeap = weap;
         }
+
       }
 
       return closestWeap;
@@ -414,7 +423,7 @@ public class AStar {
     // If the cast is null or returns a Static RigidBody
     boolean inSight = rayCast == null || (((Rigidbody) rayCast.getCollidedObject()
         .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC);
-
+    
     if (weaponHolder.getHolding().isGun() || !chasing) {
 
       if (inSight)
