@@ -45,8 +45,7 @@ public class ButtonSingleplayer extends ButtonObject {
       botPlayer.startThread();
     }
 
-    settings.getLevelHandler().changeMap(
-        new Map("map1", Path.convert("src/main/resources/maps/map1.map")),
+    settings.getLevelHandler().changeMap(settings.getLevelHandler().pollPlayList(),
         true, false);
 
     Client.singleplayerGame = true;
