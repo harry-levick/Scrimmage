@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import server.ai.pathFind.AStar.SearchNode;
@@ -325,4 +326,10 @@ public class Bot extends Player {
   public LevelHandler getLevelHandler() {
     return levelHandler;
   }
+
+  /**
+   * Get the bots target player
+   */
+  public Player getTargetPlayer() { return targetPlayer; }
+
 }
