@@ -3,7 +3,7 @@ package client.handlers.userData;
 /**
  * Container class for the save data of the Client
  */
-public class ClientData {
+public class AccountData {
 
   private String username;
   private String uuid;
@@ -12,6 +12,7 @@ public class ClientData {
   private int activeSkin[];
   private int lootboxCount;
   private int moneyCount;
+  public static final int SKIN_COUNT = 7;
 
   /**
    * Constructs a client data with the given unlocks
@@ -22,14 +23,19 @@ public class ClientData {
    * @param lootboxCount The number of unopened lootboxes left to open
    * @param moneyCount The amount of in-game currency currently held by the user
    */
-  public ClientData(String uuid, String username, boolean[] achievements, boolean[] skins, int lootboxCount, int moneyCount) {
+  public AccountData(String uuid, String username, boolean[] achievements, boolean[] skins, int lootboxCount, int moneyCount) {
     this.username = username;
     this.achievements = achievements;
     this.skins = skins;
     this.lootboxCount = lootboxCount;
     this.moneyCount = moneyCount;
     this.uuid = uuid;
+    skins[0] = true;
     activeSkin = new int[4];
+    activeSkin[0] = 6;
+    activeSkin[1] = 6;
+    activeSkin[2] = 6;
+    activeSkin[3] = 6;
   }
 
   /**
@@ -37,7 +43,7 @@ public class ClientData {
    * @param data Data representing content of player
    * @return ClientData processed from String data
    */
-  public static ClientData fromString(String data) {
+  public static AccountData fromString(String data) {
     String[] splitData = data.split("//x/s");
     boolean[] achievements = new boolean[30];
     int packedAchievements = Integer.parseInt(splitData[2]);
@@ -47,7 +53,7 @@ public class ClientData {
     int packedSkins = Integer.parseInt(splitData[3]);
     for (int i = 29; i >= 0; i--)
       achievements[29 - i] = (packedAchievements & (1 << i)) != 0;
-    return new ClientData(splitData[0], splitData[1], achievements, skins, Integer.parseInt(splitData[4]), Integer.parseInt(splitData[5]));
+    return new AccountData(splitData[0], splitData[1], achievements, skins, Integer.parseInt(splitData[4]), Integer.parseInt(splitData[5]));
   }
 
   /**
@@ -80,17 +86,26 @@ public class ClientData {
     return achievements;
   }
 
-
+  /**
+   * Sets the achievement with the passed ID to true
+   * @param id Achievement ID to award to user
+   */
   public void awardAchievement(int id) {
     achievements[id] = true;
+    SQLConnect.saveData(this);
   }
 
   public boolean[] getSkins() {
     return skins;
   }
 
+  /**
+   * Allows the user to now use the skin of the given ID
+   * @param id Skin ID to award to user
+   */
   public void awardSkin(int id) {
    skins[id] = true;
+    SQLConnect.saveData(this);
   }
 
   public int getLootboxCount() {
@@ -99,10 +114,12 @@ public class ClientData {
 
   public void earnLootbox() {
     lootboxCount++;
+    SQLConnect.saveData(this);
   }
 
   public void openLootbox() {
     lootboxCount--;
+    SQLConnect.saveData(this);
   }
 
   public int getMoneyCount() {
@@ -111,10 +128,12 @@ public class ClientData {
 
   public void addMoney(int value) {
     moneyCount += value;
+    SQLConnect.saveData(this);
   }
 
   public void removeMoney(int value) {
     moneyCount -= value;
+    SQLConnect.saveData(this);
   }
 
   public String getUsername() {
@@ -130,5 +149,29 @@ public class ClientData {
     activeSkin[1] = body;
     activeSkin[2] = legs;
     activeSkin[3] = arms;
+  }
+
+  public int[] getActiveSkin() {
+    return activeSkin;
+  }
+
+  public String getUUID() {
+    return uuid;
+  }
+
+  public int getSkinCount() {
+    int ret = 0;
+    for (boolean skin : skins) {
+        if(skin) ret++;
+    }
+    return ret;
+  }
+
+  public int getAchievementCount() {
+    int ret = 0;
+    for (boolean skin : achievements) {
+      if(skin) ret++;
+    }
+    return ret;
   }
 }

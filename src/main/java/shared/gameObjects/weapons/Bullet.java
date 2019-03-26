@@ -169,7 +169,6 @@ public abstract class Bullet extends GameObject {
   public void OnCollisionEnter(Collision col) {
     boolean remove = true; // true: will remove this object at the end
     GameObject g = col.getCollidedObject();
-    System.out.println(alreadyHit.size());
     if(!alreadyHit.contains(g)) {
       if (g instanceof Limb) {
         Limb p = (Limb) g;

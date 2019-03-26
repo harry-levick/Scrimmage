@@ -194,6 +194,10 @@ public abstract class Limb extends GameObject implements Destructable {
     }
   }
 
+  public void updateSkinRender(int id) {
+
+  }
+
   @Override
   public void render() {
     super.render();

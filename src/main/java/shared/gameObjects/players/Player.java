@@ -189,6 +189,11 @@ public class Player extends GameObject {
 
   @Override
   public void update() {
+    // checks if outside the world, kills if fallen off the map
+    if (getY() > 1200) {
+      deductHp(999);
+    }
+
     checkGrounded(); // Checks if the player is grounded
     badWeapon();
     pointLeft = mouseX < this.getX();
@@ -268,6 +273,37 @@ public class Player extends GameObject {
     // setX(getX() + (vx * 0.0166));
   }
 
+  public void applyMultiplayerInput() {
+    if (grounded) {
+      jumped = false;
+    }
+    if (rightKey) {
+      rb.moveX(speed);
+      behaviour = Behaviour.WALK_RIGHT;
+    }
+    if (leftKey) {
+      rb.moveX(speed * -1);
+      behaviour = Behaviour.WALK_LEFT;
+    }
+
+    if (!rightKey && !leftKey) {
+      vx = 0;
+      behaviour = Behaviour.IDLE;
+    }
+    if (jumpKey && !jumped && grounded) {
+      rb.moveY(jumpForce * (legLeft.limbAttached && legRight.limbAttached ? 1f : 0.7f), 0.33333f);
+      jumped = true;
+    }
+    if (jumped) {
+      behaviour = Behaviour.JUMP;
+    }
+
+    if (grounded) {
+      jumped = false;
+    }
+
+  }
+
   private void createWalkParticle() {
     if(!grounded) return;
       settings.getLevelHandler().addGameObject(new Particle(transform.getBotPos().sub(transform.getSize().mult(new Vector2(0.5, 0))), new Vector2(0, -35), new Vector2(0, 100), new Vector2(8,8),
@@ -325,9 +361,19 @@ public class Player extends GameObject {
         this.setActive(false);
         bc.setLayer(ColliderLayer.PARTICLE);
         transform.rotate(90);
+        if(imageView != null)
         this.imageView.setOpacity(0.5);
       }
     }
+  }
+
+  public void updateSkinRender(int[] skinRender) {
+    children.forEach(child -> {
+      if (child instanceof Arm) ((Limb) child).updateSkinRender(skinRender[2]);
+      if (child instanceof Leg) ((Limb) child).updateSkinRender(skinRender[3]);
+      if (child instanceof Head) ((Limb) child).updateSkinRender(skinRender[0]);
+      if (child instanceof Body) ((Limb) child).updateSkinRender(skinRender[1]);
+    });
   }
 
 
@@ -342,6 +388,7 @@ public class Player extends GameObject {
       this.setActive(true);
       this.bc.setLayer(ColliderLayer.PLAYER);
     }
+    addPunch();
   }
 
   /**
@@ -360,6 +407,14 @@ public class Player extends GameObject {
 
   public int getHealth() {
     return health;
+  }
+
+  public int getMaxHealth() {
+    return maxHealth;
+  }
+
+  public float getHealthPercentage() {
+    return (float)health/(float)maxHealth;
   }
 
   public void setHealth(int hp) {
@@ -382,6 +437,14 @@ public class Player extends GameObject {
       newHolding.setSettings(settings);
       aimLeft = false;
     }
+  }
+
+  /**
+   * Determines if the player can hold a weapon or not
+   * @return
+   */
+  public boolean canHold() {
+    return !(!armLeft.limbAttached || !armRight.limbAttached);
   }
 
   public void usePunch() {

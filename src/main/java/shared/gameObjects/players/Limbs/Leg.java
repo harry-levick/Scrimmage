@@ -23,7 +23,12 @@ public class Leg extends Limb {
 
   @Override
   public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", "images/player/Standard_Male/leg.png");
+    this.animation.supplyAnimation("default", "images/player/skin" + settings.getData().getActiveSkin()[3] + "/leg.png");
+  }
+
+  @Override
+  public void updateSkinRender(int id) {
+    this.animation.supplyAnimation("default", "images/player/skin" + id + "/leg.png");
   }
 
 

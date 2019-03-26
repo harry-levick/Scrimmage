@@ -27,7 +27,12 @@ public class Head extends Limb {
 
   @Override
   public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", "images/player/Standard_Male/head.png");
+    this.animation.supplyAnimation("default", "images/player/skin" + settings.getData().getActiveSkin()[0] + "/head.png");
+  }
+
+  @Override
+  public void updateSkinRender(int id) {
+    this.animation.supplyAnimation("default", "images/player/skin" + id + "/head.png");
   }
 
   @Override

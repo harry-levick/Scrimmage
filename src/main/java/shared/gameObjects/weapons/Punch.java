@@ -43,7 +43,7 @@ public class Punch extends Melee {
         sizeX,
         sizeY,
         ObjectType.Fist,
-        10,
+        5,
         1,
         name,
         -1,
@@ -88,7 +88,7 @@ public class Punch extends Melee {
               Physics.boxcastAll(
                 new Vector2((float) (this.getGripX()+(i*deltaX)), (float) (this.getGripY()+(i*deltaY))),
                 boxCastSize,
-                false, // TODO: set to false
+                false,
               false
               )
             )
@@ -137,5 +137,15 @@ public class Punch extends Melee {
   @Override
   public double getGripFlipY() {
     return holder.getHandLeft().getY();
+  }
+
+  @Override
+  public double getSizeX() {
+    return 0;
+  }
+
+  @Override
+  public double getSizeY() {
+    return 0;
   }
 }

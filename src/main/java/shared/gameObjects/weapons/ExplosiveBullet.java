@@ -1,5 +1,7 @@
 package shared.gameObjects.weapons;
 
+import client.handlers.audioHandler.AudioHandler;
+import client.main.Client;
 import java.util.ArrayList;
 import java.util.UUID;
 import shared.gameObjects.Destructable;
@@ -86,6 +88,8 @@ public class ExplosiveBullet extends Bullet {
     ArrayList<Collision> collision = Physics.circlecastAll(this.bc.getCentre(), radius);
     GameObject gCol = col.getCollidedObject();
     boolean remove = true;
+
+    new AudioHandler(settings, Client.musicActive).playSFX("FART");
 
     if (gCol.getId() == ObjectType.Player || gCol instanceof Destructable) {
       if (gCol.equals(holder)) {

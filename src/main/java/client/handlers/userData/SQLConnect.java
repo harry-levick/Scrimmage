@@ -37,7 +37,7 @@ public class SQLConnect {
    * Obtains user data in String format when given a username and a password
    * @param username Desired username to connect to
    * @param password Password of the user stored in the databse
-   * @return ClientData constructor in String format, or a fail string if no result was returned
+   * @return AccountData constructor in String format, or a fail string if no result was returned
    */
   public static String getUserdata(String username, String password) {
     String toRet = "";
@@ -66,11 +66,11 @@ public class SQLConnect {
 
   /**
    * Registers a new unique user
-   * @param data ClientData from settings containing the data of the new user
+   * @param data AccountData from settings containing the data of the new user
    * @param password The password to store alongside the user to protect it
    * @return success/fail/exists
    */
-  public static String registerUser(ClientData data, String password) {
+  public static String registerUser(AccountData data, String password) {
     String toRet = "";
     try {
       Connection conn = getConnection();
@@ -93,13 +93,14 @@ public class SQLConnect {
         pst.setInt(6, Integer.parseInt(args[5]));
         pst.setInt(7, Integer.parseInt(args[6]));
 
-        results = pst.executeQuery();
-        if(results.isBeforeFirst()) toRet = "success";
+        int result = pst.executeUpdate();
+        if(result == 1) toRet = "success";
         else toRet = "fail";
       }
 
     } catch (SQLException e) {
       toRet = "failed error: " + e;
+      System.out.println(e);
     }
     finally{
       return toRet;
@@ -107,11 +108,12 @@ public class SQLConnect {
   }
 
   /**
-   * Saves the current local ClientData onto the database
-   * @param data The Client Data to save
+   * Saves the current local AccountData onto the database
+   * @param data The AccountData to save
    * @return success/fail
    */
-  public static String saveData(ClientData data) {
+  public static String saveData(AccountData data) {
+    if(data.getUsername().equals("newuser")) return "failed";
     String toRet = "";
     try {
       Connection conn = getConnection();

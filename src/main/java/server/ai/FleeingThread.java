@@ -38,7 +38,7 @@ public class FleeingThread extends Thread {
   public void run() {
     while (running) {
 
-      targetPlayer = bot.findTarget();
+      targetPlayer = bot.getTargetPlayer();
       List<boolean[]> tempList = pathFinder.optimise(targetPlayer, FSA.FLEEING);
       plan.clear();
       plan.addAll(tempList);
