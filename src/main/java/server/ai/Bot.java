@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import server.ai.pathFind.AStar.SearchNode;
@@ -42,6 +43,8 @@ public class Bot extends Player {
   /** The list of actions to take from when the bot is fleeing the enemy */
   List<boolean[]> fleeingPlan;
 
+  int prevHealth;
+
   /**
    * @param x x pos of the bot
    * @param y y pos of the bot
@@ -50,6 +53,7 @@ public class Bot extends Player {
    */
   public Bot(double x, double y, UUID playerUUID, LevelHandler levelHandler) {
     super(x, y, playerUUID);
+    this.prevHealth = this.health;
     this.state = FSA.INITIAL_STATE;
     this.levelHandler = levelHandler;
     this.targetPlayer = findTarget();
@@ -129,21 +133,25 @@ public class Bot extends Player {
       }
     }
 
-    state = state.next(targetPlayer, this, distanceToTarget);
+    state = state.next(targetPlayer, this, distanceToTarget, prevHealth);
 
     switch (state) {
       case IDLE:
+        System.out.println("IDLE");
 
         break;
       case CHASING:
+        System.out.println("CHASING");
         executeAction(FSA.CHASING);
 
         break;
       case FLEEING:
+        System.out.println("FLEEING");
         executeAction(FSA.FLEEING);
 
         break;
       case ATTACKING:
+        System.out.println("ATTACKING");
         Vector2 enemyPosCenter = targetPlayer.getTransform().getPos()
             .add(targetPlayer.getTransform().getSize().mult(0.5f));
         mouseX = enemyPosCenter.getX();
@@ -152,6 +160,7 @@ public class Bot extends Player {
 
         break;
     }
+    prevHealth = this.health;
     super.update();
   }
 
@@ -317,4 +326,10 @@ public class Bot extends Player {
   public LevelHandler getLevelHandler() {
     return levelHandler;
   }
+
+  /**
+   * Get the bots target player
+   */
+  public Player getTargetPlayer() { return targetPlayer; }
+
 }

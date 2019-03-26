@@ -28,7 +28,7 @@ public enum FSA {
      * @param targetDistance The distance to the target.
      * @return The next state
      */
-    public FSA next(Player targetPlayer, Player bot, double targetDistance) {
+    public FSA next(Player targetPlayer, Player bot, double targetDistance, int prevHealth) {
       if (targetPlayer == null)
         return IDLE;
 
@@ -63,11 +63,10 @@ public enum FSA {
       }
 
       if (((targetDistance > weaponRange) || !inSight)
-          && (botHealth >= this.HIGH_HEALTH || botHealth < this.MEDIUM_HEALTH)
           && ((ammoLeft > 0) && bot.getHolding().isGun() || bot.getHolding().isMelee())) {
         return CHASING;
 
-      } else if ((botHealth <= this.HIGH_HEALTH)
+      } else if ((prevHealth > botHealth)
           || ((ammoLeft == 0) && bot.getHolding().isGun())) {
         return FLEEING;
 
@@ -89,7 +88,7 @@ public enum FSA {
      * @param targetDistance The distance to the target.
      * @return The next state
      */
-    public FSA next(Player targetPlayer, Player bot, double targetDistance) {
+    public FSA next(Player targetPlayer, Player bot, double targetDistance, int prevHealth) {
       if (targetPlayer == null)
         return IDLE;
 
@@ -125,19 +124,15 @@ public enum FSA {
 
       if ((targetDistance <= weaponRange)
           && inSight
-          && ((ammoLeft > 0) && bot.getHolding().isGun() || bot.getHolding().isMelee())
-          && (botHealth >= this.HIGH_HEALTH || botHealth < this.MEDIUM_HEALTH)) {
+          && ((ammoLeft > 0) && bot.getHolding().isGun() || bot.getHolding().isMelee())) {
         return ATTACKING;
 
-      } else if ((botHealth <= this.MEDIUM_HEALTH)
+      } else if ((prevHealth > botHealth)
           || ((bot.getHolding().isGun()) && (ammoLeft == 0))) {
         return FLEEING;
 
-      } else if (!inSight) {
-        return CHASING;
-
       } else {
-        return IDLE;
+        return CHASING;
       }
     }
   },
@@ -152,7 +147,8 @@ public enum FSA {
      * @param targetDistance The distance to the target.
      * @return The next state
      */
-    public FSA next(Player targetPlayer, Player bot, double targetDistance) {
+    public FSA next(Player targetPlayer, Player bot, double targetDistance, int prevHealth) {
+      
       if (targetPlayer == null)
         return IDLE;
 
@@ -195,17 +191,11 @@ public enum FSA {
 
       if ((targetDistance <= weaponRange)
           && inSight
-          && (botHealth >= this.HIGH_HEALTH || botHealth < this.MEDIUM_HEALTH)
           && ((ammoLeft > 0) && bot.getHolding().isGun() || bot.getHolding().isMelee())) {
         return ATTACKING;
 
-      } else if ((botHealth >= this.HIGH_HEALTH)
-          && (targetDistance > weaponRange || !inSight)) {
+      } else if (targetDistance > weaponRange || !inSight) {
         return CHASING;
-
-        // If we have run out of the range of the enemy
-      } else if ((targetDistance > enemyWeaponRange) && (botHealth >= this.HIGH_HEALTH)) {
-        return IDLE;
 
       } else {
         return FLEEING;
@@ -223,7 +213,7 @@ public enum FSA {
      * @param targetDistance The distance to the target.
      * @return the next state
      */
-    public FSA next(Player targetPlayer, Player bot, double targetDistance) {
+    public FSA next(Player targetPlayer, Player bot, double targetDistance, int prevHealth) {
       if (targetPlayer == null)
         return IDLE;
 
@@ -285,7 +275,7 @@ public enum FSA {
      * @param targetDistance The distance to the target.
      * @return The next state
      */
-    public FSA next(Player targetPlayer, Player bot, double targetDistance) {
+    public FSA next(Player targetPlayer, Player bot, double targetDistance, int prevHealth) {
       // The initial state just acts as an entry point, and so directs straight to the IDLE state.
       return FSA.IDLE;
     }
@@ -303,5 +293,5 @@ public enum FSA {
    * @param targetDistance The distance to the target.
    * @return The state that we should update to.
    */
-  public abstract FSA next(Player targetPlayer, Player bot, double targetDistance);
+  public abstract FSA next(Player targetPlayer, Player bot, double targetDistance, int prevHealth);
 }
