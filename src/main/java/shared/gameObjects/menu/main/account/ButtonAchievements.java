@@ -16,10 +16,11 @@ public class ButtonAchievements extends ButtonObject {
 
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
-    settings.getLevelHandler().changeMap(
-        new Map(
-            "achievements",
-            Path.convert("src/main/resources/menus/achievements.map")),
-        false, false);
+    settings
+        .getLevelHandler()
+        .changeMap(
+            new Map("achievements", Path.convert("src/main/resources/menus/achievements.map")),
+            false,
+            false);
   }
 }

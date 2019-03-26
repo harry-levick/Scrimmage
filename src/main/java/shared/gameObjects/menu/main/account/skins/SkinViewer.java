@@ -35,9 +35,9 @@ public class SkinViewer extends GameObject {
     if(!init) {
       init = true;
       getAvailableSkins();
-      ButtonCycle left, right;
-      left = new ButtonCycle(getX() - 120, getY() + 120, 60, 40, false, ObjectType.Button, UUID.randomUUID());
-      right = new ButtonCycle(getX() + 100, getY() + 120, 60, 40, true, ObjectType.Button, UUID.randomUUID());
+      ButtonBasic left, right;
+      left = new ButtonBasic(getX() - 120, getY() + 120, 60, 40, false, ObjectType.Button, UUID.randomUUID());
+      right = new ButtonBasic(getX() + 100, getY() + 120, 60, 40, true, ObjectType.Button, UUID.randomUUID());
       cycleManager = new CycleManager(getX() - 10, getY() + 160, 40, 40, left, right, "Skins", ObjectType.Button, UUID.randomUUID());
       settings.getLevelHandler().addGameObject(left);
       settings.getLevelHandler().addGameObject(right);

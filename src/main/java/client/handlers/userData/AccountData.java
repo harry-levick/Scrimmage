@@ -30,6 +30,7 @@ public class AccountData {
     this.lootboxCount = lootboxCount;
     this.moneyCount = moneyCount;
     this.uuid = uuid;
+    skins[0] = true;
     activeSkin = new int[4];
     activeSkin[0] = 6;
     activeSkin[1] = 6;
@@ -91,6 +92,7 @@ public class AccountData {
    */
   public void awardAchievement(int id) {
     achievements[id] = true;
+    SQLConnect.saveData(this);
   }
 
   public boolean[] getSkins() {
@@ -103,6 +105,7 @@ public class AccountData {
    */
   public void awardSkin(int id) {
    skins[id] = true;
+    SQLConnect.saveData(this);
   }
 
   public int getLootboxCount() {
@@ -111,10 +114,12 @@ public class AccountData {
 
   public void earnLootbox() {
     lootboxCount++;
+    SQLConnect.saveData(this);
   }
 
   public void openLootbox() {
     lootboxCount--;
+    SQLConnect.saveData(this);
   }
 
   public int getMoneyCount() {
@@ -123,10 +128,12 @@ public class AccountData {
 
   public void addMoney(int value) {
     moneyCount += value;
+    SQLConnect.saveData(this);
   }
 
   public void removeMoney(int value) {
     moneyCount -= value;
+    SQLConnect.saveData(this);
   }
 
   public String getUsername() {

@@ -16,10 +16,9 @@ public class ButtonLootbox extends ButtonObject {
 
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
-    settings.getLevelHandler().changeMap(
-        new Map(
-            "lootbox",
-            Path.convert("src/main/resources/menus/lootbox.map")),
-        false, false);
+    settings
+        .getLevelHandler()
+        .changeMap(
+            new Map("lootbox", Path.convert("src/main/resources/menus/lootbox.map")), false, false);
   }
 }

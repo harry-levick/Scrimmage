@@ -7,9 +7,7 @@ import shared.gameObjects.menu.ButtonObject;
 import shared.handlers.levelHandler.Map;
 import shared.util.Path;
 
-/**
- * Clickable Button to enter Account management screen
- */
+/** Clickable Button to enter Account management screen */
 public class ButtonAccount extends ButtonObject {
 
   public ButtonAccount(
@@ -19,10 +17,9 @@ public class ButtonAccount extends ButtonObject {
 
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
-    settings.getLevelHandler().changeMap(
-        new Map(
-            "ACCOUNT",
-            Path.convert("src/main/resources/menus/account.map")),
-        false, false);
+    settings
+        .getLevelHandler()
+        .changeMap(
+            new Map("ACCOUNT", Path.convert("src/main/resources/menus/account.map")), false, false);
   }
 }

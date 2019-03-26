@@ -13,9 +13,7 @@ import javafx.scene.text.Text;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 
-/**
- * Displays the information on the current user account
- */
+/** Displays the information on the current user account */
 public class AccountDataDisplay extends GameObject {
 
   private transient Text uuid, username, achievements, skins, lootboxes, money;
@@ -66,16 +64,40 @@ public class AccountDataDisplay extends GameObject {
     moneyImage.setTranslateX(money.getX() - 10);
     moneyImage.setTranslateY(money.getY() - 80);
 
-    box = new Rectangle(getX() - 300,getY() - 30, 760 ,160);
+    box = new Rectangle(getX() - 300, getY() - 30, 760, 160);
     box.setFill(Color.LIGHTGREY);
     box.setOpacity(0.8);
     box.setStroke(Color.BLACK);
-     root.getChildren().addAll(box, uuid, username, skins, skinImage, achievements, trophy, lootboxes, lootboxImage, money, moneyImage);
+    root.getChildren()
+        .addAll(
+            box,
+            uuid,
+            username,
+            skins,
+            skinImage,
+            achievements,
+            trophy,
+            lootboxes,
+            lootboxImage,
+            money,
+            moneyImage);
   }
 
   @Override
   public void removeRender() {
     super.removeRender();
-    root.getChildren().removeAll(uuid, username, skins, skinImage, achievements, trophy, lootboxes, lootboxImage, money, moneyImage, box);
+    root.getChildren()
+        .removeAll(
+            uuid,
+            username,
+            skins,
+            skinImage,
+            achievements,
+            trophy,
+            lootboxes,
+            lootboxImage,
+            money,
+            moneyImage,
+            box);
   }
 }

@@ -16,10 +16,9 @@ public class ButtonShop extends ButtonObject {
 
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
-    settings.getLevelHandler().changeMap(
-        new Map(
-            "shop",
-            Path.convert("src/main/resources/menus/shop.map")),
-        false, false);
+    settings
+        .getLevelHandler()
+        .changeMap(
+            new Map("shop", Path.convert("src/main/resources/menus/shop.map")), false, false);
   }
 }

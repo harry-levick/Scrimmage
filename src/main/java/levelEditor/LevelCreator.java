@@ -38,6 +38,7 @@ import shared.gameObjects.menu.main.ButtonSingleplayer;
 import shared.gameObjects.menu.main.SoundSlider;
 import shared.gameObjects.menu.main.SoundSlider.SOUND_TYPE;
 import shared.gameObjects.menu.main.account.ButtonAchievements;
+import shared.gameObjects.menu.main.account.lootbox.Lootbox;
 import shared.gameObjects.menu.main.account.registration.ButtonLogin;
 import shared.gameObjects.menu.main.account.ButtonLootbox;
 import shared.gameObjects.menu.main.account.ButtonShop;
@@ -698,7 +699,7 @@ public class LevelCreator extends Application {
     ////////////////////////////////////////
     // ACCOUNT SKIN CHANGE
     ////////////////////////////////////////
-    System.out.println("Generating Login Map");
+    System.out.println("Generating Skin Map");
     filename = "skin";
     gameObjects = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
         .maximumWeightedCapacity(500).build();
@@ -788,6 +789,56 @@ public class LevelCreator extends Application {
     gameObjects.put(uuid,
         new ButtonRegisterAccount(
             getAbs(30), getAbs(7), getAbs(8), getAbs(2), ObjectType.Button, uuid));
+    uuid = UUID.randomUUID();
+    for (int i = 0; i < 12; i++) {
+      // top row wall
+      gameObjects.put(uuid,
+          new StoneFloorObject(
+              getAbs(i * 4), getAbs(0), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
+      uuid = UUID.randomUUID();
+    }
+    for (int i = 0; i < 5; i++) {
+      // side col walls
+      gameObjects.put(uuid,
+          new StoneWallObject(
+              getAbs(0),
+              getAbs((i * 5) + 1),
+              getAbs(1),
+              getAbs(5),
+              ObjectType.Bot,
+              uuid));
+      uuid = UUID.randomUUID();
+      gameObjects.put(uuid,
+          new StoneWallObject(
+              getAbs(47),
+              getAbs((i * 5) + 1),
+              getAbs(1),
+              getAbs(5),
+              ObjectType.Bot,
+              uuid));
+      uuid = UUID.randomUUID();
+    }
+    for (int i = 0; i < 12; i++) {
+      // bottom row floor
+      gameObjects.put(uuid,
+          new StoneFloorObject(
+              getAbs(i * 4), getAbs(26), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
+      uuid = UUID.randomUUID();
+    }
+    MapLoader.saveMap(gameObjects, mapDataObject, filepath + filename + ".map");
+    ////////////////////////////////////////
+    // ACCOUNT LOOTBOX
+    ////////////////////////////////////////
+    System.out.println("Generating Lootbox Map");
+    filename = "lootbox";
+    gameObjects = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
+        .maximumWeightedCapacity(500).build();
+    playerSpawns = new ArrayList<Player>();
+    mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.ACCOUNT);
+    mapDataObject.setBackground(
+        new Background1(UUID.randomUUID()));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid, new Lootbox(getAbs(20), getAbs(10), 1, 1, uuid));
     uuid = UUID.randomUUID();
     for (int i = 0; i < 12; i++) {
       // top row wall

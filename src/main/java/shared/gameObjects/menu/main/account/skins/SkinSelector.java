@@ -86,30 +86,30 @@ public class SkinSelector extends GameObject {
   //Initializes the button objects
   private void initSkinButton() {
     init = true;
-    ButtonCycle left, right;
-    left = new ButtonCycle(getX(), getY() + 40, 60, 40, false, ObjectType.Button, UUID.randomUUID());
-    right = new ButtonCycle(getX() + 300, getY() + 40, 60, 40, true, ObjectType.Button, UUID.randomUUID());
+    ButtonBasic left, right;
+    left = new ButtonBasic(getX(), getY() + 40, 60, 40, false, ObjectType.Button, UUID.randomUUID());
+    right = new ButtonBasic(getX() + 300, getY() + 40, 60, 40, true, ObjectType.Button, UUID.randomUUID());
     skinCycles[0] = new CycleManager(getX() + 152, getY() + 80, 40, 40, left, right, "Head", ObjectType.Button, UUID.randomUUID());
     settings.getLevelHandler().addGameObject(left);
     settings.getLevelHandler().addGameObject(right);
     settings.getLevelHandler().addGameObject(skinCycles[0]);
 
-    left = new ButtonCycle(getX(), getY() + 120, 60, 40, false, ObjectType.Button, UUID.randomUUID());
-    right = new ButtonCycle(getX() + 300, getY() + 120, 60, 40, true, ObjectType.Button, UUID.randomUUID());
+    left = new ButtonBasic(getX(), getY() + 120, 60, 40, false, ObjectType.Button, UUID.randomUUID());
+    right = new ButtonBasic(getX() + 300, getY() + 120, 60, 40, true, ObjectType.Button, UUID.randomUUID());
     skinCycles[1] = new CycleManager(getX() + 152, getY() + 160, 40, 40, left, right, "Body", ObjectType.Button, UUID.randomUUID());
     settings.getLevelHandler().addGameObject(left);
     settings.getLevelHandler().addGameObject(right);
     settings.getLevelHandler().addGameObject(skinCycles[1]);
 
-    left = new ButtonCycle(getX(), getY() + 200, 60, 40, false, ObjectType.Button, UUID.randomUUID());
-    right = new ButtonCycle(getX() + 300, getY() + 200, 60, 40, true, ObjectType.Button, UUID.randomUUID());
+    left = new ButtonBasic(getX(), getY() + 200, 60, 40, false, ObjectType.Button, UUID.randomUUID());
+    right = new ButtonBasic(getX() + 300, getY() + 200, 60, 40, true, ObjectType.Button, UUID.randomUUID());
     skinCycles[2] = new CycleManager(getX() + 152, getY() + 240, 40, 40, left, right, "Arm", ObjectType.Button, UUID.randomUUID());
     settings.getLevelHandler().addGameObject(left);
     settings.getLevelHandler().addGameObject(right);
     settings.getLevelHandler().addGameObject(skinCycles[2]);
 
-    left = new ButtonCycle(getX(), getY() + 280, 60, 40, false, ObjectType.Button, UUID.randomUUID());
-    right = new ButtonCycle(getX() + 300, getY() + 280, 60, 40, true, ObjectType.Button, UUID.randomUUID());
+    left = new ButtonBasic(getX(), getY() + 280, 60, 40, false, ObjectType.Button, UUID.randomUUID());
+    right = new ButtonBasic(getX() + 300, getY() + 280, 60, 40, true, ObjectType.Button, UUID.randomUUID());
     skinCycles[3] = new CycleManager(getX() + 152, getY() + 320, 40, 40, left, right, "Leg", ObjectType.Button, UUID.randomUUID());
     settings.getLevelHandler().addGameObject(left);
     settings.getLevelHandler().addGameObject(right);

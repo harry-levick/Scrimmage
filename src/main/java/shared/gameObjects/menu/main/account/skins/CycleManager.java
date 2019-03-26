@@ -13,13 +13,13 @@ import shared.gameObjects.Utils.ObjectType;
  */
 public class CycleManager extends GameObject {
 
-  private ButtonCycle left, right;
+  private ButtonBasic left, right;
   private transient Text text;
   private String textContent;
   private int clickID;
   private int textCount;
 
-  public CycleManager(double x, double y, double sizeX, double sizeY, ButtonCycle left, ButtonCycle right, String textContent, ObjectType id, UUID uuid) {
+  public CycleManager(double x, double y, double sizeX, double sizeY, ButtonBasic left, ButtonBasic right, String textContent, ObjectType id, UUID uuid) {
     super(x, y, sizeX, sizeY, id, uuid);
     this.left = left;
     left.setParent(this);
@@ -29,7 +29,7 @@ public class CycleManager extends GameObject {
     textCount = 0;
   }
 
-  protected void triggerClick(ButtonCycle cycle) {
+  protected void triggerClick(ButtonBasic cycle) {
     if (cycle.equals(right)) {
         clickID = 1;
     } else if (cycle.equals(left)) {
@@ -75,7 +75,6 @@ public class CycleManager extends GameObject {
   @Override
   public void removeRender() {
     super.removeRender();
-    System.out.println(root.getChildren().contains(text));
     root.getChildren().remove(text);
     text = null;
   }

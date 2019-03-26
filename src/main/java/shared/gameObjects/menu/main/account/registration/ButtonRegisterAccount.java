@@ -58,7 +58,6 @@ public class ButtonRegisterAccount extends ButtonObject {
   @Override
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
-    System.out.println(settings.getData().getUsername());
     settings.getData().setUsername(usernameInput.getText());
     String ret = SQLConnect.registerUser(settings.getData(), passwordInput.getText());
     if(ret.startsWith("exists")) {

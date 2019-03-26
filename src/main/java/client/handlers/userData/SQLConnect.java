@@ -113,6 +113,7 @@ public class SQLConnect {
    * @return success/fail
    */
   public static String saveData(AccountData data) {
+    if(data.getUsername().equals("newuser")) return "failed";
     String toRet = "";
     try {
       Connection conn = getConnection();
