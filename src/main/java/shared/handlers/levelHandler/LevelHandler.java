@@ -6,8 +6,11 @@ import client.handlers.effectsHandler.Particle;
 import client.handlers.effectsHandler.emitters.ParticleEmitter;
 import client.main.Client;
 import client.main.Settings;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javafx.scene.Group;
@@ -37,6 +40,7 @@ public class LevelHandler {
   private ArrayList<Map> maps;
   private GameState gameState;
   private Map map;
+  private LinkedList<Map> playlist;
   private Map previousMap;
   private Group backgroundRoot;
   private Group gameRoot;
@@ -77,6 +81,7 @@ public class LevelHandler {
         new Map("menus/main_menu.map", Path.convert("src/main/resources/menus/main_menu.map")),
         true, false);
     previousMap = null;
+    setPlaylist("playlist1");
   }
   /**
    * Constructs level handler for server
@@ -101,6 +106,7 @@ public class LevelHandler {
     changeMap(new Map("LOBBY", Path.convert("src/main/resources/menus/lobby.map")),
         false, true);
     previousMap = null;
+    setPlaylist("playlist1");
   }
 
   /**
@@ -115,6 +121,7 @@ public class LevelHandler {
     if (!isServer) {
       Client.closeSettingsOverlay();
     }
+
     generateLevel(backgroundRoot, gameRoot, moveToSpawns, isServer);
 
     if (!isServer) {
@@ -186,24 +193,6 @@ public class LevelHandler {
     gameState = map.getGameState() != null ? map.getGameState() : GameState.MAIN_MENU;
     players.forEach((key, player) -> {
       player.reset();
-      /**
-       player.setHolding(new MachineGun(player.getX(), player.getY(),
-       "MachineGun@LevelHandler", player, UUID.randomUUID()));
-
-       gameObjects.put(player.getHolding().getUUID(), player.getHolding());
-       player.getHolding().initialise(gameRoot, settings);
-       **/
-    });
-
-    bots.forEach((key, bot) -> {
-      bot.reset();
-      /**
-       bot.setHolding(new MachineGun(bot.getX(), bot.getY(), "MachineGun@LevelHandler", bot,
-       UUID.randomUUID()));
-
-       gameObjects.put(bot.getHolding().getUUID(), bot.getHolding());
-       bot.getHolding().initialise(gameRoot, settings);
-       **/
     });
 
     if (!isServer) {
@@ -317,6 +306,30 @@ public class LevelHandler {
    */
   public ArrayList<Map> getMaps() {
     return maps;
+  }
+
+  /**
+   * Initialise the playlist with a selected playlist name
+   * @param playlistName The playlist to be created, must be the name of the directory
+   */
+  public void setPlaylist(String playlistName) {
+    playlist = new LinkedList<>();
+    int playlistLength = new File(settings.getMapsPath() + File.separator + playlistName)
+        .list().length;
+
+    for (int i = 1; i <= playlistLength; i++) {
+      playlist.add(
+          new Map(
+              "Map" + i,
+              Path.convert(settings.getMapsPath() + File.separator + playlistName + File.separator + "map" + i + ".map")));
+    }
+  }
+
+  public LinkedList<Map> getPlaylist() { return playlist; }
+
+  public Map pollPlayList() {
+    int index = new Random().nextInt(getPlaylist().size() - 1);
+    return playlist.get(index);
   }
 
   /**

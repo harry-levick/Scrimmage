@@ -14,7 +14,7 @@ import shared.util.Path;
 
 public class ButtonSingleplayer extends ButtonObject {
 
-  private static final int maxPlayers = 4;
+  private static final int maxPlayers = 3;
 
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
@@ -45,8 +45,7 @@ public class ButtonSingleplayer extends ButtonObject {
       botPlayer.startThread();
     }
 
-    settings.getLevelHandler().changeMap(
-        new Map("map1", Path.convert("src/main/resources/maps/map1.map")),
+    settings.getLevelHandler().changeMap(settings.getLevelHandler().pollPlayList(),
         true, false);
 
     Client.singleplayerGame = true;

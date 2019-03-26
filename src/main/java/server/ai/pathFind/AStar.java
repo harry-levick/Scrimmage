@@ -161,7 +161,7 @@ public class AStar {
         double distanceToItem = botPos.exactMagnitude(itemPos);
         // The heuristic value is the combined distance of the bot->enemy + bot->item
         // The heuristic value for the item is weighted to add preference to pick the items up.
-        totalH += (distanceToItem * 5);
+        totalH += distanceToItem * 100000;
       }
 
       return totalH;
@@ -218,8 +218,6 @@ public class AStar {
         Vector2 itemPos = new Vector2((float) weap.getX(), (float) weap.getY());
         double distance = botPos.exactMagnitude(itemPos);
 
-        boolean betterWeap = weap.getWeaponRank() > replicaBot.getHolding().getWeaponRank();
-
         if (distance < targetDistance &&
             (weap.getWeaponRank() > replicaBot.getHolding().getWeaponRank())) {
           targetDistance = distance;
@@ -244,54 +242,13 @@ public class AStar {
     boolean outHorizontal = (neighbour.botX + botSize.getX() <= 30) ||
         (neighbour.botX >= xMax);
 
-    boolean outVertical = (neighbour.botY + botSize.getY() <= 30) ||
-        (neighbour.botY >= yMax);
+    boolean outVertical = (neighbour.botY >= yMax);
 
     if (outHorizontal || outVertical) {
       return false;
     } else return true;
   }
 
-  /**
-   * The main search function
-   */
-  private void search() {
-    int searchCount = 0, seachCutoff = 1300;
-    SearchNode current = bestPosition;
-    closedList.add(current);
-    boolean currentGood = false;
-
-    while (openList.size() != 0 && !atEnemy(current.botX, current.botY, replicaBot)) {
-      current = pickBestNode(openList);
-      currentGood = false;
-
-      if (!current.visited && isInClosed(current)) {
-        /**
-         * Closed List -> Nodes too close to a node in the closed list are considered visited, even
-         * though they are a bit different.
-         */
-        current.fValue += visitedListPenalty;
-        current.visited = true;
-        openList.add(current);
-
-      } else {
-        currentGood = true;
-        closedList.add(current);
-        openList.addAll(current.generateChildren());
-        searchCount++;
-        //Physics.drawCast(current.botX, current.botY, current.botX, current.botY, "#00ff00");
-      }
-
-      if (currentGood) {
-        bestPosition = current;
-      }
-      if (searchCount >= seachCutoff) {
-        break;
-      }
-
-    }
-
-  }
 
   /**
    * Create new AStar
@@ -346,16 +303,57 @@ public class AStar {
   }
 
   /**
-   * The main fleeing function
-   * @param enemy the enemy we are fleeing from
+   * The main search function
    */
-  private void flee(Player enemy) {
-    int searchCount = 0, seachCutoff = 200;
+  private void search() {
+    int searchCount = 0, seachCutoff = 2000;
     SearchNode current = bestPosition;
     closedList.add(current);
     boolean currentGood = false;
 
-    while (openList.size() != 0 && atEnemy(current.botX, current.botY, enemy)) {
+    while (openList.size() != 0 && !atEnemy(current.botX, current.botY, replicaBot, true)) {
+      current = pickBestNode(openList);
+      currentGood = false;
+
+      if (!current.visited && isInClosed(current)) {
+        /**
+         * Closed List -> Nodes too close to a node in the closed list are considered visited, even
+         * though they are a bit different.
+         */
+        current.fValue += visitedListPenalty;
+        current.visited = true;
+        openList.add(current);
+
+      } else {
+        currentGood = true;
+        closedList.add(current);
+        openList.addAll(current.generateChildren());
+        searchCount++;
+        //Physics.drawCast(current.botX, current.botY, current.botX, current.botY, "#00ff00");
+      }
+
+      if (currentGood) {
+        bestPosition = current;
+      }
+      if (searchCount >= seachCutoff) {
+        break;
+      }
+
+    }
+
+  }
+
+  /**
+   * The main fleeing function
+   * @param enemy the enemy we are fleeing from
+   */
+  private void flee(Player enemy) {
+    int searchCount = 0, seachCutoff = 1300;
+    SearchNode current = bestPosition;
+    closedList.add(current);
+    boolean currentGood = false;
+
+    while (openList.size() != 0 && atEnemy(current.botX, current.botY, enemy, false)) {
       current = pickWorstNode(openList);
       currentGood = false;
 
@@ -397,7 +395,7 @@ public class AStar {
    * if we are chasing)
    * @return true if the bot is close enough to the enemy.
    */
-  private boolean atEnemy(double botX, double botY, Player weaponHolder) {
+  private boolean atEnemy(double botX, double botY, Player weaponHolder, boolean chasing) {
     Vector2 botPos = new Vector2(botX, botY);
     Vector2 botPosCenter = botPos.add(bot.getTransform().getSize().mult(0.5f));
     Vector2 enemyPos = new Vector2(enemyX, enemyY);
@@ -417,13 +415,12 @@ public class AStar {
     boolean inSight = rayCast == null || (((Rigidbody) rayCast.getCollidedObject()
         .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC);
 
-    if (weaponHolder.getHolding().isGun()) {
+    if (weaponHolder.getHolding().isGun() || !chasing) {
 
       if (inSight)
         return true;
-      else {
+      else
         return false;
-      }
 
     } else { // melee weapon
       tempMelee = (Melee) weaponHolder.getHolding();
@@ -456,9 +453,9 @@ public class AStar {
     if (!Arrays.equals(parentAction, new boolean[]{false, false, true})) {
 
       ArrayList<Collision> viscinityLeft = Physics.boxcastAll(
-          botPosition.add(Vector2.Left().mult(botSize.mult(new Vector2(0.6, 0.9))))
+          botPosition.add(Vector2.Left().mult(botSize.mult(new Vector2(0.1, 0.85))))
               .add(Vector2.Down().mult(3)),
-          botSize.mult(new Vector2(0.6, 0.85)), false, true);
+          botSize.mult(new Vector2(0.1, 0.85)), false, true);
 
       if (viscinityLeft.size() == 0 ||
           (viscinityLeft.stream().allMatch(o -> ((Rigidbody) o.getCollidedObject()
@@ -478,7 +475,7 @@ public class AStar {
 
       ArrayList<Collision> viscinityRight = Physics.boxcastAll(
           botPosition.add(Vector2.Right().mult(botSize)).add(Vector2.Down().mult(3)),
-          botSize.mult(new Vector2(0.6, 0.85)), false, true);
+          botSize.mult(new Vector2(0.1, 0.85)), false, true);
 
       if (viscinityRight.size() == 0 ||
           (viscinityRight.stream().allMatch(o -> ((Rigidbody) o.getCollidedObject()
@@ -497,8 +494,8 @@ public class AStar {
     if (nodeBot.mayJump()) { // If the bot cant jump, theres no point casting upwards
 
       ArrayList<Collision> viscinityUp = Physics.boxcastAll(
-          botPosition.add(Vector2.Up().mult(botSize.mult(new Vector2(1, 0.5)))),
-          botSize.mult(new Vector2(1, 0.5)), false, true);
+          botPosition.add(Vector2.Up().mult(botSize.mult(new Vector2(1, 0.1)))),
+          botSize.mult(new Vector2(1, 0.1)), false, true);
 
       // If no collision
       if (viscinityUp.size() == 0 ||
@@ -507,14 +504,14 @@ public class AStar {
               .getBodyType() != RigidbodyType.STATIC))) {
 
         ArrayList<Collision> viscinityUpLeft = Physics.boxcastAll(
-            botPosition.add(Vector2.Up().mult(botSize)).add(Vector2.Left()
-                .mult(new Vector2(0.5, 1))),
-            botSize.mult(new Vector2(0.5, 1)), false, true);
+            botPosition.add(Vector2.Up().mult(botSize.mult(new Vector2(0.2, 0.1)))).add(Vector2.Left()
+                .mult(new Vector2(0.2, 0.1))),
+            botSize.mult(new Vector2(0.2, 0.1)), false, true);
 
         ArrayList<Collision> viscinityUpRight = Physics.boxcastAll(
-            botPosition.add(Vector2.Up().mult(botSize)).add(Vector2.Right()
-                .mult(botSize.mult(new Vector2(0.5, 1)))),
-            botSize.mult(new Vector2(0.5, 1)), false, true);
+            botPosition.add(Vector2.Up().mult(botSize.mult(new Vector2(0.2, 0.1)))).add(Vector2.Right()
+                .mult(botSize.mult(new Vector2(1, 0.1)))),
+            botSize.mult(new Vector2(0.2, 0.1)), false, true);
 
         // Just jump
         possibleActions.add(createAction(true, false, false));
