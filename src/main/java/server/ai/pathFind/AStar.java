@@ -161,7 +161,7 @@ public class AStar {
         double distanceToItem = botPos.exactMagnitude(itemPos);
         // The heuristic value is the combined distance of the bot->enemy + bot->item
         // The heuristic value for the item is weighted to add preference to pick the items up.
-        totalH += (distanceToItem * 1000);
+        totalH += distanceToItem * 100000;
       }
 
       return totalH;
@@ -453,9 +453,9 @@ public class AStar {
     if (!Arrays.equals(parentAction, new boolean[]{false, false, true})) {
 
       ArrayList<Collision> viscinityLeft = Physics.boxcastAll(
-          botPosition.add(Vector2.Left().mult(botSize.mult(new Vector2(0.2, 0.9))))
+          botPosition.add(Vector2.Left().mult(botSize.mult(new Vector2(0.1, 0.85))))
               .add(Vector2.Down().mult(3)),
-          botSize.mult(new Vector2(0.2, 0.85)), false, true);
+          botSize.mult(new Vector2(0.1, 0.85)), false, true);
 
       if (viscinityLeft.size() == 0 ||
           (viscinityLeft.stream().allMatch(o -> ((Rigidbody) o.getCollidedObject()
@@ -475,7 +475,7 @@ public class AStar {
 
       ArrayList<Collision> viscinityRight = Physics.boxcastAll(
           botPosition.add(Vector2.Right().mult(botSize)).add(Vector2.Down().mult(3)),
-          botSize.mult(new Vector2(0.2, 0.85)), false, true);
+          botSize.mult(new Vector2(0.1, 0.85)), false, true);
 
       if (viscinityRight.size() == 0 ||
           (viscinityRight.stream().allMatch(o -> ((Rigidbody) o.getCollidedObject()
@@ -504,14 +504,14 @@ public class AStar {
               .getBodyType() != RigidbodyType.STATIC))) {
 
         ArrayList<Collision> viscinityUpLeft = Physics.boxcastAll(
-            botPosition.add(Vector2.Up().mult(botSize.mult(new Vector2(0.2, 0.2)))).add(Vector2.Left()
-                .mult(new Vector2(0.2, 0.2))),
-            botSize.mult(new Vector2(0.2, 0.2)), false, true);
+            botPosition.add(Vector2.Up().mult(botSize.mult(new Vector2(0.2, 0.1)))).add(Vector2.Left()
+                .mult(new Vector2(0.2, 0.1))),
+            botSize.mult(new Vector2(0.2, 0.1)), false, true);
 
         ArrayList<Collision> viscinityUpRight = Physics.boxcastAll(
-            botPosition.add(Vector2.Up().mult(botSize.mult(new Vector2(0.2, 0.2)))).add(Vector2.Right()
-                .mult(botSize.mult(new Vector2(1, 0.2)))),
-            botSize.mult(new Vector2(0.2, 0.2)), false, true);
+            botPosition.add(Vector2.Up().mult(botSize.mult(new Vector2(0.2, 0.1)))).add(Vector2.Right()
+                .mult(botSize.mult(new Vector2(1, 0.1)))),
+            botSize.mult(new Vector2(0.2, 0.1)), false, true);
 
         // Just jump
         possibleActions.add(createAction(true, false, false));
