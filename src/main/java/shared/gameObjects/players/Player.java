@@ -376,6 +376,10 @@ public class Player extends GameObject {
   public void setMaxHealth(int hp) {
     this.maxHealth = hp;
   }
+  
+  public float getHealthPercentage() {
+    return (float)health/(float)maxHealth;
+  }
 
   public void setHealth(int hp) {
     this.health = hp;
