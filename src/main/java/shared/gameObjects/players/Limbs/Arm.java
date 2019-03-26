@@ -1,6 +1,7 @@
 package shared.gameObjects.players.Limbs;
 
 import client.main.Settings;
+import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.transform.Rotate;
 import shared.gameObjects.GameObject;
@@ -124,6 +125,22 @@ public class Arm extends Limb {
   public void addChild(GameObject child) {
     super.addChild(child);
     settings.getLevelHandler().getLimbs().put(child.getUUID(), (Limb) child);
+  }
+
+  /**
+   * Remove the image from the imageView by setting the image to null
+   */
+  @Override
+  public void removeRender() {
+    if (imageView != null) {
+      imageView.setImage(null);
+      Platform.runLater(
+          () -> {
+            root.getChildren().remove(imageView);
+          }
+      );
+    }
+    children.forEach(child -> child.removeRender());
   }
 
   @Override
