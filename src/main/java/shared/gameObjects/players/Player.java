@@ -128,6 +128,7 @@ public class Player extends GameObject {
         new MaterialProperty(0f, 0.1f, 0.05f), null, this);
     addComponent(bc);
     addComponent(rb);
+    aimLeft = pointLeft = true;
   }
 
   // Initialise the animation
@@ -270,7 +271,7 @@ public class Player extends GameObject {
       this.throwHolding();
     }
 
-    if (click && holding != null && !(!armLeft.limbAttached || !armRight.limbAttached)) {
+    if (click && holding != null) {
       holding.fire(mouseX, mouseY);
     }
     // setX(getX() + (vx * 0.0166));
@@ -480,6 +481,8 @@ public class Player extends GameObject {
    * @return A 2 elements array, a[0] = X position of the hand, a[1] = Y position of the hand
    */
   public double[] getGunHandPos() {
+    if (this.handLeft.isDeattached() || this.handRight.isDeattached())
+      return new double[]{-1, -1};
     if (isAimingLeft()) {
       return new double[]{this.handRight.getX(), this.handRight.getY()};
     } else {
@@ -494,8 +497,12 @@ public class Player extends GameObject {
    */
   public double[] getMeleeHandPos() {
     if (isAimingLeft()) {
+      if (handLeft.isDeattached())
+        return new double[]{-1, -1};
       return new double[]{this.handLeft.getX(), this.handLeft.getY()};
     } else {
+      if (handRight.isDeattached())
+        return new double[]{-1, -1};
       return new double[]{this.handRight.getX(), this.handRight.getY()};
     }
   }

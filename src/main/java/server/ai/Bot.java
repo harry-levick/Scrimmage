@@ -73,7 +73,6 @@ public class Bot extends Player {
   public Bot(Bot that) {
     super(that.getX(), that.getY(), UUID.randomUUID());
     this.levelHandler = that.levelHandler;
-
   }
 
   /**
@@ -96,6 +95,14 @@ public class Bot extends Player {
     startThread();
 
     super.reset();
+  }
+
+  /**
+   * Terminate all threads
+   */
+  public void terminateThreads() {
+    chasingThread.terminate();
+    fleeingThread.terminate();
   }
 
   /**
@@ -142,21 +149,17 @@ public class Bot extends Player {
 
     switch (state) {
       case IDLE:
-        System.out.println("IDLE");
 
         break;
       case CHASING:
-        System.out.println("CHASING");
         executeAction(FSA.CHASING);
 
         break;
       case FLEEING:
-        System.out.println("FLEEING");
         executeAction(FSA.FLEEING);
 
         break;
       case ATTACKING:
-        System.out.println("ATTACKING");
         Vector2 enemyPosCenter = targetPlayer.getTransform().getPos()
             .add(targetPlayer.getTransform().getSize().mult(0.5f));
         mouseX = enemyPosCenter.getX();

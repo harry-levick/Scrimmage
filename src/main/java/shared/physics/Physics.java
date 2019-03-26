@@ -16,6 +16,7 @@ import shared.gameObjects.components.Collider;
 import shared.gameObjects.components.ComponentType;
 import shared.gameObjects.components.EdgeCollider;
 import shared.gameObjects.players.Limb;
+import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.Bullet;
 import shared.gameObjects.weapons.Weapon;
 import shared.physics.data.Collision;
@@ -81,6 +82,7 @@ public class Physics {
    *
    * @param sourcePos The point to start casting the ray
    * @param lengthAndDirection The length and direction of the ray
+   * @param showCollider True to visualise the ray
    * @return The first collider hit in the path, null if nothing was hit.
    */
   public static Collision raycast(Vector2 sourcePos, Vector2 lengthAndDirection,
@@ -135,6 +137,9 @@ public class Physics {
    *
    * @param sourcePos The point to start casting the ray
    * @param lengthAndDirection The length and direction of the ray
+   * @param objects GameObjects to search for
+   * @param bot Bot that starts the raycast
+   * @param showCollider True to visualise the ray
    * @return The first collider hit in the path, null if nothing was hit.
    */
   public static Collision raycastAi(Vector2 sourcePos, Vector2 lengthAndDirection,
@@ -202,6 +207,63 @@ public class Physics {
   }
 
   /**
+   * Cast a ray which interacts with colliders in the world, ignoring Limbs and holder of weapon
+   *
+   * @param sourcePos Source of ray
+   * @param lengthAndDirection Length and direction of the ray
+   * @param holder Holder of the weapon which starts the raycast
+   * @param showCollider True to visualise the ray on cast
+   *
+   * @return First collision if there is one, null otherwise
+   */
+  public static Collision raycastBullet(Vector2 sourcePos, Vector2 lengthAndDirection,
+      Player holder, boolean showCollider) {
+    EdgeCollider castCollider = new EdgeCollider(false);
+    Collision collision = null;
+    ArrayList<Collision> collisions = new ArrayList<>();
+    Vector2 incrementVal = lengthAndDirection.div(RAYCAST_INC);
+    for (int i = 0; i <= RAYCAST_INC; i++) {
+      castCollider.addNode(sourcePos.add(incrementVal.mult(i)));
+    }
+
+    if (showCollider) {
+      Platform.runLater(
+          () -> {
+            drawCast(castCollider.getNodes().get(0).getX(), castCollider.getNodes().get(0).getY(),
+                castCollider.getNodes().get(castCollider.getNodes().size() - 1).getX(),
+                castCollider.getNodes().get(castCollider.getNodes().size() - 1).getY(), "#00ff00");
+          }
+      );
+
+    }
+
+    Iterator<GameObject> iter = gameObjects.values().iterator();
+    while (iter.hasNext()) {
+      GameObject object = iter.next();
+      if (object instanceof Limb || (object instanceof Player && object.equals(holder))) continue;
+
+      if (object.getComponent(ComponentType.COLLIDER) != null) {
+        collision =
+            new Collision(
+                object, castCollider, (Collider) object.getComponent(ComponentType.COLLIDER));
+        if (collision.isCollided()) {
+          collisions.add(collision);
+        }
+      }
+    }
+    if (collisions.size() > 0) {
+      Collision toRet = collisions.get(0);
+      for (Collision c : collisions) {
+        toRet = c.getPointOfCollision().sub(sourcePos).magnitude() <= toRet.getPointOfCollision()
+            .sub(sourcePos).magnitude() ? c : toRet;
+      }
+      return toRet;
+    } else {
+      return null;
+    }
+  }
+
+  /**
    * Draws a raycast for debugging
    */
   public static void drawCast(double xStart, double yStart, double xFinish, double yFinish,
@@ -242,6 +304,7 @@ public class Physics {
    *
    * @param sourcePos The point to start casting the ray
    * @param lengthAndDirection The length and direction of the ray
+   * @param showCast True to visualise the ray
    * @return All colliders hit in the path, empty if nothing was hit.
    */
   public static ArrayList<Collision> raycastAll(Vector2 sourcePos, Vector2 lengthAndDirection, boolean showCast) {
@@ -324,6 +387,8 @@ public class Physics {
    *
    * @param sourcePos The top-right corner of the box
    * @param size The extents of the box
+   * @param showCast True to visualise the ray
+   * @param ignoreLimbs True to ignore Limbs
    * @return All colliders hit in the path, empty if nothing was hit
    */
   public static ArrayList<Collision> boxcastAll(Vector2 sourcePos, Vector2 size, boolean showCast, boolean ignoreLimbs) {

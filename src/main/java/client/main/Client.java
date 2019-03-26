@@ -137,7 +137,7 @@ public class Client extends Application {
   private static boolean gameOver;
   private boolean startedGame;
   private int timeRemaining;
-  private int timeLimit = 3; // Time limit in minutes
+  private int timeLimit = 1; // Time limit in minutes
   private static boolean settingsOverlay = false;
   private static ArrayList<GameObject> settingsObjects = new ArrayList<>();
   private final float timeStep = 0.0166f;
@@ -378,6 +378,7 @@ public class Client extends Application {
   public static void endGame() {
     singleplayerGame = false;
     gameOver = false;
+    levelHandler.getBotPlayerList().forEach((key, bot) -> bot.terminateThreads());
     levelHandler.getPlayers().keySet().removeAll(levelHandler.getBotPlayerList().keySet());
     levelHandler.getGameObjects().keySet().removeAll(levelHandler.getBotPlayerList().keySet());
     levelHandler.getBotPlayerList().forEach((key, gameObject) -> gameObject.removeRender());
