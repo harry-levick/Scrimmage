@@ -1,5 +1,6 @@
 package shared.gameObjects.menu;
 
+import client.handlers.audioHandler.AudioHandler;
 import client.main.Client;
 import client.main.Settings;
 import com.jfoenix.controls.JFXSlider;
@@ -38,6 +39,7 @@ public abstract class SliderObject extends GameObject {
     slider.setLayoutY(getY() + yOffset);
     slider.setMinSize(transform.getSize().getX(), transform.getSize().getY() + 30);
     slider.setMaxSize(transform.getSize().getX(), transform.getSize().getY() + 30);
+    slider.setOnMouseClicked(event -> doOnClick());
     root.getChildren().add(slider);
     text = new Text(label);
     text.setLayoutX(getX());
@@ -54,6 +56,10 @@ public abstract class SliderObject extends GameObject {
   @Override
   public void render() {
 
+  }
+
+  private void doOnClick() {
+    new AudioHandler(settings, Client.musicActive).playSFX("CLICK");
   }
 
   @Override
