@@ -368,7 +368,7 @@ public abstract class Weapon extends GameObject {
   @Override
   public void OnTriggerEnter(Collision col) {
     GameObject g = col.getCollidedObject();
-    if (g != null && (g.getId() == ObjectType.Player || g.getId() == ObjectType.Bot)) {
+    if (g != null && (g instanceof Player)) {
       Player p = (Player) g;
       if (p.getHolding() == null || p.getHolding() instanceof Punch && p.canHold()) {
         setHolder(p);
