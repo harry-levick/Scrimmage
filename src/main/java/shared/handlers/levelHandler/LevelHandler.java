@@ -20,6 +20,7 @@ import shared.gameObjects.GameObject;
 import shared.gameObjects.MapDataObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.background.Background;
+import shared.gameObjects.players.Limb;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.rendering.ColorFilters;
 import shared.packets.PacketDelete;
@@ -35,6 +36,7 @@ public class LevelHandler {
   private ConcurrentLinkedHashMap<UUID, GameObject> gameObjects;
   private CopyOnWriteArrayList<GameObject> toRemove;
   private LinkedHashMap<UUID, Player> players;
+  private LinkedHashMap<UUID, Limb> limbs;
   private LinkedHashMap<UUID, Bot> bots;
   private Player clientPlayer;
   private ArrayList<Map> maps;
@@ -68,6 +70,7 @@ public class LevelHandler {
     toCreate = new ArrayList<>();
     toRemove = new CopyOnWriteArrayList<>();
     players = new LinkedHashMap<>();
+    limbs = new LinkedHashMap<>();
     bots = new LinkedHashMap<>();
     maps = MapLoader.getMaps(settings.getMapsPath());
     filters = new ColorFilters();
@@ -96,6 +99,7 @@ public class LevelHandler {
         .maximumWeightedCapacity(500).build();
     toRemove = new CopyOnWriteArrayList<>();
     players = new LinkedHashMap<>();
+    limbs = new LinkedHashMap<>();
     toCreate = new ArrayList<>();
     bots = new LinkedHashMap<>();
     maps = MapLoader.getMaps(settings.getMapsPath());
@@ -156,8 +160,10 @@ public class LevelHandler {
   public void generateLevel(Group backgroundGroup, Group gameGroup, Boolean moveToSpawns,
       Boolean isServer) {
 
+    settings.resetDeaths();
     gameObjects.keySet().removeAll(players.keySet());
     gameObjects.keySet().removeAll(bots.keySet());
+    gameObjects.keySet().removeAll(limbs.keySet());
     gameObjects.forEach((key, gameObject) -> gameObject.removeRender());
     gameObjects.forEach((key, gameObject) -> gameObject = null);
     gameObjects.clear();
@@ -189,6 +195,8 @@ public class LevelHandler {
           }
         });
     gameObjects.putAll(players);
+    gameObjects.putAll(limbs);
+    limbs.forEach((key, limbs) -> limbs.reset());
     gameObjects.forEach((key, gameObject) -> gameObject.setSettings(settings));
     gameState = map.getGameState() != null ? map.getGameState() : GameState.MAIN_MENU;
     players.forEach((key, player) -> {
@@ -242,6 +250,13 @@ public class LevelHandler {
   }
 
   /**
+   * Readd limbs
+   */
+  public void addLimbs(GameObject gameObject) {
+    this.toCreate.add(gameObject);
+  }
+
+  /**
    * Add a gameobject to list to be created next update
    *
    * @param gameObject GameObject to be added
@@ -276,7 +291,9 @@ public class LevelHandler {
    */
   public void createObjects() {
     toCreate.forEach(gameObject -> {
-      gameObject.initialise(gameRoot, settings);
+      if (!(gameObject instanceof Limb)) {
+        gameObject.initialise(gameRoot, settings);
+      }
       if (gameObject instanceof Player && gameObject.getUUID() != clientPlayer.getUUID()) {
         addPlayer((Player) gameObject, settings.getGameRoot());
       } else {
@@ -393,4 +410,10 @@ public class LevelHandler {
   public Group getGameRoot() {
     return gameRoot;
   }
+
+  public LinkedHashMap<UUID, Limb> getLimbs() {
+    return limbs;
+  }
+
+
 }

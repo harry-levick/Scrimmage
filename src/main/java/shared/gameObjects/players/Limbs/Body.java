@@ -16,7 +16,8 @@ public class Body extends Limb {
    */
   public Body(Player parent, LevelHandler levelHandler) {
     super(0, 0, 22, 64, 39, 31, ObjectType.Limb, false, parent, parent, 0, 0, levelHandler);
-    limbHealth = 99999;
+    limbMaxHealth = 99999;
+    limbHealth = limbMaxHealth;
   }
 
   @Override
@@ -31,7 +32,6 @@ public class Body extends Limb {
 
   @Override
   protected void rotateAnimate() {
-    // TODO Auto-generated method stub
 
   }
 }

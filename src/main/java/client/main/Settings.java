@@ -37,6 +37,7 @@ public class Settings {
   private int defaultFontSize;
   private Font font;
   private int gridSize;
+  private int playersDead;
 
   /**
    * Default Constructor Music volume set to 100 and sound effects to 75
@@ -52,6 +53,7 @@ public class Settings {
     maxPlayers = 4;
     defaultFontSize = 20;
     gridSize = 40;
+    playersDead = 0;
     this.levelHandler = levelHandler;
     this.gameRoot = gameRoot;
     resourcesPath = "src" + s + "main" + s + "resources";
@@ -296,5 +298,17 @@ public class Settings {
 
   public void setData(AccountData data) {
     this.data = data;
+  }
+
+  public void playerDied() {
+    this.playersDead++;
+  }
+
+  public void resetDeaths() {
+    this.playersDead = 0;
+  }
+
+  public int getPlayersDead() {
+    return playersDead;
   }
 }

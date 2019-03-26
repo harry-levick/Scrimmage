@@ -3,6 +3,7 @@ package shared.gameObjects.players;
 import client.main.Settings;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.UUID;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
@@ -12,7 +13,6 @@ import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
-import shared.gameObjects.players.Limbs.Arm;
 import shared.handlers.levelHandler.LevelHandler;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.ColliderLayer;
@@ -46,7 +46,10 @@ public abstract class Limb extends GameObject implements Destructable {
    * Health value of a limb
    */
   protected int limbHealth;
-  //TODO idk what these does
+  /**
+   * Limb Max Health
+   */
+  protected int limbMaxHealth;
   protected boolean lastAttachedCheck;
   protected Behaviour behaviour;
   protected Behaviour lastBehaviour;
@@ -64,7 +67,6 @@ public abstract class Limb extends GameObject implements Destructable {
 
   protected transient LevelHandler levelHandler;
 
-  protected int resetOffsetX = 0;
   protected boolean damagedThisFrame;
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
@@ -100,7 +102,8 @@ public abstract class Limb extends GameObject implements Destructable {
 
     rb =
         new Rigidbody(
-            RigidbodyType.DYNAMIC, 80, 8, 0.2f, new MaterialProperty(0.005f, 0.1f, 0.05f), null,
+            RigidbodyType.DYNAMIC, 90, 11.67f, 0.2f, new MaterialProperty(0.005f, 0.1f, 0.05f),
+            null,
             this);
     rotate.setPivotX(pivotX);
     rotate.setPivotY(pivotY);
@@ -146,19 +149,11 @@ public abstract class Limb extends GameObject implements Destructable {
     }
   }
 
-  public void addChild(GameObject child, boolean init) {
-    if (init) {
-      children.add(child);
-    }
-    levelHandler.addGameObject(child);
-  }
-
   @Override
   public void update() {
     super.update();
     getBehaviour();
     if (limbAttached) {
-      setRelativePosition();
       if (!lastAttachedCheck) {
         removeComponent(rb);
       }
@@ -174,11 +169,16 @@ public abstract class Limb extends GameObject implements Destructable {
 
   @Override
   public void destroy() {
+    if(!limbAttached) return;
     detachLimb();
-    bc.setLayer(ColliderLayer.PARTICLE);
+    Random random = new Random();
+    rb.setVelocity(new Vector2(1000 * (random.nextDouble() + 0.2) * (random.nextInt(4) - 1 > 0 ? 1 : -1),
+        1000 * (random.nextDouble() + 0.2) * (random.nextInt(3) - 1)));
+    System.out.println("Limb Yeeted");
   }
   public void reset() {
-    removeRender();
+    reattachedLimb();
+    limbHealth = limbMaxHealth;
   }
 
   private void getBehaviour() {
@@ -204,60 +204,24 @@ public abstract class Limb extends GameObject implements Destructable {
   @Override
   public void render() {
     super.render();
-
-    //Do all the rotations here.
-    rotateAnimate();
-
-    // Flip the imageView depending on the direciton of travel
-    flipImageView(imageView,this.behaviour.toString());
-  }
-
-  public boolean isLimbAttached() {
-    return limbAttached;
+    if (limbAttached) {
+      setRelativePosition();
+      //Do all the rotations here.
+      rotateAnimate();
+      // Flip the imageView depending on the direciton of travel
+      flipImageView(imageView, this.behaviour.toString());
+    }
   }
 
   public void detachLimb() {
     this.limbAttached = false;
-    rb.setVelocity(new Vector2(0, -1000));
+  }
+
+  public void reattachedLimb() {
+    this.limbAttached = true;
   }
 
   public boolean isDeattached() {
     return !this.limbAttached;
-  }
-
-  public void reattachLimb() {
-    this.limbAttached = true;
-  }
-
-  protected void setXLeft(double x) {
-    this.xLeft = x;
-  }
-
-  protected void setYLeft(double y) {
-    this.yLeft = y;
-  }
-
-  protected void setXRight(double x) {
-    this.xRight = x;
-  }
-
-  protected void setYRight(double y) {
-    this.yRight = y;
-  }
-
-  public double getXLeft() {
-    return xLeft;
-  }
-
-  public double getYLeft() {
-    return yLeft;
-  }
-
-  public double getXRight() {
-    return xRight;
-  }
-
-  public double getYRight() {
-    return yRight;
   }
 }

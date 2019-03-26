@@ -19,7 +19,7 @@ public class WeaponSpawner extends GameObject {
   private Random random;
 
   public WeaponSpawner(double x, double y, double sizeX, double sizeY, UUID uuid) {
-    super(x, y, sizeX, sizeY, ObjectType.Bot, uuid);
+    super(x, y, sizeX, sizeY, ObjectType.WeaponSpawner, uuid);
     weapons =  new ArrayList<>();
     random = new Random();
     /**

@@ -133,7 +133,12 @@ public class Bot extends Player {
       }
     }
 
-    state = state.next(targetPlayer, this, distanceToTarget, prevHealth);
+    try {
+      state = state.next(targetPlayer, this, distanceToTarget, prevHealth);
+    } catch (NullPointerException e) {
+      System.out.println("Null Pointer");
+    }
+
 
     switch (state) {
       case IDLE:

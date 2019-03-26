@@ -3,6 +3,7 @@ package shared.gameObjects.players;
 import client.handlers.effectsHandler.Particle;
 import client.main.Settings;
 import java.util.UUID;
+import javafx.application.Platform;
 import javafx.scene.Group;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
@@ -67,9 +68,9 @@ public class Player extends GameObject {
    */
   protected int health;
   /**
-   * The maximum health of the player
+   * Max health
    */
-  protected int maxHealth;
+  protected final int maxHealth = 200;
   /**
    * The current weapon the player is using
    */
@@ -120,8 +121,7 @@ public class Player extends GameObject {
     this.rightKey = false;
     this.jumpKey = false;
     this.click = false;
-    this.health = 200;
-    this.maxHealth = this.health;
+    this.health = maxHealth;
     this.behaviour = Behaviour.IDLE;
     this.bc = new BoxCollider(this, ColliderLayer.PLAYER, false);
     this.rb = new Rigidbody(RigidbodyType.DYNAMIC, 90, 11.67f, 0.2f,
@@ -168,6 +168,12 @@ public class Player extends GameObject {
     this.holding = myPunch;
   }
 
+  @Override
+  public void addChild(GameObject child) {
+    super.addChild(child);
+    settings.getLevelHandler().getLimbs().put(child.getUUID(), (Limb) child);
+  }
+
   private void updateAnimationTimer() {
     if(this.behaviour != Behaviour.IDLE) {
       animationTimer++;
@@ -208,7 +214,8 @@ public class Player extends GameObject {
     return objectUUID + ";" + id + ";" + getX() + ";" + getY() + ";" + animation.getName() + ";"
         + health + ";"
         + lastInputCount + ";"
-        + throwHoldingKey;
+        + throwHoldingKey + ";"
+        + behaviour.name();
   }
 
   @Override
@@ -219,6 +226,7 @@ public class Player extends GameObject {
     this.health = Integer.parseInt(unpackedData[5]);
     this.lastInputCount = Integer.parseInt(unpackedData[6]);
     this.throwHoldingKey = Boolean.parseBoolean(unpackedData[7]);
+    this.behaviour = Behaviour.valueOf(unpackedData[8]);
   }
 
   private void checkGrounded() {
@@ -349,18 +357,31 @@ public class Player extends GameObject {
 
   }
 
+  /**
+   * Remove the image from the imageView by setting the image to null
+   */
+  @Override
+  public void removeRender() {
+    if (imageView != null) {
+      imageView.setImage(null);
+      Platform.runLater(
+          () -> {
+            root.getChildren().remove(imageView);
+          }
+      );
+    }
+    children.forEach(child -> child.removeRender());
+  }
+
   public void deductHp(int damage) {
     if(!damagedThisFrame) {
       damagedThisFrame = true;
       this.health -= damage;
       if (this.health <= 0) {
-        // For testing
-        transform.translate(new Vector2(0, -80));
+        settings.playerDied();
         this.setActive(false);
         bc.setLayer(ColliderLayer.PARTICLE);
-        transform.rotate(90);
-        if(imageView != null)
-        this.imageView.setOpacity(0.5);
+        children.forEach(child -> child.destroy());
       }
     }
   }
@@ -386,12 +407,6 @@ public class Player extends GameObject {
       this.setActive(true);
       this.bc.setLayer(ColliderLayer.PLAYER);
     }
-    children.forEach(child -> {
-      Limb limb = (Limb) child;
-      limb.reset();
-    });
-    children.clear();
-    addLimbs();
     addPunch();
   }
 
@@ -412,15 +427,11 @@ public class Player extends GameObject {
   public int getHealth() {
     return health;
   }
-  
+
   public int getMaxHealth() {
     return maxHealth;
   }
-  
-  public void setMaxHealth(int hp) {
-    this.maxHealth = hp;
-  }
-  
+
   public float getHealthPercentage() {
     return (float)health/(float)maxHealth;
   }

@@ -13,8 +13,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
@@ -380,7 +378,8 @@ public class Client extends Application {
   public static void endGame() {
     singleplayerGame = false;
     gameOver = false;
-    levelHandler.getPlayers().entrySet().removeAll(levelHandler.getBotPlayerList().entrySet());
+    levelHandler.getPlayers().keySet().removeAll(levelHandler.getBotPlayerList().keySet());
+    levelHandler.getGameObjects().keySet().removeAll(levelHandler.getBotPlayerList().keySet());
     levelHandler.getBotPlayerList().forEach((key, gameObject) -> gameObject.removeRender());
     levelHandler.getBotPlayerList().forEach((key, gameObject) -> gameObject = null);
     levelHandler.getBotPlayerList().clear();
@@ -517,7 +516,6 @@ public class Client extends Application {
           }
           if (alive.size() == 1) {
             alive.forEach(player -> player.increaseScore());
-            int index = new Random().nextInt(levelHandler.getPlaylist().size() - 1);
             Map nextMap = levelHandler.pollPlayList();
             levelHandler.changeMap(nextMap, true, false);
           }

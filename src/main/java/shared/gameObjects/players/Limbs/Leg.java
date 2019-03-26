@@ -17,7 +17,8 @@ public class Leg extends Limb {
    */
   public Leg(Boolean isLeft, Player parent, LevelHandler levelHandler) {
     super(19, 87, 43, 87, 21, 23, ObjectType.Limb, isLeft, parent, parent, 0, 0, levelHandler);
-    limbHealth = player.getHealth()/4;
+    limbMaxHealth = player.getHealth() / 4;
+    limbHealth = limbMaxHealth;
   }
 
   @Override
@@ -82,7 +83,6 @@ public class Leg extends Limb {
 
   @Override
   protected void rotateAnimate() {
-
     if(this.behaviour == Behaviour.JUMP || this.player.getJumped()) {
       jumpAnimation();
     }
