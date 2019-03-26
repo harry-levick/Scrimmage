@@ -90,6 +90,14 @@ public class Settings {
   }
 
   /**
+   * Get the whole HashMap of the key bindings
+   * @return The HashMap of KEY_CONTROL game functions to keyboard keys
+   */
+  public HashMap<KEY_CONTROL, KeyCode> getKeyHashMap() {
+    return keyMap;
+  }
+
+  /**
    * Remap the key binding of a enum key function to a new keyboard key
    * @param keyControl the KEY_CONTROL game function
    * @param keyCode the KeyCode which triggers the KEY_CONTROL function
