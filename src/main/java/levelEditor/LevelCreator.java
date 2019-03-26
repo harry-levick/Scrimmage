@@ -28,6 +28,7 @@ import shared.gameObjects.background.Background6;
 import shared.gameObjects.background.Background7;
 import shared.gameObjects.background.Background8;
 import shared.gameObjects.components.behaviours.blockBehaviours.Crushing;
+import shared.gameObjects.menu.LabelObject;
 import shared.gameObjects.menu.main.ButtonBack;
 import shared.gameObjects.menu.main.ButtonCredits;
 import shared.gameObjects.menu.main.ButtonMultiplayer;
@@ -627,7 +628,8 @@ public class LevelCreator extends Application {
     uuid = UUID.randomUUID();
 
     // input controls
-
+    gameObjects.put(uuid, new LabelObject(getAbs(26), getAbs(5), "Controls:", ObjectType.Button, uuid)); //todo Button type?
+    uuid = UUID.randomUUID();
 
     for (int i = 0; i < 12; i++) {
       // top row wall
