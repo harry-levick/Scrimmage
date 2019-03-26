@@ -268,6 +268,9 @@ public class Player extends GameObject {
     // setX(getX() + (vx * 0.0166));
   }
 
+  /**
+   * Applies delayed input without creating unnecessary particles or objects
+   */
   public void applyMultiplayerInput() {
     if (grounded) {
       jumped = false;

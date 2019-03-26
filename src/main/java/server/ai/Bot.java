@@ -1,5 +1,7 @@
 package server.ai;
 
+import client.handlers.userData.AccountData;
+import client.main.Settings;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -8,6 +10,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import javafx.scene.Group;
 import server.ai.pathFind.AStar.SearchNode;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.players.Player;
@@ -63,7 +66,6 @@ public class Bot extends Player {
     this.chasingThread = new ChasingThread(this, chasingPlan);
     chasingThread.setName("Bot chasingThread");
     this.fleeingThread = new FleeingThread(this, fleeingPlan);
-
   }
 
   /**
@@ -162,6 +164,14 @@ public class Bot extends Player {
     }
     prevHealth = this.health;
     super.update();
+  }
+
+  @Override
+  public void initialise(Group root, Settings settings) {
+    super.initialise(root, settings);
+    Random random = new Random();
+    int[] newSkin = {random.nextInt(AccountData.SKIN_COUNT), random.nextInt(AccountData.SKIN_COUNT),random.nextInt(AccountData.SKIN_COUNT),random.nextInt(AccountData.SKIN_COUNT)};
+    updateSkinRender(newSkin);
   }
 
   /**
