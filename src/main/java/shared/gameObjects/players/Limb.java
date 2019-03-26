@@ -169,10 +169,12 @@ public abstract class Limb extends GameObject implements Destructable {
 
   @Override
   public void destroy() {
+    if(!limbAttached) return;
     detachLimb();
     Random random = new Random();
-    rb.setVelocity(new Vector2(1000 * (random.nextDouble() + 0.2) * (random.nextInt(3) - 1),
+    rb.setVelocity(new Vector2(1000 * (random.nextDouble() + 0.2) * (random.nextInt(4) - 1 > 0 ? 1 : -1),
         1000 * (random.nextDouble() + 0.2) * (random.nextInt(3) - 1)));
+    System.out.println("Limb Yeeted");
   }
   public void reset() {
     reattachedLimb();

@@ -540,7 +540,7 @@ public abstract class GameObject implements Serializable {
   }
 
   public void setX(double x) {
-    this.transform.getPos().setX((float) x);
+    this.transform.translate(new Vector2(x, transform.getPos().getY()).sub(transform.getPos()));
   }
 
   public double getY() {
@@ -548,7 +548,7 @@ public abstract class GameObject implements Serializable {
   }
 
   public void setY(double y) {
-    this.transform.getPos().setY((float) y);
+    this.transform.translate(new Vector2(transform.getPos().getX(), y).sub(transform.getPos()));
   }
 
   public ObjectType getId() {
