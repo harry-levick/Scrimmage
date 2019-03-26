@@ -25,7 +25,7 @@ public class WeaponSpawner extends GameObject {
     /**
      * Debugging
      */
-    addWeaponToSpawner(Weapons.SWORD, Weapons.MACHINEGUN);
+    addWeaponToSpawner(Weapons.SWORD, Weapons.MACHINEGUN, Weapons.UZI, Weapons.HANDGUN);
   }
 
   @Override
