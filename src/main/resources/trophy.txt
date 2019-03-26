@@ -1,30 +1,22 @@
-Test 1,this is test 1
-Test 2,311
-Test 3,311,150
-Test 4,39,5
-Test 5,39,15
-Test 6,39,30
-Test 7,5,10
-Test 8,25,100
-Test 9,155,75
-Test 10,155,150
-Test 11,149,10
-Test 12,0,30
-Test 13,0,50
-Test 14,0,10
-Test 15,5,10
-Test 12,this is test 1
-Test 22,311
-Test 32,311,150
-Test 42,39,5
-Test 52,39,15
-Test 62,39,30
-Test 72,5,10
-Test 82,25,100
-Test 92,155,75
-Test 120,155,150
-Test 121,149,10
-Test 122,0,30
-Test 123,0,50
-Test 124,0,10
-Test 125,5,10
+0,Skin Scrimmer,Unlock 1 new skin
+1,Skin Hunter,Unlock 5 new skins
+2,Skin Warrior,Unlock 10 new skins
+3,Skin Warlord,Unlock all new skins
+4,EA Madness,Open your first Lootbox
+5,Lootbox Hoarder,Have 10 Lootboxes saved on your account
+6,Banker,Have $2000 saved on your account
+7,Window Shopper, Purchase an item from the Shop
+8,Sniper Elite,Get three Headshot kills in one map
+9,Crushing Defeat,Get killed by a falling block
+10,Absolute Unit, Win a game without dying once
+11,Fullmetal Victory,Win a around with an arm and a leg removed
+12,Limbo,Get all 4 limbs removed
+13,Mix'N'Match, helppls
+14,???,Konami
+15,TBD,X
+16,TBD,X
+17,TBD,X
+18,TBD,X
+19,Filthy Casuals,Register an Account
+20,Net-working, Win a multiplayer game
+21,Fallout 76, Quit a multiplayer game
