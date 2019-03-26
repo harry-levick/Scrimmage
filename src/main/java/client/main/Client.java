@@ -625,8 +625,8 @@ public class Client extends Application {
    * @param primaryStage The JavaFX stage to be scaled
    */
   public void scaleRendering(Stage primaryStage) {
-    scaleRatio = new Vector2(primaryStage.getWidth() / settings.getMapWidth(),
-        primaryStage.getHeight() / settings.getMapHeight());
+    scaleRatio = new Vector2(scene.getWidth() / settings.getMapWidth(),
+        scene.getHeight() / settings.getMapHeight());
     Scale scale = new Scale(scaleRatio.getX(), scaleRatio.getY(), 0, 0);
     scene.getRoot().getTransforms().setAll(scale);
   }
