@@ -1,6 +1,6 @@
 package shared.gameObjects.menu.main.account.skins;
 
-import client.handlers.userData.AccountData;
+import client.handlers.accountHandler.AccountData;
 import java.util.UUID;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;

@@ -1,4 +1,4 @@
-package client.handlers.userData;
+package client.handlers.accountHandler;
 
 /**
  * Container class for the save data of the Client

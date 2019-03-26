@@ -1,6 +1,6 @@
 package server.ai;
 
-import client.handlers.userData.AccountData;
+import client.handlers.accountHandler.AccountData;
 import client.main.Settings;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,8 +11,6 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import javafx.scene.Group;
-import server.ai.pathFind.AStar.SearchNode;
-import shared.gameObjects.GameObject;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.weapons.Weapon;
 import shared.handlers.levelHandler.LevelHandler;

@@ -1,4 +1,4 @@
-package client.handlers.userData;
+package client.handlers.accountHandler;
 
 import static org.junit.Assert.*;
 

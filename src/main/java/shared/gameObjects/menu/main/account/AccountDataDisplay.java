@@ -1,6 +1,6 @@
 package shared.gameObjects.menu.main.account;
 
-import client.handlers.userData.AccountData;
+import client.handlers.accountHandler.AccountData;
 import client.main.Settings;
 import java.io.File;
 import java.util.UUID;

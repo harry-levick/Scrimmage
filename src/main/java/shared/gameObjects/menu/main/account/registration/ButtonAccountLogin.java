@@ -1,22 +1,17 @@
 package shared.gameObjects.menu.main.account.registration;
 
-import client.handlers.networkHandlers.ConnectionHandler;
-import client.handlers.userData.AccountData;
-import client.handlers.userData.SQLConnect;
-import client.main.Client;
+import client.handlers.accountHandler.AccountData;
+import client.handlers.accountHandler.SQLConnect;
 import client.main.Settings;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import java.util.UUID;
 import javafx.scene.Group;
-import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.menu.ButtonObject;
-import shared.handlers.levelHandler.Map;
-import shared.util.Path;
 
 /**
  * Button handling the userinput for logging in to an account on the SQL

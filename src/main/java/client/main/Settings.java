@@ -1,6 +1,6 @@
 package client.main;
 
-import client.handlers.userData.AccountData;
+import client.handlers.accountHandler.AccountData;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -27,6 +27,7 @@ public class Settings {
   private String menuPath;
   private String musicPath;
   private String SFXPath;
+  private String achivementPath;
   private int windowWidth;// = (int) Screen.getPrimary().getBounds().getWidth();
   private int windowHeight;// = (int) Screen.getPrimary().getBounds().getHeight();
   private int mapWidth;

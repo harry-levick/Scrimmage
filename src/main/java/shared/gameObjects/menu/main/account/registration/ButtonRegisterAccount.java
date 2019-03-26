@@ -1,13 +1,11 @@
 package shared.gameObjects.menu.main.account.registration;
 
-import client.handlers.userData.AccountData;
-import client.handlers.userData.SQLConnect;
+import client.handlers.accountHandler.SQLConnect;
 import client.main.Settings;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import java.util.UUID;
 import javafx.scene.Group;
-import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;

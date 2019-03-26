@@ -1,4 +1,4 @@
-package client.handlers.AchivementHandler;
+package client.handlers.accountHandler;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -13,39 +13,19 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import shared.util.Path;
 
-public class Achivement {
+public class Achievement {
 
   private String name, description;
-  private double progress, total;
+  private boolean status;
 
-  public Achivement(String name, int progress, int total) {
+  public Achievement(String name, String description) {
     this.name = name;
-    this.progress = progress;
-    this.total = total;
-    this.description = "Probably should put something here";
+    this.description = description;
   }
 
 
   public Image getImage() {
-    List list = new ArrayList();
-    double temp = progress / total;
-    double percentage = temp * 100;
-    list.add(0);
-    list.add(25);
-    list.add(50);
-    list.add(75);
-    list.add(100);
-
-    int a = 0;
-    try {
-      a = (int) list.stream()
-          .min(Comparator.comparingInt(i -> Math.abs((int) i - (int) Math.round(percentage))))
-          .orElseThrow(() -> new NoSuchElementException("No value present"));
-    } catch (Throwable throwable) {
-      throwable.printStackTrace();
-    }
-
-    return new Image(Path.convert("images/Achivements/golden_trophy_" + a + ".png"));
+    return new Image(Path.convert("images/Achivements/golden_trophy_" + (status ? "100.png" : "greyed.png")));
   }
 
   public Pane getPane() {
@@ -75,12 +55,6 @@ public class Achivement {
 
     holder.getChildren().add(stackPane);
 
-
-    //Progress
-    Label progressLabel = new Label((int) progress + " / " + (int) total);
-    progressLabel.setStyle("-fx-font-size:15px; -fx-text-fill: white;");
-    holder.getChildren().add(progressLabel);
-
     //Progress
     Label descriptionLabel = new Label(description);
     descriptionLabel.setStyle("-fx-font-size:15px; -fx-text-fill: white;");
@@ -93,11 +67,7 @@ public class Achivement {
     return name;
   }
 
-  public double getProgress() {
-    return progress;
-  }
-
-  public double getTotal() {
-    return total;
+  public void setStatus(boolean status) {
+    this.status = status;
   }
 }

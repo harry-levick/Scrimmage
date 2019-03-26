@@ -1,5 +1,6 @@
 package levelEditor;
 
+import client.handlers.accountHandler.AchivementHandler;
 import client.handlers.effectsHandler.emitters.LineEmitter;
 import client.main.Settings;
 import java.io.File;
@@ -112,6 +113,8 @@ public class LevelCreator extends Application {
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.MAIN_MENU);
     mapDataObject.setBackground(
         new Background1(uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid, new AchivementHandler(uuid));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid, new ButtonSingleplayer(
         getAbs(20), getAbs(6), getAbs(8), getAbs(2), ObjectType.Button, uuid));
