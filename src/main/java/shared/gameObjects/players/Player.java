@@ -67,6 +67,10 @@ public class Player extends GameObject {
    */
   protected int health;
   /**
+   * The maximum health of the player
+   */
+  protected int maxHealth;
+  /**
    * The current weapon the player is using
    */
   protected Weapon holding;
@@ -117,6 +121,7 @@ public class Player extends GameObject {
     this.jumpKey = false;
     this.click = false;
     this.health = 200;
+    this.maxHealth = this.health;
     this.behaviour = Behaviour.IDLE;
     this.bc = new BoxCollider(this, ColliderLayer.PLAYER, false);
     this.rb = new Rigidbody(RigidbodyType.DYNAMIC, 90, 11.67f, 0.2f,
@@ -362,6 +367,14 @@ public class Player extends GameObject {
 
   public int getHealth() {
     return health;
+  }
+  
+  public int getMaxHealth() {
+    return maxHealth;
+  }
+  
+  public void setMaxHealth(int hp) {
+    this.maxHealth = hp;
   }
 
   public void setHealth(int hp) {
