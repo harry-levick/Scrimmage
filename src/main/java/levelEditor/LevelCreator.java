@@ -62,6 +62,7 @@ import shared.gameObjects.score.Podium3;
 import shared.gameObjects.score.Podium4;
 import shared.gameObjects.weapons.WeaponSpawner;
 import shared.handlers.levelHandler.GameState;
+import shared.handlers.levelHandler.LevelHandler;
 import shared.handlers.levelHandler.MapLoader;
 import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import shared.util.maths.Vector2;
@@ -71,9 +72,11 @@ import shared.util.maths.Vector2;
  */
 public class LevelCreator extends Application {
 
-  private static int stageSizeX = 1920; // todo autofetch
-  private static int stageSizeY = 1080;
-  private static int gridSizePX = 40;
+  private static Settings settings = new Settings(null, null); // WARNING be careful using this
+
+  private static int stageSizeX = settings.getMapWidth(); // todo autofetch
+  private static int stageSizeY = settings.getMapHeight();
+  private static int gridSizePX = settings.getGridSize();
   private static int gridSizeX = stageSizeX / gridSizePX; // 40 px blocks
   private static int gridSizeY = stageSizeY / gridSizePX; // 48 x 27
   private ArrayList<Vector2> spawnPoints;
@@ -82,8 +85,6 @@ public class LevelCreator extends Application {
   private static ArrayList<Player> playerSpawns;
   private static MapDataObject mapDataObject;
   private UUID uuid = UUID.randomUUID();
-
-  private Settings settings = new Settings(null, null);
 
   private static int getAbs(int gridPos) {
     return gridPos * gridSizePX;
@@ -608,22 +609,26 @@ public class LevelCreator extends Application {
         new Background1(UUID.randomUUID()));
     uuid = UUID.randomUUID();
     gameObjects
-        .put(uuid, new SoundSlider(getAbs(20), getAbs(5), getAbs(8), getAbs(1), SOUND_TYPE.MUSIC,
+        .put(uuid, new SoundSlider(getAbs(14), getAbs(5), getAbs(8), getAbs(1), SOUND_TYPE.MUSIC,
             "Music", ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
     gameObjects
-        .put(uuid, new SoundSlider(getAbs(20), getAbs(9), getAbs(8), getAbs(1), SOUND_TYPE.SFX,
+        .put(uuid, new SoundSlider(getAbs(14), getAbs(9), getAbs(8), getAbs(1), SOUND_TYPE.SFX,
             "Sound Effects", ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
     gameObjects
         .put(uuid,
-            new ButtonCredits(getAbs(20), getAbs(13), getAbs(8), getAbs(2), ObjectType.Button,
+            new ButtonCredits(getAbs(14), getAbs(13), getAbs(8), getAbs(2), ObjectType.Button,
                 uuid));
     uuid = UUID.randomUUID();
     gameObjects
-        .put(uuid, new ButtonBack(getAbs(20), getAbs(16), getAbs(8), getAbs(2), ObjectType.Button,
+        .put(uuid, new ButtonBack(getAbs(14), getAbs(16), getAbs(8), getAbs(2), ObjectType.Button,
             uuid));
     uuid = UUID.randomUUID();
+
+    // input controls
+
+
     for (int i = 0; i < 12; i++) {
       // top row wall
       gameObjects.put(uuid,

@@ -84,6 +84,14 @@ public class Settings {
   }
 
   /**
+   * Get the size of the game grid - default 40 units
+   * @return The size of he grid in the game in units
+   */
+  public int getGridSize() {
+    return gridSize;
+  }
+
+  /**
    * The path of the maps without an ending file separator to the resources
    * @return The relative path containing File.Separator
    */
