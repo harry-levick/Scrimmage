@@ -372,6 +372,25 @@ public class LevelCreator extends Application {
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "map9" + ".map");
     mapDataObject.setBackground(new Background2(UUID.randomUUID()));
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "map10" + ".map");
+    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map1" + ".map");
+    mapDataObject.setBackground(new Background2(UUID.randomUUID()));
+    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map2" + ".map");
+    mapDataObject.setBackground(new Background3(UUID.randomUUID()));
+    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map3" + ".map");
+    mapDataObject.setBackground(new Background4(UUID.randomUUID()));
+    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map4" + ".map");
+    mapDataObject.setBackground(new Background5(UUID.randomUUID()));
+    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map5" + ".map");
+    mapDataObject.setBackground(new Background6(UUID.randomUUID()));
+    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map6" + ".map");
+    mapDataObject.setBackground(new Background7(UUID.randomUUID()));
+    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map7" + ".map");
+    mapDataObject.setBackground(new Background8(UUID.randomUUID()));
+    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map8" + ".map");
+    mapDataObject.setBackground(new Background1(UUID.randomUUID()));
+    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map9" + ".map");
+    mapDataObject.setBackground(new Background2(UUID.randomUUID()));
+    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map10" + ".map");
 
     ////////////////////////////////////////
     // MULTIPLAYER
