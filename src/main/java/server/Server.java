@@ -284,8 +284,8 @@ public class Server extends Application {
   }
 
   private void scaleRendering(Stage primaryStage) {
-    Vector2 scaleRatio = new Vector2(primaryStage.getWidth() / 1920,
-        primaryStage.getHeight() / 1080);
+    Vector2 scaleRatio = new Vector2(scene.getWidth() / settings.getMapWidth(),
+        scene.getHeight() / settings.getMapHeight());
     Scale scale = new Scale(scaleRatio.getX(), scaleRatio.getY(), 0, 0);
     primaryStage.getScene().getRoot().getTransforms().setAll(scale);
   }
