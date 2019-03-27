@@ -171,7 +171,7 @@ public class ClientNetworkManager {
     } finally {
       try {
         objectInputStream.close();
-      } catch (IOException e) {
+      } catch (Exception e) {
         e.printStackTrace();
       }
     }
