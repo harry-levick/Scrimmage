@@ -430,5 +430,7 @@ public class LevelHandler {
     return limbs;
   }
 
-
+  public boolean isServer() {
+    return isServer;
+  }
 }

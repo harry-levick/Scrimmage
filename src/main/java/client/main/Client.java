@@ -473,6 +473,7 @@ public class Client extends Application {
         if (!singleplayerGame && !multiplayer) {
           startedGame = false;
         }
+        settings.setMultiplayer(multiplayer);
 
         if (multiplayer) {
           ClientNetworkManager.processServerPackets();
