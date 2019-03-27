@@ -1,7 +1,6 @@
 package client.main;
 
 import client.handlers.accountHandler.AccountData;
-import java.awt.Paint;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -41,6 +40,7 @@ public class Settings {
   private Font font;
   private int gridSize;
   private int playersDead;
+  private boolean multiplayer;
 
   // key mappings
   public enum KEY_CONTROL {
@@ -362,7 +362,14 @@ public class Settings {
     this.playersDead = 0;
   }
 
-  public int getPlayersDead() {
-    return playersDead;
+  /**
+   * Is current match multiplayer
+   */
+  public boolean isMultiplayer() {
+    return multiplayer;
+  }
+
+  public void setMultiplayer(boolean multiplayer) {
+    this.multiplayer = multiplayer;
   }
 }

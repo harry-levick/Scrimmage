@@ -121,7 +121,7 @@ public class ClientNetworkManager {
             PacketGameState gameState = new PacketGameState(message);
             HashMap<UUID, String> data = gameState.getGameObjects();
             data.forEach((key, value) -> {
-              if (!value.split(";")[1].equals("Limb") && !value.split(";")[1].equals("Fist")
+              if (!value.split(";")[1].equals("Fist")
                   && !value.split(";")[1].equals("WeaponSpawner")) {
                 GameObject gameObject = Client.levelHandler.getGameObjects().get(key);
                 if (gameObject == null) {
@@ -160,7 +160,8 @@ public class ClientNetworkManager {
       objectInputStream = new ObjectInputStream(byteArrayInputStream);
       ConcurrentLinkedHashMap<UUID, GameObject> gameObjects = (ConcurrentLinkedHashMap<UUID, GameObject>) objectInputStream
           .readObject();
-      Client.levelHandler.addGameObjects(gameObjects);
+      Client.levelHandler.getToCreate().putAll(gameObjects);
+      System.out.println("1111");
     } catch (IOException e) {
       e.printStackTrace();
     } catch (ClassNotFoundException e) {
@@ -168,7 +169,7 @@ public class ClientNetworkManager {
     } finally {
       try {
         objectInputStream.close();
-      } catch (IOException e) {
+      } catch (Exception e) {
         e.printStackTrace();
       }
     }

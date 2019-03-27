@@ -5,11 +5,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketTimeoutException;
 import java.util.List;
 import javafx.application.Platform;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import server.ai.Bot;
 import shared.gameObjects.players.Player;
 import shared.packets.PacketInput;
 import shared.packets.PacketJoin;
@@ -41,61 +41,75 @@ public class ServerReceiver implements Runnable {
 
   @Override
   public void run() {
-    String message = null;
-    BufferedReader input = null;
-    try {
-      socket = this.serverSocket.accept();
-      input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-      /** Client Join */
-      message = input.readLine();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    LOGGER.debug("Recieved" + message);
-    int packetID = Integer.parseInt(message.split(",")[0]);
-    if (packetID == 0
-        && server.playerCount.get() < 4
-        && server.serverState == ServerState.WAITING_FOR_PLAYERS) {
-      PacketJoin joinPacket = new PacketJoin(message);
-      Platform.runLater(
-          () -> {
-            player = server.addPlayer(joinPacket, socket.getInetAddress());
-            server.sendObjects(server.getLevelHandler().getGameObjectsFiltered());
-          }
-      );
-
-      /** Main Loop */
-      while (true) {
-        try {
-          message = input.readLine();
-          LOGGER.debug("GOT" + message);
-        } catch (SocketTimeoutException e) {
-          server.playerCount.decrementAndGet();
-          connected.remove(socket.getInetAddress());
-          server.levelHandler.getPlayers().remove(player);
-          server.levelHandler.getGameObjects().remove(player);
-          LOGGER.debug("Removing player");
-          break;
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-        packetID = Integer.parseInt(message.split(",")[0]);
-        switch (packetID) {
-          //Player Input
-          case 2:
-            PacketInput inputPacket = new PacketInput(message);
-            // Change to add to list
-            server.getQueue(player).add(inputPacket);
-            break;
-          //Player Ready
-          case 5:
-            PacketReady readyPacket = new PacketReady(message);
-            if (readyPacket.getUUID() == player.getUUID()
-                && server.serverState == ServerState.WAITING_FOR_PLAYERS
-                || server.serverState == ServerState.WAITING_FOR_READYUP) {
-              server.readyCount.getAndIncrement();
+    boolean running = true;
+    while (running) {
+      String message = null;
+      BufferedReader input = null;
+      try {
+        socket = this.serverSocket.accept();
+        input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        /** Client Join */
+        message = input.readLine();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+      LOGGER.debug("Recieved Join request" + message);
+      int packetID = Integer.parseInt(message.split(",")[0]);
+      if (packetID == 0) {
+        PacketJoin joinPacket = new PacketJoin(message);
+        Platform.runLater(
+            () -> {
+              player = server.addPlayer(joinPacket, socket.getInetAddress());
             }
+        );
+        Thread.currentThread().setName("Server Receiver " + joinPacket.getUsername());
+
+        /** Main Loop */
+        while (true) {
+          try {
+            message = input.readLine();
+            LOGGER.debug("GOT" + message);
+          } catch (IOException e) {
+            //Disconnect
+            server.levelHandler.getPlayers().remove(player);
+            server.levelHandler.getGameObjects().remove(player);
+            connected.remove(socket.getInetAddress());
+            //Replacement bot
+            Platform.runLater(
+                () -> {
+                  Bot botPlayer = new Bot(player.getX(), player.getY(), player.getUUID(),
+                      server.settings.getLevelHandler());
+                  botPlayer.initialise(server.settings.getGameRoot(), server.settings);
+                  server.settings.getLevelHandler().getPlayers()
+                      .put(botPlayer.getUUID(), botPlayer);
+                  server.settings.getLevelHandler().getBotPlayerList()
+                      .put(botPlayer.getUUID(), botPlayer);
+                  server.settings.getLevelHandler().getGameObjects()
+                      .put(botPlayer.getUUID(), botPlayer);
+                  botPlayer.startThread();
+                });
+            System.out.println("Removing player and Swap for bot");
+            running = false;
             break;
+          }
+          packetID = Integer.parseInt(message.split(",")[0]);
+          switch (packetID) {
+            //Player Input
+            case 2:
+              PacketInput inputPacket = new PacketInput(message);
+              // Change to add to list
+              server.getQueue(player).add(inputPacket);
+              break;
+            //Player Ready
+            case 5:
+              PacketReady readyPacket = new PacketReady(message);
+              if (readyPacket.getUUID() == player.getUUID()
+                  && server.serverState == ServerState.WAITING_FOR_PLAYERS
+                  || server.serverState == ServerState.WAITING_FOR_READYUP) {
+                server.readyCount.getAndIncrement();
+              }
+              break;
+          }
         }
       }
     }

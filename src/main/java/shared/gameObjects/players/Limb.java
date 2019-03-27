@@ -68,16 +68,18 @@ public abstract class Limb extends GameObject implements Destructable {
   protected transient LevelHandler levelHandler;
 
   protected boolean damagedThisFrame;
+
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
    * ensure actions are calculated the same
+   *
    *
    * @param id Unique Identifier of every game object
    */
   public Limb(double xLeft, double yLeft, double xRight, double yRight, double sizeX, double sizeY,
       ObjectType id, Boolean isLeft, GameObject parent, Player player, double pivotX, double pivotY,
-      LevelHandler levelHandler) {
-    super(0, 0, sizeX, sizeY, id, UUID.randomUUID());
+      LevelHandler levelHandler, UUID uuid) {
+    super(0, 0, sizeX, sizeY, id, uuid);
     this.limbAttached = true;
     this.lastAttachedCheck = true;
     this.isLeft = isLeft;
@@ -108,6 +110,7 @@ public abstract class Limb extends GameObject implements Destructable {
     rotate.setPivotX(pivotX);
     rotate.setPivotY(pivotY);
   }
+
 
   public abstract void initialiseAnimation();
 
@@ -142,6 +145,7 @@ public abstract class Limb extends GameObject implements Destructable {
   @Override
   public void initialise(Group root, Settings settings) {
     super.initialise(root, settings);
+    rotate = new Rotate();
     rotate.setPivotX(pivotX);
     rotate.setPivotY(pivotY);
     if (isLeft) {
@@ -152,8 +156,8 @@ public abstract class Limb extends GameObject implements Destructable {
   @Override
   public void update() {
     super.update();
-    getBehaviour();
     if (limbAttached) {
+      setRelativePosition();
       if (!lastAttachedCheck) {
         removeComponent(rb);
       }
@@ -180,6 +184,23 @@ public abstract class Limb extends GameObject implements Destructable {
     limbHealth = limbMaxHealth;
   }
 
+  /**
+   * Contains the state of the object for sending over server Only contains items that need sending
+   * separate by commas
+   *
+   * @return State of object
+   */
+  public String getState() {
+    return objectUUID + ";" + id + ";" + (float) getX() + ";" + (float) getY() + ";" + isLeft;
+  }
+
+  public void setState(String data, Boolean snap) {
+    String[] unpackedData = data.split(";");
+    setX(Double.parseDouble(unpackedData[2]));
+    setY(Double.parseDouble(unpackedData[3]));
+    this.isLeft = Boolean.parseBoolean(unpackedData[4]);
+  }
+
   private void getBehaviour() {
     this.behaviour = this.player.behaviour;
 
@@ -203,8 +224,11 @@ public abstract class Limb extends GameObject implements Destructable {
   @Override
   public void render() {
     super.render();
+    getBehaviour();
     if (limbAttached) {
-      setRelativePosition();
+      if (!settings.isMultiplayer()) {
+        setRelativePosition();
+      }
       //Do all the rotations here.
       rotateAnimate();
       // Flip the imageView depending on the direciton of travel
