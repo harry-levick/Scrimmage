@@ -121,7 +121,7 @@ public class ClientNetworkManager {
             PacketGameState gameState = new PacketGameState(message);
             HashMap<UUID, String> data = gameState.getGameObjects();
             data.forEach((key, value) -> {
-              if (!value.split(";")[1].equals("Limb") && !value.split(";")[1].equals("Fist")
+              if (!value.split(";")[1].equals("Fist")
                   && !value.split(";")[1].equals("WeaponSpawner")) {
                 GameObject gameObject = Client.levelHandler.getGameObjects().get(key);
                 if (gameObject == null) {

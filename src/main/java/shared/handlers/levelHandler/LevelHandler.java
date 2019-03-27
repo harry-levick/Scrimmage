@@ -380,6 +380,12 @@ public class LevelHandler {
   public void addPlayer2(Player newPlayer) {
     players.put(newPlayer.getUUID(), newPlayer);
     gameObjects.put(newPlayer.getUUID(), newPlayer);
+    if (isServer) {
+      ConcurrentLinkedHashMap<UUID, GameObject> temp = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
+          .maximumWeightedCapacity(1).build();
+      temp.put(newPlayer.getUUID(), newPlayer);
+      server.sendObjects(temp);
+    }
   }
 
   public void addClientPlayer(Group root) {

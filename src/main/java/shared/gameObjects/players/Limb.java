@@ -156,7 +156,6 @@ public abstract class Limb extends GameObject implements Destructable {
   @Override
   public void update() {
     super.update();
-    getBehaviour();
     if (limbAttached) {
       if (!lastAttachedCheck) {
         removeComponent(rb);
@@ -207,6 +206,7 @@ public abstract class Limb extends GameObject implements Destructable {
   @Override
   public void render() {
     super.render();
+    getBehaviour();
     if (limbAttached) {
       setRelativePosition();
       //Do all the rotations here.
