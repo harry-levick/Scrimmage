@@ -51,11 +51,9 @@ public class ServerReceiver implements Runnable {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    LOGGER.debug("Recieved" + message);
+    LOGGER.debug("Recieved Join request" + message);
     int packetID = Integer.parseInt(message.split(",")[0]);
-    if (packetID == 0
-        && server.playerCount.get() < 4
-        && server.serverState == ServerState.WAITING_FOR_PLAYERS) {
+    if (packetID == 0) {
       PacketJoin joinPacket = new PacketJoin(message);
       Platform.runLater(
           () -> {
@@ -63,6 +61,7 @@ public class ServerReceiver implements Runnable {
             server.sendObjects(server.getLevelHandler().getGameObjectsFiltered());
           }
       );
+      Thread.currentThread().setName("Server Receiver " + joinPacket.getUsername());
 
       /** Main Loop */
       while (true) {

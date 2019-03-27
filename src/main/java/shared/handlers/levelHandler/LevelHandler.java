@@ -22,7 +22,6 @@ import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.background.Background;
 import shared.gameObjects.players.Limb;
 import shared.gameObjects.players.Player;
-import shared.gameObjects.rendering.ColorFilters;
 import shared.packets.PacketDelete;
 import shared.util.Path;
 import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
@@ -48,7 +47,6 @@ public class LevelHandler {
   private Group gameRoot;
   private Group uiRoot;
   private Background background;
-  private ColorFilters filters;
   private AudioHandler musicPlayer;
   private Settings settings;
   private ArrayList<GameObject> toCreate;
@@ -73,7 +71,6 @@ public class LevelHandler {
     limbs = new LinkedHashMap<>();
     bots = new LinkedHashMap<>();
     maps = MapLoader.getMaps(settings.getMapsPath());
-    filters = new ColorFilters();
     this.backgroundRoot = backgroundRoot;
     this.gameRoot = gameRoot;
     this.isServer = false;
@@ -268,7 +265,7 @@ public class LevelHandler {
       this.toCreate.add(gameObject);
       if (isServer) {
         ConcurrentLinkedHashMap<UUID, GameObject> temp = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
-            .maximumWeightedCapacity(500).build();
+            .maximumWeightedCapacity(1).build();
         temp.put(gameObject.getUUID(), gameObject);
         server.sendObjects(temp);
       }

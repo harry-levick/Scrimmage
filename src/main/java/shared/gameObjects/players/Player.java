@@ -15,7 +15,7 @@ import shared.gameObjects.players.Limbs.Body;
 import shared.gameObjects.players.Limbs.Hand;
 import shared.gameObjects.players.Limbs.Head;
 import shared.gameObjects.players.Limbs.Leg;
-import shared.gameObjects.rendering.ColorFilters;
+import shared.gameObjects.rendering.ColourFilters;
 import shared.gameObjects.weapons.Punch;
 import shared.gameObjects.weapons.Weapon;
 import shared.physics.data.MaterialProperty;
@@ -109,7 +109,7 @@ public class Player extends GameObject {
   private int lastInputCount;
   
   //ColoFilter
-  private ColorFilters colorFilter;
+  private transient ColourFilters colorFilter;
 
   /**
    *
@@ -152,7 +152,7 @@ public class Player extends GameObject {
   }
   
   private void initialiseColorFilter() {
-    colorFilter = new ColorFilters();
+    colorFilter = new ColourFilters();
     colorFilter.setDesaturate(0.0f);
   }
   

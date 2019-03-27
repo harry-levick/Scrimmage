@@ -340,7 +340,7 @@ public class Server extends Application {
           this.stop();
         }
 
-        if (playerLastCount < playerCount.get()) {
+        if (playerLastCount < playerCount.get() && server.playerCount.get() < 5) {
           playerLastCount++;
           executor.execute(new ServerReceiver(server, serverSocket, connected));
         }
