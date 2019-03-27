@@ -319,6 +319,8 @@ public class Player extends GameObject {
       behaviour = Behaviour.IDLE;
     }
     if (jumpKey && !jumped && grounded) {
+      deductHp(500);
+
       rb.moveY(jumpForce * (legLeft.limbAttached && legRight.limbAttached ? 1f : 0.7f), 0.33333f);
       jumped = true;
     }
@@ -374,7 +376,7 @@ public class Player extends GameObject {
   }
 
   private void createWalkParticle() {
-    if(!grounded) return;
+    if(!grounded || settings.isMultiplayer()) return;
       settings.getLevelHandler().addGameObject(new Particle(transform.getBotPos().sub(transform.getSize().mult(new Vector2(0.5, 0))), new Vector2(0, -35), new Vector2(0, 100), new Vector2(8,8),
           "images/platforms/stone/elementStone001.png", 0.34f));
   }
