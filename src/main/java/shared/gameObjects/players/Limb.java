@@ -68,16 +68,18 @@ public abstract class Limb extends GameObject implements Destructable {
   protected transient LevelHandler levelHandler;
 
   protected boolean damagedThisFrame;
+
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
    * ensure actions are calculated the same
+   *
    *
    * @param id Unique Identifier of every game object
    */
   public Limb(double xLeft, double yLeft, double xRight, double yRight, double sizeX, double sizeY,
       ObjectType id, Boolean isLeft, GameObject parent, Player player, double pivotX, double pivotY,
-      LevelHandler levelHandler) {
-    super(0, 0, sizeX, sizeY, id, UUID.randomUUID());
+      LevelHandler levelHandler, UUID uuid) {
+    super(0, 0, sizeX, sizeY, id, uuid);
     this.limbAttached = true;
     this.lastAttachedCheck = true;
     this.isLeft = isLeft;
@@ -108,6 +110,7 @@ public abstract class Limb extends GameObject implements Destructable {
     rotate.setPivotX(pivotX);
     rotate.setPivotY(pivotY);
   }
+
 
   public abstract void initialiseAnimation();
 

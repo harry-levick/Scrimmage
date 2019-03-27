@@ -424,7 +424,10 @@ public class Server extends Application {
    */
   public Player addPlayer(PacketJoin joinPacket, InetAddress address) {
     Player player = new Player(joinPacket.getX(), joinPacket.getY(), joinPacket.getClientID());
-    levelHandler.addPlayer(player, gameRoot);
+    player.initialise(gameRoot, settings, joinPacket.getLegLeftUUID(), joinPacket.getLegRightUUID(),
+        joinPacket.getBodyUUID(), joinPacket.getHeadUUID(), joinPacket.getArmLeftUUID(),
+        joinPacket.getArmRightUUID(), joinPacket.getHandLeftUUID(), joinPacket.getHandRightUUID());
+    levelHandler.addPlayer2(player);
     playerCount.getAndIncrement();
     connected.add(address);
     server.add(player);

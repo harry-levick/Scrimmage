@@ -148,7 +148,30 @@ public class Player extends GameObject {
     addLimbs();
     addPunch();
     initialiseColorFilter();
-    
+  }
+
+  public void initialise(Group root, Settings settings, UUID legLeftUUID, UUID legRightUUID,
+      UUID bodyUUID, UUID headUUID, UUID armLeftUUID, UUID armRightUUID, UUID handLeftUUID,
+      UUID handRightUUID) {
+    super.initialise(root, settings);
+    legLeft = new Leg(true, this, settings.getLevelHandler(), legLeftUUID);
+    legRight = new Leg(false, this, settings.getLevelHandler(), legRightUUID);
+    body = new Body(this, settings.getLevelHandler(), bodyUUID);
+    head = new Head(this, settings.getLevelHandler(), headUUID);
+    armLeft = new Arm(true, this, settings.getLevelHandler(), armLeftUUID);
+    armRight = new Arm(false, this, settings.getLevelHandler(), armRightUUID);
+    handLeft = new Hand(true, armLeft, this, settings.getLevelHandler(), handLeftUUID);
+    handRight = new Hand(false, armRight, this, settings.getLevelHandler(), handRightUUID);
+    addChild(legLeft);
+    addChild(legRight);
+    addChild(body);
+    addChild(head);
+    addChild(armLeft);
+    addChild(armRight);
+    armRight.addChild(handRight);
+    armLeft.addChild(handLeft);
+    addPunch();
+    initialiseColorFilter();
   }
   
   private void initialiseColorFilter() {
@@ -163,14 +186,14 @@ public class Player extends GameObject {
   
 
   private void addLimbs() {
-    legLeft = new Leg(true, this, settings.getLevelHandler());
-    legRight = new Leg(false, this, settings.getLevelHandler());
-    body = new Body(this, settings.getLevelHandler());
-    head = new Head(this, settings.getLevelHandler());
-    armLeft = new Arm(true, this, settings.getLevelHandler());
-    armRight = new Arm(false, this, settings.getLevelHandler());
-    handLeft = new Hand(true, armLeft, this, settings.getLevelHandler());
-    handRight = new Hand(false, armRight,this, settings.getLevelHandler());
+    legLeft = new Leg(true, this, settings.getLevelHandler(), UUID.randomUUID());
+    legRight = new Leg(false, this, settings.getLevelHandler(), UUID.randomUUID());
+    body = new Body(this, settings.getLevelHandler(), UUID.randomUUID());
+    head = new Head(this, settings.getLevelHandler(), UUID.randomUUID());
+    armLeft = new Arm(true, this, settings.getLevelHandler(), UUID.randomUUID());
+    armRight = new Arm(false, this, settings.getLevelHandler(), UUID.randomUUID());
+    handLeft = new Hand(true, armLeft, this, settings.getLevelHandler(), UUID.randomUUID());
+    handRight = new Hand(false, armRight, this, settings.getLevelHandler(), UUID.randomUUID());
     addChild(legLeft);
     addChild(legRight);
     addChild(body);
@@ -613,5 +636,21 @@ public class Player extends GameObject {
 
   public Limb getHandRight() {
     return handRight;
+  }
+
+  public Limb getLegLeft() {
+    return legLeft;
+  }
+
+  public Limb getLegRight() {
+    return legRight;
+  }
+
+  public Limb getArmLeft() {
+    return armLeft;
+  }
+
+  public Limb getArmRight() {
+    return armRight;
   }
 }

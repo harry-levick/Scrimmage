@@ -279,11 +279,6 @@ public class LevelHandler {
     gameObjectsT.forEach(((uuid, gameObject) -> {
       if (!(gameObjects.containsKey(uuid) && (gameObject instanceof Particle || gameObject instanceof ParticleEmitter))) {
         this.toCreate.add(gameObject);
-        if (gameObject instanceof Player) {
-          this.toCreate.addAll(gameObject.getChildren());
-          this.toCreate.add(((Player) gameObject).getHandLeft());
-          this.toCreate.add(((Player) gameObject).getHandRight());
-        }
       }
     }));
   }
@@ -375,6 +370,11 @@ public class LevelHandler {
 
   public void addPlayer(Player newPlayer, Group root) {
     newPlayer.initialise(root, settings);
+    players.put(newPlayer.getUUID(), newPlayer);
+    gameObjects.put(newPlayer.getUUID(), newPlayer);
+  }
+
+  public void addPlayer2(Player newPlayer) {
     players.put(newPlayer.getUUID(), newPlayer);
     gameObjects.put(newPlayer.getUUID(), newPlayer);
   }
