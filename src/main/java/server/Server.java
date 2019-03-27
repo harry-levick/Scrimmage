@@ -431,6 +431,7 @@ public class Server extends Application {
     connected.add(address);
     server.add(player);
     server.sendObjects(levelHandler.getGameObjects());
+    server.sendObjects(levelHandler.getGameObjects());
     return player;
   }
   private void setupRender(Stage primaryStage) {
