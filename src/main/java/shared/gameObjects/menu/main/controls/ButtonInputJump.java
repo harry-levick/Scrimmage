@@ -22,7 +22,6 @@ public class ButtonInputJump extends ButtonObject {
     Client.keyInput.setChangeListening(KEY_CONTROL.JUMP);
   }
 
-
   @Override
   public void render() {
     super.render();
