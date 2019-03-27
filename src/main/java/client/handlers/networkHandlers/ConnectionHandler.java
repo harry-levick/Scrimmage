@@ -60,17 +60,21 @@ public class ConnectionHandler extends Thread {
 
     Client.multiplayer = true;
     while (connected) {
+      System.out.println("sdfsdf");
       buffer = new byte[size];
       DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
       try {
         clientSocket.receive(packet);
         String msg = new String(packet.getData(), packet.getOffset(), packet.getLength());
+        System.out.println(msg);
         if (msg.startsWith("length:")) {
           size = Integer.parseInt(msg.split(":")[1]);
         } else if (msg.startsWith("object")) {
           packet = new DatagramPacket(buffer, buffer.length);
           clientSocket.receive(packet);
+          System.out.println("got");
           ClientNetworkManager.createGameObjects(packet.getData());
+          System.out.println("sdf");
         } else {
           received.add(msg.trim());
         }

@@ -88,7 +88,7 @@ public class ServerReceiver implements Runnable {
                       .put(botPlayer.getUUID(), botPlayer);
                   botPlayer.startThread();
                 });
-            LOGGER.debug("Removing player and Swap for bot");
+            System.out.println("Removing player and Swap for bot");
             running = false;
             break;
           }

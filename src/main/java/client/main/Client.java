@@ -477,6 +477,7 @@ public class Client extends Application {
 
         if (multiplayer) {
           ClientNetworkManager.processServerPackets();
+          levelHandler.processToCreate();
         }
 
         if (gameOver) {

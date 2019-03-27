@@ -32,6 +32,7 @@ import shared.util.maths.Vector2;
 public class LevelHandler {
 
   private ConcurrentLinkedHashMap<UUID, GameObject> gameObjects;
+  private ConcurrentLinkedHashMap<UUID, GameObject> toCreate;
   private LinkedHashMap<UUID, Player> players;
   private LinkedHashMap<UUID, Limb> limbs;
   private LinkedHashMap<UUID, Bot> bots;
@@ -62,6 +63,8 @@ public class LevelHandler {
     this.settings = settings;
     gameObjects = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
         .maximumWeightedCapacity(500).build();
+    toCreate = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
+        .maximumWeightedCapacity(500).build();
     players = new LinkedHashMap<>();
     limbs = new LinkedHashMap<>();
     bots = new LinkedHashMap<>();
@@ -90,6 +93,8 @@ public class LevelHandler {
     gameObjects = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
         .maximumWeightedCapacity(500).build();
     players = new LinkedHashMap<>();
+    toCreate = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
+        .maximumWeightedCapacity(500).build();
     limbs = new LinkedHashMap<>();
     bots = new LinkedHashMap<>();
     maps = MapLoader.getMaps(settings.getMapsPath());
@@ -277,8 +282,10 @@ public class LevelHandler {
    * Creates game objects that are meant to be created from the previous loop
    */
   public void createObject(GameObject gameObject) {
+    if (!gameObjects.containsKey(gameObject.getUUID())) {
       gameObject.initialise(gameRoot, settings);
-    gameObjects.put(gameObject.getUUID(), gameObject);
+      gameObjects.put(gameObject.getUUID(), gameObject);
+    }
   }
 
   /**
@@ -327,6 +334,14 @@ public class LevelHandler {
   public Map pollPlayList() {
     int index = new Random().nextInt(getPlaylist().size());
     return playlist.get(index);
+  }
+
+  public void processToCreate() {
+    if (toCreate.size() < 1) {
+      return;
+    }
+    addGameObjects(toCreate);
+    toCreate.clear();
   }
 
   /**
@@ -394,5 +409,9 @@ public class LevelHandler {
 
   public boolean isServer() {
     return isServer;
+  }
+
+  public ConcurrentLinkedHashMap<UUID, GameObject> getToCreate() {
+    return toCreate;
   }
 }
