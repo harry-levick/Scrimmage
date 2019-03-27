@@ -61,39 +61,32 @@ public class MachineGun extends Gun {
     if (canFire()) {
       UUID uuid = UUID.randomUUID();
       Vector2 playerCentre = new Vector2(holderHandPos[0], holderHandPos[1]); // centre = main hand
-      double playerRadius = 55 + 65; // Player.sizeY / 2 + bias
 
-      double bulletX = playerCentre.getX() + playerRadius * Math.cos(-angleRadian);
-      double bulletY = playerCentre.getY() - playerRadius * Math.sin(-angleRadian);
-      double bulletFlipX = playerCentre.getX() - playerRadius * Math.cos(angleRadian);
-      double bulletFlipY = playerCentre.getY() - playerRadius * Math.sin(angleRadian);
+      double bulletX;
+      double bulletY;
 
-      Collision raycast = Physics.raycastBullet(
-          playerCentre,
-          new Vector2(mouseX - bulletX, mouseY - bulletY).normalize().mult(55),
-          this.holder,
-          false);
-      Bullet bullet;
-
-      if (raycast != null && raycast.getCollidedObject().getClass().getPackage().getName()
-          .contains(blocksPackageName)) {
-        bullet = new FireBullet(
-            holderHandPos[0],
-            holderHandPos[1] + 20,
-            mouseX,
-            mouseY,
-            this.holder,
-            uuid
-        );
+      if (holder.isAimingLeft()) {
+        bulletX = playerCentre.getX() - playerRadius * Math.cos(angleRadian);
+        bulletY = playerCentre.getY() - playerRadius * Math.sin(angleRadian);
       } else {
-        bullet = new FireBullet(
-            (holder.isAimingLeft() ? bulletFlipX : bulletX),
-            (holder.isAimingLeft() ? bulletFlipY : bulletY),
-            mouseX,
-            mouseY,
-            this.holder,
-            uuid);
+        bulletX = playerCentre.getX() + playerRadius * Math.cos(-angleRadian);
+        bulletY = playerCentre.getY() - playerRadius * Math.sin(-angleRadian);
+
       }
+
+      // Ray cast check if shooting floor
+      double[] bulletStartPos =
+          isShootingFloor(bulletX, bulletY, mouseX, mouseY, playerCentre);
+
+      Bullet bullet = new FireBullet(
+          bulletStartPos[0],
+          bulletStartPos[1],
+          mouseX,
+          mouseY,
+          this.holder,
+          uuid
+      );
+
       settings.getLevelHandler().addGameObject(bullet);
       this.currentCooldown = getDefaultCoolDown();
       new AudioHandler(settings, Client.musicActive).playSFX("MACHINEGUN");
