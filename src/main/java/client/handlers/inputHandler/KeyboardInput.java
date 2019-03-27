@@ -2,7 +2,6 @@ package client.handlers.inputHandler;
 
 import client.main.Client;
 import client.main.Settings.KEY_CONTROL;
-import java.util.HashMap;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -97,7 +96,8 @@ public class KeyboardInput implements EventHandler<KeyEvent> {
 //          Client.settingsToggle();
 //        default:
 //          Client.sendUpdate = false;
-    } else if (event.getEventType() == KeyEvent.KEY_RELEASED) {
+    }
+    if (event.getEventType() == KeyEvent.KEY_RELEASED) {
       if (k == keyLeft) {
         clientPlayer.leftKey = false;
       } else if (k == keyRight) {
