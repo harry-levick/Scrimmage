@@ -391,14 +391,18 @@ public class Server extends Application {
   public void sendObjects(ConcurrentLinkedHashMap<UUID, GameObject> gameobjects) {
     ByteArrayOutputStream byteArrayOutputStream = null;
     try {
-      byteArrayOutputStream = new ByteArrayOutputStream();
-      ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
-      objectOutputStream.writeObject(gameobjects);
-      objectOutputStream.flush();
+      for (java.util.Map.Entry<UUID, GameObject> entry : gameobjects.ascendingMap().entrySet()) {
+        byteArrayOutputStream = new ByteArrayOutputStream();
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+        objectOutputStream.writeObject(entry.getValue());
+        objectOutputStream.flush();
 
-      sendToClients(byteArrayOutputStream.toByteArray(), true);
+        sendToClients(byteArrayOutputStream.toByteArray(), true);
+      }
     } catch (IOException e) {
       LOGGER.error("Unable to send new objects to clients ");
+      e.printStackTrace();
+    } catch (Exception e) {
       e.printStackTrace();
     } finally {
       try {
