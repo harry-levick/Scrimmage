@@ -319,8 +319,6 @@ public class Player extends GameObject {
       behaviour = Behaviour.IDLE;
     }
     if (jumpKey && !jumped && grounded) {
-      deductHp(500);
-
       rb.moveY(jumpForce * (legLeft.limbAttached && legRight.limbAttached ? 1f : 0.7f), 0.33333f);
       jumped = true;
     }

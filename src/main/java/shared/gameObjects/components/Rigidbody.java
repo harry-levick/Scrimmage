@@ -16,6 +16,7 @@ import shared.util.maths.Vector2;
  */
 public class Rigidbody extends Component implements Serializable {
 
+  private final float X_THRESHOLD = 10f;
   private Vector2 deltaPos;
   private Vector2 deltaPosUpdate;
 
@@ -263,7 +264,13 @@ public class Rigidbody extends Component implements Serializable {
     acceleration = currentForce.div(mass);
     acceleration = lastAcceleration.add(acceleration).div(2);
     velocity = velocity.add(acceleration.mult(Physics.TIMESTEP));
-
+    if(velocity.getX() != 0) {
+      if(Math.abs(velocity.getX()) < X_THRESHOLD) {
+        velocity = new Vector2(0, velocity.getY());
+      } else {
+        velocity = velocity.add(new Vector2(velocity.getX() > 0 ? -X_THRESHOLD : X_THRESHOLD, 0));
+      }
+    }
     deltaPos = deltaPos.add(deltaPosUpdate);
     deltaPos =
         deltaPos.add(
