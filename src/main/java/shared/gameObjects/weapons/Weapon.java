@@ -57,9 +57,7 @@ public abstract class Weapon extends GameObject {
    protected int maxAmmo;
   /** Vector2 for throwing the weapon */
   protected Vector2 throwVector;
-  /**
-   * Weapon ranking to allow Bot to decide what weapon is best
-   */
+  /** Weapon ranking to allow Bot to decide what weapon is best */
   protected int weaponRank;
 
   /** The player who holds the weapon, null if none */
@@ -72,6 +70,9 @@ public abstract class Weapon extends GameObject {
    * There is value only when holder != null
    */
   protected double[] holderHandPos;
+
+  /** Player's radius where a bullet starts fire */
+  protected double playerRadius = 55 + 45; // Player.sizeY / 2 + bias
 
   /**
    * Angle of aiming in radian measured about x axis
