@@ -12,7 +12,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.UUID;
-import java.util.concurrent.CopyOnWriteArrayList;
 import javafx.scene.Group;
 import server.Server;
 import server.ai.Bot;
@@ -33,7 +32,6 @@ import shared.util.maths.Vector2;
 public class LevelHandler {
 
   private ConcurrentLinkedHashMap<UUID, GameObject> gameObjects;
-  private CopyOnWriteArrayList<GameObject> toRemove;
   private LinkedHashMap<UUID, Player> players;
   private LinkedHashMap<UUID, Limb> limbs;
   private LinkedHashMap<UUID, Bot> bots;
@@ -49,7 +47,6 @@ public class LevelHandler {
   private Background background;
   private AudioHandler musicPlayer;
   private Settings settings;
-  private ArrayList<GameObject> toCreate;
   private boolean isServer;
   private Server server;
 
@@ -65,8 +62,6 @@ public class LevelHandler {
     this.settings = settings;
     gameObjects = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
         .maximumWeightedCapacity(500).build();
-    toCreate = new ArrayList<>();
-    toRemove = new CopyOnWriteArrayList<>();
     players = new LinkedHashMap<>();
     limbs = new LinkedHashMap<>();
     bots = new LinkedHashMap<>();
@@ -94,10 +89,8 @@ public class LevelHandler {
     this.settings = settings;
     gameObjects = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
         .maximumWeightedCapacity(500).build();
-    toRemove = new CopyOnWriteArrayList<>();
     players = new LinkedHashMap<>();
     limbs = new LinkedHashMap<>();
-    toCreate = new ArrayList<>();
     bots = new LinkedHashMap<>();
     maps = MapLoader.getMaps(settings.getMapsPath());
     this.isServer = true;
@@ -225,7 +218,6 @@ public class LevelHandler {
    * @return All Game Objects
    */
   public ConcurrentLinkedHashMap<UUID, GameObject> getGameObjects() {
-    clearToRemove(); // Remove every gameObjects we no longer need
     return gameObjects;
   }
 
@@ -234,7 +226,6 @@ public class LevelHandler {
    * @return All non-player Game Objects
    */
   public ConcurrentLinkedHashMap<UUID, GameObject> getGameObjectsFiltered() {
-    clearToRemove(); // Remove every gameObjects we no longer need
     ConcurrentLinkedHashMap<UUID, GameObject> filtered = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
         .maximumWeightedCapacity(500).build();
     filtered.putAll(gameObjects);
@@ -247,13 +238,6 @@ public class LevelHandler {
   }
 
   /**
-   * Readd limbs
-   */
-  public void addLimbs(GameObject gameObject) {
-    this.toCreate.add(gameObject);
-  }
-
-  /**
    * Add a gameobject to list to be created next update
    *
    * @param gameObject GameObject to be added
@@ -261,8 +245,7 @@ public class LevelHandler {
   public void addGameObject(GameObject gameObject) {
     if((gameObject instanceof Particle || gameObject instanceof ParticleEmitter) && isServer) return;
     try {
-      gameObject.initialise(this.gameRoot, settings);
-      this.toCreate.add(gameObject);
+      createObject(gameObject);
       if (isServer) {
         ConcurrentLinkedHashMap<UUID, GameObject> temp = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
             .maximumWeightedCapacity(1).build();
@@ -280,11 +263,11 @@ public class LevelHandler {
       if (!(gameObjects.containsKey(uuid) && (gameObject instanceof Particle
           || gameObject instanceof ParticleEmitter) && gameObject.getUUID() != clientPlayer
           .getUUID())) {
-        this.toCreate.add(gameObject);
+        createObject(gameObject);
         if (gameObject instanceof Player) {
-          this.toCreate.addAll(gameObject.getChildren());
-          this.toCreate.add(((Player) gameObject).getHandLeft());
-          this.toCreate.add(((Player) gameObject).getHandRight());
+          gameObject.getChildren().forEach(child -> createObject(child));
+          createObject(((Player) gameObject).getHandLeft());
+          createObject(((Player) gameObject).getHandRight());
         }
       }
     }));
@@ -293,16 +276,9 @@ public class LevelHandler {
   /**
    * Creates game objects that are meant to be created from the previous loop
    */
-  public void createObjects() {
-    toCreate.forEach(gameObject -> {
+  public void createObject(GameObject gameObject) {
       gameObject.initialise(gameRoot, settings);
-      if (gameObject instanceof Player && gameObject.getUUID() != clientPlayer.getUUID()) {
-        addPlayer((Player) gameObject, settings.getGameRoot());
-      } else {
-        gameObjects.put(gameObject.getUUID(), gameObject);
-      }
-    });
-    toCreate.clear();
+    gameObjects.put(gameObject.getUUID(), gameObject);
   }
 
   /**
@@ -311,7 +287,9 @@ public class LevelHandler {
    * @param g GameObject to be removed
    */
   public void removeGameObject(GameObject g) {
-    toRemove.add(g); // Will be removed on next frame
+    gameObjects.values().remove(g);
+    g.removeRender();
+    g.destroy();
     if (isServer) {
       PacketDelete delete = new PacketDelete(g.getUUID());
       server.sendToClients(delete.getData(), false);
@@ -373,15 +351,9 @@ public class LevelHandler {
     return players;
   }
 
-  public void addPlayer(Player newPlayer, Group root) {
-    newPlayer.initialise(root, settings);
+  public void addPlayer(Player newPlayer) {
     players.put(newPlayer.getUUID(), newPlayer);
-    gameObjects.put(newPlayer.getUUID(), newPlayer);
-  }
-
-  public void addPlayer2(Player newPlayer) {
-    players.put(newPlayer.getUUID(), newPlayer);
-    gameObjects.put(newPlayer.getUUID(), newPlayer);
+    createObject(newPlayer);
     if (isServer) {
       ConcurrentLinkedHashMap<UUID, GameObject> temp = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
           .maximumWeightedCapacity(1).build();
@@ -392,9 +364,8 @@ public class LevelHandler {
 
   public void addClientPlayer(Group root) {
     clientPlayer = new Player(500, 200, UUID.randomUUID());
-    clientPlayer.initialise(root, settings);
     players.put(clientPlayer.getUUID(), clientPlayer);
-    gameObjects.put(clientPlayer.getUUID(), clientPlayer);
+    createObject(clientPlayer);
   }
 
   public Player getClientPlayer() {
@@ -407,17 +378,6 @@ public class LevelHandler {
 
   public AudioHandler getMusicAudioHandler() {
     return this.musicPlayer;
-  }
-
-  /**
-   * It removes the image from the imageView, destroy the gameObject and remove it from gameObjects
-   * list. Finally clear the list for next frame
-   */
-  private void clearToRemove() {
-    gameObjects.values().removeAll(toRemove);
-    toRemove.forEach(gameObject -> gameObject.removeRender());
-    toRemove.forEach(gameObject -> gameObject.destroy());
-    toRemove.clear();
   }
 
   public Group getGameRoot() {

@@ -60,7 +60,6 @@ public class ServerReceiver implements Runnable {
         Platform.runLater(
             () -> {
               player = server.addPlayer(joinPacket, socket.getInetAddress());
-              server.sendObjects(server.getLevelHandler().getGameObjects());
             }
         );
         Thread.currentThread().setName("Server Receiver " + joinPacket.getUsername());

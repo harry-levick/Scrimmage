@@ -185,7 +185,6 @@ public class Server extends Application {
   }
   //Updates the Physics of the objects on the Server
   private void updateSimulation() {
-    levelHandler.createObjects();
     /** Check Collisions */
     Physics.gameObjects = levelHandler.getGameObjects();
     inputQueue.forEach(
@@ -427,10 +426,11 @@ public class Server extends Application {
     player.initialise(gameRoot, settings, joinPacket.getLegLeftUUID(), joinPacket.getLegRightUUID(),
         joinPacket.getBodyUUID(), joinPacket.getHeadUUID(), joinPacket.getArmLeftUUID(),
         joinPacket.getArmRightUUID(), joinPacket.getHandLeftUUID(), joinPacket.getHandRightUUID());
-    levelHandler.addPlayer2(player);
+    levelHandler.addPlayer(player);
     playerCount.getAndIncrement();
     connected.add(address);
     server.add(player);
+    server.sendObjects(levelHandler.getGameObjects());
     return player;
   }
   private void setupRender(Stage primaryStage) {
