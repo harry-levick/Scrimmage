@@ -277,6 +277,10 @@ public class AStar {
    * @return The action to take.
    */
   public List<boolean[]> optimise(Player enemy, FSA mode) {
+
+    if (enemy == null)
+      return new ArrayList<>();
+
     initEnemyData(enemy);
     initSearch();
 
