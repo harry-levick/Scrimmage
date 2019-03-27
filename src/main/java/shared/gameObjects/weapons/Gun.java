@@ -5,6 +5,8 @@ import java.util.UUID;
 import javafx.scene.Group;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.players.Player;
+import shared.physics.Physics;
+import shared.physics.data.Collision;
 import shared.util.maths.Vector2;
 
 /**
@@ -71,6 +73,37 @@ public abstract class Gun extends Weapon {
   public void initialise(Group root, Settings settings) {
     super.initialise(root, settings);
     this.angle = 0;
+  }
+
+  /**
+   * Check if the player is shooting at the floor, as there might be a chance to shoot through
+   * the floor
+   *
+   * @param bulletX X position of bullet start position
+   * @param bulletY Y position of bullet start position
+   * @param mouseX X position of mouse
+   * @param mouseY Y position of mouse
+   * @param playerCentre Centre of player (main hand / centre of box collider)
+   * @return Array double with 2 elements: X and Y position of bullet starting position
+   */
+  protected double[] isShootingFloor(
+      double bulletX, double bulletY,
+      double mouseX, double mouseY,
+      Vector2 playerCentre) {
+
+    Collision raycast = Physics.raycastBullet(
+        playerCentre,
+        new Vector2(mouseX - bulletX, mouseY - bulletY).normalize().mult(55),
+        this.holder,
+        false);
+
+    // Raycast first collider is floor
+    if (raycast != null && raycast.getCollidedObject().getClass().getPackage().getName()
+        .contains(blocksPackageName)) {
+      return new double[] { holderHandPos[0], holderHandPos[1] + 20 };
+    } else { // Not floor
+      return new double[] { bulletX, bulletY };
+    }
   }
 
   /**
