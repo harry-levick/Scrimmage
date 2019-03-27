@@ -279,6 +279,11 @@ public class LevelHandler {
     gameObjectsT.forEach(((uuid, gameObject) -> {
       if (!(gameObjects.containsKey(uuid) && (gameObject instanceof Particle || gameObject instanceof ParticleEmitter))) {
         this.toCreate.add(gameObject);
+        if (gameObject instanceof Player) {
+          this.toCreate.addAll(gameObject.getChildren());
+          this.toCreate.add(((Player) gameObject).getHandLeft());
+          this.toCreate.add(((Player) gameObject).getHandRight());
+        }
       }
     }));
   }
