@@ -63,7 +63,10 @@ public abstract class ButtonObject extends GameObject {
   public void interpolatePosition(float alpha) {
   }
 
-
+  public void setText(String text) {
+    this.text = text;
+    button.setText(this.text);
+  }
 
   public void doOnEnter(MouseEvent e) {
     animation.switchAnimation("clicked");

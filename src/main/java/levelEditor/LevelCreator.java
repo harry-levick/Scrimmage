@@ -28,6 +28,7 @@ import shared.gameObjects.background.Background6;
 import shared.gameObjects.background.Background7;
 import shared.gameObjects.background.Background8;
 import shared.gameObjects.components.behaviours.blockBehaviours.Crushing;
+import shared.gameObjects.menu.LabelObject;
 import shared.gameObjects.menu.main.ButtonBack;
 import shared.gameObjects.menu.main.ButtonCredits;
 import shared.gameObjects.menu.main.ButtonMultiplayer;
@@ -48,6 +49,11 @@ import shared.gameObjects.menu.main.account.registration.ButtonLogin;
 import shared.gameObjects.menu.main.account.registration.ButtonRegisterAccount;
 import shared.gameObjects.menu.main.account.skins.SkinSelector;
 import shared.gameObjects.menu.main.account.skins.SkinViewer;
+import shared.gameObjects.menu.main.controls.ButtonInputJump;
+import shared.gameObjects.menu.main.controls.ButtonInputLeft;
+import shared.gameObjects.menu.main.controls.ButtonInputMenu;
+import shared.gameObjects.menu.main.controls.ButtonInputRight;
+import shared.gameObjects.menu.main.controls.ButtonInputThrow;
 import shared.gameObjects.menu.multiplayer.ButtonJoin;
 import shared.gameObjects.menu.multiplayer.ButtonReady;
 import shared.gameObjects.objects.utility.BlueBlock;
@@ -62,6 +68,7 @@ import shared.gameObjects.score.Podium3;
 import shared.gameObjects.score.Podium4;
 import shared.gameObjects.weapons.WeaponSpawner;
 import shared.handlers.levelHandler.GameState;
+import shared.handlers.levelHandler.LevelHandler;
 import shared.handlers.levelHandler.MapLoader;
 import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import shared.util.maths.Vector2;
@@ -71,9 +78,11 @@ import shared.util.maths.Vector2;
  */
 public class LevelCreator extends Application {
 
-  private static int stageSizeX = 1920; // todo autofetch
-  private static int stageSizeY = 1080;
-  private static int gridSizePX = 40;
+  private static Settings settings = new Settings(null, null); // WARNING be careful using this
+
+  private static int stageSizeX = settings.getMapWidth(); // todo autofetch
+  private static int stageSizeY = settings.getMapHeight();
+  private static int gridSizePX = settings.getGridSize();
   private static int gridSizeX = stageSizeX / gridSizePX; // 40 px blocks
   private static int gridSizeY = stageSizeY / gridSizePX; // 48 x 27
   private ArrayList<Vector2> spawnPoints;
@@ -82,8 +91,6 @@ public class LevelCreator extends Application {
   private static ArrayList<Player> playerSpawns;
   private static MapDataObject mapDataObject;
   private UUID uuid = UUID.randomUUID();
-
-  private Settings settings = new Settings(null, null);
 
   private static int getAbs(int gridPos) {
     return gridPos * gridSizePX;
@@ -608,22 +615,39 @@ public class LevelCreator extends Application {
         new Background1(UUID.randomUUID()));
     uuid = UUID.randomUUID();
     gameObjects
-        .put(uuid, new SoundSlider(getAbs(20), getAbs(5), getAbs(8), getAbs(1), SOUND_TYPE.MUSIC,
+        .put(uuid, new SoundSlider(getAbs(11), getAbs(7), getAbs(8), getAbs(1), SOUND_TYPE.MUSIC,
             "Music", ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
     gameObjects
-        .put(uuid, new SoundSlider(getAbs(20), getAbs(9), getAbs(8), getAbs(1), SOUND_TYPE.SFX,
+        .put(uuid, new SoundSlider(getAbs(11), getAbs(11), getAbs(8), getAbs(1), SOUND_TYPE.SFX,
             "Sound Effects", ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
     gameObjects
         .put(uuid,
-            new ButtonCredits(getAbs(20), getAbs(13), getAbs(8), getAbs(2), ObjectType.Button,
+            new ButtonCredits(getAbs(11), getAbs(15), getAbs(8), getAbs(2), ObjectType.Button,
                 uuid));
     uuid = UUID.randomUUID();
     gameObjects
-        .put(uuid, new ButtonBack(getAbs(20), getAbs(16), getAbs(8), getAbs(2), ObjectType.Button,
+        .put(uuid, new ButtonBack(getAbs(11), getAbs(18), getAbs(8), getAbs(2), ObjectType.Button,
             uuid));
     uuid = UUID.randomUUID();
+
+    // input controls
+    gameObjects.put(uuid, new LabelObject(getAbs(23), getAbs(7), "Controls:", ObjectType.Button, uuid)); //todo Button type?
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid, new ButtonInputJump(getAbs(23), getAbs(9), getAbs(6), getAbs(2), ObjectType.Button, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid, new ButtonInputLeft(getAbs(23), getAbs(12), getAbs(6), getAbs(2), ObjectType.Button, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid, new ButtonInputRight(getAbs(23), getAbs(15), getAbs(6), getAbs(2), ObjectType.Button, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid, new ButtonInputThrow(getAbs(23), getAbs(18), getAbs(6), getAbs(2), ObjectType.Button, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid, new ButtonInputMenu(getAbs(31), getAbs(9), getAbs(6), getAbs(2), ObjectType.Button, uuid));
+    uuid = UUID.randomUUID();
+
+
+
     for (int i = 0; i < 12; i++) {
       // top row wall
       gameObjects.put(uuid,

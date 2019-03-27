@@ -1,11 +1,14 @@
 package client.main;
 
 import client.handlers.accountHandler.AccountData;
+import java.awt.Paint;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.HashMap;
 import java.util.UUID;
 import javafx.scene.Group;
+import javafx.scene.input.KeyCode;
 import javafx.scene.text.Font;
 import shared.handlers.levelHandler.LevelHandler;
 
@@ -39,6 +42,12 @@ public class Settings {
   private int gridSize;
   private int playersDead;
 
+  // key mappings
+  public enum KEY_CONTROL {
+    JUMP, LEFT, RIGHT, THROW, MENU
+  }
+  private HashMap<KEY_CONTROL, KeyCode> keyMap = new HashMap<>();
+
   /**
    * Default Constructor Music volume set to 100 and sound effects to 75
    */
@@ -63,6 +72,43 @@ public class Settings {
     SFXPath = resourcesPath + s + "audio" + s + "sound-effects";
     fontPath = resourcesPath + s + "Kenney Future.ttf";
     data = new AccountData(UUID.randomUUID().toString(), "newuser", new boolean[30], new boolean[30], 1, 0);
+
+    keyMap.put(KEY_CONTROL.JUMP, KeyCode.W);
+    keyMap.put(KEY_CONTROL.LEFT, KeyCode.A);
+    keyMap.put(KEY_CONTROL.RIGHT, KeyCode.D);
+    keyMap.put(KEY_CONTROL.THROW, KeyCode.F);
+    keyMap.put(KEY_CONTROL.MENU, KeyCode.ESCAPE);
+  }
+
+  /**
+   * Get the mapped keyboard key for the enum key function
+   * @param key the KEY_CONTROL game function
+   * @return the KeyCode which triggers the KEY_CONTROL function
+   */
+  public KeyCode getKeyMap(KEY_CONTROL key) {
+    return keyMap.get(key);
+  }
+
+  /**
+   * Get the whole HashMap of the key bindings
+   * @return The HashMap of KEY_CONTROL game functions to keyboard keys
+   */
+  public HashMap<KEY_CONTROL, KeyCode> getKeyHashMap() {
+    return keyMap;
+  }
+
+  /**
+   * Remap the key binding of a enum key function to a new keyboard key
+   * @param keyControl the KEY_CONTROL game function
+   * @param keyCode the KeyCode which triggers the KEY_CONTROL function
+   */
+  public void setKeyMap(KEY_CONTROL keyControl, KeyCode keyCode) {
+    if (keyMap.isEmpty() || !keyMap.containsKey(keyControl)) {
+      // the remapping can't be done since the hashmap is empty or the key isn't there
+      keyMap.put(keyControl, keyCode);
+    } else {
+      keyMap.replace(keyControl, keyCode);
+    }
   }
 
   /**
@@ -81,6 +127,14 @@ public class Settings {
    */
   public int getGrisPos(int gridPos) {
     return gridPos * gridSize;
+  }
+
+  /**
+   * Get the size of the game grid - default 40 units
+   * @return The size of he grid in the game in units
+   */
+  public int getGridSize() {
+    return gridSize;
   }
 
   /**

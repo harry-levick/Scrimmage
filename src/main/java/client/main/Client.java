@@ -44,6 +44,7 @@ import shared.gameObjects.menu.main.SoundSlider;
 import shared.gameObjects.menu.main.SoundSlider.SOUND_TYPE;
 import shared.gameObjects.objects.ObjectManager;
 import shared.gameObjects.players.Player;
+import shared.gameObjects.rendering.ColorFilters;
 import shared.gameObjects.weapons.MachineGun;
 import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.LevelHandler;
@@ -121,10 +122,10 @@ public class Client extends Application {
   public static Group gameRoot;
 
   private final String gameTitle = "Alone in the Dark";
-  private KeyboardInput keyInput;
+  public static KeyboardInput keyInput;
   private MouseInput mouseInput;
   private Group root;
-  private Group backgroundRoot;
+  private static Group backgroundRoot;
   private static Group uiRoot;
   private static Group creditsRoot;
   private static Group creditsBackground;
@@ -186,6 +187,11 @@ public class Client extends Application {
       }
 
       //add screen saturation
+      ColorFilters filter = new ColorFilters();
+      filter.setDesaturate(-0.5);
+      filter.applyFilter(uiRoot, "desaturate");
+      filter.applyFilter(gameRoot, "desaturate");
+      filter.applyFilter(backgroundRoot, "desaturate");
 
       //background
       try {
@@ -244,6 +250,11 @@ public class Client extends Application {
     settingsOverlay = false;
     creditsRoot.getChildren().clear();
     settingsObjects.clear();
+    ColorFilters filter = new ColorFilters();
+    filter.setDesaturate(0); //todo change to remove method
+    filter.applyFilter(uiRoot, "desaturate");
+    filter.applyFilter(gameRoot, "desaturate");
+    filter.applyFilter(backgroundRoot, "desaturate");
   }
 
   /**
