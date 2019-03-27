@@ -217,10 +217,12 @@ public class LevelCreator extends Application {
         new WoodBlockSmallObject(
             getAbs(6), getAbs(3), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
     uuid = UUID.randomUUID();
-        gameObjects.put(uuid, new WeaponSpawner(
-            getAbs(8), getAbs(4), getAbs(1), getAbs(1), uuid
-        ));
-        uuid = UUID.randomUUID();
+
+//        remove weapons from main menu
+//        gameObjects.put(uuid, new WeaponSpawner(
+//            getAbs(8), getAbs(4), getAbs(1), getAbs(1), uuid
+//        ));
+//        uuid = UUID.randomUUID();
 
     // right side blocks
     gameObjects.put(uuid,
