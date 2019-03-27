@@ -10,8 +10,6 @@ import shared.gameObjects.menu.ButtonObject;
 
 public class ButtonInputJump extends ButtonObject {
 
-  private boolean listening = false;
-
   public ButtonInputJump(
       double x, double y, double sizeX, double sizeY, ObjectType id, UUID objectUUID) {
     super(x, y, sizeX, sizeY, "JUMP: ", id, objectUUID);
