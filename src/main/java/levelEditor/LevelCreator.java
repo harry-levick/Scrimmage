@@ -51,6 +51,7 @@ import shared.gameObjects.menu.main.account.skins.SkinSelector;
 import shared.gameObjects.menu.main.account.skins.SkinViewer;
 import shared.gameObjects.menu.main.controls.ButtonInputJump;
 import shared.gameObjects.menu.main.controls.ButtonInputLeft;
+import shared.gameObjects.menu.main.controls.ButtonInputMenu;
 import shared.gameObjects.menu.multiplayer.ButtonJoin;
 import shared.gameObjects.menu.multiplayer.ButtonReady;
 import shared.gameObjects.objects.utility.BlueBlock;
@@ -635,6 +636,9 @@ public class LevelCreator extends Application {
     gameObjects.put(uuid, new ButtonInputJump(getAbs(26), getAbs(7), getAbs(6), getAbs(2), ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid, new ButtonInputLeft(getAbs(26), getAbs(10), getAbs(6), getAbs(2), ObjectType.Button, uuid));
+    uuid = UUID.randomUUID();
+
+    gameObjects.put(uuid, new ButtonInputMenu(getAbs(34), getAbs(7), getAbs(6), getAbs(2), ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
 
 
