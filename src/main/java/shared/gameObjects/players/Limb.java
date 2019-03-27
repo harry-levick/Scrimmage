@@ -145,6 +145,7 @@ public abstract class Limb extends GameObject implements Destructable {
   @Override
   public void initialise(Group root, Settings settings) {
     super.initialise(root, settings);
+    rotate = new Rotate();
     rotate.setPivotX(pivotX);
     rotate.setPivotY(pivotY);
     if (isLeft) {
