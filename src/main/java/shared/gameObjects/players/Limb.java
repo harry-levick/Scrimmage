@@ -226,7 +226,7 @@ public abstract class Limb extends GameObject implements Destructable {
     super.render();
     getBehaviour();
     if (limbAttached) {
-      if (settings.isMultiplayer()) {
+      if (!settings.isMultiplayer()) {
         setRelativePosition();
       }
       //Do all the rotations here.
