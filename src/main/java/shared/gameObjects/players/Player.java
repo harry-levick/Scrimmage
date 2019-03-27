@@ -607,22 +607,6 @@ public class Player extends GameObject {
     return body;
   }
 
-  public Limb getLegLeft() {
-    return legLeft;
-  }
-
-  public Limb getLegRight() {
-    return legRight;
-  }
-
-  public Limb getArmLeft() {
-    return armLeft;
-  }
-
-  public Limb getArmRight() {
-    return armRight;
-  }
-
   public Limb getHandLeft() {
     return handLeft;
   }
