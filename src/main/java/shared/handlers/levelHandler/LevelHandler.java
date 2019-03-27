@@ -266,7 +266,11 @@ public class LevelHandler {
       if (isServer) {
         ConcurrentLinkedHashMap<UUID, GameObject> temp = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
             .maximumWeightedCapacity(1).build();
-        temp.put(gameObject.getUUID(), gameObject);
+        if (gameObject instanceof Bot) {
+          temp.put(gameObject.getUUID(), (Player) gameObject);
+        } else {
+          temp.put(gameObject.getUUID(), gameObject);
+        }
         server.sendObjects(temp);
       }
     } catch (IllegalStateException e) {
