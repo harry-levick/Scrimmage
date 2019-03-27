@@ -28,7 +28,7 @@ public class PacketJoin extends Packet {
   public PacketJoin(UUID uuid, String username, double x, double y, UUID legLeftUUID,
       UUID legRightUUID, UUID bodyUUID, UUID headUUID, UUID armLeftUUID, UUID armRightUUID,
       UUID handLeftUUID, UUID handRightUUID) {
-    packetID = PacketID.PLAYERJOIN.getID();
+    packetID = PacketID.JOIN.getID();
     this.x = x;
     this.y = y;
     this.uuid = uuid;
