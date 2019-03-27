@@ -91,7 +91,6 @@ public class ClientNetworkManager {
     if (Client.connectionHandler.received.size() != 0) {
       try {
         String message = (String) Client.connectionHandler.received.take();
-        System.out.println(message);
         int messageID = Integer.parseInt(message.substring(0, 1));
         switch (messageID) {
           // Ends
@@ -161,7 +160,6 @@ public class ClientNetworkManager {
       objectInputStream = new ObjectInputStream(byteArrayInputStream);
       ConcurrentLinkedHashMap<UUID, GameObject> gameObjects = (ConcurrentLinkedHashMap<UUID, GameObject>) objectInputStream
           .readObject();
-      System.out.println(gameObjects.size());
       Client.levelHandler.getToCreate().putAll(gameObjects);
       System.out.println("1111");
     } catch (IOException e) {

@@ -175,7 +175,6 @@ public class Server extends Application {
                   (InetAddress) address, serverPort);
               socket.send(packet);
               LOGGER.debug("SEND: " + new String(buffer));
-              System.out.println("SEND: " + new String(buffer));
             } catch (UnknownHostException e) {
               e.printStackTrace();
             } catch (IOException e) {
