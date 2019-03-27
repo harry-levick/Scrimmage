@@ -5,6 +5,7 @@ import client.main.Settings;
 import java.util.UUID;
 import javafx.application.Platform;
 import javafx.scene.Group;
+import server.ai.Bot;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
@@ -14,6 +15,7 @@ import shared.gameObjects.players.Limbs.Body;
 import shared.gameObjects.players.Limbs.Hand;
 import shared.gameObjects.players.Limbs.Head;
 import shared.gameObjects.players.Limbs.Leg;
+import shared.gameObjects.rendering.ColorFilters;
 import shared.gameObjects.weapons.Punch;
 import shared.gameObjects.weapons.Weapon;
 import shared.physics.data.MaterialProperty;
@@ -105,6 +107,9 @@ public class Player extends GameObject {
 
   //Networking
   private int lastInputCount;
+  
+  //ColoFilter
+  private ColorFilters colorFilter;
 
   /**
    *
@@ -142,7 +147,20 @@ public class Player extends GameObject {
     super.initialise(root, settings);
     addLimbs();
     addPunch();
+    initialiseColorFilter();
+    
   }
+  
+  private void initialiseColorFilter() {
+    colorFilter = new ColorFilters();
+    colorFilter.setDesaturate(0.0f);
+  }
+  
+  private void resetColorFilter() {
+    colorFilter.setDesaturate(0.0f);
+  }
+  
+  
 
   private void addLimbs() {
     legLeft = new Leg(true, this, settings.getLevelHandler());
@@ -188,6 +206,21 @@ public class Player extends GameObject {
   public int getAnimationTimer() {
     return animationTimer;
   }
+  
+  private void applyFilter() {
+    //Only start applying the desaturation when below 40% health.
+    float hpc = getHealthPercentage();
+    if(hpc<0.4) {
+      
+      //Convert range of 0.0 -> 0.4 to -1 -> 0.
+      float filterPercentage = (hpc/0.4f) - 1;
+      
+      //Apply the filter percentage
+      colorFilter.setDesaturate(filterPercentage);
+      colorFilter.applyFilter(settings.getLevelHandler().getGameRoot(),"desaturate");
+      colorFilter.applyFilter(settings.getLevelHandler().getBackgroundRoot(),"desaturate");
+    }
+  }
 
   @Override
   public void update() {
@@ -207,6 +240,9 @@ public class Player extends GameObject {
       }
     }
     damagedThisFrame = false;
+    if(!(this instanceof Bot)) { 
+      applyFilter();
+    }
     super.update();
   }
 
@@ -409,6 +445,8 @@ public class Player extends GameObject {
       this.bc.setLayer(ColliderLayer.PLAYER);
     }
     addPunch();
+    resetColorFilter();
+    
   }
 
   /**
