@@ -277,7 +277,9 @@ public class LevelHandler {
 
   public void addGameObjects(ConcurrentLinkedHashMap<UUID, GameObject> gameObjectsT) {
     gameObjectsT.forEach(((uuid, gameObject) -> {
-      if (!(gameObjects.containsKey(uuid) && (gameObject instanceof Particle || gameObject instanceof ParticleEmitter))) {
+      if (!(gameObjects.containsKey(uuid) && (gameObject instanceof Particle
+          || gameObject instanceof ParticleEmitter) && gameObject.getUUID() != clientPlayer
+          .getUUID())) {
         this.toCreate.add(gameObject);
         if (gameObject instanceof Player) {
           this.toCreate.addAll(gameObject.getChildren());
