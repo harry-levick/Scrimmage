@@ -126,7 +126,7 @@ public class Client extends Application {
   private Group root;
   private static Group backgroundRoot;
   private static Group uiRoot;
-  private static Group creditsRoot;
+  public static Group creditsRoot;
   private static Group creditsBackground;
   private Scene scene;
   private float elapsedSinceFPS = 0f;

@@ -1,10 +1,13 @@
 package shared.gameObjects.players;
 
 import client.handlers.effectsHandler.Particle;
+import client.main.Client;
 import client.main.Settings;
 import java.util.UUID;
 import javafx.application.Platform;
 import javafx.scene.Group;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import server.ai.Bot;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
@@ -111,6 +114,11 @@ public class Player extends GameObject {
   //ColoFilter
   private ColorFilters colorFilter;
 
+  // Death text
+  private boolean diedThisUpdate = true;
+  private Text youDied = new Text("You Died!");
+  private Text killedBy = new Text("Killed By null");
+
   /**
    *
    * Constructs a player object in the scene
@@ -134,6 +142,11 @@ public class Player extends GameObject {
     addComponent(bc);
     addComponent(rb);
     aimLeft = pointLeft = true;
+
+    youDied.setFont(settings.getFont(72));
+    youDied.setFill(Color.DARKRED);
+    killedBy.setFont(settings.getFont(32));
+    killedBy.setFill(Color.DARKRED);
   }
 
   // Initialise the animation
@@ -243,6 +256,19 @@ public class Player extends GameObject {
     damagedThisFrame = false;
     if(!(this instanceof Bot)) { 
       applyFilter();
+      if (health <= 0) {
+        youDied.setLayoutY(settings.getGrisPos(10));
+        youDied.setLayoutX((settings.getMapWidth() / 2) - (youDied.getLayoutBounds().getWidth() / 2) );
+        killedBy.setText("Killed by " + "someone");
+        killedBy.setLayoutY(settings.getGrisPos(13));
+        killedBy.setLayoutX((settings.getMapWidth() / 2) - (killedBy.getLayoutBounds().getWidth() /2));
+
+        if (diedThisUpdate) {
+          Client.creditsRoot.getChildren().add(youDied);
+          Client.creditsRoot.getChildren().add(killedBy);
+          diedThisUpdate = false;
+        }
+      }
     }
     super.update();
   }
@@ -447,7 +473,15 @@ public class Player extends GameObject {
     }
     addPunch();
     resetColorFilter();
-    
+
+    if (Client.creditsRoot.getChildren().contains(youDied)) {
+      Client.creditsRoot.getChildren().remove(youDied);
+    }
+    if (Client.creditsRoot.getChildren().contains(killedBy)) {
+      Client.creditsRoot.getChildren().remove(killedBy);
+    }
+    diedThisUpdate = true;
+
   }
 
   /**
