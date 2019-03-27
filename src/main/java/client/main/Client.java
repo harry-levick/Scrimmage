@@ -138,7 +138,7 @@ public class Client extends Application {
   private static boolean gameOver;
   private boolean startedGame;
   private int timeRemaining;
-  private int timeLimit = 1; // Time limit in minutes
+  private int timeLimit = 3; // Time limit in minutes
   private static boolean settingsOverlay = false;
   private static ArrayList<GameObject> settingsObjects = new ArrayList<>();
   private final float timeStep = 0.0166f;
