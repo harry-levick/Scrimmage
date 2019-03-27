@@ -410,6 +410,10 @@ public class LevelHandler {
   public Group getGameRoot() {
     return gameRoot;
   }
+  
+  public Group getBackgroundRoot() {
+    return backgroundRoot;
+  }
 
   public LinkedHashMap<UUID, Limb> getLimbs() {
     return limbs;
