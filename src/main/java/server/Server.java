@@ -431,6 +431,9 @@ public class Server extends Application {
     connected.add(address);
     server.add(player);
     server.sendObjects(levelHandler.getGameObjects());
+    //Redundancy
+    server.sendObjects(levelHandler.getGameObjects());
+    //Redundancy
     server.sendObjects(levelHandler.getGameObjects());
     return player;
   }
