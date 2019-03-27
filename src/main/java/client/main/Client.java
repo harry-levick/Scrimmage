@@ -395,6 +395,11 @@ public class Client extends Application {
     levelHandler.getBotPlayerList().forEach((key, gameObject) -> gameObject.removeRender());
     levelHandler.getBotPlayerList().forEach((key, gameObject) -> gameObject = null);
     levelHandler.getBotPlayerList().clear();
+    // remove desaturation
+    ColorFilters filter = new ColorFilters();
+    filter.setDesaturate(0);
+    filter.applyFilter(gameRoot, "desaturation");
+    filter.applyFilter(backgroundRoot, "desaturation");
     levelHandler.changeMap(
         new Map("menus/main_menu.map", Path.convert("src/main/resources/menus/main_menu.map")),
         false, false);
