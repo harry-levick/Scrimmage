@@ -38,6 +38,7 @@ import shared.gameObjects.menu.main.ButtonSingleplayer;
 import shared.gameObjects.menu.main.SoundSlider;
 import shared.gameObjects.menu.main.SoundSlider.SOUND_TYPE;
 import shared.gameObjects.menu.main.account.AccountDataDisplay;
+import shared.gameObjects.menu.main.account.AccountPageHandler;
 import shared.gameObjects.menu.main.account.ButtonAccount;
 import shared.gameObjects.menu.main.account.ButtonAchievements;
 import shared.gameObjects.menu.main.account.ButtonLootbox;
@@ -904,8 +905,10 @@ public class LevelCreator extends Application {
     mapDataObject.setSpawnPoints(spawnPoints);
     mapDataObject.setBackground(
         new Background1(UUID.randomUUID()));
+   // uuid = UUID.randomUUID();
+   // gameObjects.put(uuid, new Lootbox(getAbs(20), getAbs(10), 1, 1, uuid));
+    gameObjects.put(uuid, new AccountPageHandler(uuid));
     uuid = UUID.randomUUID();
-    gameObjects.put(uuid, new Lootbox(getAbs(20), getAbs(10), 1, 1, uuid));
     uuid = UUID.randomUUID();
     for (int i = 0; i < 12; i++) {
       // top row wall

@@ -10,7 +10,7 @@ public class ButtonBasic extends ButtonObject {
   private String updateText;
   public ButtonBasic(double x, double y, double sizeX, double sizeY, boolean right, ObjectType id, UUID uuid) {
     super(x, y, sizeX, sizeY, "" , id, uuid);
-    updateText = right ? "|]" : "[|";
+    updateText = right ? ">" : "<";
   }
 
   public ButtonBasic(double x, double y, double sizeX, double sizeY, String text, ObjectType id, UUID uuid) {
@@ -21,6 +21,18 @@ public class ButtonBasic extends ButtonObject {
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
     ((CycleManager)parent).triggerClick(this);
+  }
+
+  @Override
+  public void initialiseAnimation() {
+    if(updateText == null) return;
+    if(updateText.equals(">")) {
+      this.animation.supplyAnimation("default", "images/buttons/blue_sliderRight.png");
+      this.animation.supplyAnimation("clicked", "images/buttons/blue_sliderRight.png");
+    } else {
+      this.animation.supplyAnimation("default", "images/buttons/blue_sliderLeft.png");
+      this.animation.supplyAnimation("clicked", "images/buttons/blue_sliderLeft.png");
+    }
   }
 
   @Override
