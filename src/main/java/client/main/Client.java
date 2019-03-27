@@ -121,7 +121,7 @@ public class Client extends Application {
   public static Group gameRoot;
 
   private final String gameTitle = "Alone in the Dark";
-  private KeyboardInput keyInput;
+  public static KeyboardInput keyInput;
   private MouseInput mouseInput;
   private Group root;
   private Group backgroundRoot;

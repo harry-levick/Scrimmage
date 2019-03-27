@@ -14,6 +14,8 @@ import shared.gameObjects.players.Player;
 public class KeyboardInput implements EventHandler<KeyEvent> {
 
   private Player clientPlayer;
+  private boolean changeListening = false;
+  private KEY_CONTROL hotKeyChange = null;
 
   /**
    * Default constructor
@@ -32,11 +34,33 @@ public class KeyboardInput implements EventHandler<KeyEvent> {
     KeyCode keyThrow = Client.settings.getKeyMap(KEY_CONTROL.THROW);
     KeyCode keyMenu = Client.settings.getKeyMap(KEY_CONTROL.MENU);
 
-    if (event.getEventType() == KeyEvent.KEY_PRESSED) {
+    KeyCode k = event.getCode();
+    if (changeListening) {
+
+      switch (hotKeyChange) {
+        case JUMP:
+          Client.settings.setKeyMap(KEY_CONTROL.JUMP, k);
+          break;
+        case LEFT:
+          Client.settings.setKeyMap(KEY_CONTROL.LEFT, k);
+          break;
+        case RIGHT:
+          Client.settings.setKeyMap(KEY_CONTROL.RIGHT, k);
+          break;
+        case THROW:
+          Client.settings.setKeyMap(KEY_CONTROL.THROW, k);
+          break;
+        case MENU:
+          Client.settings.setKeyMap(KEY_CONTROL.MENU, k);
+          break;
+          default: break;
+      }
+      changeListening = false;
+
+    } else if (event.getEventType() == KeyEvent.KEY_PRESSED) {
 
 
       // switch requires constant at compile time, use if else instead
-      KeyCode k = event.getCode();
       if (k == keyLeft) {
         clientPlayer.leftKey = true;
       } else if (k == keyRight) {
@@ -74,7 +98,6 @@ public class KeyboardInput implements EventHandler<KeyEvent> {
 //        default:
 //          Client.sendUpdate = false;
     } else if (event.getEventType() == KeyEvent.KEY_RELEASED) {
-      KeyCode k = event.getCode();
       if (k == keyLeft) {
         clientPlayer.leftKey = false;
       } else if (k == keyRight) {
@@ -92,5 +115,22 @@ public class KeyboardInput implements EventHandler<KeyEvent> {
       }
 
     }
+  }
+
+  public boolean getChangeListening() {
+    return changeListening;
+  }
+
+  public void setChangeListening(boolean listen) {
+    changeListening = listen;
+  }
+
+  public void setChangeListening(KEY_CONTROL key) {
+    changeListening = true;
+    hotKeyChange = key;
+  }
+
+  public KEY_CONTROL getHotChangeKey() {
+    return hotKeyChange;
   }
 }
