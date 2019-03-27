@@ -293,9 +293,7 @@ public class LevelHandler {
    */
   public void createObjects() {
     toCreate.forEach(gameObject -> {
-      if (!(gameObject instanceof Limb)) {
-        gameObject.initialise(gameRoot, settings);
-      }
+      gameObject.initialise(gameRoot, settings);
       if (gameObject instanceof Player && gameObject.getUUID() != clientPlayer.getUUID()) {
         addPlayer((Player) gameObject, settings.getGameRoot());
       } else {
