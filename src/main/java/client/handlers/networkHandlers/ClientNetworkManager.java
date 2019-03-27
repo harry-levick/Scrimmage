@@ -18,7 +18,6 @@ import shared.packets.PacketDelete;
 import shared.packets.PacketGameState;
 import shared.packets.PacketInput;
 import shared.util.Path;
-import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import shared.util.maths.Vector2;
 
 public class ClientNetworkManager {
@@ -158,10 +157,9 @@ public class ClientNetworkManager {
     try {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(data);
       objectInputStream = new ObjectInputStream(byteArrayInputStream);
-      ConcurrentLinkedHashMap<UUID, GameObject> gameObjects = (ConcurrentLinkedHashMap<UUID, GameObject>) objectInputStream
+      GameObject gameObjects = (GameObject) objectInputStream
           .readObject();
-      Client.levelHandler.getToCreate().putAll(gameObjects);
-      System.out.println("1111");
+      Client.levelHandler.getToCreate().put(gameObjects.getUUID(), gameObjects);
     } catch (IOException e) {
       e.printStackTrace();
     } catch (ClassNotFoundException e) {

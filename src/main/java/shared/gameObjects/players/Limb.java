@@ -157,7 +157,6 @@ public abstract class Limb extends GameObject implements Destructable {
   public void update() {
     super.update();
     if (limbAttached) {
-      setRelativePosition();
       if (!lastAttachedCheck) {
         removeComponent(rb);
       }
