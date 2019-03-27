@@ -309,12 +309,14 @@ public class LevelCreator extends Application {
         .maximumWeightedCapacity(500).build();
     playerSpawns = new ArrayList<>();
     mapDataObject = new MapDataObject(UUID.randomUUID(), GameState.IN_GAME);
-    mapDataObject.setSpawnPoints(spawnPoints);
 
+    //mapDataObject.setSpawnPoints(spawnPoints);
+    // manual set instead
     // player spawns
     mapDataObject.addSpawnPoint(getAbs(2), getAbs(22));
     mapDataObject.addSpawnPoint(getAbs(15), getAbs(3));
     mapDataObject.addSpawnPoint(getAbs(29), getAbs(22));
+    mapDataObject.addSpawnPoint(getAbs(32), getAbs(2));
 
     mapDataObject.setBackground(
         new Background1(UUID.randomUUID()));
@@ -392,6 +394,9 @@ public class LevelCreator extends Application {
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
         new WeaponSpawner(getAbs(29), getAbs(20), 40, 40, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new WeaponSpawner(getAbs(32), getAbs(0), 40, 40, uuid));
     uuid = UUID.randomUUID();
 
 //    //wood block pyramid
