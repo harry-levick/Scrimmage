@@ -210,10 +210,11 @@ public class Player extends GameObject {
   private void applyFilter() {
     //Only start applying the desaturation when below 40% health.
     float hpc = getHealthPercentage();
-    if(hpc<0.4) {
+    float ignitionLevel = 0.4f;
+    if(hpc<ignitionLevel) {
       
       //Convert range of 0.0 -> 0.4 to -1 -> 0.
-      float filterPercentage = (hpc/0.4f) - 1;
+      float filterPercentage = (hpc/ignitionLevel) - 1;
       
       //Apply the filter percentage
       colorFilter.setDesaturate(filterPercentage);
