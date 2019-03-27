@@ -64,21 +64,33 @@ public class Uzi extends Gun {
     if (canFire()) {
       UUID uuid = UUID.randomUUID();
       //Vector2 playerCentre = ((BoxCollider) (holder.getComponent(ComponentType.COLLIDER))).getCentre(); // centre = body.centre
-      Vector2 playerCentre = new Vector2(holderHandPos[0], holderHandPos[1]-16); // centre = main hand
-      double playerRadius = 55 + 65; // Player.sizeY / 2 + bias
+      Vector2 playerCentre = new Vector2(holderHandPos[0], holderHandPos[1]-12); // centre = main hand
 
-      double bulletX = playerCentre.getX() + playerRadius * Math.cos(-angleRadian);
-      double bulletY = playerCentre.getY() - playerRadius * Math.sin(-angleRadian);
-      double bulletFlipX = playerCentre.getX() - playerRadius * Math.cos(angleRadian);
-      double bulletFlipY = playerCentre.getY() - playerRadius * Math.sin(angleRadian);
-      Bullet bullet =
-          new FireBullet(
-              (holder.isAimingLeft() ? bulletFlipX : bulletX),
-              (holder.isAimingLeft() ? bulletFlipY : bulletY),
-              mouseX,
-              mouseY,
-              this.holder,
-              uuid);
+      double bulletX;
+      double bulletY;
+
+      if (holder.isAimingLeft()) {
+        bulletX = playerCentre.getX() - playerRadius * Math.cos(angleRadian);
+        bulletY = playerCentre.getY() - playerRadius * Math.sin(angleRadian);
+      } else {
+        bulletX = playerCentre.getX() + playerRadius * Math.cos(-angleRadian);
+        bulletY = playerCentre.getY() - playerRadius * Math.sin(-angleRadian);
+
+      }
+
+      // Ray cast check if shooting floor
+      double[] bulletStartPos =
+          isShootingFloor(bulletX, bulletY, mouseX, mouseY, playerCentre);
+
+      Bullet bullet = new FireBullet(
+          bulletStartPos[0],
+          bulletStartPos[1],
+          mouseX,
+          mouseY,
+          this.holder,
+          uuid
+      );
+
       settings.getLevelHandler().addGameObject(bullet);
       this.currentCooldown = getDefaultCoolDown();
       new AudioHandler(settings, Client.musicActive).playSFX("MACHINEGUN");
