@@ -146,6 +146,7 @@ public class Player extends GameObject {
   public void initialise(Group root, Settings settings) {
     super.initialise(root, settings);
     addLimbs();
+    System.out.println("Adding limbs");
     addPunch();
     initialiseColorFilter();
   }
@@ -186,6 +187,7 @@ public class Player extends GameObject {
   
 
   private void addLimbs() {
+    if(legLeft != null) return;
     legLeft = new Leg(true, this, settings.getLevelHandler(), UUID.randomUUID());
     legRight = new Leg(false, this, settings.getLevelHandler(), UUID.randomUUID());
     body = new Body(this, settings.getLevelHandler(), UUID.randomUUID());
