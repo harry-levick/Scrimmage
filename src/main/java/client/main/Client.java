@@ -122,10 +122,11 @@ public class Client extends Application {
   private static Group uiRoot;
   public static Group overlayRoot;
   private static Group overlayBackground;
+  private static Group lightingRoot;
+  private Group root;
   private Scene scene;
   private float elapsedSinceFPS = 0f;
   private int framesElapsedSinceFPS = 0;
-  private static Group lightingRoot;
   private static UI userInterface;
   private static boolean credits = false;
   private static int creditStartDelay = 100;
@@ -135,7 +136,6 @@ public class Client extends Application {
   private final String gameTitle = "Alone in the Dark";
   private final float timeStep = 0.0166f;
   private MouseInput mouseInput;
-  private Group root;
   private boolean startedGame;
   private static int timeRemaining;
   private int timeLimit = 1; // Time limit in minutes

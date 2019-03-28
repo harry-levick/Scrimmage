@@ -8,6 +8,7 @@ import java.util.Comparator;
 import java.util.UUID;
 import javafx.application.Platform;
 import javafx.scene.Group;
+import javafx.scene.text.Text;
 import server.ai.Bot;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
@@ -26,6 +27,11 @@ public class Podium1 extends GameObject {
   private Podium2 podium2;
   private Podium3 podium3;
   private Podium4 podium4;
+
+  private transient Text score0;
+  private transient Text score1;
+  private transient Text score2;
+  private transient Text score3;
 
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
@@ -48,17 +54,20 @@ public class Podium1 extends GameObject {
   }
 
   public void initialise(Group root, Settings settings) {
+    //Kill Bots
     settings.getLevelHandler().getGameObjects().keySet()
         .removeAll(settings.getLevelHandler().getBotPlayerList().keySet());
     settings.getLevelHandler().getBotPlayerList().forEach((key, bot) -> bot.terminate());
     super.initialise(root, settings);
-    podium2 = new Podium2(getX() + 320, getY() + 120, 240, 320);
+    //Create Podiums
+    podium2 = new Podium2(getX() + 320, getY() + 160, 240, 320);
     settings.getLevelHandler().addGameObject(podium2);
-    podium3 = new Podium3(getX() - 320, getY() + 40, 240, 240);
+    podium3 = new Podium3(getX() - 320, getY() + 240, 240, 240);
     settings.getLevelHandler().addGameObject(podium3);
-    podium4 = new Podium4(getX() + 640, getY() + 320, 240, 120);
+    podium4 = new Podium4(getX() + 640, getY() + 360, 240, 120);
     settings.getLevelHandler().addGameObject(podium4);
      ArrayList<Player> players = new ArrayList();
+    //Create player replacements for each bot
     settings.getLevelHandler().getPlayers().forEach((uuid, player) -> {
       if (player instanceof Bot) {
         Player playerCopy = new Player(player.getX(), player.getY(), player.getUUID());
@@ -70,6 +79,7 @@ public class Podium1 extends GameObject {
         players.add(player);
       }
     });
+    //Double destory bots
     settings.getLevelHandler().getPlayers().keySet()
         .removeAll(settings.getLevelHandler().getBotPlayerList().keySet());
     settings.getLevelHandler().getBotPlayerList()
@@ -78,22 +88,47 @@ public class Podium1 extends GameObject {
     settings.getLevelHandler().getBotPlayerList().clear();
 
      Comparator<Player> compareScore = Comparator.comparing(Player::getScore);
-     Collections.sort(players,compareScore);
-    if (players.get(0) != null) {
-      players.get(0).getTransform().setPos(this.getTransform().getPos().add(new Vector2(50, -300)));
+    Collections.sort(players, compareScore.reversed());
+    //1st
+    if (players.size() > 0) {
+      Vector2 pos0 = this.getTransform().getPos().add(new Vector2(80, -300));
+      players.get(0).getTransform().setPos(pos0);
+      score0 = new Text(String.valueOf(players.get(0).getScore()));
+      score0.setTranslateX(pos0.getX());
+      score0.setTranslateY(pos0.getY());
+      root.getChildren().add(score0);
     }
-    if (players.get(1) != null) {
+    //2nd
+    if (players.size() > 1) {
+      Vector2 pos1 = podium2.getTransform().getPos().add(new Vector2(80, -300));
       players.get(1).getTransform()
-          .setPos(podium2.getTransform().getPos().add(new Vector2(50, -300)));
-    }
-    if (players.get(2) != null) {
-      players.get(2).getTransform()
-          .setPos(podium3.getTransform().getPos().add(new Vector2(50, -300)));
-    }
-    if (players.get(3) != null) {
+          .setPos(pos1);
+      score1 = new Text(String.valueOf(players.get(1).getScore()));
+      score1.setTranslateX(pos1.getX());
+      score1.setTranslateY(pos1.getY());
+      root.getChildren().add(score1);
+     }
+    //3rd
+    if (players.size() > 2) {
+      Vector2 pos2 = podium3.getTransform().getPos().add(new Vector2(80, -300));
+     players.get(2).getTransform()
+         .setPos(pos2);
+      score2 = new Text(String.valueOf(players.get(2).getScore()));
+      score2.setTranslateX(pos2.getX());
+      score2.setTranslateY(pos2.getY());
+      root.getChildren().add(score2);
+     }
+    //4th
+    if (players.size() > 3) {
+      Vector2 pos3 = podium4.getTransform().getPos().add(new Vector2(80, -300));
       players.get(3).getTransform()
-          .setPos(podium4.getTransform().getPos().add(new Vector2(50, -300)));
-    }
+          .setPos(pos3);
+      score3 = new Text(String.valueOf(players.get(3).getScore()));
+      score3.setTranslateX(pos3.getX());
+      score3.setTranslateY(pos3.getY());
+      root.getChildren().add(score3);
+     }
+    //Go back
     new java.util.Timer().schedule(
         new java.util.TimerTask() {
           @Override
@@ -101,6 +136,9 @@ public class Podium1 extends GameObject {
             Platform.runLater(new Runnable() {
               @Override
               public void run() {
+                if (settings.getLevelHandler().getClientPlayer() != null) {
+                  players.remove(settings.getLevelHandler().getClientPlayer());
+                }
                 players.forEach(player -> {
                   player.removeRender();
                 });
@@ -114,6 +152,19 @@ public class Podium1 extends GameObject {
 
           }
         }, 15000
+    );
+  }
+
+  @Override
+  public void removeRender() {
+    super.removeRender();
+    Platform.runLater(
+        () -> {
+          root.getChildren().remove(score0);
+          root.getChildren().remove(score1);
+          root.getChildren().remove(score2);
+          root.getChildren().remove(score3);
+        }
     );
   }
 
