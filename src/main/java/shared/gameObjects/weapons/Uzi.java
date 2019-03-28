@@ -69,29 +69,34 @@ public class Uzi extends Gun {
       double bulletX;
       double bulletY;
 
-      if (holder.isAimingLeft()) {
-        bulletX = playerCentre.getX() - playerRadius * Math.cos(angleRadian);
-        bulletY = playerCentre.getY() - playerRadius * Math.sin(angleRadian);
-      } else {
-        bulletX = playerCentre.getX() + playerRadius * Math.cos(-angleRadian);
-        bulletY = playerCentre.getY() - playerRadius * Math.sin(-angleRadian);
+      try {
+        if (holder.isAimingLeft()) {
+          bulletX = playerCentre.getX() - playerRadius * Math.cos(angleRadian);
+          bulletY = playerCentre.getY() - playerRadius * Math.sin(angleRadian);
+        } else {
+          bulletX = playerCentre.getX() + playerRadius * Math.cos(-angleRadian);
+          bulletY = playerCentre.getY() - playerRadius * Math.sin(-angleRadian);
 
+        }
+
+        // Ray cast check if shooting floor
+        double[] bulletStartPos =
+            isShootingFloor(bulletX, bulletY, mouseX, mouseY, playerCentre);
+
+        Bullet bullet = new FireBullet(
+            bulletStartPos[0],
+            bulletStartPos[1],
+            mouseX,
+            mouseY,
+            this.holder,
+            uuid
+        );
+
+        settings.getLevelHandler().addGameObject(bullet);
+      } catch (NullPointerException e) {
+        System.out.println("NullPointerException in Uzi when creating bullet");
       }
 
-      // Ray cast check if shooting floor
-      double[] bulletStartPos =
-          isShootingFloor(bulletX, bulletY, mouseX, mouseY, playerCentre);
-
-      Bullet bullet = new FireBullet(
-          bulletStartPos[0],
-          bulletStartPos[1],
-          mouseX,
-          mouseY,
-          this.holder,
-          uuid
-      );
-
-      settings.getLevelHandler().addGameObject(bullet);
       this.currentCooldown = getDefaultCoolDown();
       new AudioHandler(settings, Client.musicActive).playSFX("MACHINEGUN");
       deductAmmo();

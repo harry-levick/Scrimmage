@@ -143,7 +143,6 @@ public class Bot extends Player {
     try {
       state = state.next(targetPlayer, this, distanceToTarget, prevHealth);
     } catch (NullPointerException e) {
-      System.out.println("Null Pointer");
     }
 
 
@@ -294,6 +293,15 @@ public class Bot extends Player {
         targetDistance = distance;
         target = player;
       }
+    }
+
+    boolean targetGood = new Random().nextInt(101) < 50;
+
+    if (!targetGood) {
+      ArrayList<Player> tempPlayerList = new ArrayList<>(allPlayers.values());
+      tempPlayerList.remove(this);
+
+      target = tempPlayerList.get(new Random().nextInt(tempPlayerList.size()));
     }
 
     // Returns null if no active player is found.

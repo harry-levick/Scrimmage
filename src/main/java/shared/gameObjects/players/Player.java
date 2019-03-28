@@ -53,6 +53,8 @@ public class Player extends GameObject {
   public int score;
   //TODO idk what this does
   protected Behaviour behaviour;
+  /** True if start punching */
+  protected boolean punched;
   /**
    * Boolean to determine if a player has jumped or not
    */
@@ -61,6 +63,8 @@ public class Player extends GameObject {
    * Boolean to determine if a player is on the ground or in the air
    */
   protected boolean grounded;
+  /** True if player is facing left */
+  protected boolean faceLeft;
   /** True when the gun is aiming LHS */
   protected boolean aimLeft;
   /** True when the mouse pointer is on the LHS */
@@ -122,6 +126,7 @@ public class Player extends GameObject {
     super(x, y, 80, 110, ObjectType.Player, playerUUID);
     this.lastInputCount = 0;
     this.score = 0;
+    this.punched = false;
     this.leftKey = false;
     this.rightKey = false;
     this.jumpKey = false;
@@ -134,6 +139,7 @@ public class Player extends GameObject {
     addComponent(bc);
     addComponent(rb);
     aimLeft = pointLeft = true;
+    faceLeft = false;
   }
 
   // Initialise the animation
@@ -159,8 +165,6 @@ public class Player extends GameObject {
   private void resetColorFilter() {
     colorFilter.setDesaturate(0.0f);
   }
-  
-  
 
   private void addLimbs() {
     legLeft = new Leg(true, this, settings.getLevelHandler());
@@ -229,7 +233,6 @@ public class Player extends GameObject {
     if (getY() > 1200) {
       deductHp(999);
     }
-
     checkGrounded(); // Checks if the player is grounded
     badWeapon();
     pointLeft = mouseX < this.getX();
@@ -282,17 +285,20 @@ public class Player extends GameObject {
       rb.moveX(speed);
       createWalkParticle();
       behaviour = Behaviour.WALK_RIGHT;
+      faceLeft = false;
     }
     if (leftKey) {
       rb.moveX(speed * -1);
       createWalkParticle();
       behaviour = Behaviour.WALK_LEFT;
+      faceLeft = true;
     }
 
     if (!rightKey && !leftKey) {
       vx = 0;
       behaviour = Behaviour.IDLE;
     }
+
     if (jumpKey && !jumped && grounded) {
       rb.moveY(jumpForce * (legLeft.limbAttached && legRight.limbAttached ? 1f : 0.7f), 0.33333f);
       jumped = true;
@@ -309,6 +315,8 @@ public class Player extends GameObject {
     }
 
     if (click && holding != null) {
+      if (holding instanceof Punch)
+        punched = true;
       holding.fire(mouseX, mouseY);
     }
     // setX(getX() + (vx * 0.0166));
@@ -383,8 +391,9 @@ public class Player extends GameObject {
    */
   public void throwHolding() {
     if (!(this.holding == null || this.holding instanceof Punch)) {
-      Weapon w = this.holding;
-      w.startThrowing();
+      //Weapon w = this.holding;
+      //w.startThrowing();
+      this.holding.startThrowing();
       throwHoldingKey = false;
       this.usePunch();
     }
@@ -411,6 +420,11 @@ public class Player extends GameObject {
     children.forEach(child -> child.removeRender());
   }
 
+  /**
+   * Deduct hp of the player by the given value. Player dies if health falls below zero.
+   *
+   * @param damage Health to deduct from player
+   */
   public void deductHp(int damage) {
     if(!damagedThisFrame) {
       damagedThisFrame = true;
@@ -418,6 +432,8 @@ public class Player extends GameObject {
       if (this.health <= 0) {
         settings.playerDied();
         this.setActive(false);
+        throwHolding();
+        usePunch();
         bc.setLayer(ColliderLayer.PARTICLE);
         children.forEach(child -> child.destroy());
       }
@@ -446,8 +462,8 @@ public class Player extends GameObject {
       this.bc.setLayer(ColliderLayer.PLAYER);
     }
     addPunch();
+    usePunch();
     resetColorFilter();
-    
   }
 
   /**
@@ -589,6 +605,15 @@ public class Player extends GameObject {
 
   public boolean isGrounded() {
     return grounded;
+  }
+
+  /** Returns true if started a punch */
+  public boolean isPunched() {
+    return punched;
+  }
+
+  public void setPunched(boolean b) {
+    punched = b;
   }
 
   public int getLastInputCount() {
