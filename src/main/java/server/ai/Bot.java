@@ -22,29 +22,29 @@ import shared.util.maths.Vector2;
 public class Bot extends Player {
 
   /** The action array index for jump key */
-  public static final int KEY_JUMP = 0;
+  public transient static final int KEY_JUMP = 0;
   /** The action array index for left key */
-  public static final int KEY_LEFT = 1;
+  public transient static final int KEY_LEFT = 1;
   /** The action array index for right key */
-  public static final int KEY_RIGHT = 2;
+  public transient static final int KEY_RIGHT = 2;
   /** The state that the bot is in */
   FSA state;
   /** The bots target */
-  public Player targetPlayer;
+  public transient Player targetPlayer;
   /** All of the players in the world, players + bots */
-  LinkedHashMap<UUID, Player> allPlayers;
+  transient LinkedHashMap<UUID, Player> allPlayers;
   /** The levelHandler passed in the constructor, used for collecting game objects */
-  LevelHandler levelHandler;
+  transient LevelHandler levelHandler;
   /** Thread to govern the chasing path to the enemy */
-  ChasingThread chasingThread;
+  transient ChasingThread chasingThread;
   /** Thread to govern the fleeing path from the enemy */
-  FleeingThread fleeingThread;
+  transient FleeingThread fleeingThread;
   /** The list of actions to take from when the bot is chasing the enemy */
-  List<boolean[]> chasingPlan;
+  transient List<boolean[]> chasingPlan;
   /** The list of actions to take from when the bot is fleeing the enemy */
-  List<boolean[]> fleeingPlan;
+  transient List<boolean[]> fleeingPlan;
 
-  int prevHealth;
+  transient int prevHealth;
 
   /**
    * @param x x pos of the bot

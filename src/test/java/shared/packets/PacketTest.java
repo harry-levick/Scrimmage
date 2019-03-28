@@ -21,15 +21,6 @@ public class PacketTest {
   private UUID uuid = UUID.randomUUID();
 
   @Test
-  public void JoinPacketTest() {
-    PacketJoin join = new PacketJoin(uuid, username, x, y);
-    byte[] simulateNetwork = join.getData();
-    PacketJoin output = new PacketJoin(new String(simulateNetwork));
-    assertEquals(output.getClientID(), uuid);
-    assertEquals(output.getUsername(), username);
-  }
-
-  @Test
   public void ResponsePacketTest() {
     boolean accepted = true;
     PacketResponse out = new PacketResponse(accepted, username);
@@ -67,14 +58,16 @@ public class PacketTest {
 
   @Test
   public void PlayerJoinPacketTest() {
-    PacketPlayerJoin out = new PacketPlayerJoin(x, y, uuid, username);
+    PacketJoin out = new PacketJoin(uuid, username, x, y, UUID.randomUUID(), UUID.randomUUID(),
+        UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(),
+        UUID.randomUUID(), UUID.randomUUID());
     byte[] packetData = out.getData();
-    PacketPlayerJoin in = new PacketPlayerJoin(new String(packetData));
+    PacketJoin in = new PacketJoin(new String(packetData));
     assertEquals(PacketID.PLAYERJOIN.getID(), in.packetID);
     assertEquals(in.getX(), x);
     assertEquals(in.getY(), y);
     assertEquals(in.getUsername(), username);
-    assertEquals(in.getUUID(), uuid);
+    assertEquals(in.getClientID(), uuid);
   }
 
   @Test

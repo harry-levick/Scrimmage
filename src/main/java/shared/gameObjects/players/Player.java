@@ -15,7 +15,7 @@ import shared.gameObjects.players.Limbs.Body;
 import shared.gameObjects.players.Limbs.Hand;
 import shared.gameObjects.players.Limbs.Head;
 import shared.gameObjects.players.Limbs.Leg;
-import shared.gameObjects.rendering.ColorFilters;
+import shared.gameObjects.rendering.ColourFilters;
 import shared.gameObjects.weapons.Punch;
 import shared.gameObjects.weapons.Weapon;
 import shared.physics.data.MaterialProperty;
@@ -109,7 +109,7 @@ public class Player extends GameObject {
   private int lastInputCount;
   
   //ColoFilter
-  private ColorFilters colorFilter;
+  private transient ColourFilters colorFilter;
 
   /**
    *
@@ -148,11 +148,34 @@ public class Player extends GameObject {
     addLimbs();
     addPunch();
     initialiseColorFilter();
-    
+  }
+
+  public void initialise(Group root, Settings settings, UUID legLeftUUID, UUID legRightUUID,
+      UUID bodyUUID, UUID headUUID, UUID armLeftUUID, UUID armRightUUID, UUID handLeftUUID,
+      UUID handRightUUID) {
+    super.initialise(root, settings);
+    legLeft = new Leg(true, this, settings.getLevelHandler(), legLeftUUID);
+    legRight = new Leg(false, this, settings.getLevelHandler(), legRightUUID);
+    body = new Body(this, settings.getLevelHandler(), bodyUUID);
+    head = new Head(this, settings.getLevelHandler(), headUUID);
+    armLeft = new Arm(true, this, settings.getLevelHandler(), armLeftUUID);
+    armRight = new Arm(false, this, settings.getLevelHandler(), armRightUUID);
+    handLeft = new Hand(true, armLeft, this, settings.getLevelHandler(), handLeftUUID);
+    handRight = new Hand(false, armRight, this, settings.getLevelHandler(), handRightUUID);
+    addChild(legLeft);
+    addChild(legRight);
+    addChild(body);
+    addChild(head);
+    addChild(armLeft);
+    addChild(armRight);
+    armRight.addChild(handRight);
+    armLeft.addChild(handLeft);
+    addPunch();
+    initialiseColorFilter();
   }
   
   private void initialiseColorFilter() {
-    colorFilter = new ColorFilters();
+    colorFilter = new ColourFilters();
     colorFilter.setDesaturate(0.0f);
   }
   
@@ -163,14 +186,15 @@ public class Player extends GameObject {
   
 
   private void addLimbs() {
-    legLeft = new Leg(true, this, settings.getLevelHandler());
-    legRight = new Leg(false, this, settings.getLevelHandler());
-    body = new Body(this, settings.getLevelHandler());
-    head = new Head(this, settings.getLevelHandler());
-    armLeft = new Arm(true, this, settings.getLevelHandler());
-    armRight = new Arm(false, this, settings.getLevelHandler());
-    handLeft = new Hand(true, armLeft, this, settings.getLevelHandler());
-    handRight = new Hand(false, armRight,this, settings.getLevelHandler());
+    if(legLeft != null) return;
+    legLeft = new Leg(true, this, settings.getLevelHandler(), UUID.randomUUID());
+    legRight = new Leg(false, this, settings.getLevelHandler(), UUID.randomUUID());
+    body = new Body(this, settings.getLevelHandler(), UUID.randomUUID());
+    head = new Head(this, settings.getLevelHandler(), UUID.randomUUID());
+    armLeft = new Arm(true, this, settings.getLevelHandler(), UUID.randomUUID());
+    armRight = new Arm(false, this, settings.getLevelHandler(), UUID.randomUUID());
+    handLeft = new Hand(true, armLeft, this, settings.getLevelHandler(), UUID.randomUUID());
+    handRight = new Hand(false, armRight, this, settings.getLevelHandler(), UUID.randomUUID());
     addChild(legLeft);
     addChild(legRight);
     addChild(body);
@@ -349,7 +373,7 @@ public class Player extends GameObject {
   }
 
   private void createWalkParticle() {
-    if(!grounded) return;
+    if(!grounded || settings.isMultiplayer()) return;
       settings.getLevelHandler().addGameObject(new Particle(transform.getBotPos().sub(transform.getSize().mult(new Vector2(0.5, 0))), new Vector2(0, -35), new Vector2(0, 100), new Vector2(8,8),
           "images/platforms/stone/elementStone001.png", 0.34f));
   }
@@ -607,6 +631,14 @@ public class Player extends GameObject {
     return body;
   }
 
+  public Limb getHandLeft() {
+    return handLeft;
+  }
+
+  public Limb getHandRight() {
+    return handRight;
+  }
+
   public Limb getLegLeft() {
     return legLeft;
   }
@@ -621,13 +653,5 @@ public class Player extends GameObject {
 
   public Limb getArmRight() {
     return armRight;
-  }
-
-  public Limb getHandLeft() {
-    return handLeft;
-  }
-
-  public Limb getHandRight() {
-    return handRight;
   }
 }

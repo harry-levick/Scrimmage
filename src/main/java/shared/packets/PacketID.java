@@ -39,7 +39,11 @@ public enum PacketID {
   /**
    * Gameobject deleted
    */
-  DELETE(8);
+  DELETE(8),
+  /**
+   * Resend unseen objects
+   */
+  RESEND(9);
 
   private int packetID;
 
