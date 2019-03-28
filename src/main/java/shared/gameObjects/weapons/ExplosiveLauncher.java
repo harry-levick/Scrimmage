@@ -43,7 +43,7 @@ public class ExplosiveLauncher extends Gun {
         false, // singleHanded
         uuid);
 
-    this.weaponRank = 10;
+    this.weaponRank = 4;
   }
 
   /**
