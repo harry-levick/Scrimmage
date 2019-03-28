@@ -1,6 +1,7 @@
 package shared.gameObjects.players.Limbs;
 
 import client.main.Settings;
+import java.util.UUID;
 import javafx.scene.Group;
 import shared.gameObjects.Destructable;
 import shared.gameObjects.Utils.ObjectType;
@@ -17,9 +18,10 @@ public class Hand extends Limb {
    * Base class used to create an object in game. This is used on both the client and server side to
    * ensure actions are calculated the same
    */
-  public Hand(Boolean isLeft, Limb armRight, Player player, LevelHandler levelHandler) {
+  public Hand(Boolean isLeft, Limb armRight, Player player, LevelHandler levelHandler, UUID uuid) {
     //17 15
-    super(-3, 20, 3, 20, 17, 15, ObjectType.Limb, isLeft, armRight, player, 0, 0, levelHandler);
+    super(-3, 20, 3, 20, 17, 15, ObjectType.Limb, isLeft, armRight, player, 0, 0, levelHandler,
+        uuid);
   }
 
 

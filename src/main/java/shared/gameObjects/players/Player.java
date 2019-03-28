@@ -5,6 +5,7 @@ import client.main.Settings;
 import java.util.UUID;
 import javafx.application.Platform;
 import javafx.scene.Group;
+import javafx.scene.image.ImageView;
 import server.ai.Bot;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
@@ -15,9 +16,11 @@ import shared.gameObjects.players.Limbs.Body;
 import shared.gameObjects.players.Limbs.Hand;
 import shared.gameObjects.players.Limbs.Head;
 import shared.gameObjects.players.Limbs.Leg;
-import shared.gameObjects.rendering.ColorFilters;
+import shared.gameObjects.rendering.ColourFilters;
+import shared.gameObjects.rendering.PointLighting;
 import shared.gameObjects.weapons.Punch;
 import shared.gameObjects.weapons.Weapon;
+import shared.handlers.levelHandler.GameState;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
@@ -89,9 +92,14 @@ public class Player extends GameObject {
    * The Physics Rigidbody component attached to the player
    */
   protected Rigidbody rb;
-  //TODO idk what this does
-  protected double vx;
+  /**
+   * The Box collider that detects collisions
+   */
   private BoxCollider bc;
+  /**
+   * If the lighting is on or off
+   */
+  private boolean lightingSwitch;
 
   // Limbs
   private Limb head;
@@ -109,7 +117,11 @@ public class Player extends GameObject {
   private int lastInputCount;
   
   //ColoFilter
-  private ColorFilters colorFilter;
+  private transient ColourFilters colorFilter;
+  
+  // Lighting
+  private transient PointLighting lighting;
+  private transient ImageView lightingImageView;
 
   /**
    *
@@ -134,6 +146,7 @@ public class Player extends GameObject {
     addComponent(bc);
     addComponent(rb);
     aimLeft = pointLeft = true;
+    lightingSwitch = false;
   }
 
   // Initialise the animation
@@ -148,12 +161,49 @@ public class Player extends GameObject {
     addLimbs();
     addPunch();
     initialiseColorFilter();
-    
+    if (lightingSwitch) {
+      initialiseLighting();
+    }
+  }
+  
+  
+
+  public void initialise(Group root, Settings settings, UUID legLeftUUID, UUID legRightUUID,
+      UUID bodyUUID, UUID headUUID, UUID armLeftUUID, UUID armRightUUID, UUID handLeftUUID,
+      UUID handRightUUID) {
+    super.initialise(root, settings);
+    legLeft = new Leg(true, this, settings.getLevelHandler(), legLeftUUID);
+    legRight = new Leg(false, this, settings.getLevelHandler(), legRightUUID);
+    body = new Body(this, settings.getLevelHandler(), bodyUUID);
+    head = new Head(this, settings.getLevelHandler(), headUUID);
+    armLeft = new Arm(true, this, settings.getLevelHandler(), armLeftUUID);
+    armRight = new Arm(false, this, settings.getLevelHandler(), armRightUUID);
+    handLeft = new Hand(true, armLeft, this, settings.getLevelHandler(), handLeftUUID);
+    handRight = new Hand(false, armRight, this, settings.getLevelHandler(), handRightUUID);
+    addChild(legLeft);
+    addChild(legRight);
+    addChild(body);
+    addChild(head);
+    addChild(armLeft);
+    addChild(armRight);
+    armRight.addChild(handRight);
+    armLeft.addChild(handLeft);
+    addPunch();
+    initialiseColorFilter();
+    if (lightingSwitch) {
+      initialiseLighting();
+    }
   }
   
   private void initialiseColorFilter() {
-    colorFilter = new ColorFilters();
+    colorFilter = new ColourFilters();
     colorFilter.setDesaturate(0.0f);
+  }
+  
+  private void initialiseLighting() {
+    lighting = new PointLighting();
+    lightingImageView = new ImageView();
+    settings.getLevelHandler().getLightingRoot().getChildren().add(lightingImageView);    
   }
   
   private void resetColorFilter() {
@@ -163,14 +213,15 @@ public class Player extends GameObject {
   
 
   private void addLimbs() {
-    legLeft = new Leg(true, this, settings.getLevelHandler());
-    legRight = new Leg(false, this, settings.getLevelHandler());
-    body = new Body(this, settings.getLevelHandler());
-    head = new Head(this, settings.getLevelHandler());
-    armLeft = new Arm(true, this, settings.getLevelHandler());
-    armRight = new Arm(false, this, settings.getLevelHandler());
-    handLeft = new Hand(true, armLeft, this, settings.getLevelHandler());
-    handRight = new Hand(false, armRight,this, settings.getLevelHandler());
+    if(legLeft != null) return;
+    legLeft = new Leg(true, this, settings.getLevelHandler(), UUID.randomUUID());
+    legRight = new Leg(false, this, settings.getLevelHandler(), UUID.randomUUID());
+    body = new Body(this, settings.getLevelHandler(), UUID.randomUUID());
+    head = new Head(this, settings.getLevelHandler(), UUID.randomUUID());
+    armLeft = new Arm(true, this, settings.getLevelHandler(), UUID.randomUUID());
+    armRight = new Arm(false, this, settings.getLevelHandler(), UUID.randomUUID());
+    handLeft = new Hand(true, armLeft, this, settings.getLevelHandler(), UUID.randomUUID());
+    handRight = new Hand(false, armRight, this, settings.getLevelHandler(), UUID.randomUUID());
     addChild(legLeft);
     addChild(legRight);
     addChild(body);
@@ -222,6 +273,20 @@ public class Player extends GameObject {
       colorFilter.applyFilter(settings.getLevelHandler().getBackgroundRoot(),"desaturate");
     }
   }
+  
+  private void updateLighting() {
+    if(settings.getLevelHandler().getGameState() == GameState.IN_GAME) {
+      lighting.update(getX(),getY());
+      if(lightingImageView.getImage()==null) {
+        lightingImageView.setImage(lighting.getImage());
+      }
+      lightingImageView.setX(lighting.getX());
+      lightingImageView.setY(lighting.getY());
+    }
+    else {
+      lightingImageView.setImage(null);
+    } 
+  }
 
   @Override
   public void update() {
@@ -243,6 +308,9 @@ public class Player extends GameObject {
     damagedThisFrame = false;
     if(!(this instanceof Bot)) { 
       applyFilter();
+      if (lightingSwitch) {
+        updateLighting();
+      }
     }
     super.update();
   }
@@ -290,7 +358,6 @@ public class Player extends GameObject {
     }
 
     if (!rightKey && !leftKey) {
-      vx = 0;
       behaviour = Behaviour.IDLE;
     }
     if (jumpKey && !jumped && grounded) {
@@ -331,7 +398,6 @@ public class Player extends GameObject {
     }
 
     if (!rightKey && !leftKey) {
-      vx = 0;
       behaviour = Behaviour.IDLE;
     }
     if (jumpKey && !jumped && grounded) {
@@ -349,7 +415,7 @@ public class Player extends GameObject {
   }
 
   private void createWalkParticle() {
-    if(!grounded) return;
+    if(!grounded || settings.isMultiplayer()) return;
       settings.getLevelHandler().addGameObject(new Particle(transform.getBotPos().sub(transform.getSize().mult(new Vector2(0.5, 0))), new Vector2(0, -35), new Vector2(0, 100), new Vector2(8,8),
           "images/platforms/stone/elementStone001.png", 0.34f));
   }
@@ -607,6 +673,14 @@ public class Player extends GameObject {
     return body;
   }
 
+  public Limb getHandLeft() {
+    return handLeft;
+  }
+
+  public Limb getHandRight() {
+    return handRight;
+  }
+
   public Limb getLegLeft() {
     return legLeft;
   }
@@ -621,13 +695,5 @@ public class Player extends GameObject {
 
   public Limb getArmRight() {
     return armRight;
-  }
-
-  public Limb getHandLeft() {
-    return handLeft;
-  }
-
-  public Limb getHandRight() {
-    return handRight;
   }
 }

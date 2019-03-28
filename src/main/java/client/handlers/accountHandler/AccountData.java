@@ -109,6 +109,14 @@ public class AccountData {
     SQLConnect.saveData(this);
   }
 
+  public boolean hasSkin(int id) {
+    try {
+      return skins[id];
+    } catch (NullPointerException e) {
+      return false;
+    }
+  }
+
   public int getLootboxCount() {
     return lootboxCount;
   }
@@ -152,6 +160,9 @@ public class AccountData {
     activeSkin[3] = arms;
   }
 
+  public void applySkin(int[] newSkin) {
+    activeSkin = newSkin;
+  }
   public int[] getActiveSkin() {
     return activeSkin;
   }

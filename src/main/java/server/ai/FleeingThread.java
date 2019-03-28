@@ -32,6 +32,7 @@ public class FleeingThread extends Thread {
     this.plan = plan;
     pathFinder = new AStar(bot, bot.getLevelHandler());
     running = true;
+    Thread.currentThread().setName("Fleeing Calculator " + bot.getUUID());
   }
 
   @Override

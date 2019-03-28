@@ -70,10 +70,12 @@ public abstract class ButtonObject extends GameObject {
 
   public void doOnEnter(MouseEvent e) {
     animation.switchAnimation("clicked");
+    button.setTextFill(Color.LIGHTGREY);
   }
 
   public void doOnExit(MouseEvent e) {
     animation.switchDefault();
+    button.setTextFill(Color.WHITE);
   }
 
   @Override

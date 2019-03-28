@@ -43,7 +43,7 @@ import shared.gameObjects.menu.main.SoundSlider;
 import shared.gameObjects.menu.main.SoundSlider.SOUND_TYPE;
 import shared.gameObjects.objects.ObjectManager;
 import shared.gameObjects.players.Player;
-import shared.gameObjects.rendering.ColorFilters;
+import shared.gameObjects.rendering.ColourFilters;
 import shared.gameObjects.weapons.MachineGun;
 import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.LevelHandler;
@@ -126,6 +126,7 @@ public class Client extends Application {
   private Group root;
   private static Group backgroundRoot;
   private static Group uiRoot;
+  private static Group lightingRoot;
   private static Group creditsRoot;
   private static Group creditsBackground;
   private Scene scene;
@@ -186,7 +187,7 @@ public class Client extends Application {
       }
 
       //add screen saturation
-      ColorFilters filter = new ColorFilters();
+      ColourFilters filter = new ColourFilters();
       filter.setDesaturate(-0.5);
       filter.applyFilter(uiRoot, "desaturate");
       filter.applyFilter(gameRoot, "desaturate");
@@ -249,7 +250,7 @@ public class Client extends Application {
     settingsOverlay = false;
     creditsRoot.getChildren().clear();
     settingsObjects.clear();
-    ColorFilters filter = new ColorFilters();
+    ColourFilters filter = new ColourFilters();
     filter.setDesaturate(0); //todo change to remove method
     filter.applyFilter(uiRoot, "desaturate");
     filter.applyFilter(gameRoot, "desaturate");
@@ -395,7 +396,7 @@ public class Client extends Application {
     levelHandler.getBotPlayerList().forEach((key, gameObject) -> gameObject = null);
     levelHandler.getBotPlayerList().clear();
     // remove desaturation
-    ColorFilters filter = new ColorFilters();
+    ColourFilters filter = new ColourFilters();
     filter.setDesaturate(0);
     filter.applyFilter(gameRoot, "desaturation");
     filter.applyFilter(backgroundRoot, "desaturation");
@@ -441,7 +442,7 @@ public class Client extends Application {
   @Override
   public void start(Stage primaryStage) {
     setupRender(primaryStage);
-    levelHandler = new LevelHandler(settings, backgroundRoot, gameRoot, uiRoot);
+    levelHandler = new LevelHandler(settings, backgroundRoot, gameRoot,lightingRoot, uiRoot);
     settings.setLevelHandler(levelHandler);
     levelHandler.addClientPlayer(gameRoot);
 
@@ -473,11 +474,12 @@ public class Client extends Application {
         if (!singleplayerGame && !multiplayer) {
           startedGame = false;
         }
+        settings.setMultiplayer(multiplayer);
 
         if (multiplayer) {
           ClientNetworkManager.processServerPackets();
+          levelHandler.processToCreate();
         }
-        levelHandler.createObjects();
 
         if (gameOver) {
           endGame();
@@ -611,6 +613,7 @@ public class Client extends Application {
     root = new Group();
     backgroundRoot = new Group();
     gameRoot = new Group();
+    lightingRoot = new Group();
     uiRoot = new Group();
     creditsRoot = new Group();
     creditsBackground = new Group();
@@ -619,6 +622,7 @@ public class Client extends Application {
 
     root.getChildren().add(backgroundRoot);
     root.getChildren().add(gameRoot);
+    root.getChildren().add(lightingRoot);
     root.getChildren().add(uiRoot);
     root.getChildren().add(creditsBackground);
     root.getChildren().add(creditsRoot);
