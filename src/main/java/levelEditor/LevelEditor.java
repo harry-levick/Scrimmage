@@ -788,12 +788,16 @@ public class LevelEditor extends Application {
     dialog.show();
   }
 
+  /**
+   * Scaling of the window
+   *
+   * @param primaryStage The JavaFX stage to be scaled
+   */
   public void scaleRendering(Stage primaryStage) {
-    Vector2 scaleRatio =
-        new Vector2(scene.getWidth() / settings.getMapWidth(),
-            scene.getHeight() / settings.getMapHeight());
+    scaleRatio = new Vector2(scene.getWidth() / settings.getMapWidth(),
+        scene.getHeight() / settings.getMapHeight());
     Scale scale = new Scale(scaleRatio.getX(), scaleRatio.getY(), 0, 0);
-    primaryStage.getScene().getRoot().getTransforms().setAll(scale);
+    scene.getRoot().getTransforms().setAll(scale);
   }
 
   protected enum OBJECT_TYPES {
