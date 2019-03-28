@@ -39,7 +39,6 @@ public class AccountData {
     this.uuid = uuid;
     skins[0] = true;
     activeSkin = new int[4];
-    achievements[2] = true;
   }
 
   /**

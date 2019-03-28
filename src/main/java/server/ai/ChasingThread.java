@@ -71,6 +71,7 @@ public class ChasingThread extends Thread {
    */
   public void terminate() {
     running = false;
+    this.interrupt();
   }
 
 
