@@ -102,6 +102,10 @@ public class Server extends Application {
   private Group root;
   private Group backgroundRoot;
   private Scene scene;
+  public static Group overlayRoot;
+  private static Group uiRoot;
+  private static Group overlayBackground;
+  private static Group lightingRoot;
 
   public static void main(String args[]) {
     launch(args);
@@ -454,19 +458,36 @@ public class Server extends Application {
     return player;
   }
 
+  /**
+   * Initialises the rendering stage of the game setup
+   *
+   * @param primaryStage The JavaFX stage the game elements are to be placed into
+   */
   private void setupRender(Stage primaryStage) {
     root = new Group();
     backgroundRoot = new Group();
     gameRoot = new Group();
+    lightingRoot = new Group();
+    uiRoot = new Group();
+    overlayRoot = new Group();
+    overlayBackground = new Group();
+
+    root.setStyle("-fx-font-family: Kenney Future");
 
     root.getChildren().add(backgroundRoot);
     root.getChildren().add(gameRoot);
+    root.getChildren().add(lightingRoot);
+    root.getChildren().add(uiRoot);
+    root.getChildren().add(overlayBackground);
+    root.getChildren().add(overlayRoot);
+    settings.setOverlay(overlayRoot);
 
     primaryStage.setTitle(gameTitle);
     primaryStage.getIcons().add(new Image(Path.convert("images/logo.png")));
 
-    scene = new Scene(root, 1920, 1080);
+    scene = new Scene(root, settings.getWindowWidth(), settings.getWindowHeight());
     scene.setCursor(Cursor.CROSSHAIR);
+    scene.getStylesheets().add("style.css");
 
     primaryStage.setScene(scene);
     primaryStage.setFullScreen(false);
