@@ -168,8 +168,7 @@ public class LevelHandler {
     gameObjects.keySet().removeAll(players.keySet());
     gameObjects.keySet().removeAll(bots.keySet());
     gameObjects.keySet().removeAll(limbs.keySet());
-    gameObjects.forEach((key, gameObject) -> gameObject.removeRender());
-    gameObjects.forEach((key, gameObject) -> gameObject = null);
+    gameObjects.forEach((key, gameObject) -> removeGameObject(gameObject));
     gameObjects.clear();
 
     // Create new game objects for map
@@ -307,12 +306,12 @@ public class LevelHandler {
    */
   public void removeGameObject(GameObject g) {
     gameObjects.values().remove(g);
-    g.removeRender();
     g.destroy();
     if (isServer) {
       PacketDelete delete = new PacketDelete(g.getUUID());
       server.sendToClients(delete.getData(), false);
     }
+    g = null;
   }
 
   /**
