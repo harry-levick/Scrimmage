@@ -17,6 +17,7 @@ import shared.handlers.levelHandler.Map;
 import shared.packets.PacketDelete;
 import shared.packets.PacketGameState;
 import shared.packets.PacketInput;
+import shared.packets.PacketReSend;
 import shared.util.Path;
 import shared.util.maths.Vector2;
 
@@ -124,7 +125,8 @@ public class ClientNetworkManager {
                   && !value.split(";")[1].equals("WeaponSpawner")) {
                 GameObject gameObject = Client.levelHandler.getGameObjects().get(key);
                 if (gameObject == null) {
-                  System.out.println("HMMM I've never seen this before " + value);
+                  PacketReSend reSend = new PacketReSend(key);
+                  Client.connectionHandler.send(reSend.getString());
                 } else {
                   if (!entity_interpolation || gameObject.getUUID() == Client.levelHandler
                       .getClientPlayer().getUUID()) {
@@ -157,9 +159,10 @@ public class ClientNetworkManager {
     try {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(data);
       objectInputStream = new ObjectInputStream(byteArrayInputStream);
-      GameObject gameObjects = (GameObject) objectInputStream
+      ArrayList<GameObject> gameObjects = (ArrayList<GameObject>) objectInputStream
           .readObject();
-      Client.levelHandler.getToCreate().put(gameObjects.getUUID(), gameObjects);
+      gameObjects.forEach(
+          gameObject -> Client.levelHandler.getToCreate().put(gameObject.getUUID(), gameObject));
     } catch (IOException e) {
       e.printStackTrace();
     } catch (ClassNotFoundException e) {

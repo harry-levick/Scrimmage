@@ -65,7 +65,6 @@ public class ConnectionHandler extends Thread {
       try {
         clientSocket.receive(packet);
         String msg = new String(packet.getData(), packet.getOffset(), packet.getLength());
-        System.out.println(msg);
         if (msg.startsWith("length:")) {
           size = Integer.parseInt(msg.split(":")[1]);
         } else if (msg.startsWith("object")) {
