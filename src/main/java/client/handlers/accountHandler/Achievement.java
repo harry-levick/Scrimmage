@@ -41,7 +41,7 @@ public class Achievement {
     nameLabel.setStyle("-fx-font-size:20px; -fx-text-fill: white;");
     nameLabel.setMaxWidth(160);
     nameLabel.setWrapText(true);
-    nameLabel.setTextAlignment(TextAlignment.CENTER);
+    nameLabel.setAlignment(Pos.CENTER);
     holder.getChildren().add(nameLabel);
 
     StackPane stackPane = new StackPane();
