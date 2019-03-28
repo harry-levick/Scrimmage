@@ -4,6 +4,7 @@ import java.util.Random;
 
 public class Lootbox {
 
+  public static final int LOOTBOX_PRICE = 200;
   private static final double SKIN_CHANCE = 0.333;
   private static final double LARGE_MONEY_CHANCE = 0.35;
   private static final int LARGE_MONEY = 350;

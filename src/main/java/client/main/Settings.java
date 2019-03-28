@@ -71,7 +71,7 @@ public class Settings {
     musicPath = resourcesPath + s + "audio" + s + "music";
     SFXPath = resourcesPath + s + "audio" + s + "sound-effects";
     fontPath = resourcesPath + s + "Kenney Future.ttf";
-    data = new AccountData(UUID.randomUUID().toString(), "newuser", new boolean[30], new boolean[30], 1, 0);
+    data = new AccountData(UUID.randomUUID().toString(), "newuser", new boolean[30], new boolean[30], 7, 200);
 
     keyMap.put(KEY_CONTROL.JUMP, KeyCode.W);
     keyMap.put(KEY_CONTROL.LEFT, KeyCode.A);

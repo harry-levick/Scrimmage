@@ -32,10 +32,6 @@ public class AccountData {
     this.uuid = uuid;
     skins[0] = true;
     activeSkin = new int[4];
-    activeSkin[0] = 8;
-    activeSkin[1] = 8;
-    activeSkin[2] = 8;
-    activeSkin[3] = 8;
     achievements[2] = true;
   }
 
@@ -53,7 +49,7 @@ public class AccountData {
     boolean[] skins = new boolean[30];
     int packedSkins = Integer.parseInt(splitData[3]);
     for (int i = 29; i >= 0; i--)
-      achievements[29 - i] = (packedAchievements & (1 << i)) != 0;
+      skins[29 - i] = (packedSkins & (1 << i)) != 0;
     return new AccountData(splitData[0], splitData[1], achievements, skins, Integer.parseInt(splitData[4]), Integer.parseInt(splitData[5]));
   }
 

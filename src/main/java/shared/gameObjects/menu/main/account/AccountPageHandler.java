@@ -23,6 +23,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import org.omg.PortableInterceptor.LOCATION_FORWARD;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.handlers.levelHandler.Map;
@@ -245,11 +246,33 @@ public class AccountPageHandler extends GameObject {
     }
   }
 
-  private void purchaseBox(int id, Label notification) {
-
+  private void purchaseBox(int id, Label notification, Label status) {
+    if(settings.getData().getMoneyCount() < Lootbox.LOOTBOX_PRICE) {
+      notification.setText("Not enough scrimbucks to purchase.");
+      notification.setTextFill(Color.RED);
+    } else {
+      if(id == 0) {
+        settings.getData().earnLootbox();
+        settings.getData().removeMoney(Lootbox.LOOTBOX_PRICE);
+        notification.setText("Purchased 1 Lootbox");
+        notification.setTextFill(Color.GREEN);
+      } else {
+        if(settings.getData().getMoneyCount() < Lootbox.LOOTBOX_PRICE*5) {
+          notification.setText("Not enough scrimbucks to purchase.");
+          notification.setTextFill(Color.RED);
+        } else
+        {
+          for(int i = 0; i < 5; i++) settings.getData().earnLootbox();
+          settings.getData().removeMoney(Lootbox.LOOTBOX_PRICE*5);
+          notification.setText("Purchased 5 Lootbox");
+          notification.setTextFill(Color.GREEN);
+        }
+      }
+    }
+    status.setText(settings.getData().getMoneyCount() + " Scrimbucks");
   }
 
-  private void processCode(String code, Label notification) {
+  private void processCode(String code, Label notification, Label status) {
 
   }
 
@@ -549,10 +572,10 @@ public class AccountPageHandler extends GameObject {
     moneyStatus.setFont(settings.getFont(52));
     moneyStatus.setAlignment(Pos.CENTER);
 
-    Label notification = new Label("Purchased 5x Lootboxes!");
-    notification.relocate(540, 600);
+    Label notification = new Label("");
+    notification.relocate(340, 600);
     notification.setTextFill(Color.BLACK);
-    notification.setPrefWidth(800);
+    notification.setPrefWidth(1200);
     notification.setFont(settings.getFont(32));
     notification.setAlignment(Pos.CENTER);
 
@@ -566,7 +589,7 @@ public class AccountPageHandler extends GameObject {
       purchase[i].setTranslateX(80);
       purchase[i].setTranslateY(200 + 120*i);
       purchase[i].setTextFill(Color.WHITE);
-      purchase[i].setOnMousePressed(event -> purchaseBox(temp, notification));
+      purchase[i].setOnMousePressed(event -> purchaseBox(temp, notification, moneyStatus));
       purchase[i].setOnMouseEntered(event -> purchase[temp].setTextFill(Color.LIGHTBLUE));
       purchase[i].setOnMouseExited(event -> purchase[temp].setTextFill(Color.WHITE));
     }
@@ -580,7 +603,7 @@ public class AccountPageHandler extends GameObject {
     validateCode.setPrefWidth(560);
     validateCode.relocate(1240, 320);
     validateCode.setTextFill(Color.WHITE);
-    validateCode.setOnMousePressed(event -> processCode(inputCode.getText().toLowerCase(), notification));
+    validateCode.setOnMousePressed(event -> processCode(inputCode.getText().toLowerCase(), notification, moneyStatus));
     validateCode.setOnMouseEntered(event -> validateCode.setTextFill(Color.LIGHTBLUE));
     validateCode.setOnMouseExited(event -> validateCode.setTextFill(Color.WHITE));
 
