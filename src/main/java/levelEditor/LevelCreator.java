@@ -365,7 +365,7 @@ public class LevelCreator extends Application {
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
         new StoneWallObject(
-            getAbs(27), getAbs(24), getAbs(1), getAbs(4), ObjectType.Bot, uuid));
+            getAbs(27), getAbs(22), getAbs(1), getAbs(4), ObjectType.Bot, uuid));
     uuid = UUID.randomUUID();
 
     // weapon spawn points
@@ -699,7 +699,7 @@ public class LevelCreator extends Application {
     }
 
     uuid = UUID.randomUUID();
-    gameObjects.put(uuid, new Podium1(getAbs(17), getAbs(15), getAbs(6), getAbs(12)));
+    gameObjects.put(uuid, new Podium1(getAbs(17), getAbs(14), getAbs(6), getAbs(12)));
 
     MapLoader.saveMap(gameObjects, mapDataObject, filepath + filename + ".map");
 

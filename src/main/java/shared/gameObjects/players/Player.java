@@ -176,13 +176,13 @@ public class Player extends GameObject {
     aimLeft = pointLeft = true;
     faceLeft = false;
     lightingSwitch = true;
+
+    youDied = new Text("You Died!");
+    killedBy = new Text("Killed by unknown");
     youDied.setFont(settings.getFont(72));
     youDied.setFill(Color.DARKRED);
     killedBy.setFont(settings.getFont(32));
     killedBy.setFill(Color.DARKRED);
-
-    youDied = new Text("You Died!");
-    killedBy = new Text("Killed by unknown");
   }
 
   // Initialise the animation
@@ -199,6 +199,10 @@ public class Player extends GameObject {
     if (!settings.getLevelHandler().isServer()) {
       youDied = new Text("You Died!");
       killedBy = new Text("Killed by unknown");
+      youDied.setFont(settings.getFont(72));
+      youDied.setFill(Color.DARKRED);
+      killedBy.setFont(settings.getFont(32));
+      killedBy.setFill(Color.DARKRED);
       initialiseColorFilter();
       if (lightingSwitch) {
         initialiseLighting();
@@ -249,6 +253,10 @@ public class Player extends GameObject {
     if (!settings.getLevelHandler().isServer()) {
       youDied = new Text("You Died!");
       killedBy = new Text("Killed by unknown");
+      youDied.setFont(settings.getFont(72));
+      youDied.setFill(Color.DARKRED);
+      killedBy.setFont(settings.getFont(32));
+      killedBy.setFill(Color.DARKRED);
       initialiseColorFilter();
       if (lightingSwitch) {
         initialiseLighting();
