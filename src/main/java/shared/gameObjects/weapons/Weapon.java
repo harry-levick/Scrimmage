@@ -353,6 +353,7 @@ public abstract class Weapon extends GameObject {
       p.deductHp(30);
     }
 
+    this.holder = null;
     setCollectable();
     this.startedThrowing = false;
   }
