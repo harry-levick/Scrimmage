@@ -17,17 +17,24 @@ import shared.handlers.levelHandler.Map;
 import shared.packets.PacketDelete;
 import shared.packets.PacketGameState;
 import shared.packets.PacketInput;
+import shared.packets.PacketReSend;
 import shared.util.Path;
-import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import shared.util.maths.Vector2;
 
 public class ClientNetworkManager {
 
-  private static final boolean prediction = false; //Broken
+  /**
+   * Client side smoothing methods to be used
+   */
+  private static final boolean prediction = false;
   private static final boolean reconciliation = true;
-  private static final boolean setStateSnap = true; //Broken
+  private static final boolean setStateSnap = true;
   private static final boolean entity_interpolation = true;
 
+  /**
+   * Loops through all gameobjects and interpolates between states recieved by server to smooth
+   * movement
+   */
   public static void interpolateEntities() {
     Timestamp now = new Timestamp(System.currentTimeMillis() - (1000 / 60));
     //Need to calculate render timestamp
@@ -62,6 +69,11 @@ public class ClientNetworkManager {
     });
   }
 
+  /**
+   * Receives last processed input and reapplies inputs not yet seen by the server
+   *
+   * @param lastProcessedInput Last input processed by server
+   */
   public static void serverReconciliation(int lastProcessedInput) {
     int j = 0;
     // Server Reconciliation. Re-apply all the inputs not yet processed by
@@ -87,8 +99,12 @@ public class ClientNetworkManager {
     }
   }
 
+  /**
+   * Processes the Packets received by server DeletePacket - Delete game objects GameStatePacket -
+   * Set state of game objects Tell server about any unseen game objects to resend
+   */
   public static void processServerPackets() {
-    if (Client.connectionHandler.received.size() != 0) {
+    while (Client.connectionHandler.received.size() != 0) {
       try {
         String message = (String) Client.connectionHandler.received.take();
         int messageID = Integer.parseInt(message.substring(0, 1));
@@ -121,11 +137,12 @@ public class ClientNetworkManager {
             PacketGameState gameState = new PacketGameState(message);
             HashMap<UUID, String> data = gameState.getGameObjects();
             data.forEach((key, value) -> {
-              if (!value.split(";")[1].equals("Limb") && !value.split(";")[1].equals("Fist")
+              if (!value.split(";")[1].equals("Fist")
                   && !value.split(";")[1].equals("WeaponSpawner")) {
                 GameObject gameObject = Client.levelHandler.getGameObjects().get(key);
                 if (gameObject == null) {
-                  System.out.println("HMMM I've never seen this before " + value);
+                  PacketReSend reSend = new PacketReSend(key);
+                  Client.connectionHandler.send(reSend.getString());
                 } else {
                   if (!entity_interpolation || gameObject.getUUID() == Client.levelHandler
                       .getClientPlayer().getUUID()) {
@@ -153,14 +170,20 @@ public class ClientNetworkManager {
   }
 
 
+  /**
+   * Create game objects sent by the server
+   *
+   * @param data Data to convert to game objects
+   */
   public static void createGameObjects(byte[] data) {
     ObjectInputStream objectInputStream = null;
     try {
       ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(data);
       objectInputStream = new ObjectInputStream(byteArrayInputStream);
-      ConcurrentLinkedHashMap<UUID, GameObject> gameObjects = (ConcurrentLinkedHashMap<UUID, GameObject>) objectInputStream
+      ArrayList<GameObject> gameObjects = (ArrayList<GameObject>) objectInputStream
           .readObject();
-      Client.levelHandler.addGameObjects(gameObjects);
+      gameObjects.forEach(
+          gameObject -> Client.levelHandler.getToCreate().put(gameObject.getUUID(), gameObject));
     } catch (IOException e) {
       e.printStackTrace();
     } catch (ClassNotFoundException e) {
@@ -168,12 +191,15 @@ public class ClientNetworkManager {
     } finally {
       try {
         objectInputStream.close();
-      } catch (IOException e) {
+      } catch (Exception e) {
         e.printStackTrace();
       }
     }
   }
 
+  /**
+   * Sends the player input to the server
+   */
   public static void sendInput() {
     Player player = Client.levelHandler.getClientPlayer();
     PacketInput input =
@@ -193,6 +219,9 @@ public class ClientNetworkManager {
     Client.inputSequenceNumber++;
   }
 
+  /**
+   * Update the client world from based on packets from server
+   */
   public static void update() {
     if (prediction) {
       Client.levelHandler.getClientPlayer().update();

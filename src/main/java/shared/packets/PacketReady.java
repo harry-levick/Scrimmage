@@ -11,6 +11,7 @@ public class PacketReady extends Packet {
 
   /**
    * Constructs a packet with the UUID of the player who has decided to ready up
+   *
    * @param uuid Player UUID
    * @param username Player username
    */
@@ -19,8 +20,10 @@ public class PacketReady extends Packet {
     this.uuid = uuid;
     data = packetID + "," + uuid;
   }
+
   /**
    * Constructs a packet from a string of data
+   *
    * @param data Packet data received from sender
    */
   public PacketReady(String data) {

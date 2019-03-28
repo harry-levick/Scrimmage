@@ -26,8 +26,8 @@ public abstract class ButtonObject extends GameObject {
   protected String text;
 
   /**
-   * Base class used to create a Button in game. This is used on both the client and server side
-   * to ensure actions are calculated the same
+   * Base class used to create a Button in game. This is used on both the client and server side to
+   * ensure actions are calculated the same
    *
    * @param x X Position of object
    * @param y Y position of object
@@ -70,10 +70,12 @@ public abstract class ButtonObject extends GameObject {
 
   public void doOnEnter(MouseEvent e) {
     animation.switchAnimation("clicked");
+    button.setTextFill(Color.LIGHTGREY);
   }
 
   public void doOnExit(MouseEvent e) {
     animation.switchDefault();
+    button.setTextFill(Color.WHITE);
   }
 
   @Override

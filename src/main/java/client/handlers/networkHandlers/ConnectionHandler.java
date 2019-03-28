@@ -8,6 +8,7 @@ import java.net.DatagramSocket;
 import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import shared.gameObjects.players.Player;
 import shared.packets.Packet;
 import shared.packets.PacketJoin;
 
@@ -24,6 +25,11 @@ public class ConnectionHandler extends Thread {
   private PrintWriter out;
   private int size;
 
+  /**
+   * Starts a new client side connection to a game server
+   *
+   * @param address Address of server to connect to
+   */
   public ConnectionHandler(String address) {
     connected = true;
     size = 1000;
@@ -39,13 +45,26 @@ public class ConnectionHandler extends Thread {
     }
   }
 
+  /**
+   * Sends player join packet to the server to connect then begins listening to messages from server
+   * and adding to received queue
+   */
   public void run() {
+    Player player = Client.levelHandler.getClientPlayer();
     Packet joinPacket =
         new PacketJoin(
-            Client.levelHandler.getClientPlayer().getUUID(),
+            player.getUUID(),
             Client.settings.getUsername(),
-            Client.levelHandler.getClientPlayer().getX(),
-            Client.levelHandler.getClientPlayer().getY());
+            player.getX(),
+            player.getY(),
+            player.getLegLeft().getUUID(),
+            player.getLegRight().getUUID(),
+            player.getBody().getUUID(),
+            player.getHead().getUUID(),
+            player.getArmLeft().getUUID(),
+            player.getArmRight().getUUID(),
+            player.getHandLeft().getUUID(),
+            player.getHandRight().getUUID());
     send(joinPacket.getString());
 
     Client.multiplayer = true;
@@ -70,6 +89,9 @@ public class ConnectionHandler extends Thread {
     }
   }
 
+  /**
+   * Ends connection to server
+   */
   public void end() {
     connected = false;
     out.close();
@@ -81,6 +103,11 @@ public class ConnectionHandler extends Thread {
     }
   }
 
+  /**
+   * Sends message to the server
+   *
+   * @param data Message to server
+   */
   public void send(String data) {
     out.println(data);
   }

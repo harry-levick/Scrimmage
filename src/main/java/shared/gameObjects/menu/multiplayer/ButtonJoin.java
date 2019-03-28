@@ -32,19 +32,30 @@ public class ButtonJoin extends ButtonObject {
     super(x, y, sizeX, sizeY, "Join", id, objectUUID);
   }
 
+  /**
+   * Setup button and text field for address input
+   *
+   * @param root Game root to render to
+   * @param settings Settings
+   */
   public void initialise(Group root, Settings settings) {
     super.initialise(root, settings);
     addressInput = new TextField();
     addressInput.setTranslateX(getX() + 90);
     addressInput.setTranslateY(getY() + 120);
     root.getChildren().add(addressInput);
-    //TODO note: this does not currently get removed by the gamObject clear when changing maps
   }
 
 
+  /**
+   * When button clicked start multiplayer connection
+   *
+   * @param e Mouse event
+   */
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
     Client.connectionHandler = new ConnectionHandler(addressInput.getText());
+    Client.connectionHandler.setDaemon(true);
     Client.connectionHandler.start();
     button.disarm();
     root.getChildren().remove(addressInput);

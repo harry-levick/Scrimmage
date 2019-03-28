@@ -25,49 +25,74 @@ import shared.util.maths.Vector2;
 public abstract class Weapon extends GameObject {
 
   /**
-   * Cooldown of a weapon = MAX_COOLDOWN - fireRate.
-   * For every frame, deduct cooldown by 1.
-   * If cooldown == 0, the weapon can be fired. Otherwise, nothing will happen when mouse is
+   * Cooldown of a weapon = MAX_COOLDOWN - fireRate. For every frame, deduct cooldown by 1. If
+   * cooldown == 0, the weapon can be fired. Otherwise, nothing will happen when mouse is
    * left-clicked
    */
   protected final int MAX_COOLDOWN = 81;
-  /** Speed of throwing weapon */
+  /**
+   * Speed of throwing weapon
+   */
   protected final int THROW_SPEED = 14;
-  /** Constant value PI */
+  /**
+   * Constant value PI
+   */
   protected final float PI = 3.141592654f;
-  /** Weight of the weapon */
+  /**
+   * Weight of the weapon
+   */
   protected double weight; // grams
-  /** Name of the weapon */
+  /**
+   * Name of the weapon
+   */
   protected String name; // name of the weapon
-  /** True if this is a gun */
+  /**
+   * True if this is a gun
+   */
   protected boolean isGun;
-  /** True if this is a melee */
+  /**
+   * True if this is a melee
+   */
   protected boolean isMelee;
-  /** True if started the process to throw this weapon */
+  /**
+   * True if started the process to throw this weapon
+   */
   protected boolean startedThrowing;
-  /** Ammo of the weapon, -1 for unlimited ammo */
+  /**
+   * Ammo of the weapon, -1 for unlimited ammo
+   */
   protected int ammo;
-  /** Fire rate of the weapon, max = MAX_COOLDOWN - 1 */
+  /**
+   * Fire rate of the weapon, max = MAX_COOLDOWN - 1
+   */
   protected int fireRate;
-  /** Current cooldown of the weapon, ready to fire when equals 0 */
+  /**
+   * Current cooldown of the weapon, ready to fire when equals 0
+   */
   protected int currentCooldown;
-  /** True if this gun is held with single hand */
+  /**
+   * True if this gun is held with single hand
+   */
   protected boolean singleHanded;
-  /** Max ammo amount for the player */
-   protected int maxAmmo;
-  /** Vector2 for throwing the weapon */
+  /**
+   * Max ammo amount for the player
+   */
+  protected int maxAmmo;
+  /**
+   * Vector2 for throwing the weapon
+   */
   protected Vector2 throwVector;
   /** Weapon ranking to allow Bot to decide what weapon is best */
   protected int weaponRank;
 
-  /** The player who holds the weapon, null if none */
+  /**
+   * The player who holds the weapon, null if none
+   */
   protected Player holder;
   /**
-   * The hand position of the holder represented as an array.
-   * array[0] = x position of hand
-   * array[1] = y position of hand
-   * The values change based on the aiming direction of the weapon.
-   * There is value only when holder != null
+   * The hand position of the holder represented as an array. array[0] = x position of hand array[1]
+   * = y position of hand The values change based on the aiming direction of the weapon. There is
+   * value only when holder != null
    */
   protected double[] holderHandPos;
 
@@ -75,23 +100,21 @@ public abstract class Weapon extends GameObject {
   protected double playerRadius = 55 + 45; // Player.sizeY / 2 + bias
 
   /**
-   * Angle of aiming in radian measured about x axis
-   *      |
-   *   +  |  -
-   * -----------
-   *   -  |  +
-   *      |
+   * Angle of aiming in radian measured about x axis | +  |  - ----------- -  |  + |
    */
   protected double angleRadian;
   /**
-   * Rotate property of imageView with
-   * pivot(x) = 20  TODO: change here after changing pivot of guns
+   * Rotate property of imageView with pivot(x) = 20  TODO: change here after changing pivot of guns
    * pivot(y) = 10
    */
   protected transient Rotate rotate;
-  /** Pivot x */
+  /**
+   * Pivot x
+   */
   protected double pivotX;
-  /** Pivot y */
+  /**
+   * Pivot y
+   */
   protected double pivotY;
   protected BoxCollider bcCol;
   protected Rigidbody rb;
@@ -179,16 +202,24 @@ public abstract class Weapon extends GameObject {
    */
   public abstract void fire(double mouseX, double mouseY);
 
-  /** Get the x position of the grip */
+  /**
+   * Get the x position of the grip
+   */
   public abstract double getGripX();
 
-  /** Get the y position of the grip */
+  /**
+   * Get the y position of the grip
+   */
   public abstract double getGripY();
 
-  /** Get the x position of the grip when aiming the left hand side */
+  /**
+   * Get the x position of the grip when aiming the left hand side
+   */
   public abstract double getGripFlipX();
 
-  /** Get the y position of the grip when aiming the left hand side */
+  /**
+   * Get the y position of the grip when aiming the left hand side
+   */
   public abstract double getGripFlipY();
 
   @Override
@@ -198,15 +229,14 @@ public abstract class Weapon extends GameObject {
     if (startedThrowing) {
       if (0 < getX() && getX() < 1920 && 0 < getY() && getY() < 1080) {
         rb.move(throwVector.mult(THROW_SPEED));
-      }
-      else {
+      } else {
         settings.getLevelHandler().removeGameObject(this);
       }
-    }
-    else if (holder != null) {
-      if (holder.getHandLeft().isDeattached() || holder.getHandRight().isDeattached() || holder.getHealth() <= 0)
+    } else if (holder != null) {
+      if (holder.getHandLeft().isDeattached() || holder.getHandRight().isDeattached()
+          || holder.getHealth() <= 0) {
         setCollectable();
-      else {
+      } else {
         holderHandPos = getHolderHandPos();
         this.setX(getGripX());
         this.setY(getGripY());
@@ -215,15 +245,15 @@ public abstract class Weapon extends GameObject {
   }
 
   /**
-   * After calling this, the holder no longer holds this weapon, and the weapon
-   * will start flying in the path
+   * After calling this, the holder no longer holds this weapon, and the weapon will start flying in
+   * the path
    */
   public void startThrowing() {
     if (holder == null) {
       setCollectable();
       return;
     }
-    
+
     double playerRadius = 55 + 65; // Player.sizeY / 2 + bias
     Vector2 bodyV = ((BoxCollider) holder.getHead().getComponent(ComponentType.COLLIDER))
         .getCentre();
@@ -244,9 +274,9 @@ public abstract class Weapon extends GameObject {
         new MaterialProperty(0.1f, 1, 1),
         new AngularData(0, 0, 0, 0),
         this); // TODO FIX
-    if (this.bcCol != null)
+    if (this.bcCol != null) {
       this.bcCol.setLayer(ColliderLayer.DEFAULT);
-    else {
+    } else {
       this.bcCol = new BoxCollider(this, ColliderLayer.DEFAULT, false);
       addComponent(bcCol);
     }
@@ -267,8 +297,8 @@ public abstract class Weapon extends GameObject {
   /**
    * Get holder hand position
    *
-   * @return A double[] with the first element being the x position and the second
-   *         element being the y position, or null if there is no holder (i.e. holder==null)
+   * @return A double[] with the first element being the x position and the second element being the
+   * y position, or null if there is no holder (i.e. holder==null)
    */
   public double[] getHolderHandPos() {
     if (holder != null) {
@@ -318,15 +348,21 @@ public abstract class Weapon extends GameObject {
   }
 
   public boolean isHolder(GameObject g) {
-    if(g instanceof Player) return g.equals(holder);
-    if(!(g instanceof Limb)) return false;
-    if(g instanceof Hand) g = g.getParent();
+    if (g instanceof Player) {
+      return g.equals(holder);
+    }
+    if (!(g instanceof Limb)) {
+      return false;
+    }
+    if (g instanceof Hand) {
+      g = g.getParent();
+    }
     return (g.getParent()).equals(holder);
   }
 
   /**
-   * Destroy the weapon by removing it from update loop, remove the rendering
-   * and set active to false
+   * Destroy the weapon by removing it from update loop, remove the rendering and set active to
+   * false
    */
   public void destroyWeapon() {
     settings.getLevelHandler().removeGameObject(this);
@@ -405,17 +441,24 @@ public abstract class Weapon extends GameObject {
   // -------START-------
   // Setters and Getters
   // -------------------
-  /** Get the current cooldown */
+
+  /**
+   * Get the current cooldown
+   */
   public int getCoolDown() {
     return this.currentCooldown;
   }
 
-  /** Get the weight */
+  /**
+   * Get the weight
+   */
   public double getWeight() {
     return this.weight;
   }
-  
-  /** Set a new weight, with value between 0 to 1000f exclusive */
+
+  /**
+   * Set a new weight, with value between 0 to 1000f exclusive
+   */
   public void setWeight(double newWeight) {
     if (newWeight > 0 && newWeight < 1000.0f) {
       this.weight = newWeight;
@@ -443,12 +486,16 @@ public abstract class Weapon extends GameObject {
     return isMelee;
   }
 
-  /** Get the name of the weapon */
+  /**
+   * Get the name of the weapon
+   */
   public String getName() {
     return this.name;
   }
 
-  /** Get the ammo of the weapon */
+  /**
+   * Get the ammo of the weapon
+   */
   public int getAmmo() {
     return this.ammo;
   }
@@ -479,7 +526,8 @@ public abstract class Weapon extends GameObject {
     }
   }
 
-  /** Get the holder of the weapon
+  /**
+   * Get the holder of the weapon
    *
    * @return A Player or null if there is no holder
    */
@@ -508,7 +556,9 @@ public abstract class Weapon extends GameObject {
     return this.weaponRank;
   }
 
-  /** Get angle of gun when aiming in radian */
+  /**
+   * Get angle of gun when aiming in radian
+   */
   public double getAngleRadian() {
     return this.angleRadian;
   }

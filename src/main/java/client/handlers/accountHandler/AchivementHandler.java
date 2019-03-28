@@ -1,11 +1,9 @@
 package client.handlers.accountHandler;
 
-import client.handlers.inputHandler.KeyboardInput;
 import client.main.Settings;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -13,14 +11,11 @@ import java.util.UUID;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
-import shared.gameObjects.players.Limb;
 
 public class AchivementHandler extends GameObject {
 
@@ -101,7 +96,7 @@ public class AchivementHandler extends GameObject {
     root.getChildren().removeAll(achivementPane);
   }
 
-  public class KonamiCodeHandler implements EventHandler<KeyEvent> {
+  public static class KonamiCodeHandler implements EventHandler<KeyEvent> {
 
     int index;
 
@@ -112,35 +107,48 @@ public class AchivementHandler extends GameObject {
         switch (index) {
           case 0:
           case 1:
-            if (event.getCode() == KeyCode.UP) index++;
-            else index = 0;
+            if (event.getCode() == KeyCode.UP) {
+              index++;
+            } else {
+              index = 0;
+            }
             break;
           case 2:
           case 3:
-            if (event.getCode() == KeyCode.DOWN) index++;
-            else index = 0;
+            if (event.getCode() == KeyCode.DOWN) {
+              index++;
+            } else {
+              index = 0;
+            }
             break;
           case 4:
           case 6:
-            if (event.getCode() == KeyCode.LEFT) index++;
-            else index = 0;
+            if (event.getCode() == KeyCode.LEFT) {
+              index++;
+            } else {
+              index = 0;
+            }
             break;
           case 5:
           case 7:
-            if (event.getCode() == KeyCode.RIGHT) index++;
-            else index = 0;
+            if (event.getCode() == KeyCode.RIGHT) {
+              index++;
+            } else {
+              index = 0;
+            }
             break;
           case 8:
-            if (event.getCode() == KeyCode.A) index++;
+            if (event.getCode() == KeyCode.A) {
+              index++;
+            }
             break;
           case 9:
             if (event.getCode() == KeyCode.B) {
               System.out.println("KonamiCode");
-
             }
             break;
         }
       }
     }
   }
-  }
+}

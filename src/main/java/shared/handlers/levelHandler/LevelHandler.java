@@ -12,7 +12,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.UUID;
-import java.util.concurrent.CopyOnWriteArrayList;
 import javafx.scene.Group;
 import server.Server;
 import server.ai.Bot;
@@ -22,7 +21,6 @@ import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.background.Background;
 import shared.gameObjects.players.Limb;
 import shared.gameObjects.players.Player;
-import shared.gameObjects.rendering.ColorFilters;
 import shared.packets.PacketDelete;
 import shared.util.Path;
 import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
@@ -34,7 +32,7 @@ import shared.util.maths.Vector2;
 public class LevelHandler {
 
   private ConcurrentLinkedHashMap<UUID, GameObject> gameObjects;
-  private CopyOnWriteArrayList<GameObject> toRemove;
+  private ConcurrentLinkedHashMap<UUID, GameObject> toCreate;
   private LinkedHashMap<UUID, Player> players;
   private LinkedHashMap<UUID, Limb> limbs;
   private LinkedHashMap<UUID, Bot> bots;
@@ -46,36 +44,36 @@ public class LevelHandler {
   private Map previousMap;
   private Group backgroundRoot;
   private Group gameRoot;
+  private Group lightingRoot;
   private Group uiRoot;
   private Background background;
-  private ColorFilters filters;
   private AudioHandler musicPlayer;
   private Settings settings;
-  private ArrayList<GameObject> toCreate;
   private boolean isServer;
   private Server server;
 
   /**
    * Constructs level handler for client
+   *
    * @param settings Settings attached to client
    * @param backgroundRoot root containing background images
    * @param gameRoot main game root containing all the objects
    * @param uiRoot root containing the foreground and UI images
    */
-  public LevelHandler(Settings settings, Group backgroundRoot, Group gameRoot,
+  public LevelHandler(Settings settings, Group backgroundRoot, Group gameRoot, Group lightingRoot,
       Group uiRoot) {
     this.settings = settings;
     gameObjects = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
         .maximumWeightedCapacity(500).build();
-    toCreate = new ArrayList<>();
-    toRemove = new CopyOnWriteArrayList<>();
+    toCreate = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
+        .maximumWeightedCapacity(500).build();
     players = new LinkedHashMap<>();
     limbs = new LinkedHashMap<>();
     bots = new LinkedHashMap<>();
     maps = MapLoader.getMaps(settings.getMapsPath());
-    filters = new ColorFilters();
     this.backgroundRoot = backgroundRoot;
     this.gameRoot = gameRoot;
+    this.lightingRoot = lightingRoot;
     this.isServer = false;
     this.uiRoot = uiRoot;
 
@@ -86,8 +84,10 @@ public class LevelHandler {
     previousMap = null;
     setPlaylist("playlist1");
   }
+
   /**
    * Constructs level handler for server
+   *
    * @param settings Settings attached to server
    * @param backgroundRoot root containing background images
    * @param gameRoot main game root containing all the objects
@@ -97,10 +97,10 @@ public class LevelHandler {
     this.settings = settings;
     gameObjects = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
         .maximumWeightedCapacity(500).build();
-    toRemove = new CopyOnWriteArrayList<>();
     players = new LinkedHashMap<>();
+    toCreate = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
+        .maximumWeightedCapacity(500).build();
     limbs = new LinkedHashMap<>();
-    toCreate = new ArrayList<>();
     bots = new LinkedHashMap<>();
     maps = MapLoader.getMaps(settings.getMapsPath());
     this.isServer = true;
@@ -115,6 +115,7 @@ public class LevelHandler {
 
   /**
    * Changes the current active map
+   *
    * @param map Map object containing details for the new map to load
    * @param moveToSpawns If true, moves the players to the spawnpoints found on the map
    * @param isServer If false, it is a client changing their map
@@ -143,7 +144,6 @@ public class LevelHandler {
 
   /**
    * Loads the previous map instead of the current one
-   * @param moveToSpawns
    */
   public void previousMap(Boolean moveToSpawns) {
     if (previousMap != null) {
@@ -159,6 +159,10 @@ public class LevelHandler {
    */
   public void generateLevel(Group backgroundGroup, Group gameGroup, Boolean moveToSpawns,
       Boolean isServer) {
+
+    if (!isServer) {
+      Client.overlayRoot.getChildren().clear();
+    }
 
     settings.resetDeaths();
     gameObjects.keySet().removeAll(players.keySet());
@@ -228,16 +232,15 @@ public class LevelHandler {
    * @return All Game Objects
    */
   public ConcurrentLinkedHashMap<UUID, GameObject> getGameObjects() {
-    clearToRemove(); // Remove every gameObjects we no longer need
     return gameObjects;
   }
 
   /**
    * List of all gameObjects excluding players
+   *
    * @return All non-player Game Objects
    */
   public ConcurrentLinkedHashMap<UUID, GameObject> getGameObjectsFiltered() {
-    clearToRemove(); // Remove every gameObjects we no longer need
     ConcurrentLinkedHashMap<UUID, GameObject> filtered = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
         .maximumWeightedCapacity(500).build();
     filtered.putAll(gameObjects);
@@ -250,38 +253,39 @@ public class LevelHandler {
   }
 
   /**
-   * Readd limbs
-   */
-  public void addLimbs(GameObject gameObject) {
-    this.toCreate.add(gameObject);
-  }
-
-  /**
    * Add a gameobject to list to be created next update
    *
    * @param gameObject GameObject to be added
    */
   public void addGameObject(GameObject gameObject) {
-    if((gameObject instanceof Particle || gameObject instanceof ParticleEmitter) && isServer) return;
+    if ((gameObject instanceof Particle || gameObject instanceof ParticleEmitter) && isServer) {
+      return;
+    }
     try {
-      gameObject.initialise(this.gameRoot, settings);
-      this.toCreate.add(gameObject);
+      createObject(gameObject);
       if (isServer) {
         ConcurrentLinkedHashMap<UUID, GameObject> temp = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
-            .maximumWeightedCapacity(500).build();
+            .maximumWeightedCapacity(1).build();
         temp.put(gameObject.getUUID(), gameObject);
         server.sendObjects(temp);
       }
     } catch (IllegalStateException e) {
-      System.out.println("AI - avoiding placement of object");
+      //System.out.println("AI - avoiding placement of object");
     }
 
   }
 
   public void addGameObjects(ConcurrentLinkedHashMap<UUID, GameObject> gameObjectsT) {
     gameObjectsT.forEach(((uuid, gameObject) -> {
-      if (!(gameObjects.containsKey(uuid) && (gameObject instanceof Particle || gameObject instanceof ParticleEmitter))) {
-        this.toCreate.add(gameObject);
+      if (!(gameObjects.containsKey(uuid) && (gameObject instanceof Particle
+          || gameObject instanceof ParticleEmitter) && gameObject.getUUID() != clientPlayer
+          .getUUID())) {
+        createObject(gameObject);
+        if (gameObject instanceof Player) {
+          gameObject.getChildren().forEach(child -> createObject(child));
+          createObject(((Player) gameObject).getHandLeft());
+          createObject(((Player) gameObject).getHandRight());
+        }
       }
     }));
   }
@@ -289,18 +293,11 @@ public class LevelHandler {
   /**
    * Creates game objects that are meant to be created from the previous loop
    */
-  public void createObjects() {
-    toCreate.forEach(gameObject -> {
-      if (!(gameObject instanceof Limb)) {
-        gameObject.initialise(gameRoot, settings);
-      }
-      if (gameObject instanceof Player && gameObject.getUUID() != clientPlayer.getUUID()) {
-        addPlayer((Player) gameObject, settings.getGameRoot());
-      } else {
-        gameObjects.put(gameObject.getUUID(), gameObject);
-      }
-    });
-    toCreate.clear();
+  public void createObject(GameObject gameObject) {
+    if (!gameObjects.containsKey(gameObject.getUUID())) {
+      gameObject.initialise(gameRoot, settings);
+      gameObjects.put(gameObject.getUUID(), gameObject);
+    }
   }
 
   /**
@@ -309,7 +306,9 @@ public class LevelHandler {
    * @param g GameObject to be removed
    */
   public void removeGameObject(GameObject g) {
-    toRemove.add(g); // Will be removed on next frame
+    gameObjects.values().remove(g);
+    g.removeRender();
+    g.destroy();
     if (isServer) {
       PacketDelete delete = new PacketDelete(g.getUUID());
       server.sendToClients(delete.getData(), false);
@@ -325,8 +324,13 @@ public class LevelHandler {
     return maps;
   }
 
+  public LinkedList<Map> getPlaylist() {
+    return playlist;
+  }
+
   /**
    * Initialise the playlist with a selected playlist name
+   *
    * @param playlistName The playlist to be created, must be the name of the directory
    */
   public void setPlaylist(String playlistName) {
@@ -338,15 +342,23 @@ public class LevelHandler {
       playlist.add(
           new Map(
               "Map" + i,
-              Path.convert(settings.getMapsPath() + File.separator + playlistName + File.separator + "map" + i + ".map")));
+              Path.convert(
+                  settings.getMapsPath() + File.separator + playlistName + File.separator + "map"
+                      + i + ".map")));
     }
   }
-
-  public LinkedList<Map> getPlaylist() { return playlist; }
 
   public Map pollPlayList() {
     int index = new Random().nextInt(getPlaylist().size());
     return playlist.get(index);
+  }
+
+  public void processToCreate() {
+    if (toCreate.size() < 1) {
+      return;
+    }
+    addGameObjects(toCreate);
+    toCreate.clear();
   }
 
   /**
@@ -371,17 +383,21 @@ public class LevelHandler {
     return players;
   }
 
-  public void addPlayer(Player newPlayer, Group root) {
-    newPlayer.initialise(root, settings);
+  public void addPlayer(Player newPlayer) {
     players.put(newPlayer.getUUID(), newPlayer);
-    gameObjects.put(newPlayer.getUUID(), newPlayer);
+    createObject(newPlayer);
+    if (isServer) {
+      ConcurrentLinkedHashMap<UUID, GameObject> temp = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
+          .maximumWeightedCapacity(1).build();
+      temp.put(newPlayer.getUUID(), newPlayer);
+      server.sendObjects(temp);
+    }
   }
 
   public void addClientPlayer(Group root) {
     clientPlayer = new Player(500, 200, UUID.randomUUID());
-    clientPlayer.initialise(root, settings);
     players.put(clientPlayer.getUUID(), clientPlayer);
-    gameObjects.put(clientPlayer.getUUID(), clientPlayer);
+    createObject(clientPlayer);
   }
 
   public Player getClientPlayer() {
@@ -396,28 +412,27 @@ public class LevelHandler {
     return this.musicPlayer;
   }
 
-  /**
-   * It removes the image from the imageView, destroy the gameObject and remove it from gameObjects
-   * list. Finally clear the list for next frame
-   */
-  private void clearToRemove() {
-    gameObjects.values().removeAll(toRemove);
-    toRemove.forEach(gameObject -> gameObject.removeRender());
-    toRemove.forEach(gameObject -> gameObject.destroy());
-    toRemove.clear();
-  }
-
   public Group getGameRoot() {
     return gameRoot;
   }
-  
+
   public Group getBackgroundRoot() {
     return backgroundRoot;
+  }
+
+  public Group getLightingRoot() {
+    return lightingRoot;
   }
 
   public LinkedHashMap<UUID, Limb> getLimbs() {
     return limbs;
   }
 
+  public boolean isServer() {
+    return isServer;
+  }
 
+  public ConcurrentLinkedHashMap<UUID, GameObject> getToCreate() {
+    return toCreate;
+  }
 }

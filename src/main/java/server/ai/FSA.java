@@ -29,8 +29,9 @@ public enum FSA {
      * @return The next state
      */
     public FSA next(Player targetPlayer, Player bot, double targetDistance, int prevHealth) {
-      if (targetPlayer == null)
+      if (targetPlayer == null) {
         return IDLE;
+      }
 
       StateInfo.setInfo(targetPlayer, bot);
 
@@ -58,8 +59,8 @@ public enum FSA {
         inSight = ((Rigidbody) rayCast.getCollidedObject()
             .getComponent(ComponentType.RIGIDBODY)).getBodyType() != RigidbodyType.STATIC &&
             !(rayCast.getCollidedObject() instanceof WoodBlockSmallObject ||
-            rayCast.getCollidedObject() instanceof WoodBlockLargeObject ||
-            rayCast.getCollidedObject() instanceof WoodFloorObject);
+                rayCast.getCollidedObject() instanceof WoodBlockLargeObject ||
+                rayCast.getCollidedObject() instanceof WoodFloorObject);
       }
 
       if (((targetDistance > weaponRange) || !inSight)
@@ -73,8 +74,9 @@ public enum FSA {
       } else if (inSight) {
         return ATTACKING;
 
-      } else
+      } else {
         return IDLE;
+      }
     }
   },
   /**
@@ -89,8 +91,9 @@ public enum FSA {
      * @return The next state
      */
     public FSA next(Player targetPlayer, Player bot, double targetDistance, int prevHealth) {
-      if (targetPlayer == null)
+      if (targetPlayer == null) {
         return IDLE;
+      }
 
       StateInfo.setInfo(targetPlayer, bot);
 
@@ -148,9 +151,10 @@ public enum FSA {
      * @return The next state
      */
     public FSA next(Player targetPlayer, Player bot, double targetDistance, int prevHealth) {
-      
-      if (targetPlayer == null)
+
+      if (targetPlayer == null) {
         return IDLE;
+      }
 
       StateInfo.setInfo(targetPlayer, bot);
 
@@ -214,8 +218,9 @@ public enum FSA {
      * @return the next state
      */
     public FSA next(Player targetPlayer, Player bot, double targetDistance, int prevHealth) {
-      if (targetPlayer == null)
+      if (targetPlayer == null) {
         return IDLE;
+      }
 
       StateInfo.setInfo(targetPlayer, bot);
 
@@ -281,13 +286,18 @@ public enum FSA {
     }
   };
 
-  /** The border between medium - high health */
+  /**
+   * The border between medium - high health
+   */
   final int HIGH_HEALTH = 66;
-  /** The border between low - medium health */
+  /**
+   * The border between low - medium health
+   */
   final int MEDIUM_HEALTH = 33;
 
   /**
    * Determines the state to update to.
+   *
    * @param targetPlayer The bots target.
    * @param bot The bot that this FSA is associated with.
    * @param targetDistance The distance to the target.

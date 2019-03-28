@@ -5,8 +5,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.UUID;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import shared.gameObjects.weapons.Handgun;
-import shared.gameObjects.weapons.Weapon;
 
 public class HandgunTest {
 

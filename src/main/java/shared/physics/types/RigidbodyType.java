@@ -5,7 +5,8 @@ package shared.physics.types;
  */
 public enum RigidbodyType {
   /**
-   * Dynamic Rigidbodies are updated constantly and moved around by collisions and other external forces
+   * Dynamic Rigidbodies are updated constantly and moved around by collisions and other external
+   * forces
    */
   DYNAMIC,
   /**

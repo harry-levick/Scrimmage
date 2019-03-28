@@ -1,6 +1,7 @@
 package shared.gameObjects.players.Limbs;
 
 import client.main.Settings;
+import java.util.UUID;
 import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.transform.Rotate;
@@ -29,8 +30,9 @@ public class Arm extends Limb {
    * Base class used to create an object in game. This is used on both the client and server side to
    * ensure actions are calculated the same
    */
-  public Arm(Boolean isLeft, Player parent, LevelHandler levelHandler) {
-    super(13, 62, 53, 62, 17, 33, ObjectType.Limb, isLeft, parent, parent, 0, 0, levelHandler);
+  public Arm(Boolean isLeft, Player parent, LevelHandler levelHandler, UUID uuid) {
+    super(13, 62, 53, 62, 17, 33, ObjectType.Limb, isLeft, parent, parent, 0, 0, levelHandler,
+        uuid);
     rotate = new Rotate();
     rotate.setPivotX(10);
     rotate.setPivotY(10);

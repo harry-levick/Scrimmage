@@ -20,6 +20,7 @@ public abstract class Component implements Serializable {
 
   /**
    * Base parent constructor for components
+   *
    * @param parent The object the component is attached to
    * @param componentType The type of component
    */

@@ -14,13 +14,19 @@ import shared.util.maths.Vector2;
  */
 public abstract class Gun extends Weapon {
 
-  /** Segment of package name of blocks, to check if an object is instance of Blocks */
+  /**
+   * Segment of package name of blocks, to check if an object is instance of Blocks
+   */
   protected static String blocksPackageName = ".Blocks.";
 
-  /** Maximum angle of aiming before switching holding hand */
+  /**
+   * Maximum angle of aiming before switching holding hand
+   */
   protected float AIM_ANGLE_MAX = 110f;
 
-  /** True if this gun is full auto fire */
+  /**
+   * True if this gun is full auto fire
+   */
   protected boolean fullAutoFire;
 
 
@@ -232,12 +238,17 @@ public abstract class Gun extends Weapon {
   // -------START-------
   // Setters and Getters
   // -------------------
-  /** Returns true if this gun is full auto fire */
+
+  /**
+   * Returns true if this gun is full auto fire
+   */
   public boolean isFullAutoFire() {
     return this.fullAutoFire;
   }
 
-  /** Returns true if this gun is held with one hand */
+  /**
+   * Returns true if this gun is held with one hand
+   */
   public boolean isSingleHanded() {
     return this.singleHanded;
   }

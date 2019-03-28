@@ -68,6 +68,7 @@ public abstract class Limb extends GameObject implements Destructable {
   protected transient LevelHandler levelHandler;
 
   protected boolean damagedThisFrame;
+
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
    * ensure actions are calculated the same
@@ -76,8 +77,8 @@ public abstract class Limb extends GameObject implements Destructable {
    */
   public Limb(double xLeft, double yLeft, double xRight, double yRight, double sizeX, double sizeY,
       ObjectType id, Boolean isLeft, GameObject parent, Player player, double pivotX, double pivotY,
-      LevelHandler levelHandler) {
-    super(0, 0, sizeX, sizeY, id, UUID.randomUUID());
+      LevelHandler levelHandler, UUID uuid) {
+    super(0, 0, sizeX, sizeY, id, uuid);
     this.limbAttached = true;
     this.lastAttachedCheck = true;
     this.isLeft = isLeft;
@@ -108,6 +109,7 @@ public abstract class Limb extends GameObject implements Destructable {
     rotate.setPivotY(pivotY);
   }
 
+
   public abstract void initialiseAnimation();
 
   @Override
@@ -117,11 +119,11 @@ public abstract class Limb extends GameObject implements Destructable {
 
   @Override
   public void deductHp(int damage) {
-    if(!damagedThisFrame) {
+    if (!damagedThisFrame) {
       damagedThisFrame = true;
       ((Player) parent).deductHp(damage);
       this.limbHealth -= damage;
-      if(limbHealth <= 0) {
+      if (limbHealth <= 0) {
         destroy();
       }
     }
@@ -141,6 +143,7 @@ public abstract class Limb extends GameObject implements Destructable {
   @Override
   public void initialise(Group root, Settings settings) {
     super.initialise(root, settings);
+    rotate = new Rotate();
     rotate.setPivotX(pivotX);
     rotate.setPivotY(pivotY);
     if (isLeft) {
@@ -169,15 +172,36 @@ public abstract class Limb extends GameObject implements Destructable {
 
   @Override
   public void destroy() {
-    if(!limbAttached) return;
+    if (!limbAttached) {
+      return;
+    }
     detachLimb();
     Random random = new Random();
-    rb.setVelocity(new Vector2(1000 * (random.nextDouble() + 0.2) * (random.nextInt(4) - 1 > 0 ? 1 : -1),
-        1000 * (random.nextDouble() + 0.2) * (random.nextInt(3) - 1)));
+    rb.setVelocity(
+        new Vector2(1000 * (random.nextDouble() + 0.2) * (random.nextInt(4) - 1 > 0 ? 1 : -1),
+            1000 * (random.nextDouble() + 0.2) * (random.nextInt(3) - 1)));
   }
+
   public void reset() {
     reattachedLimb();
     limbHealth = limbMaxHealth;
+  }
+
+  /**
+   * Contains the state of the object for sending over server Only contains items that need sending
+   * separate by commas
+   *
+   * @return State of object
+   */
+  public String getState() {
+    return objectUUID + ";" + id + ";" + (float) getX() + ";" + (float) getY() + ";" + isLeft;
+  }
+
+  public void setState(String data, Boolean snap) {
+    String[] unpackedData = data.split(";");
+    setX(Double.parseDouble(unpackedData[2]));
+    setY(Double.parseDouble(unpackedData[3]));
+    this.isLeft = Boolean.parseBoolean(unpackedData[4]);
   }
 
   private void getBehaviour() {
@@ -187,24 +211,26 @@ public abstract class Limb extends GameObject implements Destructable {
   protected abstract void rotateAnimate();
 
   protected void flipImageView(ImageView iv, String direction) {
-    if(direction.equals("WALK_LEFT")) {
+    if (direction.equals("WALK_LEFT")) {
       iv.setScaleX(-1);
-    }
-    else if(direction.equals("WALK_RIGHT")){
+    } else if (direction.equals("WALK_RIGHT")) {
       iv.setScaleX(1);
     }
   }
 
   public void updateSkinRender(int id) {
-      animation.switchDefault();
+    animation.switchDefault();
   }
 
   @Override
   public void render() {
     super.render();
     imageView.getTransforms().clear();
+    getBehaviour();
     if (limbAttached) {
-      setRelativePosition();
+      if (!settings.isMultiplayer()) {
+        setRelativePosition();
+      }
       //Do all the rotations here.
       rotateAnimate();
       // Flip the imageView depending on the direciton of travel

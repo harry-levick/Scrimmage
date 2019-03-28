@@ -18,7 +18,9 @@ import shared.util.maths.Vector2;
  */
 public class Punch extends Melee {
 
-  /** Size of the image (default image = blank) */
+  /**
+   * Size of the image (default image = blank)
+   */
   private static double sizeX = 30, sizeY = 30;
   /** Range of punch */
   private static double range = 30;
@@ -85,12 +87,13 @@ public class Punch extends Melee {
       for (int i = 0; i < numCast; i++) {
         collisionSet.addAll(
             new HashSet<>(
-              Physics.boxcastAll(
-                new Vector2((float) (this.getGripX()+(i*deltaX)), (float) (this.getGripY()+(i*deltaY))),
-                boxCastSize,
-                false,
-              false
-              )
+                Physics.boxcastAll(
+                    new Vector2((float) (this.getGripX() + (i * deltaX)),
+                        (float) (this.getGripY() + (i * deltaY))),
+                    boxCastSize,
+                    false,
+                    false
+                )
             )
         );
       }
@@ -109,19 +112,20 @@ public class Punch extends Melee {
   }
 
   /**
-   * Checks if the hand punching is deattached from the holder
-   * For example, if player punch the RHS and the right hand is deattached,
-   * return false as it is not possible to punch the RHS
+   * Checks if the hand punching is deattached from the holder For example, if player punch the RHS
+   * and the right hand is deattached, return false as it is not possible to punch the RHS
    *
    * @return True if it is ok to punch at that direction
    */
   @Override
   public boolean canFire() {
-    if (this.currentCooldown > 0)
+    if (this.currentCooldown > 0) {
       return false;
+    }
 
-    if (holder.isAimingLeft())
+    if (holder.isAimingLeft()) {
       return !holder.getHandLeft().isDeattached();
+    }
     return !holder.getHandRight().isDeattached();
   }
 
