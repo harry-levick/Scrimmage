@@ -582,15 +582,9 @@ public class Player extends GameObject {
   }
 
   /**
-<<<<<<< HEAD
-   * Deduct hp of the player by the given value. Player dies if health falls below zero.
-   *
-   * @param damage Health to deduct from player
-=======
    * Applies damage to the player from weapons and other objects and manages players death
    *
    * @param damage Amount of damage to deal to player
->>>>>>> master
    */
   public void deductHp(int damage) {
     if (!damagedThisFrame) {
