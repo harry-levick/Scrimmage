@@ -119,7 +119,7 @@ public class Bot extends Player {
   }
 
   /**
-   * Terminate all threads
+   * Terminate all threads and clear the paths so that the bot stops moving immediately
    */
   public void terminate() {
     chasingThread.terminate();
