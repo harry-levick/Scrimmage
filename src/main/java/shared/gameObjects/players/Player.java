@@ -1,11 +1,13 @@
 package shared.gameObjects.players;
 
 import client.handlers.effectsHandler.Particle;
+import client.main.Client;
 import client.main.Settings;
 import java.util.UUID;
 import javafx.application.Platform;
 import javafx.scene.Group;
-import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import server.ai.Bot;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
@@ -17,10 +19,8 @@ import shared.gameObjects.players.Limbs.Hand;
 import shared.gameObjects.players.Limbs.Head;
 import shared.gameObjects.players.Limbs.Leg;
 import shared.gameObjects.rendering.ColourFilters;
-import shared.gameObjects.rendering.PointLighting;
 import shared.gameObjects.weapons.Punch;
 import shared.gameObjects.weapons.Weapon;
-import shared.handlers.levelHandler.GameState;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
@@ -36,10 +36,6 @@ public class Player extends GameObject {
    * The jump force of the player in Newtons
    */
   protected static final float jumpForce = -300;
-  /**
-   * Max health
-   */
-  protected static final int maxHealth = 200;
   /**
    * Control Booleans determined by the Input Manager
    */
@@ -68,18 +64,18 @@ public class Player extends GameObject {
    * Boolean to determine if a player is on the ground or in the air
    */
   protected boolean grounded;
-  /**
-   * True when the gun is aiming LHS
-   */
+  /** True when the gun is aiming LHS */
   protected boolean aimLeft;
-  /**
-   * True when the mouse pointer is on the LHS
-   */
+  /** True when the mouse pointer is on the LHS */
   protected boolean pointLeft;
   /**
    * The current health of the player; is killed when reaches 0
    */
   protected int health;
+  /**
+   * Max health
+   */
+  protected final int maxHealth = 200;
   /**
    * The current weapon the player is using
    */
@@ -96,22 +92,11 @@ public class Player extends GameObject {
    * The Physics Rigidbody component attached to the player
    */
   protected Rigidbody rb;
-  /**
-   * The Box collider that detects collisions
-   */
+  //TODO idk what this does
+  protected double vx;
   private BoxCollider bc;
-  /**
-   * If the lighting is on or off
-   */
-  private boolean lightingSwitch;
-  /**
-   * Players username
-   */
-  private String username;
 
-  /**
-   * Players limbs
-   */
+  // Limbs
   private Limb head;
   private Limb body;
   private Limb legLeft;
@@ -120,27 +105,23 @@ public class Player extends GameObject {
   private Limb armRight;
   private Limb handLeft;
   private Limb handRight;
-  /**
-   * Synchronise the animations for each limb.
-   */
-  private int animationTimer = 0;
+  private int animationTimer = 0; //This is used to synchronise the animations for each limb.
 
 
-  /**
-   * Networking count for each player of last received input for reconciliation
-   */
+  //Networking
   private int lastInputCount;
-
+  
   //ColoFilter
   private transient ColourFilters colorFilter;
 
-  // Lighting
-  private transient PointLighting lighting;
-  private transient ImageView lightingImageView;
+  // Death text
+  private boolean diedThisUpdate = true;
+  private Text youDied = new Text("You Died!");
+  private Text killedBy = new Text("Killed By null");
 
   /**
-   * Constructs a player object in the scene
    *
+   * Constructs a player object in the scene
    * @param x The X-Coordinate of the object
    * @param y The Y-Coordinate of the object
    * @param playerUUID The uuid of the object
@@ -153,7 +134,6 @@ public class Player extends GameObject {
     this.rightKey = false;
     this.jumpKey = false;
     this.click = false;
-    this.username = "Player";
     this.health = maxHealth;
     this.behaviour = Behaviour.IDLE;
     this.bc = new BoxCollider(this, ColliderLayer.PLAYER, false);
@@ -162,7 +142,11 @@ public class Player extends GameObject {
     addComponent(bc);
     addComponent(rb);
     aimLeft = pointLeft = true;
-    lightingSwitch = true;
+
+    youDied.setFont(settings.getFont(72));
+    youDied.setFill(Color.DARKRED);
+    killedBy.setFont(settings.getFont(32));
+    killedBy.setFill(Color.DARKRED);
   }
 
   // Initialise the animation
@@ -177,29 +161,8 @@ public class Player extends GameObject {
     addLimbs();
     addPunch();
     initialiseColorFilter();
-    if (lightingSwitch) {
-      initialiseLighting();
-    }
-    if (username == null) {
-      username = "Player";
-    }
   }
 
-
-  /**
-   * Server Side initaliser to allow limbs UUID's to be set same as client side
-   *
-   * @param root Game root to render character on
-   * @param settings Settings
-   * @param legLeftUUID UUID of left leg
-   * @param legRightUUID UUID of right leg
-   * @param bodyUUID UUID of body
-   * @param headUUID UUID of head
-   * @param armLeftUUID UUID of left arm
-   * @param armRightUUID UUID of right arm
-   * @param handLeftUUID UUID of left hand
-   * @param handRightUUID UUID of right hand
-   */
   public void initialise(Group root, Settings settings, UUID legLeftUUID, UUID legRightUUID,
       UUID bodyUUID, UUID headUUID, UUID armLeftUUID, UUID armRightUUID, UUID handLeftUUID,
       UUID handRightUUID) {
@@ -222,34 +185,21 @@ public class Player extends GameObject {
     armLeft.addChild(handLeft);
     addPunch();
     initialiseColorFilter();
-    if (lightingSwitch) {
-      initialiseLighting();
-    }
   }
-
+  
   private void initialiseColorFilter() {
     colorFilter = new ColourFilters();
     colorFilter.setDesaturate(0.0f);
   }
-
-  private void initialiseLighting() {
-    lighting = new PointLighting();
-    lightingImageView = new ImageView();
-    settings.getLevelHandler().getLightingRoot().getChildren().add(lightingImageView);
-  }
-
+  
   private void resetColorFilter() {
     colorFilter.setDesaturate(0.0f);
   }
+  
+  
 
-
-  /**
-   * Adds limbs to the player and creates them in level handler
-   */
   private void addLimbs() {
-    if (legLeft != null) {
-      return;
-    }
+    if(legLeft != null) return;
     legLeft = new Leg(true, this, settings.getLevelHandler(), UUID.randomUUID());
     legRight = new Leg(false, this, settings.getLevelHandler(), UUID.randomUUID());
     body = new Body(this, settings.getLevelHandler(), UUID.randomUUID());
@@ -268,9 +218,6 @@ public class Player extends GameObject {
     armLeft.addChild(handLeft);
   }
 
-  /**
-   * Adds default weapon of punch to the player
-   */
   private void addPunch() {
     myPunch = new Punch(getX(), getY(), "myPunch@Player", this, UUID.randomUUID());
     settings.getLevelHandler().addGameObject(myPunch);
@@ -284,9 +231,10 @@ public class Player extends GameObject {
   }
 
   private void updateAnimationTimer() {
-    if (this.behaviour != Behaviour.IDLE) {
+    if(this.behaviour != Behaviour.IDLE) {
       animationTimer++;
-    } else {
+    }
+    else{
       animationTimer = 0;
     }
 
@@ -295,33 +243,20 @@ public class Player extends GameObject {
   public int getAnimationTimer() {
     return animationTimer;
   }
-
+  
   private void applyFilter() {
     //Only start applying the desaturation when below 40% health.
     float hpc = getHealthPercentage();
     float ignitionLevel = 0.4f;
-    if (hpc < ignitionLevel) {
-
+    if(hpc<ignitionLevel) {
+      
       //Convert range of 0.0 -> 0.4 to -1 -> 0.
-      float filterPercentage = (hpc / ignitionLevel) - 1;
-
+      float filterPercentage = (hpc/ignitionLevel) - 1;
+      
       //Apply the filter percentage
       colorFilter.setDesaturate(filterPercentage);
-      colorFilter.applyFilter(settings.getLevelHandler().getGameRoot(), "desaturate");
-      colorFilter.applyFilter(settings.getLevelHandler().getBackgroundRoot(), "desaturate");
-    }
-  }
-
-  private void updateLighting() {
-    if (settings.getLevelHandler().getGameState() == GameState.IN_GAME) {
-      lighting.update(getX(), getY());
-      if (lightingImageView.getImage() == null) {
-        lightingImageView.setImage(lighting.getImage());
-      }
-      lightingImageView.setX(lighting.getX());
-      lightingImageView.setY(lighting.getY());
-    } else {
-      lightingImageView.setImage(null);
+      colorFilter.applyFilter(settings.getLevelHandler().getGameRoot(),"desaturate");
+      colorFilter.applyFilter(settings.getLevelHandler().getBackgroundRoot(),"desaturate");
     }
   }
 
@@ -343,10 +278,20 @@ public class Player extends GameObject {
       }
     }
     damagedThisFrame = false;
-    if (!(this instanceof Bot)) {
+    if(!(this instanceof Bot)) { 
       applyFilter();
-      if (lightingSwitch) {
-        updateLighting();
+      if (health <= 0) {
+        youDied.setLayoutY(settings.getGrisPos(10));
+        youDied.setLayoutX((settings.getMapWidth() / 2) - (youDied.getLayoutBounds().getWidth() / 2) );
+        killedBy.setText("Killed by " + "someone");
+        killedBy.setLayoutY(settings.getGrisPos(13));
+        killedBy.setLayoutX((settings.getMapWidth() / 2) - (killedBy.getLayoutBounds().getWidth() /2));
+
+        if (diedThisUpdate) {
+          Client.overlayRoot.getChildren().add(youDied);
+          Client.overlayRoot.getChildren().add(killedBy);
+          diedThisUpdate = false;
+        }
       }
     }
     super.update();
@@ -372,15 +317,12 @@ public class Player extends GameObject {
     this.behaviour = Behaviour.valueOf(unpackedData[8]);
   }
 
-  /**
-   * If the player is on the ground then set grounded
-   */
   private void checkGrounded() {
     grounded = rb.isGrounded();
   }
 
   /**
-   * Applies the inputs at the beginning of the frame for moving character and animation
+   * Applies the inputs at the beginning of the frame
    */
   public void applyInput() {
     if (grounded) {
@@ -398,6 +340,7 @@ public class Player extends GameObject {
     }
 
     if (!rightKey && !leftKey) {
+      vx = 0;
       behaviour = Behaviour.IDLE;
     }
     if (jumpKey && !jumped && grounded) {
@@ -438,6 +381,7 @@ public class Player extends GameObject {
     }
 
     if (!rightKey && !leftKey) {
+      vx = 0;
       behaviour = Behaviour.IDLE;
     }
     if (jumpKey && !jumped && grounded) {
@@ -454,17 +398,10 @@ public class Player extends GameObject {
 
   }
 
-  /**
-   * Creates particles on ground when walking
-   */
   private void createWalkParticle() {
-    if (!grounded || settings.isMultiplayer()) {
-      return;
-    }
-    settings.getLevelHandler().addGameObject(
-        new Particle(transform.getBotPos().sub(transform.getSize().mult(new Vector2(0.5, 0))),
-            new Vector2(0, -35), new Vector2(0, 100), new Vector2(8, 8),
-            "images/platforms/stone/elementStone001.png", 0.34f));
+    if(!grounded || settings.isMultiplayer()) return;
+      settings.getLevelHandler().addGameObject(new Particle(transform.getBotPos().sub(transform.getSize().mult(new Vector2(0.5, 0))), new Vector2(0, -35), new Vector2(0, 100), new Vector2(8,8),
+          "images/platforms/stone/elementStone001.png", 0.34f));
   }
 
   /**
@@ -503,13 +440,8 @@ public class Player extends GameObject {
     }
   }
 
-  /**
-   * Players are not interpolated, unless networked
-   *
-   * @param deltaTimeAlpha calculation of delta time
-   */
   @Override
-  public void interpolatePosition(float deltaTimeAlpha) {
+  public void interpolatePosition(float alpha) {
 
   }
 
@@ -529,13 +461,8 @@ public class Player extends GameObject {
     children.forEach(child -> child.removeRender());
   }
 
-  /**
-   * Applies damage to the player from weapons and other objects and manages players death
-   *
-   * @param damage Amount of damage to deal to player
-   */
   public void deductHp(int damage) {
-    if (!damagedThisFrame) {
+    if(!damagedThisFrame) {
       damagedThisFrame = true;
       this.health -= damage;
       if (this.health <= 0) {
@@ -547,25 +474,12 @@ public class Player extends GameObject {
     }
   }
 
-  /**
-   * On skin change update all limbs with new rendered textures
-   *
-   * @param skinRender Textures of skin to apply
-   */
   public void updateSkinRender(int[] skinRender) {
     children.forEach(child -> {
-      if (child instanceof Arm) {
-        ((Limb) child).updateSkinRender(skinRender[2]);
-      }
-      if (child instanceof Leg) {
-        ((Limb) child).updateSkinRender(skinRender[3]);
-      }
-      if (child instanceof Head) {
-        ((Limb) child).updateSkinRender(skinRender[0]);
-      }
-      if (child instanceof Body) {
-        ((Limb) child).updateSkinRender(skinRender[1]);
-      }
+      if (child instanceof Arm) ((Limb) child).updateSkinRender(skinRender[2]);
+      if (child instanceof Leg) ((Limb) child).updateSkinRender(skinRender[3]);
+      if (child instanceof Head) ((Limb) child).updateSkinRender(skinRender[0]);
+      if (child instanceof Body) ((Limb) child).updateSkinRender(skinRender[1]);
     });
   }
 
@@ -584,6 +498,14 @@ public class Player extends GameObject {
     addPunch();
     resetColorFilter();
 
+    if (Client.overlayRoot.getChildren().contains(youDied)) {
+      Client.overlayRoot.getChildren().remove(youDied);
+    }
+    if (Client.overlayRoot.getChildren().contains(killedBy)) {
+      Client.overlayRoot.getChildren().remove(killedBy);
+    }
+    diedThisUpdate = true;
+
   }
 
   /**
@@ -600,61 +522,29 @@ public class Player extends GameObject {
     score += amount;
   }
 
-  /**
-   * Returns current health of player
-   *
-   * @return Health
-   */
   public int getHealth() {
     return health;
   }
 
-  /**
-   * Sets the health of player to specific value
-   *
-   * @param hp Health value to set player to
-   */
-  public void setHealth(int hp) {
-    this.health = hp;
-  }
-
-  /**
-   * Gets the base/max health of a player
-   *
-   * @return Max health
-   */
   public int getMaxHealth() {
     return maxHealth;
   }
 
-  /**
-   * Gets health percentage for UI
-   *
-   * @return Health/Maxhealth
-   */
   public float getHealthPercentage() {
-    return (float) health / (float) maxHealth;
+    return (float)health/(float)maxHealth;
   }
 
-  /**
-   * Gets the current item that the player is holding
-   *
-   * @return Current item held, if null fist
-   */
+  public void setHealth(int hp) {
+    this.health = hp;
+  }
+
   public Weapon getHolding() {
-    return holding == null ? myPunch : holding;
+    return holding==null? myPunch : holding;
   }
 
-  /**
-   * Gives the player a new weapon to hold
-   *
-   * @param newHolding Weapon to give player to hold
-   */
   public void setHolding(Weapon newHolding) {
     try {
-      if (!armLeft.limbAttached || !armRight.limbAttached) {
-        return;
-      }
+      if (!armLeft.limbAttached || !armRight.limbAttached) return;
     } catch (Exception e) {
 
     }
@@ -668,23 +558,16 @@ public class Player extends GameObject {
 
   /**
    * Determines if the player can hold a weapon or not
+   * @return
    */
   public boolean canHold() {
     return !(!armLeft.limbAttached || !armRight.limbAttached);
   }
 
-  /**
-   * Sets holding to punch
-   */
   public void usePunch() {
     this.setHolding(this.myPunch);
   }
 
-  /**
-   * Gets players current score in this game
-   *
-   * @return Players score
-   */
   public int getScore() {
     return score;
   }
@@ -695,9 +578,8 @@ public class Player extends GameObject {
    * @return A 2 elements array, a[0] = X position of the hand, a[1] = Y position of the hand
    */
   public double[] getGunHandPos() {
-    if (this.handLeft.isDeattached() || this.handRight.isDeattached()) {
+    if (this.handLeft.isDeattached() || this.handRight.isDeattached())
       return new double[]{-1, -1};
-    }
     if (isAimingLeft()) {
       return new double[]{this.handRight.getX(), this.handRight.getY()};
     } else {
@@ -712,14 +594,12 @@ public class Player extends GameObject {
    */
   public double[] getMeleeHandPos() {
     if (isAimingLeft()) {
-      if (handLeft.isDeattached()) {
+      if (handLeft.isDeattached())
         return new double[]{-1, -1};
-      }
       return new double[]{this.handLeft.getX(), this.handLeft.getY()};
     } else {
-      if (handRight.isDeattached()) {
+      if (handRight.isDeattached())
         return new double[]{-1, -1};
-      }
       return new double[]{this.handRight.getX(), this.handRight.getY()};
     }
   }
@@ -733,156 +613,79 @@ public class Player extends GameObject {
     return false;
   }
 
-  /**
-   * Returns if player is jumping
-   *
-   * @return Jumping
-   */
+  public void setHandRightX(double pos) {
+    this.handRight.setX(pos);
+  }
+
+  public void setHandRightY(double pos) {
+    this.handRight.setY(pos);
+  }
+
+  public void setHandLeftX(double pos) {
+    this.handLeft.setX(pos);
+  }
+
+  public void setHandLeftY(double pos) {
+    this.handLeft.setY(pos);
+  }
+
   public boolean getJumped() {
     return this.jumped;
   }
 
-  /**
-   * Gets direction player is aiming their held item
-   *
-   * @return Aiming direction
-   */
   public boolean isAimingLeft() {
     return this.aimLeft;
   }
 
-  /**
-   * Sets that the player is currently aiming left
-   *
-   * @param b Is aiming left
-   */
   public void setAimingLeft(boolean b) {
     this.aimLeft = b;
   }
 
-  /**
-   * Checks if player is pointing cursor left
-   *
-   * @return Cursor left of player
-   */
   public boolean isPointingLeft() {
     return this.pointLeft;
   }
 
-  /**
-   * Checks if the player is on the ground
-   *
-   * @return Is player grounded
-   */
   public boolean isGrounded() {
     return grounded;
   }
 
-  /**
-   * Gets last input for networking received by this player
-   *
-   * @return Last Input number
-   */
   public int getLastInputCount() {
     return lastInputCount;
   }
 
-  /**
-   * Sets input number of player
-   *
-   * @param lastInputCount Number of set last input to
-   */
   public void setLastInputCount(int lastInputCount) {
     this.lastInputCount = lastInputCount;
   }
 
-  /**
-   * Gets the head of player
-   *
-   * @return Player Head
-   */
   public Limb getHead() {
     return head;
   }
 
-  /**
-   * Gets the Body of the player
-   *
-   * @return Player Body
-   */
   public Limb getBody() {
     return body;
   }
 
-  /**
-   * Gets the Left Hand of the player
-   *
-   * @return Player Left Hand
-   */
   public Limb getHandLeft() {
     return handLeft;
   }
 
-  /**
-   * Gets the Right Hand of the player
-   *
-   * @return Player Right Hand
-   */
   public Limb getHandRight() {
     return handRight;
   }
 
-  /**
-   * Gets the Left Leg of the player
-   *
-   * @return Player Left Leg
-   */
   public Limb getLegLeft() {
     return legLeft;
   }
 
-  /**
-   * Gets the Right Leg of the player
-   *
-   * @return Player Right Leg
-   */
   public Limb getLegRight() {
     return legRight;
   }
 
-  /**
-   * Gets the Left arm of the player
-   *
-   * @return Player Left Arm
-   */
   public Limb getArmLeft() {
     return armLeft;
   }
 
-  /**
-   * Gets the Right Arm of the player
-   *
-   * @return Player Right Arm
-   */
   public Limb getArmRight() {
     return armRight;
-  }
-
-  /**
-   * Gets the username of Player
-   *
-   * @return Players username
-   */
-  public String getUsername() {
-    return username;
-  }
-
-  /**
-   * Sets the user name of the player
-   *
-   * @param username Username to give player
-   */
-  public void setUsername(String username) {
-    this.username = username;
   }
 }

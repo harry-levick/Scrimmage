@@ -96,6 +96,7 @@ public class LevelEditor extends Application {
   private String filename = "";
   private String filepath = settings.getMapsPath() + File.separator;
 
+  private Scene scene;
   private Vector2 scaleRatio;
 
   /**
@@ -553,7 +554,7 @@ public class LevelEditor extends Application {
       grid.getChildren().add(line);
     } // todo remove
 
-    Scene scene = new Scene(root, stageSizeX, stageSizeY);
+    scene = new Scene(root, stageSizeX, stageSizeY);
     scene.setOnMouseClicked(
         new EventHandler<MouseEvent>() {
           @Override
@@ -788,8 +789,8 @@ public class LevelEditor extends Application {
   }
 
   public void scaleRendering(Stage primaryStage) {
-    Vector2 scaleRatio = new Vector2(primaryStage.getWidth() / 1920,
-        primaryStage.getHeight() / 1080);
+    Vector2 scaleRatio =
+        new Vector2(scene.getWidth() / settings.getMapWidth(), scene.getHeight() / settings.getMapHeight());
     Scale scale = new Scale(scaleRatio.getX(), scaleRatio.getY(), 0, 0);
     primaryStage.getScene().getRoot().getTransforms().setAll(scale);
   }

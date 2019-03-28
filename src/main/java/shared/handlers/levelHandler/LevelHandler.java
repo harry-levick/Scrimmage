@@ -160,6 +160,10 @@ public class LevelHandler {
   public void generateLevel(Group backgroundGroup, Group gameGroup, Boolean moveToSpawns,
       Boolean isServer) {
 
+    if (!isServer) {
+      Client.overlayRoot.getChildren().clear();
+    }
+
     settings.resetDeaths();
     gameObjects.keySet().removeAll(players.keySet());
     gameObjects.keySet().removeAll(bots.keySet());

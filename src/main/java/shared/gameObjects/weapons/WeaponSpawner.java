@@ -17,6 +17,7 @@ public class WeaponSpawner extends GameObject {
   private float timer;
   private ArrayList<Weapons> weapons;
   private Random random;
+  private int guaranteedSpawn = 1;
 
   public WeaponSpawner(double x, double y, double sizeX, double sizeY, UUID uuid) {
     super(x, y, sizeX, sizeY, ObjectType.WeaponSpawner, uuid);
@@ -44,6 +45,9 @@ public class WeaponSpawner extends GameObject {
     if (timer <= 0) {
       random = new Random();
       if (random.nextDouble() <= WEAPON_PROBABILITY) {
+        createRandomWeapon();
+      } else if (guaranteedSpawn > 0) {
+        guaranteedSpawn--;
         createRandomWeapon();
       }
       timer = TIMER;
