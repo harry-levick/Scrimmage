@@ -23,7 +23,6 @@ public class Achievement {
     this.status = status;
   }
 
-
   public Image getImage() {
     return new Image(
         Path.convert("images/Achivements/golden_trophy_" + (status ? "100.png" : "greyed.png")));
@@ -33,7 +32,7 @@ public class Achievement {
     VBox holder = new VBox();
     holder.setAlignment(Pos.CENTER);
 
-    //Name
+    // Name
     Label nameLabel = new Label(name);
     nameLabel.setStyle("-fx-font-size:20px; -fx-text-fill: white;");
     nameLabel.setMaxWidth(160);
@@ -43,7 +42,7 @@ public class Achievement {
 
     StackPane stackPane = new StackPane();
 
-    //Icon
+    // Icon
     ImageView icon = new ImageView(getImage());
     icon.setFitWidth(120);
     icon.setFitHeight(145);
@@ -51,7 +50,7 @@ public class Achievement {
 
     holder.getChildren().add(stackPane);
 
-    //Progress
+    // Progress
     Label descriptionLabel = new Label(description);
     descriptionLabel.setStyle("-fx-font-size:15px; -fx-text-fill: white;");
     descriptionLabel.setMaxWidth(160);

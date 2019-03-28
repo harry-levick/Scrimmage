@@ -14,11 +14,11 @@ public class Lootbox {
     String toDisplay = "";
     data.openLootbox();
     Random random = new Random();
-    if(random.nextDouble() <= SKIN_CHANCE) {
-      data.awardSkin(random.nextInt(data.SKIN_COUNT - 1) + 1) ;
+    if (random.nextDouble() <= SKIN_CHANCE) {
+      data.awardSkin(random.nextInt(data.SKIN_COUNT - 1) + 1);
       toDisplay = "Earned Skin!";
     } else {
-      if(random.nextDouble() <= LARGE_MONEY_CHANCE) {
+      if (random.nextDouble() <= LARGE_MONEY_CHANCE) {
         data.addMoney(LARGE_MONEY);
         toDisplay = "Earned " + LARGE_MONEY + " Scrimbucks!";
       } else {
