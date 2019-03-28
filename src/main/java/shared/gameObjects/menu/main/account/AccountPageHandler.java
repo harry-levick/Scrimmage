@@ -105,6 +105,7 @@ public class AccountPageHandler extends GameObject {
                   "menus/main_menu.map", Path.convert("src/main/resources/menus/main_menu.map")),
               true,
               false);
+      return;
     }
     settings
         .getLevelHandler()
