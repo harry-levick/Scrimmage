@@ -157,7 +157,7 @@ public class Player extends GameObject {
     addComponent(bc);
     addComponent(rb);
     aimLeft = pointLeft = true;
-    lightingSwitch = false;
+    lightingSwitch = true;
   }
 
   // Initialise the animation
