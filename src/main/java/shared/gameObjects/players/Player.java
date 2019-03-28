@@ -652,7 +652,7 @@ public class Player extends GameObject {
    */
   public void setHolding(Weapon newHolding) {
     try {
-      if (!armLeft.limbAttached || !armRight.limbAttached) {
+      if (armRight == null || armLeft == null || !armLeft.limbAttached || !armRight.limbAttached) {
         return;
       }
     } catch (Exception e) {
@@ -884,5 +884,9 @@ public class Player extends GameObject {
    */
   public void setUsername(String username) {
     this.username = username;
+  }
+
+  public void setScore(int score) {
+    this.score = score;
   }
 }
