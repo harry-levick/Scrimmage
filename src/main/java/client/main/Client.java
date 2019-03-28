@@ -138,7 +138,7 @@ public class Client extends Application {
   private MouseInput mouseInput;
   private boolean startedGame;
   private int timeRemaining;
-  private int timeLimit = 1; // Time limit in minutes
+  private int timeLimit = 3; // Time limit in minutes
   private float maximumStep;
   private long previousTime;
   private float accumulatedTime;
