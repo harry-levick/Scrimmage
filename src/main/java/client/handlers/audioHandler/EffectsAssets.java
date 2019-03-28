@@ -29,6 +29,7 @@ public class EffectsAssets {
     tracks.put("LASER", "laser_gun.wav");
     tracks.put("PUNCH", "punch.wav");
     tracks.put("FART", "fart.wav");
+    tracks.put("BUBBLE_POP", "bubble_pop.wav");
   }
 
   /**
