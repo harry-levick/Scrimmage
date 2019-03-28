@@ -66,15 +66,19 @@ public class ExplosiveLauncher extends Gun {
       double bulletY = playerCentre.getY() - playerRadius * Math.sin(-angleRadian);
       double bulletFlipX = playerCentre.getX() - playerRadius * Math.cos(angleRadian);
       double bulletFlipY = playerCentre.getY() - playerRadius * Math.sin(angleRadian);
-      Bullet bullet =
-          new ExplosiveBullet(
-              (holder.isAimingLeft() ? bulletFlipX : bulletX),
-              (holder.isAimingLeft() ? bulletFlipY : bulletY),
-              mouseX,
-              mouseY,
-              this.holder,
-              uuid);
-      settings.getLevelHandler().addGameObject(bullet);
+      try {
+        Bullet bullet =
+            new ExplosiveBullet(
+                (holder.isAimingLeft() ? bulletFlipX : bulletX),
+                (holder.isAimingLeft() ? bulletFlipY : bulletY),
+                mouseX,
+                mouseY,
+                this.holder,
+                uuid);
+        settings.getLevelHandler().addGameObject(bullet);
+      } catch (NullPointerException e) {
+        System.out.println("NullPointerException in creating bullet in ExplosiveLauncher");
+      }
       this.currentCooldown = getDefaultCoolDown();
       new AudioHandler(settings, Client.musicActive).playSFX("LASER");
       deductAmmo();

@@ -59,45 +59,50 @@ public class MachineGun extends Gun {
   @Override
   public void fire(double mouseX, double mouseY) {
     if (canFire()) {
-      UUID uuid = UUID.randomUUID();
-      Vector2 playerCentre = new Vector2(holderHandPos[0], holderHandPos[1]); // centre = main hand
-      double playerRadius = 55 + 65; // Player.sizeY / 2 + bias
+      try {
+        UUID uuid = UUID.randomUUID();
+        Vector2 playerCentre = new Vector2(holderHandPos[0],
+            holderHandPos[1]); // centre = main hand
+        double playerRadius = 55 + 65; // Player.sizeY / 2 + bias
 
-      double bulletX = playerCentre.getX() + playerRadius * Math.cos(-angleRadian);
-      double bulletY = playerCentre.getY() - playerRadius * Math.sin(-angleRadian);
-      double bulletFlipX = playerCentre.getX() - playerRadius * Math.cos(angleRadian);
-      double bulletFlipY = playerCentre.getY() - playerRadius * Math.sin(angleRadian);
-
-      Collision raycast = Physics.raycastBullet(
-          playerCentre,
-          new Vector2(mouseX - bulletX, mouseY - bulletY).normalize().mult(55),
-          this.holder,
-          false);
-      Bullet bullet;
-
-      if (raycast != null && raycast.getCollidedObject().getClass().getPackage().getName()
-          .contains(blocksPackageName)) {
-        bullet = new FireBullet(
-            holderHandPos[0],
-            holderHandPos[1] + 20,
-            mouseX,
-            mouseY,
+        double bulletX = playerCentre.getX() + playerRadius * Math.cos(-angleRadian);
+        double bulletY = playerCentre.getY() - playerRadius * Math.sin(-angleRadian);
+        double bulletFlipX = playerCentre.getX() - playerRadius * Math.cos(angleRadian);
+        double bulletFlipY = playerCentre.getY() - playerRadius * Math.sin(angleRadian);
+        System.out.println("@MachineGun.fire holder=" + holder);
+        Collision raycast = Physics.raycastBullet(
+            playerCentre,
+            new Vector2(mouseX - bulletX, mouseY - bulletY).normalize().mult(55),
             this.holder,
-            uuid
-        );
-      } else {
-        bullet = new FireBullet(
-            (holder.isAimingLeft() ? bulletFlipX : bulletX),
-            (holder.isAimingLeft() ? bulletFlipY : bulletY),
-            mouseX,
-            mouseY,
-            this.holder,
-            uuid);
+            false);
+        Bullet bullet;
+
+        if (raycast != null && raycast.getCollidedObject().getClass().getPackage().getName()
+            .contains(blocksPackageName)) {
+          bullet = new FireBullet(
+              holderHandPos[0],
+              holderHandPos[1] + 20,
+              mouseX,
+              mouseY,
+              this.holder,
+              uuid
+          );
+        } else {
+          bullet = new FireBullet(
+              (holder.isAimingLeft() ? bulletFlipX : bulletX),
+              (holder.isAimingLeft() ? bulletFlipY : bulletY),
+              mouseX,
+              mouseY,
+              this.holder,
+              uuid);
+        }
+        settings.getLevelHandler().addGameObject(bullet);
+        this.currentCooldown = getDefaultCoolDown();
+        new AudioHandler(settings, Client.musicActive).playSFX("MACHINEGUN");
+        deductAmmo();
+      } catch (NullPointerException e) {
+        System.out.println("NullPointerException in MachineGun");
       }
-      settings.getLevelHandler().addGameObject(bullet);
-      this.currentCooldown = getDefaultCoolDown();
-      new AudioHandler(settings, Client.musicActive).playSFX("MACHINEGUN");
-      deductAmmo();
     }
   }
 

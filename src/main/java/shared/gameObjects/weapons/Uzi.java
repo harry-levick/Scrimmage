@@ -71,15 +71,19 @@ public class Uzi extends Gun {
       double bulletY = playerCentre.getY() - playerRadius * Math.sin(-angleRadian);
       double bulletFlipX = playerCentre.getX() - playerRadius * Math.cos(angleRadian);
       double bulletFlipY = playerCentre.getY() - playerRadius * Math.sin(angleRadian);
-      Bullet bullet =
-          new FireBullet(
-              (holder.isAimingLeft() ? bulletFlipX : bulletX),
-              (holder.isAimingLeft() ? bulletFlipY : bulletY),
-              mouseX,
-              mouseY,
-              this.holder,
-              uuid);
-      settings.getLevelHandler().addGameObject(bullet);
+      try {
+        Bullet bullet =
+            new FireBullet(
+                (holder.isAimingLeft() ? bulletFlipX : bulletX),
+                (holder.isAimingLeft() ? bulletFlipY : bulletY),
+                mouseX,
+                mouseY,
+                this.holder,
+                uuid);
+        settings.getLevelHandler().addGameObject(bullet);
+      } catch (NullPointerException e) {
+        System.out.println("NullPointerException in Uzi when creating bullet");
+      }
       this.currentCooldown = getDefaultCoolDown();
       new AudioHandler(settings, Client.musicActive).playSFX("MACHINEGUN");
       deductAmmo();
