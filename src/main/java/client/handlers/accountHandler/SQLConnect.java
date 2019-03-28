@@ -12,10 +12,9 @@ import java.util.Properties;
  */
 public class SQLConnect {
 
+  private static final String URL = "jdbc:mysql://sql2.freemysqlhosting.net:3306";
   //  private static final String URL = "jdbc:mysql://REDACTED";
   private static final String USERNAME = "sql2284965";
-
-  private static final String URL = "jdbc:mysql://sql2.freemysqlhosting.net:3306";
   //  private static final String USERNAME = "REDACTED";
   private static final String PASSWD = "lU7*jV5%";
 
@@ -28,7 +27,6 @@ public class SQLConnect {
     props.setProperty("password", PASSWD);
     return DriverManager.getConnection(URL, props);
   }
-
   // private static final String PASSWD = "REDACTED";
   private static final String GET_DATA_STATEMENT = "SELECT uuid, achievements, skins, lootbox, money FROM sql2284965.userData WHERE name = ? AND password = ?";
   private static final String CHECK_USERNAME = "SELECT name FROM sql2284965.userData WHERE name = ?";

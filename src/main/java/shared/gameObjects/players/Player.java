@@ -1,7 +1,6 @@
 package shared.gameObjects.players;
 
 import client.handlers.effectsHandler.Particle;
-import client.handlers.effectsHandler.ServerParticle;
 import client.main.Settings;
 import java.util.UUID;
 import javafx.application.Platform;
@@ -645,7 +644,7 @@ public class Player extends GameObject {
    */
   public void setHolding(Weapon newHolding) {
     try {
-      if (armLeft == null || armRight == null || !armLeft.limbAttached || !armRight.limbAttached) {
+      if (!armLeft.limbAttached || !armRight.limbAttached) {
         return;
       }
     } catch (Exception e) {

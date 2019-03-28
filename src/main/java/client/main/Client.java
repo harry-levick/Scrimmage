@@ -139,7 +139,7 @@ public class Client extends Application {
   private int framesElapsedSinceFPS = 0;
   private boolean startedGame;
   private int timeRemaining;
-  private int timeLimit = 0; // Time limit in minutes
+  private int timeLimit = 3; // Time limit in minutes
   private float maximumStep;
   private long previousTime;
   private float accumulatedTime;
@@ -395,7 +395,7 @@ public class Client extends Application {
             });
 
           }
-        }, 20000
+        }, 15000
     );
 
 

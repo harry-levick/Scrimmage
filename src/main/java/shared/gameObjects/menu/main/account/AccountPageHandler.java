@@ -30,7 +30,7 @@ import shared.util.Path;
 import shared.util.maths.Vector2;
 
 /**
- * Handler for the "Accounts" multipage map
+ *  Handler for the "Accounts" multipage map
  */
 public class AccountPageHandler extends GameObject {
 
@@ -41,7 +41,6 @@ public class AccountPageHandler extends GameObject {
 
   /**
    * Constructs gameObject scene in 0 0 with size 1
-   *
    * @param uuid UUID of gameObject
    */
   public AccountPageHandler(UUID uuid) {
