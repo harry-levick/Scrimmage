@@ -1,6 +1,8 @@
 package shared.gameObjects.UI;
 
 
+import javafx.scene.paint.Color;
+import client.main.Settings;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Font;
@@ -25,7 +27,7 @@ public class Score {
    *
    * @param root UI root to render to
    */
-  public Score(Group root, Player clientPlayer) {
+  public Score(Group root, Player clientPlayer, Settings settings) {
     board = new Animator();
     board.supplyAnimation("default", "images/ui/score.png");
     boardImageView = new ImageView();
@@ -35,7 +37,8 @@ public class Score {
 
     player = clientPlayer;
     scoreText = new Text(xPos + 20, yPos + 40, "");
-    scoreText.setFont(new Font(48));
+    scoreText.setFill(new Color(0.3,0.3,0.3, 1));
+    scoreText.setFont(settings.getFont(38));
     root.getChildren().addAll(this.boardImageView, this.scoreText);
   }
 

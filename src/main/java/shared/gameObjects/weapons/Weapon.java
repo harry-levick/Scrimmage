@@ -82,9 +82,7 @@ public abstract class Weapon extends GameObject {
    * Vector2 for throwing the weapon
    */
   protected Vector2 throwVector;
-  /**
-   * Weapon ranking to allow Bot to decide what weapon is best
-   */
+  /** Weapon ranking to allow Bot to decide what weapon is best */
   protected int weaponRank;
 
   /**
@@ -97,6 +95,9 @@ public abstract class Weapon extends GameObject {
    * value only when holder != null
    */
   protected double[] holderHandPos;
+
+  /** Player's radius where a bullet starts fire */
+  protected double playerRadius = 55 + 45; // Player.sizeY / 2 + bias
 
   /**
    * Angle of aiming in radian measured about x axis | +  |  - ----------- -  |  + |
@@ -389,6 +390,7 @@ public abstract class Weapon extends GameObject {
       p.deductHp(30);
     }
 
+    this.holder = null;
     setCollectable();
     this.startedThrowing = false;
   }

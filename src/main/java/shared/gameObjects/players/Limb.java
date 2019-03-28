@@ -52,7 +52,7 @@ public abstract class Limb extends GameObject implements Destructable {
   protected int limbMaxHealth;
   protected boolean lastAttachedCheck;
   protected Behaviour behaviour;
-  protected Behaviour lastBehaviour;
+  protected boolean playerFaceLeft;
   protected int action;
   protected HashMap<Behaviour, ArrayList<Integer>> actions;
 
@@ -91,7 +91,6 @@ public abstract class Limb extends GameObject implements Destructable {
     this.rotate = new Rotate();
     this.behaviour = Behaviour.IDLE;
     this.actions = new HashMap<>();
-    this.lastBehaviour = Behaviour.IDLE;
     this.action = 0;
     this.pivotX = pivotX;
     this.pivotY = pivotY;
@@ -155,6 +154,8 @@ public abstract class Limb extends GameObject implements Destructable {
   @Override
   public void update() {
     super.update();
+    getBehaviour();
+    this.playerFaceLeft = this.player.faceLeft;
     if (limbAttached) {
       if (!lastAttachedCheck) {
         removeComponent(rb);
@@ -205,7 +206,6 @@ public abstract class Limb extends GameObject implements Destructable {
 
   private void getBehaviour() {
     this.behaviour = this.player.behaviour;
-
   }
 
   protected abstract void rotateAnimate();
@@ -225,6 +225,7 @@ public abstract class Limb extends GameObject implements Destructable {
   @Override
   public void render() {
     super.render();
+    imageView.getTransforms().clear();
     getBehaviour();
     if (limbAttached) {
       if (!settings.isMultiplayer()) {
