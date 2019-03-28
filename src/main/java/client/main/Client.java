@@ -155,7 +155,7 @@ public class Client extends Application {
    * Sets a new user interface in the uiRoot, rendered by the main game loop depending on use
    */
   public static void setUserInterface() {
-    userInterface = new UI(uiRoot, levelHandler.getClientPlayer());
+    userInterface = new UI(uiRoot, levelHandler.getClientPlayer(),settings);
   }
 
   /**
@@ -409,6 +409,7 @@ public class Client extends Application {
     if (!startedGame) {
       timeRemaining = timeLimit * 60;
 
+     
       Timer secondsTimer = new Timer();
       secondsTimer.scheduleAtFixedRate(new TimerTask() {
         @Override

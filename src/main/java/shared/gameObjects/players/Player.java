@@ -62,6 +62,8 @@ public class Player extends GameObject {
   public int score;
   //TODO idk what this does
   protected Behaviour behaviour;
+  /** True if start punching */
+  protected boolean punched;
   /**
    * Boolean to determine if a player has jumped or not
    */
@@ -70,9 +72,9 @@ public class Player extends GameObject {
    * Boolean to determine if a player is on the ground or in the air
    */
   protected boolean grounded;
-  /**
-   * True when the gun is aiming LHS
-   */
+  /** True if player is facing left */
+  protected boolean faceLeft;
+  /** True when the gun is aiming LHS */
   protected boolean aimLeft;
   /**
    * True when the mouse pointer is on the LHS
@@ -142,8 +144,8 @@ public class Player extends GameObject {
 
   // Death text
   private boolean diedThisUpdate = true;
-  private Text youDied = new Text("You Died!");
-  private Text killedBy = new Text("Killed By null");
+  private transient Text youDied = new Text("You Died!");
+  private transient Text killedBy = new Text("Killed By null");
 
   /**
    * Constructs a player object in the scene
@@ -156,6 +158,7 @@ public class Player extends GameObject {
     super(x, y, 80, 110, ObjectType.Player, playerUUID);
     this.lastInputCount = 0;
     this.score = 0;
+    this.punched = false;
     this.leftKey = false;
     this.rightKey = false;
     this.jumpKey = false;
@@ -169,11 +172,15 @@ public class Player extends GameObject {
     addComponent(bc);
     addComponent(rb);
     aimLeft = pointLeft = true;
+    faceLeft = false;
     lightingSwitch = true;
     youDied.setFont(settings.getFont(72));
     youDied.setFill(Color.DARKRED);
     killedBy.setFont(settings.getFont(32));
     killedBy.setFill(Color.DARKRED);
+
+    youDied = new Text("You Died!");
+    killedBy = new Text("Killed by unknown");
   }
 
   // Initialise the animation
@@ -187,10 +194,15 @@ public class Player extends GameObject {
     super.initialise(root, settings);
     addLimbs();
     addPunch();
-    initialiseColorFilter();
-    if (lightingSwitch) {
-      initialiseLighting();
+    if (!settings.getLevelHandler().isServer()) {
+      youDied = new Text("You Died!");
+      killedBy = new Text("Killed by unknown");
+      initialiseColorFilter();
+      if (lightingSwitch) {
+        initialiseLighting();
+      }
     }
+
     if (username == null) {
       username = "Player";
     }
@@ -232,9 +244,13 @@ public class Player extends GameObject {
     armRight.addChild(handRight);
     armLeft.addChild(handLeft);
     addPunch();
-    initialiseColorFilter();
-    if (lightingSwitch) {
-      initialiseLighting();
+    if (!settings.getLevelHandler().isServer()) {
+      youDied = new Text("You Died!");
+      killedBy = new Text("Killed by unknown");
+      initialiseColorFilter();
+      if (lightingSwitch) {
+        initialiseLighting();
+      }
     }
   }
 
@@ -250,7 +266,9 @@ public class Player extends GameObject {
   }
 
   private void resetColorFilter() {
-    colorFilter.setDesaturate(0.0f);
+    if (colorFilter != null) {
+      colorFilter.setDesaturate(0.0f);
+    }
   }
 
 
@@ -342,7 +360,6 @@ public class Player extends GameObject {
     if (getY() > 1200) {
       deductHp(999);
     }
-
     checkGrounded(); // Checks if the player is grounded
     badWeapon();
     pointLeft = mouseX < this.getX();
@@ -355,23 +372,26 @@ public class Player extends GameObject {
     }
     damagedThisFrame = false;
     if (!(this instanceof Bot)) {
-      applyFilter();
-      if (lightingSwitch) {
-        updateLighting();
-      }
-      if (health <= 0) {
-        youDied.setLayoutY(settings.getGrisPos(10));
-        youDied
-            .setLayoutX((settings.getMapWidth() / 2) - (youDied.getLayoutBounds().getWidth() / 2));
-        killedBy.setText("Killed by " + "someone");
-        killedBy.setLayoutY(settings.getGrisPos(13));
-        killedBy
-            .setLayoutX((settings.getMapWidth() / 2) - (killedBy.getLayoutBounds().getWidth() / 2));
+      if (!settings.getLevelHandler().isServer()) {
+        applyFilter();
+        if (lightingSwitch) {
+          updateLighting();
+        }
 
-        if (diedThisUpdate) {
-          settings.getOverlay().getChildren().add(youDied);
-          settings.getOverlay().getChildren().add(killedBy);
-          diedThisUpdate = false;
+        if (health <= 0) {
+          youDied.setLayoutY(settings.getGrisPos(10));
+          youDied.setLayoutX(
+              (settings.getMapWidth() / 2) - (youDied.getLayoutBounds().getWidth() / 2));
+          killedBy.setText("Killed by " + "someone");
+          killedBy.setLayoutY(settings.getGrisPos(13));
+          killedBy.setLayoutX(
+              (settings.getMapWidth() / 2) - (killedBy.getLayoutBounds().getWidth() / 2));
+
+          if (diedThisUpdate) {
+            settings.getOverlay().getChildren().add(youDied);
+            settings.getOverlay().getChildren().add(killedBy);
+            diedThisUpdate = false;
+          }
         }
       }
       super.update();
@@ -416,16 +436,19 @@ public class Player extends GameObject {
       rb.moveX(speed);
       createWalkParticle();
       behaviour = Behaviour.WALK_RIGHT;
+      faceLeft = false;
     }
     if (leftKey) {
       rb.moveX(speed * -1);
       createWalkParticle();
       behaviour = Behaviour.WALK_LEFT;
+      faceLeft = true;
     }
 
     if (!rightKey && !leftKey) {
       behaviour = Behaviour.IDLE;
     }
+
     if (jumpKey && !jumped && grounded) {
       rb.moveY(jumpForce * (legLeft.limbAttached && legRight.limbAttached ? 1f : 0.7f), 0.33333f);
       jumped = true;
@@ -442,6 +465,8 @@ public class Player extends GameObject {
     }
 
     if (click && holding != null) {
+      if (holding instanceof Punch)
+        punched = true;
       holding.fire(mouseX, mouseY);
     }
     // setX(getX() + (vx * 0.0166));
@@ -522,8 +547,9 @@ public class Player extends GameObject {
    */
   public void throwHolding() {
     if (!(this.holding == null || this.holding instanceof Punch)) {
-      Weapon w = this.holding;
-      w.startThrowing();
+      //Weapon w = this.holding;
+      //w.startThrowing();
+      this.holding.startThrowing();
       throwHoldingKey = false;
       this.usePunch();
     }
@@ -556,9 +582,15 @@ public class Player extends GameObject {
   }
 
   /**
+<<<<<<< HEAD
+   * Deduct hp of the player by the given value. Player dies if health falls below zero.
+   *
+   * @param damage Health to deduct from player
+=======
    * Applies damage to the player from weapons and other objects and manages players death
    *
    * @param damage Amount of damage to deal to player
+>>>>>>> master
    */
   public void deductHp(int damage) {
     if (!damagedThisFrame) {
@@ -567,6 +599,8 @@ public class Player extends GameObject {
       if (this.health <= 0) {
         settings.playerDied();
         this.setActive(false);
+        throwHolding();
+        usePunch();
         bc.setLayer(ColliderLayer.PARTICLE);
         children.forEach(child -> child.destroy());
       }
@@ -608,16 +642,18 @@ public class Player extends GameObject {
       this.bc.setLayer(ColliderLayer.PLAYER);
     }
     addPunch();
-    resetColorFilter();
+    usePunch();
+    if (!settings.getLevelHandler().isServer()) {
+      resetColorFilter();
 
-    if (settings.getOverlay().getChildren().contains(youDied)) {
-      settings.getOverlay().getChildren().remove(youDied);
+      if (settings.getOverlay().getChildren().contains(youDied)) {
+        settings.getOverlay().getChildren().remove(youDied);
+      }
+      if (settings.getOverlay().getChildren().contains(killedBy)) {
+        settings.getOverlay().getChildren().remove(killedBy);
+      }
+      diedThisUpdate = true;
     }
-    if (settings.getOverlay().getChildren().contains(killedBy)) {
-      settings.getOverlay().getChildren().remove(killedBy);
-    }
-    diedThisUpdate = true;
-
   }
 
   /**
@@ -810,6 +846,15 @@ public class Player extends GameObject {
    */
   public boolean isGrounded() {
     return grounded;
+  }
+
+  /** Returns true if started a punch */
+  public boolean isPunched() {
+    return punched;
+  }
+
+  public void setPunched(boolean b) {
+    punched = b;
   }
 
   /**
