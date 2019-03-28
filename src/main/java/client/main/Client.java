@@ -19,6 +19,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -138,7 +139,7 @@ public class Client extends Application {
   private int framesElapsedSinceFPS = 0;
   private boolean startedGame;
   private int timeRemaining;
-  private int timeLimit = 3; // Time limit in minutes
+  private int timeLimit = 0; // Time limit in minutes
   private float maximumStep;
   private long previousTime;
   private float accumulatedTime;
@@ -361,19 +362,42 @@ public class Client extends Application {
     singleplayerGame = false;
     gameOver = false;
     levelHandler.getBotPlayerList().forEach((key, bot) -> bot.terminate());
-    levelHandler.getPlayers().keySet().removeAll(levelHandler.getBotPlayerList().keySet());
-    levelHandler.getGameObjects().keySet().removeAll(levelHandler.getBotPlayerList().keySet());
-    levelHandler.getBotPlayerList().forEach((key, gameObject) -> gameObject.removeRender());
-    levelHandler.getBotPlayerList().forEach((key, gameObject) -> gameObject = null);
-    levelHandler.getBotPlayerList().clear();
     // remove desaturation
     ColourFilters filter = new ColourFilters();
     filter.setDesaturate(0);
     filter.applyFilter(gameRoot, "desaturation");
     filter.applyFilter(backgroundRoot, "desaturation");
+    //Show Scores
     levelHandler.changeMap(
-        new Map("menus/main_menu.map", Path.convert("src/main/resources/menus/main_menu.map")),
-        false, false);
+        new Map("menus/score.map", Path.convert("src/main/resources/menus/score.map")),
+        true, false);
+
+    new java.util.Timer().schedule(
+        new java.util.TimerTask() {
+          @Override
+          public void run() {
+            Platform.runLater(new Runnable() {
+              @Override
+              public void run() {
+                levelHandler.getPlayers().keySet()
+                    .removeAll(levelHandler.getBotPlayerList().keySet());
+                levelHandler.getGameObjects().keySet()
+                    .removeAll(levelHandler.getBotPlayerList().keySet());
+                levelHandler.getBotPlayerList()
+                    .forEach((key, gameObject) -> gameObject.removeRender());
+                levelHandler.getBotPlayerList().forEach((key, gameObject) -> gameObject = null);
+                levelHandler.getBotPlayerList().clear();
+                levelHandler.changeMap(
+                    new Map("menus/main_menu.map",
+                        Path.convert("src/main/resources/menus/main_menu.map")),
+                    true, false);
+              }
+            });
+
+          }
+        }, 20000
+    );
+
 
   }
 

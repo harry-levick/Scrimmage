@@ -41,18 +41,20 @@ public class Podium1 extends GameObject {
   }
 
   public void initialise(Group root, Settings settings) {
-    super.initialise(root, settings);/**
+    super.initialise(root, settings);
+    /**
      podium2 = (Podium2) settings.getLevelHandler().getGameObjects().get(UUID.fromString("180e405a-e3ac-46f4-9480-67f31496ea72"));
      podium3 = (Podium3) settings.getLevelHandler().getGameObjects().get(UUID.fromString("5883e6ae-558a-4db1-82c3-2dcf353ec2a5"));
      podium4 = (Podium4) settings.getLevelHandler().getGameObjects().get(UUID.fromString("15699b59-f31b-4708-9ae0-97ef77333c9d"));
+     System.out.println("HI");
      ArrayList<Player> players = new ArrayList();
      settings.getLevelHandler().getPlayers().forEach((uuid, player) -> players.add(player));
      Comparator<Player> compareScore = Comparator.comparing(Player::getScore);
      Collections.sort(players,compareScore);
-     players.get(0).getTransform().setPos(this.getTransform().getPos().add(new Vector2(50,-300)));
-     players.get(1).getTransform().setPos(podium2.getTransform().getPos().add(new Vector2(50,-300)));
-     players.get(2).getTransform().setPos(podium3.getTransform().getPos().add(new Vector2(50,-300)));
-     players.get(3).getTransform().setPos(podium4.getTransform().getPos().add(new Vector2(50,-300)));
+     //if (players.get(0) != null) players.get(0).getTransform().setPos(this.getTransform().getPos().add(new Vector2(50,-300)));
+     //if (players.get(1) != null) players.get(1).getTransform().setPos(podium2.getTransform().getPos().add(new Vector2(50,-300)));
+     // if (players.get(2) != null) players.get(2).getTransform().setPos(podium3.getTransform().getPos().add(new Vector2(50,-300)));
+     //if (players.get(3) != null) players.get(3).getTransform().setPos(podium4.getTransform().getPos().add(new Vector2(50,-300)));
      **/
   }
 
