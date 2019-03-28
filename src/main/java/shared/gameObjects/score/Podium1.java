@@ -54,10 +54,12 @@ public class Podium1 extends GameObject {
   }
 
   public void initialise(Group root, Settings settings) {
+    //Kill Bots
     settings.getLevelHandler().getGameObjects().keySet()
         .removeAll(settings.getLevelHandler().getBotPlayerList().keySet());
     settings.getLevelHandler().getBotPlayerList().forEach((key, bot) -> bot.terminate());
     super.initialise(root, settings);
+    //Create Podiums
     podium2 = new Podium2(getX() + 320, getY() + 160, 240, 320);
     settings.getLevelHandler().addGameObject(podium2);
     podium3 = new Podium3(getX() - 320, getY() + 240, 240, 240);
@@ -65,6 +67,7 @@ public class Podium1 extends GameObject {
     podium4 = new Podium4(getX() + 640, getY() + 360, 240, 120);
     settings.getLevelHandler().addGameObject(podium4);
      ArrayList<Player> players = new ArrayList();
+    //Create player replacements for each bot
     settings.getLevelHandler().getPlayers().forEach((uuid, player) -> {
       if (player instanceof Bot) {
         Player playerCopy = new Player(player.getX(), player.getY(), player.getUUID());
@@ -76,6 +79,7 @@ public class Podium1 extends GameObject {
         players.add(player);
       }
     });
+    //Double destory bots
     settings.getLevelHandler().getPlayers().keySet()
         .removeAll(settings.getLevelHandler().getBotPlayerList().keySet());
     settings.getLevelHandler().getBotPlayerList()
@@ -84,7 +88,8 @@ public class Podium1 extends GameObject {
     settings.getLevelHandler().getBotPlayerList().clear();
 
      Comparator<Player> compareScore = Comparator.comparing(Player::getScore);
-     Collections.sort(players,compareScore);
+    Collections.sort(players, compareScore.reversed());
+    //1st
     if (players.size() > 0) {
       Vector2 pos0 = this.getTransform().getPos().add(new Vector2(80, -300));
       players.get(0).getTransform().setPos(pos0);
@@ -93,6 +98,7 @@ public class Podium1 extends GameObject {
       score0.setTranslateY(pos0.getY());
       root.getChildren().add(score0);
     }
+    //2nd
     if (players.size() > 1) {
       Vector2 pos1 = podium2.getTransform().getPos().add(new Vector2(80, -300));
       players.get(1).getTransform()
@@ -102,6 +108,7 @@ public class Podium1 extends GameObject {
       score1.setTranslateY(pos1.getY());
       root.getChildren().add(score1);
      }
+    //3rd
     if (players.size() > 2) {
       Vector2 pos2 = podium3.getTransform().getPos().add(new Vector2(80, -300));
      players.get(2).getTransform()
@@ -111,6 +118,7 @@ public class Podium1 extends GameObject {
       score2.setTranslateY(pos2.getY());
       root.getChildren().add(score2);
      }
+    //4th
     if (players.size() > 3) {
       Vector2 pos3 = podium4.getTransform().getPos().add(new Vector2(80, -300));
       players.get(3).getTransform()
@@ -120,6 +128,7 @@ public class Podium1 extends GameObject {
       score3.setTranslateY(pos3.getY());
       root.getChildren().add(score3);
      }
+    //Go back
     new java.util.Timer().schedule(
         new java.util.TimerTask() {
           @Override
@@ -127,6 +136,9 @@ public class Podium1 extends GameObject {
             Platform.runLater(new Runnable() {
               @Override
               public void run() {
+                if (settings.getLevelHandler().getClientPlayer() != null) {
+                  players.remove(settings.getLevelHandler().getClientPlayer());
+                }
                 players.forEach(player -> {
                   player.removeRender();
                 });
