@@ -37,6 +37,7 @@ public class Animator {
 
   /**
    * Adds an animation composed of frames from a list of files
+   *
    * @param animationName Name of the animation to switch into
    * @param args List of files
    */
@@ -86,6 +87,7 @@ public class Animator {
 
   /**
    * Changes the current animation state to a new one
+   *
    * @param animationName New animationt state to switch into
    */
   public void switchAnimation(String animationName) {

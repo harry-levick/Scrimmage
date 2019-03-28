@@ -14,8 +14,10 @@ public class PacketMap extends Packet {
     this.uuid = uuid;
     data = packetID + "," + name + "," + uuid;
   }
+
   /**
    * Constructs a packet from a string of data
+   *
    * @param data Packet data received from sender
    */
   public PacketMap(String data) {

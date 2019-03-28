@@ -154,6 +154,7 @@ public class AudioHandler {
 
   /**
    * If this AudioHandler is active
+   *
    * @return The state of this handler. Active is true if it plays sounds
    */
   public boolean getActive() {
@@ -162,6 +163,7 @@ public class AudioHandler {
 
   /**
    * Sets the state of the AudioHandler. True if it plays sound
+   *
    * @param active boolean state of the handler
    */
   public void setActive(boolean active) {

@@ -9,10 +9,12 @@ import shared.util.maths.Vector2;
  * Class to handle emission of Line-based particles.
  */
 public class LineEmitter extends ParticleEmitter {
+
   private Vector2 leftPos;
 
   /**
    * Constructor:
+   *
    * @param sourcePosition Centre position of the emitter
    * @param initialVelocity Maximum initial velocity particles will be spawned it
    * @param acceleration Constant acceleration of particles in their lifetime
@@ -44,13 +46,14 @@ public class LineEmitter extends ParticleEmitter {
         particleAmount,
         ParticleType.LINE,
         imageSource);
-    this.leftPos = sourcePosition.sub(new Vector2(radius/2, 0));
+    this.leftPos = sourcePosition.sub(new Vector2(radius / 2, 0));
   }
 
   @Override
   protected Particle newParticle() {
     Random random = new Random();
-    Vector2 newPos = leftPos.add(new Vector2(random.nextDouble()*radius, 0));
-    return new Particle(newPos, velocity.mult(random.nextFloat()), acceleration, particleSize, imageSource, 0.2f);
+    Vector2 newPos = leftPos.add(new Vector2(random.nextDouble() * radius, 0));
+    return new Particle(newPos, velocity.mult(random.nextFloat()), acceleration, particleSize,
+        imageSource, 0.2f);
   }
 }

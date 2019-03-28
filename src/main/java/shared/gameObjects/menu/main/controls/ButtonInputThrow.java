@@ -25,7 +25,8 @@ public class ButtonInputThrow extends ButtonObject {
     super.render();
     super.button.setFont(settings.getFont(20));
     super.setText("THROW: " + Client.settings.getKeyMap(KEY_CONTROL.THROW));
-    if (Client.keyInput.getChangeListening() && Client.keyInput.getHotChangeKey() == KEY_CONTROL.THROW) {
+    if (Client.keyInput.getChangeListening()
+        && Client.keyInput.getHotChangeKey() == KEY_CONTROL.THROW) {
       super.button.setTextFill(Color.YELLOW);
     } else {
       super.button.setTextFill(Color.WHITE);

@@ -19,8 +19,10 @@ public class PacketGameState extends Packet {
 
   /**
    * Constructs a packet that can be sent to the client to update all the game objects in a map
+   *
    * @param gameObjects The list of game objects available
-   * @param sendAll Whether to send all data (true) or to only send data that has been updated in the last frame (false)
+   * @param sendAll Whether to send all data (true) or to only send data that has been updated in
+   * the last frame (false)
    */
   public PacketGameState(ArrayList<GameObject> gameObjects, boolean sendAll) {
     packetID = PacketID.GAMESTATE.getID();
@@ -35,6 +37,7 @@ public class PacketGameState extends Packet {
 
   /**
    * Constructs a packet from received data to update a client's game objects
+   *
    * @param data Packet data received from sender
    */
   public PacketGameState(String data) {

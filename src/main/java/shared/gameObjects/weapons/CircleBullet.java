@@ -17,9 +17,13 @@ public class CircleBullet extends Bullet {
    * Damage of the bullet
    */
   private static final int damage = 5;
-  /** Speed of the bullet */
+  /**
+   * Speed of the bullet
+   */
   private static final int speed = 50;
-  /** Path to image */
+  /**
+   * Path to image
+   */
   private static String imagePath = "images/weapons/circleBullet.png";
 
   /**

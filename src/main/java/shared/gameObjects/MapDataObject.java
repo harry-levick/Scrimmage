@@ -20,6 +20,7 @@ public class MapDataObject extends GameObject implements Serializable {
 
   /**
    * Constructs a Map Data container
+   *
    * @param mapUUID UUID of object
    * @param gameState Current game state
    */

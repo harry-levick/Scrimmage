@@ -8,6 +8,7 @@ public class TestObject extends GameObject {
 
   public int test;
   public int testStay;
+
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
    * ensure actions are calculated the same
@@ -24,6 +25,7 @@ public class TestObject extends GameObject {
     super(x, y, sizeX, sizeY, id, testUUID);
     test = 0;
   }
+
   public TestObject() {
     super(0, 0, 10, 10, ObjectType.Bot, UUID.randomUUID());
   }
@@ -46,10 +48,12 @@ public class TestObject extends GameObject {
   public void OnCollisionEnter(Collision col) {
     test = 1;
   }
+
   @Override
   public void OnCollisionStay(Collision col) {
     testStay++;
   }
+
   @Override
   public void OnCollisionExit(Collision col) {
     test = 2;

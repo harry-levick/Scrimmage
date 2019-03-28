@@ -44,6 +44,7 @@ public class LevelHandler {
   private Map previousMap;
   private Group backgroundRoot;
   private Group gameRoot;
+  private Group lightingRoot;
   private Group uiRoot;
   private Background background;
   private AudioHandler musicPlayer;
@@ -53,12 +54,13 @@ public class LevelHandler {
 
   /**
    * Constructs level handler for client
+   *
    * @param settings Settings attached to client
    * @param backgroundRoot root containing background images
    * @param gameRoot main game root containing all the objects
    * @param uiRoot root containing the foreground and UI images
    */
-  public LevelHandler(Settings settings, Group backgroundRoot, Group gameRoot,
+  public LevelHandler(Settings settings, Group backgroundRoot, Group gameRoot, Group lightingRoot,
       Group uiRoot) {
     this.settings = settings;
     gameObjects = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
@@ -71,6 +73,7 @@ public class LevelHandler {
     maps = MapLoader.getMaps(settings.getMapsPath());
     this.backgroundRoot = backgroundRoot;
     this.gameRoot = gameRoot;
+    this.lightingRoot = lightingRoot;
     this.isServer = false;
     this.uiRoot = uiRoot;
 
@@ -81,8 +84,10 @@ public class LevelHandler {
     previousMap = null;
     setPlaylist("playlist1");
   }
+
   /**
    * Constructs level handler for server
+   *
    * @param settings Settings attached to server
    * @param backgroundRoot root containing background images
    * @param gameRoot main game root containing all the objects
@@ -110,6 +115,7 @@ public class LevelHandler {
 
   /**
    * Changes the current active map
+   *
    * @param map Map object containing details for the new map to load
    * @param moveToSpawns If true, moves the players to the spawnpoints found on the map
    * @param isServer If false, it is a client changing their map
@@ -138,7 +144,6 @@ public class LevelHandler {
 
   /**
    * Loads the previous map instead of the current one
-   * @param moveToSpawns
    */
   public void previousMap(Boolean moveToSpawns) {
     if (previousMap != null) {
@@ -232,6 +237,7 @@ public class LevelHandler {
 
   /**
    * List of all gameObjects excluding players
+   *
    * @return All non-player Game Objects
    */
   public ConcurrentLinkedHashMap<UUID, GameObject> getGameObjectsFiltered() {
@@ -252,17 +258,19 @@ public class LevelHandler {
    * @param gameObject GameObject to be added
    */
   public void addGameObject(GameObject gameObject) {
-    if((gameObject instanceof Particle || gameObject instanceof ParticleEmitter) && isServer) return;
+    if ((gameObject instanceof Particle || gameObject instanceof ParticleEmitter) && isServer) {
+      return;
+    }
     try {
       createObject(gameObject);
       if (isServer) {
         ConcurrentLinkedHashMap<UUID, GameObject> temp = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
             .maximumWeightedCapacity(1).build();
-          temp.put(gameObject.getUUID(), gameObject);
+        temp.put(gameObject.getUUID(), gameObject);
         server.sendObjects(temp);
       }
     } catch (IllegalStateException e) {
-      System.out.println("AI - avoiding placement of object");
+      //System.out.println("AI - avoiding placement of object");
     }
 
   }
@@ -316,8 +324,13 @@ public class LevelHandler {
     return maps;
   }
 
+  public LinkedList<Map> getPlaylist() {
+    return playlist;
+  }
+
   /**
    * Initialise the playlist with a selected playlist name
+   *
    * @param playlistName The playlist to be created, must be the name of the directory
    */
   public void setPlaylist(String playlistName) {
@@ -329,11 +342,11 @@ public class LevelHandler {
       playlist.add(
           new Map(
               "Map" + i,
-              Path.convert(settings.getMapsPath() + File.separator + playlistName + File.separator + "map" + i + ".map")));
+              Path.convert(
+                  settings.getMapsPath() + File.separator + playlistName + File.separator + "map"
+                      + i + ".map")));
     }
   }
-
-  public LinkedList<Map> getPlaylist() { return playlist; }
 
   public Map pollPlayList() {
     int index = new Random().nextInt(getPlaylist().size());
@@ -402,9 +415,13 @@ public class LevelHandler {
   public Group getGameRoot() {
     return gameRoot;
   }
-  
+
   public Group getBackgroundRoot() {
     return backgroundRoot;
+  }
+
+  public Group getLightingRoot() {
+    return lightingRoot;
   }
 
   public LinkedHashMap<UUID, Limb> getLimbs() {

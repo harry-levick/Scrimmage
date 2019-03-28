@@ -70,7 +70,8 @@ public class Arm extends Limb {
 
   @Override
   public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", "images/player/skin" + settings.getData().getActiveSkin()[2] + "/arm.png");
+    this.animation.supplyAnimation("default",
+        "images/player/skin" + settings.getData().getActiveSkin()[2] + "/arm.png");
   }
 
   @Override
@@ -82,48 +83,44 @@ public class Arm extends Limb {
     // Control to switch the leg animations depending on movement direction.
     boolean control = isLeft;
     int inverse = 1;
-    if(this.behaviour == Behaviour.WALK_LEFT) {
-      control =!control;
+    if (this.behaviour == Behaviour.WALK_LEFT) {
+      control = !control;
       inverse = -1;
     }
-    
-    if(!control) {
-      imageView.setRotate(-130*inverse);
+
+    if (!control) {
+      imageView.setRotate(-130 * inverse);
     }
-    
+
   }
-  
+
   private void walkAnimation() {
-  
+
     int interval = 7;
     int segments = 3;
     int localTime = this.player.getAnimationTimer() % (interval * segments);
-    
+
     boolean control = isLeft;
     int inverse = 1;
-    if(this.behaviour == Behaviour.WALK_LEFT) {
-      control =!control;
+    if (this.behaviour == Behaviour.WALK_LEFT) {
+      control = !control;
       inverse = -1;
     }
-    
+
     // Default is for running left.
-    if(this.behaviour == Behaviour.WALK_LEFT || this.behaviour == Behaviour.WALK_RIGHT) {   
-      
-      if(localTime < interval * 1) {
-        if(control) {
-          imageView.setRotate(60*inverse);
+    if (this.behaviour == Behaviour.WALK_LEFT || this.behaviour == Behaviour.WALK_RIGHT) {
+
+      if (localTime < interval * 1) {
+        if (control) {
+          imageView.setRotate(60 * inverse);
+        } else {
+          imageView.setRotate(-100 * inverse);
         }
-        else {
-          imageView.setRotate(-100*inverse);
-        }
-      }
-      
-      else if(localTime < interval * 2) {
-        if(control) {
-          imageView.setRotate(-40*inverse);
-        }
-        else {
-          imageView.setRotate(-50*inverse);
+      } else if (localTime < interval * 2) {
+        if (control) {
+          imageView.setRotate(-40 * inverse);
+        } else {
+          imageView.setRotate(-50 * inverse);
         }
       }
     }
@@ -131,16 +128,12 @@ public class Arm extends Limb {
 
   @Override
   protected void rotateAnimate() {
-    if(this.behaviour == Behaviour.JUMP || this.player.getJumped()) {
+    if (this.behaviour == Behaviour.JUMP || this.player.getJumped()) {
       jumpAnimation();
-    }
- 
-    else if(this.behaviour == Behaviour.WALK_LEFT || this.behaviour == Behaviour.WALK_RIGHT) {   
+    } else if (this.behaviour == Behaviour.WALK_LEFT || this.behaviour == Behaviour.WALK_RIGHT) {
       walkAnimation();
     }
 
-    
-    
-    
+
   }
 }

@@ -12,10 +12,11 @@ import shared.util.maths.Vector2;
 
 /**
  * @author fxa579 The primary components responsible for all Physics updates; includes data and
- *     methods to process forces and gravity
+ * methods to process forces and gravity
  */
 public class Rigidbody extends Component implements Serializable {
 
+  private static final float X_THRESHOLD = 10f;
   private Vector2 deltaPos;
   private Vector2 deltaPosUpdate;
 
@@ -119,7 +120,9 @@ public class Rigidbody extends Component implements Serializable {
   }
   // Update Methods
 
-  /** Called every physics frame, manages the velocity, forces, position, etc. */
+  /**
+   * Called every physics frame, manages the velocity, forces, position, etc.
+   */
   public void update() {
     if (bodyType == RigidbodyType.DYNAMIC) {
       applyForces();
@@ -131,7 +134,9 @@ public class Rigidbody extends Component implements Serializable {
   }
   // Force Methods
 
-  /** */
+  /**
+   *
+   */
   public void addForce(Vector2 force) {
     forces.add(force);
   }
@@ -222,7 +227,9 @@ public class Rigidbody extends Component implements Serializable {
     getParent().getTransform().translate(distance);
   }
 
-  /** An update method; all force updates happen here. */
+  /**
+   * An update method; all force updates happen here.
+   */
   private void applyForces() {
 
     currentForce = Vector2.Zero();
@@ -256,14 +263,22 @@ public class Rigidbody extends Component implements Serializable {
     }
   }
 
-  /** An update method; all velocity and acceleration updates happen here */
+  /**
+   * An update method; all velocity and acceleration updates happen here
+   */
   private void updateVelocity() {
     lastAcceleration = acceleration;
 
     acceleration = currentForce.div(mass);
     acceleration = lastAcceleration.add(acceleration).div(2);
     velocity = velocity.add(acceleration.mult(Physics.TIMESTEP));
-
+    if (velocity.getX() != 0) {
+      if (Math.abs(velocity.getX()) < X_THRESHOLD) {
+        velocity = new Vector2(0, velocity.getY());
+      } else {
+        velocity = velocity.add(new Vector2(velocity.getX() > 0 ? -X_THRESHOLD : X_THRESHOLD, 0));
+      }
+    }
     deltaPos = deltaPos.add(deltaPosUpdate);
     deltaPos =
         deltaPos.add(
@@ -291,6 +306,7 @@ public class Rigidbody extends Component implements Serializable {
 
   /**
    * Returns either Static or Dynamic
+   *
    * @return Rigidbody Type (Static or Dynamic)
    */
   public RigidbodyType getBodyType() {
@@ -362,7 +378,9 @@ public class Rigidbody extends Component implements Serializable {
   }
 }
 
-/** Helper class to apply force over time without needed to thread/coroutine */
+/**
+ * Helper class to apply force over time without needed to thread/coroutine
+ */
 class ForceTime implements Serializable {
 
   private Vector2 force;

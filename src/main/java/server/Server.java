@@ -76,10 +76,6 @@ public class Server extends Application {
   private final AtomicBoolean sendAllObjects = new AtomicBoolean(false);
   private final AtomicBoolean gameOver = new AtomicBoolean(false);
   private final AtomicInteger counter = new AtomicInteger(0);
-  private boolean startedGame;
-  private int timeRemaining;
-  private int timeLimit = 1;
-  private Timer timer = new Timer("Timer", true);
   private final int maxPlayers = 4;
   private final int serverUpdateRate = 3;
   private final String gameTitle = "SERVER";
@@ -87,6 +83,10 @@ public class Server extends Application {
    * Current game state of the server
    */
   public ServerState serverState;
+  private boolean startedGame;
+  private int timeRemaining;
+  private int timeLimit = 1;
+  private Timer timer = new Timer("Timer", true);
   private ArrayList<InetAddress> connectedList = new ArrayList<>();
   private List connected = Collections.synchronizedList(connectedList);
   private String threadName;
@@ -116,7 +116,7 @@ public class Server extends Application {
   }
 
   /**
-   * Initializes the Server data
+   * Initializes the Server
    */
   public void init() {
     server = this;
@@ -151,6 +151,7 @@ public class Server extends Application {
 
   /**
    * Send data to clients
+   *
    * @param buffer Data as a byte array
    * @param object If true, server is sending objects
    */
@@ -183,6 +184,7 @@ public class Server extends Application {
           });
     }
   }
+
   //Updates the Physics of the objects on the Server
   private void updateSimulation() {
     /** Check Collisions */
@@ -229,6 +231,7 @@ public class Server extends Application {
 
   /**
    * Adds new player to input list
+   *
    * @param player Player to add
    */
   public void add(Player player) {
@@ -236,6 +239,12 @@ public class Server extends Application {
   }
 
 
+  /**
+   * Gets the queue of items for a specific client
+   *
+   * @param player Player to get inputs for
+   * @return Queue of player inputs received and not processed
+   */
   public BlockingQueue<PacketInput> getQueue(Player player) {
     BlockingQueue<PacketInput> toRet = new LinkedBlockingQueue<>();
     try {
@@ -344,13 +353,6 @@ public class Server extends Application {
           executor.execute(new ServerReceiver(server, serverSocket, connected));
         }
 
-        if (playerCount.get() == 5) {
-          //Bot bot = new Bot(500, 500, UUID.randomUUID(), levelHandler.getGameObjects(), levelHandler);
-          //bot.initialise(null);
-          //levelHandler.getPlayers().add(bot);
-          //levelHandler.getBotPlayerList().add(bot);
-          //levelHandler.getGameObjects().add(bot);
-        }
         counter.getAndIncrement();
         if (playerCount.get() == maxPlayers) {
           serverState = ServerState.WAITING_FOR_READYUP;
@@ -386,6 +388,7 @@ public class Server extends Application {
 
   /**
    * Sends a list of updated objects to all the clients
+   *
    * @param gameobjects List of objects to send
    */
   public void sendObjects(ConcurrentLinkedHashMap<UUID, GameObject> gameobjects) {
@@ -427,14 +430,11 @@ public class Server extends Application {
     }
   }
 
-  public AtomicBoolean getSendAllObjects() {
-    return sendAllObjects;
-  }
-
   //Rendering; mostly for Debugging
 
   /**
    * Adds a player to the server and renders them
+   *
    * @param joinPacket Packet of data responsible for join details
    * @param address IP address of the player
    * @return The player object
@@ -451,10 +451,9 @@ public class Server extends Application {
     server.sendObjects(levelHandler.getGameObjects());
     //Redundancy
     server.sendObjects(levelHandler.getGameObjects());
-    //Redundancy
-    server.sendObjects(levelHandler.getGameObjects());
     return player;
   }
+
   private void setupRender(Stage primaryStage) {
     root = new Group();
     backgroundRoot = new Group();

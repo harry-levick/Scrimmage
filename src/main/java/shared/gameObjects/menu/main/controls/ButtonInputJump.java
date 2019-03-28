@@ -23,9 +23,10 @@ public class ButtonInputJump extends ButtonObject {
   @Override
   public void render() {
     super.render();
-    super.button.setFont(settings.getFont(20));
+    //super.button.setFont(settings.getFont(20));
     super.setText("JUMP: " + Client.settings.getKeyMap(KEY_CONTROL.JUMP));
-    if (Client.keyInput.getChangeListening() && Client.keyInput.getHotChangeKey() == KEY_CONTROL.JUMP) {
+    if (Client.keyInput.getChangeListening()
+        && Client.keyInput.getHotChangeKey() == KEY_CONTROL.JUMP) {
       super.button.setTextFill(Color.YELLOW);
     } else {
       super.button.setTextFill(Color.WHITE);
