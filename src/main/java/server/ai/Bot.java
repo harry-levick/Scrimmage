@@ -100,9 +100,11 @@ public class Bot extends Player {
   /**
    * Terminate all threads
    */
-  public void terminateThreads() {
+  public void terminate() {
     chasingThread.terminate();
     fleeingThread.terminate();
+    chasingPlan.clear();
+    fleeingPlan.clear();
   }
 
   /**

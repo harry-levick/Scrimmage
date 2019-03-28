@@ -389,7 +389,7 @@ public class Client extends Application {
   public static void endGame() {
     singleplayerGame = false;
     gameOver = false;
-    levelHandler.getBotPlayerList().forEach((key, bot) -> bot.terminateThreads());
+    levelHandler.getBotPlayerList().forEach((key, bot) -> bot.terminate());
     levelHandler.getPlayers().keySet().removeAll(levelHandler.getBotPlayerList().keySet());
     levelHandler.getGameObjects().keySet().removeAll(levelHandler.getBotPlayerList().keySet());
     levelHandler.getBotPlayerList().forEach((key, gameObject) -> gameObject.removeRender());
