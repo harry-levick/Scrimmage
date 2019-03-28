@@ -353,13 +353,6 @@ public class Server extends Application {
           executor.execute(new ServerReceiver(server, serverSocket, connected));
         }
 
-        if (playerCount.get() == 5) {
-          //Bot bot = new Bot(500, 500, UUID.randomUUID(), levelHandler.getGameObjects(), levelHandler);
-          //bot.initialise(null);
-          //levelHandler.getPlayers().add(bot);
-          //levelHandler.getBotPlayerList().add(bot);
-          //levelHandler.getGameObjects().add(bot);
-        }
         counter.getAndIncrement();
         if (playerCount.get() == maxPlayers) {
           serverState = ServerState.WAITING_FOR_READYUP;

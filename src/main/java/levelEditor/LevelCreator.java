@@ -360,25 +360,6 @@ public class LevelCreator extends Application {
     gameObjects.put(uuid,
         new WeaponSpawner(350, 350, 40, 40, uuid));
 
-    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "map1" + ".map");
-    mapDataObject.setBackground(new Background2(UUID.randomUUID()));
-    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "map2" + ".map");
-    mapDataObject.setBackground(new Background3(UUID.randomUUID()));
-    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "map3" + ".map");
-    mapDataObject.setBackground(new Background4(UUID.randomUUID()));
-    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "map4" + ".map");
-    mapDataObject.setBackground(new Background5(UUID.randomUUID()));
-    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "map5" + ".map");
-    mapDataObject.setBackground(new Background6(UUID.randomUUID()));
-    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "map6" + ".map");
-    mapDataObject.setBackground(new Background7(UUID.randomUUID()));
-    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "map7" + ".map");
-    mapDataObject.setBackground(new Background8(UUID.randomUUID()));
-    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "map8" + ".map");
-    mapDataObject.setBackground(new Background1(UUID.randomUUID()));
-    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "map9" + ".map");
-    mapDataObject.setBackground(new Background2(UUID.randomUUID()));
-    MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "map10" + ".map");
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map1" + ".map");
     mapDataObject.setBackground(new Background2(UUID.randomUUID()));
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map2" + ".map");
@@ -576,13 +557,13 @@ public class LevelCreator extends Application {
     }
 
     uuid = UUID.randomUUID();
-    gameObjects.put(uuid, new Podium4(getAbs(33), getAbs(23), getAbs(6), getAbs(3), uuid));
+    gameObjects.put(uuid, new Podium4(getAbs(33), getAbs(23), getAbs(6), getAbs(3)));
     uuid = UUID.randomUUID();
-    gameObjects.put(uuid, new Podium3(getAbs(9), getAbs(20), getAbs(6), getAbs(6), uuid));
+    gameObjects.put(uuid, new Podium3(getAbs(9), getAbs(20), getAbs(6), getAbs(6)));
     uuid = UUID.randomUUID();
-    gameObjects.put(uuid, new Podium2(getAbs(25), getAbs(18), getAbs(6), getAbs(8), uuid));
+    gameObjects.put(uuid, new Podium2(getAbs(25), getAbs(18), getAbs(6), getAbs(8)));
     uuid = UUID.randomUUID();
-    gameObjects.put(uuid, new Podium1(getAbs(17), getAbs(15), getAbs(6), getAbs(12), uuid));
+    gameObjects.put(uuid, new Podium1(getAbs(17), getAbs(15), getAbs(6), getAbs(12)));
 
     MapLoader.saveMap(gameObjects, mapDataObject, filepath + filename + ".map");
 

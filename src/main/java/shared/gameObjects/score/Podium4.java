@@ -17,8 +17,9 @@ public class Podium4 extends GameObject {
    * @param y Y coordinate of object in game world
    */
   public Podium4(
-      double x, double y, double sizeX, double sizeY, UUID exampleUUID) {
-    super(x, y, sizeX, sizeY, ObjectType.Podium, exampleUUID);
+      double x, double y, double sizeX, double sizeY) {
+    super(x, y, sizeX, sizeY, ObjectType.Podium,
+        UUID.fromString("15699b59-f31b-4708-9ae0-97ef77333c9d"));
     addComponent(new BoxCollider(this, ColliderLayer.PLATFORM, false));
     addComponent(new Rigidbody(0, this));
   }
