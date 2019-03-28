@@ -13,7 +13,7 @@ import shared.gameObjects.players.Player;
  */
 public class Timer {
 
-  private static final int xPos = 1920/2; //Center it on the screen.
+  private static final int xPos = 1920 / 2; //Center it on the screen.
   private static final int yPos = 25;
   private Animator board;
   private Player player;
@@ -31,7 +31,7 @@ public class Timer {
     timerText.setFont(new Font(48));
     root.getChildren().addAll(this.boardImageView, this.timerText);
   }
-  
+
 
   /**
    * Renders the timer UI

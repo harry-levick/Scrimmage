@@ -62,12 +62,13 @@ public class PlayerInfo {
     ammoW = ammoBar.getImage().getWidth();
     ammoH = ammoBar.getImage().getHeight();
     currentAmmoText = new Text(5, 100, "");
-    maxAmmoText = new Text(200,100,"");
+    maxAmmoText = new Text(200, 100, "");
     currentAmmoText.setFont(new Font(48));
     maxAmmoText.setFont(new Font(18));
-    
+
     // Add to the root
-    root.getChildren().addAll(boardImageView, healthBarImageView, ammoBarImageView, currentAmmoText,maxAmmoText);
+    root.getChildren()
+        .addAll(boardImageView, healthBarImageView, ammoBarImageView, currentAmmoText, maxAmmoText);
   }
 
 
@@ -108,14 +109,12 @@ public class PlayerInfo {
 
   private String getAmmoText(String x) {
     if (player.getHolding().getAmmo() != -1) {
-      if(x.equals("current")) {
+      if (x.equals("current")) {
         return Integer.toString(player.getHolding().getAmmo());
+      } else {
+        return "/ " + Integer.toString(player.getHolding().getMaxAmmo());
       }
-      else {
-        return "/ "+Integer.toString(player.getHolding().getMaxAmmo());
-      }
-    }
-    else {
+    } else {
       return "";
     }
 

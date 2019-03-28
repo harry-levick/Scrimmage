@@ -1,7 +1,6 @@
 package shared.gameObjects.players;
 
 import client.handlers.effectsHandler.Particle;
-import client.handlers.effectsHandler.ServerParticle;
 import client.main.Settings;
 import java.util.UUID;
 import javafx.application.Platform;
@@ -105,6 +104,10 @@ public class Player extends GameObject {
    * If the lighting is on or off
    */
   private boolean lightingSwitch;
+  /**
+   * Players username
+   */
+  private String username;
 
   /**
    * Players limbs
@@ -150,6 +153,7 @@ public class Player extends GameObject {
     this.rightKey = false;
     this.jumpKey = false;
     this.click = false;
+    this.username = "Player";
     this.health = maxHealth;
     this.behaviour = Behaviour.IDLE;
     this.bc = new BoxCollider(this, ColliderLayer.PLAYER, false);
@@ -175,6 +179,9 @@ public class Player extends GameObject {
     initialiseColorFilter();
     if (lightingSwitch) {
       initialiseLighting();
+    }
+    if (username == null) {
+      username = "Player";
     }
   }
 
@@ -859,5 +866,23 @@ public class Player extends GameObject {
    */
   public Limb getArmRight() {
     return armRight;
+  }
+
+  /**
+   * Gets the username of Player
+   *
+   * @return Players username
+   */
+  public String getUsername() {
+    return username;
+  }
+
+  /**
+   * Sets the user name of the player
+   *
+   * @param username Username to give player
+   */
+  public void setUsername(String username) {
+    this.username = username;
   }
 }

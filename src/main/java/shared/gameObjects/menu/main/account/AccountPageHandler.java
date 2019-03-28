@@ -122,8 +122,9 @@ public class AccountPageHandler extends GameObject {
                 12,
                 false,
                 Path.convert("images/particle/BulletParticle.png")));
-    if (currentPage == id) return;
-    else {
+    if (currentPage == id) {
+      return;
+    } else {
       root.getChildren().remove(panes[currentPage]);
       initPanes();
       root.getChildren().add(panes[id]);
@@ -188,14 +189,18 @@ public class AccountPageHandler extends GameObject {
   // Given an index, returns the next unlocked index
   private int getNextSkinViewerID() {
     currentSkinID++;
-    if (currentSkinID >= AccountData.SKIN_COUNT) currentSkinID = 0;
+    if (currentSkinID >= AccountData.SKIN_COUNT) {
+      currentSkinID = 0;
+    }
     return currentSkinID;
   }
 
   // Given an index, returns the previous unlocked index
   private int getPreviousSkinViewerID() {
     currentSkinID--;
-    if (currentSkinID < 0) currentSkinID = (AccountData.SKIN_COUNT - 1);
+    if (currentSkinID < 0) {
+      currentSkinID = (AccountData.SKIN_COUNT - 1);
+    }
     return currentSkinID;
   }
 
@@ -203,8 +208,12 @@ public class AccountPageHandler extends GameObject {
   private int getNextSkinID(int id) {
     id++;
     for (int j = 0; j < AccountData.SKIN_COUNT; j++) {
-      if (id >= AccountData.SKIN_COUNT) id = 0;
-      if (settings.getData().hasSkin(id)) return id;
+      if (id >= AccountData.SKIN_COUNT) {
+        id = 0;
+      }
+      if (settings.getData().hasSkin(id)) {
+        return id;
+      }
       id++;
     }
     return 0;
@@ -214,8 +223,12 @@ public class AccountPageHandler extends GameObject {
   private int getPreviousSkinID(int id) {
     id--;
     for (int j = 0; j < AccountData.SKIN_COUNT; j++) {
-      if (id < 0) id = (AccountData.SKIN_COUNT - 1);
-      if (settings.getData().hasSkin(id)) return id;
+      if (id < 0) {
+        id = (AccountData.SKIN_COUNT - 1);
+      }
+      if (settings.getData().hasSkin(id)) {
+        return id;
+      }
       id--;
     }
     return 0;
@@ -242,7 +255,9 @@ public class AccountPageHandler extends GameObject {
     model[7].setImage(new Image(start + currentSkinID + File.separator + "leg" + end));
     if (settings.getData().hasSkin(currentSkinID))
       model[8].setImage(new Image(Path.convert("images/blank.png")));
-    else model[8].setImage(new Image(Path.convert("images/ui/icons/locked.png")));
+    else {
+      model[8].setImage(new Image(Path.convert("images/ui/icons/locked.png")));
+    }
   }
 
   private void openLootbox(Label lootboxStatus, Label notification) {
@@ -272,7 +287,9 @@ public class AccountPageHandler extends GameObject {
           notification.setText("Not enough scrimbucks to purchase.");
           notification.setTextFill(Color.RED);
         } else {
-          for (int i = 0; i < 5; i++) settings.getData().earnLootbox();
+          for (int i = 0; i < 5; i++) {
+            settings.getData().earnLootbox();
+          }
           settings.getData().removeMoney(Lootbox.LOOTBOX_PRICE * 5);
           notification.setText("Purchased 5 Lootbox");
           notification.setTextFill(Color.GREEN);

@@ -12,21 +12,21 @@ import java.util.Properties;
  */
 public class SQLConnect {
 
+  private static final String URL = "jdbc:mysql://sql2.freemysqlhosting.net:3306";
+  //  private static final String URL = "jdbc:mysql://REDACTED";
+  private static final String USERNAME = "sql2284965";
+  //  private static final String USERNAME = "REDACTED";
+  private static final String PASSWD = "lU7*jV5%";
+
   /**
    * Sets up the connection
    */
   private static Connection getConnection() throws SQLException {
-      Properties props = new Properties();
-      props.setProperty("user", USERNAME);
-      props.setProperty("password", PASSWD);
-      return DriverManager.getConnection(URL, props);
+    Properties props = new Properties();
+    props.setProperty("user", USERNAME);
+    props.setProperty("password", PASSWD);
+    return DriverManager.getConnection(URL, props);
   }
-
-  private static final String URL = "jdbc:mysql://sql2.freemysqlhosting.net:3306";
-//  private static final String URL = "jdbc:mysql://REDACTED";
-  private static final String USERNAME = "sql2284965";
-//  private static final String USERNAME = "REDACTED";
-  private static final String PASSWD = "lU7*jV5%";
   // private static final String PASSWD = "REDACTED";
   private static final String GET_DATA_STATEMENT = "SELECT uuid, achievements, skins, lootbox, money FROM sql2284965.userData WHERE name = ? AND password = ?";
   private static final String CHECK_USERNAME = "SELECT name FROM sql2284965.userData WHERE name = ?";
@@ -48,18 +48,17 @@ public class SQLConnect {
       pst.setString(2, password);
 
       ResultSet results = pst.executeQuery();
-      if(results.isBeforeFirst()) {
+      if (results.isBeforeFirst()) {
         results.next();
-        toRet = results.getString(1) + "//x/s" + username + "//x/s" + results.getInt(2) + "//x/s" + results.getInt(3) + "//x/s" +
+        toRet = results.getString(1) + "//x/s" + username + "//x/s" + results.getInt(2) + "//x/s"
+            + results.getInt(3) + "//x/s" +
             results.getInt(4) + "//x/s" + results.getInt(5);
-      }
-      else {
+      } else {
         toRet = "fail";
       }
     } catch (SQLException e) {
-        toRet = "failed error: " + e;
-    }
-    finally{
+      toRet = "failed error: " + e;
+    } finally {
       return toRet;
     }
   }
@@ -79,9 +78,9 @@ public class SQLConnect {
       pst.setString(1, data.getUsername());
       ResultSet results = pst.executeQuery();
 
-      if(results.isBeforeFirst()) {
+      if (results.isBeforeFirst()) {
         toRet = "exists";
-      } else  {
+      } else {
         pst = conn.prepareStatement(REGISTER_USER);
 
         String[] args = data.registerAccountQuery(password);
@@ -94,15 +93,17 @@ public class SQLConnect {
         pst.setInt(7, Integer.parseInt(args[6]));
 
         int result = pst.executeUpdate();
-        if(result == 1) toRet = "success";
-        else toRet = "fail";
+        if (result == 1) {
+          toRet = "success";
+        } else {
+          toRet = "fail";
+        }
       }
 
     } catch (SQLException e) {
       toRet = "failed error: " + e;
       System.out.println(e);
-    }
-    finally{
+    } finally {
       return toRet;
     }
   }
@@ -113,7 +114,9 @@ public class SQLConnect {
    * @return success/fail
    */
   public static String saveData(AccountData data) {
-    if(data.getUsername().equals("NEWUSER")) return "new";
+    if (data.getUsername().equals("NEWUSER")) {
+      return "new";
+    }
     String toRet = "";
     try {
       Connection conn = getConnection();
@@ -122,7 +125,7 @@ public class SQLConnect {
       pst.setString(1, data.getUsername());
       ResultSet results = pst.executeQuery();
 
-      if(!results.isBeforeFirst()) {
+      if (!results.isBeforeFirst()) {
         toRet = "new";
       } else {
         pst = conn.prepareStatement(SAVE_DATA);
@@ -140,8 +143,7 @@ public class SQLConnect {
       }
     } catch (SQLException e) {
       toRet = "failed error: " + e;
-    }
-    finally{
+    } finally {
       return toRet;
     }
   }

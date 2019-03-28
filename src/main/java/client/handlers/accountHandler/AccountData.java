@@ -1,6 +1,8 @@
 package client.handlers.accountHandler;
 
-/** Container class for the save data of the Client */
+/**
+ * Container class for the save data of the Client
+ */
 public class AccountData {
 
   public static final int SKIN_COUNT = 9;
@@ -81,12 +83,12 @@ public class AccountData {
       packedSkins = (packedSkins << 1) | (skins[i] ? 1 : 0);
     }
     String[] ret = {
-      uuid,
-      username,
-      Integer.toString(packedAchievements),
-      Integer.toString(packedSkins),
-      Integer.toString(lootboxCount),
-      Integer.toString(moneyCount)
+        uuid,
+        username,
+        Integer.toString(packedAchievements),
+        Integer.toString(packedSkins),
+        Integer.toString(lootboxCount),
+        Integer.toString(moneyCount)
     };
     return ret;
   }
