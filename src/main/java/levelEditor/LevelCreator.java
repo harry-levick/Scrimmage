@@ -399,123 +399,123 @@ public class LevelCreator extends Application {
         new WeaponSpawner(getAbs(32), getAbs(0), 40, 40, uuid));
     uuid = UUID.randomUUID();
 
-//    //wood block pyramid
-//    gameObjects.put(uuid,
-//        new WoodBlockLargeObject(
-//            getAbs(36), getAbs(17), getAbs(2), getAbs(2), ObjectType.Bot, uuid));
-//    uuid = UUID.randomUUID();
-//    gameObjects.put(uuid,
-//        new WoodBlockLargeObject(
-//            getAbs(37), getAbs(15), getAbs(2), getAbs(2), ObjectType.Bot, uuid));
-//    uuid = UUID.randomUUID();
-//    gameObjects.put(uuid,
-//        new WoodBlockLargeObject(
-//            getAbs(38), getAbs(17), getAbs(2), getAbs(2), ObjectType.Bot, uuid));
-//    uuid = UUID.randomUUID();
-//    gameObjects.put(uuid,
-//        new WoodBlockSmallObject(
-//            getAbs(33), getAbs(18), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
-//    uuid = UUID.randomUUID();
-//    gameObjects.put(uuid,
-//        new WoodBlockSmallObject(
-//            getAbs(34), getAbs(17), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
-//    uuid = UUID.randomUUID();
-//    gameObjects.put(uuid,
-//        new WoodBlockSmallObject(
-//            getAbs(34), getAbs(18), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
-//    uuid = UUID.randomUUID();
-//    gameObjects.put(uuid,
-//        new WoodBlockSmallObject(
-//            getAbs(35), getAbs(15), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
-//    uuid = UUID.randomUUID();
-//    gameObjects.put(uuid,
-//        new WoodBlockSmallObject(
-//            getAbs(35), getAbs(16), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
-//    uuid = UUID.randomUUID();
-//    gameObjects.put(uuid,
-//        new WoodBlockSmallObject(
-//            getAbs(35), getAbs(17), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
-//    uuid = UUID.randomUUID();
-//    gameObjects.put(uuid,
-//        new WoodBlockSmallObject(
-//            getAbs(35), getAbs(18), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
-//    uuid = UUID.randomUUID();
-//    gameObjects.put(uuid,
-//        new WoodBlockSmallObject(
-//            getAbs(36), getAbs(14), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
-//    uuid = UUID.randomUUID();
-//    gameObjects.put(uuid,
-//        new WoodBlockSmallObject(
-//            getAbs(36), getAbs(15), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
-//    uuid = UUID.randomUUID();
-//    gameObjects.put(uuid,
-//        new WoodBlockSmallObject(
-//            getAbs(36), getAbs(16), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
-//    uuid = UUID.randomUUID();
-//    gameObjects.put(uuid,
-//        new WoodBlockSmallObject(
-//            getAbs(37), getAbs(12), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
-//    uuid = UUID.randomUUID();
-//    gameObjects.put(uuid,
-//        new WoodBlockSmallObject(
-//            getAbs(37), getAbs(13), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
-//    uuid = UUID.randomUUID();
-//    gameObjects.put(uuid,
-//        new WoodBlockSmallObject(
-//            getAbs(37), getAbs(14), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
-//    uuid = UUID.randomUUID();
-//    gameObjects.put(uuid,
-//        new WoodBlockSmallObject(
-//            getAbs(38), getAbs(12), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
-//    uuid = UUID.randomUUID();
-//    gameObjects.put(uuid,
-//        new WoodBlockSmallObject(
-//            getAbs(38), getAbs(13), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
-//    uuid = UUID.randomUUID();
-//    gameObjects.put(uuid,
-//        new WoodBlockSmallObject(
-//            getAbs(38), getAbs(14), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
-//    uuid = UUID.randomUUID();
-//    gameObjects.put(uuid,
-//        new WoodBlockSmallObject(
-//            getAbs(39), getAbs(14), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
-//    uuid = UUID.randomUUID();
-//    gameObjects.put(uuid,
-//        new WoodBlockSmallObject(
-//            getAbs(39), getAbs(15), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
-//    uuid = UUID.randomUUID();
-//    gameObjects.put(uuid,
-//        new WoodBlockSmallObject(
-//            getAbs(39), getAbs(16), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
-//    uuid = UUID.randomUUID();
-//    gameObjects.put(uuid,
-//        new WoodBlockSmallObject(
-//            getAbs(40), getAbs(15), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
-//    uuid = UUID.randomUUID();
-//    gameObjects.put(uuid,
-//        new WoodBlockSmallObject(
-//            getAbs(40), getAbs(16), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
-//    uuid = UUID.randomUUID();
-//    gameObjects.put(uuid,
-//        new WoodBlockSmallObject(
-//            getAbs(40), getAbs(17), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
-//    uuid = UUID.randomUUID();
-//    gameObjects.put(uuid,
-//        new WoodBlockSmallObject(
-//            getAbs(40), getAbs(18), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
-//    uuid = UUID.randomUUID();
-//    gameObjects.put(uuid,
-//        new WoodBlockSmallObject(
-//            getAbs(41), getAbs(17), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
-//    uuid = UUID.randomUUID();
-//    gameObjects.put(uuid,
-//        new WoodBlockSmallObject(
-//            getAbs(41), getAbs(18), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
-//    uuid = UUID.randomUUID();
-//    gameObjects.put(uuid,
-//        new WoodBlockSmallObject(
-//            getAbs(42), getAbs(18), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
-//    uuid = UUID.randomUUID();
+    //wood block pyramid
+    gameObjects.put(uuid,
+        new WoodBlockLargeObject(
+            getAbs(36), getAbs(17), getAbs(2), getAbs(2), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new WoodBlockLargeObject(
+            getAbs(37), getAbs(15), getAbs(2), getAbs(2), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new WoodBlockLargeObject(
+            getAbs(38), getAbs(17), getAbs(2), getAbs(2), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new WoodBlockSmallObject(
+            getAbs(33), getAbs(18), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new WoodBlockSmallObject(
+            getAbs(34), getAbs(17), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new WoodBlockSmallObject(
+            getAbs(34), getAbs(18), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new WoodBlockSmallObject(
+            getAbs(35), getAbs(15), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new WoodBlockSmallObject(
+            getAbs(35), getAbs(16), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new WoodBlockSmallObject(
+            getAbs(35), getAbs(17), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new WoodBlockSmallObject(
+            getAbs(35), getAbs(18), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new WoodBlockSmallObject(
+            getAbs(36), getAbs(14), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new WoodBlockSmallObject(
+            getAbs(36), getAbs(15), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new WoodBlockSmallObject(
+            getAbs(36), getAbs(16), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new WoodBlockSmallObject(
+            getAbs(37), getAbs(12), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new WoodBlockSmallObject(
+            getAbs(37), getAbs(13), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new WoodBlockSmallObject(
+            getAbs(37), getAbs(14), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new WoodBlockSmallObject(
+            getAbs(38), getAbs(12), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new WoodBlockSmallObject(
+            getAbs(38), getAbs(13), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new WoodBlockSmallObject(
+            getAbs(38), getAbs(14), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new WoodBlockSmallObject(
+            getAbs(39), getAbs(14), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new WoodBlockSmallObject(
+            getAbs(39), getAbs(15), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new WoodBlockSmallObject(
+            getAbs(39), getAbs(16), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new WoodBlockSmallObject(
+            getAbs(40), getAbs(15), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new WoodBlockSmallObject(
+            getAbs(40), getAbs(16), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new WoodBlockSmallObject(
+            getAbs(40), getAbs(17), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new WoodBlockSmallObject(
+            getAbs(40), getAbs(18), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new WoodBlockSmallObject(
+            getAbs(41), getAbs(17), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new WoodBlockSmallObject(
+            getAbs(41), getAbs(18), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new WoodBlockSmallObject(
+            getAbs(42), getAbs(18), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
 
 
 
