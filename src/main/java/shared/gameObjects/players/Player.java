@@ -146,7 +146,6 @@ public class Player extends GameObject {
   public void initialise(Group root, Settings settings) {
     super.initialise(root, settings);
     addLimbs();
-    System.out.println("Adding limbs");
     addPunch();
     initialiseColorFilter();
   }
