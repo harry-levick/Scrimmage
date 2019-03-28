@@ -69,7 +69,7 @@ public class MachineGun extends Gun {
         double bulletY = playerCentre.getY() - playerRadius * Math.sin(-angleRadian);
         double bulletFlipX = playerCentre.getX() - playerRadius * Math.cos(angleRadian);
         double bulletFlipY = playerCentre.getY() - playerRadius * Math.sin(angleRadian);
-        System.out.println("@MachineGun.fire holder=" + holder);
+
         Collision raycast = Physics.raycastBullet(
             playerCentre,
             new Vector2(mouseX - bulletX, mouseY - bulletY).normalize().mult(55),
