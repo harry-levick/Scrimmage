@@ -6,14 +6,18 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
+import java.util.UUID;
 import javafx.application.Platform;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import server.ai.Bot;
+import shared.gameObjects.GameObject;
 import shared.gameObjects.players.Player;
 import shared.packets.PacketInput;
 import shared.packets.PacketJoin;
+import shared.packets.PacketReSend;
 import shared.packets.PacketReady;
+import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 
 /**
  * Thread that reads Client sent data for the Server
@@ -73,6 +77,7 @@ public class ServerReceiver implements Runnable {
             //Disconnect
             server.levelHandler.getPlayers().remove(player);
             server.levelHandler.getGameObjects().remove(player);
+            player.removeRender();
             connected.remove(socket.getInetAddress());
             //Replacement bot
             Platform.runLater(
@@ -109,6 +114,16 @@ public class ServerReceiver implements Runnable {
                 server.readyCount.getAndIncrement();
               }
               break;
+            case 9:
+              PacketReSend packetReSend = new PacketReSend(message);
+              GameObject gameObject = Server.getLevelHandler().getGameObjects()
+                  .get(packetReSend.getGameobject());
+              if (gameObject != null) {
+                ConcurrentLinkedHashMap<UUID, GameObject> temp = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
+                    .maximumWeightedCapacity(1).build();
+                temp.put(gameObject.getUUID(), gameObject);
+                server.sendObjects(temp);
+              }
           }
         }
       }
