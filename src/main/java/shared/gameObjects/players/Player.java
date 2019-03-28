@@ -5,6 +5,7 @@ import client.main.Settings;
 import java.util.UUID;
 import javafx.application.Platform;
 import javafx.scene.Group;
+import javafx.scene.image.ImageView;
 import server.ai.Bot;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
@@ -16,8 +17,10 @@ import shared.gameObjects.players.Limbs.Hand;
 import shared.gameObjects.players.Limbs.Head;
 import shared.gameObjects.players.Limbs.Leg;
 import shared.gameObjects.rendering.ColourFilters;
+import shared.gameObjects.rendering.PointLighting;
 import shared.gameObjects.weapons.Punch;
 import shared.gameObjects.weapons.Weapon;
+import shared.handlers.levelHandler.GameState;
 import shared.physics.data.MaterialProperty;
 import shared.physics.types.ColliderLayer;
 import shared.physics.types.RigidbodyType;
@@ -110,6 +113,10 @@ public class Player extends GameObject {
   
   //ColoFilter
   private transient ColourFilters colorFilter;
+  
+  // Lighting
+  private transient PointLighting lighting;
+  private transient ImageView lightingImageView;
 
   /**
    *
@@ -148,7 +155,10 @@ public class Player extends GameObject {
     addLimbs();
     addPunch();
     initialiseColorFilter();
+    initialiseLighting();
   }
+  
+  
 
   public void initialise(Group root, Settings settings, UUID legLeftUUID, UUID legRightUUID,
       UUID bodyUUID, UUID headUUID, UUID armLeftUUID, UUID armRightUUID, UUID handLeftUUID,
@@ -172,11 +182,18 @@ public class Player extends GameObject {
     armLeft.addChild(handLeft);
     addPunch();
     initialiseColorFilter();
+    initialiseLighting();
   }
   
   private void initialiseColorFilter() {
     colorFilter = new ColourFilters();
     colorFilter.setDesaturate(0.0f);
+  }
+  
+  private void initialiseLighting() {
+    lighting = new PointLighting();
+    lightingImageView = new ImageView();
+    settings.getLevelHandler().getLightingRoot().getChildren().add(lightingImageView);    
   }
   
   private void resetColorFilter() {
@@ -246,6 +263,20 @@ public class Player extends GameObject {
       colorFilter.applyFilter(settings.getLevelHandler().getBackgroundRoot(),"desaturate");
     }
   }
+  
+  private void updateLighting() {
+    if(settings.getLevelHandler().getGameState() == GameState.IN_GAME) {
+      lighting.update(getX(),getY());
+      if(lightingImageView.getImage()==null) {
+        lightingImageView.setImage(lighting.getImage());
+      }
+      lightingImageView.setX(lighting.getX());
+      lightingImageView.setY(lighting.getY());
+    }
+    else {
+      lightingImageView.setImage(null);
+    } 
+  }
 
   @Override
   public void update() {
@@ -267,6 +298,7 @@ public class Player extends GameObject {
     damagedThisFrame = false;
     if(!(this instanceof Bot)) { 
       applyFilter();
+      updateLighting();
     }
     super.update();
   }
