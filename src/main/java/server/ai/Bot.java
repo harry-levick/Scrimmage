@@ -188,7 +188,9 @@ public class Bot extends Player {
             .add(targetPlayer.getTransform().getSize().mult(0.5f));
         mouseX = enemyPosCenter.getX();
         mouseY = enemyPosCenter.getY();
-        click = true;
+        if (new Random().nextInt(101) < 60) {
+          click = true;
+        }
 
         break;
     }

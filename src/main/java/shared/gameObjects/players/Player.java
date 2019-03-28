@@ -6,6 +6,8 @@ import java.util.UUID;
 import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import server.ai.Bot;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
@@ -138,6 +140,11 @@ public class Player extends GameObject {
   private transient PointLighting lighting;
   private transient ImageView lightingImageView;
 
+  // Death text
+  private boolean diedThisUpdate = true;
+  private Text youDied = new Text("You Died!");
+  private Text killedBy = new Text("Killed By null");
+
   /**
    * Constructs a player object in the scene
    *
@@ -163,6 +170,10 @@ public class Player extends GameObject {
     addComponent(rb);
     aimLeft = pointLeft = true;
     lightingSwitch = true;
+    youDied.setFont(settings.getFont(72));
+    youDied.setFill(Color.DARKRED);
+    killedBy.setFont(settings.getFont(32));
+    killedBy.setFill(Color.DARKRED);
   }
 
   // Initialise the animation
@@ -348,8 +359,23 @@ public class Player extends GameObject {
       if (lightingSwitch) {
         updateLighting();
       }
+      if (health <= 0) {
+        youDied.setLayoutY(settings.getGrisPos(10));
+        youDied
+            .setLayoutX((settings.getMapWidth() / 2) - (youDied.getLayoutBounds().getWidth() / 2));
+        killedBy.setText("Killed by " + "someone");
+        killedBy.setLayoutY(settings.getGrisPos(13));
+        killedBy
+            .setLayoutX((settings.getMapWidth() / 2) - (killedBy.getLayoutBounds().getWidth() / 2));
+
+        if (diedThisUpdate) {
+          settings.getOverlay().getChildren().add(youDied);
+          settings.getOverlay().getChildren().add(killedBy);
+          diedThisUpdate = false;
+        }
+      }
+      super.update();
     }
-    super.update();
   }
 
   @Override
@@ -583,6 +609,14 @@ public class Player extends GameObject {
     }
     addPunch();
     resetColorFilter();
+
+    if (settings.getOverlay().getChildren().contains(youDied)) {
+      settings.getOverlay().getChildren().remove(youDied);
+    }
+    if (settings.getOverlay().getChildren().contains(killedBy)) {
+      settings.getOverlay().getChildren().remove(killedBy);
+    }
+    diedThisUpdate = true;
 
   }
 
