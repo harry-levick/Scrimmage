@@ -1,6 +1,5 @@
 package levelEditor;
 
-import client.handlers.accountHandler.AchivementHandler;
 import client.handlers.effectsHandler.emitters.LineEmitter;
 import client.main.Settings;
 import java.io.File;
@@ -11,7 +10,6 @@ import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.stage.Stage;
 import shared.gameObjects.Blocks.Metal.MetalBlockLargeObject;
-import shared.gameObjects.Blocks.Metal.MetalFloorObject;
 import shared.gameObjects.Blocks.Stone.StoneFloorObject;
 import shared.gameObjects.Blocks.Stone.StoneWallObject;
 import shared.gameObjects.Blocks.Wood.WoodBlockLargeObject;
@@ -58,7 +56,6 @@ import shared.gameObjects.score.Podium3;
 import shared.gameObjects.score.Podium4;
 import shared.gameObjects.weapons.WeaponSpawner;
 import shared.handlers.levelHandler.GameState;
-import shared.handlers.levelHandler.LevelHandler;
 import shared.handlers.levelHandler.MapLoader;
 import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import shared.util.maths.Vector2;
@@ -75,11 +72,10 @@ public class LevelCreator extends Application {
   private static int gridSizePX = settings.getGridSize();
   private static int gridSizeX = stageSizeX / gridSizePX; // 40 px blocks
   private static int gridSizeY = stageSizeY / gridSizePX; // 48 x 27
-  private ArrayList<Vector2> spawnPoints;
-
   private static ConcurrentLinkedHashMap<UUID, GameObject> gameObjects;
   private static ArrayList<Player> playerSpawns;
   private static MapDataObject mapDataObject;
+  private ArrayList<Vector2> spawnPoints;
   private UUID uuid = UUID.randomUUID();
 
   private static int getAbs(int gridPos) {
@@ -105,7 +101,6 @@ public class LevelCreator extends Application {
     spawnPoints.add(new Vector2(600, 150));
     spawnPoints.add(new Vector2(1200, 150));
     spawnPoints.add(new Vector2(1700, 150));
-
 
     ////////////////////////////////////////
     // MAIN MENU
@@ -159,8 +154,9 @@ public class LevelCreator extends Application {
     //JumpPad todo remove form mm
     gameObjects.put(uuid, new JumpPad(getAbs(2), getAbs(25), uuid));
     uuid = UUID.randomUUID();
-    gameObjects.put(uuid, new LineEmitter(new Vector2(getAbs(2), getAbs(25)), new Vector2(0, -400), new Vector2(0, 42), new Vector2(12,12), 100, 1, 8, 2,
-         "images/platforms/Debris/debrisWood_1.png"));
+    gameObjects.put(uuid, new LineEmitter(new Vector2(getAbs(2), getAbs(25)), new Vector2(0, -400),
+        new Vector2(0, 42), new Vector2(12, 12), 100, 1, 8, 2,
+        "images/platforms/Debris/debrisWood_1.png"));
     uuid = UUID.randomUUID();
 
     //Middle platforms
@@ -207,10 +203,10 @@ public class LevelCreator extends Application {
         new WoodBlockSmallObject(
             getAbs(6), getAbs(3), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
     uuid = UUID.randomUUID();
-        gameObjects.put(uuid, new WeaponSpawner(
-            getAbs(8), getAbs(4), getAbs(1), getAbs(1), uuid
-        ));
-        uuid = UUID.randomUUID();
+    gameObjects.put(uuid, new WeaponSpawner(
+        getAbs(8), getAbs(4), getAbs(1), getAbs(1), uuid
+    ));
+    uuid = UUID.randomUUID();
 
     // right side blocks
     gameObjects.put(uuid,
@@ -623,20 +619,26 @@ public class LevelCreator extends Application {
     uuid = UUID.randomUUID();
 
     // input controls
-    gameObjects.put(uuid, new LabelObject(getAbs(23), getAbs(7), "Controls:", ObjectType.Button, uuid)); //todo Button type?
+    gameObjects.put(uuid, new LabelObject(getAbs(23), getAbs(7), "Controls:", ObjectType.Button,
+        uuid)); //todo Button type?
     uuid = UUID.randomUUID();
-    gameObjects.put(uuid, new ButtonInputJump(getAbs(23), getAbs(9), getAbs(6), getAbs(2), ObjectType.Button, uuid));
+    gameObjects.put(uuid,
+        new ButtonInputJump(getAbs(23), getAbs(9), getAbs(6), getAbs(2), ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
-    gameObjects.put(uuid, new ButtonInputLeft(getAbs(23), getAbs(12), getAbs(6), getAbs(2), ObjectType.Button, uuid));
+    gameObjects.put(uuid,
+        new ButtonInputLeft(getAbs(23), getAbs(12), getAbs(6), getAbs(2), ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
-    gameObjects.put(uuid, new ButtonInputRight(getAbs(23), getAbs(15), getAbs(6), getAbs(2), ObjectType.Button, uuid));
+    gameObjects.put(uuid,
+        new ButtonInputRight(getAbs(23), getAbs(15), getAbs(6), getAbs(2), ObjectType.Button,
+            uuid));
     uuid = UUID.randomUUID();
-    gameObjects.put(uuid, new ButtonInputThrow(getAbs(23), getAbs(18), getAbs(6), getAbs(2), ObjectType.Button, uuid));
+    gameObjects.put(uuid,
+        new ButtonInputThrow(getAbs(23), getAbs(18), getAbs(6), getAbs(2), ObjectType.Button,
+            uuid));
     uuid = UUID.randomUUID();
-    gameObjects.put(uuid, new ButtonInputMenu(getAbs(31), getAbs(9), getAbs(6), getAbs(2), ObjectType.Button, uuid));
+    gameObjects.put(uuid,
+        new ButtonInputMenu(getAbs(31), getAbs(9), getAbs(6), getAbs(2), ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
-
-
 
     for (int i = 0; i < 12; i++) {
       // top row wall

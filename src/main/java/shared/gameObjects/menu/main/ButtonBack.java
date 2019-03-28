@@ -5,7 +5,9 @@ import javafx.scene.input.MouseEvent;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.menu.ButtonObject;
 
-/** Button to return the client to the previous menu */
+/**
+ * Button to return the client to the previous menu
+ */
 public class ButtonBack extends ButtonObject {
 
   public ButtonBack(

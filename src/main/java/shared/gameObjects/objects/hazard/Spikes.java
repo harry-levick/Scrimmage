@@ -9,7 +9,9 @@ import shared.gameObjects.components.Rigidbody;
 import shared.physics.data.Collision;
 import shared.physics.types.ColliderLayer;
 
-/** Spikes hazard object */
+/**
+ * Spikes hazard object
+ */
 public class Spikes extends GameObject implements Hazard {
 
   public Spikes(double x, double y, double sizeX, double sizeY, ObjectType id, UUID exampleUUID) {

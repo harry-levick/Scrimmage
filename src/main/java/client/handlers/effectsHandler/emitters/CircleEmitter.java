@@ -8,11 +8,13 @@ import shared.util.maths.Vector2;
 /**
  * Class to handle emission of Circle-based particles
  */
-public class CircleEmitter extends ParticleEmitter{
+public class CircleEmitter extends ParticleEmitter {
+
   private int direction;
 
   /**
    * Constructor:
+   *
    * @param sourcePosition Centre position of the emitter
    * @param initialVelocity Maximum initial velocity particles will be spawned it
    * @param acceleration Constant acceleration of particles in their lifetime
@@ -52,10 +54,12 @@ public class CircleEmitter extends ParticleEmitter{
   @Override
   protected Particle newParticle() {
     Random random = new Random();
-    double angle = random.nextDouble() * 2*Math.PI;
-    double tempRadius = random.nextDouble()*radius;
-    Vector2 newPos = new Vector2(radius* Math.cos(angle), radius*Math.sin(angle));
+    double angle = random.nextDouble() * 2 * Math.PI;
+    double tempRadius = random.nextDouble() * radius;
+    Vector2 newPos = new Vector2(radius * Math.cos(angle), radius * Math.sin(angle));
 
-    return new Particle(transform.getPos().add(newPos), velocity.mult(newPos.normalize()).mult(direction), acceleration, particleSize, imageSource, lifetime);
+    return new Particle(transform.getPos().add(newPos),
+        velocity.mult(newPos.normalize()).mult(direction), acceleration, particleSize, imageSource,
+        lifetime);
   }
 }

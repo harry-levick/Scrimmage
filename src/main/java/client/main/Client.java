@@ -58,13 +58,11 @@ import shared.util.maths.Vector2;
  */
 public class Client extends Application {
 
+  private static final Logger LOGGER = LogManager.getLogger(Client.class.getName());
   /**
    * A temporary implementation for deactivating game music and sound effects
    */
   public static boolean musicActive = true;
-
-  private static final Logger LOGGER = LogManager.getLogger(Client.class.getName());
-
   /**
    * Handler for changing levels/maps
    */
@@ -119,29 +117,28 @@ public class Client extends Application {
    * JavaFX root for all GameObjects
    */
   public static Group gameRoot;
-
-  private final String gameTitle = "Alone in the Dark";
   public static KeyboardInput keyInput;
-  private MouseInput mouseInput;
-  private Group root;
   private static Group backgroundRoot;
   private static Group uiRoot;
   private static Group lightingRoot;
   private static Group creditsRoot;
   private static Group creditsBackground;
-  private Scene scene;
-  private float elapsedSinceFPS = 0f;
-  private int framesElapsedSinceFPS = 0;
   private static UI userInterface;
   private static boolean credits = false;
   private static int creditStartDelay = 100;
   private static boolean gameOver;
+  private static boolean settingsOverlay = false;
+  private static ArrayList<GameObject> settingsObjects = new ArrayList<>();
+  private final String gameTitle = "Alone in the Dark";
+  private final float timeStep = 0.0166f;
+  private MouseInput mouseInput;
+  private Group root;
+  private Scene scene;
+  private float elapsedSinceFPS = 0f;
+  private int framesElapsedSinceFPS = 0;
   private boolean startedGame;
   private int timeRemaining;
   private int timeLimit = 3; // Time limit in minutes
-  private static boolean settingsOverlay = false;
-  private static ArrayList<GameObject> settingsObjects = new ArrayList<>();
-  private final float timeStep = 0.0166f;
   private float maximumStep;
   private long previousTime;
   private float accumulatedTime;
@@ -162,7 +159,8 @@ public class Client extends Application {
   }
 
   /**
-   * Toggle display the mini-settings overlay. Shares use of creditsRoot since the ui and credit are not displayed at the same time. Clears all elements in the JavaFX group when toggle off.
+   * Toggle display the mini-settings overlay. Shares use of creditsRoot since the ui and credit are
+   * not displayed at the same time. Clears all elements in the JavaFX group when toggle off.
    */
   public static void settingsToggle() {
     // todo check if ingame
@@ -258,7 +256,9 @@ public class Client extends Application {
   }
 
   /**
-   * Shows the game credits in the creditsRoot, uses the CREDITS.MD file, allowing styling by italics or bold text, as well as optional 1st and 2nd size headers. A single <br> in any tag will display the while line as empty.
+   * Shows the game credits in the creditsRoot, uses the CREDITS.MD file, allowing styling by
+   * italics or bold text, as well as optional 1st and 2nd size headers. A single <br> in any tag
+   * will display the while line as empty.
    */
   public static void showCredits() {
     credits = true;
@@ -342,7 +342,8 @@ public class Client extends Application {
   }
 
   /**
-   * Hides the credits being displayed and resets the animation for the next time the credits are displayed.
+   * Hides the credits being displayed and resets the animation for the next time the credits are
+   * displayed.
    */
   public static void endCredits() {
     credits = false;
@@ -354,9 +355,30 @@ public class Client extends Application {
   }
 
   /**
+   * The end of the game, resets game back to main menu
+   */
+  public static void endGame() {
+    singleplayerGame = false;
+    gameOver = false;
+    levelHandler.getBotPlayerList().forEach((key, bot) -> bot.terminateThreads());
+    levelHandler.getPlayers().keySet().removeAll(levelHandler.getBotPlayerList().keySet());
+    levelHandler.getGameObjects().keySet().removeAll(levelHandler.getBotPlayerList().keySet());
+    levelHandler.getBotPlayerList().forEach((key, gameObject) -> gameObject.removeRender());
+    levelHandler.getBotPlayerList().forEach((key, gameObject) -> gameObject = null);
+    levelHandler.getBotPlayerList().clear();
+    // remove desaturation
+    ColourFilters filter = new ColourFilters();
+    filter.setDesaturate(0);
+    filter.applyFilter(gameRoot, "desaturation");
+    filter.applyFilter(backgroundRoot, "desaturation");
+    levelHandler.changeMap(
+        new Map("menus/main_menu.map", Path.convert("src/main/resources/menus/main_menu.map")),
+        false, false);
+
+  }
+
+  /**
    * Calculates the FPS of the game and sets it in the title of the game window
-   * @param secondElapsed
-   * @param primaryStage
    */
   public void calculateFPS(float secondElapsed, Stage primaryStage) {
     elapsedSinceFPS += secondElapsed;
@@ -384,29 +406,6 @@ public class Client extends Application {
   }
 
   /**
-   * The end of the game, resets game back to main menu
-   */
-  public static void endGame() {
-    singleplayerGame = false;
-    gameOver = false;
-    levelHandler.getBotPlayerList().forEach((key, bot) -> bot.terminateThreads());
-    levelHandler.getPlayers().keySet().removeAll(levelHandler.getBotPlayerList().keySet());
-    levelHandler.getGameObjects().keySet().removeAll(levelHandler.getBotPlayerList().keySet());
-    levelHandler.getBotPlayerList().forEach((key, gameObject) -> gameObject.removeRender());
-    levelHandler.getBotPlayerList().forEach((key, gameObject) -> gameObject = null);
-    levelHandler.getBotPlayerList().clear();
-    // remove desaturation
-    ColourFilters filter = new ColourFilters();
-    filter.setDesaturate(0);
-    filter.applyFilter(gameRoot, "desaturation");
-    filter.applyFilter(backgroundRoot, "desaturation");
-    levelHandler.changeMap(
-        new Map("menus/main_menu.map", Path.convert("src/main/resources/menus/main_menu.map")),
-        false, false);
-
-  }
-
-  /**
    * Begin the timer
    */
   private void beginTimer() {
@@ -417,7 +416,8 @@ public class Client extends Application {
       secondsTimer.scheduleAtFixedRate(new TimerTask() {
         @Override
         public void run() {
-          System.out.println(String.format("%d:%d", timeRemaining / 60, timeRemaining - ((timeRemaining / 60) * 60)));
+          System.out.println(String
+              .format("%d:%d", timeRemaining / 60, timeRemaining - ((timeRemaining / 60) * 60)));
           timeRemaining -= 1;
         }
       }, 0, 1000);
@@ -435,14 +435,16 @@ public class Client extends Application {
     }
   }
   // TODO change this to get the chosen playlist and all of its maps
+
   /**
    * Main game setup and game loop
+   *
    * @param primaryStage The JavaFX stage the game is put in
    */
   @Override
   public void start(Stage primaryStage) {
     setupRender(primaryStage);
-    levelHandler = new LevelHandler(settings, backgroundRoot, gameRoot,lightingRoot, uiRoot);
+    levelHandler = new LevelHandler(settings, backgroundRoot, gameRoot, lightingRoot, uiRoot);
     settings.setLevelHandler(levelHandler);
     levelHandler.addClientPlayer(gameRoot);
 
@@ -509,10 +511,12 @@ public class Client extends Application {
           accumulatedTime -= timeStep;
         }
 
-
         /** Apply Input */
-        if(multiplayer) levelHandler.getClientPlayer().applyMultiplayerInput();
-        else levelHandler.getClientPlayer().applyInput();
+        if (multiplayer) {
+          levelHandler.getClientPlayer().applyMultiplayerInput();
+        } else {
+          levelHandler.getClientPlayer().applyInput();
+        }
 
         if (multiplayer && sendUpdate) {
           ClientNetworkManager.sendInput();
@@ -567,7 +571,6 @@ public class Client extends Application {
         levelHandler.getGameObjects()
             .forEach((key, gameObject) -> gameObject.interpolatePosition(alpha));
 
-
         /** Scale and Render Game Objects */
         scaleRendering(primaryStage);
 
@@ -576,7 +579,6 @@ public class Client extends Application {
           levelHandler.getBackground().render();
         }
         calculateFPS(secondElapsed, primaryStage);
-
 
         /** Draw the UI */
         if (levelHandler.getGameState() == GameState.IN_GAME) {
@@ -607,6 +609,7 @@ public class Client extends Application {
 
   /**
    * Initialises the rendering stage of the game setup
+   *
    * @param primaryStage The JavaFX stage the game elements are to be placed into
    */
   private void setupRender(Stage primaryStage) {
@@ -641,6 +644,7 @@ public class Client extends Application {
 
   /**
    * Scaling of the window
+   *
    * @param primaryStage The JavaFX stage to be scaled
    */
   public void scaleRendering(Stage primaryStage) {

@@ -1,6 +1,5 @@
 package shared.gameObjects.weapons;
 
-import client.handlers.effectsHandler.Particle;
 import client.handlers.effectsHandler.emitters.CircleEmitter;
 import client.main.Settings;
 import java.util.HashSet;
@@ -54,17 +53,29 @@ public abstract class Bullet extends GameObject {
    */
   protected boolean hitHolder;
 
-  /** Constant value PI */
+  /**
+   * Constant value PI
+   */
   private double PI = 3.141592654;
-  /** Width of the bullet */
+  /**
+   * Width of the bullet
+   */
   private double width;
-  /** Speed of travel of the bullet */
+  /**
+   * Speed of travel of the bullet
+   */
   private double speed;
-  /** Vector of the force of bullet fire */
+  /**
+   * Vector of the force of bullet fire
+   */
   private Vector2 vector;
-  /** Damage of the bullet */
+  /**
+   * Damage of the bullet
+   */
   private int damage;
-  /** Angle of firing in degree */
+  /**
+   * Angle of firing in degree
+   */
   private double angleDegree;
   private HashSet<GameObject> alreadyHit;
 
@@ -159,11 +170,13 @@ public abstract class Bullet extends GameObject {
   public void OnCollisionEnter(Collision col) {
     boolean remove = true; // true: will remove this object at the end
     GameObject g = col.getCollidedObject();
-    if(!alreadyHit.contains(g)) {
+    if (!alreadyHit.contains(g)) {
       if (g instanceof Limb) {
         Limb p = (Limb) g;
         Limb q = p;
-        if(p instanceof Hand) q = (Limb) q.getParent();
+        if (p instanceof Hand) {
+          q = (Limb) q.getParent();
+        }
         if (q.getParent().equals(holder)) {
           remove = false;
           hitHolder = true;
@@ -176,11 +189,11 @@ public abstract class Bullet extends GameObject {
                   new CircleEmitter(
                       col.getPointOfCollision(),
                       new Vector2(speed * 2, speed * 2),
-                      new Vector2(0, Physics.GRAVITY*40),
+                      new Vector2(0, Physics.GRAVITY * 40),
                       new Vector2(6, 6),
-                      bc.getSize().magnitude()/2,
+                      bc.getSize().magnitude() / 2,
                       0.34f,
-                      Physics.TIMESTEP*2,
+                      Physics.TIMESTEP * 2,
                       2,
                       false,
                       "images/particle/bloodParticle.png"));
@@ -212,7 +225,7 @@ public abstract class Bullet extends GameObject {
 
   @Override
   public void destroy() {
-    if (!destroyed)
+    if (!destroyed) {
       settings
           .getLevelHandler()
           .addGameObject(
@@ -223,10 +236,11 @@ public abstract class Bullet extends GameObject {
                   new Vector2(12, 12),
                   bc.getSize().magnitude(),
                   0.34f,
-                  Physics.TIMESTEP*2,
+                  Physics.TIMESTEP * 2,
                   1,
                   false,
                   "images/particle/BulletParticle.png"));
+    }
     super.destroy();
   }
 

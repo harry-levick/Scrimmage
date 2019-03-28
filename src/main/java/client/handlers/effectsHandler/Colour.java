@@ -2,7 +2,9 @@ package client.handlers.effectsHandler;
 
 import java.io.Serializable;
 
-/** Data container for RGB colour */
+/**
+ * Data container for RGB colour
+ */
 public class Colour implements Serializable {
 
   private int r, g, b;

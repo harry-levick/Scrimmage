@@ -25,7 +25,8 @@ public class ButtonInputMenu extends ButtonObject {
     super.render();
     super.button.setFont(settings.getFont(20));
     super.setText("MENU: " + Client.settings.getKeyMap(KEY_CONTROL.MENU));
-    if (Client.keyInput.getChangeListening() && Client.keyInput.getHotChangeKey() == KEY_CONTROL.MENU) {
+    if (Client.keyInput.getChangeListening()
+        && Client.keyInput.getHotChangeKey() == KEY_CONTROL.MENU) {
       super.button.setTextFill(Color.YELLOW);
     } else {
       super.button.setTextFill(Color.WHITE);

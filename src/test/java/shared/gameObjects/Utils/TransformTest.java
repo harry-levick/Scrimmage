@@ -1,6 +1,7 @@
 package shared.gameObjects.Utils;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -10,10 +11,12 @@ import shared.util.maths.Vector2;
 public class TransformTest {
 
   static TestObject object;
+
   @BeforeClass
   public static void initTransform() {
     object = new TestObject();
   }
+
   @Test
   public void translate() {
     object.getTransform().translate(new Vector2(10, 10));

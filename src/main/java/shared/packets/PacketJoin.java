@@ -12,6 +12,7 @@ public class PacketJoin extends Packet {
 
   /**
    * Construct a packet that contains the data needed by the server to create and process a client
+   *
    * @param username The username the player has set for themselves
    * @param x X Position of the player
    * @param y Y Position of the player
@@ -45,8 +46,10 @@ public class PacketJoin extends Packet {
         + legRightUUID + "," + bodyUUID + "," + armLeftUUID + "," + armRightUUID + "," + headUUID
         + "," + handLeftUUID + "," + handRightUUID;
   }
+
   /**
    * Constructs a packet from a string of data
+   *
    * @param data Packet data received from sender
    */
   public PacketJoin(String data) {

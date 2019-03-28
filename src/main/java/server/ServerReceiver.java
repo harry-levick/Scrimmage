@@ -33,6 +33,7 @@ public class ServerReceiver implements Runnable {
 
   /**
    * Constructor:
+   *
    * @param server Current active server
    * @param serverSocket Socket to listen from
    * @param connected List of connected players
