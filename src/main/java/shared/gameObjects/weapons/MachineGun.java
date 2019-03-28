@@ -59,7 +59,6 @@ public class MachineGun extends Gun {
   @Override
   public void fire(double mouseX, double mouseY) {
     if (canFire()) {
-<<<<<<< HEAD
       UUID uuid = UUID.randomUUID();
       Vector2 playerCentre = new Vector2(holderHandPos[0], holderHandPos[1]); // centre = main hand
 

@@ -41,6 +41,7 @@ public class Settings {
   private int playersDead;
   private boolean multiplayer;
   private HashMap<KEY_CONTROL, KeyCode> keyMap = new HashMap<>();
+  private Group overlay;
 
   /**
    * Default Constructor Music volume set to 100 and sound effects to 75
@@ -398,5 +399,13 @@ public class Settings {
   // key mappings
   public enum KEY_CONTROL {
     JUMP, LEFT, RIGHT, THROW, MENU
+  }
+
+  public Group getOverlay() {
+    return overlay;
+  }
+
+  public void setOverlay(Group overlay) {
+    this.overlay = overlay;
   }
 }

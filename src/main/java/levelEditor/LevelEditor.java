@@ -790,7 +790,8 @@ public class LevelEditor extends Application {
 
   public void scaleRendering(Stage primaryStage) {
     Vector2 scaleRatio =
-        new Vector2(scene.getWidth() / settings.getMapWidth(), scene.getHeight() / settings.getMapHeight());
+        new Vector2(scene.getWidth() / settings.getMapWidth(),
+            scene.getHeight() / settings.getMapHeight());
     Scale scale = new Scale(scaleRatio.getX(), scaleRatio.getY(), 0, 0);
     primaryStage.getScene().getRoot().getTransforms().setAll(scale);
   }
