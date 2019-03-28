@@ -1,5 +1,7 @@
 package shared.gameObjects.UI;
 
+import client.main.Settings;
+import javafx.scene.paint.Color;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
@@ -21,6 +23,8 @@ public class PlayerInfo {
   private Animator board2;
   private Animator healthBar;
   private Animator ammoBar;
+  
+  private Settings settings;
 
   private ImageView boardImageView;
   private ImageView healthBarImageView;
@@ -39,7 +43,7 @@ public class PlayerInfo {
    *
    * @param root UI root to render to
    */
-  public PlayerInfo(Group root, Player clientPlayer) {
+  public PlayerInfo(Group root, Player clientPlayer,Settings settings) {
     root = root;
     player = clientPlayer;
 
@@ -62,9 +66,13 @@ public class PlayerInfo {
     ammoW = ammoBar.getImage().getWidth();
     ammoH = ammoBar.getImage().getHeight();
     currentAmmoText = new Text(5, 100, "");
-    maxAmmoText = new Text(200, 100, "");
-    currentAmmoText.setFont(new Font(48));
-    maxAmmoText.setFont(new Font(18));
+    currentAmmoText.setFill(new Color(0.2,0.2,0.2,1));
+    maxAmmoText = new Text(180, 100, "");
+    maxAmmoText.setFill(new Color(0.9,0.9,0.9,1));
+    
+
+    currentAmmoText.setFont(settings.getFont(48));
+    maxAmmoText.setFont(settings.getFont(24));
 
     // Add to the root
     root.getChildren()

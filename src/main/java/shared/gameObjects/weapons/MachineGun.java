@@ -17,6 +17,8 @@ public class MachineGun extends Gun {
   private static String imagePath = "images/weapons/machinegun.png"; // path to Machine Gun image
   private static String audioPath = "audio/sound-effects/laser_gun.wav"; // path to Machine Gun sfx
   private static double sizeX = 84, sizeY = 35;
+  private static int ammo = 50;
+  private static int fireRate = 64;
 
   /**
    * Default Constructor of a machine gun
@@ -36,8 +38,8 @@ public class MachineGun extends Gun {
         sizeY, // sizeY
         10, // weight
         name,
-        50, // ammo
-        70, // fireRate
+        ammo,
+        fireRate,
         20, // pivotX
         10, // pivotY
         holder,
@@ -58,50 +60,43 @@ public class MachineGun extends Gun {
 
   @Override
   public void fire(double mouseX, double mouseY) {
-    try {
-      if (canFire()) {
-        UUID uuid = UUID.randomUUID();
-        Vector2 playerCentre = new Vector2(holderHandPos[0], holderHandPos[1]); // centre = main hand
-        double playerRadius = 55 + 65; // Player.sizeY / 2 + bias
+    if (canFire()) {
+      UUID uuid = UUID.randomUUID();
+      Vector2 playerCentre = new Vector2(holderHandPos[0], holderHandPos[1]); // centre = main hand
 
-        double bulletX = playerCentre.getX() + playerRadius * Math.cos(-angleRadian);
-        double bulletY = playerCentre.getY() - playerRadius * Math.sin(-angleRadian);
-        double bulletFlipX = playerCentre.getX() - playerRadius * Math.cos(angleRadian);
-        double bulletFlipY = playerCentre.getY() - playerRadius * Math.sin(angleRadian);
+      double bulletX;
+      double bulletY;
 
-        Collision raycast = Physics.raycastBullet(
-            playerCentre,
-            new Vector2(mouseX - bulletX, mouseY - bulletY).normalize().mult(55),
-            this.holder,
-            false);
-        Bullet bullet;
-
-        if (raycast != null && raycast.getCollidedObject().getClass().getPackage().getName()
-            .contains(blocksPackageName)) {
-          bullet = new FireBullet(
-              holderHandPos[0],
-              holderHandPos[1] + 20,
-              mouseX,
-              mouseY,
-              this.holder,
-              uuid
-          );
+      try {
+        if (holder.isAimingLeft()) {
+          bulletX = playerCentre.getX() - playerRadius * Math.cos(angleRadian);
+          bulletY = playerCentre.getY() - playerRadius * Math.sin(angleRadian);
         } else {
-          bullet = new FireBullet(
-              (holder.isAimingLeft() ? bulletFlipX : bulletX),
-              (holder.isAimingLeft() ? bulletFlipY : bulletY),
-              mouseX,
-              mouseY,
-              this.holder,
-              uuid);
+          bulletX = playerCentre.getX() + playerRadius * Math.cos(-angleRadian);
+          bulletY = playerCentre.getY() - playerRadius * Math.sin(-angleRadian);
+
         }
+
+        // Ray cast check if shooting floor
+        double[] bulletStartPos =
+            isShootingFloor(bulletX, bulletY, mouseX, mouseY, playerCentre);
+
+        Bullet bullet = new FireBullet(
+            bulletStartPos[0],
+            bulletStartPos[1],
+            mouseX,
+            mouseY,
+            this.holder,
+            uuid
+        );
+
         settings.getLevelHandler().addGameObject(bullet);
-        this.currentCooldown = getDefaultCoolDown();
-        new AudioHandler(settings, Client.musicActive).playSFX("MACHINEGUN");
-        deductAmmo();
+      } catch (NullPointerException e) {
+        System.out.println("NullPointerException in MachineGun");
       }
-    } catch (NullPointerException e) {
-      return;
+      this.currentCooldown = getDefaultCoolDown();
+      new AudioHandler(settings, Client.musicActive).playSFX("MACHINEGUN");
+      deductAmmo();
     }
 
   }

@@ -19,7 +19,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -139,7 +138,7 @@ public class Client extends Application {
   private Group root;
   private boolean startedGame;
   private int timeRemaining;
-  private int timeLimit = 3; // Time limit in minutes
+  private int timeLimit = 1; // Time limit in minutes
   private float maximumStep;
   private long previousTime;
   private float accumulatedTime;
@@ -156,7 +155,7 @@ public class Client extends Application {
    * Sets a new user interface in the uiRoot, rendered by the main game loop depending on use
    */
   public static void setUserInterface() {
-    userInterface = new UI(uiRoot, levelHandler.getClientPlayer());
+    userInterface = new UI(uiRoot, levelHandler.getClientPlayer(),settings);
   }
 
   /**
@@ -362,7 +361,6 @@ public class Client extends Application {
   public static void endGame() {
     singleplayerGame = false;
     gameOver = false;
-    levelHandler.getBotPlayerList().forEach((key, bot) -> bot.terminate());
     // remove desaturation
     ColourFilters filter = new ColourFilters();
     filter.setDesaturate(0);
@@ -372,34 +370,6 @@ public class Client extends Application {
     levelHandler.changeMap(
         new Map("menus/score.map", Path.convert("src/main/resources/menus/score.map")),
         true, false);
-
-    new java.util.Timer().schedule(
-        new java.util.TimerTask() {
-          @Override
-          public void run() {
-            Platform.runLater(new Runnable() {
-              @Override
-              public void run() {
-                levelHandler.getPlayers().keySet()
-                    .removeAll(levelHandler.getBotPlayerList().keySet());
-                levelHandler.getGameObjects().keySet()
-                    .removeAll(levelHandler.getBotPlayerList().keySet());
-                levelHandler.getBotPlayerList()
-                    .forEach((key, gameObject) -> gameObject.removeRender());
-                levelHandler.getBotPlayerList().forEach((key, gameObject) -> gameObject = null);
-                levelHandler.getBotPlayerList().clear();
-                levelHandler.changeMap(
-                    new Map("menus/main_menu.map",
-                        Path.convert("src/main/resources/menus/main_menu.map")),
-                    true, false);
-              }
-            });
-
-          }
-        }, 15000
-    );
-
-
   }
 
   /**
@@ -439,6 +409,7 @@ public class Client extends Application {
     if (!startedGame) {
       timeRemaining = timeLimit * 60;
 
+     
       Timer secondsTimer = new Timer();
       secondsTimer.scheduleAtFixedRate(new TimerTask() {
         @Override
@@ -656,6 +627,7 @@ public class Client extends Application {
     root.getChildren().add(uiRoot);
     root.getChildren().add(overlayBackground);
     root.getChildren().add(overlayRoot);
+    settings.setOverlay(overlayRoot);
 
     primaryStage.setTitle(gameTitle);
     primaryStage.getIcons().add(new Image(Path.convert("images/logo.png")));
