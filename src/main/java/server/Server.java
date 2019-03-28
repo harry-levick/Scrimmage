@@ -185,7 +185,6 @@ public class Server extends Application {
   }
   //Updates the Physics of the objects on the Server
   private void updateSimulation() {
-    levelHandler.createObjects();
     /** Check Collisions */
     Physics.gameObjects = levelHandler.getGameObjects();
     inputQueue.forEach(
@@ -340,7 +339,7 @@ public class Server extends Application {
           this.stop();
         }
 
-        if (playerLastCount < playerCount.get()) {
+        if (playerLastCount < playerCount.get() && server.playerCount.get() < 5) {
           playerLastCount++;
           executor.execute(new ServerReceiver(server, serverSocket, connected));
         }
@@ -392,14 +391,32 @@ public class Server extends Application {
   public void sendObjects(ConcurrentLinkedHashMap<UUID, GameObject> gameobjects) {
     ByteArrayOutputStream byteArrayOutputStream = null;
     try {
+      int i = 0;
+      ArrayList list = new ArrayList();
+      for (java.util.Map.Entry<UUID, GameObject> entry : gameobjects.entrySet()) {
+        list.add(entry.getValue());
+        if (i >= 25) {
+          byteArrayOutputStream = new ByteArrayOutputStream();
+          ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+          objectOutputStream.writeObject(list);
+          objectOutputStream.flush();
+          sendToClients(byteArrayOutputStream.toByteArray(), true);
+          list.clear();
+          i = 0;
+        }
+        i++;
+      }
       byteArrayOutputStream = new ByteArrayOutputStream();
       ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
-      objectOutputStream.writeObject(gameobjects);
+      objectOutputStream.writeObject(list);
       objectOutputStream.flush();
-
       sendToClients(byteArrayOutputStream.toByteArray(), true);
+      list.clear();
+
     } catch (IOException e) {
       LOGGER.error("Unable to send new objects to clients ");
+      e.printStackTrace();
+    } catch (Exception e) {
       e.printStackTrace();
     } finally {
       try {
@@ -424,10 +441,18 @@ public class Server extends Application {
    */
   public Player addPlayer(PacketJoin joinPacket, InetAddress address) {
     Player player = new Player(joinPacket.getX(), joinPacket.getY(), joinPacket.getClientID());
-    levelHandler.addPlayer(player, gameRoot);
+    player.initialise(gameRoot, settings, joinPacket.getLegLeftUUID(), joinPacket.getLegRightUUID(),
+        joinPacket.getBodyUUID(), joinPacket.getHeadUUID(), joinPacket.getArmLeftUUID(),
+        joinPacket.getArmRightUUID(), joinPacket.getHandLeftUUID(), joinPacket.getHandRightUUID());
+    levelHandler.addPlayer(player);
     playerCount.getAndIncrement();
     connected.add(address);
     server.add(player);
+    server.sendObjects(levelHandler.getGameObjects());
+    //Redundancy
+    server.sendObjects(levelHandler.getGameObjects());
+    //Redundancy
+    server.sendObjects(levelHandler.getGameObjects());
     return player;
   }
   private void setupRender(Stage primaryStage) {

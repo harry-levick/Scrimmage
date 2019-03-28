@@ -8,6 +8,7 @@ import java.net.DatagramSocket;
 import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import shared.gameObjects.players.Player;
 import shared.packets.Packet;
 import shared.packets.PacketJoin;
 
@@ -40,12 +41,21 @@ public class ConnectionHandler extends Thread {
   }
 
   public void run() {
+    Player player = Client.levelHandler.getClientPlayer();
     Packet joinPacket =
         new PacketJoin(
-            Client.levelHandler.getClientPlayer().getUUID(),
+            player.getUUID(),
             Client.settings.getUsername(),
-            Client.levelHandler.getClientPlayer().getX(),
-            Client.levelHandler.getClientPlayer().getY());
+            player.getX(),
+            player.getY(),
+            player.getLegLeft().getUUID(),
+            player.getLegRight().getUUID(),
+            player.getBody().getUUID(),
+            player.getHead().getUUID(),
+            player.getArmLeft().getUUID(),
+            player.getArmRight().getUUID(),
+            player.getHandLeft().getUUID(),
+            player.getHandRight().getUUID());
     send(joinPacket.getString());
 
     Client.multiplayer = true;

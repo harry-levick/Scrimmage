@@ -7,7 +7,7 @@ import javafx.scene.image.ImageView;
 /**
  * Component class to apply color filters to a rendered objects TODO JavaDocs correct?
  */
-public class ColorFilters {
+public class ColourFilters {
 
   //Colour adjust definitions 
   ColorAdjust greyScale = new ColorAdjust();
@@ -17,7 +17,7 @@ public class ColorFilters {
   /**
    * Constructs manager
    */
-  public ColorFilters() {
+  public ColourFilters() {
     setGreyScale();
     setDesaturate(0.5);
 

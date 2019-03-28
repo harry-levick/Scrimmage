@@ -45,6 +45,7 @@ public class ButtonJoin extends ButtonObject {
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
     Client.connectionHandler = new ConnectionHandler(addressInput.getText());
+    Client.connectionHandler.setDaemon(true);
     Client.connectionHandler.start();
     button.disarm();
     root.getChildren().remove(addressInput);

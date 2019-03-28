@@ -32,6 +32,7 @@ public class ChasingThread extends Thread {
     this.plan = plan;
     pathFinder = new AStar(bot, bot.getLevelHandler());
     running = true;
+    Thread.currentThread().setName("Chasing Calculator " + bot.getUUID());
   }
 
   @Override
