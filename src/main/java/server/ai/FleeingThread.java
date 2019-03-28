@@ -71,7 +71,6 @@ public class FleeingThread extends Thread {
    */
   public void terminate() {
     running = false;
-    this.interrupt();
   }
 
 }
