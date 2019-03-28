@@ -691,11 +691,6 @@ public class LevelCreator extends Application {
     uuid = UUID.randomUUID();
     gameObjects.put(uuid, new AccountPageHandler(uuid));
     uuid = UUID.randomUUID();
-    //Six Buttons
-    gameObjects.put(uuid,
-        new ButtonQuit(
-            getAbs(8), getAbs(18), getAbs(8), getAbs(2), ObjectType.Button, uuid));
-    uuid = UUID.randomUUID();
 
     for (int i = 0; i < 12; i++) {
       // top row wall

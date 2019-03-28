@@ -266,7 +266,7 @@ public class LevelHandler {
         server.sendObjects(temp);
       }
     } catch (IllegalStateException e) {
-      System.out.println("AI - avoiding placement of object");
+      //System.out.println("AI - avoiding placement of object");
     }
 
   }

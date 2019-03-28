@@ -1,11 +1,9 @@
 package client.handlers.accountHandler;
 
-/**
- * Container class for the save data of the Client
- */
+/** Container class for the save data of the Client */
 public class AccountData {
 
-  public static final int SKIN_COUNT = 7;
+  public static final int SKIN_COUNT = 9;
   private String username;
   private String uuid;
   private boolean[] achievements;
@@ -24,8 +22,13 @@ public class AccountData {
    * @param lootboxCount The number of unopened lootboxes left to open
    * @param moneyCount The amount of in-game currency currently held by the user
    */
-  public AccountData(String uuid, String username, boolean[] achievements, boolean[] skins,
-      int lootboxCount, int moneyCount) {
+  public AccountData(
+      String uuid,
+      String username,
+      boolean[] achievements,
+      boolean[] skins,
+      int lootboxCount,
+      int moneyCount) {
     this.username = username;
     this.achievements = achievements;
     this.skins = skins;
@@ -34,11 +37,6 @@ public class AccountData {
     this.uuid = uuid;
     skins[0] = true;
     activeSkin = new int[4];
-    activeSkin[0] = 6;
-    activeSkin[1] = 6;
-    activeSkin[2] = 6;
-    activeSkin[3] = 6;
-    achievements[2] = true;
   }
 
   /**
@@ -57,10 +55,15 @@ public class AccountData {
     boolean[] skins = new boolean[30];
     int packedSkins = Integer.parseInt(splitData[3]);
     for (int i = 29; i >= 0; i--) {
-      achievements[29 - i] = (packedAchievements & (1 << i)) != 0;
+      skins[29 - i] = (packedSkins & (1 << i)) != 0;
     }
-    return new AccountData(splitData[0], splitData[1], achievements, skins,
-        Integer.parseInt(splitData[4]), Integer.parseInt(splitData[5]));
+    return new AccountData(
+        splitData[0],
+        splitData[1],
+        achievements,
+        skins,
+        Integer.parseInt(splitData[4]),
+        Integer.parseInt(splitData[5]));
   }
 
   /**
@@ -77,9 +80,14 @@ public class AccountData {
     for (int i = 0; i < skins.length; i++) {
       packedSkins = (packedSkins << 1) | (skins[i] ? 1 : 0);
     }
-    String[] ret = {uuid, username, Integer.toString(packedAchievements),
-        Integer.toString(packedSkins), Integer.toString(lootboxCount),
-        Integer.toString(moneyCount)};
+    String[] ret = {
+      uuid,
+      username,
+      Integer.toString(packedAchievements),
+      Integer.toString(packedSkins),
+      Integer.toString(lootboxCount),
+      Integer.toString(moneyCount)
+    };
     return ret;
   }
 
@@ -93,7 +101,6 @@ public class AccountData {
     String[] ret = {uuid, username, password, save[2], save[3], save[4], save[5]};
     return ret;
   }
-
 
   public boolean[] getAchievements() {
     return achievements;

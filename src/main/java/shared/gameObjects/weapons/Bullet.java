@@ -1,5 +1,6 @@
 package shared.gameObjects.weapons;
 
+import client.handlers.effectsHandler.ServerParticle;
 import client.handlers.effectsHandler.emitters.CircleEmitter;
 import client.main.Settings;
 import java.util.HashSet;
@@ -183,20 +184,11 @@ public abstract class Bullet extends GameObject {
         } else {
           p.deductHp(this.damage);
           alreadyHit.add(g);
-          settings
-              .getLevelHandler()
-              .addGameObject(
-                  new CircleEmitter(
-                      col.getPointOfCollision(),
-                      new Vector2(speed * 2, speed * 2),
-                      new Vector2(0, Physics.GRAVITY * 40),
-                      new Vector2(6, 6),
-                      bc.getSize().magnitude() / 2,
-                      0.34f,
-                      Physics.TIMESTEP * 2,
-                      2,
-                      false,
-                      "images/particle/bloodParticle.png"));
+          settings.getLevelHandler().addGameObject(new ServerParticle(
+              transform.getBotPos().sub(transform.getSize().mult(new Vector2(0.5, 0))),
+              new Vector2(0, -35), new Vector2(0, 100), new Vector2(64, 64),
+              "blood", 0.28f)
+          );
         }
       }
     }
