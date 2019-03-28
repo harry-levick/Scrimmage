@@ -16,7 +16,7 @@ public class FireBullet extends Bullet {
   /**
    * Damage of the bullet
    */
-  private static final int damage = 5;
+  private static final int damage = 10;
   /**
    * Speed of travel of the bullet
    */
