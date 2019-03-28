@@ -245,6 +245,14 @@ public class AccountPageHandler extends GameObject {
     }
   }
 
+  private void purchaseBox(int id, Label notification) {
+
+  }
+
+  private void processCode(String code, Label notification) {
+
+  }
+
   private void initPanes() {
     panes = new Pane[5];
     initAccountPane();
@@ -533,6 +541,56 @@ public class AccountPageHandler extends GameObject {
 
   private void initShopPane() {
     panes[4] = new Pane();
+
+    Label moneyStatus = new Label(settings.getData().getMoneyCount() + " Scrimbucks");
+    moneyStatus.relocate(540, 20);
+    moneyStatus.setTextFill(Color.BLACK);
+    moneyStatus.setPrefWidth(800);
+    moneyStatus.setFont(settings.getFont(52));
+    moneyStatus.setAlignment(Pos.CENTER);
+
+    Label notification = new Label("Purchased 5x Lootboxes!");
+    notification.relocate(540, 600);
+    notification.setTextFill(Color.BLACK);
+    notification.setPrefWidth(800);
+    notification.setFont(settings.getFont(32));
+    notification.setAlignment(Pos.CENTER);
+
+    JFXButton[] purchase = new JFXButton[2];
+    purchase[0] = new JFXButton("Purchase");
+    purchase[1] = new JFXButton("Purchase x5");
+    for (int i=0; i < purchase.length; i++) {
+      final int temp = i;
+      purchase[i].setFont(settings.getFont(42));
+      purchase[i].setPrefWidth(560);
+      purchase[i].setTranslateX(80);
+      purchase[i].setTranslateY(200 + 120*i);
+      purchase[i].setTextFill(Color.WHITE);
+      purchase[i].setOnMousePressed(event -> purchaseBox(temp, notification));
+      purchase[i].setOnMouseEntered(event -> purchase[temp].setTextFill(Color.LIGHTBLUE));
+      purchase[i].setOnMouseExited(event -> purchase[temp].setTextFill(Color.WHITE));
+    }
+    JFXTextField inputCode = new JFXTextField("Enter Code Here");
+    inputCode.setFont(settings.getFont(28));
+    inputCode.setPrefWidth(560);
+    inputCode.relocate(1240, 200);
+
+    JFXButton validateCode = new JFXButton("Enter");
+    validateCode.setFont(settings.getFont(42));
+    validateCode.setPrefWidth(560);
+    validateCode.relocate(1240, 320);
+    validateCode.setTextFill(Color.WHITE);
+    validateCode.setOnMousePressed(event -> processCode(inputCode.getText().toLowerCase(), notification));
+    validateCode.setOnMouseEntered(event -> validateCode.setTextFill(Color.LIGHTBLUE));
+    validateCode.setOnMouseExited(event -> validateCode.setTextFill(Color.WHITE));
+
+    panes[4].getChildren().addAll(purchase);
+    panes[4].getChildren().add(notification);
+    panes[4].getChildren().add(validateCode);
+    panes[4].getChildren().add(inputCode);
+    panes[4].getChildren().add(moneyStatus);
+    panes[4].setTranslateX(0);
+    panes[4].setTranslateY(200);
   }
 
   @Override

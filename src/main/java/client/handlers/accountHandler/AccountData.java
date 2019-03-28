@@ -12,7 +12,7 @@ public class AccountData {
   private int activeSkin[];
   private int lootboxCount;
   private int moneyCount;
-  public static final int SKIN_COUNT = 8;
+  public static final int SKIN_COUNT = 9;
 
   /**
    * Constructs a client data with the given unlocks
@@ -32,10 +32,10 @@ public class AccountData {
     this.uuid = uuid;
     skins[0] = true;
     activeSkin = new int[4];
-    activeSkin[0] = 7;
-    activeSkin[1] = 7;
-    activeSkin[2] = 7;
-    activeSkin[3] = 7;
+    activeSkin[0] = 8;
+    activeSkin[1] = 8;
+    activeSkin[2] = 8;
+    activeSkin[3] = 8;
     achievements[2] = true;
   }
 
