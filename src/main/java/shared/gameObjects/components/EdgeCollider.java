@@ -1,19 +1,21 @@
 package shared.gameObjects.components;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import shared.gameObjects.GameObject;
 import shared.physics.types.ColliderLayer;
 import shared.physics.types.ColliderType;
 import shared.util.maths.Vector2;
 
-/** An edge collider; used only for Raycasts */
+/**
+ * An edge collider; used only for Raycasts
+ */
 public class EdgeCollider extends Collider {
 
   ArrayList<Vector2> nodes;
 
   /**
    * EdgeCollider constructor with DEFAULT Layer and no parent
+   *
    * @param isTrigger Whether this collider is a trigger or a collider
    */
   public EdgeCollider(boolean isTrigger) {
@@ -23,6 +25,7 @@ public class EdgeCollider extends Collider {
 
   /**
    * EdgeCollider constructor
+   *
    * @param parent The object the collider is attached to
    * @param layer The collision layer the collider is a part of
    * @param isTrigger Whether this collider is a trigger or a collider
@@ -34,7 +37,6 @@ public class EdgeCollider extends Collider {
 
   /**
    * Adds a new node on the EdgeCollider
-   * @param position
    */
   public void addNode(Vector2 position) {
     nodes.add(position);
@@ -46,8 +48,6 @@ public class EdgeCollider extends Collider {
 
   /**
    * Find the node on the edge collider that is closest to a point passed in
-   * @param point
-   * @return
    */
   public Vector2 findClosestPoint(Vector2 point) {
 
@@ -60,6 +60,6 @@ public class EdgeCollider extends Collider {
 
   @Override
   public Vector2 getCentre() {
-    return nodes.get(nodes.size()/2);
+    return nodes.get(nodes.size() / 2);
   }
 }

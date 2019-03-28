@@ -13,7 +13,6 @@ import shared.util.maths.Vector2;
 public class Crushing extends Behaviour {
 
   /**
-   *
    * @param parent Object to apply "Crushing" behaviour to
    */
   public Crushing(GameObject parent) {

@@ -12,15 +12,15 @@ import shared.physics.Physics;
  */
 public class WeaponSpawner extends GameObject {
 
-  private float timer;
   private static final float TIMER = 6.432f;
   private static final double WEAPON_PROBABILITY = 0.26;
+  private float timer;
   private ArrayList<Weapons> weapons;
   private Random random;
 
   public WeaponSpawner(double x, double y, double sizeX, double sizeY, UUID uuid) {
     super(x, y, sizeX, sizeY, ObjectType.WeaponSpawner, uuid);
-    weapons =  new ArrayList<>();
+    weapons = new ArrayList<>();
     random = new Random();
     /**
      * Debugging
@@ -34,16 +34,16 @@ public class WeaponSpawner extends GameObject {
 
   @Override
   public void initialiseAnimation() {
-  //Has no image
+    //Has no image
     this.animation.supplyAnimation("default", "images/empty.png");
   }
 
   @Override
   public void update() {
     timer -= Physics.TIMESTEP;
-    if(timer <= 0) {
+    if (timer <= 0) {
       random = new Random();
-      if(random.nextDouble() <= WEAPON_PROBABILITY) {
+      if (random.nextDouble() <= WEAPON_PROBABILITY) {
         createRandomWeapon();
       }
       timer = TIMER;
@@ -52,12 +52,14 @@ public class WeaponSpawner extends GameObject {
 
   /**
    * Adds a new weapon types to the spawner
+   *
    * @param weapon The weapon types to add to the spawner
    */
   public void addWeaponToSpawner(Weapons... weapon) {
     for (Weapons w : weapon) {
-      if(!weapons.contains(w))
+      if (!weapons.contains(w)) {
         weapons.add(w);
+      }
     }
   }
 
@@ -66,19 +68,25 @@ public class WeaponSpawner extends GameObject {
     int index = random.nextInt(weapons.size());
     switch (weapons.get(index)) {
       case SWORD:
-        settings.getLevelHandler().addGameObject(new Sword(getX(), getY(), "SwordFromSpawner", null, UUID.randomUUID()));
+        settings.getLevelHandler()
+            .addGameObject(new Sword(getX(), getY(), "SwordFromSpawner", null, UUID.randomUUID()));
         break;
       case HANDGUN:
-        settings.getLevelHandler().addGameObject(new Handgun(getX(), getY(), "HandgunFromSpawner", null, UUID.randomUUID()));
+        settings.getLevelHandler().addGameObject(
+            new Handgun(getX(), getY(), "HandgunFromSpawner", null, UUID.randomUUID()));
         break;
       case MACHINEGUN:
-        settings.getLevelHandler().addGameObject(new MachineGun(getX(), getY(), "MachinegunFromSpawner", null, UUID.randomUUID()));
+        settings.getLevelHandler().addGameObject(
+            new MachineGun(getX(), getY(), "MachinegunFromSpawner", null, UUID.randomUUID()));
         break;
       case UZI:
-        settings.getLevelHandler().addGameObject(new Uzi(getX(), getY(), "UziFromSpawner", null, UUID.randomUUID()));
+        settings.getLevelHandler()
+            .addGameObject(new Uzi(getX(), getY(), "UziFromSpawner", null, UUID.randomUUID()));
         break;
       case EXPLOSIVE_LAUNCHER:
-        settings.getLevelHandler().addGameObject(new ExplosiveLauncher(getX(), getY(), "ExplosiveLauncherFromSpawner", null, UUID.randomUUID()));
+        settings.getLevelHandler().addGameObject(
+            new ExplosiveLauncher(getX(), getY(), "ExplosiveLauncherFromSpawner", null,
+                UUID.randomUUID()));
         break;
     }
   }

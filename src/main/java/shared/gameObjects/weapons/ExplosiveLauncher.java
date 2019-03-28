@@ -12,9 +12,13 @@ import shared.util.maths.Vector2;
  */
 public class ExplosiveLauncher extends Gun {
 
-  /** Path to image */
+  /**
+   * Path to image
+   */
   private static String imagePath = "images/weapons/explosiveLauncher.png";
-  /** Size of image */
+  /**
+   * Size of image
+   */
   private static double sizeX = 117, sizeY = 29;
 
   /**
@@ -27,7 +31,7 @@ public class ExplosiveLauncher extends Gun {
    * @param uuid UUID of this explosive launcher
    */
   public ExplosiveLauncher(double x, double y, String name, Player holder, UUID uuid) {
-    super (
+    super(
         x,
         y,
         sizeX, // sizeX

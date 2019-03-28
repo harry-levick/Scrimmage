@@ -1,10 +1,9 @@
 package client.handlers.accountHandler;
 
-/**
- * Container class for the save data of the Client
- */
+/** Container class for the save data of the Client */
 public class AccountData {
 
+  public static final int SKIN_COUNT = 9;
   private String username;
   private String uuid;
   private boolean[] achievements;
@@ -12,10 +11,10 @@ public class AccountData {
   private int activeSkin[];
   private int lootboxCount;
   private int moneyCount;
-  public static final int SKIN_COUNT = 7;
 
   /**
    * Constructs a client data with the given unlocks
+   *
    * @param uuid UUID of the user, as can be found on the SQL Database
    * @param username Name of the user, shown to other players and as found on the SQL Database
    * @param achievements Boolean array representing unlock state of achievements
@@ -23,7 +22,13 @@ public class AccountData {
    * @param lootboxCount The number of unopened lootboxes left to open
    * @param moneyCount The amount of in-game currency currently held by the user
    */
-  public AccountData(String uuid, String username, boolean[] achievements, boolean[] skins, int lootboxCount, int moneyCount) {
+  public AccountData(
+      String uuid,
+      String username,
+      boolean[] achievements,
+      boolean[] skins,
+      int lootboxCount,
+      int moneyCount) {
     this.username = username;
     this.achievements = achievements;
     this.skins = skins;
@@ -32,15 +37,12 @@ public class AccountData {
     this.uuid = uuid;
     skins[0] = true;
     activeSkin = new int[4];
-    activeSkin[0] = 6;
-    activeSkin[1] = 6;
-    activeSkin[2] = 6;
-    activeSkin[3] = 6;
     achievements[2] = true;
   }
 
   /**
    * Constructs ClientData from a formatted string usually obtained by the database
+   *
    * @param data Data representing content of player
    * @return ClientData processed from String data
    */
@@ -48,32 +50,51 @@ public class AccountData {
     String[] splitData = data.split("//x/s");
     boolean[] achievements = new boolean[30];
     int packedAchievements = Integer.parseInt(splitData[2]);
-    for (int i = 29; i >= 0; i--)
+    for (int i = 29; i >= 0; i--) {
       achievements[29 - i] = (packedAchievements & (1 << i)) != 0;
+    }
     boolean[] skins = new boolean[30];
     int packedSkins = Integer.parseInt(splitData[3]);
-    for (int i = 29; i >= 0; i--)
-      achievements[29 - i] = (packedAchievements & (1 << i)) != 0;
-    return new AccountData(splitData[0], splitData[1], achievements, skins, Integer.parseInt(splitData[4]), Integer.parseInt(splitData[5]));
+    for (int i = 29; i >= 0; i--) {
+      skins[29 - i] = (packedSkins & (1 << i)) != 0;
+    }
+    return new AccountData(
+        splitData[0],
+        splitData[1],
+        achievements,
+        skins,
+        Integer.parseInt(splitData[4]),
+        Integer.parseInt(splitData[5]));
   }
 
   /**
    * Generates the String array used to query the server for saving the state of the user
+   *
    * @return String array used by SQL Save Query
    */
   public String[] saveQuery() {
     int packedAchievements = 0;
-    for (int i = 0; i < achievements.length; i++)
+    for (int i = 0; i < achievements.length; i++) {
       packedAchievements = (packedAchievements << 1) | (achievements[i] ? 1 : 0);
+    }
     int packedSkins = 0;
-    for (int i = 0; i < skins.length; i++)
+    for (int i = 0; i < skins.length; i++) {
       packedSkins = (packedSkins << 1) | (skins[i] ? 1 : 0);
-    String[] ret = {uuid, username, Integer.toString(packedAchievements), Integer.toString(packedSkins), Integer.toString(lootboxCount), Integer.toString(moneyCount)};
+    }
+    String[] ret = {
+      uuid,
+      username,
+      Integer.toString(packedAchievements),
+      Integer.toString(packedSkins),
+      Integer.toString(lootboxCount),
+      Integer.toString(moneyCount)
+    };
     return ret;
   }
 
   /**
    * Generates the String array used to query the server for registering a new user
+   *
    * @return String array used by SQL Register Query
    */
   public String[] registerAccountQuery(String password) {
@@ -82,13 +103,13 @@ public class AccountData {
     return ret;
   }
 
-
   public boolean[] getAchievements() {
     return achievements;
   }
 
   /**
    * Sets the achievement with the passed ID to true
+   *
    * @param id Achievement ID to award to user
    */
   public void awardAchievement(int id) {
@@ -102,10 +123,11 @@ public class AccountData {
 
   /**
    * Allows the user to now use the skin of the given ID
+   *
    * @param id Skin ID to award to user
    */
   public void awardSkin(int id) {
-   skins[id] = true;
+    skins[id] = true;
     SQLConnect.saveData(this);
   }
 
@@ -163,6 +185,7 @@ public class AccountData {
   public void applySkin(int[] newSkin) {
     activeSkin = newSkin;
   }
+
   public int[] getActiveSkin() {
     return activeSkin;
   }
@@ -174,7 +197,9 @@ public class AccountData {
   public int getSkinCount() {
     int ret = 0;
     for (boolean skin : skins) {
-        if(skin) ret++;
+      if (skin) {
+        ret++;
+      }
     }
     return ret;
   }
@@ -182,7 +207,9 @@ public class AccountData {
   public int getAchievementCount() {
     int ret = 0;
     for (boolean skin : achievements) {
-      if(skin) ret++;
+      if (skin) {
+        ret++;
+      }
     }
     return ret;
   }

@@ -8,7 +8,9 @@ import shared.physics.types.ColliderLayer;
 import shared.physics.types.ColliderType;
 import shared.util.maths.Vector2;
 
-/** Constructs a Circle shaped Collider */
+/**
+ * Constructs a Circle shaped Collider
+ */
 public class CircleCollider extends Collider implements Serializable {
 
   private float radius;
@@ -17,6 +19,7 @@ public class CircleCollider extends Collider implements Serializable {
 
   /**
    * CircleCollider constructor with DEFAULT Layer
+   *
    * @param parent The object the collider is attached to
    * @param radius The radius of the circle collider projected from the centre of the object
    * @param isTrigger Whether this collider is a trigger or a collider
@@ -29,6 +32,7 @@ public class CircleCollider extends Collider implements Serializable {
 
   /**
    * CircleCollider constructor
+   *
    * @param parent The object the collider is attached to
    * @param radius The radius of the circle collider projected from the centre of the object
    * @param layer The collision layer the collider is a part of
@@ -42,6 +46,7 @@ public class CircleCollider extends Collider implements Serializable {
 
   /**
    * CircleCollider constructor with no parent
+   *
    * @param sourcePos The centre position of the circle
    * @param radius The projected radius from sourcePos
    */

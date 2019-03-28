@@ -12,8 +12,10 @@ public class PacketResponse extends Packet {
     this.multiAddress = multiAddress;
     data = packetID + "," + Boolean.toString(accepted) + "," + multiAddress;
   }
+
   /**
    * Constructs a packet from a string of data
+   *
    * @param data Packet data received from sender
    */
   public PacketResponse(String data) {

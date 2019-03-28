@@ -79,7 +79,8 @@ public abstract class GameObject implements Serializable {
    */
   protected boolean active;
   /**
-   * Boolean to determine if an object is destroyed; once set to true it cannot be set back to false
+   * Boolean to determine if an object is destroyed; once set to true it cannot be set back to
+   * false
    */
   protected boolean destroyed;
 
@@ -137,7 +138,9 @@ public abstract class GameObject implements Serializable {
    */
   public void update() {
     networkStateUpdate = false;
-    if(destroyed) return;
+    if (destroyed) {
+      return;
+    }
     animation.update();
 
     for (Component comp : getComponents(ComponentType.RIGIDBODY)) {
@@ -328,12 +331,12 @@ public abstract class GameObject implements Serializable {
 
   // Interpolate Position Client only
   public void interpolatePosition(float alpha) {
-      imageView.setTranslateX(alpha * getX() + (1 - alpha) * imageView.getTranslateX());
-      imageView.setTranslateY(alpha * getY() + (1 - alpha) * imageView.getTranslateY());
-    }
+    imageView.setTranslateX(alpha * getX() + (1 - alpha) * imageView.getTranslateX());
+    imageView.setTranslateY(alpha * getY() + (1 - alpha) * imageView.getTranslateY());
+  }
 
 
-      public void setState(String data, Boolean snap) {
+  public void setState(String data, Boolean snap) {
     String[] unpackedData = data.split(";");
     Vector2 statePos = new Vector2(Double.parseDouble(unpackedData[2]),
         Double.parseDouble(unpackedData[3]));
@@ -365,7 +368,8 @@ public abstract class GameObject implements Serializable {
       this.root = root;
       root.getChildren().add(this.imageView);
     }
-    if (getComponent(ComponentType.COLLIDER) != null && Physics.showColliders && this instanceof Limb) {
+    if (getComponent(ComponentType.COLLIDER) != null && Physics.showColliders
+        && this instanceof Limb) {
       ((Collider) getComponent(ComponentType.COLLIDER)).initialise(root);
     }
     imageView.setFitHeight(transform.getSize().getY());
@@ -374,6 +378,7 @@ public abstract class GameObject implements Serializable {
 
   /**
    * Sets this gameObject as the parent to a defined gameObject
+   *
    * @param child The object to make a child to this object
    */
   public void addChild(GameObject child) {
@@ -384,10 +389,13 @@ public abstract class GameObject implements Serializable {
 
   /**
    * Removes this gameObject as the parent to a defined gameObject
+   *
    * @param child The object to no longer make a child to this object
    */
   public void removeChild(GameObject child) {
-    if(children.remove(child)) child.setParent(null);
+    if (children.remove(child)) {
+      child.setParent(null);
+    }
   }
 
   /**
@@ -399,6 +407,7 @@ public abstract class GameObject implements Serializable {
 
   /**
    * Adds a new component to this object
+   *
    * @param component Component to add
    */
   public void addComponent(Component component) {
@@ -407,6 +416,7 @@ public abstract class GameObject implements Serializable {
 
   /**
    * Removes a component from this object
+   *
    * @param component Component to remove
    */
   public void removeComponent(Component component) {

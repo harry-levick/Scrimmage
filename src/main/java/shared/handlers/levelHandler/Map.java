@@ -12,10 +12,10 @@ public class Map {
   private String playlist;
   private String path;
   private GameState gameState;
-  private String mapUUID;
 
   /**
    * Constructs map from a file
+   *
    * @param name Name of the map file in the directory
    * @param path File path to the directory containing the map file
    */
@@ -24,7 +24,6 @@ public class Map {
     this.playlist = "N/A";
     this.path = path;
     this.gameState = gameState;
-    this.mapUUID = name;
   }
 
   public String getName() {

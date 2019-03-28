@@ -25,6 +25,11 @@ public class ConnectionHandler extends Thread {
   private PrintWriter out;
   private int size;
 
+  /**
+   * Starts a new client side connection to a game server
+   *
+   * @param address Address of server to connect to
+   */
   public ConnectionHandler(String address) {
     connected = true;
     size = 1000;
@@ -40,6 +45,10 @@ public class ConnectionHandler extends Thread {
     }
   }
 
+  /**
+   * Sends player join packet to the server to connect then begins listening to messages from server
+   * and adding to received queue
+   */
   public void run() {
     Player player = Client.levelHandler.getClientPlayer();
     Packet joinPacket =
@@ -80,6 +89,9 @@ public class ConnectionHandler extends Thread {
     }
   }
 
+  /**
+   * Ends connection to server
+   */
   public void end() {
     connected = false;
     out.close();
@@ -91,6 +103,11 @@ public class ConnectionHandler extends Thread {
     }
   }
 
+  /**
+   * Sends message to the server
+   *
+   * @param data Message to server
+   */
   public void send(String data) {
     out.println(data);
   }

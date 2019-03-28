@@ -62,6 +62,7 @@ public class MusicAssets {
 
   /**
    * Gets the full relative path of the of a track
+   *
    * @param trackIndex The key of the track in the hashmap
    * @return The relative path of the track. If no track in the hashmap then null
    */
@@ -74,7 +75,8 @@ public class MusicAssets {
   }
 
   /**
-   * Available types of playlist. Associated with an ArrayList<String> where the Sring is the Key of the hashmap, in getPlayList().
+   * Available types of playlist. Associated with an ArrayList<String> where the Sring is the Key of
+   * the hashmap, in getPlayList().
    */
   public enum PLAYLIST {MENU, INGAME}
 }

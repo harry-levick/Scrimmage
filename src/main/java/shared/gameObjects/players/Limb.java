@@ -73,7 +73,6 @@ public abstract class Limb extends GameObject implements Destructable {
    * Base class used to create an object in game. This is used on both the client and server side to
    * ensure actions are calculated the same
    *
-   *
    * @param id Unique Identifier of every game object
    */
   public Limb(double xLeft, double yLeft, double xRight, double yRight, double sizeX, double sizeY,
@@ -121,11 +120,11 @@ public abstract class Limb extends GameObject implements Destructable {
 
   @Override
   public void deductHp(int damage) {
-    if(!damagedThisFrame) {
+    if (!damagedThisFrame) {
       damagedThisFrame = true;
       ((Player) parent).deductHp(damage);
       this.limbHealth -= damage;
-      if(limbHealth <= 0) {
+      if (limbHealth <= 0) {
         destroy();
       }
     }
@@ -172,12 +171,16 @@ public abstract class Limb extends GameObject implements Destructable {
 
   @Override
   public void destroy() {
-    if(!limbAttached) return;
+    if (!limbAttached) {
+      return;
+    }
     detachLimb();
     Random random = new Random();
-    rb.setVelocity(new Vector2(1000 * (random.nextDouble() + 0.2) * (random.nextInt(4) - 1 > 0 ? 1 : -1),
-        1000 * (random.nextDouble() + 0.2) * (random.nextInt(3) - 1)));
+    rb.setVelocity(
+        new Vector2(1000 * (random.nextDouble() + 0.2) * (random.nextInt(4) - 1 > 0 ? 1 : -1),
+            1000 * (random.nextDouble() + 0.2) * (random.nextInt(3) - 1)));
   }
+
   public void reset() {
     reattachedLimb();
     limbHealth = limbMaxHealth;
@@ -208,16 +211,15 @@ public abstract class Limb extends GameObject implements Destructable {
   protected abstract void rotateAnimate();
 
   protected void flipImageView(ImageView iv, String direction) {
-    if(direction.equals("WALK_LEFT")) {
+    if (direction.equals("WALK_LEFT")) {
       iv.setScaleX(-1);
-    }
-    else if(direction.equals("WALK_RIGHT")){
+    } else if (direction.equals("WALK_RIGHT")) {
       iv.setScaleX(1);
     }
   }
 
   public void updateSkinRender(int id) {
-      animation.switchDefault();
+    animation.switchDefault();
   }
 
   @Override

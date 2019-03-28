@@ -20,27 +20,49 @@ import shared.util.maths.Vector2;
  */
 public abstract class Melee extends Weapon {
 
-  /** Damage of the melee */
+  /**
+   * Damage of the melee
+   */
   protected int damage;
-  /** Limit of attack allowed */
+  /**
+   * Limit of attack allowed
+   */
   protected int ammo;
-  /** Range of the melee (radius) */
+  /**
+   * Range of the melee (radius)
+   */
   protected double range;
-  /** Origin position of swing when attacking (relative to arm) */
+  /**
+   * Origin position of swing when attacking (relative to arm)
+   */
   protected double beginAngle;
-  /** Destination position of swing when attacking (relative to arm) */
+  /**
+   * Destination position of swing when attacking (relative to arm)
+   */
   protected double endAngle;
-  /** Rigidbody of this melee */
+  /**
+   * Rigidbody of this melee
+   */
   protected Rigidbody rb;
-  /** True if this melee is attacking (in the process of swing) */
+  /**
+   * True if this melee is attacking (in the process of swing)
+   */
   protected boolean attacking;
-  /** Angles to travel when attacking */
+  /**
+   * Angles to travel when attacking
+   */
   protected double[] angles;
-  /** Index indicating which part the swing is in now during attack */
+  /**
+   * Index indicating which part the swing is in now during attack
+   */
   protected int currentAngleIndex;
-  /** -1 if aiming Left, 1 if aiming Right */
+  /**
+   * -1 if aiming Left, 1 if aiming Right
+   */
   protected double attackAngleSign;
-  /** Hash set to record collided object in 1 attack */
+  /**
+   * Hash set to record collided object in 1 attack
+   */
   protected HashSet<Destructable> collidedSet;
   /**
    * Rotate for swinging the sword on attack
@@ -154,8 +176,9 @@ public abstract class Melee extends Weapon {
       // Box cast on beginning of swing
       ArrayList<Collision> collisions =
           Physics.boxcastAll(
-              new Vector2((float) (holderHandPos[0] + (range * attackAngleSign)), (float) (holderHandPos[1]-(getSizeY()/2))),
-              new Vector2((float) getSizeY()/2, (float) getSizeY()/2),
+              new Vector2((float) (holderHandPos[0] + (range * attackAngleSign)),
+                  (float) (holderHandPos[1] - (getSizeY() / 2))),
+              new Vector2((float) getSizeY() / 2, (float) getSizeY() / 2),
               false,
               false
           );
@@ -208,7 +231,9 @@ public abstract class Melee extends Weapon {
   // Setters and Getters
   // -------------------
 
-  /** Get the current angle of attack */
+  /**
+   * Get the current angle of attack
+   */
   public double getAngle(int index) {
     if (index < (int) (beginAngle + endAngle + 1)) {
       return angles[index];
@@ -216,36 +241,48 @@ public abstract class Melee extends Weapon {
     return 0;
   }
 
-  /** Get the range of this melee */
+  /**
+   * Get the range of this melee
+   */
   public double getRange() {
     return this.range;
   }
 
-  /** Set a new range to this melee */
+  /**
+   * Set a new range to this melee
+   */
   public void setRange(double newRange) {
     if (newRange > 0 && newRange < 100.0) {
       this.range = newRange;
     }
   }
 
-  /** Get the begin angle of attack */
+  /**
+   * Get the begin angle of attack
+   */
   public double getBeginAngle() {
     return this.beginAngle;
   }
 
-  /** Set a new begin angle of attack */
+  /**
+   * Set a new begin angle of attack
+   */
   public void setBeginAngle(double newBeginAngle) {
     if (newBeginAngle > 0 && newBeginAngle < 90.0) {
       this.beginAngle = newBeginAngle;
     }
   }
 
-  /** Get the end angle of attack */
+  /**
+   * Get the end angle of attack
+   */
   public double getEndAngle() {
     return this.endAngle;
   }
 
-  /** Set a new end angle of attack */
+  /**
+   * Set a new end angle of attack
+   */
   public void setEndAngle(double newEndAngle) {
     if (newEndAngle > 0 && newEndAngle < 90.0) {
       this.endAngle = newEndAngle;

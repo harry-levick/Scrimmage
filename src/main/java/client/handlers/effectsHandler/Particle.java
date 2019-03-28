@@ -18,6 +18,7 @@ public class Particle extends GameObject {
 
   /**
    * Constructs a particle
+   *
    * @param sourcePosition Spawn position of the particle
    * @param initialVelocity Particle's initial velocity
    * @param acceleration Acceleration applied on every update
@@ -49,7 +50,9 @@ public class Particle extends GameObject {
 
   @Override
   public void initialiseAnimation() {
-    if(imageSource == null) return;
+    if (imageSource == null) {
+      return;
+    }
     this.animation.supplyAnimation("default", imageSource);
   }
 

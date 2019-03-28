@@ -27,6 +27,7 @@ public class JumpPad extends GameObject {
 
   /**
    * Constructs Jump Pad object
+   *
    * @param x X Position of object
    * @param y Y position of object
    * @param uuid UUID of object
@@ -54,7 +55,7 @@ public class JumpPad extends GameObject {
                 false, false);
         for (Collision c : collisions) {
           Rigidbody rb = (Rigidbody) c.getCollidedObject().getComponent(ComponentType.RIGIDBODY);
-          if(rb != null) {
+          if (rb != null) {
             if (rb.getBodyType() == RigidbodyType.DYNAMIC) {
               rb.setVelocity(new Vector2(rb.getVelocity().getX(), SPRING_FORCE));
             }

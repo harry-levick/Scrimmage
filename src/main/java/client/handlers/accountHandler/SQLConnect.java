@@ -113,22 +113,31 @@ public class SQLConnect {
    * @return success/fail
    */
   public static String saveData(AccountData data) {
-    if(data.getUsername().equals("newuser")) return "failed";
+    if(data.getUsername().equals("NEWUSER")) return "new";
     String toRet = "";
     try {
       Connection conn = getConnection();
-      PreparedStatement pst = conn.prepareStatement(SAVE_DATA);
-      String[] args = data.saveQuery();
 
-      pst.setString(1, args[1]);
-      pst.setInt(2, Integer.parseInt(args[2]));
-      pst.setInt(3, Integer.parseInt(args[3]));
-      pst.setInt(4, Integer.parseInt(args[4]));
-      pst.setInt(5, Integer.parseInt(args[5]));
-      pst.setString(6, args[0]);
+      PreparedStatement pst = conn.prepareStatement(CHECK_USERNAME);
+      pst.setString(1, data.getUsername());
+      ResultSet results = pst.executeQuery();
 
-      pst.executeUpdate();
-      toRet = "success";
+      if(!results.isBeforeFirst()) {
+        toRet = "new";
+      } else {
+        pst = conn.prepareStatement(SAVE_DATA);
+        String[] args = data.saveQuery();
+
+        pst.setString(1, args[1]);
+        pst.setInt(2, Integer.parseInt(args[2]));
+        pst.setInt(3, Integer.parseInt(args[3]));
+        pst.setInt(4, Integer.parseInt(args[4]));
+        pst.setInt(5, Integer.parseInt(args[5]));
+        pst.setString(6, args[0]);
+
+        pst.executeUpdate();
+        toRet = "success";
+      }
     } catch (SQLException e) {
       toRet = "failed error: " + e;
     }

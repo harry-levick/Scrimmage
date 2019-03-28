@@ -64,7 +64,8 @@ public class Uzi extends Gun {
     if (canFire()) {
       UUID uuid = UUID.randomUUID();
       //Vector2 playerCentre = ((BoxCollider) (holder.getComponent(ComponentType.COLLIDER))).getCentre(); // centre = body.centre
-      Vector2 playerCentre = new Vector2(holderHandPos[0], holderHandPos[1]-16); // centre = main hand
+      Vector2 playerCentre = new Vector2(holderHandPos[0],
+          holderHandPos[1] - 16); // centre = main hand
       double playerRadius = 55 + 65; // Player.sizeY / 2 + bias
 
       double bulletX = playerCentre.getX() + playerRadius * Math.cos(-angleRadian);

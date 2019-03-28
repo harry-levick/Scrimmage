@@ -15,6 +15,7 @@ public class PacketInput extends Packet {
 
   /**
    * Constructs a packet that holds all the data regarding the player
+   *
    * @param x X Position of the player
    * @param y Y Position of the player
    * @param leftKey The player's leftKey boolean
@@ -68,6 +69,7 @@ public class PacketInput extends Packet {
 
   /**
    * Constructs a packet from a string of data
+   *
    * @param data Packet data received from sender
    */
   public PacketInput(String data) {

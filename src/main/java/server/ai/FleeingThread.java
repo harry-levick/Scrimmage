@@ -9,21 +9,34 @@ import shared.gameObjects.players.Player;
  */
 public class FleeingThread extends Thread {
 
-  /** The respecive bot */
-  Bot bot;
-  /** The path-finder used to find the best path */
-  AStar pathFinder;
-  /** The bots target */
-  Player targetPlayer;
-  /** The shared path with the bot */
+  /**
+   * The shared path with the bot
+   */
   public List<boolean[]> plan;
-  /** Flag that governs the threads main loop */
+  /**
+   * The respecive bot
+   */
+  Bot bot;
+  /**
+   * The path-finder used to find the best path
+   */
+  AStar pathFinder;
+  /**
+   * The bots target
+   */
+  Player targetPlayer;
+  /**
+   * Flag that governs the threads main loop
+   */
   boolean running;
-  /** The time delay used at the end of each loop */
+  /**
+   * The time delay used at the end of each loop
+   */
   int TIME_TO_SLEEP = 300;
 
   /**
    * Create a new thread
+   *
    * @param bot The respective bot
    * @param plan The shared plan
    */

@@ -1,7 +1,8 @@
 package shared.packets;
 
 /**
- * PacketID enum and ints to allow client and server to send messages; the IDs are processed to know which packet is being sent/received
+ * PacketID enum and ints to allow client and server to send messages; the IDs are processed to know
+ * which packet is being sent/received
  */
 public enum PacketID {
   /**
@@ -53,6 +54,7 @@ public enum PacketID {
 
   /**
    * Gets the int value of the ID to be able to send it via the network
+   *
    * @return the int value of the packet ID
    */
   public int getID() {

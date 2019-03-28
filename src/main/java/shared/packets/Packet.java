@@ -6,7 +6,8 @@ package shared.packets;
 public abstract class Packet {
 
   /**
-   * ID of packet (Determined by PacketID enum) used to let the client/server know what type of packet is being sent.
+   * ID of packet (Determined by PacketID enum) used to let the client/server know what type of
+   * packet is being sent.
    */
   protected int packetID;
   /**
@@ -22,6 +23,7 @@ public abstract class Packet {
 
   /**
    * Receive the string of data in byte form
+   *
    * @return Byte array of data string
    */
   public byte[] getData() {
