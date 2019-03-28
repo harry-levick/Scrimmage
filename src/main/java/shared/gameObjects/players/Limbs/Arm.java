@@ -16,6 +16,9 @@ import shared.handlers.levelHandler.LevelHandler;
  */
 public class Arm extends Limb {
 
+  private final int MAX_ANGLE_INDEX = 90;
+  private double[] punchAngles;
+  private int punchAngleIndex;
 
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
@@ -28,6 +31,12 @@ public class Arm extends Limb {
     rotate.setPivotY(10);
     limbMaxHealth = player.getHealth() / 2;
     limbHealth = limbMaxHealth;
+
+    punchAngleIndex = 0;
+    punchAngles = new double[MAX_ANGLE_INDEX];
+    for (int i = 0; i < MAX_ANGLE_INDEX; i++) {
+      punchAngles[i] = (double) i;
+    }
   }
 
   @Override
@@ -36,6 +45,15 @@ public class Arm extends Limb {
     rotate = new Rotate();
     rotate.setPivotX(10);
     rotate.setPivotY(10);
+  }
+
+  @Override
+  public void render() {
+    super.render();
+    if (limbAttached)
+      if (player.isPunched()) {
+        punchAnimation();
+      }
   }
 
   @Override
@@ -81,7 +99,7 @@ public class Arm extends Limb {
     boolean control = isLeft;
     int inverse = 1;
     if(this.behaviour == Behaviour.WALK_LEFT) {
-      control =!control;
+      control = !control;
       inverse = -1;
     }
     
@@ -100,7 +118,7 @@ public class Arm extends Limb {
     boolean control = isLeft;
     int inverse = 1;
     if(this.behaviour == Behaviour.WALK_LEFT) {
-      control =!control;
+      control = !control;
       inverse = -1;
     }
     
@@ -136,9 +154,27 @@ public class Arm extends Limb {
     else if(this.behaviour == Behaviour.WALK_LEFT || this.behaviour == Behaviour.WALK_RIGHT) {   
       walkAnimation();
     }
+  }
 
-    
-    
-    
+  protected void punchAnimation() {
+    if (punchAngleIndex >= MAX_ANGLE_INDEX) {
+      player.setPunched(false);
+      punchAngleIndex = 0;
+    }
+
+    double angle = punchAngles[punchAngleIndex];
+    if (player.isPointingLeft()) {
+      angle = isLeft?
+          (playerFaceLeft? angle-90 : angle)
+          : 0;
+    }
+    else // is pointing right
+    {
+      angle = isLeft? 0
+          : (!playerFaceLeft? -angle : angle);
+    }
+    rotate.setAngle(angle);
+    imageView.getTransforms().add(rotate);
+    punchAngleIndex += 8;
   }
 }
