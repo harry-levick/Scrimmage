@@ -144,16 +144,6 @@ public abstract class Bullet extends GameObject {
     imageView.setRotate(angleDegree);
     if ((0 < getX() && getX() < 1920) && (0 < getY() && getY() < 1080)) {
       rb.move(vector.mult((float) speed));
-      settings
-          .getLevelHandler()
-          .addGameObject(
-              new Particle(
-                  transform.getPos(),
-                  vector.mult((float) (-1f * speed * random.nextDouble() - 2)),
-                  Vector2.Zero(),
-                  new Vector2(12, 12).mult((float) random.nextDouble()),
-                  "images/particle/BulletParticle.png",
-                  0.2f));
     } else {
       settings.getLevelHandler().removeGameObject(this);
     }
