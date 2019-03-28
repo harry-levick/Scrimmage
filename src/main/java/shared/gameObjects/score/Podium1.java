@@ -1,5 +1,6 @@
 package shared.gameObjects.score;
 
+import client.handlers.effectsHandler.ServerParticle;
 import client.handlers.effectsHandler.emitters.LineEmitter;
 import client.main.Settings;
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ public class Podium1 extends GameObject {
     settings.getLevelHandler().addGameObject(podium3);
     podium4 = new Podium4(getX() + 640, getY() + 320, 240, 120);
     settings.getLevelHandler().addGameObject(podium4);
-     ArrayList<Player> players = new ArrayList();
+     ArrayList<Player> players = new ArrayList(4);
     settings.getLevelHandler().getPlayers().forEach((uuid, player) -> {
       if (player instanceof Bot) {
         Player playerCopy = new Player(player.getX(), player.getY(), player.getUUID());
@@ -120,9 +121,13 @@ public class Podium1 extends GameObject {
   public void OnCollisionEnter(Collision c) {
     if (c.getCollidedObject() instanceof Player && !triggered) {
       settings.getLevelHandler().addGameObject(
-          new LineEmitter(transform.getPos().add(new Vector2(20, 0)), new Vector2(-300, -400),
+          new ServerParticle(transform.getPos().add(new Vector2(20, 0)), new Vector2(-300, -400),
               Vector2.Zero(),
-              new Vector2(8, 8), 70, 0.55f, 10f, 2, "images/particle/bloodParticle.png"));
+              new Vector2(128, 256), "blood", 100));
+      settings.getLevelHandler().addGameObject(
+          new ServerParticle(transform.getPos().add(new Vector2(20, 0)), new Vector2(300, -400),
+              Vector2.Zero(),
+              new Vector2(128, 256), "blood", 100));
       triggered = true;
     }
   }

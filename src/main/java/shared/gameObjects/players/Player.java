@@ -135,6 +135,8 @@ public class Player extends GameObject {
    */
   private int lastInputCount;
 
+  private int[] currentSkin;
+
   //ColoFilter
   private transient ColourFilters colorFilter;
 
@@ -613,6 +615,7 @@ public class Player extends GameObject {
    * @param skinRender Textures of skin to apply
    */
   public void updateSkinRender(int[] skinRender) {
+    this.currentSkin = skinRender;
     children.forEach(child -> {
       if (child instanceof Arm) {
         ((Limb) child).updateSkinRender(skinRender[2]);
@@ -967,5 +970,13 @@ public class Player extends GameObject {
 
   public void setScore(int score) {
     this.score = score;
+  }
+
+  /**
+   * Gets the current skin equipped for the player
+   * @return
+   */
+  public int[] getCurrentSkin() {
+    return currentSkin;
   }
 }

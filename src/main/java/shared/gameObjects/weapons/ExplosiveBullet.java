@@ -1,6 +1,7 @@
 package shared.gameObjects.weapons;
 
 import client.handlers.audioHandler.AudioHandler;
+import client.handlers.effectsHandler.ServerParticle;
 import client.main.Client;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -28,7 +29,7 @@ public class ExplosiveBullet extends Bullet {
   /**
    * Damage of the explosion
    */
-  private static final int damage = 20;
+  private static final int damage = 35;
   /**
    * Speed of travel of the bullet
    */
@@ -36,11 +37,11 @@ public class ExplosiveBullet extends Bullet {
   /**
    * Radius of explosion on impact
    */
-  private static final float radius = 40f;
+  private static final float radius = 30f;
   /**
    * Power of pushing on Objects in explosion
    */
-  private static final float pushPower = 50f;
+  private static final float pushPower = 90f;
   /**
    * Path to image
    */
@@ -91,6 +92,10 @@ public class ExplosiveBullet extends Bullet {
 
     new AudioHandler(settings, Client.musicActive).playSFX("FART");
 
+    settings.getLevelHandler().addGameObject(new ServerParticle(
+        bc.getCentre(), Vector2.Zero(), Vector2.Zero(), new Vector2(192,192), "explosion", 0.4f
+    ));
+
     if (gCol.getId() == ObjectType.Player || gCol instanceof Destructable) {
       if (gCol.equals(holder)) {
         hitHolder = true;
@@ -118,6 +123,9 @@ public class ExplosiveBullet extends Bullet {
       if (g instanceof Destructable && !g.equals(holder)) {
         // Every player in the explosion area deals half the hazard
         ((Destructable) g).deductHp(damage / 2);
+        settings.getLevelHandler().addGameObject(new ServerParticle(
+            bc.getCentre(), Vector2.Zero(), Vector2.Zero(), new Vector2(64,64), "explosion", 0.35f
+        ));
       }
 
       // Knockback here
