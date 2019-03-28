@@ -17,6 +17,8 @@ public class MachineGun extends Gun {
   private static String imagePath = "images/weapons/machinegun.png"; // path to Machine Gun image
   private static String audioPath = "audio/sound-effects/laser_gun.wav"; // path to Machine Gun sfx
   private static double sizeX = 84, sizeY = 35;
+  private static int ammo = 50;
+  private static int fireRate = 64;
 
   /**
    * Default Constructor of a machine gun
@@ -36,8 +38,8 @@ public class MachineGun extends Gun {
         sizeY, // sizeY
         10, // weight
         name,
-        50, // ammo
-        70, // fireRate
+        ammo,
+        fireRate,
         20, // pivotX
         10, // pivotY
         holder,
