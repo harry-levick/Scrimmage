@@ -21,6 +21,7 @@ public class MapLoader {
 
   /**
    * Saves the contents of a map to a file to be loaded later
+   *
    * @param gameObjects List of gameObjects to save
    * @param mapDataObject List of Map Data Objects to save
    * @param path The filepath to save the file to
@@ -39,8 +40,10 @@ public class MapLoader {
       e.printStackTrace();
     }
   }
+
   /**
    * Loads the contents of a map to a file to be loaded later
+   *
    * @param path The filepath to save the file to
    */
   public static ConcurrentLinkedHashMap<UUID, GameObject> loadMap(String path) {

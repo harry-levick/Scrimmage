@@ -25,7 +25,8 @@ public class Leg extends Limb {
 
   @Override
   public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", "images/player/skin" + settings.getData().getActiveSkin()[3] + "/leg.png");
+    this.animation.supplyAnimation("default",
+        "images/player/skin" + settings.getData().getActiveSkin()[3] + "/leg.png");
   }
 
   @Override
@@ -43,25 +44,22 @@ public class Leg extends Limb {
     // Control to switch the leg animations depending on movement direction.
     boolean control = isLeft;
     int inverse = 1;
-    if(this.behaviour == Behaviour.WALK_LEFT) {
-      control =!control;
+    if (this.behaviour == Behaviour.WALK_LEFT) {
+      control = !control;
       inverse = -1;
     }
 
-    if(localTime < interval*1) {
-      if(control) {
-        imageView.setRotate(45*inverse);
+    if (localTime < interval * 1) {
+      if (control) {
+        imageView.setRotate(45 * inverse);
+      } else {
+        imageView.setRotate(-45 * inverse);
       }
-      else {
-        imageView.setRotate(-45*inverse);
-      }
-    }
-    else if(localTime < interval*2) {
-      if(control) {
-        imageView.setRotate(-40*inverse);
-      }
-      else {
-        imageView.setRotate(0*inverse);
+    } else if (localTime < interval * 2) {
+      if (control) {
+        imageView.setRotate(-40 * inverse);
+      } else {
+        imageView.setRotate(0 * inverse);
       }
     }
   }
@@ -71,13 +69,13 @@ public class Leg extends Limb {
     // Control to switch the leg animations depending on movement direction.
     boolean control = isLeft;
     int inverse = 1;
-    if(this.behaviour == Behaviour.WALK_LEFT) {
-      control =!control;
+    if (this.behaviour == Behaviour.WALK_LEFT) {
+      control = !control;
       inverse = -1;
     }
 
-    if(control) {
-      imageView.setRotate(45*inverse);
+    if (control) {
+      imageView.setRotate(45 * inverse);
     }
 
   }
@@ -85,15 +83,12 @@ public class Leg extends Limb {
 
   @Override
   protected void rotateAnimate() {
-    if(this.behaviour == Behaviour.JUMP || this.player.getJumped()) {
+    if (this.behaviour == Behaviour.JUMP || this.player.getJumped()) {
       jumpAnimation();
-    }
-
-    else if(this.behaviour == Behaviour.WALK_LEFT || this.behaviour == Behaviour.WALK_RIGHT) {
+    } else if (this.behaviour == Behaviour.WALK_LEFT || this.behaviour == Behaviour.WALK_RIGHT) {
       walkAnimation();
     }
   }
-
 
 
 }

@@ -18,8 +18,10 @@ public class PacketPlayerJoin extends Packet {
     this.username = username;
     data = packetID + "," + x + "," + y + "," + uuid + "," + username;
   }
+
   /**
    * Constructs a packet from a string of data
+   *
    * @param data Packet data received from sender
    */
   public PacketPlayerJoin(String data) {

@@ -22,7 +22,9 @@ import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
 // TODO Networking
 
-/** Laser Beam hazard object */
+/**
+ * Laser Beam hazard object
+ */
 public class LaserBeam extends GameObject implements Hazard {
 
 
@@ -125,7 +127,7 @@ public class LaserBeam extends GameObject implements Hazard {
     for (Collision c : collisions) {
       if (c.getCollidedObject().getComponent(ComponentType.RIGIDBODY) != null) {
         if (((Rigidbody) c.getCollidedObject().getComponent(ComponentType.RIGIDBODY)).getBodyType()
-                == RigidbodyType.STATIC
+            == RigidbodyType.STATIC
             && c.getCollidedObject() != this) {
           closestPoint =
               c.getPointOfCollision().getY() < closestPoint

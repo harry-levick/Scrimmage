@@ -24,7 +24,9 @@ import shared.physics.data.DynamicCollision;
 import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import shared.util.maths.Vector2;
 
-/** @author fxa579 The singleton class respomsible for raycasting and physics constants/equations */
+/**
+ * @author fxa579 The singleton class respomsible for raycasting and physics constants/equations
+ */
 public class Physics {
 
   /**
@@ -47,6 +49,7 @@ public class Physics {
    * Settings objects of client (For Debugging)
    */
   public static Settings settings;
+  public static ConcurrentLinkedHashMap<UUID, GameObject> gameObjects;
   /*
    * Order: DEFAULT, PLAYER, OBJECT, PLATFORM, PARTICLE, COLLECTABLE, LIMBS
    */
@@ -59,11 +62,11 @@ public class Physics {
   private static boolean[] LIMBS = {true, false, true, true, false, false, false, true};
   private static boolean[] PROJECTILE = {true, false, true, true, false, false, true, false};
   /**
-   * The collision layers ordered as specified by their int value. 2D Matrix format, used by the Collider tests.
+   * The collision layers ordered as specified by their int value. 2D Matrix format, used by the
+   * Collider tests.
    */
   public static boolean[][] COLLISION_LAYERS = {DEFAULT, PLAYER, OBJECT, PLATFORM, PARTICLES,
       COLLECTABLE, LIMBS, PROJECTILE};
-  public static ConcurrentLinkedHashMap<UUID, GameObject> gameObjects;
   /**
    * A concurrent map used to synchronize collision updates.
    */
@@ -109,7 +112,9 @@ public class Physics {
     Iterator<GameObject> iter = gameObjects.values().iterator();
     while (iter.hasNext()) {
       GameObject object = iter.next();
-      if(object instanceof Bullet) continue;
+      if (object instanceof Bullet) {
+        continue;
+      }
 
       if (object.getComponent(ComponentType.COLLIDER) != null) {
         collision =
@@ -133,7 +138,8 @@ public class Physics {
   }
 
   /**
-   * Casts a ray that interacts with colliders, returning the first collider it hits, ignoring Limbs.
+   * Casts a ray that interacts with colliders, returning the first collider it hits, ignoring
+   * Limbs.
    *
    * @param sourcePos The point to start casting the ray
    * @param lengthAndDirection The length and direction of the ray
@@ -213,7 +219,6 @@ public class Physics {
    * @param lengthAndDirection Length and direction of the ray
    * @param holder Holder of the weapon which starts the raycast
    * @param showCollider True to visualise the ray on cast
-   *
    * @return First collision if there is one, null otherwise
    */
   public static Collision raycastBullet(Vector2 sourcePos, Vector2 lengthAndDirection,
@@ -240,7 +245,9 @@ public class Physics {
     Iterator<GameObject> iter = gameObjects.values().iterator();
     while (iter.hasNext()) {
       GameObject object = iter.next();
-      if (object instanceof Limb || (object instanceof Player && object.equals(holder))) continue;
+      if (object instanceof Limb || (object instanceof Player && object.equals(holder))) {
+        continue;
+      }
 
       if (object.getComponent(ComponentType.COLLIDER) != null) {
         collision =
@@ -307,7 +314,8 @@ public class Physics {
    * @param showCast True to visualise the ray
    * @return All colliders hit in the path, empty if nothing was hit.
    */
-  public static ArrayList<Collision> raycastAll(Vector2 sourcePos, Vector2 lengthAndDirection, boolean showCast) {
+  public static ArrayList<Collision> raycastAll(Vector2 sourcePos, Vector2 lengthAndDirection,
+      boolean showCast) {
     EdgeCollider castCollider = new EdgeCollider(false);
     Collision collision = null;
     ArrayList<Collision> collisions = new ArrayList<>();
@@ -326,7 +334,7 @@ public class Physics {
                 castCollider.getNodes().get(castCollider.getNodes().size() - 1).getY(),
                 "#00ff00");
           });
-      }
+    }
 
     for (GameObject object : gameObjects.values()) {
       if (object.getComponent(ComponentType.COLLIDER) != null) {
@@ -391,7 +399,8 @@ public class Physics {
    * @param ignoreLimbs True to ignore Limbs
    * @return All colliders hit in the path, empty if nothing was hit
    */
-  public static ArrayList<Collision> boxcastAll(Vector2 sourcePos, Vector2 size, boolean showCast, boolean ignoreLimbs) {
+  public static ArrayList<Collision> boxcastAll(Vector2 sourcePos, Vector2 size, boolean showCast,
+      boolean ignoreLimbs) {
     BoxCollider castCollider = new BoxCollider(sourcePos, size);
     Collision collision;
     ArrayList<Collision> collisions = new ArrayList<>();
@@ -469,9 +478,9 @@ public class Physics {
     return collisions;
   }
 
-    /**
-     * Used by collision system to add a DynamicCollision if no duplicate existss
-     */
+  /**
+   * Used by collision system to add a DynamicCollision if no duplicate existss
+   */
   public static boolean addCollision(DynamicCollision dcol) {
     for (DynamicCollision c : collisions) {
       if (c.getBodyA() == dcol.getBodyB() && c.getBodyB() == dcol.getBodyA()) {

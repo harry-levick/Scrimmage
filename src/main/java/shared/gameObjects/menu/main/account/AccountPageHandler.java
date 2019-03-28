@@ -90,8 +90,9 @@ public class AccountPageHandler extends GameObject {
                 12,
                 false,
                 Path.convert("images/particle/BulletParticle.png")));
-    if (currentPage == id) return;
-    else {
+    if (currentPage == id) {
+      return;
+    } else {
       root.getChildren().remove(panes[currentPage]);
       initPanes();
       root.getChildren().add(panes[id]);
@@ -108,7 +109,7 @@ public class AccountPageHandler extends GameObject {
         break;
       case 1:
         String ret = SQLConnect.getUserdata(username, password);
-        if(ret.startsWith("fail")) {
+        if (ret.startsWith("fail")) {
           notice.setText("User/password not found");
           notice.setTextFill(Color.RED);
         } else {
@@ -133,23 +134,31 @@ public class AccountPageHandler extends GameObject {
   //Given an index, returns the next unlocked index
   private int getNextSkinViewerID() {
     currentSkinID++;
-    if(currentSkinID >= AccountData.SKIN_COUNT) currentSkinID = 0;
+    if (currentSkinID >= AccountData.SKIN_COUNT) {
+      currentSkinID = 0;
+    }
     return currentSkinID;
   }
 
   //Given an index, returns the previous unlocked index
   private int getPreviousSkinViewerID() {
     currentSkinID--;
-    if(currentSkinID < 0) currentSkinID = (AccountData.SKIN_COUNT - 1);
+    if (currentSkinID < 0) {
+      currentSkinID = (AccountData.SKIN_COUNT - 1);
+    }
     return currentSkinID;
   }
 
   //Given an index, returns the next unlocked index
   private int getNextSkinID(int id) {
     id++;
-    for (int j = 0; j < AccountData.SKIN_COUNT ; j++) {
-      if(id >= AccountData.SKIN_COUNT ) id = 0;
-      if(settings.getData().hasSkin(id)) return id;
+    for (int j = 0; j < AccountData.SKIN_COUNT; j++) {
+      if (id >= AccountData.SKIN_COUNT) {
+        id = 0;
+      }
+      if (settings.getData().hasSkin(id)) {
+        return id;
+      }
       id++;
     }
     return 0;
@@ -158,9 +167,13 @@ public class AccountPageHandler extends GameObject {
   //Given an index, returns the previous unlocked index
   private int getPreviousSkinID(int id) {
     id--;
-    for (int j = 0; j < AccountData.SKIN_COUNT ; j++) {
-      if(id < 0) id = (AccountData.SKIN_COUNT  - 1);
-      if(settings.getData().hasSkin(id)) return id;
+    for (int j = 0; j < AccountData.SKIN_COUNT; j++) {
+      if (id < 0) {
+        id = (AccountData.SKIN_COUNT - 1);
+      }
+      if (settings.getData().hasSkin(id)) {
+        return id;
+      }
       id--;
     }
     return 0;
@@ -173,6 +186,7 @@ public class AccountPageHandler extends GameObject {
     settings.getData().applySkin(currentSkin);
     settings.getLevelHandler().getClientPlayer().updateSkinRender(currentSkin);
   }
+
   private void renderSkinViewer(int currentSkinID, ImageView[] model) {
     String start = "images/player/skin".replace('/', File.separatorChar);
     String end = ".png";
@@ -184,8 +198,11 @@ public class AccountPageHandler extends GameObject {
     model[5].setImage(new Image(start + currentSkinID + File.separator + "hand" + end));
     model[6].setImage(new Image(start + currentSkinID + File.separator + "leg" + end));
     model[7].setImage(new Image(start + currentSkinID + File.separator + "leg" + end));
-    if(settings.getData().hasSkin(currentSkinID)) model[8].setImage(new Image(Path.convert("images/blank.png")));
-    else model[8].setImage(new Image(Path.convert("images/ui/icons/locked.png")));
+    if (settings.getData().hasSkin(currentSkinID)) {
+      model[8].setImage(new Image(Path.convert("images/blank.png")));
+    } else {
+      model[8].setImage(new Image(Path.convert("images/ui/icons/locked.png")));
+    }
   }
 
   private void initPanes() {
@@ -234,7 +251,7 @@ public class AccountPageHandler extends GameObject {
     registration[2] = new JFXButton("Register");
 
     for (int i = 0; i < 3; i++) {
-      registration[i].relocate(350*i + 40, 640);
+      registration[i].relocate(350 * i + 40, 640);
       registration[i].setFont(settings.getFont(28));
       registration[i].setPrefWidth(300);
       registration[i].setTextFill(Color.WHITE);
@@ -245,9 +262,12 @@ public class AccountPageHandler extends GameObject {
     notice.relocate(0, 720);
     notice.setPrefWidth(1100);
 
-    registration[0].setOnMouseClicked((event -> sqlResponse(username.getText(), passwd.getText(), labels,notice, 0)));
-    registration[1].setOnMouseClicked((event -> sqlResponse(username.getText(), passwd.getText(), labels,notice,1)));
-    registration[2].setOnMouseClicked((event -> sqlResponse(username.getText(), passwd.getText(), labels,notice,2)));
+    registration[0].setOnMouseClicked(
+        (event -> sqlResponse(username.getText(), passwd.getText(), labels, notice, 0)));
+    registration[1].setOnMouseClicked(
+        (event -> sqlResponse(username.getText(), passwd.getText(), labels, notice, 1)));
+    registration[2].setOnMouseClicked(
+        (event -> sqlResponse(username.getText(), passwd.getText(), labels, notice, 2)));
 
     panes[0].getChildren().addAll(labels);
     panes[0].getChildren().addAll(registration);
@@ -281,7 +301,7 @@ public class AccountPageHandler extends GameObject {
 
     for (int i = 0; i < titles.length; i++) {
       titles[i].setFont(settings.getFont(38));
-      titles[i].relocate(i == 0 ? 120 : 200, 82*(i+1));
+      titles[i].relocate(i == 0 ? 120 : 200, 82 * (i + 1));
       titles[i].setTextFill(Color.WHITE);
       titles[i].setAlignment(Pos.CENTER);
     }
@@ -292,17 +312,16 @@ public class AccountPageHandler extends GameObject {
       skinSelector[i].setTextFill(Color.BLACK);
       skinSelector[i].setFont(settings.getFont(38));
       skinSelector[i].setAlignment(Pos.CENTER);
-      if(i < 4) {
-        skinSelector[i].relocate(400, 80*i + 160);
+      if (i < 4) {
+        skinSelector[i].relocate(400, 80 * i + 160);
       } else {
-        skinSelector[i].relocate(0, 80*(i - 4) + 160);
+        skinSelector[i].relocate(0, 80 * (i - 4) + 160);
       }
     }
 
     //SkinViewer
     Group viewer = new Group();
     final ImageView[] model = new ImageView[9];
-
 
     String start = "images/player/skin".replace('/', File.separatorChar);
     String end = ".png";
@@ -374,14 +393,16 @@ public class AccountPageHandler extends GameObject {
     viewer.relocate(1300, 300);
 
     JFXButton[] viewerCycle = new JFXButton[2];
-    (viewerCycle[0] = new JFXButton("<|-")).setOnMouseClicked(event -> renderSkinViewer(getPreviousSkinViewerID(), model));
-    (viewerCycle[1] = new JFXButton("-|>")).setOnMouseClicked(event -> renderSkinViewer(getNextSkinViewerID(), model));
+    (viewerCycle[0] = new JFXButton("<|-"))
+        .setOnMouseClicked(event -> renderSkinViewer(getPreviousSkinViewerID(), model));
+    (viewerCycle[1] = new JFXButton("-|>"))
+        .setOnMouseClicked(event -> renderSkinViewer(getNextSkinViewerID(), model));
     for (int i = 0; i < 2; i++) {
-    viewerCycle[i].relocate(1222 + 145*i, 150);
-    viewerCycle[i].setTextFill(Color.BLACK);
-    viewerCycle[i].setFont(settings.getFont(42));
-    viewerCycle[i].setPrefWidth(130);
-    viewerCycle[i].setAlignment(Pos.CENTER);
+      viewerCycle[i].relocate(1222 + 145 * i, 150);
+      viewerCycle[i].setTextFill(Color.BLACK);
+      viewerCycle[i].setFont(settings.getFont(42));
+      viewerCycle[i].setPrefWidth(130);
+      viewerCycle[i].setAlignment(Pos.CENTER);
     }
 
     Label title = new Label("View Skins");

@@ -12,6 +12,7 @@ public class Vector2 implements Serializable {
 
   /**
    * Constructs a 2D Vector of floats
+   *
    * @param x X-Value of Vector
    * @param y Y-Value of Vector
    */
@@ -22,6 +23,7 @@ public class Vector2 implements Serializable {
 
   /**
    * Constructs a 2D Vector of floats
+   *
    * @param x X-Value of Vector
    * @param y Y-Value of Vector
    */
@@ -29,17 +31,21 @@ public class Vector2 implements Serializable {
     this.x = x;
     this.y = y;
   }
+
   /**
    * Constructs a 2D Vector of floats
-   * @param x  Y-Value of Vector
-   * @param y  Y-Value of Vector
+   *
+   * @param x Y-Value of Vector
+   * @param y Y-Value of Vector
    */
   public Vector2(double x, double y) {
     this.x = (float) x;
     this.y = (float) y;
   }
+
   /**
    * Constructs a 2D Vector of floats from a class-generated string
+   *
    * @param vector the string obtains from toString
    */
   public Vector2(String vector) {
@@ -50,7 +56,8 @@ public class Vector2 implements Serializable {
 
   /**
    * Constructs a zero vector.
-   * @return (0,0)
+   *
+   * @return (0, 0)
    */
   public static Vector2 Zero() {
     return new Vector2(0, 0);
@@ -58,35 +65,44 @@ public class Vector2 implements Serializable {
 
   /**
    * Constructs a unit vector.
-   * @return (1,1)
+   *
+   * @return (1, 1)
    */
   public static Vector2 Unit() {
     return new Vector2(1, 1);
   }
+
   /**
    * Constructs a unit vector pointing right.
-   * @return (1,0)
+   *
+   * @return (1, 0)
    */
   public static Vector2 Right() {
     return new Vector2(1, 0);
   }
+
   /**
    * Constructs a unit vector pointing left.
-   * @return (-1,0)
+   *
+   * @return (- 1, 0)
    */
   public static Vector2 Left() {
     return new Vector2(-1, 0);
   }
+
   /**
    * Constructs a unit vector pointing down.
-   * @return (0,1)
+   *
+   * @return (0, 1)
    */
   public static Vector2 Down() {
     return new Vector2(0, 1);
   }
+
   /**
    * Constructs a unit vector pointing up.
-   * @return (0,-1)
+   *
+   * @return (0, - 1)
    */
 
   public static Vector2 Up() {
@@ -122,7 +138,6 @@ public class Vector2 implements Serializable {
   /**
    * Multiplies the corresponding elements in the vectors
    *
-   * @param vector
    * @return The new product vector
    */
   public Vector2 mult(Vector2 vector) {
@@ -135,7 +150,6 @@ public class Vector2 implements Serializable {
   /**
    * Adds both elements in the vector with a scalar
    *
-   * @param scalar
    * @return The new summed vector
    */
   public Vector2 add(float scalar) {
@@ -148,7 +162,6 @@ public class Vector2 implements Serializable {
   /**
    * Adds the corresponding elements in the vectors
    *
-   * @param vector
    * @return The new summed vector
    */
   public Vector2 add(Vector2 vector) {
@@ -161,7 +174,6 @@ public class Vector2 implements Serializable {
   /**
    * Subtracts both elements in the vector with a scalar
    *
-   * @param scalar
    * @return The new subtracted vector
    */
   public Vector2 sub(float scalar) {
@@ -174,7 +186,6 @@ public class Vector2 implements Serializable {
   /**
    * Subtracts the corresponding elements in the vectors
    *
-   * @param vector
    * @return The new subtracted vector
    */
   public Vector2 sub(Vector2 vector) {
@@ -187,7 +198,6 @@ public class Vector2 implements Serializable {
   /**
    * Divides both elements in the vector with a scalar
    *
-   * @param scalar
    * @return The new quotient vector
    */
   public Vector2 div(float scalar) {
@@ -200,7 +210,6 @@ public class Vector2 implements Serializable {
   /**
    * Divides the corresponding elements in the vectors
    *
-   * @param vector
    * @return The new quotient vector
    */
   public Vector2 div(Vector2 vector) {
@@ -283,6 +292,7 @@ public class Vector2 implements Serializable {
     y = -1 * getY() * vector.getX();
     return new Vector2(x, y);
   }
+
   /**
    * Computes the cross product between a scalar and a vector
    *

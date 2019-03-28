@@ -14,6 +14,7 @@ public class AngularData implements Serializable {
 
   /**
    * Creates AngularData container
+   *
    * @param angularRadius The radius the object will be rotating at
    * @param angularCoefficient The friction of angular motion
    * @param angularVelocity The angular velocitu

@@ -9,16 +9,16 @@ import javafx.scene.text.Text;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 
-public class LabelObject extends GameObject{
+public class LabelObject extends GameObject {
 
   private String label;
   private transient Text text;
 
   public LabelObject(
-    double x, double y, String label, ObjectType id,
-        UUID objectUUID) {
-      super(x, y, 0, 0, id, objectUUID);
-      this.label = label;
+      double x, double y, String label, ObjectType id,
+      UUID objectUUID) {
+    super(x, y, 0, 0, id, objectUUID);
+    this.label = label;
   }
 
   @Override

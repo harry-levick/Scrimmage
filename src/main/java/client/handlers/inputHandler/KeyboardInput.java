@@ -52,12 +52,12 @@ public class KeyboardInput implements EventHandler<KeyEvent> {
         case MENU:
           Client.settings.setKeyMap(KEY_CONTROL.MENU, k);
           break;
-          default: break;
+        default:
+          break;
       }
       changeListening = false;
 
     } else if (event.getEventType() == KeyEvent.KEY_PRESSED) {
-
 
       // switch requires constant at compile time, use if else instead
       if (k == keyLeft) {

@@ -21,7 +21,8 @@ public class Transform implements Serializable {
   private GameObject gameObject;
 
   /**
-   *  Base Constructor for positon (0,0) and size (1,1)
+   * Base Constructor for positon (0,0) and size (1,1)
+   *
    * @param parent The object the transform is attached to
    */
   public Transform(GameObject parent) {
@@ -35,6 +36,7 @@ public class Transform implements Serializable {
 
   /**
    * Base constructor for size (1,1)
+   *
    * @param parent The object the transform is attached to
    * @param topPos The top-left position of the object in the world space
    */
@@ -50,6 +52,7 @@ public class Transform implements Serializable {
 
   /**
    * Base constructor for Transform
+   *
    * @param parent The object the transform is attached to
    * @param topPos The top-left position of the object in the world space
    * @param size The size (in pixels) of the object
@@ -66,6 +69,7 @@ public class Transform implements Serializable {
 
   /**
    * Translates the object via the given factor
+   *
    * @param translateFactor The distance by which to translate
    */
   public void translate(Vector2 translateFactor) {
@@ -75,6 +79,7 @@ public class Transform implements Serializable {
 
   /**
    * Rotates the objects by a given rotation
+   *
    * @param rotation in degrees
    */
   public void rotate(float rotation) {
@@ -123,7 +128,6 @@ public class Transform implements Serializable {
   }
 
   /**
-   *
    * @return The top-left position of the transform
    */
   public Vector2 getPos() {
@@ -131,7 +135,6 @@ public class Transform implements Serializable {
   }
 
   /**
-   *
    * @return Manually sets the object to this position
    */
   public void setPos(Vector2 pos) {

@@ -1,7 +1,7 @@
 package shared.handlers.levelHandler;
+
 /**
- * @author Brett Saunders
- * Enum to determine the current state of the application
+ * @author Brett Saunders Enum to determine the current state of the application
  */
 public enum GameState {
   /**

@@ -25,7 +25,8 @@ public class ButtonInputRight extends ButtonObject {
     super.render();
     super.button.setFont(settings.getFont(20));
     super.setText("RIGHT: " + Client.settings.getKeyMap(KEY_CONTROL.RIGHT));
-    if (Client.keyInput.getChangeListening() && Client.keyInput.getHotChangeKey() == KEY_CONTROL.RIGHT) {
+    if (Client.keyInput.getChangeListening()
+        && Client.keyInput.getHotChangeKey() == KEY_CONTROL.RIGHT) {
       super.button.setTextFill(Color.YELLOW);
     } else {
       super.button.setTextFill(Color.WHITE);

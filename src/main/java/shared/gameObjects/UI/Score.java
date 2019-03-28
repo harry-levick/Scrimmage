@@ -22,6 +22,7 @@ public class Score {
 
   /**
    * Constructs a score UI pertaining to a player
+   *
    * @param root UI root to render to
    */
   public Score(Group root, Player clientPlayer) {
@@ -29,14 +30,13 @@ public class Score {
     board.supplyAnimation("default", "images/ui/score.png");
     boardImageView = new ImageView();
 
-
     boardImageView.setX(xPos);
     boardImageView.setY(yPos);
 
     player = clientPlayer;
-    scoreText = new Text(xPos + 20, yPos + 40,"");
+    scoreText = new Text(xPos + 20, yPos + 40, "");
     scoreText.setFont(new Font(48));
-    root.getChildren().addAll(this.boardImageView,this.scoreText);
+    root.getChildren().addAll(this.boardImageView, this.scoreText);
   }
 
 
@@ -44,7 +44,7 @@ public class Score {
    * Renders the UI
    */
   public void render() {
-    scoreText.setText("Score:"+Integer.toString(player.getScore()));
+    scoreText.setText("Score:" + Integer.toString(player.getScore()));
     boardImageView.setImage(board.getImage());
   }
 

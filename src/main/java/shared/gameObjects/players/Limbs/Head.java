@@ -28,7 +28,8 @@ public class Head extends Limb {
 
   @Override
   public void initialiseAnimation() {
-    this.animation.supplyAnimation("default", "images/player/skin" + settings.getData().getActiveSkin()[0] + "/head.png");
+    this.animation.supplyAnimation("default",
+        "images/player/skin" + settings.getData().getActiveSkin()[0] + "/head.png");
   }
 
   @Override
@@ -40,8 +41,9 @@ public class Head extends Limb {
   protected void rotateAnimate() {
 
   }
+
   @Override
   public void deductHp(int damage) {
-    super.deductHp(damage*2);
+    super.deductHp(damage * 2);
   }
 }

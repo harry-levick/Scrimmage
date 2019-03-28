@@ -8,7 +8,9 @@ import shared.physics.types.ColliderLayer;
 import shared.physics.types.ColliderType;
 import shared.util.maths.Vector2;
 
-/** Constructs an AABB Collider */
+/**
+ * Constructs an AABB Collider
+ */
 public class BoxCollider extends Collider implements Serializable {
 
   private Vector2 size;
@@ -22,6 +24,7 @@ public class BoxCollider extends Collider implements Serializable {
 
   /**
    * BoxCollider constructor with DEFAULT Layer. Maintains same size as parent
+   *
    * @param parent The object the collider is attached to
    * @param isTrigger Whether this collider is a trigger or a collider
    */
@@ -36,6 +39,7 @@ public class BoxCollider extends Collider implements Serializable {
 
   /**
    * BoxCollider constructor. Maintains same size as parent
+   *
    * @param parent The object the collider is attached to
    * @param layer The collision layer the collider is a part of
    * @param isTrigger Whether this collider is a trigger or a collider
@@ -52,6 +56,7 @@ public class BoxCollider extends Collider implements Serializable {
 
   /**
    * BoxCollider constructor with no parent.
+   *
    * @param sourcePos The top-left position from which the collider is sourced at
    * @param size Size of the Collider
    */

@@ -10,7 +10,8 @@ import shared.physics.types.RigidbodyType;
 import shared.util.maths.Vector2;
 
 /**
- * @author fxa579 Processes and manages collisions happening with two Dynamic Rigidbodies. Used in the backend.
+ * @author fxa579 Processes and manages collisions happening with two Dynamic Rigidbodies. Used in
+ * the backend.
  */
 public class DynamicCollision {
 
@@ -37,6 +38,7 @@ public class DynamicCollision {
 
   /**
    * Constructs and processes a Dynamic Collision
+   *
    * @param bodyA First body involved in Collision
    * @param bodyB Second body involved in Collision
    */

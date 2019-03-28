@@ -20,6 +20,7 @@ public class Collision {
 
   /**
    * Container for collision class; holds data on the object collided with only
+   *
    * @param collidedObject The object collided with
    * @param colA The collider doing the colliding
    * @param colB The collider attached to the collidedObject

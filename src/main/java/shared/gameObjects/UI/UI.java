@@ -13,6 +13,7 @@ public class UI {
 
   /**
    * Constructs a UI pertaining to a specific player
+   *
    * @param root UI root to render to
    * @param clientPlayer Player to obtain data from
    */
@@ -21,7 +22,7 @@ public class UI {
     //Load the Kenney font
     //uiFont = Font.loadFont("fonts/kenney1.ttf", 25);
 
-    playerInfo = new PlayerInfo(root,clientPlayer);
+    playerInfo = new PlayerInfo(root, clientPlayer);
     score = new Score(root, clientPlayer);
   }
 

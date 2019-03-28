@@ -1,9 +1,5 @@
 package client.handlers.accountHandler;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.NoSuchElementException;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -29,7 +25,8 @@ public class Achievement {
 
 
   public Image getImage() {
-    return new Image(Path.convert("images/Achivements/golden_trophy_" + (status ? "100.png" : "greyed.png")));
+    return new Image(
+        Path.convert("images/Achivements/golden_trophy_" + (status ? "100.png" : "greyed.png")));
   }
 
   public Pane getPane() {
@@ -69,11 +66,11 @@ public class Achievement {
     return name;
   }
 
-  public void setStatus(boolean status) {
-    this.status = status;
-  }
-
   public boolean isStatus() {
     return status;
+  }
+
+  public void setStatus(boolean status) {
+    this.status = status;
   }
 }
