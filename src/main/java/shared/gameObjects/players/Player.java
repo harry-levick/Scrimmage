@@ -92,9 +92,14 @@ public class Player extends GameObject {
    * The Physics Rigidbody component attached to the player
    */
   protected Rigidbody rb;
-  //TODO idk what this does
-  protected double vx;
+  /**
+   * The Box collider that detects collisions
+   */
   private BoxCollider bc;
+  /**
+   * If the lighting is on or off
+   */
+  private boolean lightingSwitch;
 
   // Limbs
   private Limb head;
@@ -141,6 +146,7 @@ public class Player extends GameObject {
     addComponent(bc);
     addComponent(rb);
     aimLeft = pointLeft = true;
+    lightingSwitch = false;
   }
 
   // Initialise the animation
@@ -155,7 +161,9 @@ public class Player extends GameObject {
     addLimbs();
     addPunch();
     initialiseColorFilter();
-    initialiseLighting();
+    if (lightingSwitch) {
+      initialiseLighting();
+    }
   }
   
   
@@ -182,7 +190,9 @@ public class Player extends GameObject {
     armLeft.addChild(handLeft);
     addPunch();
     initialiseColorFilter();
-    initialiseLighting();
+    if (lightingSwitch) {
+      initialiseLighting();
+    }
   }
   
   private void initialiseColorFilter() {
@@ -298,7 +308,9 @@ public class Player extends GameObject {
     damagedThisFrame = false;
     if(!(this instanceof Bot)) { 
       applyFilter();
-      updateLighting();
+      if (lightingSwitch) {
+        updateLighting();
+      }
     }
     super.update();
   }
@@ -346,7 +358,6 @@ public class Player extends GameObject {
     }
 
     if (!rightKey && !leftKey) {
-      vx = 0;
       behaviour = Behaviour.IDLE;
     }
     if (jumpKey && !jumped && grounded) {
@@ -387,7 +398,6 @@ public class Player extends GameObject {
     }
 
     if (!rightKey && !leftKey) {
-      vx = 0;
       behaviour = Behaviour.IDLE;
     }
     if (jumpKey && !jumped && grounded) {

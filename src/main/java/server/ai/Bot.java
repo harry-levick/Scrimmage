@@ -247,9 +247,6 @@ public class Bot extends Player {
     if (leftKey) {
       rb.moveX(speed * -1);
     }
-    if (!rightKey && !leftKey) {
-      vx = 0;
-    }
     if (jumpKey && !jumped) {
       rb.moveY(jumpForce, 0.33333f);
       jumped = true;
