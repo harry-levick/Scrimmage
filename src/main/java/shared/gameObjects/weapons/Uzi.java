@@ -20,6 +20,10 @@ public class Uzi extends Gun {
    * Size of image
    */
   private static double sizeX = 84, sizeY = 35;
+  /** Ammo of gun */
+  private static int ammo = 50;
+  /** Fire rate of gun */
+  private static int fireRate = 72;
 
   /**
    * Default constructor
@@ -38,8 +42,8 @@ public class Uzi extends Gun {
         sizeY,
         10, // weight
         name,
-        50, // ammo
-        70, // fireRate
+        ammo,
+        fireRate,
         20, // pivotX
         25, // pivotY
         holder,
@@ -83,7 +87,7 @@ public class Uzi extends Gun {
         double[] bulletStartPos =
             isShootingFloor(bulletX, bulletY, mouseX, mouseY, playerCentre);
 
-        Bullet bullet = new FireBullet(
+        Bullet bullet = new CircleBullet(
             bulletStartPos[0],
             bulletStartPos[1],
             mouseX,
