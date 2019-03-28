@@ -288,8 +288,8 @@ public class Player extends GameObject {
         killedBy.setLayoutX((settings.getMapWidth() / 2) - (killedBy.getLayoutBounds().getWidth() /2));
 
         if (diedThisUpdate) {
-          Client.creditsRoot.getChildren().add(youDied);
-          Client.creditsRoot.getChildren().add(killedBy);
+          Client.overlayRoot.getChildren().add(youDied);
+          Client.overlayRoot.getChildren().add(killedBy);
           diedThisUpdate = false;
         }
       }
@@ -498,11 +498,11 @@ public class Player extends GameObject {
     addPunch();
     resetColorFilter();
 
-    if (Client.creditsRoot.getChildren().contains(youDied)) {
-      Client.creditsRoot.getChildren().remove(youDied);
+    if (Client.overlayRoot.getChildren().contains(youDied)) {
+      Client.overlayRoot.getChildren().remove(youDied);
     }
-    if (Client.creditsRoot.getChildren().contains(killedBy)) {
-      Client.creditsRoot.getChildren().remove(killedBy);
+    if (Client.overlayRoot.getChildren().contains(killedBy)) {
+      Client.overlayRoot.getChildren().remove(killedBy);
     }
     diedThisUpdate = true;
 

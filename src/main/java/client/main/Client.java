@@ -126,8 +126,8 @@ public class Client extends Application {
   private Group root;
   private static Group backgroundRoot;
   private static Group uiRoot;
-  public static Group creditsRoot;
-  private static Group creditsBackground;
+  public static Group overlayRoot;
+  private static Group overlayBackground;
   private Scene scene;
   private float elapsedSinceFPS = 0f;
   private int framesElapsedSinceFPS = 0;
@@ -161,7 +161,7 @@ public class Client extends Application {
   }
 
   /**
-   * Toggle display the mini-settings overlay. Shares use of creditsRoot since the ui and credit are not displayed at the same time. Clears all elements in the JavaFX group when toggle off.
+   * Toggle display the mini-settings overlay. Shares use of overlayRoot since the ui and credit are not displayed at the same time. Clears all elements in the JavaFX group when toggle off.
    */
   public static void settingsToggle() {
     // todo check if ingame
@@ -202,14 +202,14 @@ public class Client extends Application {
         iv.setFitHeight(settings.getGrisPos(10) + quitButtonExtraPadding);
         iv.setX(settings.getGrisPos(18));
         iv.setY(settings.getGrisPos(3));
-        creditsRoot.getChildren().add(iv);
+        overlayRoot.getChildren().add(iv);
       } catch (FileNotFoundException e) {
         Rectangle rect = new Rectangle();
         rect.setWidth(settings.getGrisPos(12));
         rect.setHeight(settings.getGrisPos(7) + quitButtonExtraPadding);
         rect.setX(settings.getGrisPos(18));
         rect.setY(settings.getGrisPos(5));
-        creditsRoot.getChildren().add(rect);
+        overlayRoot.getChildren().add(rect);
       }
       //add controls
       settingsObjects.add(
@@ -231,7 +231,7 @@ public class Client extends Application {
         settingsObjects.add(quit);
       }
       settingsObjects.forEach(obj -> obj.initialiseAnimation());
-      settingsObjects.forEach(obj -> obj.initialise(creditsRoot, settings));
+      settingsObjects.forEach(obj -> obj.initialise(overlayRoot, settings));
       settingsObjects.forEach(obj -> obj.render());
     } else {
       closeSettingsOverlay();
@@ -243,11 +243,11 @@ public class Client extends Application {
   }
 
   /**
-   * Clear the creditsRoot JavaFX group, hiding the overlay
+   * Clear the overlayRoot JavaFX group, hiding the overlay
    */
   public static void closeSettingsOverlay() {
     settingsOverlay = false;
-    creditsRoot.getChildren().clear();
+    overlayRoot.getChildren().clear();
     settingsObjects.clear();
     ColourFilters filter = new ColourFilters();
     filter.setDesaturate(0); //todo change to remove method
@@ -257,7 +257,7 @@ public class Client extends Application {
   }
 
   /**
-   * Shows the game credits in the creditsRoot, uses the CREDITS.MD file, allowing styling by italics or bold text, as well as optional 1st and 2nd size headers. A single <br> in any tag will display the while line as empty.
+   * Shows the game credits in the overlayRoot, uses the CREDITS.MD file, allowing styling by italics or bold text, as well as optional 1st and 2nd size headers. A single <br> in any tag will display the while line as empty.
    */
   public static void showCredits() {
     credits = true;
@@ -265,7 +265,7 @@ public class Client extends Application {
     levelHandler.getMusicAudioHandler().playMusic(
         "LOCAL_FORECAST"); // not using playlist since assumed length of credits is less than the length of song
     Rectangle bg = new Rectangle(0, 0, settings.getMapWidth(), settings.getMapHeight());
-    creditsBackground.getChildren().add(bg);
+    overlayBackground.getChildren().add(bg);
     try {
       BufferedReader reader = new BufferedReader(
           new FileReader(settings.getResourcesPath() + File.separator + "CREDITS.md"));
@@ -334,7 +334,7 @@ public class Client extends Application {
         text.setLayoutX(x - (text.getLayoutBounds().getWidth() / 2));
         text.setLayoutY(y + extraBufferSpace + yOffset);
         y += 40 + extraBufferSpace;
-        creditsRoot.getChildren().add(text);
+        overlayRoot.getChildren().add(text);
       }
     }
 
@@ -346,8 +346,8 @@ public class Client extends Application {
   public static void endCredits() {
     credits = false;
     creditStartDelay = 100; //todo magic number
-    creditsRoot.getChildren().clear(); // deletes all children, removing all credit texts
-    creditsBackground.getChildren().clear();
+    overlayRoot.getChildren().clear(); // deletes all children, removing all credit texts
+    overlayBackground.getChildren().clear();
     levelHandler.getMusicAudioHandler()
         .playMusicPlaylist(PLAYLIST.MENU); //assume always return to menu map from credits
   }
@@ -587,10 +587,10 @@ public class Client extends Application {
           creditStartDelay--;
           if (creditStartDelay < 0 && creditStartDelay % 2 == 0) {
             int maxY = Integer.MIN_VALUE;
-            if (creditsRoot.getChildren().size() != 0) {
-              maxY = (int) creditsRoot.getChildren().get(0).getLayoutY();
+            if (overlayRoot.getChildren().size() != 0) {
+              maxY = (int) overlayRoot.getChildren().get(0).getLayoutY();
             }
-            for (Node node : creditsRoot.getChildren()) {
+            for (Node node : overlayRoot.getChildren()) {
               node.setLayoutY(node.getLayoutY() - 1);
               maxY = Math.max(maxY, (int) node.getLayoutY());
             }
@@ -613,16 +613,16 @@ public class Client extends Application {
     backgroundRoot = new Group();
     gameRoot = new Group();
     uiRoot = new Group();
-    creditsRoot = new Group();
-    creditsBackground = new Group();
+    overlayRoot = new Group();
+    overlayBackground = new Group();
 
     root.setStyle("-fx-font-family: Kenney Future");
 
     root.getChildren().add(backgroundRoot);
     root.getChildren().add(gameRoot);
     root.getChildren().add(uiRoot);
-    root.getChildren().add(creditsBackground);
-    root.getChildren().add(creditsRoot);
+    root.getChildren().add(overlayBackground);
+    root.getChildren().add(overlayRoot);
 
     primaryStage.setTitle(gameTitle);
     primaryStage.getIcons().add(new Image(Path.convert("images/logo.png")));
