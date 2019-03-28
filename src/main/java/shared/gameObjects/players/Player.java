@@ -142,8 +142,8 @@ public class Player extends GameObject {
 
   // Death text
   private boolean diedThisUpdate = true;
-  private Text youDied = new Text("You Died!");
-  private Text killedBy = new Text("Killed By null");
+  private transient Text youDied = new Text("You Died!");
+  private transient Text killedBy = new Text("Killed By null");
 
   /**
    * Constructs a player object in the scene
@@ -174,6 +174,9 @@ public class Player extends GameObject {
     youDied.setFill(Color.DARKRED);
     killedBy.setFont(settings.getFont(32));
     killedBy.setFill(Color.DARKRED);
+
+    youDied = new Text("You Died!");
+    killedBy = new Text("Killed by unknown");
   }
 
   // Initialise the animation
@@ -187,10 +190,15 @@ public class Player extends GameObject {
     super.initialise(root, settings);
     addLimbs();
     addPunch();
-    initialiseColorFilter();
-    if (lightingSwitch) {
-      initialiseLighting();
+    if (!settings.getLevelHandler().isServer()) {
+      youDied = new Text("You Died!");
+      killedBy = new Text("Killed by unknown");
+      initialiseColorFilter();
+      if (lightingSwitch) {
+        initialiseLighting();
+      }
     }
+
     if (username == null) {
       username = "Player";
     }
@@ -232,9 +240,13 @@ public class Player extends GameObject {
     armRight.addChild(handRight);
     armLeft.addChild(handLeft);
     addPunch();
-    initialiseColorFilter();
-    if (lightingSwitch) {
-      initialiseLighting();
+    if (!settings.getLevelHandler().isServer()) {
+      youDied = new Text("You Died!");
+      killedBy = new Text("Killed by unknown");
+      initialiseColorFilter();
+      if (lightingSwitch) {
+        initialiseLighting();
+      }
     }
   }
 
@@ -250,7 +262,9 @@ public class Player extends GameObject {
   }
 
   private void resetColorFilter() {
-    colorFilter.setDesaturate(0.0f);
+    if (colorFilter != null) {
+      colorFilter.setDesaturate(0.0f);
+    }
   }
 
 
@@ -355,23 +369,26 @@ public class Player extends GameObject {
     }
     damagedThisFrame = false;
     if (!(this instanceof Bot)) {
-      applyFilter();
-      if (lightingSwitch) {
-        updateLighting();
-      }
-      if (health <= 0) {
-        youDied.setLayoutY(settings.getGrisPos(10));
-        youDied
-            .setLayoutX((settings.getMapWidth() / 2) - (youDied.getLayoutBounds().getWidth() / 2));
-        killedBy.setText("Killed by " + "someone");
-        killedBy.setLayoutY(settings.getGrisPos(13));
-        killedBy
-            .setLayoutX((settings.getMapWidth() / 2) - (killedBy.getLayoutBounds().getWidth() / 2));
+      if (!settings.getLevelHandler().isServer()) {
+        applyFilter();
+        if (lightingSwitch) {
+          updateLighting();
+        }
 
-        if (diedThisUpdate) {
-          settings.getOverlay().getChildren().add(youDied);
-          settings.getOverlay().getChildren().add(killedBy);
-          diedThisUpdate = false;
+        if (health <= 0) {
+          youDied.setLayoutY(settings.getGrisPos(10));
+          youDied.setLayoutX(
+              (settings.getMapWidth() / 2) - (youDied.getLayoutBounds().getWidth() / 2));
+          killedBy.setText("Killed by " + "someone");
+          killedBy.setLayoutY(settings.getGrisPos(13));
+          killedBy.setLayoutX(
+              (settings.getMapWidth() / 2) - (killedBy.getLayoutBounds().getWidth() / 2));
+
+          if (diedThisUpdate) {
+            settings.getOverlay().getChildren().add(youDied);
+            settings.getOverlay().getChildren().add(killedBy);
+            diedThisUpdate = false;
+          }
         }
       }
       super.update();
@@ -608,15 +625,17 @@ public class Player extends GameObject {
       this.bc.setLayer(ColliderLayer.PLAYER);
     }
     addPunch();
-    resetColorFilter();
+    if (!settings.getLevelHandler().isServer()) {
+      resetColorFilter();
 
-    if (settings.getOverlay().getChildren().contains(youDied)) {
-      settings.getOverlay().getChildren().remove(youDied);
+      if (settings.getOverlay().getChildren().contains(youDied)) {
+        settings.getOverlay().getChildren().remove(youDied);
+      }
+      if (settings.getOverlay().getChildren().contains(killedBy)) {
+        settings.getOverlay().getChildren().remove(killedBy);
+      }
+      diedThisUpdate = true;
     }
-    if (settings.getOverlay().getChildren().contains(killedBy)) {
-      settings.getOverlay().getChildren().remove(killedBy);
-    }
-    diedThisUpdate = true;
 
   }
 
