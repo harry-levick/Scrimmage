@@ -126,6 +126,7 @@ public class Client extends Application {
   private Group root;
   private static Group backgroundRoot;
   private static Group uiRoot;
+  private static Group lightingRoot;
   private static Group creditsRoot;
   private static Group creditsBackground;
   private Scene scene;
@@ -441,7 +442,7 @@ public class Client extends Application {
   @Override
   public void start(Stage primaryStage) {
     setupRender(primaryStage);
-    levelHandler = new LevelHandler(settings, backgroundRoot, gameRoot, uiRoot);
+    levelHandler = new LevelHandler(settings, backgroundRoot, gameRoot,lightingRoot, uiRoot);
     settings.setLevelHandler(levelHandler);
     levelHandler.addClientPlayer(gameRoot);
 
@@ -612,6 +613,7 @@ public class Client extends Application {
     root = new Group();
     backgroundRoot = new Group();
     gameRoot = new Group();
+    lightingRoot = new Group();
     uiRoot = new Group();
     creditsRoot = new Group();
     creditsBackground = new Group();
@@ -620,6 +622,7 @@ public class Client extends Application {
 
     root.getChildren().add(backgroundRoot);
     root.getChildren().add(gameRoot);
+    root.getChildren().add(lightingRoot);
     root.getChildren().add(uiRoot);
     root.getChildren().add(creditsBackground);
     root.getChildren().add(creditsRoot);

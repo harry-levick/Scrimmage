@@ -44,6 +44,7 @@ public class LevelHandler {
   private Map previousMap;
   private Group backgroundRoot;
   private Group gameRoot;
+  private Group lightingRoot;
   private Group uiRoot;
   private Background background;
   private AudioHandler musicPlayer;
@@ -58,7 +59,7 @@ public class LevelHandler {
    * @param gameRoot main game root containing all the objects
    * @param uiRoot root containing the foreground and UI images
    */
-  public LevelHandler(Settings settings, Group backgroundRoot, Group gameRoot,
+  public LevelHandler(Settings settings, Group backgroundRoot, Group gameRoot, Group lightingRoot,
       Group uiRoot) {
     this.settings = settings;
     gameObjects = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
@@ -71,6 +72,7 @@ public class LevelHandler {
     maps = MapLoader.getMaps(settings.getMapsPath());
     this.backgroundRoot = backgroundRoot;
     this.gameRoot = gameRoot;
+    this.lightingRoot = lightingRoot;
     this.isServer = false;
     this.uiRoot = uiRoot;
 
@@ -401,6 +403,10 @@ public class LevelHandler {
   
   public Group getBackgroundRoot() {
     return backgroundRoot;
+  }
+  
+  public Group getLightingRoot() {
+    return lightingRoot;
   }
 
   public LinkedHashMap<UUID, Limb> getLimbs() {
