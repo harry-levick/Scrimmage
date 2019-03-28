@@ -6,14 +6,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.UUID;
+import javafx.application.Platform;
 import javafx.scene.Group;
+import server.ai.Bot;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Player;
+import shared.handlers.levelHandler.Map;
 import shared.physics.data.Collision;
 import shared.physics.types.ColliderLayer;
+import shared.util.Path;
 import shared.util.maths.Vector2;
 
 public class Podium1 extends GameObject {
@@ -44,13 +48,35 @@ public class Podium1 extends GameObject {
   }
 
   public void initialise(Group root, Settings settings) {
+    settings.getLevelHandler().getGameObjects().keySet()
+        .removeAll(settings.getLevelHandler().getBotPlayerList().keySet());
+    settings.getLevelHandler().getBotPlayerList().forEach((key, bot) -> bot.terminate());
     super.initialise(root, settings);
-     podium2 = (Podium2) settings.getLevelHandler().getGameObjects().get(UUID.fromString("180e405a-e3ac-46f4-9480-67f31496ea72"));
-     podium3 = (Podium3) settings.getLevelHandler().getGameObjects().get(UUID.fromString("5883e6ae-558a-4db1-82c3-2dcf353ec2a5"));
-     podium4 = (Podium4) settings.getLevelHandler().getGameObjects().get(UUID.fromString("15699b59-f31b-4708-9ae0-97ef77333c9d"));
-     System.out.println("HI");
+    podium2 = new Podium2(getX() + 320, getY() + 120, 240, 320);
+    settings.getLevelHandler().addGameObject(podium2);
+    podium3 = new Podium3(getX() - 320, getY() + 40, 240, 240);
+    settings.getLevelHandler().addGameObject(podium3);
+    podium4 = new Podium4(getX() + 640, getY() + 320, 240, 120);
+    settings.getLevelHandler().addGameObject(podium4);
      ArrayList<Player> players = new ArrayList();
-     settings.getLevelHandler().getPlayers().forEach((uuid, player) -> players.add(player));
+    settings.getLevelHandler().getPlayers().forEach((uuid, player) -> {
+      if (player instanceof Bot) {
+        Player playerCopy = new Player(player.getX(), player.getY(), player.getUUID());
+        playerCopy.setScore(player.score);
+        playerCopy.setUsername(player.getUsername());
+        settings.getLevelHandler().addGameObject(playerCopy);
+        players.add(playerCopy);
+      } else {
+        players.add(player);
+      }
+    });
+    settings.getLevelHandler().getPlayers().keySet()
+        .removeAll(settings.getLevelHandler().getBotPlayerList().keySet());
+    settings.getLevelHandler().getBotPlayerList()
+        .forEach((key, gameObject) -> gameObject.removeRender());
+    settings.getLevelHandler().getBotPlayerList().forEach((key, gameObject) -> gameObject = null);
+    settings.getLevelHandler().getBotPlayerList().clear();
+
      Comparator<Player> compareScore = Comparator.comparing(Player::getScore);
      Collections.sort(players,compareScore);
     if (players.get(0) != null) {
@@ -68,6 +94,27 @@ public class Podium1 extends GameObject {
       players.get(3).getTransform()
           .setPos(podium4.getTransform().getPos().add(new Vector2(50, -300)));
     }
+    new java.util.Timer().schedule(
+        new java.util.TimerTask() {
+          @Override
+          public void run() {
+            Platform.runLater(new Runnable() {
+              @Override
+              public void run() {
+                players.forEach(player -> {
+                  player.removeRender();
+                });
+                players.clear();
+                settings.getLevelHandler().changeMap(
+                    new Map("menus/main_menu.map",
+                        Path.convert("src/main/resources/menus/main_menu.map")),
+                    true, false);
+              }
+            });
+
+          }
+        }, 15000
+    );
   }
 
   public void OnCollisionEnter(Collision c) {

@@ -16,7 +16,6 @@ import shared.gameObjects.Blocks.Wood.WoodBlockLargeObject;
 import shared.gameObjects.Blocks.Wood.WoodBlockSmallObject;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.MapDataObject;
-import shared.gameObjects.PlayerSpawnpoint;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.background.Background1;
 import shared.gameObjects.background.Background2;
@@ -52,9 +51,6 @@ import shared.gameObjects.objects.utility.RedBlock;
 import shared.gameObjects.objects.utility.YellowBlock;
 import shared.gameObjects.players.Player;
 import shared.gameObjects.score.Podium1;
-import shared.gameObjects.score.Podium2;
-import shared.gameObjects.score.Podium3;
-import shared.gameObjects.score.Podium4;
 import shared.gameObjects.weapons.WeaponSpawner;
 import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.MapLoader;
@@ -702,12 +698,6 @@ public class LevelCreator extends Application {
       uuid = UUID.randomUUID();
     }
 
-    uuid = UUID.randomUUID();
-    gameObjects.put(uuid, new Podium4(getAbs(33), getAbs(23), getAbs(6), getAbs(3)));
-    uuid = UUID.randomUUID();
-    gameObjects.put(uuid, new Podium3(getAbs(9), getAbs(20), getAbs(6), getAbs(6)));
-    uuid = UUID.randomUUID();
-    gameObjects.put(uuid, new Podium2(getAbs(25), getAbs(18), getAbs(6), getAbs(8)));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid, new Podium1(getAbs(17), getAbs(15), getAbs(6), getAbs(12)));
 
