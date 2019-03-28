@@ -22,10 +22,8 @@ public class Punch extends Melee {
    * Size of the image (default image = blank)
    */
   private static double sizeX = 30, sizeY = 30;
-  /**
-   * Range of punch
-   */
-  private static double range = 50;
+  /** Range of punch */
+  private static double range = 30;
 
   /**
    * Constructor for Punch
