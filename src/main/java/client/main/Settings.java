@@ -29,7 +29,6 @@ public class Settings {
   private String menuPath;
   private String musicPath;
   private String SFXPath;
-  private String achivementPath;
   private int windowWidth;// = (int) Screen.getPrimary().getBounds().getWidth();
   private int windowHeight;// = (int) Screen.getPrimary().getBounds().getHeight();
   private int mapWidth;
@@ -41,11 +40,6 @@ public class Settings {
   private int gridSize;
   private int playersDead;
   private boolean multiplayer;
-
-  // key mappings
-  public enum KEY_CONTROL {
-    JUMP, LEFT, RIGHT, THROW, MENU
-  }
   private HashMap<KEY_CONTROL, KeyCode> keyMap = new HashMap<>();
 
   /**
@@ -71,7 +65,8 @@ public class Settings {
     musicPath = resourcesPath + s + "audio" + s + "music";
     SFXPath = resourcesPath + s + "audio" + s + "sound-effects";
     fontPath = resourcesPath + s + "Kenney Future.ttf";
-    data = new AccountData(UUID.randomUUID().toString(), "newuser", new boolean[30], new boolean[30], 7, 200);
+    data = new AccountData(UUID.randomUUID().toString(), "newuser", new boolean[30],
+        new boolean[30], 1, 0);
 
     keyMap.put(KEY_CONTROL.JUMP, KeyCode.W);
     keyMap.put(KEY_CONTROL.LEFT, KeyCode.A);
@@ -82,6 +77,7 @@ public class Settings {
 
   /**
    * Get the mapped keyboard key for the enum key function
+   *
    * @param key the KEY_CONTROL game function
    * @return the KeyCode which triggers the KEY_CONTROL function
    */
@@ -91,6 +87,7 @@ public class Settings {
 
   /**
    * Get the whole HashMap of the key bindings
+   *
    * @return The HashMap of KEY_CONTROL game functions to keyboard keys
    */
   public HashMap<KEY_CONTROL, KeyCode> getKeyHashMap() {
@@ -99,6 +96,7 @@ public class Settings {
 
   /**
    * Remap the key binding of a enum key function to a new keyboard key
+   *
    * @param keyControl the KEY_CONTROL game function
    * @param keyCode the KeyCode which triggers the KEY_CONTROL function
    */
@@ -122,6 +120,7 @@ public class Settings {
 
   /**
    * Scales a grid position to its pixel position (top left)
+   *
    * @param gridPos The grid square count
    * @return Scales grid squares to the pixels
    */
@@ -131,6 +130,7 @@ public class Settings {
 
   /**
    * Get the size of the game grid - default 40 units
+   *
    * @return The size of he grid in the game in units
    */
   public int getGridSize() {
@@ -139,6 +139,7 @@ public class Settings {
 
   /**
    * The path of the maps without an ending file separator to the resources
+   *
    * @return The relative path containing File.Separator
    */
   public String getMapsPath() {
@@ -147,6 +148,7 @@ public class Settings {
 
   /**
    * Sets the full relative path of the maps directory
+   *
    * @param mapsPath The new directory of the maps
    */
   public void setMapsPath(String mapsPath) {
@@ -155,6 +157,7 @@ public class Settings {
 
   /**
    * The path of the menus without an ending file separator to the resources
+   *
    * @return The relative path containing File.Separator
    */
   public String getMenuPath() {
@@ -163,6 +166,7 @@ public class Settings {
 
   /**
    * Sets the full relative path of the menu directory
+   *
    * @param menuPath The new directory of the menus
    */
   public void setMenuPath(String menuPath) {
@@ -171,6 +175,7 @@ public class Settings {
 
   /**
    * Gets the width of the size of the map
+   *
    * @return The number of units the map is wide
    */
   public int getMapWidth() {
@@ -179,6 +184,7 @@ public class Settings {
 
   /**
    * Gets the height of the size of the map
+   *
    * @return The number of units the map is high
    */
   public int getMapHeight() {
@@ -187,6 +193,7 @@ public class Settings {
 
   /**
    * Gets the number of pixels of the client window
+   *
    * @return The number of pixels the window is wide
    */
   public int getWindowWidth() {
@@ -195,6 +202,7 @@ public class Settings {
 
   /**
    * Gets the number of pixels of the client window
+   *
    * @return The number of pixels the window is high
    */
   public int getWindowHeight() {
@@ -203,6 +211,7 @@ public class Settings {
 
   /**
    * The path of the music without an ending file separator
+   *
    * @return The relative path containing File.Separator
    */
   public String getMusicPath() {
@@ -211,6 +220,7 @@ public class Settings {
 
   /**
    * The path of the sound effects without an ending file separator
+   *
    * @return The relative path containing File.Separator
    */
   public String getSFXPath() {
@@ -219,6 +229,7 @@ public class Settings {
 
   /**
    * The maximum number of players allowed in the game
+   *
    * @return The maximum number of players allowed in the game
    */
   public int getMaxPlayers() {
@@ -227,6 +238,7 @@ public class Settings {
 
   /**
    * The global font
+   *
    * @return The global font at the default size
    */
   public Font getFont() {
@@ -235,6 +247,7 @@ public class Settings {
 
   /**
    * The global font
+   *
    * @param size The size of the font returned
    * @return The global font at the specified size
    */
@@ -248,6 +261,7 @@ public class Settings {
     }
     return font;
   }
+
   /**
    * @return Current game music volume
    */
@@ -284,6 +298,7 @@ public class Settings {
 
   /**
    * Gets the username of the client's player
+   *
    * @return The name chosen by the client
    */
   public String getUsername() {
@@ -292,6 +307,7 @@ public class Settings {
 
   /**
    * Sets the username of the client's player
+   *
    * @param username The new name chosen by the player
    */
   public void setUsername(String username) {
@@ -300,6 +316,7 @@ public class Settings {
 
   /**
    * The port of the client/server connection
+   *
    * @return The port of the client/server connection
    */
   public int getPort() {
@@ -308,6 +325,7 @@ public class Settings {
 
   /**
    * The port of the clinet/server connection
+   *
    * @param port The port of the client/server conneciton
    */
   public void setPort(int port) {
@@ -316,6 +334,7 @@ public class Settings {
 
   /**
    * The global levelhandler controlling map/level changes
+   *
    * @return Instance of LevelHandler
    */
   public LevelHandler getLevelHandler() {
@@ -323,7 +342,8 @@ public class Settings {
   }
 
   /**
-   *  The global levelhandler controlling map/level changes
+   * The global levelhandler controlling map/level changes
+   *
    * @param levelHandler Instance of LevelHandler
    */
   public void setLevelHandler(LevelHandler levelHandler) {
@@ -332,6 +352,7 @@ public class Settings {
 
   /**
    * The JavaFX Group which all elements are added to
+   *
    * @return The group root
    */
   public Group getGameRoot() {
@@ -340,6 +361,7 @@ public class Settings {
 
   /**
    * The JavaFX Group which all elements are added to
+   *
    * @param gameRoot The group root
    */
   public void setGameRoot(Group gameRoot) {
@@ -371,5 +393,10 @@ public class Settings {
 
   public void setMultiplayer(boolean multiplayer) {
     this.multiplayer = multiplayer;
+  }
+
+  // key mappings
+  public enum KEY_CONTROL {
+    JUMP, LEFT, RIGHT, THROW, MENU
   }
 }

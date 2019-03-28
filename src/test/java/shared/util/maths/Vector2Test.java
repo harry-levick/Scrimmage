@@ -143,21 +143,35 @@ public class Vector2Test {
   }
 
   @Test
-  public void cross1() {assertTrue(twoThree.cross(fourSeven).equals(new Vector2(twoThree.getX()*fourSeven.getY(), twoThree.getY()*-fourSeven.getX())));}
+  public void cross1() {
+    assertTrue(twoThree.cross(fourSeven).equals(
+        new Vector2(twoThree.getX() * fourSeven.getY(), twoThree.getY() * -fourSeven.getX())));
+  }
 
   @Test
-  public void clamp() {assertTrue(twoThree.clamp(Vector2.Zero(), Vector2.Unit()).equals(Vector2.Unit()));}
+  public void clamp() {
+    assertTrue(twoThree.clamp(Vector2.Zero(), Vector2.Unit()).equals(Vector2.Unit()));
+  }
 
   @Test
-  public void normalize() {assertTrue(twoThree.normalize().equals(new Vector2(twoThree.getX()/twoThree.magnitude(), twoThree.getY()/twoThree.magnitude())));}
+  public void normalize() {
+    assertTrue(twoThree.normalize().equals(new Vector2(twoThree.getX() / twoThree.magnitude(),
+        twoThree.getY() / twoThree.magnitude())));
+  }
 
   @Test
-  public void normal() {assertTrue(twoThree.normal().equals(new Vector2(-twoThree.getY(), twoThree.getX())));}
+  public void normal() {
+    assertTrue(twoThree.normal().equals(new Vector2(-twoThree.getY(), twoThree.getX())));
+  }
 
   @Test
-  public void canOverlap() {assertTrue(!(twoThree.canOverlap(fourSeven)));}
+  public void canOverlap() {
+    assertTrue(!(twoThree.canOverlap(fourSeven)));
+  }
 
 
   @Test
-  public void equals() {assertTrue(Vector2.Unit().equals(Vector2.Unit()));}
+  public void equals() {
+    assertTrue(Vector2.Unit().equals(Vector2.Unit()));
+  }
 }

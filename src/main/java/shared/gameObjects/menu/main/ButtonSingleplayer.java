@@ -9,8 +9,6 @@ import server.ai.Bot;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.menu.ButtonObject;
-import shared.handlers.levelHandler.Map;
-import shared.util.Path;
 
 public class ButtonSingleplayer extends ButtonObject {
 

@@ -3,6 +3,7 @@ package shared.gameObjects.Utils;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import shared.util.maths.Vector2;
+
 //TODO JavaDoc this boi
 public class TimePosition implements Serializable {
 

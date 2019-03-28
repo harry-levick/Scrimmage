@@ -1,6 +1,5 @@
 package shared.gameObjects.components;
 
-import java.io.Serializable;
 import javafx.scene.Group;
 import shared.gameObjects.GameObject;
 import shared.physics.Physics;
@@ -10,9 +9,9 @@ import shared.util.maths.Vector2;
 
 /**
  * @author fxa579 Primary components responsible for collider info, such as collision state, size,
- *     shape
+ * shape
  */
-public abstract class Collider extends Component  {
+public abstract class Collider extends Component {
 
   /**
    * Determines if a collider is a trigger or not; triggers ignore physics collisions
@@ -29,6 +28,7 @@ public abstract class Collider extends Component  {
 
   /**
    * Collider constructor with DEFAULT Layer
+   *
    * @param parent The object the collider is attached to
    * @param colliderType The type of collider
    * @param trigger Whether this collider is a trigger or a collider
@@ -42,6 +42,7 @@ public abstract class Collider extends Component  {
 
   /**
    * Collider Contructor
+   *
    * @param parent The object the collider is attached to
    * @param colliderType The type of collider
    * @param layer The collision layer the collider is a part of
@@ -58,6 +59,7 @@ public abstract class Collider extends Component  {
 
   /**
    * Tests for a collision between a BoxCollider and a CircleCollider
+   *
    * @param box BoxCollider to test
    * @param circle CircleCollider to test
    * @return True if the colliders intersect
@@ -91,6 +93,7 @@ public abstract class Collider extends Component  {
 
   /**
    * Tests for a collision between a CircleCollider and a CircleCollider
+   *
    * @param circleA CircleCollider to test
    * @param circleB CircleCollider to test
    * @return True if the colliders intersect
@@ -105,6 +108,7 @@ public abstract class Collider extends Component  {
 
   /**
    * Tests for a collision between a BoxCollider and a BoxCollider
+   *
    * @param boxA BoxCollider to test
    * @param boxB BoxCollider to test
    * @return True if the colliders intersect
@@ -129,6 +133,7 @@ public abstract class Collider extends Component  {
 
   /**
    * Projects a BoxCollider 2D shape to a given 1D axis
+   *
    * @param a BoxCollider to project
    * @param axis axis to project to
    * @return the segment the BoxCollider exists on in the axis
@@ -147,8 +152,10 @@ public abstract class Collider extends Component  {
     }
     return new Vector2(min, max);
   }
+
   /**
    * Projects all points on a 2D Edge Collider shape to a given 1D axis
+   *
    * @param a EdgeCollider to project
    * @param axis axis to project to
    * @return the segment the EdgeCollider exists on in the axis
@@ -158,7 +165,8 @@ public abstract class Collider extends Component  {
     float min = axis.dot(a.getNodes().get(0)); // Get the first min
     double max = min;
     for (int i = 1; i < a.getNodes().size(); i++) {
-      float temp = axis.dot(a.getNodes().get(i)); // Get the dot product between the axis and the node
+      float temp = axis
+          .dot(a.getNodes().get(i)); // Get the dot product between the axis and the node
       if (temp < min) {
         min = temp;
       } else if (temp > max) {
@@ -167,6 +175,7 @@ public abstract class Collider extends Component  {
     }
     return new Vector2(min, max);
   }
+
   //TODO Comments
   private static boolean pointBoxCollision(EdgeCollider edgeA, BoxCollider boxB) {
     for (Vector2 axisOfProjection : boxB.getAxes()) {
@@ -193,12 +202,15 @@ public abstract class Collider extends Component  {
 
   /**
    * Tests for a collision between two colliders
+   *
    * @param colA Collider to test
    * @param colB Collider to test
    * @return True if the colliders intersect
    */
   public static boolean haveCollided(Collider colA, Collider colB) {
-    if(colA == null || colB == null) return false;
+    if (colA == null || colB == null) {
+      return false;
+    }
     if (colA == colB
         || !(canCollideWithLayer(colA.getLayer(), colB.getLayer()))
         || colB.isTrigger()) {
@@ -251,7 +263,9 @@ public abstract class Collider extends Component  {
     return colliderType;
   }
 
-  public void initialise(Group root) {}
+  public void initialise(Group root) {
+  }
+
   public abstract Vector2 getCentre();
   // Getters
 

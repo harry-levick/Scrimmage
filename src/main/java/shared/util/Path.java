@@ -9,6 +9,7 @@ public class Path {
 
   /**
    * Parses a string array into a valid filepath for the user's system
+   *
    * @param args String array of folder names
    * @return String representing valid filepath
    */
@@ -23,6 +24,7 @@ public class Path {
 
   /**
    * Parses a filepath using File.seperator
+   *
    * @param path Filepath to parse
    * @return Filepath valid for user's system
    */

@@ -7,8 +7,6 @@ import java.util.UUID;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import shared.gameObjects.Utils.ObjectType;
-import shared.gameObjects.weapons.Melee;
-import shared.gameObjects.weapons.Sword;
 
 public class SwordTest {
 

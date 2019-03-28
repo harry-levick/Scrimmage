@@ -2,33 +2,34 @@ package client.handlers.effectsHandler.emitters;
 
 import client.handlers.effectsHandler.Particle;
 import client.handlers.effectsHandler.ParticleType;
-import java.util.Random;
 import java.util.UUID;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.physics.Physics;
 import shared.util.maths.Vector2;
 
-/** @author fxa579 Base class of ParticleEmitter Effects */
+/**
+ * @author fxa579 Base class of ParticleEmitter Effects
+ */
 public abstract class ParticleEmitter extends GameObject {
 
   protected Vector2 velocity;
   protected Vector2 acceleration;
   protected Vector2 particleSize;
   protected float radius;
-  private float particleEmitterLifetime;
   protected float lifetime;
-  private ParticleType type;
-  private int particleAmount;
   protected String imageSource;
-
   /**
    * Position the last particle was spawned at
    */
   protected Vector2 previousPosition;
+  private float particleEmitterLifetime;
+  private ParticleType type;
+  private int particleAmount;
 
   /**
    * Constructor:
+   *
    * @param sourcePosition Centre position of the emitter
    * @param initialVelocity Maximum initial velocity particles will be spawned it
    * @param acceleration Constant acceleration of particles in their lifetime
@@ -76,7 +77,7 @@ public abstract class ParticleEmitter extends GameObject {
     if (particleEmitterLifetime <= 0) {
       settings.getLevelHandler().removeGameObject(this);
     } else {
-      for(int i = 0; i < particleAmount; i++) {
+      for (int i = 0; i < particleAmount; i++) {
         settings.getLevelHandler().addGameObject(newParticle());
       }
       particleEmitterLifetime -= Physics.TIMESTEP;
@@ -85,6 +86,7 @@ public abstract class ParticleEmitter extends GameObject {
 
   /**
    * Generates a new particle, calculating its position and velocity based off of the emitter
+   *
    * @return Particle Game Object to instantiate
    */
   protected abstract Particle newParticle();
