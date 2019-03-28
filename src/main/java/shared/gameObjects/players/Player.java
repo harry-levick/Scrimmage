@@ -1,6 +1,7 @@
 package shared.gameObjects.players;
 
 import client.handlers.effectsHandler.Particle;
+import client.handlers.effectsHandler.ServerParticle;
 import client.main.Settings;
 import java.util.UUID;
 import javafx.application.Platform;
