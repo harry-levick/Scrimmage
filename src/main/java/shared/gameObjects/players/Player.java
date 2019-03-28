@@ -394,8 +394,8 @@ public class Player extends GameObject {
           }
         }
       }
-      super.update();
     }
+    super.update();
   }
 
   @Override
