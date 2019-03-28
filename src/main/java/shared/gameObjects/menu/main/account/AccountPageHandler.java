@@ -1,6 +1,7 @@
 package shared.gameObjects.menu.main.account;
 
 import client.handlers.accountHandler.AccountData;
+import client.handlers.accountHandler.AchivementHandler;
 import client.handlers.accountHandler.SQLConnect;
 import client.handlers.audioHandler.AudioHandler;
 import client.handlers.effectsHandler.emitters.CircleEmitter;
@@ -399,7 +400,17 @@ public class AccountPageHandler extends GameObject {
   }
 
   private void initTropyPane() {
-    panes[2] = new GridPane();
+    panes[2] = new Pane();
+    Group group = new Group();
+    AchivementHandler achivementHandler = new AchivementHandler(UUID.randomUUID());
+    achivementHandler.initialise(group, settings);
+
+    group.setScaleX(0.85);
+    group.setScaleY(0.85);
+    group.setTranslateY(-100);
+    panes[2].getChildren().add(group);
+    panes[2].setTranslateX(0);
+    panes[2].setTranslateY(200);
   }
 
   private void initLootboxPane() {
@@ -408,5 +419,12 @@ public class AccountPageHandler extends GameObject {
 
   private void initShopPane() {
     panes[4] = new GridPane();
+  }
+
+  @Override
+  public void removeRender() {
+    super.removeRender();
+    root.getChildren().removeAll(buttons);
+    root.getChildren().removeAll(panes);
   }
 }
