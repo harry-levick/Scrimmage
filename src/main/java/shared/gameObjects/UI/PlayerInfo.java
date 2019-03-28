@@ -26,7 +26,8 @@ public class PlayerInfo {
   private ImageView healthBarImageView;
   private ImageView ammoBarImageView;
 
-  private Text ammoText;
+  private Text currentAmmoText;
+  private Text maxAmmoText;
 
   private double healthW;
   private double healthH;
@@ -42,7 +43,7 @@ public class PlayerInfo {
     root = root;
     player = clientPlayer;
 
-    //Set the images/animations
+    // Set the images/animations
     board = new Animator();
     board2 = new Animator();
     board.supplyAnimation("default", "images/ui/board1.png");
@@ -60,17 +61,20 @@ public class PlayerInfo {
     ammoBarImageView = new ImageView();
     ammoW = ammoBar.getImage().getWidth();
     ammoH = ammoBar.getImage().getHeight();
-    ammoText = new Text(20, 100, "");
-    ammoText.setFont(new Font(48));
+    currentAmmoText = new Text(5, 100, "");
+    maxAmmoText = new Text(200, 100, "");
+    currentAmmoText.setFont(new Font(48));
+    maxAmmoText.setFont(new Font(18));
 
-    //Add to the root
-    root.getChildren().addAll(boardImageView, healthBarImageView, ammoBarImageView, ammoText);
+    // Add to the root
+    root.getChildren()
+        .addAll(boardImageView, healthBarImageView, ammoBarImageView, currentAmmoText, maxAmmoText);
   }
 
 
   private Rectangle2D getHealthViewport() {
     float scale = player.getHealthPercentage();
-    if (scale > 0) { //Used so that the viewport doesn't reset to full when width = 0.
+    if (scale > 0) { // Used so that the viewport doesn't reset to full when width = 0.
       int w = Math.round(scale * (float) healthW);
 
       return new Rectangle2D(0, 0, w, healthH);
@@ -84,7 +88,7 @@ public class PlayerInfo {
     if (playerAmmo != -1) {
       float scale =
           (float) player.getHolding().getAmmo() / (float) player.getHolding().getMaxAmmo();
-      if (scale > 0) { //Used so that the viewport doesn't reset to full when width = 0.
+      if (scale > 0) { // Used so that the viewport doesn't reset to full when width = 0.
         int w = Math.round(scale * (float) ammoW);
         return new Rectangle2D(0, 0, w, ammoH);
       } else {
@@ -103,13 +107,17 @@ public class PlayerInfo {
     }
   }
 
-  private String getAmmoText() {
+  private String getAmmoText(String x) {
     if (player.getHolding().getAmmo() != -1) {
-      return Integer.toString(player.getHolding().getAmmo()) + " / " + Integer
-          .toString(player.getHolding().getMaxAmmo());
+      if (x.equals("current")) {
+        return Integer.toString(player.getHolding().getAmmo());
+      } else {
+        return "/ " + Integer.toString(player.getHolding().getMaxAmmo());
+      }
     } else {
       return "";
     }
+
   }
 
   /**
@@ -124,7 +132,8 @@ public class PlayerInfo {
     healthBarImageView.setViewport(getHealthViewport());
     ammoBarImageView.setViewport(getAmmoViewport());
 
-    ammoText.setText(getAmmoText());
+    currentAmmoText.setText(getAmmoText("current"));
+    maxAmmoText.setText(getAmmoText("max"));
 
 
   }
