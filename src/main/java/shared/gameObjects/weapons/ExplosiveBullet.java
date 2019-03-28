@@ -89,7 +89,7 @@ public class ExplosiveBullet extends Bullet {
     GameObject gCol = col.getCollidedObject();
     boolean remove = true;
 
-    new AudioHandler(settings, Client.musicActive).playSFX("FART");
+    new AudioHandler(settings, Client.musicActive).playSFX("BUBBLE_POP");
 
     if (gCol.getId() == ObjectType.Player || gCol instanceof Destructable) {
       if (gCol.equals(holder)) {
