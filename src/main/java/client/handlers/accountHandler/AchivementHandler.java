@@ -145,7 +145,6 @@ public class AchivementHandler extends GameObject {
           case 9:
             if (event.getCode() == KeyCode.B) {
               System.out.println("KonamiCode");
-
             }
             break;
         }

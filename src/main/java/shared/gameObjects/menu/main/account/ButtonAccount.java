@@ -27,10 +27,9 @@ public class ButtonAccount extends ButtonObject {
 
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
-    settings.getLevelHandler().changeMap(
-        new Map(
-            "account",
-            Path.convert("src/main/resources/menus/account.map")),
-        false, false);
+    settings
+        .getLevelHandler()
+        .changeMap(
+            new Map("account", Path.convert("src/main/resources/menus/account.map")), false, false);
   }
 }
