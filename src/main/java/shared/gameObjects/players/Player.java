@@ -652,7 +652,7 @@ public class Player extends GameObject {
    */
   public void setHolding(Weapon newHolding) {
     try {
-      if (armRight == null || armLeft == null || !armLeft.limbAttached || !armRight.limbAttached) {
+      if (!armLeft.limbAttached || !armRight.limbAttached) {
         return;
       }
     } catch (Exception e) {
