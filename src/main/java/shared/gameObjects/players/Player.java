@@ -2,6 +2,7 @@ package shared.gameObjects.players;
 
 import client.handlers.effectsHandler.Particle;
 import client.main.Settings;
+import java.util.Random;
 import java.util.UUID;
 import javafx.application.Platform;
 import javafx.scene.Group;
@@ -113,6 +114,10 @@ public class Player extends GameObject {
    */
   private String username;
 
+  private int deaths;
+  private int killsInGame;
+  private int killsInMap;
+  private GameObject sourceOfDeath;
   /**
    * Players limbs
    */
@@ -135,6 +140,8 @@ public class Player extends GameObject {
    */
   private int lastInputCount;
 
+  private int[] currentSkin;
+
   //ColoFilter
   private transient ColourFilters colorFilter;
 
@@ -146,6 +153,10 @@ public class Player extends GameObject {
   private boolean diedThisUpdate = true;
   private transient Text youDied = new Text("You Died!");
   private transient Text killedBy = new Text("Killed By null");
+
+  private static final String[] RANDOM_NAMES = {"AbsoluteUnit", "Physics4Life", "EdgeLord44", "KingKenny",
+      "Brett", "Raj7i", "Lik Kan", "Henry", "Harry", "Matt",
+      "BugFixer", "PraiseOCaml", "Java++", "TensorFlow"};
 
   /**
    * Constructs a player object in the scene
@@ -163,7 +174,7 @@ public class Player extends GameObject {
     this.rightKey = false;
     this.jumpKey = false;
     this.click = false;
-    this.username = "Player";
+    this.username = "newuser";
     this.health = maxHealth;
     this.behaviour = Behaviour.IDLE;
     this.bc = new BoxCollider(this, ColliderLayer.PLAYER, false);
@@ -181,6 +192,7 @@ public class Player extends GameObject {
     youDied.setFill(Color.DARKRED);
     killedBy.setFont(settings.getFont(32));
     killedBy.setFill(Color.DARKRED);
+    currentSkin = new int[4];
   }
 
   // Initialise the animation
@@ -207,8 +219,8 @@ public class Player extends GameObject {
       }
     }
 
-    if (username == null) {
-      username = "Player";
+    if (username == null || this instanceof Bot) {
+      username = RANDOM_NAMES[(new Random()).nextInt(RANDOM_NAMES.length)];
     }
   }
 
@@ -365,8 +377,8 @@ public class Player extends GameObject {
   @Override
   public void update() {
     // checks if outside the world, kills if fallen off the map
-    if (getY() > 1200) {
-      deductHp(999);
+    if (getY() > 1200 && isActive()) {
+      deductHp(999, this);
     }
     checkGrounded(); // Checks if the player is grounded
     badWeapon();
@@ -390,7 +402,14 @@ public class Player extends GameObject {
           youDied.setLayoutY(settings.getGrisPos(10));
           youDied.setLayoutX(
               (settings.getMapWidth() / 2) - (youDied.getLayoutBounds().getWidth() / 2));
-          killedBy.setText("Killed by " + "someone");
+          if(sourceOfDeath != null) {
+            killedBy.setText("Killed by " + (
+                (sourceOfDeath instanceof Player) ? ((Player) sourceOfDeath).getUsername() : sourceOfDeath.getClass().getSimpleName()
+            ));
+          } else {
+            killedBy.setText("Killed");
+          }
+
           killedBy.setLayoutY(settings.getGrisPos(13));
           killedBy.setLayoutX(
               (settings.getMapWidth() / 2) - (killedBy.getLayoutBounds().getWidth() / 2));
@@ -582,12 +601,17 @@ public class Player extends GameObject {
   public void removeRender() {
     if (imageView != null) {
       imageView.setImage(null);
-      Platform.runLater(
-          () -> {
-            root.getChildren().remove(imageView);
-          }
-      );
-    }
+      try {
+        Platform.runLater(
+            () -> {
+              root.getChildren().remove(imageView);
+            }
+        );
+      } catch (NullPointerException e) {
+
+      }
+      }
+
     children.forEach(child -> child.removeRender());
   }
 
@@ -599,12 +623,14 @@ public class Player extends GameObject {
    *
    * @param damage Amount of damage to deal to player
    */
-  public void deductHp(int damage) {
-    if (!damagedThisFrame) {
+
+  public void deductHp(int damage, GameObject source) {
+    if (!damagedThisFrame || !isActive()) {
       damagedThisFrame = true;
       this.health -= damage;
       if (this.health <= 0) {
         settings.playerDied();
+        this.sourceOfDeath = source;
         this.setActive(false);
         throwHolding();
         usePunch();
@@ -612,7 +638,7 @@ public class Player extends GameObject {
         children.forEach(child -> child.destroy());
       }
     }
-  }
+    }
 
   /**
    * On skin change update all limbs with new rendered textures
@@ -620,6 +646,7 @@ public class Player extends GameObject {
    * @param skinRender Textures of skin to apply
    */
   public void updateSkinRender(int[] skinRender) {
+    this.currentSkin = skinRender;
     children.forEach(child -> {
       if (child instanceof Arm) {
         ((Limb) child).updateSkinRender(skinRender[2]);
@@ -652,13 +679,7 @@ public class Player extends GameObject {
     usePunch();
     if (!settings.getLevelHandler().isServer()) {
       resetColorFilter();
-
-      if (settings.getOverlay().getChildren().contains(youDied)) {
-        settings.getOverlay().getChildren().remove(youDied);
-      }
-      if (settings.getOverlay().getChildren().contains(killedBy)) {
-        settings.getOverlay().getChildren().remove(killedBy);
-      }
+      clearDeathMessage();
       diedThisUpdate = true;
     }
   }
@@ -974,5 +995,22 @@ public class Player extends GameObject {
 
   public void setScore(int score) {
     this.score = score;
+  }
+
+  /**
+   * Gets the current skin equipped for the player
+   * @return
+   */
+  public int[] getCurrentSkin() {
+    return currentSkin;
+  }
+
+  public void clearDeathMessage() {
+    if (settings.getOverlay().getChildren().contains(youDied)) {
+      settings.getOverlay().getChildren().remove(youDied);
+    }
+    if (settings.getOverlay().getChildren().contains(killedBy)) {
+      settings.getOverlay().getChildren().remove(killedBy);
+    }
   }
 }

@@ -45,16 +45,16 @@ public class SwordTest {
 
   @Test
   public void testRange() {
-    assertEquals(70, ((Melee) sword).getRange(), delta);
+    assertEquals(50, ((Melee) sword).getRange(), delta);
   }
 
   @Test
   public void testBeginAngle() {
-    assertEquals(20, ((Melee) sword).getBeginAngle(), delta);
+    assertEquals(50, ((Melee) sword).getBeginAngle(), delta);
   }
 
   @Test
   public void testEndAngle() {
-    assertEquals(20, ((Melee) sword).getEndAngle(), delta);
+    assertEquals(50, (sword).getEndAngle(), delta);
   }
 }

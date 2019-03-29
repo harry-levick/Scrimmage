@@ -1,14 +1,15 @@
 package shared.handlers.levelHandler;
 
+import java.io.Serializable;
 import javafx.scene.image.Image;
 
 /**
  * Container class for the game's map file
  */
-public class Map {
+public class Map implements Serializable {
 
   private String name;
-  private Image mapIcon;
+  private transient Image mapIcon;
   private String playlist;
   private String path;
   private GameState gameState;
@@ -23,7 +24,6 @@ public class Map {
     this.name = name;
     this.playlist = "N/A";
     this.path = path;
-    this.gameState = gameState;
   }
 
   public String getName() {

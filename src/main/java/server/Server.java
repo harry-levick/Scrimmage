@@ -445,7 +445,8 @@ public class Server extends Application {
     player.initialise(gameRoot, settings, joinPacket.getLegLeftUUID(), joinPacket.getLegRightUUID(),
         joinPacket.getBodyUUID(), joinPacket.getHeadUUID(), joinPacket.getArmLeftUUID(),
         joinPacket.getArmRightUUID(), joinPacket.getHandLeftUUID(), joinPacket.getHandRightUUID());
-    levelHandler.addPlayer(player);
+    levelHandler.addPlayer(player, joinPacket.getPlayerSkin());
+    player.updateSkinRender(joinPacket.getPlayerSkin());
     playerCount.getAndIncrement();
     connected.add(address);
     server.add(player);

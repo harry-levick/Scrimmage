@@ -98,6 +98,7 @@ public class MachineGun extends Gun {
       new AudioHandler(settings, Client.musicActive).playSFX("MACHINEGUN");
       deductAmmo();
     }
+
   }
 
   @Override

@@ -390,7 +390,7 @@ public abstract class Weapon extends GameObject {
 
     if (g.getId() == ObjectType.Player) {
       Player p = (Player) g;
-      p.deductHp(30);
+      p.deductHp(30, holder);
     }
 
     this.holder = null;

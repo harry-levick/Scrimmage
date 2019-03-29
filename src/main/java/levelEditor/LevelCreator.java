@@ -1,5 +1,6 @@
 package levelEditor;
 
+import client.handlers.effectsHandler.ServerParticle;
 import client.handlers.effectsHandler.emitters.LineEmitter;
 import client.main.Settings;
 import java.io.File;
@@ -26,6 +27,7 @@ import shared.gameObjects.background.Background6;
 import shared.gameObjects.background.Background7;
 import shared.gameObjects.background.Background8;
 import shared.gameObjects.menu.LabelObject;
+import shared.gameObjects.menu.Title;
 import shared.gameObjects.menu.main.ButtonBack;
 import shared.gameObjects.menu.main.ButtonCredits;
 import shared.gameObjects.menu.main.ButtonMultiplayer;
@@ -54,6 +56,7 @@ import shared.gameObjects.score.Podium1;
 import shared.gameObjects.weapons.WeaponSpawner;
 import shared.handlers.levelHandler.GameState;
 import shared.handlers.levelHandler.MapLoader;
+import shared.handlers.levelHandler.PlaylistHandler;
 import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import shared.util.maths.Vector2;
 
@@ -113,23 +116,24 @@ public class LevelCreator extends Application {
     mapDataObject.setBackground(
         new Background1(uuid));
     uuid = UUID.randomUUID();
-    //gameObjects.put(uuid, new AchivementHandler(uuid));
+    gameObjects.put(uuid, new Title(
+        getAbs(15), getAbs(3), getAbs(19), getAbs(5), uuid));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid, new ButtonSingleplayer(
-        getAbs(20), getAbs(6), getAbs(8), getAbs(2), ObjectType.Button, uuid));
-    uuid = UUID.randomUUID();
-    gameObjects.put(uuid, new ButtonMultiplayer(
         getAbs(20), getAbs(9), getAbs(8), getAbs(2), ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
-    gameObjects.put(uuid, new ButtonSettings(
+    gameObjects.put(uuid, new ButtonMultiplayer(
         getAbs(20), getAbs(12), getAbs(8), getAbs(2), ObjectType.Button, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid, new ButtonSettings(
+        getAbs(20), getAbs(15), getAbs(8), getAbs(2), ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
         new ButtonAccount(
-            getAbs(20), getAbs(15), getAbs(8), getAbs(2), ObjectType.Button, uuid));
+            getAbs(20), getAbs(18), getAbs(8), getAbs(2), ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid, new ButtonQuit(
-        getAbs(20), getAbs(18), getAbs(8), getAbs(2), ObjectType.Button, uuid));
+        getAbs(20), getAbs(21), getAbs(8), getAbs(2), ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
 
     //ColouredBlocks todo remove form mm
@@ -189,10 +193,6 @@ public class LevelCreator extends Application {
     gameObjects.put(uuid, new JumpPad(getAbs(1), getAbs(25), uuid));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid, new JumpPad(getAbs(2), getAbs(25), uuid));
-    uuid = UUID.randomUUID();
-    gameObjects.put(uuid, new LineEmitter(new Vector2(getAbs(2), getAbs(25)), new Vector2(0, -400),
-        new Vector2(0, 42), new Vector2(12, 12), 100, 1, 8, 2,
-        "images/platforms/Debris/debrisWood_1.png"));
     uuid = UUID.randomUUID();
 
     //Middle platforms

@@ -23,7 +23,7 @@ public abstract class DestructableBlock extends GameObject implements Destructab
   }
 
   @Override
-  public void deductHp(int damage) {
+  public void deductHp(int damage, GameObject source) {
 
   }
 }

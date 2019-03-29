@@ -137,6 +137,7 @@ public class LevelHandler {
         case MULTIPLAYER:
           if (Client.levelHandler != null) {
             Client.setUserInterface();
+            Client.setUserInterface();
           }
           break;
       }
@@ -161,9 +162,7 @@ public class LevelHandler {
   public void generateLevel(Group backgroundGroup, Group gameGroup, Boolean moveToSpawns,
       Boolean isServer) {
 
-    if (!isServer) {
-      Client.overlayRoot.getChildren().clear();
-    }
+
 
     settings.resetDeaths();
     gameObjects.keySet().removeAll(players.keySet());
@@ -207,6 +206,9 @@ public class LevelHandler {
     players.forEach((key, player) -> {
       player.reset();
     });
+    if (!isServer) {
+      Client.overlayRoot.getChildren().clear();
+    }
 
     if (!isServer) {
       musicPlayer.stopMusic();
@@ -349,6 +351,11 @@ public class LevelHandler {
     }
   }
 
+  public void setPlaylist(Playlist newPlaylist) {
+    playlist = new LinkedList<>();
+    playlist.addAll(newPlaylist.getMaps());
+  }
+
   public Map pollPlayList() {
     int index = new Random().nextInt(getPlaylist().size());
     return playlist.get(index);
@@ -384,9 +391,10 @@ public class LevelHandler {
     return players;
   }
 
-  public void addPlayer(Player newPlayer) {
+  public void addPlayer(Player newPlayer, int[] skin) {
     players.put(newPlayer.getUUID(), newPlayer);
     createObject(newPlayer);
+    newPlayer.updateSkinRender(skin);
     if (isServer) {
       ConcurrentLinkedHashMap<UUID, GameObject> temp = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
           .maximumWeightedCapacity(1).build();
@@ -435,5 +443,9 @@ public class LevelHandler {
 
   public ConcurrentLinkedHashMap<UUID, GameObject> getToCreate() {
     return toCreate;
+  }
+
+  public Server getServer() {
+    return server;
   }
 }
