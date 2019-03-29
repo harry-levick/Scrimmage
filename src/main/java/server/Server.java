@@ -11,7 +11,6 @@ import java.net.ServerSocket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -26,6 +25,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -38,12 +38,12 @@ import shared.gameObjects.GameObject;
 import shared.gameObjects.MapDataObject;
 import shared.gameObjects.objects.ObjectManager;
 import shared.gameObjects.players.Player;
+import shared.gameObjects.rendering.ColourFilters;
 import shared.handlers.levelHandler.LevelHandler;
 import shared.handlers.levelHandler.Map;
 import shared.packets.PacketGameState;
 import shared.packets.PacketInput;
 import shared.packets.PacketJoin;
-import shared.packets.PacketMap;
 import shared.physics.Physics;
 import shared.util.Path;
 import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
@@ -71,12 +71,12 @@ public class Server extends Application {
   /**
    * The numbers of players that are ready to play
    */
-  public final AtomicInteger readyCount = new AtomicInteger(0);
   private final AtomicBoolean running = new AtomicBoolean(false);
+  private final AtomicBoolean ready = new AtomicBoolean(false);
   private final AtomicBoolean sendAllObjects = new AtomicBoolean(false);
   private final AtomicBoolean gameOver = new AtomicBoolean(false);
   private final AtomicInteger counter = new AtomicInteger(0);
-  private final int maxPlayers = 4;
+  private final int maxPlayers = 2;
   private final int serverUpdateRate = 3;
   private final String gameTitle = "SERVER";
   /**
@@ -90,7 +90,6 @@ public class Server extends Application {
   private ArrayList<InetAddress> connectedList = new ArrayList<>();
   private List connected = Collections.synchronizedList(connectedList);
   private String threadName;
-  private LinkedList<Map> playlist;
   private ConcurrentMap<Player, BlockingQueue<PacketInput>> inputQueue;
   private int playerLastCount = 0;
   private ServerSocket serverSocket = null;
@@ -102,6 +101,10 @@ public class Server extends Application {
   private Group root;
   private Group backgroundRoot;
   private Scene scene;
+  public static Group overlayRoot;
+  private static Group uiRoot;
+  private static Group overlayBackground;
+  private static Group lightingRoot;
 
   public static void main(String args[]) {
     launch(args);
@@ -111,35 +114,18 @@ public class Server extends Application {
     return levelHandler;
   }
 
-  public static Group getGameRoot() {
-    return gameRoot;
-  }
-
   /**
-   * Initializes the Server
+   * The end of the game, resets game back to main menu
    */
-  public void init() {
-    server = this;
-    executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-    threadName = "Server";
-    settings = new Settings(levelHandler, gameRoot);
-    running.set(true);
-    settings.setLevelHandler(levelHandler);
-    playlist = new LinkedList();
-    inputQueue = new ConcurrentHashMap<>();
-    try {
-      this.serverSocket = new ServerSocket(4445);
-      this.socket = new DatagramSocket();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    serverState = ServerState.WAITING_FOR_PLAYERS;
-
-    // Testing code
-    playlist.add(
-        new Map("Map1", Path.convert("src/main/resources/maps/menu.map")));
-    playlist.add(
-        new Map("Map2", Path.convert("src/main/resources/maps/map2.map")));
+  public static void endGame() {
+    // remove desaturation
+    ColourFilters filter = new ColourFilters();
+    filter.setDesaturate(0);
+    filter.applyFilter(gameRoot, "desaturation");
+    //Show Scores
+    levelHandler.changeMap(
+        new Map("menus/score.map", Path.convert("src/main/resources/menus/score.map")),
+        true, true);
   }
 
   /**
@@ -213,22 +199,6 @@ public class Server extends Application {
     ObjectManager.update();
   }
 
-  private void startMatch() {
-    if (serverState == ServerState.WAITING_FOR_READYUP) {
-      // Add bots
-    }
-    serverState = ServerState.IN_GAME;
-    nextMap();
-  }
-
-  private void nextMap() {
-    Map nextMap = playlist.pop();
-    levelHandler.changeMap(nextMap, true, true);
-    // TODO Change to actual UUID
-    PacketMap mapPacket = new PacketMap(nextMap.getName(), UUID.randomUUID());
-    sendToClients(mapPacket.getData(), false);
-  }
-
   /**
    * Adds new player to input list
    *
@@ -273,22 +243,25 @@ public class Server extends Application {
     }
   }
 
-  private void checkConditions() {
-    if (gameOver.get()) {
-
-    } else {
-      int dead = 0;
-      for (UUID key : levelHandler.getPlayers().keySet()) {
-        Player player = levelHandler.getPlayers().get(key);
-        if (player.getHealth() <= 0) {
-          dead++;
-        }
-      }
-      if (playerCount.get() > 0 && dead == playerCount.get() || dead == (playerCount.get() - 1)) {
-        nextMap();
-      }
+  /**
+   * Initializes the Server
+   */
+  public void init() {
+    server = this;
+    executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    threadName = "Server";
+    settings = new Settings(levelHandler, gameRoot);
+    running.set(true);
+    startedGame = false;
+    settings.setLevelHandler(levelHandler);
+    inputQueue = new ConcurrentHashMap<>();
+    try {
+      this.serverSocket = new ServerSocket(4445);
+      this.socket = new DatagramSocket();
+    } catch (IOException e) {
+      e.printStackTrace();
     }
-
+    serverState = ServerState.WAITING_FOR_PLAYERS;
   }
 
   private void scaleRendering(Stage primaryStage) {
@@ -298,18 +271,38 @@ public class Server extends Application {
     primaryStage.getScene().getRoot().getTransforms().setAll(scale);
   }
 
+  private void checkConditions() {
+    ArrayList<Player> alive = new ArrayList<>();
+      for (UUID key : levelHandler.getPlayers().keySet()) {
+        Player p = levelHandler.getPlayers().get(key);
+        if (p.isActive()) {
+          alive.add(p);
+        }
+        if (alive.size() > 1) {
+          break;
+        }
+      }
+    if (alive.size() == 1 && serverState == ServerState.IN_GAME) {
+      alive.forEach(player -> player.increaseScore());
+      Map nextMap = levelHandler.pollPlayList();
+      levelHandler.changeMap(nextMap, true, true);
+    } else if (alive.size() == 1 && serverState == ServerState.WAITING_FOR_READYUP) {
+      ready.set(true);
+    }
+  }
+
   /**
    * Begin the timer
    */
-  private void beginTimer() {
+  private void startMatch() {
     if (!startedGame) {
+      serverState = ServerState.IN_GAME;
       timeRemaining = timeLimit * 60;
-
       Timer secondsTimer = new Timer();
       secondsTimer.scheduleAtFixedRate(new TimerTask() {
         @Override
         public void run() {
-          LOGGER.debug(String
+          System.out.println(String
               .format("%d:%d", timeRemaining / 60, timeRemaining - ((timeRemaining / 60) * 60)));
           timeRemaining -= 1;
         }
@@ -319,17 +312,24 @@ public class Server extends Application {
       timer.schedule(new TimerTask() {
         @Override
         public void run() {
-          gameOver.set(true);
-          secondsTimer.cancel();
+          Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+              endGame();
+              gameOver.set(true);
+              secondsTimer.cancel();
+            }
+          });
         }
       }, delay);
 
       startedGame = true;
+      serverState = ServerState.IN_GAME;
     }
   }
 
   @Override
-  public void start(Stage primaryStage) throws Exception {
+  public void start(Stage primaryStage) {
     setupRender(primaryStage);
     levelHandler = new LevelHandler(settings, backgroundRoot, gameRoot, this);
     settings.setLevelHandler(levelHandler);
@@ -344,27 +344,30 @@ public class Server extends Application {
 
       @Override
       public void handle(long now) {
+        counter.getAndIncrement();
         if (!running.get()) {
           this.stop();
         }
 
-        if (playerLastCount < playerCount.get() && server.playerCount.get() < 5) {
+        //Allow player to join
+        if (playerLastCount < playerCount.get() && server.playerCount.get() < 5
+            && serverState == ServerState.WAITING_FOR_PLAYERS) {
           playerLastCount++;
           executor.execute(new ServerReceiver(server, serverSocket, connected));
         }
 
-        counter.getAndIncrement();
-        if (playerCount.get() == maxPlayers) {
+        //All players have joined
+        if (playerCount.get() == maxPlayers && (serverState != ServerState.IN_GAME
+            || serverState != ServerState.WAITING_FOR_READYUP)) {
           serverState = ServerState.WAITING_FOR_READYUP;
         }
-        if (playerCount.get() > 1 && readyCount.get() == playerCount.get()) {
+        //Start game
+        if (playerCount.get() > 1 && ready.get()) {
           startMatch();
-          beginTimer();
         }
 
-        if (serverState == ServerState.IN_GAME) {
-          checkConditions();
-        }
+        /** Check Conditions */
+        checkConditions();
 
         /** Process Update */
         updateSimulation();
@@ -454,19 +457,36 @@ public class Server extends Application {
     return player;
   }
 
+  /**
+   * Initialises the rendering stage of the game setup
+   *
+   * @param primaryStage The JavaFX stage the game elements are to be placed into
+   */
   private void setupRender(Stage primaryStage) {
     root = new Group();
     backgroundRoot = new Group();
     gameRoot = new Group();
+    lightingRoot = new Group();
+    uiRoot = new Group();
+    overlayRoot = new Group();
+    overlayBackground = new Group();
+
+    root.setStyle("-fx-font-family: Kenney Future");
 
     root.getChildren().add(backgroundRoot);
     root.getChildren().add(gameRoot);
+    root.getChildren().add(lightingRoot);
+    root.getChildren().add(uiRoot);
+    root.getChildren().add(overlayBackground);
+    root.getChildren().add(overlayRoot);
+    settings.setOverlay(overlayRoot);
 
     primaryStage.setTitle(gameTitle);
     primaryStage.getIcons().add(new Image(Path.convert("images/logo.png")));
 
-    scene = new Scene(root, 1920, 1080);
+    scene = new Scene(root, settings.getWindowWidth(), settings.getWindowHeight());
     scene.setCursor(Cursor.CROSSHAIR);
+    scene.getStylesheets().add("style.css");
 
     primaryStage.setScene(scene);
     primaryStage.setFullScreen(false);

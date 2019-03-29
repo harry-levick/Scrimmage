@@ -94,7 +94,7 @@ public class Client extends Application {
   public static boolean sendUpdate;
 
   /**
-   * Game timer //todo NO USES?
+   * Game timer
    */
   public static Timer timer = new Timer("Timer", true);
 
@@ -122,10 +122,11 @@ public class Client extends Application {
   private static Group uiRoot;
   public static Group overlayRoot;
   private static Group overlayBackground;
+  private static Group lightingRoot;
+  private Group root;
   private Scene scene;
   private float elapsedSinceFPS = 0f;
   private int framesElapsedSinceFPS = 0;
-  private static Group lightingRoot;
   private static UI userInterface;
   private static boolean credits = false;
   private static int creditStartDelay = 100;
@@ -135,9 +136,8 @@ public class Client extends Application {
   private final String gameTitle = "Alone in the Dark";
   private final float timeStep = 0.0166f;
   private MouseInput mouseInput;
-  private Group root;
   private boolean startedGame;
-  private int timeRemaining;
+  private static int timeRemaining;
   private int timeLimit = 1; // Time limit in minutes
   private float maximumStep;
   private long previousTime;
@@ -155,7 +155,7 @@ public class Client extends Application {
    * Sets a new user interface in the uiRoot, rendered by the main game loop depending on use
    */
   public static void setUserInterface() {
-    userInterface = new UI(uiRoot, levelHandler.getClientPlayer(),settings);
+    userInterface = new UI(uiRoot, levelHandler.getClientPlayer(),settings, timeRemaining);
   }
 
   /**
