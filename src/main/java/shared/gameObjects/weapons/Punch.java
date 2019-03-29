@@ -101,7 +101,7 @@ public class Punch extends Melee {
       for (Collision c : collisionSet) {
         GameObject g = c.getCollidedObject();
         if (g instanceof Destructable && !isHolder(g)) {
-          ((Destructable) g).deductHp(this.damage, holderg);
+          ((Destructable) g).deductHp(this.damage, holder);
           new AudioHandler(settings, Client.musicActive).playSFX("PUNCH");
         }
       }
