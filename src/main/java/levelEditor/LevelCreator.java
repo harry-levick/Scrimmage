@@ -4,6 +4,7 @@ import client.handlers.effectsHandler.emitters.LineEmitter;
 import client.main.Settings;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.UUID;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -296,10 +297,26 @@ public class LevelCreator extends Application {
     //mapDataObject.setSpawnPoints(spawnPoints);
     // manual set instead
     // player spawns
-    mapDataObject.addSpawnPoint(getAbs(2), getAbs(22));
-    mapDataObject.addSpawnPoint(getAbs(15), getAbs(3));
-    mapDataObject.addSpawnPoint(getAbs(29), getAbs(22));
-    mapDataObject.addSpawnPoint(getAbs(32), getAbs(2));
+
+    ArrayList<Vector2> singleplayerSpawns = new ArrayList<>();
+    singleplayerSpawns.add(new Vector2(getAbs(2),getAbs(14)));
+    singleplayerSpawns.add(new Vector2(getAbs(2),getAbs(23)));
+    singleplayerSpawns.add(new Vector2(getAbs(6),getAbs(14)));
+    singleplayerSpawns.add(new Vector2(getAbs(11),getAbs(23)));
+    singleplayerSpawns.add(new Vector2(getAbs(14),getAbs(13)));
+    singleplayerSpawns.add(new Vector2(getAbs(15),getAbs(3)));
+    singleplayerSpawns.add(new Vector2(getAbs(23),getAbs(9)));
+    singleplayerSpawns.add(new Vector2(getAbs(24),getAbs(23)));
+    singleplayerSpawns.add(new Vector2(getAbs(29),getAbs(32)));
+    singleplayerSpawns.add(new Vector2(getAbs(30),getAbs(2)));
+    singleplayerSpawns.add(new Vector2(getAbs(33),getAbs(14)));
+    singleplayerSpawns.add(new Vector2(getAbs(34),getAbs(2)));
+    singleplayerSpawns.add(new Vector2(getAbs(37),getAbs(9)));
+    singleplayerSpawns.add(new Vector2(getAbs(37),getAbs(23)));
+    singleplayerSpawns.add(new Vector2(getAbs(41),getAbs(14)));
+    singleplayerSpawns.add(new Vector2(getAbs(44),getAbs(23)));
+
+    mapDataObject.setSpawnPoints(singleplayerSpawns);
 
     mapDataObject.setBackground(
         new Background1(UUID.randomUUID()));
@@ -369,18 +386,11 @@ public class LevelCreator extends Application {
     uuid = UUID.randomUUID();
 
     // weapon spawn points
-    gameObjects.put(uuid,
-        new WeaponSpawner(getAbs(2), getAbs(20), 40, 40, uuid));
-    uuid = UUID.randomUUID();
-    gameObjects.put(uuid,
-        new WeaponSpawner(getAbs(15), getAbs(1), 40, 40, uuid));
-    uuid = UUID.randomUUID();
-    gameObjects.put(uuid,
-        new WeaponSpawner(getAbs(29), getAbs(20), 40, 40, uuid));
-    uuid = UUID.randomUUID();
-    gameObjects.put(uuid,
-        new WeaponSpawner(getAbs(32), getAbs(0), 40, 40, uuid));
-    uuid = UUID.randomUUID();
+    for (Vector2 spawnVector : singleplayerSpawns) {
+      gameObjects.put(uuid,
+          new WeaponSpawner(spawnVector.getX(), spawnVector.getY() - getAbs(2), getAbs(1),getAbs(1), uuid));
+      uuid = UUID.randomUUID();
+    }
 
     //wood block pyramid
     gameObjects.put(uuid,
@@ -500,26 +510,34 @@ public class LevelCreator extends Application {
             getAbs(42), getAbs(18), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
     uuid = UUID.randomUUID();
 
-
-
+    Collections.shuffle(singleplayerSpawns);
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map1" + ".map");
     mapDataObject.setBackground(new Background2(UUID.randomUUID()));
+    Collections.shuffle(singleplayerSpawns);
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map2" + ".map");
     mapDataObject.setBackground(new Background3(UUID.randomUUID()));
+    Collections.shuffle(singleplayerSpawns);
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map3" + ".map");
     mapDataObject.setBackground(new Background4(UUID.randomUUID()));
+    Collections.shuffle(singleplayerSpawns);
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map4" + ".map");
     mapDataObject.setBackground(new Background5(UUID.randomUUID()));
+    Collections.shuffle(singleplayerSpawns);
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map5" + ".map");
     mapDataObject.setBackground(new Background6(UUID.randomUUID()));
+    Collections.shuffle(singleplayerSpawns);
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map6" + ".map");
     mapDataObject.setBackground(new Background7(UUID.randomUUID()));
+    Collections.shuffle(singleplayerSpawns);
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map7" + ".map");
     mapDataObject.setBackground(new Background8(UUID.randomUUID()));
+    Collections.shuffle(singleplayerSpawns);
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map8" + ".map");
     mapDataObject.setBackground(new Background1(UUID.randomUUID()));
+    Collections.shuffle(singleplayerSpawns);
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map9" + ".map");
     mapDataObject.setBackground(new Background2(UUID.randomUUID()));
+    Collections.shuffle(singleplayerSpawns);
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map10" + ".map");
 
     ////////////////////////////////////////
