@@ -45,12 +45,12 @@ public class PlayerPointer {
     playerY = player.getY();
     
     if(playerX + playerW <0) {
-      active = "left"; 
+      active = "right"; 
       activeX = 0;
       activeY = playerY + (playerH /2) - (leftImage.getImage().getHeight()/2);
     }
     else if(playerX > 1920) {
-      active = "right"; 
+      active = "left"; 
       activeX = 1920 - rightImage.getImage().getWidth();
       activeY = playerY + (playerH / 2) - (leftImage.getImage().getHeight()/2);
     }
