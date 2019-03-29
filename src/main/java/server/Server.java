@@ -357,7 +357,8 @@ public class Server extends Application {
         }
 
         //All players have joined
-        if (playerCount.get() == maxPlayers && serverState != ServerState.IN_GAME) {
+        if (playerCount.get() == maxPlayers && (serverState != ServerState.IN_GAME
+            || serverState != ServerState.WAITING_FOR_READYUP)) {
           serverState = ServerState.WAITING_FOR_READYUP;
         }
         //Start game
