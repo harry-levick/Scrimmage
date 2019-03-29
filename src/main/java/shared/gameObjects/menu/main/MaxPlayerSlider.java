@@ -43,17 +43,16 @@ public class MaxPlayerSlider extends SliderObject {
   @Override
   public void initialiseAnimation() {
     super.initialiseAnimation();
-    slider.setValue(settings.getMaxPlayers());
+    update();
   }
 
   public void onValueChange() {
     this.settings.setMaxPlayers((int)slider.getValue());
-    this.settings.getLevelHandler().getMusicAudioHandler().updateMusicVolume();
   }
 
   @Override
   public void update() {
-    onValueChange();
+    slider.setValue(settings.getMaxPlayers());
   }
 
 }
