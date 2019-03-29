@@ -279,6 +279,7 @@ public class Server extends Application {
     if (alive.size() <= 1 && serverState == ServerState.IN_GAME) {
       alive.forEach(player -> player.increaseScore());
       Map nextMap = levelHandler.pollPlayList();
+      levelHandler.getPlayers().forEach((uuid, player) -> player.reset());
       PacketMap map = new PacketMap(nextMap.getPath(), true);
       sendToClients(map.getData(), false);
       new java.util.Timer().schedule(
@@ -298,6 +299,7 @@ public class Server extends Application {
     } else if (alive.size() == 1 && serverState == ServerState.WAITING_FOR_READYUP) {
       ready.set(true);
     }
+    alive.clear();
   }
 
   /**
@@ -415,23 +417,21 @@ public class Server extends Application {
       ArrayList list = new ArrayList();
       for (java.util.Map.Entry<UUID, GameObject> entry : gameobjects.entrySet()) {
         list.add(entry.getValue());
-        if (i >= 2) {
           byteArrayOutputStream = new ByteArrayOutputStream();
           ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
           objectOutputStream.writeObject(list);
           objectOutputStream.flush();
           sendToClients(byteArrayOutputStream.toByteArray(), true);
           list.clear();
-          i = 0;
-        }
-        i++;
       }
-      byteArrayOutputStream = new ByteArrayOutputStream();
-      ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
-      objectOutputStream.writeObject(list);
-      objectOutputStream.flush();
-      sendToClients(byteArrayOutputStream.toByteArray(), true);
-      list.clear();
+      /**
+       byteArrayOutputStream = new ByteArrayOutputStream();
+       ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+       objectOutputStream.writeObject(list);
+       objectOutputStream.flush();
+       sendToClients(byteArrayOutputStream.toByteArray(), true);
+       list.clear();
+       **/
 
     } catch (IOException e) {
       LOGGER.error("Unable to send new objects to clients ");

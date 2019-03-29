@@ -170,6 +170,8 @@ public class ClientNetworkManager {
         }
       } catch (InterruptedException e) {
         e.printStackTrace();
+      } catch (NumberFormatException e) {
+
       }
     }
   }
