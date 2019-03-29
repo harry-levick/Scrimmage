@@ -27,7 +27,6 @@ public class PlayerPointer {
   private double playerY = 0;
   
   public PlayerPointer(Group root,Player player) {
-    System.out.println("player::"+player);
     this.player = player;
     imageView = new ImageView();
     playerW = player.getTransform().getSize().getX();
@@ -45,18 +44,18 @@ public class PlayerPointer {
     playerY = player.getY();
     
     if(playerX + playerW <0) {
-      active = "left"; 
+      active = "right"; 
       activeX = 0;
       activeY = playerY + (playerH /2) - (leftImage.getImage().getHeight()/2);
     }
     else if(playerX > 1920) {
-      active = "right"; 
+      active = "left"; 
       activeX = 1920 - rightImage.getImage().getWidth();
       activeY = playerY + (playerH / 2) - (leftImage.getImage().getHeight()/2);
     }
     else if(playerY + playerH < 0) {
       active = "up";
-      activeX = playerX;
+      activeX = playerX + (playerW /2) - (upImage.getImage().getWidth()/2);
       activeY = 0;
     }
   }
