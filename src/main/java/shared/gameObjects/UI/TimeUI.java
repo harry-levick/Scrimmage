@@ -17,7 +17,7 @@ import shared.gameObjects.players.Player;
 public class TimeUI {
 
   private static final int xPos = 1920 / 2; //Center it on the screen.
-  private static final int yPos = 25;
+  private static final int yPos = 75;
   private Animator board;
   private Player player;
   //private ImageView boardImageView;
@@ -33,7 +33,7 @@ public class TimeUI {
     player = clientPlayer;
     timeRemaining = timeRemaining;
     timerText = new Text(xPos, yPos, "");
-    timerText.setFont(settings.getFont(42));
+    timerText.setFont(settings.getFont(90));
     root.getChildren().addAll(this.timerText);
   }
 
