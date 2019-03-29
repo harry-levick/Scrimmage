@@ -71,7 +71,7 @@ public class Server extends Application {
   /**
    * The numbers of players that are ready to play
    */
-  private final AtomicBoolean running = new AtomicBoolean(false);
+  private static final AtomicBoolean running = new AtomicBoolean(false);
   private final AtomicBoolean ready = new AtomicBoolean(false);
   private final AtomicBoolean sendAllObjects = new AtomicBoolean(false);
   private final AtomicBoolean gameOver = new AtomicBoolean(false);
@@ -126,13 +126,6 @@ public class Server extends Application {
     levelHandler.changeMap(
         new Map("menus/score.map", Path.convert("src/main/resources/menus/score.map")),
         true, true);
-  }
-
-  /**
-   * Stops the server
-   */
-  public void stop() {
-    running.set(false);
   }
 
   /**
@@ -328,6 +321,10 @@ public class Server extends Application {
     }
   }
 
+  public static void killServer() {
+    running.set(false);
+  }
+
   @Override
   public void start(Stage primaryStage) {
     setupRender(primaryStage);
@@ -346,7 +343,8 @@ public class Server extends Application {
       public void handle(long now) {
         counter.getAndIncrement();
         if (!running.get()) {
-          this.stop();
+          executor.shutdownNow();
+          System.exit(0);
         }
 
         //Allow player to join
@@ -401,7 +399,7 @@ public class Server extends Application {
       ArrayList list = new ArrayList();
       for (java.util.Map.Entry<UUID, GameObject> entry : gameobjects.entrySet()) {
         list.add(entry.getValue());
-        if (i >= 25) {
+        if (i >= 18) {
           byteArrayOutputStream = new ByteArrayOutputStream();
           ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
           objectOutputStream.writeObject(list);
@@ -451,8 +449,6 @@ public class Server extends Application {
     playerCount.getAndIncrement();
     connected.add(address);
     server.add(player);
-    server.sendObjects(levelHandler.getGameObjects());
-    //Redundancy
     server.sendObjects(levelHandler.getGameObjects());
     return player;
   }

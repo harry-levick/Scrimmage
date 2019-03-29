@@ -10,7 +10,6 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.stage.Stage;
-import shared.gameObjects.Blocks.Metal.MetalBlockLargeObject;
 import shared.gameObjects.Blocks.Stone.StoneFloorObject;
 import shared.gameObjects.Blocks.Stone.StoneWallObject;
 import shared.gameObjects.Blocks.Wood.WoodBlockLargeObject;
@@ -26,7 +25,6 @@ import shared.gameObjects.background.Background5;
 import shared.gameObjects.background.Background6;
 import shared.gameObjects.background.Background7;
 import shared.gameObjects.background.Background8;
-import shared.gameObjects.components.behaviours.blockBehaviours.Crushing;
 import shared.gameObjects.menu.LabelObject;
 import shared.gameObjects.menu.main.ButtonBack;
 import shared.gameObjects.menu.main.ButtonCredits;
@@ -338,22 +336,22 @@ public class LevelCreator extends Application {
     // player spawns
 
     ArrayList<Vector2> singleplayerSpawns = new ArrayList<>();
-    singleplayerSpawns.add(new Vector2(getAbs(2),getAbs(14)));
-    singleplayerSpawns.add(new Vector2(getAbs(2),getAbs(23)));
-    singleplayerSpawns.add(new Vector2(getAbs(6),getAbs(14)));
-    singleplayerSpawns.add(new Vector2(getAbs(11),getAbs(23)));
-    singleplayerSpawns.add(new Vector2(getAbs(14),getAbs(13)));
-    singleplayerSpawns.add(new Vector2(getAbs(15),getAbs(3)));
-    singleplayerSpawns.add(new Vector2(getAbs(23),getAbs(9)));
-    singleplayerSpawns.add(new Vector2(getAbs(24),getAbs(23)));
-    singleplayerSpawns.add(new Vector2(getAbs(29),getAbs(32)));
-    singleplayerSpawns.add(new Vector2(getAbs(30),getAbs(2)));
-    singleplayerSpawns.add(new Vector2(getAbs(33),getAbs(14)));
-    singleplayerSpawns.add(new Vector2(getAbs(34),getAbs(2)));
-    singleplayerSpawns.add(new Vector2(getAbs(37),getAbs(9)));
-    singleplayerSpawns.add(new Vector2(getAbs(37),getAbs(23)));
-    singleplayerSpawns.add(new Vector2(getAbs(41),getAbs(14)));
-    singleplayerSpawns.add(new Vector2(getAbs(44),getAbs(23)));
+    singleplayerSpawns.add(new Vector2(getAbs(2), getAbs(14)));
+    singleplayerSpawns.add(new Vector2(getAbs(2), getAbs(23)));
+    singleplayerSpawns.add(new Vector2(getAbs(6), getAbs(14)));
+    singleplayerSpawns.add(new Vector2(getAbs(11), getAbs(23)));
+    singleplayerSpawns.add(new Vector2(getAbs(14), getAbs(13)));
+    singleplayerSpawns.add(new Vector2(getAbs(15), getAbs(3)));
+    singleplayerSpawns.add(new Vector2(getAbs(23), getAbs(9)));
+    singleplayerSpawns.add(new Vector2(getAbs(24), getAbs(23)));
+    singleplayerSpawns.add(new Vector2(getAbs(29), getAbs(32)));
+    singleplayerSpawns.add(new Vector2(getAbs(30), getAbs(2)));
+    singleplayerSpawns.add(new Vector2(getAbs(33), getAbs(14)));
+    singleplayerSpawns.add(new Vector2(getAbs(34), getAbs(2)));
+    singleplayerSpawns.add(new Vector2(getAbs(37), getAbs(9)));
+    singleplayerSpawns.add(new Vector2(getAbs(37), getAbs(23)));
+    singleplayerSpawns.add(new Vector2(getAbs(41), getAbs(14)));
+    singleplayerSpawns.add(new Vector2(getAbs(44), getAbs(23)));
 
     mapDataObject.setSpawnPoints(singleplayerSpawns);
 
@@ -427,7 +425,8 @@ public class LevelCreator extends Application {
     // weapon spawn points
     for (Vector2 spawnVector : singleplayerSpawns) {
       gameObjects.put(uuid,
-          new WeaponSpawner(spawnVector.getX(), spawnVector.getY() - getAbs(2), getAbs(1),getAbs(1), uuid));
+          new WeaponSpawner(spawnVector.getX(), spawnVector.getY() - getAbs(2), getAbs(1),
+              getAbs(1), uuid));
       uuid = UUID.randomUUID();
     }
 
@@ -654,15 +653,6 @@ public class LevelCreator extends Application {
               getAbs(i * 4), getAbs(0), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
       uuid = UUID.randomUUID();
     }
-    /**
-     for (int i = 0; i < 10; i++) {
-     // top row wall
-     gameObjects.put(uuid,
-     new StoneBlockObject(
-     getAbs(i * 4 + 2), getAbs(20), getAbs(2), getAbs(2), ObjectType.Bot, uuid));
-     uuid = UUID.randomUUID();
-     }
-     **/
     for (int i = 0; i < 5; i++) {
       // side col walls
       gameObjects.put(uuid,
@@ -697,11 +687,7 @@ public class LevelCreator extends Application {
         new WeaponSpawner(200, 350, 40, 40, uuid));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
-        new ButtonReady(getAbs(10), getAbs(10), getAbs(8), getAbs(2), ObjectType.Button, uuid));
-    uuid = UUID.randomUUID();
-    gameObjects.put(uuid,
-        new MetalBlockLargeObject(getAbs(10), getAbs(5), getAbs(2), getAbs(2), ObjectType.Bot,
-            uuid));
+        new ButtonReady(getAbs(14), getAbs(3), getAbs(18), getAbs(2), ObjectType.Button, uuid));
 
     MapLoader.saveMap(gameObjects, mapDataObject, filepath + filename + ".map");
 
@@ -776,8 +762,9 @@ public class LevelCreator extends Application {
     uuid = UUID.randomUUID();
 
     //sliders
-    gameObjects.put(uuid, new LabelObject(getAbs(12), getAbs(5), "Game Settings:", ObjectType.Button,
-        uuid)); //todo Button type?
+    gameObjects
+        .put(uuid, new LabelObject(getAbs(12), getAbs(5), "Game Settings:", ObjectType.Button,
+            uuid)); //todo Button type?
     uuid = UUID.randomUUID();
     gameObjects
         .put(uuid, new SoundSlider(getAbs(12), getAbs(7), getAbs(8), getAbs(1), SOUND_TYPE.MUSIC,
@@ -787,7 +774,8 @@ public class LevelCreator extends Application {
         .put(uuid, new SoundSlider(getAbs(12), getAbs(11), getAbs(8), getAbs(1), SOUND_TYPE.SFX,
             "Sound Effects", ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
-    gameObjects.put(uuid, new MaxPlayerSlider(getAbs(12), getAbs(15), getAbs(8), getAbs(1), ObjectType.Button, uuid));
+    gameObjects.put(uuid,
+        new MaxPlayerSlider(getAbs(12), getAbs(15), getAbs(8), getAbs(1), ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
 
     // input controls

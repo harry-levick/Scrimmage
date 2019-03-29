@@ -43,15 +43,7 @@ public class SoundSlider extends SliderObject {
   @Override
   public void initialiseAnimation() {
     super.initialiseAnimation();
-    if (this.soundType != null) {
-      switch (this.soundType) {
-        case MUSIC:
-          slider.setValue(Client.settings.getMusicVolume() * 100f);
-          break;
-        case SFX:
-          slider.setValue(Client.settings.getSoundEffectVolume() * 100f);
-      }
-    }
+    update();
   }
 
   public void onValueChange() {
@@ -67,8 +59,16 @@ public class SoundSlider extends SliderObject {
   }
 
   @Override
-  public void update() {
-    onValueChange();
+  public void update(){
+    if (this.soundType != null) {
+      switch (this.soundType) {
+        case MUSIC:
+          slider.setValue(Client.settings.getMusicVolume() * 100f);
+          break;
+        case SFX:
+          slider.setValue(Client.settings.getSoundEffectVolume() * 100f);
+      }
+    }
   }
 
   public enum SOUND_TYPE {

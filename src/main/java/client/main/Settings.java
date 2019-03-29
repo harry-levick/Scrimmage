@@ -54,7 +54,7 @@ public class Settings {
     soundEffectVolume = 0.75;
     mapWidth = 1920;
     mapHeight = 1080;
-    maxPlayers = 16;
+    maxPlayers = 6;
     defaultFontSize = 20;
     gridSize = 40;
     playersDead = 0;
@@ -239,6 +239,7 @@ public class Settings {
 
   /**
    * Sets max number of players in a map
+   *
    * @param max number of players
    */
   public void setMaxPlayers(int max) {
