@@ -143,6 +143,7 @@ public class ClientNetworkManager {
                 if (gameObject == null) {
                   PacketReSend reSend = new PacketReSend(key);
                   Client.connectionHandler.send(reSend.getString());
+                  System.out.println(key);
                 } else {
                   if (!entity_interpolation || gameObject.getUUID() == Client.levelHandler
                       .getClientPlayer().getUUID()) {
@@ -185,14 +186,13 @@ public class ClientNetworkManager {
       gameObjects.forEach(
           gameObject -> Client.levelHandler.getToCreate().put(gameObject.getUUID(), gameObject));
     } catch (IOException e) {
-      e.printStackTrace();
     } catch (ClassNotFoundException e) {
-      e.printStackTrace();
     } finally {
       try {
-        objectInputStream.close();
+        if (objectInputStream != null) {
+          objectInputStream.close();
+        }
       } catch (Exception e) {
-        e.printStackTrace();
       }
     }
   }
