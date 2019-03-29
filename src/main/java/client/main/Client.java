@@ -535,7 +535,7 @@ public class Client extends Application {
               break;
             }
           }
-          if (alive.size() == 1) {
+          if (alive.size() <= 1) {
             alive.forEach(player -> player.increaseScore());
             Map nextMap = levelHandler.pollPlayList();
             levelHandler.changeMap(nextMap, true, false);
