@@ -1,6 +1,7 @@
 package shared.gameObjects.score;
 
 import client.handlers.effectsHandler.emitters.LineEmitter;
+import client.main.Client;
 import client.main.Settings;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,6 +10,7 @@ import java.util.UUID;
 import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.text.Text;
+import server.Server;
 import server.ai.Bot;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
@@ -148,11 +150,13 @@ public class Podium1 extends GameObject {
                       new Map("menus/main_menu.map",
                           Path.convert("src/main/resources/menus/lobby.map")),
                       true, true);
+                  Server.killServer();
                 } else {
-                  settings.getLevelHandler().changeMap(
-                      new Map("menus/main_menu.map",
-                          Path.convert("src/main/resources/menus/main_menu.map")),
-                      true, false);
+                  if (!Client.multiplayer)
+                    settings.getLevelHandler().changeMap(
+                        new Map("menus/main_menu.map",
+                            Path.convert("src/main/resources/menus/main_menu.map")),
+                        true, false);
                 }
               }
             });
