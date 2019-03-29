@@ -430,8 +430,7 @@ public class Player extends GameObject {
     return objectUUID + ";" + id + ";" + getX() + ";" + getY() + ";" + animation.getName() + ";"
         + health + ";"
         + lastInputCount + ";"
-        + throwHoldingKey + ";"
-        + behaviour.name();
+        + throwHoldingKey;
   }
 
   @Override
@@ -442,7 +441,6 @@ public class Player extends GameObject {
     this.health = Integer.parseInt(unpackedData[5]);
     this.lastInputCount = Integer.parseInt(unpackedData[6]);
     this.throwHoldingKey = Boolean.parseBoolean(unpackedData[7]);
-    this.behaviour = Behaviour.valueOf(unpackedData[8]);
   }
 
   /**
