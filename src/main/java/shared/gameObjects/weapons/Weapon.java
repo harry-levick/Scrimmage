@@ -100,7 +100,10 @@ public abstract class Weapon extends GameObject {
   protected double playerRadius = 55 + 45; // Player.sizeY / 2 + bias
 
   /**
-   * Angle of aiming in radian measured about x axis | +  |  - ----------- -  |  + |
+   * Angle of aiming in radian measured about x axis
+   * | +  |  - |
+   * -----------
+   * | -  |  + |
    */
   protected double angleRadian;
   /**
