@@ -119,7 +119,6 @@ public abstract class GameObject implements Serializable {
     this.collidedObjects = new ArrayList<>();
     this.collidedThisFrame = new ArrayList<>();
     this.collidedToRemove = new ArrayList<>();
-    initialiseAnimation();
   }
 
   // Initialise the animation
