@@ -414,8 +414,8 @@ public class Client extends Application {
       secondsTimer.scheduleAtFixedRate(new TimerTask() {
         @Override
         public void run() {
-          System.out.println(String
-              .format("%d:%d", timeRemaining / 60, timeRemaining - ((timeRemaining / 60) * 60)));
+          //System.out.println(String
+              //.format("%d:%d", timeRemaining / 60, timeRemaining - ((timeRemaining / 60) * 60)));
           timeRemaining -= 1;
         }
       }, 0, 1000);
