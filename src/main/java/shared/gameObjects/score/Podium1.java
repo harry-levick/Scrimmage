@@ -147,7 +147,7 @@ public class Podium1 extends GameObject {
                   settings.getLevelHandler().changeMap(
                       new Map("menus/main_menu.map",
                           Path.convert("src/main/resources/menus/lobby.map")),
-                      true, false);
+                      true, true);
                 } else {
                   settings.getLevelHandler().changeMap(
                       new Map("menus/main_menu.map",

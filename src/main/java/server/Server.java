@@ -25,6 +25,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -70,8 +71,8 @@ public class Server extends Application {
   /**
    * The numbers of players that are ready to play
    */
-  public final AtomicInteger readyCount = new AtomicInteger(0);
   private final AtomicBoolean running = new AtomicBoolean(false);
+  private final AtomicBoolean ready = new AtomicBoolean(false);
   private final AtomicBoolean sendAllObjects = new AtomicBoolean(false);
   private final AtomicBoolean gameOver = new AtomicBoolean(false);
   private final AtomicInteger counter = new AtomicInteger(0);
@@ -124,7 +125,7 @@ public class Server extends Application {
     //Show Scores
     levelHandler.changeMap(
         new Map("menus/score.map", Path.convert("src/main/resources/menus/score.map")),
-        true, false);
+        true, true);
   }
 
   /**
@@ -284,11 +285,10 @@ public class Server extends Application {
     if (alive.size() == 1 && serverState == ServerState.IN_GAME) {
       alive.forEach(player -> player.increaseScore());
       Map nextMap = levelHandler.pollPlayList();
-      levelHandler.changeMap(nextMap, true, false);
-    } else if (alive.size() == 1 && (serverState == ServerState.WAITING_FOR_PLAYERS
-        || serverState == ServerState.WAITING_FOR_READYUP)) {
-      readyCount.getAndIncrement();
-      }
+      levelHandler.changeMap(nextMap, true, true);
+    } else if (alive.size() == 1 && serverState == ServerState.WAITING_FOR_READYUP) {
+      ready.set(true);
+    }
   }
 
   /**
@@ -312,13 +312,19 @@ public class Server extends Application {
       timer.schedule(new TimerTask() {
         @Override
         public void run() {
-          endGame();
-          gameOver.set(true);
-          secondsTimer.cancel();
+          Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+              endGame();
+              gameOver.set(true);
+              secondsTimer.cancel();
+            }
+          });
         }
       }, delay);
 
       startedGame = true;
+      serverState = ServerState.IN_GAME;
     }
   }
 
@@ -351,11 +357,12 @@ public class Server extends Application {
         }
 
         //All players have joined
-        if (playerCount.get() == maxPlayers) {
+        if (playerCount.get() == maxPlayers && (serverState != ServerState.IN_GAME
+            || serverState != ServerState.WAITING_FOR_READYUP)) {
           serverState = ServerState.WAITING_FOR_READYUP;
         }
         //Start game
-        if (playerCount.get() > 1 && readyCount.get() == playerCount.get() - 1) {
+        if (playerCount.get() > 1 && ready.get()) {
           startMatch();
         }
 

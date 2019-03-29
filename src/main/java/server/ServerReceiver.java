@@ -16,7 +16,6 @@ import shared.gameObjects.players.Player;
 import shared.packets.PacketInput;
 import shared.packets.PacketJoin;
 import shared.packets.PacketReSend;
-import shared.packets.PacketReady;
 import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 
 /**
@@ -105,15 +104,6 @@ public class ServerReceiver implements Runnable {
               PacketInput inputPacket = new PacketInput(message);
               // Change to add to list
               server.getQueue(player).add(inputPacket);
-              break;
-            //Player Ready
-            case 5:
-              PacketReady readyPacket = new PacketReady(message);
-              if (readyPacket.getUUID() == player.getUUID()
-                  && server.serverState == ServerState.WAITING_FOR_PLAYERS
-                  || server.serverState == ServerState.WAITING_FOR_READYUP) {
-                server.readyCount.getAndIncrement();
-              }
               break;
             case 9:
               PacketReSend packetReSend = new PacketReSend(message);
