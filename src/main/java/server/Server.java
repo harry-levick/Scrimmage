@@ -71,7 +71,7 @@ public class Server extends Application {
   /**
    * The numbers of players that are ready to play
    */
-  private final AtomicBoolean running = new AtomicBoolean(false);
+  private static final AtomicBoolean running = new AtomicBoolean(false);
   private final AtomicBoolean ready = new AtomicBoolean(false);
   private final AtomicBoolean sendAllObjects = new AtomicBoolean(false);
   private final AtomicBoolean gameOver = new AtomicBoolean(false);
@@ -326,6 +326,10 @@ public class Server extends Application {
       startedGame = true;
       serverState = ServerState.IN_GAME;
     }
+  }
+
+  public static void killServer() {
+    running.set(false);
   }
 
   @Override
