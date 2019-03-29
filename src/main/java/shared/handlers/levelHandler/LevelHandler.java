@@ -137,6 +137,7 @@ public class LevelHandler {
         case MULTIPLAYER:
           if (Client.levelHandler != null) {
             Client.setUserInterface();
+            Client.setUserInterface();
           }
           break;
       }
@@ -161,9 +162,7 @@ public class LevelHandler {
   public void generateLevel(Group backgroundGroup, Group gameGroup, Boolean moveToSpawns,
       Boolean isServer) {
 
-    if (!isServer) {
-      Client.overlayRoot.getChildren().clear();
-    }
+
 
     settings.resetDeaths();
     gameObjects.keySet().removeAll(players.keySet());
@@ -207,6 +206,9 @@ public class LevelHandler {
     players.forEach((key, player) -> {
       player.reset();
     });
+    if (!isServer) {
+      Client.overlayRoot.getChildren().clear();
+    }
 
     if (!isServer) {
       musicPlayer.stopMusic();

@@ -169,6 +169,11 @@ public class Podium1 extends GameObject {
         if(players.get(3).equals(settings.getLevelHandler().getClientPlayer())) settings.getData().addMoney(FOURTH_MONEY);
       }
      }
+
+    if (!settings.getLevelHandler().isServer()) {
+      settings.getOverlay().getChildren().clear();
+    }
+
     //Go back
     new java.util.Timer().schedule(
         new java.util.TimerTask() {

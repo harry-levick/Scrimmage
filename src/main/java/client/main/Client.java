@@ -129,7 +129,7 @@ public class Client extends Application {
   private int framesElapsedSinceFPS = 0;
   private static UI userInterface;
   private static boolean credits = false;
-  private static int creditStartDelay = 100;
+  private static int creditStartDelay = 20;
   private static boolean gameOver;
   private static boolean settingsOverlay = false;
   private static ArrayList<GameObject> settingsObjects = new ArrayList<>();
@@ -370,6 +370,7 @@ public class Client extends Application {
     levelHandler.changeMap(
         new Map("menus/score.map", Path.convert("src/main/resources/menus/score.map")),
         true, false);
+    levelHandler.getClientPlayer().clearDeathMessage();
   }
 
   /**
@@ -586,7 +587,7 @@ public class Client extends Application {
         // animate credits scrolling
         if (credits) {
           creditStartDelay--;
-          if (creditStartDelay < 0 && creditStartDelay % 2 == 0) {
+          if (creditStartDelay < 0 && creditStartDelay % 1 == 0) {
             int maxY = Integer.MIN_VALUE;
             if (overlayRoot.getChildren().size() != 0) {
               maxY = (int) overlayRoot.getChildren().get(0).getLayoutY();
