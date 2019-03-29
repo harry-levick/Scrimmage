@@ -8,9 +8,12 @@ import java.net.DatagramSocket;
 import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import javafx.application.Platform;
 import shared.gameObjects.players.Player;
+import shared.handlers.levelHandler.Map;
 import shared.packets.Packet;
 import shared.packets.PacketJoin;
+import shared.util.Path;
 
 public class ConnectionHandler extends Thread {
 
@@ -41,7 +44,7 @@ public class ConnectionHandler extends Thread {
       socket = new Socket(this.address, 4445);
       out = new PrintWriter(socket.getOutputStream(), true);
     } catch (IOException e) {
-      e.printStackTrace();
+      end();
     }
   }
 
@@ -85,7 +88,7 @@ public class ConnectionHandler extends Thread {
           received.add(msg.trim());
         }
       } catch (IOException e) {
-        e.printStackTrace();
+        end();
       }
     }
   }
@@ -94,13 +97,34 @@ public class ConnectionHandler extends Thread {
    * Ends connection to server
    */
   public void end() {
-    connected = false;
-    out.close();
-    try {
-      socket.close();
-      clientSocket.close();
-    } catch (IOException e) {
-      e.printStackTrace();
+    if (connected) {
+      connected = false;
+      try {
+        if (out != null) {
+          out.close();
+        }
+        if (socket != null) {
+          socket.close();
+        }
+        if (clientSocket != null) {
+          clientSocket.close();
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
+      } finally {
+        Platform.runLater(new Runnable() {
+          @Override
+          public void run() {
+            Client.levelHandler.changeMap(
+                new Map("menus/main_menu.map",
+                    Path.convert("src/main/resources/menus/main_menu.map")),
+                true, false);
+            Client.multiplayer = false;
+          }
+        });
+        Thread.currentThread().interrupt();
+        return;
+      }
     }
   }
 
@@ -110,6 +134,10 @@ public class ConnectionHandler extends Thread {
    * @param data Message to server
    */
   public void send(String data) {
-    out.println(data);
+    try {
+      out.println(data);
+    } catch (Exception e) {
+      end();
+    }
   }
 }

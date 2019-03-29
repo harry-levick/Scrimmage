@@ -23,7 +23,7 @@ public class ButtonInputLeft extends ButtonObject {
   @Override
   public void render() {
     super.render();
-    super.button.setFont(settings.getFont(20));
+    super.button.setFont(settings.getFont(24));
     super.setText("LEFT: " + Client.settings.getKeyMap(KEY_CONTROL.LEFT));
     if (Client.keyInput.getChangeListening()
         && Client.keyInput.getHotChangeKey() == KEY_CONTROL.LEFT) {

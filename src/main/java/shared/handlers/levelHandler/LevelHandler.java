@@ -8,6 +8,7 @@ import client.main.Client;
 import client.main.Settings;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Random;
@@ -168,8 +169,7 @@ public class LevelHandler {
     gameObjects.keySet().removeAll(players.keySet());
     gameObjects.keySet().removeAll(bots.keySet());
     gameObjects.keySet().removeAll(limbs.keySet());
-    gameObjects.forEach((key, gameObject) -> gameObject.removeRender());
-    gameObjects.forEach((key, gameObject) -> gameObject = null);
+    gameObjects.forEach((key, gameObject) -> removeGameObject(gameObject));
     gameObjects.clear();
 
     // Create new game objects for map
@@ -185,6 +185,7 @@ public class LevelHandler {
               background.initialise(backgroundGroup, settings);
             }
             if (moveToSpawns && spawnPoints != null && spawnPoints.size() >= players.size()) {
+              Collections.shuffle(spawnPoints);
               players.forEach(
                   (key2, player) -> {
                     Vector2 spawn = spawnPoints.get(0);
@@ -307,12 +308,12 @@ public class LevelHandler {
    */
   public void removeGameObject(GameObject g) {
     gameObjects.values().remove(g);
-    g.removeRender();
     g.destroy();
     if (isServer) {
       PacketDelete delete = new PacketDelete(g.getUUID());
       server.sendToClients(delete.getData(), false);
     }
+    g = null;
   }
 
   /**

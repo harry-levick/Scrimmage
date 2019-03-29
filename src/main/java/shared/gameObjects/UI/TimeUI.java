@@ -1,6 +1,8 @@
 package shared.gameObjects.UI;
 
 
+import java.util.Timer;
+import client.main.Settings;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Font;
@@ -11,25 +13,27 @@ import shared.gameObjects.players.Player;
 /**
  * UI container for the score of the player
  */
-public class Timer {
+public class TimeUI {
 
   private static final int xPos = 1920 / 2; //Center it on the screen.
   private static final int yPos = 25;
   private Animator board;
   private Player player;
-  private ImageView boardImageView;
+  //private ImageView boardImageView;
   private Text timerText;
+  private int timeRemaining;
 
   /**
    * Constructs a score UI pertaining to a player
    *
    * @param root UI root to render to
    */
-  public Timer(Group root, Player clientPlayer) {
+  public TimeUI(Group root, Player clientPlayer,Settings settings, int timeRemaining) {
     player = clientPlayer;
-    timerText = new Text(xPos + 20, yPos + 40, "");
-    timerText.setFont(new Font(48));
-    root.getChildren().addAll(this.boardImageView, this.timerText);
+    timeRemaining = timeRemaining;
+    timerText = new Text(xPos, yPos, "");
+    timerText.setFont(settings.getFont(42));
+    root.getChildren().addAll(this.timerText);
   }
 
 
@@ -37,8 +41,8 @@ public class Timer {
    * Renders the timer UI
    */
   public void render() {
-    //timerText.setText("Score:" + Integer.toString(player.getScore()));
-    boardImageView.setImage(board.getImage());
+    timerText.setText(Integer.toString(timeRemaining));
+    //boardImageView.setImage(board.getImage());
   }
 
 }

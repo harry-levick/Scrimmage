@@ -12,7 +12,6 @@ import shared.gameObjects.menu.ButtonObject;
 
 public class ButtonSingleplayer extends ButtonObject {
 
-  private static final int maxPlayers = 4;
 
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
@@ -30,7 +29,8 @@ public class ButtonSingleplayer extends ButtonObject {
   public void doOnClick(MouseEvent e) {
     super.doOnClick(e);
 
-    int botsToAdd = maxPlayers - settings.getLevelHandler().getPlayers().size();
+    int botsToAdd = settings.getMaxPlayers() - settings.getLevelHandler().getPlayers().size();
+    botsToAdd = botsToAdd < 0 ? 0 : botsToAdd;
     for (int b = 0; b < botsToAdd; b++) {
       //TODO Change physics to LinkedHashMaps
       Collection<GameObject> values = settings.getLevelHandler().getGameObjects().values();
@@ -47,7 +47,6 @@ public class ButtonSingleplayer extends ButtonObject {
         true, false);
 
     Client.singleplayerGame = true;
-    //Client.timer.schedule(Client.task, 30000L);
 
   }
 }

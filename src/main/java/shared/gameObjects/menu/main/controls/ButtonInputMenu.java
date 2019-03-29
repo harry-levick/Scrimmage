@@ -23,7 +23,7 @@ public class ButtonInputMenu extends ButtonObject {
   @Override
   public void render() {
     super.render();
-    super.button.setFont(settings.getFont(20));
+    super.button.setFont(settings.getFont(24));
     super.setText("MENU: " + Client.settings.getKeyMap(KEY_CONTROL.MENU));
     if (Client.keyInput.getChangeListening()
         && Client.keyInput.getHotChangeKey() == KEY_CONTROL.MENU) {

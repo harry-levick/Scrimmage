@@ -5,12 +5,12 @@ import client.handlers.effectsHandler.emitters.LineEmitter;
 import client.main.Settings;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.UUID;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.stage.Stage;
-import shared.gameObjects.Blocks.Metal.MetalBlockLargeObject;
 import shared.gameObjects.Blocks.Stone.StoneFloorObject;
 import shared.gameObjects.Blocks.Stone.StoneWallObject;
 import shared.gameObjects.Blocks.Wood.WoodBlockLargeObject;
@@ -26,7 +26,6 @@ import shared.gameObjects.background.Background5;
 import shared.gameObjects.background.Background6;
 import shared.gameObjects.background.Background7;
 import shared.gameObjects.background.Background8;
-import shared.gameObjects.components.behaviours.blockBehaviours.Crushing;
 import shared.gameObjects.menu.LabelObject;
 import shared.gameObjects.menu.Title;
 import shared.gameObjects.menu.main.ButtonBack;
@@ -35,6 +34,7 @@ import shared.gameObjects.menu.main.ButtonMultiplayer;
 import shared.gameObjects.menu.main.ButtonQuit;
 import shared.gameObjects.menu.main.ButtonSettings;
 import shared.gameObjects.menu.main.ButtonSingleplayer;
+import shared.gameObjects.menu.main.MaxPlayerSlider;
 import shared.gameObjects.menu.main.SoundSlider;
 import shared.gameObjects.menu.main.SoundSlider.SOUND_TYPE;
 import shared.gameObjects.menu.main.account.AccountPageHandler;
@@ -137,22 +137,60 @@ public class LevelCreator extends Application {
 
     //ColouredBlocks todo remove form mm
     gameObjects
-        .put(uuid, new RedBlock(getAbs(4), getAbs(10), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+        .put(uuid, new RedBlock(getAbs(4), getAbs(11), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects
+        .put(uuid, new RedBlock(getAbs(5), getAbs(11), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects
+        .put(uuid, new RedBlock(getAbs(6), getAbs(11), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects
+        .put(uuid, new RedBlock(getAbs(7), getAbs(11), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
     uuid = UUID.randomUUID();
     //ColouredBlocks
     gameObjects.put(uuid,
-        new BlueBlock(getAbs(5), getAbs(10), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+        new BlueBlock(getAbs(29), getAbs(9), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new BlueBlock(getAbs(30), getAbs(9), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new BlueBlock(getAbs(31), getAbs(9), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new BlueBlock(getAbs(32), getAbs(9), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
     uuid = UUID.randomUUID();
     //ColouredBlocks
     gameObjects.put(uuid,
-        new GreenBlock(getAbs(6), getAbs(10), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+        new GreenBlock(getAbs(7), getAbs(16), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new GreenBlock(getAbs(8), getAbs(16), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new GreenBlock(getAbs(9), getAbs(16), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new GreenBlock(getAbs(10), getAbs(16), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
     uuid = UUID.randomUUID();
     //ColouredBlocks
     gameObjects.put(uuid,
-        new YellowBlock(getAbs(7), getAbs(10), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+        new YellowBlock(getAbs(33), getAbs(9), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new YellowBlock(getAbs(34), getAbs(9), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new YellowBlock(getAbs(35), getAbs(9), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new YellowBlock(getAbs(36), getAbs(9), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
     uuid = UUID.randomUUID();
 
-    //JumpPad todo remove form mm
+    //JumpPad
+    gameObjects.put(uuid, new JumpPad(getAbs(1), getAbs(25), uuid));
+    uuid = UUID.randomUUID();
     gameObjects.put(uuid, new JumpPad(getAbs(2), getAbs(25), uuid));
     uuid = UUID.randomUUID();
 
@@ -193,6 +231,7 @@ public class LevelCreator extends Application {
     // left side blocks
     GameObject object = new WoodBlockLargeObject(
         getAbs(5), getAbs(4), getAbs(2), getAbs(2), ObjectType.Bot, uuid);
+    //object.addComponent(new Crushing(object)); // no death in mm
     gameObjects.put(uuid, object);
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
@@ -294,10 +333,26 @@ public class LevelCreator extends Application {
     //mapDataObject.setSpawnPoints(spawnPoints);
     // manual set instead
     // player spawns
-    mapDataObject.addSpawnPoint(getAbs(2), getAbs(22));
-    mapDataObject.addSpawnPoint(getAbs(15), getAbs(3));
-    mapDataObject.addSpawnPoint(getAbs(29), getAbs(22));
-    mapDataObject.addSpawnPoint(getAbs(32), getAbs(2));
+
+    ArrayList<Vector2> singleplayerSpawns = new ArrayList<>();
+    singleplayerSpawns.add(new Vector2(getAbs(2), getAbs(14)));
+    singleplayerSpawns.add(new Vector2(getAbs(2), getAbs(23)));
+    singleplayerSpawns.add(new Vector2(getAbs(6), getAbs(14)));
+    singleplayerSpawns.add(new Vector2(getAbs(11), getAbs(23)));
+    singleplayerSpawns.add(new Vector2(getAbs(14), getAbs(13)));
+    singleplayerSpawns.add(new Vector2(getAbs(15), getAbs(3)));
+    singleplayerSpawns.add(new Vector2(getAbs(23), getAbs(9)));
+    singleplayerSpawns.add(new Vector2(getAbs(24), getAbs(23)));
+    singleplayerSpawns.add(new Vector2(getAbs(29), getAbs(32)));
+    singleplayerSpawns.add(new Vector2(getAbs(30), getAbs(2)));
+    singleplayerSpawns.add(new Vector2(getAbs(33), getAbs(14)));
+    singleplayerSpawns.add(new Vector2(getAbs(34), getAbs(2)));
+    singleplayerSpawns.add(new Vector2(getAbs(37), getAbs(9)));
+    singleplayerSpawns.add(new Vector2(getAbs(37), getAbs(23)));
+    singleplayerSpawns.add(new Vector2(getAbs(41), getAbs(14)));
+    singleplayerSpawns.add(new Vector2(getAbs(44), getAbs(23)));
+
+    mapDataObject.setSpawnPoints(singleplayerSpawns);
 
     mapDataObject.setBackground(
         new Background1(UUID.randomUUID()));
@@ -367,18 +422,12 @@ public class LevelCreator extends Application {
     uuid = UUID.randomUUID();
 
     // weapon spawn points
-    gameObjects.put(uuid,
-        new WeaponSpawner(getAbs(2), getAbs(20), 40, 40, uuid));
-    uuid = UUID.randomUUID();
-    gameObjects.put(uuid,
-        new WeaponSpawner(getAbs(15), getAbs(1), 40, 40, uuid));
-    uuid = UUID.randomUUID();
-    gameObjects.put(uuid,
-        new WeaponSpawner(getAbs(29), getAbs(20), 40, 40, uuid));
-    uuid = UUID.randomUUID();
-    gameObjects.put(uuid,
-        new WeaponSpawner(getAbs(32), getAbs(0), 40, 40, uuid));
-    uuid = UUID.randomUUID();
+    for (Vector2 spawnVector : singleplayerSpawns) {
+      gameObjects.put(uuid,
+          new WeaponSpawner(spawnVector.getX(), spawnVector.getY() - getAbs(2), getAbs(1),
+              getAbs(1), uuid));
+      uuid = UUID.randomUUID();
+    }
 
     //wood block pyramid
     gameObjects.put(uuid,
@@ -498,26 +547,34 @@ public class LevelCreator extends Application {
             getAbs(42), getAbs(18), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
     uuid = UUID.randomUUID();
 
-
-
+    Collections.shuffle(singleplayerSpawns);
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map1" + ".map");
     mapDataObject.setBackground(new Background2(UUID.randomUUID()));
+    Collections.shuffle(singleplayerSpawns);
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map2" + ".map");
     mapDataObject.setBackground(new Background3(UUID.randomUUID()));
+    Collections.shuffle(singleplayerSpawns);
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map3" + ".map");
     mapDataObject.setBackground(new Background4(UUID.randomUUID()));
+    Collections.shuffle(singleplayerSpawns);
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map4" + ".map");
     mapDataObject.setBackground(new Background5(UUID.randomUUID()));
+    Collections.shuffle(singleplayerSpawns);
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map5" + ".map");
     mapDataObject.setBackground(new Background6(UUID.randomUUID()));
+    Collections.shuffle(singleplayerSpawns);
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map6" + ".map");
     mapDataObject.setBackground(new Background7(UUID.randomUUID()));
+    Collections.shuffle(singleplayerSpawns);
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map7" + ".map");
     mapDataObject.setBackground(new Background8(UUID.randomUUID()));
+    Collections.shuffle(singleplayerSpawns);
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map8" + ".map");
     mapDataObject.setBackground(new Background1(UUID.randomUUID()));
+    Collections.shuffle(singleplayerSpawns);
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map9" + ".map");
     mapDataObject.setBackground(new Background2(UUID.randomUUID()));
+    Collections.shuffle(singleplayerSpawns);
     MapLoader.saveMap(gameObjects, mapDataObject, filepathMaps + "playlist1/" + "map10" + ".map");
 
     ////////////////////////////////////////
@@ -595,15 +652,6 @@ public class LevelCreator extends Application {
               getAbs(i * 4), getAbs(0), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
       uuid = UUID.randomUUID();
     }
-    /**
-     for (int i = 0; i < 10; i++) {
-     // top row wall
-     gameObjects.put(uuid,
-     new StoneBlockObject(
-     getAbs(i * 4 + 2), getAbs(20), getAbs(2), getAbs(2), ObjectType.Bot, uuid));
-     uuid = UUID.randomUUID();
-     }
-     **/
     for (int i = 0; i < 5; i++) {
       // side col walls
       gameObjects.put(uuid,
@@ -638,11 +686,7 @@ public class LevelCreator extends Application {
         new WeaponSpawner(200, 350, 40, 40, uuid));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
-        new ButtonReady(getAbs(10), getAbs(10), getAbs(8), getAbs(2), ObjectType.Button, uuid));
-    uuid = UUID.randomUUID();
-    gameObjects.put(uuid,
-        new MetalBlockLargeObject(getAbs(10), getAbs(5), getAbs(2), getAbs(2), ObjectType.Bot,
-            uuid));
+        new ButtonReady(getAbs(14), getAbs(3), getAbs(18), getAbs(2), ObjectType.Button, uuid));
 
     MapLoader.saveMap(gameObjects, mapDataObject, filepath + filename + ".map");
 
@@ -715,44 +759,55 @@ public class LevelCreator extends Application {
     mapDataObject.setBackground(
         new Background1(UUID.randomUUID()));
     uuid = UUID.randomUUID();
+
+    //sliders
     gameObjects
-        .put(uuid, new SoundSlider(getAbs(11), getAbs(7), getAbs(8), getAbs(1), SOUND_TYPE.MUSIC,
+        .put(uuid, new LabelObject(getAbs(12), getAbs(5), "Game Settings:", ObjectType.Button,
+            uuid)); //todo Button type?
+    uuid = UUID.randomUUID();
+    gameObjects
+        .put(uuid, new SoundSlider(getAbs(12), getAbs(7), getAbs(8), getAbs(1), SOUND_TYPE.MUSIC,
             "Music", ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
     gameObjects
-        .put(uuid, new SoundSlider(getAbs(11), getAbs(11), getAbs(8), getAbs(1), SOUND_TYPE.SFX,
+        .put(uuid, new SoundSlider(getAbs(12), getAbs(11), getAbs(8), getAbs(1), SOUND_TYPE.SFX,
             "Sound Effects", ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
-    gameObjects
-        .put(uuid,
-            new ButtonCredits(getAbs(11), getAbs(15), getAbs(8), getAbs(2), ObjectType.Button,
-                uuid));
-    uuid = UUID.randomUUID();
-    gameObjects
-        .put(uuid, new ButtonBack(getAbs(11), getAbs(18), getAbs(8), getAbs(2), ObjectType.Button,
-            uuid));
+    gameObjects.put(uuid,
+        new MaxPlayerSlider(getAbs(12), getAbs(15), getAbs(8), getAbs(1), ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
 
     // input controls
-    gameObjects.put(uuid, new LabelObject(getAbs(23), getAbs(7), "Controls:", ObjectType.Button,
+    gameObjects.put(uuid, new LabelObject(getAbs(22), getAbs(5), "Controls:", ObjectType.Button,
         uuid)); //todo Button type?
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
-        new ButtonInputJump(getAbs(23), getAbs(9), getAbs(6), getAbs(2), ObjectType.Button, uuid));
+        new ButtonInputJump(getAbs(22), getAbs(7), getAbs(6), getAbs(2), ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
-        new ButtonInputLeft(getAbs(23), getAbs(12), getAbs(6), getAbs(2), ObjectType.Button, uuid));
+        new ButtonInputLeft(getAbs(22), getAbs(10), getAbs(6), getAbs(2), ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
-        new ButtonInputRight(getAbs(23), getAbs(15), getAbs(6), getAbs(2), ObjectType.Button,
+        new ButtonInputRight(getAbs(22), getAbs(13), getAbs(6), getAbs(2), ObjectType.Button,
             uuid));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
-        new ButtonInputThrow(getAbs(23), getAbs(18), getAbs(6), getAbs(2), ObjectType.Button,
+        new ButtonInputThrow(getAbs(22), getAbs(16), getAbs(6), getAbs(2), ObjectType.Button,
             uuid));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
-        new ButtonInputMenu(getAbs(31), getAbs(9), getAbs(6), getAbs(2), ObjectType.Button, uuid));
+        new ButtonInputMenu(getAbs(30), getAbs(7), getAbs(6), getAbs(2), ObjectType.Button, uuid));
+    uuid = UUID.randomUUID();
+
+    // main buttons
+    gameObjects
+        .put(uuid,
+            new ButtonCredits(getAbs(15), getAbs(20), getAbs(8), getAbs(2), ObjectType.Button,
+                uuid));
+    uuid = UUID.randomUUID();
+    gameObjects
+        .put(uuid, new ButtonBack(getAbs(25), getAbs(20), getAbs(8), getAbs(2), ObjectType.Button,
+            uuid));
     uuid = UUID.randomUUID();
 
     for (int i = 0; i < 12; i++) {
