@@ -5,7 +5,7 @@ package client.handlers.accountHandler;
  */
 public class AccountData {
 
-  public static final int SKIN_COUNT = 9;
+  public static final int SKIN_COUNT = 10;
   private String username;
   private String uuid;
   private boolean[] achievements;

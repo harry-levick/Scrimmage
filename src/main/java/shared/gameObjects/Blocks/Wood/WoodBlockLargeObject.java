@@ -37,7 +37,6 @@ public class WoodBlockLargeObject extends GameObject {
   @Override
   public void update() {
     super.update();
-    transform.rotate(1);
   }
 
   // Initialise the animation

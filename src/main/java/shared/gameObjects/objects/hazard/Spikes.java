@@ -28,7 +28,7 @@ public class Spikes extends GameObject implements Hazard {
   public void OnCollisionEnter(Collision col) {
     if (col.getCollidedObject() instanceof Destructable) {
       Destructable player = (Destructable) col.getCollidedObject();
-      player.deductHp(10);
+      player.deductHp(10, this);
     }
   }
 }

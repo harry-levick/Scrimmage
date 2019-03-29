@@ -73,7 +73,7 @@ public class RigidbodyTest {
       rbA.addForce(new Vector2(100, 0));
       rbA.update();
     }
-    assertEquals(52, a.getX(), 4);
+    assertEquals(3, a.getX(), 4);
   }
 
   @Test
@@ -83,7 +83,7 @@ public class RigidbodyTest {
     for (int i = 0; i < 60; i++) {
       rbA.update();
     }
-    assertEquals(52, a.getX(), 4);
+    assertEquals(3, a.getX(), 4);
   }
 
   @Test

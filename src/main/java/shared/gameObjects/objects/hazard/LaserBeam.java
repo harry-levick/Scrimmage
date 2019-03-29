@@ -77,7 +77,7 @@ public class LaserBeam extends GameObject implements Hazard {
               false, false);
       for (Collision c : collisions) {
         if (c.getCollidedObject() instanceof Destructable) {
-          ((Destructable) c.getCollidedObject()).deductHp(9999);
+          ((Destructable) c.getCollidedObject()).deductHp(9999, this);
         }
       }
       colour.setR(colour.getR() - 2);

@@ -28,7 +28,12 @@ public class Animator {
     intervalSpeed = 10;
     tickCounter = this.intervalSpeed;
     currentAnimationCounter = 0;
-    supplyAnimation("default", "images/blank.png");
+    try {
+      supplyAnimation("default", "images/blank.png");
+    } catch (Exception e) {
+
+    }
+
   }
 
   public void setSpeed(int s) {

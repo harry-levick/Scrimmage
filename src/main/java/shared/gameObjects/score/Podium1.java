@@ -1,5 +1,6 @@
 package shared.gameObjects.score;
 
+import client.handlers.effectsHandler.ServerParticle;
 import client.handlers.effectsHandler.emitters.LineEmitter;
 import client.main.Client;
 import client.main.Settings;
@@ -9,6 +10,7 @@ import java.util.Comparator;
 import java.util.UUID;
 import javafx.application.Platform;
 import javafx.scene.Group;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import server.Server;
 import server.ai.Bot;
@@ -18,6 +20,8 @@ import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
 import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.Map;
+import shared.packets.PacketAward;
+import shared.packets.PacketAward.AwardID;
 import shared.physics.data.Collision;
 import shared.physics.types.ColliderLayer;
 import shared.util.Path;
@@ -34,6 +38,11 @@ public class Podium1 extends GameObject {
   private transient Text score1;
   private transient Text score2;
   private transient Text score3;
+
+  private static final int FIRST_MONEY = 150;
+  private static final int SECOND_MONEY = 100;
+  private static final int THIRD_MONEY = 50;
+  private static final int FOURTH_MONEY = 0;
 
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
@@ -73,9 +82,11 @@ public class Podium1 extends GameObject {
     settings.getLevelHandler().getPlayers().forEach((uuid, player) -> {
       if (player instanceof Bot) {
         Player playerCopy = new Player(player.getX(), player.getY(), player.getUUID());
+        System.out.println("Using skin: " + player.getCurrentSkin());
         playerCopy.setScore(player.score);
         playerCopy.setUsername(player.getUsername());
         settings.getLevelHandler().addGameObject(playerCopy);
+        playerCopy.updateSkinRender(player.getCurrentSkin());
         players.add(playerCopy);
       } else {
         players.add(player);
@@ -98,7 +109,14 @@ public class Podium1 extends GameObject {
       score0 = new Text(String.valueOf(players.get(0).getScore()));
       score0.setTranslateX(pos0.getX());
       score0.setTranslateY(pos0.getY());
+      score0.setFill(Color.WHITE);
+      score0.setFont(settings.getFont(64));
       root.getChildren().add(score0);
+      if(settings.getLevelHandler().isServer()) {
+        settings.getLevelHandler().getServer().sendToClients(new PacketAward(AwardID.MONEY, FIRST_MONEY, players.get(0)).getData(), false);
+      } else {
+        if(players.get(0).equals(settings.getLevelHandler().getClientPlayer())) settings.getData().addMoney(FIRST_MONEY);
+      }
     }
     //2nd
     if (players.size() > 1) {
@@ -108,7 +126,14 @@ public class Podium1 extends GameObject {
       score1 = new Text(String.valueOf(players.get(1).getScore()));
       score1.setTranslateX(pos1.getX());
       score1.setTranslateY(pos1.getY());
+      score1.setFill(Color.WHITE);
+      score1.setFont(settings.getFont(64));
       root.getChildren().add(score1);
+      if(settings.getLevelHandler().isServer()) {
+        settings.getLevelHandler().getServer().sendToClients(new PacketAward(AwardID.MONEY, SECOND_MONEY, players.get(1)).getData(), false);
+      } else {
+        if(players.get(1).equals(settings.getLevelHandler().getClientPlayer())) settings.getData().addMoney(SECOND_MONEY);
+      }
      }
     //3rd
     if (players.size() > 2) {
@@ -118,7 +143,14 @@ public class Podium1 extends GameObject {
       score2 = new Text(String.valueOf(players.get(2).getScore()));
       score2.setTranslateX(pos2.getX());
       score2.setTranslateY(pos2.getY());
+      score2.setFill(Color.WHITE);
+      score2.setFont(settings.getFont(64));
       root.getChildren().add(score2);
+      if(settings.getLevelHandler().isServer()) {
+        settings.getLevelHandler().getServer().sendToClients(new PacketAward(AwardID.MONEY, THIRD_MONEY, players.get(2)).getData(), false);
+      } else {
+        if(players.get(2).equals(settings.getLevelHandler().getClientPlayer())) settings.getData().addMoney(THIRD_MONEY);
+      }
      }
     //4th
     if (players.size() > 3) {
@@ -128,7 +160,14 @@ public class Podium1 extends GameObject {
       score3 = new Text(String.valueOf(players.get(3).getScore()));
       score3.setTranslateX(pos3.getX());
       score3.setTranslateY(pos3.getY());
+      score3.setFill(Color.WHITE);
+      score3.setFont(settings.getFont(64));
       root.getChildren().add(score3);
+      if(settings.getLevelHandler().isServer()) {
+        settings.getLevelHandler().getServer().sendToClients(new PacketAward(AwardID.MONEY, FOURTH_MONEY, players.get(3)).getData(), false);
+      } else {
+        if(players.get(3).equals(settings.getLevelHandler().getClientPlayer())) settings.getData().addMoney(FOURTH_MONEY);
+      }
      }
 
     if (!settings.getLevelHandler().isServer()) {
@@ -187,9 +226,15 @@ public class Podium1 extends GameObject {
   public void OnCollisionEnter(Collision c) {
     if (c.getCollidedObject() instanceof Player && !triggered) {
       settings.getLevelHandler().addGameObject(
-          new LineEmitter(transform.getPos().add(new Vector2(20, 0)), new Vector2(-300, -400),
+          new ServerParticle(transform.getPos().add(new Vector2(20, 0)), new Vector2(100, -540),
               Vector2.Zero(),
-              new Vector2(8, 8), 70, 0.55f, 10f, 2, "images/particle/bloodParticle.png"));
+              new Vector2(256, 256), "fireworks", 1.2f));
+      settings.getLevelHandler().addGameObject(
+          new ServerParticle(transform.getPos().add(new Vector2(20, 0)), new Vector2(-100, -540),
+              Vector2.Zero(),
+              new Vector2(256, 256), "fireworks", 1.2f));
+      for(int i = 0; i < 8; i++) {
+      }
       triggered = true;
     }
   }

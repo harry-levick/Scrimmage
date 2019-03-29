@@ -10,5 +10,5 @@ public interface Destructable {
    *
    * @param damage The amount of proposed damage to deal to the hp
    */
-  void deductHp(int damage);
+  void deductHp(int damage, GameObject source);
 }

@@ -133,11 +133,11 @@ public class Client extends Application {
   private static boolean gameOver;
   private static boolean settingsOverlay = false;
   private static ArrayList<GameObject> settingsObjects = new ArrayList<>();
-  private final String gameTitle = "Alone in the Dark";
+  private final String gameTitle = "Scrimmage";
   private final float timeStep = 0.0166f;
   private MouseInput mouseInput;
   private boolean startedGame;
-  private static int timeRemaining;
+  public static int timeRemaining;
   private int timeLimit = 1; // Time limit in minutes
   private float maximumStep;
   private long previousTime;
@@ -155,7 +155,7 @@ public class Client extends Application {
    * Sets a new user interface in the uiRoot, rendered by the main game loop depending on use
    */
   public static void setUserInterface() {
-    userInterface = new UI(uiRoot, levelHandler.getClientPlayer(),settings, timeRemaining);
+    userInterface = new UI(uiRoot, levelHandler.getClientPlayer(),settings);
   }
 
   /**
@@ -415,8 +415,8 @@ public class Client extends Application {
       secondsTimer.scheduleAtFixedRate(new TimerTask() {
         @Override
         public void run() {
-          System.out.println(String
-              .format("%d:%d", timeRemaining / 60, timeRemaining - ((timeRemaining / 60) * 60)));
+          //System.out.println(String
+              //.format("%d:%d", timeRemaining / 60, timeRemaining - ((timeRemaining / 60) * 60)));
           timeRemaining -= 1;
         }
       }, 0, 1000);

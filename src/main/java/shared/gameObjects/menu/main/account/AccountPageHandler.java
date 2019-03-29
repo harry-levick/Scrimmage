@@ -489,6 +489,9 @@ public class AccountPageHandler extends GameObject {
 
     model[8].setTranslateX(-10);
     model[8].setTranslateY(15);
+    model[8].setScaleX(0.8);
+    model[8].setScaleY(0.8);
+    model[8].setOpacity(0.75);
     model[8].toFront();
 
     viewer.setScaleX(2.2);

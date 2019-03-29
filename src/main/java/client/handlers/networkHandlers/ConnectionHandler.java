@@ -67,7 +67,8 @@ public class ConnectionHandler extends Thread {
             player.getArmLeft().getUUID(),
             player.getArmRight().getUUID(),
             player.getHandLeft().getUUID(),
-            player.getHandRight().getUUID());
+            player.getHandRight().getUUID(),
+            player.getCurrentSkin());
     send(joinPacket.getString());
 
     Client.multiplayer = true;
