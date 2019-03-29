@@ -401,7 +401,7 @@ public class Server extends Application {
       ArrayList list = new ArrayList();
       for (java.util.Map.Entry<UUID, GameObject> entry : gameobjects.entrySet()) {
         list.add(entry.getValue());
-        if (i >= 25) {
+        if (i >= 18) {
           byteArrayOutputStream = new ByteArrayOutputStream();
           ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
           objectOutputStream.writeObject(list);
@@ -451,8 +451,6 @@ public class Server extends Application {
     playerCount.getAndIncrement();
     connected.add(address);
     server.add(player);
-    server.sendObjects(levelHandler.getGameObjects());
-    //Redundancy
     server.sendObjects(levelHandler.getGameObjects());
     return player;
   }

@@ -20,16 +20,6 @@ public class PacketTest {
   private String username = "TheBigMJ";
   private UUID uuid = UUID.randomUUID();
 
-  @Test
-  public void ResponsePacketTest() {
-    boolean accepted = true;
-    PacketResponse out = new PacketResponse(accepted, username);
-    byte[] packetData = out.getData();
-    PacketResponse in = new PacketResponse(new String(packetData));
-    assertEquals(PacketID.RESPONSE.getID(), in.getPacketID());
-    assertEquals(accepted, in.isAccepted());
-    assertEquals(username, in.getMultiAddress());
-  }
 
   @Test
   public void InputPacketTest() {
@@ -46,15 +36,6 @@ public class PacketTest {
     assertEquals(output.isThrowKey(), throwHolding);
   }
 
-  @Test
-  public void MapPacketTest() {
-    PacketMap out = new PacketMap(username, uuid);
-    byte[] packetData = out.getData();
-    PacketMap in = new PacketMap(new String(packetData));
-    assertEquals(PacketID.MAP.getID(), in.getPacketID());
-    assertEquals(username, in.getName());
-    assertEquals(uuid, in.getUuid());
-  }
 
   @Test
   public void PlayerJoinPacketTest() {
@@ -77,14 +58,6 @@ public class PacketTest {
     PacketReady in = new PacketReady(new String(packetData));
     assertEquals(PacketID.READY.getID(), in.packetID);
     assertEquals(in.getUUID(), uuid);
-  }
-
-  @Test
-  public void EndPacketTest() {
-    PacketEnd out = new PacketEnd();
-    byte[] endData = out.getData();
-    PacketEnd in = new PacketEnd(new String(endData));
-    assertEquals(PacketID.END.getID(), in.packetID);
   }
 
   @Test
