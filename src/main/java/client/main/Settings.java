@@ -238,6 +238,15 @@ public class Settings {
   }
 
   /**
+   * Sets max number of players in a map
+   *
+   * @param max number of players
+   */
+  public void setMaxPlayers(int max) {
+    maxPlayers = max;
+  }
+
+  /**
    * The global font
    *
    * @return The global font at the default size
