@@ -34,6 +34,7 @@ import shared.gameObjects.menu.main.ButtonMultiplayer;
 import shared.gameObjects.menu.main.ButtonQuit;
 import shared.gameObjects.menu.main.ButtonSettings;
 import shared.gameObjects.menu.main.ButtonSingleplayer;
+import shared.gameObjects.menu.main.MaxPlayerSlider;
 import shared.gameObjects.menu.main.SoundSlider;
 import shared.gameObjects.menu.main.SoundSlider.SOUND_TYPE;
 import shared.gameObjects.menu.main.account.AccountPageHandler;
@@ -773,44 +774,53 @@ public class LevelCreator extends Application {
     mapDataObject.setBackground(
         new Background1(UUID.randomUUID()));
     uuid = UUID.randomUUID();
+
+    //sliders
+    gameObjects.put(uuid, new LabelObject(getAbs(12), getAbs(5), "Game Settings:", ObjectType.Button,
+        uuid)); //todo Button type?
+    uuid = UUID.randomUUID();
     gameObjects
-        .put(uuid, new SoundSlider(getAbs(11), getAbs(7), getAbs(8), getAbs(1), SOUND_TYPE.MUSIC,
+        .put(uuid, new SoundSlider(getAbs(12), getAbs(7), getAbs(8), getAbs(1), SOUND_TYPE.MUSIC,
             "Music", ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
     gameObjects
-        .put(uuid, new SoundSlider(getAbs(11), getAbs(11), getAbs(8), getAbs(1), SOUND_TYPE.SFX,
+        .put(uuid, new SoundSlider(getAbs(12), getAbs(11), getAbs(8), getAbs(1), SOUND_TYPE.SFX,
             "Sound Effects", ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
-    gameObjects
-        .put(uuid,
-            new ButtonCredits(getAbs(11), getAbs(15), getAbs(8), getAbs(2), ObjectType.Button,
-                uuid));
-    uuid = UUID.randomUUID();
-    gameObjects
-        .put(uuid, new ButtonBack(getAbs(11), getAbs(18), getAbs(8), getAbs(2), ObjectType.Button,
-            uuid));
+    gameObjects.put(uuid, new MaxPlayerSlider(getAbs(12), getAbs(15), getAbs(8), getAbs(1), ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
 
     // input controls
-    gameObjects.put(uuid, new LabelObject(getAbs(23), getAbs(7), "Controls:", ObjectType.Button,
+    gameObjects.put(uuid, new LabelObject(getAbs(22), getAbs(5), "Controls:", ObjectType.Button,
         uuid)); //todo Button type?
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
-        new ButtonInputJump(getAbs(23), getAbs(9), getAbs(6), getAbs(2), ObjectType.Button, uuid));
+        new ButtonInputJump(getAbs(22), getAbs(7), getAbs(6), getAbs(2), ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
-        new ButtonInputLeft(getAbs(23), getAbs(12), getAbs(6), getAbs(2), ObjectType.Button, uuid));
+        new ButtonInputLeft(getAbs(22), getAbs(10), getAbs(6), getAbs(2), ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
-        new ButtonInputRight(getAbs(23), getAbs(15), getAbs(6), getAbs(2), ObjectType.Button,
+        new ButtonInputRight(getAbs(22), getAbs(13), getAbs(6), getAbs(2), ObjectType.Button,
             uuid));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
-        new ButtonInputThrow(getAbs(23), getAbs(18), getAbs(6), getAbs(2), ObjectType.Button,
+        new ButtonInputThrow(getAbs(22), getAbs(16), getAbs(6), getAbs(2), ObjectType.Button,
             uuid));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
-        new ButtonInputMenu(getAbs(31), getAbs(9), getAbs(6), getAbs(2), ObjectType.Button, uuid));
+        new ButtonInputMenu(getAbs(30), getAbs(7), getAbs(6), getAbs(2), ObjectType.Button, uuid));
+    uuid = UUID.randomUUID();
+
+    // main buttons
+    gameObjects
+        .put(uuid,
+            new ButtonCredits(getAbs(15), getAbs(20), getAbs(8), getAbs(2), ObjectType.Button,
+                uuid));
+    uuid = UUID.randomUUID();
+    gameObjects
+        .put(uuid, new ButtonBack(getAbs(25), getAbs(20), getAbs(8), getAbs(2), ObjectType.Button,
+            uuid));
     uuid = UUID.randomUUID();
 
     for (int i = 0; i < 12; i++) {
