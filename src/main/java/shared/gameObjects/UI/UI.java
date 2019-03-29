@@ -22,14 +22,14 @@ public class UI {
    * @param root UI root to render to
    * @param clientPlayer Player to obtain data from
    */
-  public UI(Group root, Player clientPlayer, Settings settings, int timeRemaining) {
+  public UI(Group root, Player clientPlayer, Settings settings) {
 
     //Load the Kenney font
     //uiFont = Font.loadFont("fonts/kenney1.ttf", 25);
     settings = settings;
     playerInfo = new PlayerInfo(root, clientPlayer,settings);
     score = new Score(root, clientPlayer, settings);
-    time = new TimeUI(root,clientPlayer, settings,timeRemaining);
+    time = new TimeUI(root,clientPlayer, settings);
     pointer = new PlayerPointer(root, clientPlayer);
 
   }

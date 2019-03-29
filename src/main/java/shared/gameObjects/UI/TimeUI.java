@@ -2,6 +2,7 @@ package shared.gameObjects.UI;
 
 
 import java.util.Timer;
+import client.main.Client;
 import client.main.Settings;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
@@ -28,7 +29,7 @@ public class TimeUI {
    *
    * @param root UI root to render to
    */
-  public TimeUI(Group root, Player clientPlayer,Settings settings, int timeRemaining) {
+  public TimeUI(Group root, Player clientPlayer,Settings settings) {
     player = clientPlayer;
     timeRemaining = timeRemaining;
     timerText = new Text(xPos, yPos, "");
@@ -41,7 +42,7 @@ public class TimeUI {
    * Renders the timer UI
    */
   public void render() {
-    timerText.setText(Integer.toString(timeRemaining));
+    timerText.setText(Integer.toString(Client.timeRemaining));
     //boardImageView.setImage(board.getImage());
   }
 
