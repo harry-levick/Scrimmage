@@ -46,7 +46,8 @@ public abstract class SliderObject extends GameObject {
     text.setLayoutY(getY());
     text.setFont(Client.settings.getFont(32));
     root.getChildren().add(text);
-    text.setFill(Color.rgb(42, 177, 234));
+   // text.setFill(Color.rgb(42, 177, 234));
+    text.setFill(Color.CYAN);
   }
 
   public void initialiseAnimation() {

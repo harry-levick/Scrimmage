@@ -349,6 +349,11 @@ public class LevelHandler {
     }
   }
 
+  public void setPlaylist(Playlist newPlaylist) {
+    playlist = new LinkedList<>();
+    playlist.addAll(newPlaylist.getMaps());
+  }
+
   public Map pollPlayList() {
     int index = new Random().nextInt(getPlaylist().size());
     return playlist.get(index);
