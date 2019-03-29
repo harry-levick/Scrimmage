@@ -185,14 +185,13 @@ public class ClientNetworkManager {
       gameObjects.forEach(
           gameObject -> Client.levelHandler.getToCreate().put(gameObject.getUUID(), gameObject));
     } catch (IOException e) {
-      e.printStackTrace();
     } catch (ClassNotFoundException e) {
-      e.printStackTrace();
     } finally {
       try {
-        objectInputStream.close();
+        if (objectInputStream != null) {
+          objectInputStream.close();
+        }
       } catch (Exception e) {
-        e.printStackTrace();
       }
     }
   }

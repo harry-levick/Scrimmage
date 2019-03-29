@@ -1,6 +1,5 @@
 package shared.gameObjects.menu.main;
 
-import client.main.Client;
 import client.main.Settings;
 import java.util.UUID;
 import javafx.beans.value.ChangeListener;
