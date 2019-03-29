@@ -76,7 +76,7 @@ public class Server extends Application {
   private final AtomicBoolean sendAllObjects = new AtomicBoolean(false);
   private final AtomicBoolean gameOver = new AtomicBoolean(false);
   private final AtomicInteger counter = new AtomicInteger(0);
-  private final int maxPlayers = 2;
+  private final int maxPlayers = 3;
   private final int serverUpdateRate = 3;
   private final String gameTitle = "SERVER";
   /**
@@ -275,7 +275,6 @@ public class Server extends Application {
     ArrayList<Player> alive = new ArrayList<>();
       for (UUID key : levelHandler.getPlayers().keySet()) {
         Player p = levelHandler.getPlayers().get(key);
-        System.out.println(serverState);
         if (p.isActive()) {
           alive.add(p);
         }

@@ -43,7 +43,6 @@ import shared.gameObjects.menu.main.controls.ButtonInputMenu;
 import shared.gameObjects.menu.main.controls.ButtonInputRight;
 import shared.gameObjects.menu.main.controls.ButtonInputThrow;
 import shared.gameObjects.menu.multiplayer.ButtonJoin;
-import shared.gameObjects.menu.multiplayer.ButtonReady;
 import shared.gameObjects.objects.utility.BlueBlock;
 import shared.gameObjects.objects.utility.GreenBlock;
 import shared.gameObjects.objects.utility.JumpPad;
@@ -638,9 +637,6 @@ public class LevelCreator extends Application {
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
         new WeaponSpawner(200, 350, 40, 40, uuid));
-    uuid = UUID.randomUUID();
-    gameObjects.put(uuid,
-        new ButtonReady(getAbs(10), getAbs(10), getAbs(8), getAbs(2), ObjectType.Button, uuid));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
         new MetalBlockLargeObject(getAbs(10), getAbs(5), getAbs(2), getAbs(2), ObjectType.Bot,
