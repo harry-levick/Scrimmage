@@ -275,6 +275,7 @@ public class Server extends Application {
     ArrayList<Player> alive = new ArrayList<>();
       for (UUID key : levelHandler.getPlayers().keySet()) {
         Player p = levelHandler.getPlayers().get(key);
+        System.out.println(serverState);
         if (p.isActive()) {
           alive.add(p);
         }
@@ -357,8 +358,7 @@ public class Server extends Application {
         }
 
         //All players have joined
-        if (playerCount.get() == maxPlayers && (serverState != ServerState.IN_GAME
-            || serverState != ServerState.WAITING_FOR_READYUP)) {
+        if (playerCount.get() == maxPlayers && serverState != ServerState.IN_GAME) {
           serverState = ServerState.WAITING_FOR_READYUP;
         }
         //Start game

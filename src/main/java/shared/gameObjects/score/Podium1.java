@@ -1,6 +1,7 @@
 package shared.gameObjects.score;
 
 import client.handlers.effectsHandler.emitters.LineEmitter;
+import client.main.Client;
 import client.main.Settings;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -128,38 +129,49 @@ public class Podium1 extends GameObject {
       score3.setTranslateY(pos3.getY());
       root.getChildren().add(score3);
      }
-    //Go back
-    new java.util.Timer().schedule(
-        new java.util.TimerTask() {
-          @Override
-          public void run() {
-            Platform.runLater(new Runnable() {
+    // Go back
+    new java.util.Timer()
+        .schedule(
+            new java.util.TimerTask() {
               @Override
               public void run() {
-                if (settings.getLevelHandler().getClientPlayer() != null) {
-                  players.remove(settings.getLevelHandler().getClientPlayer());
-                }
-                players.forEach(player -> {
-                  player.removeRender();
-                });
-                players.clear();
-                if (settings.getLevelHandler().isServer()) {
-                  settings.getLevelHandler().changeMap(
-                      new Map("menus/main_menu.map",
-                          Path.convert("src/main/resources/menus/lobby.map")),
-                      true, true);
-                } else {
-                  settings.getLevelHandler().changeMap(
-                      new Map("menus/main_menu.map",
-                          Path.convert("src/main/resources/menus/main_menu.map")),
-                      true, false);
-                }
+                Platform.runLater(
+                    new Runnable() {
+                      @Override
+                      public void run() {
+                        if (settings.getLevelHandler().getClientPlayer() != null) {
+                          players.remove(settings.getLevelHandler().getClientPlayer());
+                        }
+                        players.forEach(
+                            player -> {
+                              player.removeRender();
+                            });
+                        players.clear();
+                        if (settings.getLevelHandler().isServer()) {
+                          settings
+                              .getLevelHandler()
+                              .changeMap(
+                                  new Map(
+                                      "menus/main_menu.map",
+                                      Path.convert("src/main/resources/menus/lobby.map")),
+                                  true,
+                                  true);
+                        } else {
+                          if (!Client.multiplayer)
+                            settings
+                                .getLevelHandler()
+                                .changeMap(
+                                    new Map(
+                                        "menus/main_menu.map",
+                                        Path.convert("src/main/resources/menus/main_menu.map")),
+                                    true,
+                                    false);
+                        }
+                      }
+                    });
               }
-            });
-
-          }
-        }, 15000
-    );
+            },
+            15000);
   }
 
   @Override
