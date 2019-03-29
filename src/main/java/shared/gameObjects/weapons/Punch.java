@@ -102,10 +102,9 @@ public class Punch extends Melee {
         GameObject g = c.getCollidedObject();
         if (g instanceof Destructable && !isHolder(g)) {
           ((Destructable) g).deductHp(this.damage);
+          new AudioHandler(settings, Client.musicActive).playSFX("PUNCH");
         }
       }
-
-      new AudioHandler(settings, Client.musicActive).playSFX("PUNCH");
 
       this.currentCooldown = getDefaultCoolDown();
     }
