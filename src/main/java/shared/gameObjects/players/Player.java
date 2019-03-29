@@ -192,6 +192,7 @@ public class Player extends GameObject {
     youDied.setFill(Color.DARKRED);
     killedBy.setFont(settings.getFont(32));
     killedBy.setFill(Color.DARKRED);
+    currentSkin = new int[4];
   }
 
   // Initialise the animation
