@@ -82,18 +82,20 @@ public class Podium1 extends GameObject {
     if (players.get(0) != null) {
       players.get(0).getTransform().setPos(this.getTransform().getPos().add(new Vector2(50, -300)));
     }
-    if (players.get(1) != null) {
-      players.get(1).getTransform()
-          .setPos(podium2.getTransform().getPos().add(new Vector2(50, -300)));
-    }
-    if (players.get(2) != null) {
-      players.get(2).getTransform()
-          .setPos(podium3.getTransform().getPos().add(new Vector2(50, -300)));
-    }
-    if (players.get(3) != null) {
-      players.get(3).getTransform()
-          .setPos(podium4.getTransform().getPos().add(new Vector2(50, -300)));
-    }
+    /**
+     if (players.get(1) != null) {
+     players.get(1).getTransform()
+     .setPos(podium2.getTransform().getPos().add(new Vector2(50, -300)));
+     }
+     if (players.get(2) != null) {
+     players.get(2).getTransform()
+     .setPos(podium3.getTransform().getPos().add(new Vector2(50, -300)));
+     }
+     if (players.get(3) != null) {
+     players.get(3).getTransform()
+     .setPos(podium4.getTransform().getPos().add(new Vector2(50, -300)));
+     }
+     **/
     new java.util.Timer().schedule(
         new java.util.TimerTask() {
           @Override
