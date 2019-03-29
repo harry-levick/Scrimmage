@@ -135,22 +135,60 @@ public class LevelCreator extends Application {
 
     //ColouredBlocks todo remove form mm
     gameObjects
-        .put(uuid, new RedBlock(getAbs(4), getAbs(10), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+        .put(uuid, new RedBlock(getAbs(4), getAbs(11), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects
+        .put(uuid, new RedBlock(getAbs(5), getAbs(11), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects
+        .put(uuid, new RedBlock(getAbs(6), getAbs(11), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects
+        .put(uuid, new RedBlock(getAbs(7), getAbs(11), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
     uuid = UUID.randomUUID();
     //ColouredBlocks
     gameObjects.put(uuid,
-        new BlueBlock(getAbs(5), getAbs(10), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+        new BlueBlock(getAbs(29), getAbs(9), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new BlueBlock(getAbs(30), getAbs(9), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new BlueBlock(getAbs(31), getAbs(9), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new BlueBlock(getAbs(32), getAbs(9), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
     uuid = UUID.randomUUID();
     //ColouredBlocks
     gameObjects.put(uuid,
-        new GreenBlock(getAbs(6), getAbs(10), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+        new GreenBlock(getAbs(7), getAbs(16), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new GreenBlock(getAbs(8), getAbs(16), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new GreenBlock(getAbs(9), getAbs(16), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new GreenBlock(getAbs(10), getAbs(16), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
     uuid = UUID.randomUUID();
     //ColouredBlocks
     gameObjects.put(uuid,
-        new YellowBlock(getAbs(7), getAbs(10), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+        new YellowBlock(getAbs(33), getAbs(9), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new YellowBlock(getAbs(34), getAbs(9), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new YellowBlock(getAbs(35), getAbs(9), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
+    uuid = UUID.randomUUID();
+    gameObjects.put(uuid,
+        new YellowBlock(getAbs(36), getAbs(9), getAbs(1), getAbs(1), ObjectType.Bot, uuid));
     uuid = UUID.randomUUID();
 
-    //JumpPad todo remove form mm
+    //JumpPad
+    gameObjects.put(uuid, new JumpPad(getAbs(1), getAbs(25), uuid));
+    uuid = UUID.randomUUID();
     gameObjects.put(uuid, new JumpPad(getAbs(2), getAbs(25), uuid));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid, new LineEmitter(new Vector2(getAbs(2), getAbs(25)), new Vector2(0, -400),
@@ -195,7 +233,7 @@ public class LevelCreator extends Application {
     // left side blocks
     GameObject object = new WoodBlockLargeObject(
         getAbs(5), getAbs(4), getAbs(2), getAbs(2), ObjectType.Bot, uuid);
-    object.addComponent(new Crushing(object));
+    //object.addComponent(new Crushing(object)); // no death in mm
     gameObjects.put(uuid, object);
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
