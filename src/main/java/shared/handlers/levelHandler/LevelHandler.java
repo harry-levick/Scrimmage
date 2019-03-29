@@ -8,6 +8,7 @@ import client.main.Client;
 import client.main.Settings;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Random;
@@ -184,6 +185,7 @@ public class LevelHandler {
               background.initialise(backgroundGroup, settings);
             }
             if (moveToSpawns && spawnPoints != null && spawnPoints.size() >= players.size()) {
+              Collections.shuffle(spawnPoints);
               players.forEach(
                   (key2, player) -> {
                     Vector2 spawn = spawnPoints.get(0);
