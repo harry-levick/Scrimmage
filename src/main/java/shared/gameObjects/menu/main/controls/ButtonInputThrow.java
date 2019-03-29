@@ -23,7 +23,7 @@ public class ButtonInputThrow extends ButtonObject {
   @Override
   public void render() {
     super.render();
-    super.button.setFont(settings.getFont(20));
+    super.button.setFont(settings.getFont(24));
     super.setText("THROW: " + Client.settings.getKeyMap(KEY_CONTROL.THROW));
     if (Client.keyInput.getChangeListening()
         && Client.keyInput.getHotChangeKey() == KEY_CONTROL.THROW) {
