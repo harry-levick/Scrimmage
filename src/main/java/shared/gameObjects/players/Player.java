@@ -401,9 +401,14 @@ public class Player extends GameObject {
           youDied.setLayoutY(settings.getGrisPos(10));
           youDied.setLayoutX(
               (settings.getMapWidth() / 2) - (youDied.getLayoutBounds().getWidth() / 2));
-          killedBy.setText("Killed by " + (
-              (sourceOfDeath instanceof Player) ? ((Player) sourceOfDeath).getUsername() : sourceOfDeath.getClass().getSimpleName()
-              ));
+          if(sourceOfDeath != null) {
+            killedBy.setText("Killed by " + (
+                (sourceOfDeath instanceof Player) ? ((Player) sourceOfDeath).getUsername() : sourceOfDeath.getClass().getSimpleName()
+            ));
+          } else {
+            killedBy.setText("Killed");
+          }
+
           killedBy.setLayoutY(settings.getGrisPos(13));
           killedBy.setLayoutX(
               (settings.getMapWidth() / 2) - (killedBy.getLayoutBounds().getWidth() / 2));
