@@ -52,15 +52,6 @@ public class PacketTest {
   }
 
   @Test
-  public void ReadyPacketTest() {
-    PacketReady out = new PacketReady(uuid, username);
-    byte[] packetData = out.getData();
-    PacketReady in = new PacketReady(new String(packetData));
-    assertEquals(PacketID.READY.getID(), in.packetID);
-    assertEquals(in.getUUID(), uuid);
-  }
-
-  @Test
   public void GameStatePacketTestSendAll() {
     ArrayList<GameObject> objects = new ArrayList<>();
     objects.add(new TestObject());

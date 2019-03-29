@@ -143,7 +143,6 @@ public class ClientNetworkManager {
                 if (gameObject == null) {
                   PacketReSend reSend = new PacketReSend(key);
                   Client.connectionHandler.send(reSend.getString());
-                  System.out.println(key);
                 } else {
                   if (!entity_interpolation || gameObject.getUUID() == Client.levelHandler
                       .getClientPlayer().getUUID()) {

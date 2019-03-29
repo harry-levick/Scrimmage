@@ -9,7 +9,6 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.stage.Stage;
-import shared.gameObjects.Blocks.Metal.MetalBlockLargeObject;
 import shared.gameObjects.Blocks.Stone.StoneFloorObject;
 import shared.gameObjects.Blocks.Stone.StoneWallObject;
 import shared.gameObjects.Blocks.Wood.WoodBlockLargeObject;
@@ -597,15 +596,6 @@ public class LevelCreator extends Application {
               getAbs(i * 4), getAbs(0), getAbs(4), getAbs(1), ObjectType.Bot, uuid));
       uuid = UUID.randomUUID();
     }
-    /**
-     for (int i = 0; i < 10; i++) {
-     // top row wall
-     gameObjects.put(uuid,
-     new StoneBlockObject(
-     getAbs(i * 4 + 2), getAbs(20), getAbs(2), getAbs(2), ObjectType.Bot, uuid));
-     uuid = UUID.randomUUID();
-     }
-     **/
     for (int i = 0; i < 5; i++) {
       // side col walls
       gameObjects.put(uuid,
@@ -640,11 +630,7 @@ public class LevelCreator extends Application {
         new WeaponSpawner(200, 350, 40, 40, uuid));
     uuid = UUID.randomUUID();
     gameObjects.put(uuid,
-        new ButtonReady(getAbs(10), getAbs(10), getAbs(8), getAbs(2), ObjectType.Button, uuid));
-    uuid = UUID.randomUUID();
-    gameObjects.put(uuid,
-        new MetalBlockLargeObject(getAbs(10), getAbs(5), getAbs(2), getAbs(2), ObjectType.Bot,
-            uuid));
+        new ButtonReady(getAbs(14), getAbs(3), getAbs(18), getAbs(2), ObjectType.Button, uuid));
 
     MapLoader.saveMap(gameObjects, mapDataObject, filepath + filename + ".map");
 

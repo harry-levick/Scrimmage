@@ -129,13 +129,6 @@ public class Server extends Application {
   }
 
   /**
-   * Stops the server
-   */
-  public void stop() {
-    running.set(false);
-  }
-
-  /**
    * Send data to clients
    *
    * @param buffer Data as a byte array
@@ -350,7 +343,8 @@ public class Server extends Application {
       public void handle(long now) {
         counter.getAndIncrement();
         if (!running.get()) {
-          this.stop();
+          executor.shutdownNow();
+          System.exit(0);
         }
 
         //Allow player to join
