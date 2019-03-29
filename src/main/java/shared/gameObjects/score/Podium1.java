@@ -143,10 +143,17 @@ public class Podium1 extends GameObject {
                   player.removeRender();
                 });
                 players.clear();
-                settings.getLevelHandler().changeMap(
-                    new Map("menus/main_menu.map",
-                        Path.convert("src/main/resources/menus/main_menu.map")),
-                    true, false);
+                if (settings.getLevelHandler().isServer()) {
+                  settings.getLevelHandler().changeMap(
+                      new Map("menus/main_menu.map",
+                          Path.convert("src/main/resources/menus/lobby.map")),
+                      true, true);
+                } else {
+                  settings.getLevelHandler().changeMap(
+                      new Map("menus/main_menu.map",
+                          Path.convert("src/main/resources/menus/main_menu.map")),
+                      true, false);
+                }
               }
             });
 

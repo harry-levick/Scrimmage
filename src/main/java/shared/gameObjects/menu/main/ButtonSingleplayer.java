@@ -12,7 +12,7 @@ import shared.gameObjects.menu.ButtonObject;
 
 public class ButtonSingleplayer extends ButtonObject {
 
-  private static final int maxPlayers = 3;
+  private static final int maxPlayers = 4;
 
   /**
    * Base class used to create an object in game. This is used on both the client and server side to
@@ -47,7 +47,6 @@ public class ButtonSingleplayer extends ButtonObject {
         true, false);
 
     Client.singleplayerGame = true;
-    //Client.timer.schedule(Client.task, 30000L);
 
   }
 }

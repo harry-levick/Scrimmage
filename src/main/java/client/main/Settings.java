@@ -54,7 +54,7 @@ public class Settings {
     soundEffectVolume = 0.75;
     mapWidth = 1920;
     mapHeight = 1080;
-    maxPlayers = 4;
+    maxPlayers = 16;
     defaultFontSize = 20;
     gridSize = 40;
     playersDead = 0;

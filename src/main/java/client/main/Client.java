@@ -94,7 +94,7 @@ public class Client extends Application {
   public static boolean sendUpdate;
 
   /**
-   * Game timer //todo NO USES?
+   * Game timer
    */
   public static Timer timer = new Timer("Timer", true);
 

@@ -14,6 +14,7 @@ public class UI {
   private PlayerInfo playerInfo;
   private Score score;
   private TimeUI time;
+  private PlayerPointer pointer;
   private Settings settings;
 
   /**
@@ -30,6 +31,7 @@ public class UI {
     playerInfo = new PlayerInfo(root, clientPlayer,settings);
     score = new Score(root, clientPlayer, settings);
     time = new TimeUI(root,clientPlayer, settings,timeRemaining);
+    pointer = new PlayerPointer(root,clientPlayer);
 
   }
 
@@ -40,6 +42,7 @@ public class UI {
     playerInfo.render();
     score.render();
     time.render();
+    pointer.render();
   }
 
 
