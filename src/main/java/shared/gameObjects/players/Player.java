@@ -650,13 +650,7 @@ public class Player extends GameObject {
     usePunch();
     if (!settings.getLevelHandler().isServer()) {
       resetColorFilter();
-
-      if (settings.getOverlay().getChildren().contains(youDied)) {
-        settings.getOverlay().getChildren().remove(youDied);
-      }
-      if (settings.getOverlay().getChildren().contains(killedBy)) {
-        settings.getOverlay().getChildren().remove(killedBy);
-      }
+      clearDeathMessage();
       diedThisUpdate = true;
     }
   }
@@ -972,5 +966,14 @@ public class Player extends GameObject {
 
   public void setScore(int score) {
     this.score = score;
+  }
+
+  public void clearDeathMessage() {
+    if (settings.getOverlay().getChildren().contains(youDied)) {
+      settings.getOverlay().getChildren().remove(youDied);
+    }
+    if (settings.getOverlay().getChildren().contains(killedBy)) {
+      settings.getOverlay().getChildren().remove(killedBy);
+    }
   }
 }

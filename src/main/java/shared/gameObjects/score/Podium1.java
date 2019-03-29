@@ -130,6 +130,11 @@ public class Podium1 extends GameObject {
       score3.setTranslateY(pos3.getY());
       root.getChildren().add(score3);
      }
+
+    if (!settings.getLevelHandler().isServer()) {
+      settings.getOverlay().getChildren().clear();
+    }
+
     //Go back
     new java.util.Timer().schedule(
         new java.util.TimerTask() {

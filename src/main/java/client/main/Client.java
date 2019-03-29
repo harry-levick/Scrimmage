@@ -370,6 +370,7 @@ public class Client extends Application {
     levelHandler.changeMap(
         new Map("menus/score.map", Path.convert("src/main/resources/menus/score.map")),
         true, false);
+    levelHandler.getClientPlayer().clearDeathMessage();
   }
 
   /**
