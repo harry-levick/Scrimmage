@@ -1,5 +1,6 @@
 package client.handlers.networkHandlers;
 
+import client.handlers.accountHandler.AchivementHandler;
 import client.main.Client;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -14,6 +15,8 @@ import shared.gameObjects.Utils.TimePosition;
 import shared.gameObjects.players.Limbs.Arm;
 import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.Map;
+import shared.packets.PacketAward;
+import shared.packets.PacketAward.AwardID;
 import shared.packets.PacketDelete;
 import shared.packets.PacketGameState;
 import shared.packets.PacketInput;
@@ -161,6 +164,18 @@ public class ClientNetworkManager {
               serverReconciliation(Client.levelHandler.getClientPlayer().getLastInputCount());
             }
             break;
+          case 10:
+            PacketAward packetAward = new PacketAward(message);
+            if(packetAward.getPlayerUUID().equals(Client.levelHandler.getClientPlayer().getUUID())) {
+              switch (packetAward.getAwardID()) {
+                case 0 :
+                  Client.settings.getData().awardAchievement(packetAward.getAwardValue());
+                  break;
+                case 1:
+                  Client.settings.getData().addMoney(packetAward.getAwardValue());
+                  break;
+              }
+            }
           default:
         }
       } catch (InterruptedException e) {

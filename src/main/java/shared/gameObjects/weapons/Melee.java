@@ -204,7 +204,7 @@ public abstract class Melee extends Weapon {
       this.currentCooldown = getDefaultCoolDown();
 
       for (Destructable obj : objectsBeingHit) {
-        obj.deductHp(this.damage);
+        obj.deductHp(this.damage, holder);
       }
 
       deductAmmo();

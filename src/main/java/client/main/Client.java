@@ -133,7 +133,7 @@ public class Client extends Application {
   private static boolean gameOver;
   private static boolean settingsOverlay = false;
   private static ArrayList<GameObject> settingsObjects = new ArrayList<>();
-  private final String gameTitle = "Alone in the Dark";
+  private final String gameTitle = "Scrimmage";
   private final float timeStep = 0.0166f;
   private MouseInput mouseInput;
   private boolean startedGame;

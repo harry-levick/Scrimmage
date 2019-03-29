@@ -383,9 +383,10 @@ public class LevelHandler {
     return players;
   }
 
-  public void addPlayer(Player newPlayer) {
+  public void addPlayer(Player newPlayer, int[] skin) {
     players.put(newPlayer.getUUID(), newPlayer);
     createObject(newPlayer);
+    newPlayer.updateSkinRender(skin);
     if (isServer) {
       ConcurrentLinkedHashMap<UUID, GameObject> temp = new ConcurrentLinkedHashMap.Builder<UUID, GameObject>()
           .maximumWeightedCapacity(1).build();
@@ -434,5 +435,9 @@ public class LevelHandler {
 
   public ConcurrentLinkedHashMap<UUID, GameObject> getToCreate() {
     return toCreate;
+  }
+
+  public Server getServer() {
+    return server;
   }
 }

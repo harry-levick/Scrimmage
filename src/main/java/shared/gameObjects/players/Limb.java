@@ -118,10 +118,10 @@ public abstract class Limb extends GameObject implements Destructable {
   }
 
   @Override
-  public void deductHp(int damage) {
+  public void deductHp(int damage, GameObject source) {
     if (!damagedThisFrame) {
       damagedThisFrame = true;
-      ((Player) parent).deductHp(damage);
+      ((Player) parent).deductHp(damage, source);
       this.limbHealth -= damage;
       if (limbHealth <= 0) {
         destroy();

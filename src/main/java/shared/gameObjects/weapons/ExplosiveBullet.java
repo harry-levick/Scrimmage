@@ -102,7 +102,7 @@ public class ExplosiveBullet extends Bullet {
         remove = false;
       } else {
         // Player on direct impact takes full hazard (another half dealt in circleCasting down there)
-        ((Destructable) gCol).deductHp(damage / 2);
+        ((Destructable) gCol).deductHp(damage / 2, holder);
       }
     }
 
@@ -122,7 +122,7 @@ public class ExplosiveBullet extends Bullet {
       // Not going to deal hazard to holder
       if (g instanceof Destructable && !g.equals(holder)) {
         // Every player in the explosion area deals half the hazard
-        ((Destructable) g).deductHp(damage / 2);
+        ((Destructable) g).deductHp(damage / 2, holder);
         settings.getLevelHandler().addGameObject(new ServerParticle(
             bc.getCentre(), Vector2.Zero(), Vector2.Zero(), new Vector2(64,64), "explosion", 0.35f
         ));

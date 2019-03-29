@@ -1,6 +1,7 @@
 package shared.gameObjects.players.Limbs;
 
 import java.util.UUID;
+import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.components.BoxCollider;
 import shared.gameObjects.components.Rigidbody;
@@ -43,7 +44,7 @@ public class Head extends Limb {
   }
 
   @Override
-  public void deductHp(int damage) {
-    super.deductHp(damage * 2);
+  public void deductHp(int damage, GameObject source) {
+    super.deductHp(damage * 2, source);
   }
 }

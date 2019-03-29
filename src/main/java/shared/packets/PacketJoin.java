@@ -9,6 +9,7 @@ public class PacketJoin extends Packet {
   private UUID uuid;
   private String username;
   private UUID legLeftUUID, legRightUUID, bodyUUID, headUUID, armLeftUUID, armRightUUID, handLeftUUID, handRightUUID;
+  private int[] playerSkin;
 
   /**
    * Construct a packet that contains the data needed by the server to create and process a client
@@ -28,7 +29,7 @@ public class PacketJoin extends Packet {
    */
   public PacketJoin(UUID uuid, String username, double x, double y, UUID legLeftUUID,
       UUID legRightUUID, UUID bodyUUID, UUID headUUID, UUID armLeftUUID, UUID armRightUUID,
-      UUID handLeftUUID, UUID handRightUUID) {
+      UUID handLeftUUID, UUID handRightUUID, int[] playerSkin) {
     packetID = PacketID.JOIN.getID();
     this.x = x;
     this.y = y;
@@ -42,9 +43,10 @@ public class PacketJoin extends Packet {
     this.headUUID = headUUID;
     this.handLeftUUID = handLeftUUID;
     this.handRightUUID = handRightUUID;
+    this.playerSkin = playerSkin;
     data = packetID + "," + x + "," + y + "," + uuid + "," + username + "," + legLeftUUID + ","
         + legRightUUID + "," + bodyUUID + "," + armLeftUUID + "," + armRightUUID + "," + headUUID
-        + "," + handLeftUUID + "," + handRightUUID;
+        + "," + handLeftUUID + "," + handRightUUID + "," + playerSkin[0] + "," + playerSkin[1] + "," + playerSkin[2] + "," + playerSkin[3];
   }
 
   /**
@@ -67,6 +69,10 @@ public class PacketJoin extends Packet {
     this.headUUID = UUID.fromString(unpackedData[10]);
     this.handLeftUUID = UUID.fromString(unpackedData[11]);
     this.handRightUUID = UUID.fromString(unpackedData[12]);
+    this.playerSkin = new int[4];
+    for (int i = 0; i < 4; i++) {
+      playerSkin[i] = Integer.parseInt(unpackedData[13 + i]);
+    }
   }
 
   public double getX() {
@@ -115,5 +121,9 @@ public class PacketJoin extends Packet {
 
   public UUID getHandRightUUID() {
     return handRightUUID;
+  }
+
+  public int[] getPlayerSkin() {
+    return playerSkin;
   }
 }

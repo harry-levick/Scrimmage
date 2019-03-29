@@ -182,7 +182,7 @@ public abstract class Bullet extends GameObject {
           remove = false;
           hitHolder = true;
         } else {
-          p.deductHp(this.damage);
+          p.deductHp(this.damage, holder);
           alreadyHit.add(g);
           settings.getLevelHandler().addGameObject(new ServerParticle(
               transform.getBotPos().sub(transform.getSize().mult(new Vector2(0.5, 0))),

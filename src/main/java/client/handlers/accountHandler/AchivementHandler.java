@@ -16,6 +16,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
+import shared.gameObjects.players.Player;
+import shared.packets.PacketAward;
+import shared.packets.PacketAward.AwardID;
 
 public class AchivementHandler extends GameObject {
 
@@ -26,6 +29,14 @@ public class AchivementHandler extends GameObject {
   public AchivementHandler(UUID uuid) {
     super(0, 0, 1, 1, ObjectType.Button, uuid);
     achivements = new LinkedHashMap<>();
+  }
+
+  public static void giveAchievment(Settings settings, Player player, int id) {
+    if(settings.getLevelHandler().isServer()) {
+      settings.getLevelHandler().getServer().sendToClients(new PacketAward(AwardID.ACHIEVEMENT, id, player).getData(), false);
+    } else {
+      settings.getData().awardAchievement(id);
+    }
   }
 
   @Override

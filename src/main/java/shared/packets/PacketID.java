@@ -44,7 +44,11 @@ public enum PacketID {
   /**
    * Resend unseen objects
    */
-  RESEND(9);
+  RESEND(9),
+  /**
+   * Sends an achievement or money
+   */
+  AWARD(10);
 
   private int packetID;
 

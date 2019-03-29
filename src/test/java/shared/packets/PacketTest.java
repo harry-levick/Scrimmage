@@ -60,7 +60,7 @@ public class PacketTest {
   public void PlayerJoinPacketTest() {
     PacketJoin out = new PacketJoin(uuid, username, x, y, UUID.randomUUID(), UUID.randomUUID(),
         UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(),
-        UUID.randomUUID(), UUID.randomUUID());
+        UUID.randomUUID(), UUID.randomUUID(), new int[4]);
     byte[] packetData = out.getData();
     PacketJoin in = new PacketJoin(new String(packetData));
     assertEquals(PacketID.PLAYERJOIN.getID(), in.packetID);

@@ -4,6 +4,7 @@ import client.main.Settings;
 import java.util.UUID;
 import javafx.scene.Group;
 import shared.gameObjects.Destructable;
+import shared.gameObjects.GameObject;
 import shared.gameObjects.Utils.ObjectType;
 import shared.gameObjects.players.Limb;
 import shared.gameObjects.players.Player;
@@ -42,8 +43,8 @@ public class Hand extends Limb {
   }
 
   @Override
-  public void deductHp(int damage) {
-    ((Destructable) parent).deductHp(damage);
+  public void deductHp(int damage, GameObject source) {
+    ((Destructable) parent).deductHp(damage, source);
   }
 
 
