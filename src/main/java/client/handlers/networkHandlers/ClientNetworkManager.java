@@ -1,9 +1,7 @@
 package client.handlers.networkHandlers;
 
-import client.handlers.accountHandler.AchivementHandler;
 import client.main.Client;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.sql.Timestamp;
@@ -16,10 +14,10 @@ import shared.gameObjects.players.Limbs.Arm;
 import shared.gameObjects.players.Player;
 import shared.handlers.levelHandler.Map;
 import shared.packets.PacketAward;
-import shared.packets.PacketAward.AwardID;
 import shared.packets.PacketDelete;
 import shared.packets.PacketGameState;
 import shared.packets.PacketInput;
+import shared.packets.PacketMap;
 import shared.packets.PacketReSend;
 import shared.util.Path;
 import shared.util.maths.Vector2;
@@ -112,20 +110,6 @@ public class ClientNetworkManager {
         String message = (String) Client.connectionHandler.received.take();
         int messageID = Integer.parseInt(message.substring(0, 1));
         switch (messageID) {
-          // Ends
-          case 6:
-            Client.connectionHandler.end();
-            Client.connectionHandler = null;
-            // Show score board
-            Client.multiplayer = false;
-            Client.levelHandler.changeMap(
-                new Map(
-                    "main_menu",
-                    Path.convert(
-                        Client.settings.getMenuPath() + File.separator + "menus/main_menu.map")),
-                false, false);
-
-            break;
           case 8:
             PacketDelete delete = new PacketDelete(message);
             GameObject deleteObject = Client.levelHandler.getGameObjects()
@@ -136,6 +120,12 @@ public class ClientNetworkManager {
               Client.levelHandler.removeGameObject(deleteObject);
             }
             break;
+          case 3:
+            PacketMap map = new PacketMap(message);
+            Client.levelHandler.changeMap(
+                new Map("menus/multi.map", Path.convert(map.getMap())),
+                true, false);
+
           case 7:
             PacketGameState gameState = new PacketGameState(message);
             HashMap<UUID, String> data = gameState.getGameObjects();

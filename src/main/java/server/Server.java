@@ -44,6 +44,7 @@ import shared.handlers.levelHandler.Map;
 import shared.packets.PacketGameState;
 import shared.packets.PacketInput;
 import shared.packets.PacketJoin;
+import shared.packets.PacketMap;
 import shared.physics.Physics;
 import shared.util.Path;
 import shared.util.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
@@ -275,10 +276,25 @@ public class Server extends Application {
           break;
         }
       }
-    if (alive.size() == 1 && serverState == ServerState.IN_GAME) {
+    if (alive.size() <= 1 && serverState == ServerState.IN_GAME) {
       alive.forEach(player -> player.increaseScore());
       Map nextMap = levelHandler.pollPlayList();
-      levelHandler.changeMap(nextMap, true, true);
+      PacketMap map = new PacketMap(nextMap.getPath(), true);
+      sendToClients(map.getData(), false);
+      new java.util.Timer().schedule(
+          new java.util.TimerTask() {
+            @Override
+            public void run() {
+              Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                  levelHandler.changeMap(nextMap, true, true);
+                }
+              });
+            }
+          },
+          500
+      );
     } else if (alive.size() == 1 && serverState == ServerState.WAITING_FOR_READYUP) {
       ready.set(true);
     }
@@ -399,7 +415,7 @@ public class Server extends Application {
       ArrayList list = new ArrayList();
       for (java.util.Map.Entry<UUID, GameObject> entry : gameobjects.entrySet()) {
         list.add(entry.getValue());
-        if (i >= 18) {
+        if (i >= 2) {
           byteArrayOutputStream = new ByteArrayOutputStream();
           ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
           objectOutputStream.writeObject(list);

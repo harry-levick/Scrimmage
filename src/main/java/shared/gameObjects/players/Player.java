@@ -682,6 +682,7 @@ public class Player extends GameObject {
       clearDeathMessage();
       diedThisUpdate = true;
     }
+    this.setActive(true);
   }
 
   /**

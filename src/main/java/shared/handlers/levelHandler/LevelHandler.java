@@ -128,6 +128,10 @@ public class LevelHandler {
       Client.closeSettingsOverlay();
     }
 
+    players.forEach((key, player) -> {
+      player.reset();
+    });
+
     generateLevel(backgroundRoot, gameRoot, moveToSpawns, isServer);
 
     if (!isServer) {
@@ -161,9 +165,9 @@ public class LevelHandler {
    */
   public void generateLevel(Group backgroundGroup, Group gameGroup, Boolean moveToSpawns,
       Boolean isServer) {
-
-
-
+    players.forEach((key, player) -> {
+      player.reset();
+    });
     settings.resetDeaths();
     gameObjects.keySet().removeAll(players.keySet());
     gameObjects.keySet().removeAll(bots.keySet());
@@ -227,6 +231,9 @@ public class LevelHandler {
     } else {
       server.sendObjects(gameObjects);
     }
+    players.forEach((key, player) -> {
+      player.reset();
+    });
   }
 
   /**
