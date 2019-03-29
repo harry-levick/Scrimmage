@@ -192,6 +192,7 @@ public class Player extends GameObject {
     youDied.setFill(Color.DARKRED);
     killedBy.setFont(settings.getFont(32));
     killedBy.setFill(Color.DARKRED);
+    currentSkin = new int[4];
   }
 
   // Initialise the animation
@@ -553,17 +554,19 @@ public class Player extends GameObject {
     if (this.holding == null) {
       return false;
     }
+    try {
+      if (!armLeft.limbAttached || !armRight.limbAttached) {
+        this.throwHolding();
+        usePunch();
+        return true;
+      }
+    } catch (Exception e) {
+
+    }
     if (this.holding.getAmmo() == 0) {
       this.holding.destroyWeapon();
       this.setHolding(myPunch);
       return true;
-    }
-    try {
-      if (!armLeft.limbAttached || !armRight.limbAttached) {
-        this.throwHolding();
-      }
-    } catch (Exception e) {
-
     }
     return false;
   }
