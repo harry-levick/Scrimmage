@@ -1,39 +1,19 @@
-# Alone In The Dark
 
-Team Project to create a video game.
+![](src/main/resources/menus/cropped-scrimmagelogo.png)
 
-### Core Requriments
-* Competitive Play
-* Networking
-* Artifical Intelligence
-* User Interface
-* Audio
+[Project Website](https://togetherinthelight.wordpress.com/)
 
-## Coding Style
-[Google Code Style for Java](https://google.github.io/styleguide/javaguide.html)
-
-## Documentation
-[Reports (via. GitLab Wiki)](https://git-teaching.cs.bham.ac.uk/mod-team-proj-2018/aloneinthedark/wikis/home)
-
-## Built With
-
-* Java
-* [Maven](https://maven.apache.org/) - Dependency Management
-* JBox2D
-* JavaFX
-* JUnit
-* Log4j
+Scrimmage is a multiplayer, free for all death match. Players gain score by being the last player remaining in the map. Once this has happened, the map is changed and all players are spawned in again, and the players again fight to the death. The game is terminated by a timer. When the timer runs out, the players are shown on a podium, in the order of their scores.
 
 
+## Developers
 
-## Authors
-
-* **Brett  Saunders** - *jobs* - brett_saunders@btinternet.com 
-* **Harvey Levick** - *jobs* -
-*  **Faisal Alrajhi** - *jobs* - 
-* **Henry** - *jobs* -
-* **Matt Hooper** - *jobs* -
-* **Likkan Chung** - *jobs* -
+* **Brett  Saunders** -
+* **Harry Levick** - 
+* **Faisal Alrajhi** - 
+* **Henry Fung** - 
+* **Matt Hooper** -
+* **Likkan Chung** -
 
 
 
