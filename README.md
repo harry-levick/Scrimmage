@@ -8,12 +8,12 @@ Scrimmage is a multiplayer, free for all death match. Players gain score by bein
 
 ## Developers
 
-* **Brett  Saunders** -
-* **Harry Levick** - 
-* **Faisal Alrajhi** - 
-* **Henry Fung** - 
-* **Matt Hooper** -
-* **Likkan Chung** -
+* **Brett  Saunders** - Networking
+* **Harry Levick** - AI
+* **Faisal Alrajhi** - Physics
+* **Henry Fung** - Combat
+* **Matt Hooper** - UI
+* **Likkan Chung** - Level Editor
 
 
 
